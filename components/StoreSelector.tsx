@@ -4,7 +4,7 @@ import { useStore } from "store";
 type Props = {};
 
 export default function StoreSelector({}: Props) {
-  const { websites } = useStore();
+  const { websites, multiSearchSelectedWebsites, toggleMultiSearchSelectedWebsites,toggleMultiSearchSelectAllStores } = useStore();
 
   return (
     <div className="flex flex-col">
@@ -13,23 +13,25 @@ export default function StoreSelector({}: Props) {
           return (
             <div
               key={index}
-              className="m-1 flex items-center rounded-md p-2 accent-purple-700"
+              
+              className="m-1 flex items-center rounded-md p-2 accent-pink-700 bg-gray-900 hover:bg-gray-800"
               onClick={() => {
-                // store.setWebsites({
-                //     ...store.websites,
-                //     [website.code]: !store.websites[website.code],
-                // })
+                toggleMultiSearchSelectedWebsites(website.name);
               }}
             >
-              <input
-                type="checkbox"
-                // checked={websites[website.code]}
-                // onChange={(e) => {
-                //     store.setWebsites({
-                //         ...store.websites,
-                //         [website.code]: e.target.checked,
-                //     })
-                // }}
+
+              <div
+                className={`
+
+                    h-2 w-2
+                    mx-1
+                    rounded-full
+                    ${
+                      multiSearchSelectedWebsites.includes(website.name)
+                        ? "bg-pink-600"
+                        : "bg-gray-600"
+                    }
+                `}
               />
               <label className="ml-2 text-sm text-left">{website.name}</label>
             </div>
@@ -38,7 +40,19 @@ export default function StoreSelector({}: Props) {
       </div>
 
       <button
-        className="m-1 rounded-md bg-gray-300 p-2"
+        className="
+        bg-pink-600
+        hover:bg-pink-700
+        text-white
+        font-bold
+        py-2
+        px-4
+        rounded
+        focus:outline-none
+        focus:shadow-outline
+        mb-4
+        mx-auto
+      "
         onClick={() => {
           // let allSelected = {}
           // let noneSelected = {}
@@ -51,6 +65,7 @@ export default function StoreSelector({}: Props) {
           // } else {
           //     store.setWebsites(allSelected)
           // }
+          toggleMultiSearchSelectAllStores()
         }}
       >
         Select All

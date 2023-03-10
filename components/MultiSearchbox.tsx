@@ -23,13 +23,13 @@ export default function MultiSearchbox({}: Props) {
           py-1.5
           text-base
           font-normal
-          dark:bg-slate-700 bg-clip-padding
+          bg-gray-800 bg-clip-padding
           border border-solid border-gray-300
           rounded
           transition
           ease-in-out
           m-0
-          dark:focus:text-white dark:focus:bg-slate-800 focus:border-purple-600 focus:outline-none
+        focus:text-white focus:bg-black focus:border-pink-600 focus:outline-none
         "
           id="multisearchFormControlTextarea1"
           rows={10}
@@ -44,8 +44,8 @@ Counterspell`}
       </div>
       <button
         className="
-            bg-purple-600
-            hover:bg-purple-700
+            bg-pink-600
+            hover:bg-pink-700
             text-white
             font-bold
             py-2

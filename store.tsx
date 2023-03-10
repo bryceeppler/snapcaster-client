@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import axios from "axios";
+import { create } from 'zustand';
+import axios from 'axios';
 
 export interface SingleSearchResult {
   name: string;
@@ -17,6 +17,133 @@ export interface Website {
   code: string;
   image: string;
 }
+const websites: Website[] = [
+  {
+    name: 'Aether Vault Games',
+    code: 'aethervault',
+    image: ''
+  },
+  {
+    name: 'Atlas Collectables',
+    code: 'atlas',
+    image: ''
+  },
+  {
+    name: 'Border City Games',
+    code: 'bordercity',
+    image: ''
+  },
+  {
+    name: 'The Connection Games',
+    code: 'connectiongames',
+    image: ''
+  },
+  {
+    name: 'Enter the Battlefield',
+    code: 'enterthebattlefield',
+    image: ''
+  },
+  {
+    name: 'Everything Games',
+    code: 'everythinggames',
+    image: ''
+  },
+  {
+    name: 'Exor Games',
+    code: 'exorgames',
+    image: ''
+  },
+  {
+    name: 'Face to Face Games',
+    code: 'facetoface',
+    image: ''
+  },
+  {
+    name: 'Fantasy Forged Games',
+    code: 'fantasyforged',
+    image: ''
+  },
+  {
+    name: 'FirstPlayer',
+    code: 'firstplayer',
+    image: ''
+  },
+  {
+    name: '401 Games',
+    code: 'four01',
+    image: ''
+  },
+  {
+    name: 'Fusion Gaming',
+    code: 'fusion',
+    image: ''
+  },
+  {
+    name: 'GameKnight',
+    code: 'gameknight',
+    image: ''
+  },
+  {
+    name: 'Gamezilla',
+    code: 'gamezilla',
+    image: ''
+  },
+  {
+    name: 'Gauntlet Games',
+    code: 'gauntlet',
+    image: ''
+  },
+  {
+    name: 'Hairy Tarantula',
+    code: 'hairyt',
+    image: ''
+  },
+  {
+    name: 'House of Cards',
+    code: 'houseofcards',
+    image: ''
+  },
+  {
+    name: 'Jeux 3 Dragons',
+    code: 'jeux3dragons',
+    image: ''
+  },
+  {
+    name: 'Manaforce',
+    code: 'manaforce',
+    image: ''
+  },
+  {
+    name: 'Magic Stronghold',
+    code: 'magicstronghold',
+    image: ''
+  },
+  {
+    name: 'Orchard City Games',
+    code: 'orchardcity',
+    image: ''
+  },
+  {
+    name: 'Sequence Gaming Brockville',
+    code: 'sequencegaming',
+    image: ''
+  },
+  {
+    name: 'The Comic Hunter',
+    code: 'thecomichunter',
+    image: ''
+  },
+  {
+    name: 'Topdeck Hero',
+    code: 'topdeckhero',
+    image: ''
+  },
+  {
+    name: "Wizard's Tower (kanatacg)",
+    code: 'kanatacg',
+    image: ''
+  }
+];
 
 type State = {
   websites: Website[];
@@ -24,9 +151,11 @@ type State = {
   setSingleSearchInput: (singleSearchInput: string) => void;
   singleSearchQuery: string;
   setSingleSearchQuery: (singleSearchQuery: string) => void;
-  
+
   multiSearchInput: string;
   multiSearchQuery: string;
+  multiSearchSelectedWebsites: string[];
+  toggleMultiSearchSelectedWebsites: (website: string) => void;
   setMultiSearchInput: (multiSearchInput: string) => void;
   setMultiSearchQuery: (multiSearchQuery: string) => void;
   singleSearchOrderBy: string;
@@ -36,7 +165,7 @@ type State = {
 
   singleSearchResults: SingleSearchResult[];
   setSingleSearchResults: (singleSearchResults: SingleSearchResult[]) => void;
-  
+
   showSingleSearchFilters: boolean;
   toggleShowSingleSearchFilters: () => void;
   filteredSingleSearchResults: SingleSearchResult[];
@@ -58,166 +187,37 @@ type State = {
   setSingleSearchResultsLoading: (singleSearchResultsLoading: boolean) => void;
   fetchSingleSearchResults: (searchInput: string) => Promise<void>;
   filterSingleSearchResults: () => void;
+
+  toggleMultiSearchSelectAllStores: () => void;
+
 };
 
-const websites: Website[] = [
-  {
-    name: "Aether Vault Games",
-    code: "aethervault",
-    image:""
-  },
-  {
-    name: "Atlas Collectables",
-    code: "atlas",
-    image:""
-  },
-  {
-    name: "Border City Games",
-    code: "bordercity",
-    image:""
-  },
-  {
-    name: "The Connection Games",
-    code: "connectiongames",
-    image:""
-  },
-  {
-    name: "Enter the Battlefield",
-    code: "enterthebattlefield",
-    image:""
-  },
-  {
-    name: "Everything Games",
-    code: "everythinggames",
-    image:""
-  },
-  {
-    name: "Exor Games",
-    code: "exorgames",
-    image:""
-  },
-  {
-    name: "Face to Face Games",
-    code: "facetoface",
-    image:""
-  },
-  {
-    name: "Fantasy Forged Games",
-    code: "fantasyforged",
-    image:""
-  },
-  {
-    name: "FirstPlayer",
-    code: "firstplayer",
-    image:""
-  },
-  {
-    name: "401 Games",
-    code: "four01",
-    image:""
-  },
-  {
-    name: "Fusion Gaming",
-    code: "fusion",
-    image:""
-  },
-  {
-    name: "GameKnight",
-    code: "gameknight",
-    image:""
-  },
-  {
-    name: "Gamezilla",
-    code: "gamezilla",
-    image:""
-  },
-  {
-    name: "Gauntlet Games",
-    code: "gauntlet",
-    image:""
-  },
-  {
-    name: "Hairy Tarantula",
-    code: "hairyt",
-    image:""
-  },
-  {
-    name: "House of Cards",
-    code: "houseofcards",
-    image:""
-  },
-  {
-    name: "Jeux 3 Dragons",
-    code: "jeux3dragons",
-    image:""
-  },
-  {
-    name: "Manaforce",
-    code: "manaforce",
-    image:""
-  },
-  {
-    name: "Magic Stronghold",
-    code: "magicstronghold",
-    image:""
-  },
-  {
-    name: "Orchard City Games",
-    code: "orchardcity",
-    image:""
-  },
-  {
-    name: "Sequence Gaming Brockville",
-    code: "sequencegaming",
-    image:""
-  },
-  {
-    name: "The Comic Hunter",
-    code: "thecomichunter",
-    image:""
-  },
-  {
-    name: "Topdeck Hero",
-    code: "topdeckhero",
-    image:""
-  },
-  {
-    name: "Wizard's Tower (kanatacg)",
-    code: "kanatacg",
-    image:""
-  },
-];
-  
+
 
 export const useStore = create<State>((set, get) => ({
   websites: websites,
-  singleSearchInput: "",
+  singleSearchInput: '',
   setSingleSearchInput: (singleSearchInput: string) =>
     set({ singleSearchInput }),
   showSingleSearchFilters: false,
-  multiSearchInput: "",
-  multiSearchQuery: "",
-  setMultiSearchInput: (multiSearchInput: string) =>
-    set({ multiSearchInput }),
-  setMultiSearchQuery: (multiSearchQuery: string) =>
-    set({ multiSearchQuery }),
+  multiSearchInput: '',
+  multiSearchQuery: '',
+  setMultiSearchInput: (multiSearchInput: string) => set({ multiSearchInput }),
+  setMultiSearchQuery: (multiSearchQuery: string) => set({ multiSearchQuery }),
   toggleShowSingleSearchFilters: () =>
-    set({ showSingleSearchFilters: !get().showSingleSearchFilters }), 
-  singleSearchQuery: "",
+    set({ showSingleSearchFilters: !get().showSingleSearchFilters }),
+  singleSearchQuery: '',
 
   singleSearchConditions: {
-    "nm": true,
-    "lp": true,
-    "pl": true,
-    "mp": true,
-    "hp": true,
-    "dmg": true,
-    "scan": true,
-    "scn": true,
+    nm: true,
+    lp: true,
+    pl: true,
+    mp: true,
+    hp: true,
+    dmg: true,
+    scan: true,
+    scn: true
   },
-
-
-
 
   singleSearchFoil: false,
   toggleSingleSearchFoil: () => {
@@ -225,7 +225,6 @@ export const useStore = create<State>((set, get) => ({
     // call filter function
     get().filterSingleSearchResults();
   },
-
 
   setSingleSearchQuery: (singleSearchQuery: string) =>
     set({ singleSearchQuery }),
@@ -243,25 +242,22 @@ export const useStore = create<State>((set, get) => ({
     set({ singleSearchResultsLoading: true });
     const response = await axios.post(`http://localhost:8000/search/single/`, {
       cardName: searchInput,
-      websites: ["all"],
+      websites: ['all']
     });
     const results = response.data;
-    console.log("results", results)
+    console.log('results', results);
     // sort results by ascending price
     // results = [SingleSearchResult, SingleSearchResult, ...]
     // SingleSearchResult = { name: string, link: string, image: string, set: string, condition: string, foil: boolean, price: number, website: string }
     results.sort((a: SingleSearchResult, b: SingleSearchResult) => {
-        return a.price - b.price;
+      return a.price - b.price;
     });
 
     set({ filteredSingleSearchResults: results });
     set({ singleSearchResults: results });
     set({ singleSearchResultsLoading: false });
-    set({ singleSearchQuery: searchInput })
+    set({ singleSearchQuery: searchInput });
   },
-
-
-
 
   filterSingleSearchResults: () => {
     const conditions = get().singleSearchConditions;
@@ -271,97 +267,125 @@ export const useStore = create<State>((set, get) => ({
     const order = get().singleSearchOrder;
     const filteredResults = results.filter((result: SingleSearchResult) => {
       return (
-        conditions[result.condition.toLowerCase()] && (foil ? result.foil : true)
+        conditions[result.condition.toLowerCase()] &&
+        (foil ? result.foil : true)
       );
     });
     // sort by orderBy in order
     filteredResults.sort((a: SingleSearchResult, b: SingleSearchResult) => {
-      if (orderBy === "price") {
-        if (order === "asc") {
+      if (orderBy === 'price') {
+        if (order === 'asc') {
           return a.price - b.price;
         } else {
           return b.price - a.price;
         }
-      } else if (orderBy === "name") {
-        if (order === "asc") {
+      } else if (orderBy === 'name') {
+        if (order === 'asc') {
           return a.name.localeCompare(b.name);
         } else {
           return b.name.localeCompare(a.name);
         }
-      } else if (orderBy === "set") {
-        if (order === "asc") {
+      } else if (orderBy === 'set') {
+        if (order === 'asc') {
           return a.set.localeCompare(b.set);
         } else {
           return b.set.localeCompare(a.set);
         }
-
-      }
-      else if (orderBy === "website") {
-        if (order === "asc") {
+      } else if (orderBy === 'website') {
+        if (order === 'asc') {
           return a.website.localeCompare(b.website);
         } else {
           return b.website.localeCompare(a.website);
         }
-      }
-      else {
+      } else {
         return 0;
       }
     });
-    
 
-
-    set({ filteredSingleSearchResults: filteredResults })
+    set({ filteredSingleSearchResults: filteredResults });
   },
 
+  toggleSingleSearchCondition: (condition: string) => {
+    // toggle the condition in singleSearchConditions
+    set({
+      singleSearchConditions: {
+        ...get().singleSearchConditions,
+        [condition]: !get().singleSearchConditions[condition]
+      }
+    });
 
-
-
-
-
-
-
-
-
-    toggleSingleSearchCondition: (condition: string) => {
-      // toggle the condition in singleSearchConditions
-      set({ singleSearchConditions: {...get().singleSearchConditions, [condition]: !get().singleSearchConditions[condition] }})
-
-      // call filterSingleSearchResults
-      get().filterSingleSearchResults()
+    // call filterSingleSearchResults
+    get().filterSingleSearchResults();
   },
 
   resetSingleSearchFilters: () => {
     // set all conditions to true
-    set({ singleSearchConditions: {
-      "nm": true,
-      "lp": true,
-      "pl": true,
-      "mp": true,
-      "hp": true,
-      "dmg": true,
-      "scan": true,
-      "scn": true,
-    }
-    })
+    set({
+      singleSearchConditions: {
+        nm: true,
+        lp: true,
+        pl: true,
+        mp: true,
+        hp: true,
+        dmg: true,
+        scan: true,
+        scn: true
+      }
+    });
     // set foil to false
-    set({ singleSearchFoil: false })
+    set({ singleSearchFoil: false });
     // set orderBy to price
-    set({ singleSearchOrderBy: "price" })
+    set({ singleSearchOrderBy: 'price' });
     // set order to asc
-    set({ singleSearchOrder: "asc" })
+    set({ singleSearchOrder: 'asc' });
 
     // call filterSingleSearchResults
-    get().filterSingleSearchResults()
+    get().filterSingleSearchResults();
   },
-  
-  singleSearchOrder: "asc",
-  singleSearchOrderBy: "price",
+
+  singleSearchOrder: 'asc',
+  singleSearchOrderBy: 'price',
   setSingleSearchOrder: (singleSearchOrder: string) => {
-    set({ singleSearchOrder })
-    get().filterSingleSearchResults()
+    set({ singleSearchOrder });
+    get().filterSingleSearchResults();
   },
   setSingleSearchOrderBy: (singleSearchOrderBy: string) => {
-    set({ singleSearchOrderBy })
-    get().filterSingleSearchResults()
+    set({ singleSearchOrderBy });
+    get().filterSingleSearchResults();
   },
+
+  // multiSearchSelectedWebsites = website.name for each website in websites
+  multiSearchSelectedWebsites: websites.map((website: Website) => website.name),
+  toggleMultiSearchSelectedWebsites: (website: string) => {
+    // if website is in multiSearchSelectedWebsites, remove it
+    // else add it
+    if (get().multiSearchSelectedWebsites.includes(website)) {
+      set({
+        multiSearchSelectedWebsites: get().multiSearchSelectedWebsites.filter(
+          (selectedWebsite: string) => selectedWebsite !== website
+        )
+      });
+    }
+    // else add it
+    else {
+      set({
+        multiSearchSelectedWebsites: [
+          ...get().multiSearchSelectedWebsites,
+          website
+        ]
+      });
+    }
+  },
+  toggleMultiSearchSelectAllStores: () => {
+    if (get().multiSearchSelectedWebsites.length === websites.length) {
+      set({ multiSearchSelectedWebsites: [] });
+    } else {
+      set({
+        multiSearchSelectedWebsites: websites.map(
+          (website: Website) => website.name
+        )
+      });
+    }
+  }
+  
 }));
