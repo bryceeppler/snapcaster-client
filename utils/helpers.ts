@@ -23,7 +23,10 @@ export const postData = async ({
 
   const res: Response = await fetch(url, {
     method: 'POST',
-    headers: new Headers({ 'Content-Type': 'application/json' }),
+    headers: new Headers({ 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`
+    }),
     credentials: 'same-origin',
     body: JSON.stringify(data)
   });
