@@ -14,7 +14,7 @@ export default function StoreSelector({}: Props) {
             <div
               key={index}
               
-              className="m-1 flex items-center rounded-md p-2 accent-pink-700 bg-gray-900 hover:bg-gray-800"
+              className="m-1 flex items-center rounded-md p-2 accent-pink-700 bg-zinc-900 hover:bg-zinc-800"
               onClick={() => {
                 toggleMultiSearchSelectedWebsites(website.name);
               }}
@@ -29,7 +29,7 @@ export default function StoreSelector({}: Props) {
                     ${
                       multiSearchSelectedWebsites.includes(website.name)
                         ? "bg-pink-600"
-                        : "bg-gray-600"
+                        : "bg-zinc-600"
                     }
                 `}
               />

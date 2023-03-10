@@ -38,10 +38,10 @@ export default function Navbar({}: Props) {
       href: '/multisearch',
       current: currentPath === '/multisearch'
     },
-    { name: 'Sealed', href: '/sealed', current: currentPath === '/sealed' },
-    { name: 'Premium', href: '/pricing', current: currentPath === '/pricing' },
+    // { name: 'Sealed', href: '/sealed', current: currentPath === '/sealed' },
+    // { name: 'Premium', href: '/pricing', current: currentPath === '/pricing' },
     { name: 'About', href: '/about', current: currentPath === '/about' },
-    { name: 'Profile', href: '/account', current: currentPath === '/account' }
+    // { name: 'Profile', href: '/account', current: currentPath === '/account' }
   ];
   return (
     <div>
@@ -52,7 +52,7 @@ export default function Navbar({}: Props) {
               {/* Mobile menu button*/}
               <button
                 type="button"
-                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                className="inline-flex items-center justify-center rounded-md p-2 text-zinc-400 hover:bg-zinc-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                 aria-controls="mobile-menu"
                 aria-expanded="false"
                 onClick={() => {
@@ -118,8 +118,8 @@ export default function Navbar({}: Props) {
                       key={page.name}
                       href={page.href}
                       className={`
- rounded-md py-2 px-3 text-sm font-medium hover:bg-gray-600 
-${page.current && 'bg-gray-800 text-white hover:bg-gray-600'} 
+ rounded-md py-2 px-3 text-sm font-medium hover:bg-zinc-600 
+${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'} 
 `}
                     >
                       {page.name}
@@ -128,9 +128,9 @@ ${page.current && 'bg-gray-800 text-white hover:bg-gray-600'}
 
                   {/* User ? */}
                   <div className="flex-1" />
-                  <div
+                  {/* <div
                     className={`
- rounded-md py-2 px-3 text-sm font-medium hover:bg-gray-600
+ rounded-md py-2 px-3 text-sm font-medium hover:bg-zinc-600
 `}
                   >
                     {user ? (
@@ -145,7 +145,7 @@ ${page.current && 'bg-gray-800 text-white hover:bg-gray-600'}
                     ) : (
                       <Link href="/signin">Sign in</Link>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -163,15 +163,16 @@ ${page.current && 'bg-gray-800 text-white hover:bg-gray-600'}
                   key={page.name}
                   className={`
                     block rounded-md py-2 px-3 text-sm font-medium
-                    ${page.current && 'bg-gray-600 text-white'} 
+                    ${page.current && 'bg-zinc-600 text-white'} 
                     `}
                 >
                   {page.name}
                 </Link>
               ))}
-                                <div
+              {/* USER STUFF */}
+                                {/* <div
                     className={`
- rounded-md py-2 px-3 text-sm font-medium hover:bg-gray-400
+ rounded-md py-2 px-3 text-sm font-medium hover:bg-zinc-400
 `}
                   >
                     {user ? (
@@ -186,7 +187,7 @@ ${page.current && 'bg-gray-800 text-white hover:bg-gray-600'}
                     ) : (
                       <Link href="/signin">Sign in</Link>
                     )}
-                  </div>
+                  </div> */}
             </div>
           </div>
         </div>

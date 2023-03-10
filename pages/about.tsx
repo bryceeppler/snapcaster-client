@@ -25,7 +25,7 @@ export default function About({}: Props) {
             <div className="flex-col items-center justify-center flex-1 text-left max-w-xl">
               <div className="mx-auto space-y-7">
                 <div>
-                  <h1 className="text-3xl font-bold text-purple-500 text-center">About</h1>
+                  <h1 className="text-3xl font-bold text-pink-500 text-center">About</h1>
                   <p className="mt-4">
                     Snapcaster allows you to search for Magic: The Gathering singles
                     listed on Canadian websites. It will search all the websites for
@@ -34,7 +34,7 @@ export default function About({}: Props) {
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-purple-500">Support</h2>
+                  <h2 className="text-xl font-bold text-pink-500">Support</h2>
                   <p className="mt-4">
                     If you would like to help with development, contact me at
                     epplerdev@gmail.com or submit a pull request on GitHub.
@@ -46,12 +46,12 @@ export default function About({}: Props) {
                   </p>
                 </div>
                 <div className="flex justify-center">
-                <button className="bg-gray-300 first-letter:mt-4 py-1 px-2 rounded-md" onClick={openDonationLink}>
+                <button className="bg-zinc-700 first-letter:mt-4 py-1 px-2 rounded-md" onClick={openDonationLink}>
                     Donate
                   </button>
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-purple-500">Privacy</h2>
+                  <h2 className="text-xl font-bold text-pink-500">Privacy</h2>
                   <p className="mt-4">
                     I currently log any search queries and store them in a database
                     for debugging and basic analytics. I do not share this data with

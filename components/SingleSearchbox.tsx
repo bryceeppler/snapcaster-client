@@ -125,7 +125,7 @@ export default function SingleSearchbox({}: Props) {
         <form onSubmit={handleFormSubmit}>
           <input
             type="text"
-            className={`block w-full rounded-md border border-gray-300 px-4 py-2 placeholder-gray-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-gray-800`}
+            className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
             placeholder="Search"
             value={singleSearchInput}
             onChange={handleInputChange}
@@ -134,13 +134,13 @@ export default function SingleSearchbox({}: Props) {
             onKeyDown={(e) => handleAutocompleteKeyDown(e)}
           />
           {showAutocomplete && (
-            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-gray-300  py-1 shadow-md">
+            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-300  py-1 shadow-md">
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
                     key={result}
                     className={`cursor-pointer px-4 py-2 mx-1 rounded ${
-                      selectedAutocompleteIndex === index ? "bg-gray-700" : ""
+                      selectedAutocompleteIndex === index ? "bg-zinc-700" : ""
                     } `}
                     onClick={() => handleAutocompleteItemClick(result)}
                   >

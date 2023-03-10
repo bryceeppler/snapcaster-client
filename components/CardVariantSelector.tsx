@@ -1,16 +1,16 @@
 import { MultiSearchCardState } from '@/store';
 import React from 'react'
 import { useStore } from '@/store'
+import CloseButton from './CloseButton'
 
 type Props = {
   card: MultiSearchCardState
 }
 
 export default function CardVariantSelector({card}: Props) {
-  console.log(card)
   // Basic modal that displays all of card.variants and allows us to update the selectedVariant in the zustand store
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { updateSelectedVariant } = useStore();
+  const { updateSelectedVariant, sortMultiSearchVariants: sortVariants } = useStore();
   // const fetchWebsiteName = (websiteCode) => {
   //   let website = store.websiteCodeMap.find(
   //     (website) => website.code === websiteCode.toLowerCase()
@@ -34,7 +34,7 @@ export default function CardVariantSelector({card}: Props) {
       </button>
       {modalOpen && (
         <div
-          className="fixed top-0 left-0 w-full h-full bg-gray-600 bg-opacity-80 flex justify-center items-center"
+          className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-60 backdrop-blur-sm flex justify-center items-center"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setModalOpen(false);
@@ -42,7 +42,7 @@ export default function CardVariantSelector({card}: Props) {
           }}
         >
           <div
-            className="bg-gray-800 rounded-md pt-4 px-2 mx-1"
+            className="bg-zinc-800 rounded-md pt-4 px-2 mx-1 md:w-1/2 border-pink-500 border-2"
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -60,9 +60,9 @@ export default function CardVariantSelector({card}: Props) {
               >
                 <div className="font-bold font-md ">Sort by:</div>
                 <select
-                  className="m-2 p-2 rounded-md bg-gray-900"
+                  className="m-2 p-2 rounded-md bg-black"
                   onChange={(e) => {
-                    // store.sortVariants(card, e.target.value);
+                    sortVariants(card, e.target.value);
                   }}
                 >
                   <option value="price">Price</option>
@@ -72,14 +72,8 @@ export default function CardVariantSelector({card}: Props) {
               </div>
               {/* Close button */}
               <div>
-                <button
-                  onClick={() => {
-                    setModalOpen(false);
-                  }}
-                  className="p-2 rounded-md bg-red-700 text-white"
-                >
-                  Close
-                </button>
+              <CloseButton onClick={() => setModalOpen(false)} />
+
               </div>
             </div>
 
@@ -90,7 +84,7 @@ export default function CardVariantSelector({card}: Props) {
                   return (
                     <div
                       key={index}
-                      className="flex flex-row m-2 p-2 bg-gray-800 hover:bg-gray-900 rounded"
+                      className="flex flex-row m-2 p-2 bg-zinc-800 hover:bg-zinc-900 rounded"
                       onClick={() => {
                         // store.updateSelectedVariant(card, variant);
                         updateSelectedVariant(card.cardName, variant);

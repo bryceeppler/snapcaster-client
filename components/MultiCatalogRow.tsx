@@ -32,8 +32,8 @@ export default function MultiCatalogRow({cardData:card}: Props) {
         <div
           className={
             card.selected
-              ? "transition-all mt-6 p-3 bg-gray-800 hover:bg-gray-900 rounded-md my-2 outline outline-offset-2 outline-2 outline-pink-700 "
-              : "transition-all mt-6 p-3 hover:bg-gray-900 rounded-md my-2"
+              ? "transition-all mt-6 p-3 bg-zinc-800 hover:bg-zinc-900 rounded-md my-2 outline outline-offset-2 outline-2 outline-pink-700 "
+              : "transition-all mt-6 p-3 hover:bg-zinc-900 rounded-md my-2"
           }
           onClick={() => {
             // store.toggleSelectCard(card);
@@ -50,7 +50,7 @@ export default function MultiCatalogRow({cardData:card}: Props) {
             </div>
             <div className="col-span-7 flex flex-col text-left">
               <div className="text-md font-bold mt-2">{selectedVariant.name}</div>
-              <div className="text-gray-400">
+              <div className="text-zinc-400">
                 {
                     selectedVariant.website
                 }
@@ -62,7 +62,7 @@ export default function MultiCatalogRow({cardData:card}: Props) {
               {selectedVariant.foil && (
                 <div
                   // gold foil text
-                  className="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-gray-300 to-gray-400"
+                  className="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-zinc-300 to-zinc-400"
                 >
                   Foil
                 </div>
@@ -104,7 +104,7 @@ export default function MultiCatalogRow({cardData:card}: Props) {
                     ${
                       card.selected
                         ? "bg-pink-600"
-                        : "bg-gray-600"
+                        : "bg-zinc-600"
                     }
                 `}
               />

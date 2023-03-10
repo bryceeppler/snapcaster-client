@@ -70,8 +70,8 @@ export default function MultiSearchbox({}: Props) {
           py-1.5
           text-base
           font-normal
-          bg-gray-900 bg-clip-padding
-          border border-solid border-gray-300
+          bg-zinc-900 bg-clip-padding
+          border border-solid border-zinc-300
           rounded
           transition
           ease-in-out

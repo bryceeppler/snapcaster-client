@@ -34,7 +34,7 @@ export default function SearchFilters({}: Props) {
       <div
         className={`transition-all flex flex-col justify-center items-center w-full ${
           showSingleSearchFilters ? 'opacity-100 h-80' : 'opacity-0 h-0'
-        } bg-gray-900 shadow rounded`}
+        } bg-zinc-900 shadow rounded`}
       >
         {showSingleSearchFilters && (
           <>
@@ -43,7 +43,7 @@ export default function SearchFilters({}: Props) {
               <div className="flex flex-row justify-between items-center p-2">
                 <label className="text-sm mr-2">Sort By</label>
                 <select
-                  className="p-1 rounded-md text-sm bg-gray-800"
+                  className="p-1 rounded-md text-sm bg-zinc-800"
                   onChange={(e) => {
                     // store.setSortBy(e.target.value);
                     setSingleSearchOrderBy(e.target.value);
@@ -58,7 +58,7 @@ export default function SearchFilters({}: Props) {
               </div>
               <div>
                 <select
-                  className="p-1 rounded-md text-sm bg-gray-800"
+                  className="p-1 rounded-md text-sm bg-zinc-800"
                   value={singleSearchOrder}
                   onChange={(e) => {
                     // store.setSortOrder(e.target.value);
@@ -84,7 +84,7 @@ export default function SearchFilters({}: Props) {
                     toggleSingleSearchFoil();
                   }}
                 />
-                <div className="w-7 h-4 bg-gray-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-pink-300 dark:peer-focus:ring-pink-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-pink-600"></div>
+                <div className="w-7 h-4 bg-zinc-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-pink-300 dark:peer-focus:ring-pink-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-zinc-600 peer-checked:bg-pink-600"></div>
               </label>
             </div>
             <div className="text-sm font-bold mt-2">Condition</div>
@@ -119,7 +119,7 @@ export default function SearchFilters({}: Props) {
 
             <div className="flex flex-row space-x-2">
               <button
-                className="transition-all outline outline-2 -outline-offset-2 outline-gray-500 hover:bg-pink-500 hover:bg-opacity-50 font-bold py-1 px-4 rounded focus:outline-pink-900 focus:shadow-outline mt-1 mx-auto"
+                className="transition-all outline outline-2 -outline-offset-2 outline-zinc-500 hover:bg-pink-500 hover:bg-opacity-50 font-bold py-1 px-4 rounded focus:outline-pink-900 focus:shadow-outline mt-1 mx-auto"
                 onClick={() => {
                   resetSingleSearchFilters();
                 }}

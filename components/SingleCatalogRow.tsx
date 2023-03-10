@@ -57,7 +57,7 @@ export default function SingleCatalogRow({cardData}: Props) {
   return (
     <>
       <>
-        <div className="grid grid-cols-12 gap-4 m-1 p-2 sm:my-3 sm:p-4 rounded-md transition-all bg-gray-900 hover:bg-gray-700">
+        <div className="grid grid-cols-12 gap-4 m-1 p-2 sm:my-3 sm:p-4 rounded-md transition-all bg-zinc-900 hover:bg-zinc-700">
           {/* center content vertically in thje column */}
           <div className="col-span-3 flex justify-center items-center">
             <img
@@ -94,7 +94,7 @@ export default function SingleCatalogRow({cardData}: Props) {
                 <div className="text-sm font-bold">{cardData.condition}</div>
               </div>
               <button 
-              className="transition-all bg-gray-800 hover:bg-gray-900 text-white font-bold p-1 px-2 sm:py-1 sm:px-4 rounded focus:outline-none focus:shadow-outline mt-4 "              onClick={handleClick}>
+              className="transition-all bg-zinc-800 hover:bg-zinc-900 text-white font-bold p-1 px-2 sm:py-1 sm:px-4 rounded focus:outline-none focus:shadow-outline mt-4 "              onClick={handleClick}>
                 Buy
               </button>
             </div>
