@@ -244,7 +244,7 @@ export const useStore = create<State>((set, get) => ({
     ];
     set({ filteredMultiSearchResults: newFilteredMultiSearchResults });
   },
-  
+
 
   calculateSetMultiSearchSelectedCost: () => {
     const filteredMultiSearchResults = get().filteredMultiSearchResults;
@@ -353,7 +353,7 @@ export const useStore = create<State>((set, get) => ({
     // remove any empty strings
     const filteredCardNames = cardNames.filter((cardName) => cardName !== '');
     // match each website to it's code
-    const response = await axios.post(`http://localhost:8000/search/bulk/`, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/search/bulk/`, {
       cardNames: filteredCardNames,
       websites: websiteCodes,
       worstCondition: 'nm'
@@ -397,7 +397,7 @@ export const useStore = create<State>((set, get) => ({
 
   fetchSingleSearchResults: async (searchInput: string) => {
     set({ singleSearchResultsLoading: true });
-    const response = await axios.post(`http://localhost:8000/search/single/`, {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/search/single/`, {
       cardName: searchInput,
       websites: ['all']
     });
