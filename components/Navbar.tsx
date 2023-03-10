@@ -41,7 +41,7 @@ export default function Navbar({}: Props) {
     { name: 'Sealed', href: '/sealed', current: currentPath === '/sealed' },
     { name: 'Premium', href: '/pricing', current: currentPath === '/pricing' },
     { name: 'About', href: '/about', current: currentPath === '/about' },
-    { name: 'Account', href: '/account', current: currentPath === '/account' }
+    { name: 'Profile', href: '/account', current: currentPath === '/account' }
   ];
   return (
     <div>

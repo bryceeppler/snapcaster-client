@@ -4,7 +4,7 @@ type Props = {}
 
 export default function Loadingspinner({}: Props) {
   return (
-    <button type="button" className="bg-purple-600 p-4 font-bold text-white rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75 flex items-center">
+    <button type="button" className="bg-pink-600 p-4 font-bold text-white rounded-lg shadow-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-75 flex items-center">
         <svg
             className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
             xmlns="http://www.w3.org/2000/svg"

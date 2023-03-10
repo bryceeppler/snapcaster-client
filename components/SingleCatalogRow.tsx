@@ -57,7 +57,7 @@ export default function SingleCatalogRow({cardData}: Props) {
   return (
     <>
       <>
-        <div className="grid grid-cols-12 gap-4 m-1 p-2 sm:p-4 rounded-md transition-all bg-gray-200 hover:bg-opacity-50">
+        <div className="grid grid-cols-12 gap-4 m-1 p-2 sm:my-3 sm:p-4 rounded-md transition-all bg-gray-700 hover:bg-opacity-50">
           {/* center content vertically in thje column */}
           <div className="col-span-3 flex justify-center items-center">
             <img
@@ -71,12 +71,12 @@ export default function SingleCatalogRow({cardData}: Props) {
               <div className="text-md font-bold">{cardData.name}</div>
               <div className="text-sm">{cardData.set}</div>
               {/* match cardData.website to it's websiteLogo from the map */}
-              <div className="h-8">
+              <div className="h-16 w-16">
               <img
             //   map string of website to the image key
                 src={websiteLogos[cardData.website]}
                 alt="website logo"
-                className="h-8 sm:h-12 object-contain"
+                className="h-16 w-16 object-contain"
               />
               {/* <div className="text-sm">{cardData.website}</div> */}
               </div>
@@ -87,14 +87,14 @@ export default function SingleCatalogRow({cardData}: Props) {
               <div className="text-lg font-bold">${cardData.price}</div>
               <div className="flex flex-row space-x-2">
                 {cardData.foil && (
-                  <div className="text-sm font-extrabold text-purple-500">
+                  <div className="text-sm font-extrabold text-pink-500">
                     Foil
                   </div>
                 )}
                 <div className="text-sm font-bold">{cardData.condition}</div>
               </div>
               <button 
-              className="transition-all bg-purple-600 hover:bg-purple-700 text-white font-bold p-1 px-2 sm:py-2 sm:px-4 rounded focus:outline-none focus:shadow-outline mt-4 "              onClick={handleClick}>
+              className="transition-all bg-pink-600 hover:bg-pink-700 text-white font-bold p-1 px-2 sm:py-1 sm:px-4 rounded focus:outline-none focus:shadow-outline mt-4 "              onClick={handleClick}>
                 Buy
               </button>
             </div>

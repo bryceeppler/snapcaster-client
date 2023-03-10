@@ -39,10 +39,21 @@ type State = {
   setFilteredSingleSearchResults: (
     filteredSingleSearchResults: SingleSearchResult[]
   ) => void;
+  resetSingleSearchFilters: () => void;
+  toggleSingleSearchCondition: (condition: string) => void;
+
+  toggleSingleSearchFoil: () => void;
+
+  singleSearchConditions: {
+    [key: string]: boolean;
+  };
+
+  singleSearchFoil: boolean;
 
   singleSearchResultsLoading: boolean;
   setSingleSearchResultsLoading: (singleSearchResultsLoading: boolean) => void;
   fetchSingleSearchResults: (searchInput: string) => Promise<void>;
+  filterSingleSearchResults: () => void;
 };
 
 const websites: Website[] = [
@@ -189,6 +200,29 @@ export const useStore = create<State>((set, get) => ({
   toggleShowSingleSearchFilters: () =>
     set({ showSingleSearchFilters: !get().showSingleSearchFilters }), 
   singleSearchQuery: "",
+
+  singleSearchConditions: {
+    "nm": true,
+    "lp": true,
+    "pl": true,
+    "mp": true,
+    "hp": true,
+    "dmg": true,
+    "scan": true,
+    "scn": true,
+  },
+
+
+
+
+  singleSearchFoil: false,
+  toggleSingleSearchFoil: () => {
+    set({ singleSearchFoil: !get().singleSearchFoil });
+    // call filter function
+    get().filterSingleSearchResults();
+  },
+
+
   setSingleSearchQuery: (singleSearchQuery: string) =>
     set({ singleSearchQuery }),
   singleSearchResults: [],
@@ -220,5 +254,57 @@ export const useStore = create<State>((set, get) => ({
     set({ singleSearchResults: results });
     set({ singleSearchResultsLoading: false });
     set({ singleSearchQuery: searchInput })
+  },
+
+
+
+
+  filterSingleSearchResults: () => {
+    const conditions = get().singleSearchConditions;
+    const foil = get().singleSearchFoil;
+    const results = get().singleSearchResults;
+    const filteredResults = results.filter((result: SingleSearchResult) => {
+      return (
+        conditions[result.condition.toLowerCase()] && (foil ? result.foil : true)
+      );
+    });
+    set({ filteredSingleSearchResults: filteredResults })
+  },
+
+
+
+
+
+
+
+
+
+
+    toggleSingleSearchCondition: (condition: string) => {
+      // toggle the condition in singleSearchConditions
+      set({ singleSearchConditions: {...get().singleSearchConditions, [condition]: !get().singleSearchConditions[condition] }})
+
+      // call filterSingleSearchResults
+      get().filterSingleSearchResults()
+  },
+
+  resetSingleSearchFilters: () => {
+    // set all conditions to true
+    set({ singleSearchConditions: {
+      "nm": true,
+      "lp": true,
+      "pl": true,
+      "mp": true,
+      "hp": true,
+      "dmg": true,
+      "scan": true,
+      "scn": true,
+    }
+    })
+    // set foil to false
+    set({ singleSearchFoil: false })
+
+    // call filterSingleSearchResults
+    get().filterSingleSearchResults()
   },
 }));
