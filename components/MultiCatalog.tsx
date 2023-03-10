@@ -2,6 +2,7 @@ import React from 'react'
 import { useStore } from '@/store'
 type Props = {}
 import MultiCatalogRow from './MultiCatalogRow'
+import MultiSearchResultsInfo from './MultiSearchResultsInfo'
 
 export default function MultiCatalog({}: Props) {
     const {filteredMultiSearchResults} = useStore()
@@ -15,6 +16,7 @@ export default function MultiCatalog({}: Props) {
   
     return (
       <div>
+        <MultiSearchResultsInfo />
         {filteredMultiSearchResults.map((cardData, index) => (
           <MultiCatalogRow cardData={cardData} key={index} />
         ))}

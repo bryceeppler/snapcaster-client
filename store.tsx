@@ -17,6 +17,13 @@ export type MultiSearchCard = {
   variants: SingleSearchResult[];
 }
 
+export type MultiSearchCardState = {
+  cardName: string;
+  variants: SingleSearchResult[];
+  selectedVariant: SingleSearchResult;
+  selected: boolean;
+}
+
 // type MultiSearchResult = 
 export interface Website {
   name: string;
@@ -168,7 +175,7 @@ type State = {
   setSingleSearchOrderBy: (singleSearchOrderBy: string) => void;
   singleSearchOrder: string;
   setSingleSearchOrder: (singleSearchOrder: string) => void;
-
+  toggleSelectMultiSearchCard: (cardName: string) => void;
   singleSearchResults: SingleSearchResult[];
   setSingleSearchResults: (singleSearchResults: SingleSearchResult[]) => void;
 
@@ -197,7 +204,8 @@ type State = {
   toggleMultiSearchSelectAllStores: () => void;
   multiSearchResultsLoading: boolean;
   multiSearchResults: MultiSearchCard[];
-  filteredMultiSearchResults: MultiSearchCard[];
+  filteredMultiSearchResults: MultiSearchCardState[];
+  updateSelectedVariant: (cardName: string, variant: SingleSearchResult) => void;
 };
 
 export const useStore = create<State>((set, get) => ({
@@ -275,8 +283,16 @@ export const useStore = create<State>((set, get) => ({
         return a.price - b.price;
       });
     }
-
-    set({ filteredMultiSearchResults: results });
+    // construct filteredMultiSearchResults by adding a 'selected' property to each card, and a 'selectedVariant' property to each card
+    const filteredResults: MultiSearchCardState[] = results.map((card: MultiSearchCard) => {
+      return {
+        ...card,
+        selected: true,
+        selectedVariant: card.variants[0]
+      };
+    });
+    set({ filteredMultiSearchResults: filteredResults });
+    // set({ filteredMultiSearchResults: results });
     set({ multiSearchResults: results });
     set({ multiSearchResultsLoading: false });
     set({ multiSearchQuery: multiSearchInput });
@@ -437,5 +453,33 @@ export const useStore = create<State>((set, get) => ({
         )
       });
     }
+  },
+  updateSelectedVariant: (card: string, variant: SingleSearchResult) => {
+    set({
+      filteredMultiSearchResults: get().filteredMultiSearchResults.map((cardState: MultiSearchCardState) => {
+        if (cardState.cardName === card) {
+          return {
+            ...cardState,
+            selectedVariant: variant
+          };
+        } else {
+          return cardState;
+        }
+      })
+    });
+  },
+  toggleSelectMultiSearchCard: (card: string) => {
+    set({
+      filteredMultiSearchResults: get().filteredMultiSearchResults.map((cardState: MultiSearchCardState) => {
+        if (cardState.cardName === card) {
+          return {
+            ...cardState,
+            selected: !cardState.selected
+          };
+        } else {
+          return cardState;
+        }
+      })
+    });
   }
 }));
