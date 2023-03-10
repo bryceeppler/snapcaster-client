@@ -8,8 +8,9 @@ import StoreSelector from '@/components/StoreSelector'
 type Props = {}
 
 export default function Multisearch({}: Props) {
-    const mode: string = "search";
-    const loading = false;
+    // const mode: string = "search";
+    const { multiSearchResultsLoading: loading, multiSearchMode: mode } = useStore();
+    // const loading = false;
   return (
     <>
       <Head>
@@ -25,7 +26,7 @@ export default function Multisearch({}: Props) {
         {mode === "search" && !loading && (
           <div className="flex-col items-center justify-center flex-1 text-center max-w-2xl">
             {/* checkboxes for selecting the stores */}
-            <div className="font-bold">Select stores to search</div>
+            <div className="font-bold text-lg my-2">Select stores to search</div>
             <StoreSelector />
             {/* multi-line text field to enter card names */}
             <MultiSearchbox />

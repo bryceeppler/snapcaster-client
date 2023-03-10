@@ -118,8 +118,8 @@ export default function Navbar({}: Props) {
                       key={page.name}
                       href={page.href}
                       className={`
- rounded-md py-2 px-3 text-sm font-medium hover:bg-gray-400 
-${page.current && 'bg-gray-600 text-white hover:bg-gray-500'} 
+ rounded-md py-2 px-3 text-sm font-medium hover:bg-gray-600 
+${page.current && 'bg-gray-800 text-white hover:bg-gray-600'} 
 `}
                     >
                       {page.name}
@@ -130,7 +130,7 @@ ${page.current && 'bg-gray-600 text-white hover:bg-gray-500'}
                   <div className="flex-1" />
                   <div
                     className={`
- rounded-md py-2 px-3 text-sm font-medium hover:bg-gray-400
+ rounded-md py-2 px-3 text-sm font-medium hover:bg-gray-600
 `}
                   >
                     {user ? (

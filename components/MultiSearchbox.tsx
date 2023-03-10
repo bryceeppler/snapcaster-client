@@ -4,13 +4,13 @@ import { useStore } from '@/store'
 type Props = {}
 
 export default function MultiSearchbox({}: Props) {
-    const { multiSearchQuery, multiSearchInput, setMultiSearchInput } = useStore()
+    const { multiSearchQuery, multiSearchInput, setMultiSearchInput, fetchMultiSearchResults } = useStore()
   return (
     <div className="flex flex-col w-full justify-center">
       <div className="mt-3 w-full">
         <label
           htmlFor="multisearchFormControlTextarea1"
-          className="font-bold form-label inline-block mb-2 "
+          className="font-bold text-lg form-label inline-block mb-2 "
         >
           Cards to search
         </label>
@@ -23,7 +23,7 @@ export default function MultiSearchbox({}: Props) {
           py-1.5
           text-base
           font-normal
-          bg-gray-800 bg-clip-padding
+          bg-gray-900 bg-clip-padding
           border border-solid border-gray-300
           rounded
           transition
@@ -58,6 +58,7 @@ Counterspell`}
           "
         type="button"
         // onClick={() => store.handleSubmit()}
+        onClick={() => fetchMultiSearchResults(multiSearchInput)}
       >
         Search
       </button>

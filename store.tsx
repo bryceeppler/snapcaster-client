@@ -12,6 +12,12 @@ export interface SingleSearchResult {
   website: string;
 }
 
+export type MultiSearchCard = {
+  cardName: string;
+  variants: SingleSearchResult[];
+}
+
+// type MultiSearchResult = 
 export interface Website {
   name: string;
   code: string;
@@ -174,7 +180,7 @@ type State = {
   ) => void;
   resetSingleSearchFilters: () => void;
   toggleSingleSearchCondition: (condition: string) => void;
-
+  fetchMultiSearchResults: (multiSearchInput: string) => Promise<void>;
   toggleSingleSearchFoil: () => void;
 
   singleSearchConditions: {
@@ -187,12 +193,12 @@ type State = {
   setSingleSearchResultsLoading: (singleSearchResultsLoading: boolean) => void;
   fetchSingleSearchResults: (searchInput: string) => Promise<void>;
   filterSingleSearchResults: () => void;
-
+  multiSearchMode: string;
   toggleMultiSearchSelectAllStores: () => void;
-
+  multiSearchResultsLoading: boolean;
+  multiSearchResults: MultiSearchCard[];
+  filteredMultiSearchResults: MultiSearchCard[];
 };
-
-
 
 export const useStore = create<State>((set, get) => ({
   websites: websites,
@@ -236,8 +242,49 @@ export const useStore = create<State>((set, get) => ({
   setSingleSearchResults: (singleSearchResults: SingleSearchResult[]) =>
     set({ singleSearchResults }),
   singleSearchResultsLoading: false,
+
+  multiSearchResultsLoading: false,
   setSingleSearchResultsLoading: (singleSearchResultsLoading: boolean) =>
     set({ singleSearchResultsLoading }),
+
+
+
+
+  fetchMultiSearchResults: async (multiSearchInput: string) => {
+    set({ multiSearchResultsLoading: true });
+    const selectedWebsites = get().multiSearchSelectedWebsites;
+    const websiteCodes = selectedWebsites.map((website) => {
+      return get().websites.find((w) => w.name === website)?.code;
+    });
+    // match each website to it's code
+    const response = await axios.post(`http://localhost:8000/search/bulk/`, {
+      cardNames: multiSearchInput.split('\n'),
+      websites: websiteCodes,
+      worstCondition: 'nm'
+    });
+    let results = response.data;
+    console.log('results', results);
+    // sort results by ascending price
+    // results.sort((a: MultiSearchCard, b: MultiSearchCard) => {
+    //   return a.price - b.price;
+    // });
+    // for card in results
+    for (let i = 0; i < results.length; i++) {
+      // sort card's results by ascending price
+      results[i].variants.sort((a: SingleSearchResult, b: SingleSearchResult) => {
+        return a.price - b.price;
+      });
+    }
+
+    set({ filteredMultiSearchResults: results });
+    set({ multiSearchResults: results });
+    set({ multiSearchResultsLoading: false });
+    set({ multiSearchQuery: multiSearchInput });
+    set({ multiSearchMode: 'results' });
+  },
+  multiSearchResults: [],
+  filteredMultiSearchResults: [],
+
   fetchSingleSearchResults: async (searchInput: string) => {
     set({ singleSearchResultsLoading: true });
     const response = await axios.post(`http://localhost:8000/search/single/`, {
@@ -259,6 +306,10 @@ export const useStore = create<State>((set, get) => ({
     set({ singleSearchQuery: searchInput });
   },
 
+
+
+
+  multiSearchMode: 'search',
   filterSingleSearchResults: () => {
     const conditions = get().singleSearchConditions;
     const foil = get().singleSearchFoil;
@@ -387,5 +438,4 @@ export const useStore = create<State>((set, get) => ({
       });
     }
   }
-  
 }));
