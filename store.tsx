@@ -29,6 +29,10 @@ type State = {
   multiSearchQuery: string;
   setMultiSearchInput: (multiSearchInput: string) => void;
   setMultiSearchQuery: (multiSearchQuery: string) => void;
+  singleSearchOrderBy: string;
+  setSingleSearchOrderBy: (singleSearchOrderBy: string) => void;
+  singleSearchOrder: string;
+  setSingleSearchOrder: (singleSearchOrder: string) => void;
 
   singleSearchResults: SingleSearchResult[];
   setSingleSearchResults: (singleSearchResults: SingleSearchResult[]) => void;
@@ -263,11 +267,49 @@ export const useStore = create<State>((set, get) => ({
     const conditions = get().singleSearchConditions;
     const foil = get().singleSearchFoil;
     const results = get().singleSearchResults;
+    const orderBy = get().singleSearchOrderBy;
+    const order = get().singleSearchOrder;
     const filteredResults = results.filter((result: SingleSearchResult) => {
       return (
         conditions[result.condition.toLowerCase()] && (foil ? result.foil : true)
       );
     });
+    // sort by orderBy in order
+    filteredResults.sort((a: SingleSearchResult, b: SingleSearchResult) => {
+      if (orderBy === "price") {
+        if (order === "asc") {
+          return a.price - b.price;
+        } else {
+          return b.price - a.price;
+        }
+      } else if (orderBy === "name") {
+        if (order === "asc") {
+          return a.name.localeCompare(b.name);
+        } else {
+          return b.name.localeCompare(a.name);
+        }
+      } else if (orderBy === "set") {
+        if (order === "asc") {
+          return a.set.localeCompare(b.set);
+        } else {
+          return b.set.localeCompare(a.set);
+        }
+
+      }
+      else if (orderBy === "website") {
+        if (order === "asc") {
+          return a.website.localeCompare(b.website);
+        } else {
+          return b.website.localeCompare(a.website);
+        }
+      }
+      else {
+        return 0;
+      }
+    });
+    
+
+
     set({ filteredSingleSearchResults: filteredResults })
   },
 
@@ -303,8 +345,23 @@ export const useStore = create<State>((set, get) => ({
     })
     // set foil to false
     set({ singleSearchFoil: false })
+    // set orderBy to price
+    set({ singleSearchOrderBy: "price" })
+    // set order to asc
+    set({ singleSearchOrder: "asc" })
 
     // call filterSingleSearchResults
+    get().filterSingleSearchResults()
+  },
+  
+  singleSearchOrder: "asc",
+  singleSearchOrderBy: "price",
+  setSingleSearchOrder: (singleSearchOrder: string) => {
+    set({ singleSearchOrder })
+    get().filterSingleSearchResults()
+  },
+  setSingleSearchOrderBy: (singleSearchOrderBy: string) => {
+    set({ singleSearchOrderBy })
     get().filterSingleSearchResults()
   },
 }));
