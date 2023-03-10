@@ -34,7 +34,7 @@ export default function SearchFilters({}: Props) {
       <div
         className={`transition-all flex flex-col justify-center items-center w-full ${
           showSingleSearchFilters ? 'opacity-100 h-80' : 'opacity-0 h-0'
-        } bg-gray-700 shadow rounded`}
+        } bg-gray-900 shadow rounded`}
       >
         {showSingleSearchFilters && (
           <>
