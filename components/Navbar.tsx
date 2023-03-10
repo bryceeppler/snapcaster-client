@@ -106,7 +106,7 @@ export default function Navbar({}: Props) {
                 {/* dark mode show logo.png, light mode show logo-light.png */}
                 {}
                 <img
-                  className="hidden h-8 w-auto lg:block"
+                  className="hidden h-8 mb-2 w-auto lg:block"
                   src={logoSrc}
                   alt="Workflow"
                 />
