@@ -4,18 +4,17 @@ import Loadingspinner from '@/components/Loadingspinner'
 import SealedSearchBox from '@/components/SealedSearchBox'
 import { useUser } from '@/utils/useUser'
 import { useRouter } from 'next/router'
+import { useStore } from '@/store'
+import SealedCatalogRow from '@/components/SealedCatalogRow'
+import SealedSearchInfo from '@/components/SealedSearchInfo'
+import SealedSearchFilters from '@/components/SealedSearchFilters'
 type Props = {}
 
 export default function Sealed({}: Props) {
+  const { filteredSealedSearchResults : results, sealedSearchResultsLoading:loading } = useStore()
     const router = useRouter()
-    const loading = false;
     const showBanner = true;
-    const resultsRaw = []
-    const results = []
     const { user, isLoading, subscription } = useUser()
-    console.log("user", user)
-    console.log("isLoading", isLoading)
-    console.log("subscription", subscription)
 
     if (subscription?.status === "active")
   return (
@@ -41,15 +40,15 @@ export default function Sealed({}: Props) {
             </div>
           )}
           <div className="mt-2">
-            {resultsRaw.length > 0 && (
+            {results.length > 0 && (
               <div>
-                {/* <SealedResultsInfo /> */}
-                {/* <SealedSearchFilters /> */}
-                {/* {results.map((result, index) => ( */}
-                  {/* <div key={index}> */}
-                    {/* <SealedProductRow product={result} /> */}
-                  {/* </div> */}
-                {/* ))} */}
+                <SealedSearchInfo />
+                <SealedSearchFilters />
+                {results.map((result, index) => (
+                  <div key={index}>
+                    <SealedCatalogRow product={result} />
+                  </div>
+                ))} 
               </div>
             )}
           </div>
@@ -58,7 +57,7 @@ export default function Sealed({}: Props) {
     </>
   );
 
-  // Redirect to pricing page if not premium
+  // Redirect to pricing page if not premium user
   return (
     <>
       <Head>

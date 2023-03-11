@@ -155,7 +155,7 @@ export default function SingleSearchbox({}: Props) {
             </svg>
           </div>
           {showAutocomplete && (
-            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-300  py-1 shadow-md">
+            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-300  py-1 shadow-md bg-zinc-900">
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
