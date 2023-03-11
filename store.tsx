@@ -236,7 +236,7 @@ export const useStore = create<State>((set, get) => ({
   fetchSealedSearchResults: async (searchInput: string) => {
     set({ sealedSearchResultsLoading: true });
     const response = await axios.post(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/search/sealed/`, {
-      cardName: searchInput,
+      setName: searchInput,
       websites: ['all']
     });
     const results = response.data;
