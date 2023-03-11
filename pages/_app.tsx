@@ -26,8 +26,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <MyUserContextProvider>
           <Layout>
             <Component {...pageProps} />
-            <Analytics />
           </Layout>
+          <Analytics />
+
         </MyUserContextProvider>
       </SessionContextProvider>
     </div>
