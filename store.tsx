@@ -130,7 +130,7 @@ const websites: Website[] = [
   {
     name: 'Jeux 3 Dragons',
     code: 'jeux3dragons',
-    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/jeux3dragons/ef00baaca6ad43cfb51939c1af74c2c7/large/logo.png'
+    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/jeux3dragons/ef00baaca6ad43cfb51939c1af74c2c7/large/logo.png'
   },
   {
     name: 'Manaforce',

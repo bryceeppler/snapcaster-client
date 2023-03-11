@@ -45,7 +45,7 @@ export default function SealedCatalogRow({ product }: Props) {
           </div>
           <img
         //   find website with website.code === product.website
-            src={websites.find((website) => website.code === product.website)?.image}
+            src={websites.find((website) => website.code.toLowerCase() === product.website.toLowerCase())?.image}
             alt={product.website}
             className="mt-1 w-12 md:w-12 object-cover"
           />
