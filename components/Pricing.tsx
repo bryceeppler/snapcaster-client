@@ -139,8 +139,11 @@ export default function Pricing({ products }: Props) {
             snapcaster memberships
           </h1>
           <p className="mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl max-w-2xl m-auto">
-            Unlock premium features to find the best prices.
+            Explore price history charts and search for sealed products. 
           </p>
+          <div className="bg-pink-700 w-full max-w-sm mx-auto w-sm bg-opacity-50 p-2 rounded-md mt-5">
+            Right now all features are in testing, and nothing is locked. There is no advantage to paying for a membership.
+          </div>
           <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
             <button
               onClick={() => setBillingInterval('month')}
