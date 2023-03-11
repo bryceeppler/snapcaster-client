@@ -31,6 +31,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
         </MyUserContextProvider>
       </SessionContextProvider>
+      <Analytics />
     </div>
   );
 }
