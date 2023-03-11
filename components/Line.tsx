@@ -60,8 +60,8 @@ export default function Line({}: Props) {
       data={data as any}
       margin={{
         top: 5,
-        right: 0,
-        left: 0,
+        right: 12,
+        left: -5,
         bottom: 5,
       }}
     >
