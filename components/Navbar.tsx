@@ -25,8 +25,8 @@ export default function Navbar({}: Props) {
       href: '/multisearch',
       current: currentPath === '/multisearch'
     },
-    // { name: 'Sealed', href: '/sealed', current: currentPath === '/sealed' },
-    // { name: 'Premium', href: '/pricing', current: currentPath === '/pricing' },
+    { name: 'Sealed', href: '/sealed', current: currentPath === '/sealed' },
+    // { name: 'Membership', href: '/pricing', current: currentPath === '/pricing' },
     { name: 'About', href: '/about', current: currentPath === '/about' },
     // { name: 'Profile', href: '/account', current: currentPath === '/account' }
   ];
@@ -124,7 +124,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                       <span
                         onClick={async () => {
                           await supabaseClient.auth.signOut();
-                          router.push('/signin');
+                          router.push('/signout');
                         }}
                       >
                         Sign out

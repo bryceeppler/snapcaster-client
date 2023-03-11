@@ -26,7 +26,8 @@ export default function Multisearch({}: Props) {
         {mode === "search" && !loading && (
           <div className="flex-col items-center justify-center flex-1 text-center max-w-2xl">
             {/* checkboxes for selecting the stores */}
-            <div className="font-bold text-lg my-2">Select stores to search</div>
+            <div className="text-3xl font-extrabold my-2">Select stores to search</div>
+            <div className="text-sm text-white mb-4">Select which stores you would like to search. The more stores, the longer the search will take.</div>
             <StoreSelector />
             {/* multi-line text field to enter card names */}
             <MultiSearchbox />

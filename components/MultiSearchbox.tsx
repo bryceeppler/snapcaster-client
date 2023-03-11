@@ -26,7 +26,6 @@ const parseMultiSearchInput = (input: string) => {
       returnString += lineWithoutCountAndWhitespaceAndTrailingWhitespace + '\n'
     }
   }
-  console.log(returnString)
 
   return returnString
   // const result = lines.map((line) => {
@@ -53,14 +52,17 @@ const parseMultiSearchInput = (input: string) => {
 export default function MultiSearchbox({}: Props) {
     const { multiSearchQuery, multiSearchInput, setMultiSearchInput, fetchMultiSearchResults } = useStore()
   return (
-    <div className="flex flex-col w-full justify-center">
+    <div className="flex flex-col w-full justify-center mb-4">
       <div className="mt-3 w-full">
-        <label
+        {/* <label
           htmlFor="multisearchFormControlTextarea1"
-          className="font-bold text-lg form-label inline-block mb-2 "
+          className="text-3xl font-extrabold form-label inline-block mb-2 "
         >
-          Cards to search
-        </label>
+          Cards
+        </label> */}
+        <div className="text-sm text-gray-400 mb-2">
+          Enter card names, one per line (max 100 lines)
+        </div>
         <textarea
           className="
           form-control

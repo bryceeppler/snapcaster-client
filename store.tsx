@@ -12,6 +12,17 @@ export interface SingleSearchResult {
   website: string;
 }
 
+export type SealedSearchResult = {
+  name: string;
+  link: string;
+  image: string;
+  price: number;
+  stock: number;
+  website: string;
+  language: string;
+  tags: string[];
+}
+
 export type MultiSearchCard = {
   cardName: string;
   variants: SingleSearchResult[];
@@ -34,131 +45,143 @@ const websites: Website[] = [
   {
     name: 'Aether Vault Games',
     code: 'aethervault',
-    image: ''
+    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/aethervaultgames/baa99644755e44c2a11d7bc20494e7b0/large/AetherVaultGames.png'
   },
   {
     name: 'Atlas Collectables',
     code: 'atlas',
-    image: ''
+    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/atlascollectables/a9e1fed8d2d549cba92c6406b18f8969/large/logo-v2-small-v2.png'
   },
   {
     name: 'Border City Games',
     code: 'bordercity',
-    image: ''
+    image: 'https://i.ibb.co/cvNCbXx/Border-City-Games-Large-85873391-3559-47f7-939a-420461a0033f-201x-removebg-preview.png'
+  },
+  {
+    name: 'Chimera Gaming',
+    code: 'chimera',
+    image: 'https://cdn.shopify.com/s/files/1/0131/2463/2640/files/logo_large.png?v=1672686974'
   },
   {
     name: 'The Connection Games',
     code: 'connectiongames',
-    image: ''
+    image: 'https://i.ibb.co/Qp1kqrB/connectiongames-inverted.png'
   },
   {
     name: 'Enter the Battlefield',
     code: 'enterthebattlefield',
-    image: ''
+    image: 'https://i.ibb.co/hdnH9fY/enterthebattlefield.png'
   },
   {
     name: 'Everything Games',
     code: 'everythinggames',
-    image: ''
+    image: 'https://cdn.shopify.com/s/files/1/0618/8905/2856/files/Header_76747500-dd40-4d94-8016-a1d21282e094_large.png?v=1650298823'
   },
   {
     name: 'Exor Games',
     code: 'exorgames',
-    image: ''
+    image: 'https://cdn.shopify.com/s/files/1/0467/3083/8169/files/Untitled-2-01.png?v=1613706669'
   },
   {
     name: 'Face to Face Games',
     code: 'facetoface',
-    image: ''
+    image: 'https://i.ibb.co/W2bPWdK/logo-colored-1.png'
   },
   {
     name: 'Fantasy Forged Games',
     code: 'fantasyforged',
-    image: ''
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/ff.png'
   },
   {
     name: 'FirstPlayer',
     code: 'firstplayer',
-    image: ''
+    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/firstplayer/ab9075a71d2949aa8dd1e032f54cf7d8/large/g901%20medium.png'
   },
   {
     name: '401 Games',
     code: 'four01',
-    image: ''
+    image: 'https://i.ibb.co/h9x3Ksb/401games.png'
   },
   {
     name: 'Fusion Gaming',
     code: 'fusion',
-    image: ''
+    image: 'https://i.ibb.co/GkKmry9/fusiongaminglogo.png'
   },
   {
     name: 'GameKnight',
     code: 'gameknight',
-    image: ''
+    image: 'https://cdn.shopify.com/s/files/1/0367/8204/7276/files/GK-Logo-Full-Text-Below-1-768x603.png?v=1618430878'
   },
   {
     name: 'Gamezilla',
     code: 'gamezilla',
-    image: ''
+    image: 'https://cdn.shopify.com/s/files/1/0570/6308/0145/files/Screen_Shot_2018-09-07_at_1.02.57_PM_copy_141x.png?v=1626814255'
   },
   {
     name: 'Gauntlet Games',
     code: 'gauntlet',
-    image: ''
+    image: 'http://cc-client-assets.s3.amazonaws.com/store/gauntletgamesvictoria/7c8176e703db451bad3277bb6d4b8631/medium/Transparent_logo.png'
   },
   {
     name: 'Hairy Tarantula',
     code: 'hairyt',
-    image: ''
+    image: 'https://cdn.shopify.com/s/files/1/0266/9513/9533/files/hariyt-horizontal-logo.png?v=1615403256'
   },
   {
     name: 'House of Cards',
     code: 'houseofcards',
-    image: ''
+    image: 'https://i.ibb.co/qnytc5Q/house-of-cards-logo.png'
   },
   {
     name: 'Jeux 3 Dragons',
     code: 'jeux3dragons',
-    image: ''
+    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/jeux3dragons/ef00baaca6ad43cfb51939c1af74c2c7/large/logo.png'
   },
   {
     name: 'Manaforce',
     code: 'manaforce',
-    image: ''
+    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/manaforce/e58b802e2e334d17aacfbf9954a5400e/large/manaforce%20logo%20attempt%204.png'
   },
   {
     name: 'Magic Stronghold',
     code: 'magicstronghold',
-    image: ''
+    image: 'https://magicstronghold-images.s3.amazonaws.com/customizations/logo.png'
   },
   {
     name: 'Orchard City Games',
     code: 'orchardcity',
-    image: ''
+    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/orchardcitygames/eb6cb32f84b34b5cbb1c025fc41c9821/large/logo_v1.png'
   },
   {
     name: 'Sequence Gaming Brockville',
     code: 'sequencegaming',
-    image: ''
+    image: 'https://i.ibb.co/C2jXrmD/sequence-no-bg-inverted.png'
   },
   {
     name: 'The Comic Hunter',
     code: 'thecomichunter',
-    image: ''
+    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/comichunter/77344716f796416590aa7e3ec91af534/large/ComicHunter.png'
   },
   {
     name: 'Topdeck Hero',
     code: 'topdeckhero',
-    image: ''
+    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/topdeckhero/1fdf9e60cbd911e7aefa7116e0c551f9/large/topdeckhero.png'
   },
   {
     name: "Wizard's Tower (kanatacg)",
     code: 'kanatacg',
-    image: ''
+    image: 'https://i.ibb.co/hm3qKWc/wizardstower-removebg-preview.png'
   }
 ];
 
+export type FilterTag = {
+  name: string;
+  displayName: string;
+  selected: boolean;
+}
+
 type State = {
+
   sortMultiSearchVariants: (card: MultiSearchCardState, orderBy: string) => void;
   calculateSetMultiSearchSelectedCost: () => void;
   multiSearchSelectedCost: number;
@@ -212,9 +235,151 @@ type State = {
   multiSearchResults: MultiSearchCard[];
   filteredMultiSearchResults: MultiSearchCardState[];
   updateSelectedVariant: (cardName: string, variant: SingleSearchResult) => void;
+
+
+  // Sealed Search
+  sealedSearchResults: SealedSearchResult[];
+  sealedSearchQuery: string;
+  filteredSealedSearchResults: SealedSearchResult[];
+  sealedSearchOrderBy: 'price' | 'website';
+  sealedSearchOrder: 'asc' | 'desc';
+  sealedFilterTags: FilterTag[];
+  toggleSealedFilterTag: (tag: FilterTag) => void;
+  sealedSearchResultsLoading: boolean;
+  sealedSearchInput: string;
+  setSealedSearchInput: (sealedSearchInput: string) => void;
+  fetchSealedSearchResults: (sealedSearchInput: string) => Promise<void>;
+  filterSealedSearchResults: () => void;
+  setSealedSearchOrderBy: (sealedSearchOrderBy: 'price' | 'website') => void;
+  setSealedSearchOrder: (sealedSearchOrder: 'asc' | 'desc') => void;
 };
 
 export const useStore = create<State>((set, get) => ({
+  setSealedSearchOrderBy: (sealedSearchOrderBy) => {
+    set({ sealedSearchOrderBy });
+    get().filterSealedSearchResults();
+
+  },
+  setSealedSearchOrder: (sealedSearchOrder) => {
+    set({ sealedSearchOrder });
+    get().filterSealedSearchResults();
+  },
+  sealedSearchOrderBy: 'price',
+  sealedSearchOrder: 'asc',
+  sealedFilterTags: [
+    {
+      name: "pack",
+      displayName: "Pack",
+      selected: true,
+    },
+    {
+      name: "draft",
+      displayName: "Draft",
+      selected: true,
+    },
+    {
+      name: "jumpstart",
+      displayName: "Jumpstart",
+      selected: true,
+    },
+    {
+      name: "set",
+      displayName: "Set",
+      selected: true,
+    },
+    {
+      name: "collector",
+      displayName: "Collector",
+      selected: true,
+    },
+    {
+      name: "bundle",
+      displayName: "Bundle",
+      selected: true,
+    },
+    {
+      name: "box",
+      displayName: "Box",
+      selected: true,
+    },
+  ],
+  toggleSealedFilterTag: (tag: FilterTag) => {
+        // toggle the selected field of the tag
+    // update the selectedTags array
+    const sealedFilterTags = get().sealedFilterTags;
+    // if the selected tag is the only one selected, don't toggle it
+    const selectedTags = sealedFilterTags.filter((sealedFilterTag) => sealedFilterTag.selected);
+    if (selectedTags.length === 1 && selectedTags[0].name === tag.name) {
+      return;
+    }
+    const newSealedFilterTags = sealedFilterTags.map((sealedFilterTag) => {
+      if (sealedFilterTag.name === tag.name) {
+        return { ...sealedFilterTag, selected: !sealedFilterTag.selected };
+      }
+      return sealedFilterTag;
+    });
+    set({ sealedFilterTags: newSealedFilterTags });
+    get().filterSealedSearchResults();
+  },
+  filterSealedSearchResults: () => {
+    const sealedSearchResults = get().sealedSearchResults;
+    const sealedFilterTags = get().sealedFilterTags;
+    const filteredSealedSearchResults = sealedSearchResults.filter((sealedSearchResult) => {
+      // if the sealedSearchResult has a tag that is selected, return true
+      // otherwise return false
+      const selectedTags = sealedFilterTags.filter((sealedFilterTag) => sealedFilterTag.selected);
+      const selectedTagNames = selectedTags.map((selectedTag) => selectedTag.name);
+      const hasSelectedTag = sealedSearchResult.tags.some((tag) => selectedTagNames.includes(tag));
+      return hasSelectedTag;
+    });
+    // apply the order by and order
+    const sealedSearchOrderBy = get().sealedSearchOrderBy;
+    const sealedSearchOrder = get().sealedSearchOrder;
+    if (sealedSearchOrderBy === 'price') {
+      if (sealedSearchOrder === 'asc') {
+        filteredSealedSearchResults.sort((a, b) => a.price - b.price);
+      } else {
+        filteredSealedSearchResults.sort((a, b) => b.price - a.price);
+      }
+    } else {
+      if (sealedSearchOrder === 'asc') {
+        filteredSealedSearchResults.sort((a, b) => a.website.localeCompare(b.website));
+      } else {
+        filteredSealedSearchResults.sort((a, b) => b.website.localeCompare(a.website));
+      }
+    }
+    set({ filteredSealedSearchResults });
+
+  },
+
+
+  sealedSearchInput: '',
+  sealedSearchQuery: '',
+  sealedSearchResults: [],
+  filteredSealedSearchResults: [],
+  setSealedSearchInput: (sealedSearchInput) => set({ sealedSearchInput }),
+  sealedSearchResultsLoading: false,
+  fetchSealedSearchResults: async (searchInput: string) => {
+    set({ sealedSearchResultsLoading: true });
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/search/sealed/`, {
+      setName: searchInput,
+      websites: ['all']
+    });
+    const results = response.data;
+    // sort results by ascending price
+    // results = [SingleSearchResult, SingleSearchResult, ...]
+    // SingleSearchResult = { name: string, link: string, image: string, set: string, condition: string, foil: boolean, price: number, website: string }
+    results.sort((a: SealedSearchResult, b: SealedSearchResult) => {
+      return a.price - b.price;
+    });
+
+
+    set({ filteredSealedSearchResults: results });
+    set({ sealedSearchResults: results });
+    set({ sealedSearchResultsLoading: false });
+    set({ sealedSearchQuery: searchInput });
+  },
+
   sortMultiSearchVariants: (card, orderBy) => {
     const filteredMultiSearchResults = get().filteredMultiSearchResults;
     const cardIndex = filteredMultiSearchResults.findIndex(
@@ -402,7 +567,6 @@ export const useStore = create<State>((set, get) => ({
       websites: ['all']
     });
     const results = response.data;
-    console.log('results', results);
     // sort results by ascending price
     // results = [SingleSearchResult, SingleSearchResult, ...]
     // SingleSearchResult = { name: string, link: string, image: string, set: string, condition: string, foil: boolean, price: number, website: string }
