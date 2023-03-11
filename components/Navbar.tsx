@@ -10,26 +10,13 @@ export default function Navbar({}: Props) {
   const currentPath = useRouter().pathname;
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const supabaseClient = useSupabaseClient();
   const { user } = useUser();
 
-  // We use this to determine which logo to show in navbar
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDarkMode(mediaQuery.matches);
-    mediaQuery.addEventListener('change', (e) => {
-      setIsDarkMode(e.matches);
-    });
-    return () => {
-      mediaQuery.removeEventListener('change', (e) => {
-        setIsDarkMode(e.matches);
-      });
-    };
-  }, []);
 
-  const logoSrc = isDarkMode ? '/logo.png' : '/logo-light.png';
+
+  const logoSrc = '/logo.png' 
   const pages = [
     { name: 'Home', href: '/', current: currentPath === '/' },
     // { name: "Stocks", href: "/stocks", current: currentPath === "/stocks" },
