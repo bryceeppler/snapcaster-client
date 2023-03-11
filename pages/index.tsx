@@ -32,7 +32,8 @@ const Home: NextPage = () => {
           {Object.keys(singleSearchResults).length > 0 && (
             <>
               {
-                subscription?.status === "active" && !priceChartLoading && (
+                // subscription?.status === "active" && 
+                !priceChartLoading && (
                   <PriceHistory />
                 )
               }

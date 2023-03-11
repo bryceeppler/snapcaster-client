@@ -165,7 +165,7 @@ const websites: Website[] = [
   {
     name: 'Topdeck Hero',
     code: 'topdeckhero',
-    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/topdeckhero/1fdf9e60cbd911e7aefa7116e0c551f9/large/topdeckhero.png'
+    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/topdeckhero/1fdf9e60cbd911e7aefa7116e0c551f9/large/topdeckhero.png'
   },
   {
     name: "Wizard's Tower (kanatacg)",
