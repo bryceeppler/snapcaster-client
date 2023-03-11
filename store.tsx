@@ -58,6 +58,11 @@ const websites: Website[] = [
     image: 'https://i.ibb.co/cvNCbXx/Border-City-Games-Large-85873391-3559-47f7-939a-420461a0033f-201x-removebg-preview.png'
   },
   {
+    name: 'Chimera Gaming',
+    code: 'chimera',
+    image: 'https://cdn.shopify.com/s/files/1/0131/2463/2640/files/logo_large.png?v=1672686974'
+  },
+  {
     name: 'The Connection Games',
     code: 'connectiongames',
     image: 'https://i.ibb.co/Qp1kqrB/connectiongames-inverted.png'
