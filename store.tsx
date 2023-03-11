@@ -45,12 +45,12 @@ const websites: Website[] = [
   {
     name: 'Aether Vault Games',
     code: 'aethervault',
-    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/aethervaultgames/baa99644755e44c2a11d7bc20494e7b0/large/AetherVaultGames.png'
+    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/aethervaultgames/baa99644755e44c2a11d7bc20494e7b0/large/AetherVaultGames.png'
   },
   {
     name: 'Atlas Collectables',
     code: 'atlas',
-    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/atlascollectables/a9e1fed8d2d549cba92c6406b18f8969/large/logo-v2-small-v2.png'
+    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/atlascollectables/a9e1fed8d2d549cba92c6406b18f8969/large/logo-v2-small-v2.png'
   },
   {
     name: 'Border City Games',
@@ -95,7 +95,7 @@ const websites: Website[] = [
   {
     name: 'FirstPlayer',
     code: 'firstplayer',
-    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/firstplayer/ab9075a71d2949aa8dd1e032f54cf7d8/large/g901%20medium.png'
+    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/firstplayer/ab9075a71d2949aa8dd1e032f54cf7d8/large/g901%20medium.png'
   },
   {
     name: '401 Games',
@@ -140,7 +140,7 @@ const websites: Website[] = [
   {
     name: 'Manaforce',
     code: 'manaforce',
-    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/manaforce/e58b802e2e334d17aacfbf9954a5400e/large/manaforce%20logo%20attempt%204.png'
+    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/manaforce/e58b802e2e334d17aacfbf9954a5400e/large/manaforce%20logo%20attempt%204.png'
   },
   {
     name: 'Magic Stronghold',
@@ -160,7 +160,7 @@ const websites: Website[] = [
   {
     name: 'The Comic Hunter',
     code: 'thecomichunter',
-    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/comichunter/77344716f796416590aa7e3ec91af534/large/ComicHunter.png'
+    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/comichunter/77344716f796416590aa7e3ec91af534/large/ComicHunter.png'
   },
   {
     name: 'Topdeck Hero',

@@ -25,7 +25,7 @@ const websiteLogos: WebsiteLogo = {
       "https://dpfsqcxc2c82e.cloudfront.net/store/jeux3dragons/ef00baaca6ad43cfb51939c1af74c2c7/large/logo.png",
     sequencegaming: "https://i.ibb.co/C2jXrmD/sequence-no-bg-inverted.png",
     atlas:
-      "https://d1rw89lz12ur5s.cloudfront.net/store/atlascollectables/a9e1fed8d2d549cba92c6406b18f8969/large/logo-v2-small-v2.png",
+      "https://dpfsqcxc2c82e.cloudfront.net/store/atlascollectables/a9e1fed8d2d549cba92c6406b18f8969/large/logo-v2-small-v2.png",
     hairyt:
       "https://cdn.shopify.com/s/files/1/0266/9513/9533/files/hariyt-horizontal-logo.png?v=1615403256",
     gamezilla:
@@ -36,17 +36,17 @@ const websiteLogos: WebsiteLogo = {
       "https://cdn.shopify.com/s/files/1/0367/8204/7276/files/GK-Logo-Full-Text-Below-1-768x603.png?v=1618430878",
     enterthebattlefield: "https://i.ibb.co/hdnH9fY/enterthebattlefield.png",
     manaforce:
-      "https://d1rw89lz12ur5s.cloudfront.net/store/manaforce/e58b802e2e334d17aacfbf9954a5400e/large/manaforce%20logo%20attempt%204.png",
+      "https://dpfsqcxc2c82e.cloudfront.net/store/manaforce/e58b802e2e334d17aacfbf9954a5400e/large/manaforce%20logo%20attempt%204.png",
     firstplayer:
-      "https://d1rw89lz12ur5s.cloudfront.net/store/firstplayer/ab9075a71d2949aa8dd1e032f54cf7d8/large/g901%20medium.png",
+      "https://dpfsqcxc2c82e.cloudfront.net/store/firstplayer/ab9075a71d2949aa8dd1e032f54cf7d8/large/g901%20medium.png",
     orchardcity:
       "https://d1rw89lz12ur5s.cloudfront.net/store/orchardcitygames/eb6cb32f84b34b5cbb1c025fc41c9821/large/logo_v1.png",
     bordercity:
       "https://i.ibb.co/cvNCbXx/Border-City-Games-Large-85873391-3559-47f7-939a-420461a0033f-201x-removebg-preview.png",
     aethervault:
-      "https://d1rw89lz12ur5s.cloudfront.net/store/aethervaultgames/baa99644755e44c2a11d7bc20494e7b0/large/AetherVaultGames.png",
+      "https://dpfsqcxc2c82e.cloudfront.net/store/aethervaultgames/baa99644755e44c2a11d7bc20494e7b0/large/AetherVaultGames.png",
     thecomichunter:
-      "https://d1rw89lz12ur5s.cloudfront.net/store/comichunter/77344716f796416590aa7e3ec91af534/large/ComicHunter.png",
+      "https://dpfsqcxc2c82e.cloudfront.net/store/comichunter/77344716f796416590aa7e3ec91af534/large/ComicHunter.png",
       fantasyforged:
       "https://bryces-images.s3.us-west-2.amazonaws.com/ff.png",
   };
