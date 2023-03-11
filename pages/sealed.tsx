@@ -16,7 +16,7 @@ export default function Sealed({}: Props) {
     const showBanner = true;
     const { user, isLoading, subscription } = useUser()
 
-    // if (subscription?.status === "active")
+    if (subscription?.status === "active")
   return (
     <>
       <Head>
