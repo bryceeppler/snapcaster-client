@@ -12,6 +12,17 @@ export interface SingleSearchResult {
   website: string;
 }
 
+export type SealedSearchResult = {
+  name: string;
+  link: string;
+  image: string;
+  price: number;
+  stock: number;
+  website: string;
+  language: string;
+  tags: string[];
+}
+
 export type MultiSearchCard = {
   cardName: string;
   variants: SingleSearchResult[];
@@ -159,6 +170,10 @@ const websites: Website[] = [
 ];
 
 type State = {
+  sealedSearchResultsLoading: boolean;
+  sealedSearchInput: string;
+  setSealedSearchInput: (sealedSearchInput: string) => void;
+  fetchSealedSearchResults: (sealedSearchInput: string) => Promise<void>;
   sortMultiSearchVariants: (card: MultiSearchCardState, orderBy: string) => void;
   calculateSetMultiSearchSelectedCost: () => void;
   multiSearchSelectedCost: number;
@@ -215,6 +230,32 @@ type State = {
 };
 
 export const useStore = create<State>((set, get) => ({
+  sealedSearchInput: '',
+  setSealedSearchInput: (sealedSearchInput) => set({ sealedSearchInput }),
+  sealedSearchResultsLoading: false,
+  fetchSealedSearchResults: async (searchInput: string) => {
+    set({ sealedSearchResultsLoading: true });
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/search/sealed/`, {
+      cardName: searchInput,
+      websites: ['all']
+    });
+    const results = response.data;
+    console.log('results', results);
+    // sort results by ascending price
+    // results = [SingleSearchResult, SingleSearchResult, ...]
+    // SingleSearchResult = { name: string, link: string, image: string, set: string, condition: string, foil: boolean, price: number, website: string }
+    results.sort((a: SealedSearchResult, b: SealedSearchResult) => {
+      return a.price - b.price;
+    });
+    console.log('results after sort' , results);
+
+
+    // set({ filteredSealedSearchResults: results });
+    // set({ sealedSearchResults: results });
+    // set({ sealedSearchResultsLoading: false });
+    // set({ sealedSearchQuery: searchInput });
+  },
+
   sortMultiSearchVariants: (card, orderBy) => {
     const filteredMultiSearchResults = get().filteredMultiSearchResults;
     const cardIndex = filteredMultiSearchResults.findIndex(

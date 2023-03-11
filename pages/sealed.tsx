@@ -32,7 +32,7 @@ export default function Sealed({}: Props) {
       <main className="flex flex-col justify-between items-center p-8 min-h-screen">
         <div className="flex-col justify-center flex-1 text-center max-w-xl w-full">
           {showBanner && (
-            <div className="text-2xl">Search for a set</div>
+            <div className="text-3xl font-extrabold">Search for a set</div>
           )}
           <SealedSearchBox />
           {loading && (
