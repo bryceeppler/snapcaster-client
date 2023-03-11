@@ -13,12 +13,17 @@ export default function SealedSearchBox({}: Props) {
   const searchRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+    let value = event.target.value;
+    // replace all slashes and periods with nothing
+    value = value.replace(/[./]/g, "");
+    // replace all backslashes with nothing
+    value = value.replace(/\\/g, "");
     setSealedSearchInput(value);
 
     if (value.trim().length > 0) {
       // add artificial delay, only send on odd-numbered keystrokes
       if (value.length > 2 && value.length % 2 != 0) {
+        // remove any slashes and periods
       
       fetch(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/autocomplete/${value}/`)
         .then((response) => response.json())
@@ -155,7 +160,7 @@ export default function SealedSearchBox({}: Props) {
           {showAutocomplete && (
             <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-300  py-1 shadow-md bg-zinc-900">
               {autocompleteResults &&
-                autocompleteResults.map((result, index) => (
+                autocompleteResults?.map((result, index) => (
                   <div
                     key={result}
                     className={`cursor-pointer px-4 py-2 mx-1 rounded ${
