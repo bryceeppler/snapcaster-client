@@ -11,14 +11,14 @@ import { useUser } from '@/utils/useUser'
 import PriceHistory from '@/components/PriceHistory'
 
 const Home: NextPage = () => {
-  const { singleSearchResults, singleSearchResultsLoading, priceChartLoading, singleSearchPriceList } = useStore();
+  const { singleSearchResults, singleSearchResultsLoading, priceChartLoading, singleSearchPriceList, singleSearchStarted } = useStore();
   const { user, isLoading, subscription } = useUser()
   return (
     <>
       <HomeHead />
       <main className="flex min-h-screen flex-col items-center justify-between p-8">
         <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
-          {Object.keys(singleSearchResults).length === 0 && (
+          {Object.keys(singleSearchResults).length === 0 && !singleSearchStarted && (
             <div>
               <Homebanner />
             </div>
@@ -44,6 +44,11 @@ const Home: NextPage = () => {
               <SingleCatalog />
             </>
           )}
+          {singleSearchStarted && !singleSearchResultsLoading &&  Object.keys(singleSearchResults).length === 0 && (
+            <div className="flex items-center justify-center pt-5">
+              <p className="text-gray-500">No results found</p>
+                
+                  </div>)}
         </div>
       </main>
     </>
