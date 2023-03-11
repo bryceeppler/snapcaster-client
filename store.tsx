@@ -275,9 +275,11 @@ type State = {
   setSealedSearchOrderBy: (sealedSearchOrderBy: 'price' | 'website') => void;
   setSealedSearchOrder: (sealedSearchOrder: 'asc' | 'desc') => void;
   singleSearchPriceList?: CardPrices;
+  sealedSearchHasResults: boolean;
 }
 
 export const useStore = create<State>((set, get) => ({
+  sealedSearchHasResults: false,
   singleSearchStarted: false,
   priceChartLoading: false,
   singleSearchPriceList: undefined,
@@ -407,7 +409,7 @@ export const useStore = create<State>((set, get) => ({
       return a.price - b.price;
     });
 
-
+    set({ sealedSearchHasResults: true })
     set({ filteredSealedSearchResults: results });
     set({ sealedSearchResults: results });
     set({ sealedSearchResultsLoading: false });

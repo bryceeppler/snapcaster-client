@@ -11,7 +11,7 @@ import SealedSearchFilters from '@/components/SealedSearchFilters'
 type Props = {}
 
 export default function Sealed({}: Props) {
-  const { filteredSealedSearchResults : results, sealedSearchResultsLoading:loading } = useStore()
+  const { filteredSealedSearchResults : results, sealedSearchResultsLoading:loading, sealedSearchHasResults } = useStore()
     const router = useRouter()
     const showBanner = true;
     const { user, isLoading, subscription } = useUser()
@@ -36,13 +36,17 @@ export default function Sealed({}: Props) {
             <div className="text-3xl font-extrabold">Search for a set</div>
           )}
           <SealedSearchBox />
+          {showBanner && (
+            <div className="w-full bg-pink-900 bg-opacity-50 p-2 rounded-md mt-3">Sealed search only supports a few stores at the moment and is still in development.</div>
+          )}
           {loading && (
             <div className="flex justify-center items-center pt-5">
               <Loadingspinner />
             </div>
           )}
+          
           <div className="mt-2">
-            {!showBanner && (
+            {sealedSearchHasResults && (
               <div>                <SealedSearchInfo />
               <SealedSearchFilters /></div>
             )}
@@ -57,9 +61,7 @@ export default function Sealed({}: Props) {
               </div>
             )}
           </div>
-          {showBanner && (
-            <div className="w-full bg-pink-900 bg-opacity-50 p-2 rounded-md">Sealed search only supports a few stores at the moment and is still in development.</div>
-          )}
+
         </div>
       </main>
     </>
