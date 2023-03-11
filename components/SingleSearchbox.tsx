@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useStore } from "store";
 
-type Props = {};
+type Props = {
+  includePriceChart?: boolean;
+};
 
-export default function SingleSearchbox({}: Props) {
-  const { singleSearchInput, setSingleSearchInput, fetchSingleSearchResults } =
+export default function SingleSearchbox({ includePriceChart }: Props) {
+  const { singleSearchInput, setSingleSearchInput, fetchSingleSearchResults, fetchPriceChart } =
     useStore();
   const autocompleteEndpoint = "https://api.scryfall.com/cards/autocomplete?q=";
   const [autocompleteResults, setAutocompleteResults] = useState<string[]>([]);
@@ -115,6 +117,9 @@ export default function SingleSearchbox({}: Props) {
     setShowAutocomplete(false);
     if (singleSearchInput.trim().length > 0) {
       fetchSingleSearchResults(singleSearchInput);
+      if (includePriceChart) {
+        fetchPriceChart(singleSearchInput);  
+      }
     }
   };
 
@@ -132,7 +137,7 @@ export default function SingleSearchbox({}: Props) {
             ref={searchRef}
             onKeyDown={(e) => handleAutocompleteKeyDown(e)}
           />
-                    <div
+          <div
             className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-pink-500"
             onClick={(e) => {
               handleFormSubmit
