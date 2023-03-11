@@ -52,6 +52,9 @@ export default function Sealed({}: Props) {
               </div>
             )}
           </div>
+          {showBanner && (
+            <div className="w-full bg-pink-900 bg-opacity-50 p-2 rounded-md">Sealed search only supports a few stores at the moment and is still in development.</div>
+          )}
         </div>
       </main>
     </>
