@@ -25,24 +25,18 @@ export default function About({}: Props) {
             <div className="flex-col items-center justify-center flex-1 text-left max-w-xl">
               <div className="mx-auto space-y-7">
                 <div>
-                  <h1 className="text-3xl font-bold text-pink-500 text-center">About</h1>
+                  <h1 className="text-4xl font-extrabold text-pink-500 text-center">About</h1>
                   <p className="mt-4">
-                    Snapcaster allows you to search for Magic: The Gathering singles
-                    listed on Canadian websites. It will search all the websites for
-                    you and display the results in one place. If you have any
-                    suggestions or requests, let me know at epplerdev@gmail.com.
+                  Welcome to Snapcaster! This is a project that I created to help Magic: The Gathering players search for singles on Canadian websites. With Snapcaster, you can search multiple websites at once and see all the results in one place. If you have any suggestions or feedback, please feel free to email me at epplerdev@gmail.com.
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-pink-500">Support</h2>
+                  <h2 className="text-xl font-extrabold text-pink-500">Support</h2>
                   <p className="mt-4">
-                    If you would like to help with development, contact me at
-                    epplerdev@gmail.com or submit a pull request on GitHub.
+                  If you're interested in contributing to the development of Snapcaster, you can contact me at the same email address or submit a pull request on GitHub.
                   </p>
                   <p className="mt-4">
-                    Snapcaster is a free service I have been working on in my spare
-                    time. If you would like to support the project, please consider
-                    donating to help with the server costs.
+                    Snapcaster is a service I created in my spare time, and I rely on donations to cover the server costs. If you find Snapcaster helpful, please consider donating to support the project.
                   </p>
                 </div>
                 <div className="flex justify-center">
@@ -51,7 +45,7 @@ export default function About({}: Props) {
                   </button>
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-pink-500">Privacy</h2>
+                  <h2 className="text-xl font-extrabold text-pink-500">Privacy</h2>
                   <p className="mt-4">
                     I currently log any search queries and store them in a database
                     for debugging and basic analytics. I do not share this data with
