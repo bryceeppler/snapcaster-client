@@ -16,7 +16,7 @@ const Home: NextPage = () => {
   return (
     <>
       <HomeHead />
-      <main className="flex min-h-screen flex-col items-center justify-between p-8">
+      <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-8">
         <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
           {Object.keys(singleSearchResults).length === 0 && !singleSearchStarted && (
             <div>

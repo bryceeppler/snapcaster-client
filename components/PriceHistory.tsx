@@ -7,7 +7,7 @@ type Props = {}
 export default function PriceHistory({}: Props) {
   const { singleSearchPriceList:data } = useStore();
   return (
-    <div className="h-40 sm:h-80 mt-4 flex flex-col space-x-4 max-w-xl justify-center items-center p-5 bg-zinc-900 rounded-md">
+    <div className="h-64 sm:h-80 mt-4 flex flex-col space-x-4 max-w-xl justify-center items-center p-5 bg-zinc-900 rounded-md">
     {/* <img
         src={`${data.image}`}
         alt='Card Image'

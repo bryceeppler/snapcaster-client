@@ -58,13 +58,13 @@ export default function SingleCatalogRow({cardData}: Props) {
   return (
     <>
       <>
-        <div className="grid grid-cols-12 gap-4 m-1 p-2 sm:my-3 sm:p-4 rounded-md transition-all bg-zinc-900 hover:bg-zinc-700">
+        <div className="grid grid-cols-12 gap-4 my-2 p-2 sm:my-3 sm:p-4 rounded-md transition-all bg-zinc-900 hover:bg-zinc-700">
           {/* center content vertically in thje column */}
-          <div className="col-span-3 flex justify-center items-center">
+          <div className="col-span-3 flex">
             <img
               src={cardData.image}
               alt="card"
-              className="w-16 md:w-24 rounded-md"
+              className="w-16 md:w-24 rounded-md object-contain"
             />
           </div>
           <div className="col-span-5 mt-2">

@@ -29,12 +29,12 @@ export default function SearchFilters({}: Props) {
     { label: 'SCAN', value: false }
   ];
   return (
-    <div className="flex flex-col justify-center items-center w-full p-2">
+    <div className="flex flex-col justify-center items-center w-full sm:p-2">
       {/* div for filters should always render but not be visible unless showFilters is true */}
       <div
         className={`transition-all flex flex-col justify-center items-center w-full ${
           showSingleSearchFilters ? 'opacity-100 h-80' : 'opacity-0 h-0'
-        } bg-zinc-900 shadow rounded`}
+        } bg-zinc-900 shadow rounded-md`}
       >
         {showSingleSearchFilters && (
           <>
