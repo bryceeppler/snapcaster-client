@@ -10,6 +10,7 @@ import LoadingDots from '@/components/ui/LoadingDots';
 import Button from '@/components/ui/Button';
 import { useUser } from '@/utils/useUser';
 import { postData } from '@/utils/helpers';
+import { updateUserName } from '@/utils/supabase-client';
 
 interface Props {
   title: string;
@@ -19,6 +20,7 @@ interface Props {
 }
 
 function Card({ title, description, footer, children }: Props) {
+  console.log(children)
   return (
     <div className="border border-zinc-700	max-w-3xl w-full p rounded-md m-auto my-8">
       <div className="px-5 py-4">
@@ -59,6 +61,8 @@ export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
   const { isLoading, subscription, userDetails } = useUser();
 
+  const [full_name, setFullName] = useState("");
+
   const redirectToCustomerPortal = async () => {
     setLoading(true);
     try {
@@ -71,7 +75,6 @@ export default function Account({ user }: { user: User }) {
     }
     setLoading(false);
   };
-
   const subscriptionPrice =
     subscription &&
     new Intl.NumberFormat('en-US', {
@@ -127,15 +130,50 @@ export default function Account({ user }: { user: User }) {
         </Card>
         <Card
           title="Your Name"
-          description="Please enter your full name, or a display name you are comfortable with."
+          description="Full name or a username."
           footer={<p>Please use 64 characters at maximum.</p>}
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {userDetails ? (
-              `${
+              <>
+              {
                 userDetails.full_name ??
                 `${userDetails.first_name} ${userDetails.last_name}`
-              }`
+              }
+              {/* text boxes to edit the first and last name */}
+              <div className="flex flex-col">
+                <input
+                  type="text"
+                  placeholder='Update your name'
+                  name="first_name"
+                  id="first_name"
+                  className="transition-colors bg-zinc-700 p-2 rounded my-1 focus:bg-black hover:bg-zinc-800"
+                  value={full_name}
+                  onChange={(e) => setFullName(e.target.value)}
+                  autoComplete="off"
+                  spellCheck="false"
+                />
+              
+                {
+                  // if the first and last name are different from the database, show the update button
+                  full_name !== userDetails.full_name && full_name.length !== 0 ? (
+                    <div className="transition-all outline outline-2 -outline-offset-2 outline-zinc-500 hover:outline-white hover:bg-zinc-700 cursor-pointer  py-2 px-4 rounded focus:outline-pink-900 focus:shadow-outline mt-2 mx-auto"
+                    onClick={async () => {
+                      setLoading(true);
+                      // after updateUserName promise, we want to refresh the page
+                      // updateUserName(user, `${first_name} ${last_name}`);
+                      await updateUserName(user, `${full_name}`);
+                      setLoading(false);
+                      window.location.reload();
+                    }
+                  }
+                    >
+                      Update
+                      </div>
+                  ) : null
+                }
+              </div>
+              </>
             ) : (
               <div className="h-8 mb-6">
                 <LoadingDots />

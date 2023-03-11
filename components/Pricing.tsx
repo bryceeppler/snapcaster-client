@@ -15,13 +15,76 @@ interface Props {
 
 type BillingInterval = 'year' | 'month';
 
+const CheckIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 183 183"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="91.5"
+      cy="91.5"
+      r="81.5"
+      fill="url(#paint0_radial_14_4)"
+      stroke="#ED64A6"
+      stroke-width="20"
+    />
+    <defs>
+      <radialGradient
+        id="paint0_radial_14_4"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="translate(91.5 91.5) rotate(90) scale(91.5)"
+      >
+        <stop stop-color="#EA80B8" />
+        <stop offset="1" stop-color="#CC629A" />
+      </radialGradient>
+    </defs>
+  </svg>
+);
+
+const DisabledCheckIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 183 183"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="91.5"
+      cy="91.5"
+      r="81.5"
+      fill="url(#paint0_radial_14_5)"
+      stroke="#3F3F46"
+      stroke-width="20"
+    />
+    <defs>
+      <radialGradient
+        id="paint0_radial_14_5"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="translate(91.5 91.5) rotate(90) scale(91.5)"
+      >
+        <stop stop-color="#5A5A5A" />
+        <stop offset="1" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+  </svg>
+);
+
 export default function Pricing({ products }: Props) {
   const router = useRouter();
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const { user, isLoading, subscription } = useUser();
-
   const handleCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
     if (!user) {
@@ -45,6 +108,7 @@ export default function Pricing({ products }: Props) {
       setPriceIdLoading(undefined);
     }
   };
+  console.log(products[1]);
 
   if (!products.length)
     return (
@@ -72,7 +136,7 @@ export default function Pricing({ products }: Props) {
       <div className="max-w-6xl mx-auto py-8 sm:py-24 px-4 sm:px-6 lg:px-8 min-h-screen">
         <div className="sm:flex sm:flex-col sm:align-center">
           <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
-            snapcaster memberships 
+            snapcaster memberships
           </h1>
           <p className="mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl max-w-2xl m-auto">
             Unlock premium features to find the best prices.
@@ -130,6 +194,65 @@ export default function Pricing({ products }: Props) {
                     {product.name}
                   </h2>
                   <p className="mt-4 text-zinc-300">{product.description}</p>
+                  {product.name === 'Supporter' ? (
+                    <ul className="mt-8">
+                      <li className="flex items-center my-2">
+                        <div className="flex-shrink-0">
+                          <CheckIcon />
+                        </div>
+                        <p className="ml-3 text-base text-zinc-300">
+                          Sealed search
+                        </p>
+                      </li>
+                      <li className="flex items-center my-2">
+                        <div className="flex-shrink-0">
+                          <CheckIcon />
+                        </div>
+                        <p className="ml-3 text-base text-zinc-300">
+                          Price history
+                        </p>
+                      </li>
+                      <li className="flex items-center my-2">
+                        <div className="flex-shrink-0">
+                          <CheckIcon />
+                        </div>
+                        <p className="ml-3 text-base text-zinc-300">No Ads</p>
+                      </li>
+                    </ul>
+                  ) : (
+                    <ul className="mt-8">
+                      <li className="flex items-center my-2">
+                        <div className="flex-shrink-0">
+                          <CheckIcon />
+                        </div>
+                        <p className="ml-3 text-base text-zinc-300">
+                          Upcoming features
+                        </p>
+                      </li>
+                      <li className="flex items-center my-2">
+                        <div className="flex-shrink-0">
+                          <CheckIcon />
+                        </div>
+                        <p className="ml-3 text-base text-zinc-300">
+                          Sealed search
+                        </p>
+                      </li>
+                      <li className="flex items-center my-2">
+                        <div className="flex-shrink-0">
+                          <CheckIcon />
+                        </div>
+                        <p className="ml-3 text-base text-zinc-300">
+                          Price history
+                        </p>
+                      </li>
+                      <li className="flex items-center my-2">
+                        <div className="flex-shrink-0">
+                          <CheckIcon />
+                        </div>
+                        <p className="ml-3 text-base text-zinc-300">No Ads</p>
+                      </li>
+                    </ul>
+                  )}
                   <p className="mt-8">
                     <span className="text-5xl font-extrabold white">
                       {priceString}
@@ -155,7 +278,6 @@ export default function Pricing({ products }: Props) {
             );
           })}
         </div>
-
       </div>
     </section>
   );
