@@ -3,6 +3,7 @@ import React from 'react';
 import { AppProps } from 'next/app';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { Analytics } from '@vercel/analytics/react';
 
 import Layout from '@/components/Layout';
 import { MyUserContextProvider } from '@/utils/useUser';
@@ -25,6 +26,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <MyUserContextProvider>
           <Layout>
             <Component {...pageProps} />
+            <Analytics />
           </Layout>
         </MyUserContextProvider>
       </SessionContextProvider>
