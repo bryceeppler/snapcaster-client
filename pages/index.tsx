@@ -23,7 +23,9 @@ const Home: NextPage = () => {
               <Homebanner />
             </div>
           )}
-          <SingleSearchbox includePriceChart={subscription?.status === "active"}/>
+          {/* <SingleSearchbox includePriceChart={subscription?.status === "active"}/> */}
+          <SingleSearchbox includePriceChart={true}/>
+
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
               <Loadingspinner />
