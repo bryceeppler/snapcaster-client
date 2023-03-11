@@ -72,9 +72,11 @@ export default function Line({}: Props) {
         contentStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
       />
       <Legend />
-      <ReLine type="monotone" dataKey="min" stroke="#8884d8" />
-      <ReLine type="monotone" dataKey="avg" stroke="#FDE01A" activeDot={{ r: 8 }} />
       <ReLine type="monotone" dataKey="max"  stroke="#FF0000" />
+
+      <ReLine type="monotone" dataKey="avg" stroke="#FDE01A" activeDot={{ r: 8 }} />
+
+      <ReLine type="monotone" dataKey="min" stroke="#8884d8" />
 
     </LineChart>
   </ResponsiveContainer>
