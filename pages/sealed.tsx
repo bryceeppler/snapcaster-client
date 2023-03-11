@@ -42,10 +42,13 @@ export default function Sealed({}: Props) {
             </div>
           )}
           <div className="mt-2">
+            {!showBanner && (
+              <div>                <SealedSearchInfo />
+              <SealedSearchFilters /></div>
+            )}
             {results.length > 0 && (
               <div>
-                <SealedSearchInfo />
-                <SealedSearchFilters />
+
                 {results.map((result, index) => (
                   <div key={index}>
                     <SealedCatalogRow product={result} />
