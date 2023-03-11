@@ -366,14 +366,12 @@ export const useStore = create<State>((set, get) => ({
       websites: ['all']
     });
     const results = response.data;
-    console.log('results', results);
     // sort results by ascending price
     // results = [SingleSearchResult, SingleSearchResult, ...]
     // SingleSearchResult = { name: string, link: string, image: string, set: string, condition: string, foil: boolean, price: number, website: string }
     results.sort((a: SealedSearchResult, b: SealedSearchResult) => {
       return a.price - b.price;
     });
-    console.log('results after sort' , results);
 
 
     set({ filteredSealedSearchResults: results });
@@ -569,7 +567,6 @@ export const useStore = create<State>((set, get) => ({
       websites: ['all']
     });
     const results = response.data;
-    console.log('results', results);
     // sort results by ascending price
     // results = [SingleSearchResult, SingleSearchResult, ...]
     // SingleSearchResult = { name: string, link: string, image: string, set: string, condition: string, foil: boolean, price: number, website: string }

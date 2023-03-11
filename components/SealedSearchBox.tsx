@@ -23,7 +23,6 @@ export default function SealedSearchBox({}: Props) {
       fetch(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/autocomplete/${value}/`)
         .then((response) => response.json())
         .then((data) => {
-          console.log("data", data);
           setAutocompleteResults(data);
           setShowAutocomplete(true);
           setSelectedAutocompleteIndex(-1);

@@ -24,7 +24,6 @@ export default function SingleSearchbox({}: Props) {
       fetch(autocompleteEndpoint + value)
         .then((response) => response.json())
         .then((data) => {
-          console.log("data", data);
           setAutocompleteResults(data.data);
           setShowAutocomplete(true);
           setSelectedAutocompleteIndex(-1);

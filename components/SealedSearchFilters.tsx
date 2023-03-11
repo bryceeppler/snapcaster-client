@@ -55,7 +55,6 @@ export default function SealedSearchFilters({}: Props) {
                     }`}
     
                     onClick={() => {
-                      console.log("filtering for tag " + tag.displayName)
                         toggleFilterTag(tag);
                     }}
                 >

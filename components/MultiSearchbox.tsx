@@ -26,7 +26,6 @@ const parseMultiSearchInput = (input: string) => {
       returnString += lineWithoutCountAndWhitespaceAndTrailingWhitespace + '\n'
     }
   }
-  console.log(returnString)
 
   return returnString
   // const result = lines.map((line) => {

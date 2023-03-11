@@ -13,7 +13,6 @@ export default function Navbar({}: Props) {
 
   const supabaseClient = useSupabaseClient();
   const { user } = useUser();
-  console.log('user', user)
 
 
 
