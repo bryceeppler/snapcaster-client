@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { LineChart, Line as ReLine, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useStore } from 'store';
+import Loadingspinner from './Loadingspinner';
 
 // const data = [
 //   {
@@ -39,10 +40,16 @@ type Props = {}
 
 export default function Line({}: Props) {
   const { singleSearchPriceList:data } = useStore();
+  
+  if (data === undefined || (data as any).length === 0) {
+    return <div className="flex items-center justify-center pt-5">
+      You just created the first price entry for this card. Search the card again to view the results.
+  </div>
+  }
+  console.log("data", data)
+
 
   return (
-
-    
 
     <ResponsiveContainer width="100%" height="100%">
     <LineChart
