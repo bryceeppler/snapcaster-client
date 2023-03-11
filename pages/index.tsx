@@ -7,10 +7,12 @@ import SingleSearchInfo from "@/components/SingleSearchInfo";
 import SearchFilters from "@/components/SingleSearchFilters";
 import { useStore } from "@/store";
 import SingleCatalog from "@/components/SingleCatalog";
+import { useUser } from '@/utils/useUser'
+import PriceHistory from '@/components/PriceHistory'
 
 const Home: NextPage = () => {
-  const { singleSearchResults, singleSearchResultsLoading } = useStore();
-
+  const { singleSearchResults, singleSearchResultsLoading, priceChartLoading, singleSearchPriceList } = useStore();
+  const { user, isLoading, subscription } = useUser()
   return (
     <>
       <HomeHead />
@@ -21,7 +23,7 @@ const Home: NextPage = () => {
               <Homebanner />
             </div>
           )}
-          <SingleSearchbox />
+          <SingleSearchbox includePriceChart={subscription?.status === "active"}/>
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
               <Loadingspinner />
@@ -29,6 +31,12 @@ const Home: NextPage = () => {
           )}
           {Object.keys(singleSearchResults).length > 0 && (
             <>
+              {
+                // subscription?.status === "active" && 
+                !priceChartLoading && (
+                  <PriceHistory />
+                )
+              }
               <SingleSearchInfo />
               <SearchFilters />
               <SingleCatalog />

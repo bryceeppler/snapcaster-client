@@ -165,7 +165,7 @@ const websites: Website[] = [
   {
     name: 'Topdeck Hero',
     code: 'topdeckhero',
-    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/topdeckhero/1fdf9e60cbd911e7aefa7116e0c551f9/large/topdeckhero.png'
+    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/topdeckhero/1fdf9e60cbd911e7aefa7116e0c551f9/large/topdeckhero.png'
   },
   {
     name: "Wizard's Tower (kanatacg)",
@@ -180,8 +180,29 @@ export type FilterTag = {
   selected: boolean;
 }
 
-type State = {
+export type PriceListEntry = {
+  price: number;
+  website: string;
+  foil: boolean;
+  condition: string;
+}
 
+export type CardPrices = {
+  image: string;
+  max: number;
+  min: number;
+  avg: number;
+  foil_max?: number;
+  foil_min?: number;
+  foil_avg?: number;
+  priceList: PriceListEntry[];
+  date: string;
+}
+
+
+type State = {
+  priceChartLoading: boolean;
+  fetchPriceChart: (cardName: string) => void;
   sortMultiSearchVariants: (card: MultiSearchCardState, orderBy: string) => void;
   calculateSetMultiSearchSelectedCost: () => void;
   multiSearchSelectedCost: number;
@@ -252,9 +273,20 @@ type State = {
   filterSealedSearchResults: () => void;
   setSealedSearchOrderBy: (sealedSearchOrderBy: 'price' | 'website') => void;
   setSealedSearchOrder: (sealedSearchOrder: 'asc' | 'desc') => void;
-};
+  singleSearchPriceList?: CardPrices;
+}
 
 export const useStore = create<State>((set, get) => ({
+  priceChartLoading: false,
+  singleSearchPriceList: undefined,
+  fetchPriceChart: async (cardName) => {
+    set({ priceChartLoading: true })
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/prices/${cardName}/`)
+    set({ singleSearchPriceList: response.data })
+    console.log(response.data)
+    set({ priceChartLoading: false })
+
+  },
   setSealedSearchOrderBy: (sealedSearchOrderBy) => {
     set({ sealedSearchOrderBy });
     get().filterSealedSearchResults();
