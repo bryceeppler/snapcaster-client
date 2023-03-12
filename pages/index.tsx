@@ -33,7 +33,7 @@ const Home: NextPage = () => {
             )}
           {/* <SingleSearchbox includePriceChart={subscription?.status === "active"}/> */}
           <SingleSearchbox includePriceChart={true} />
-          {/* <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
+          <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
           <ins
             className="adsbygoogle"
             //  style="display:block"
@@ -42,7 +42,7 @@ const Home: NextPage = () => {
             data-ad-format="auto"
             data-full-width-responsive="true"
           ></ins> 
-          </div> */}
+          </div>
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
               <Loadingspinner />

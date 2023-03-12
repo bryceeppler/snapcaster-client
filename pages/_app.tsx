@@ -19,15 +19,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     document.body.classList?.remove('loading');
   }, []);
-//   useEffect(() => {
-//     var ads = document.getElementsByClassName("adsbygoogle").length;
-//     console.log(ads)
-//     for (var i = 0; i < ads -1; i++) {
-//       try {
-//         (window.adsbygoogle = window.adsbygoogle || []).push({});
-//       } catch (e) { }
-//     }
-// }, []);
+  useEffect(() => {
+    var ads = document.getElementsByClassName("adsbygoogle").length;
+    console.log(ads)
+    for (var i = 0; i < ads -1; i++) {
+      try {
+        let adsbygoogle: any;
+        (adsbygoogle = (window as any).adsbygoogle || []).push({});
+      } catch (e) { }
+    }
+}, []);
   return (
     <div className="bg-black">
       <SessionContextProvider supabaseClient={supabaseClient}>
