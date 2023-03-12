@@ -22,7 +22,7 @@ export default function Multisearch({}: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex flex-col justify-between items-center px-4 md:px-24 pt-8 min-h-screen">
+      <main className="w-full max-w-xl min-h-screen flex flex-col items-center p-2 sm:p-8">
         {mode === "search" && !loading && (
           <div className="flex-col items-center justify-center flex-1 text-center max-w-2xl">
             {/* checkboxes for selecting the stores */}

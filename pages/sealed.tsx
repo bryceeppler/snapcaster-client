@@ -28,7 +28,7 @@ export default function Sealed({}: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex flex-col justify-between items-center p-8 min-h-screen">
+      <main className="flex flex-col justify-between items-center px-2 py-8 sm:p-8 min-h-screen">
         <div className="flex-col justify-center flex-1 text-center max-w-xl w-full">
           {showBanner && (
             <div className="text-3xl font-extrabold">Search for a set</div>
