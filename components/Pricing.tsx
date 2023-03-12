@@ -197,7 +197,7 @@ export default function Pricing({ products }: Props) {
                     {product.name}
                   </h2>
                   <p className="mt-4 text-zinc-300">{product.description}</p>
-                  {product.name === 'Supporter' ? (
+                  {product.name === 'Goblin' ? (
                     <ul className="mt-8">
                       <li className="flex items-center my-2">
                         <div className="flex-shrink-0">
