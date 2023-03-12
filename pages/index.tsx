@@ -33,7 +33,7 @@ const Home: NextPage = () => {
             )}
           {/* <SingleSearchbox includePriceChart={subscription?.status === "active"}/> */}
           <SingleSearchbox includePriceChart={true} />
-          <div className="flex justify-center items-center h-36 my-2 bg-gray-600">
+          <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
           <ins
             className="adsbygoogle"
             //  style="display:block"
