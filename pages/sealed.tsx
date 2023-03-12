@@ -35,7 +35,7 @@ export default function Sealed({}: Props) {
           )}
           <SealedSearchBox />
           {showBanner && (
-            <div className="w-full bg-pink-900 bg-opacity-50 p-2 rounded-md mt-3">Sealed search only supports a few stores at the moment and is still in development.</div>
+            <div className="w-full bg-pink-900 bg-opacity-50 p-2 rounded-md mt-3">Sealed search only supports 11 stores and is still in development.</div>
           )}
           {loading && (
             <div className="flex justify-center items-center pt-5">
