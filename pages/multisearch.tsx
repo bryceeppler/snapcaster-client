@@ -28,7 +28,7 @@ export default function Multisearch({}: Props) {
             {/* checkboxes for selecting the stores */}
             <div className="text-3xl font-extrabold my-2">Select stores to search</div>
             <div className="text-sm text-white mb-4">Select which stores you would like to search. The more stores, the longer the search will take.</div>
-            <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
+            {/* <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
             <ins
             className="adsbygoogle"
             //  style="display:block"
@@ -37,7 +37,7 @@ export default function Multisearch({}: Props) {
             data-ad-format="auto"
             data-full-width-responsive="true"
           ></ins>
-          </div>
+          </div> */}
             <StoreSelector />
             {/* multi-line text field to enter card names */}
             <MultiSearchbox />
