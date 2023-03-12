@@ -17,7 +17,8 @@ const Home: NextPage = () => {
     singleSearchResultsLoading,
     priceChartLoading,
     singleSearchPriceList,
-    singleSearchStarted
+    singleSearchStarted,
+    singleSearchQuery
   } = useStore();
   const { user, isLoading, subscription } = useUser();
   return (
@@ -48,12 +49,11 @@ const Home: NextPage = () => {
               <Loadingspinner />
             </div>
           )}
+          {!priceChartLoading && singleSearchQuery &&
+            <PriceHistory />
+          }
           {Object.keys(singleSearchResults).length > 0 && (
             <>
-              {
-                // subscription?.status === "active" &&
-                !priceChartLoading && <PriceHistory />
-              }
               <SingleSearchInfo />
               <SearchFilters />
               <SingleCatalog />
