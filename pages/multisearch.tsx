@@ -21,8 +21,6 @@ export default function Multisearch({}: Props) {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6026504058618942"
-     crossOrigin="anonymous"></script>
       </Head>
       <main className="flex flex-col justify-between items-center px-4 md:px-24 pt-8 min-h-screen">
         {mode === "search" && !loading && (

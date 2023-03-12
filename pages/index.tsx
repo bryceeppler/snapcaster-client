@@ -1,31 +1,49 @@
-import { type NextPage } from "next";
-import Head from "next/head";
-import Homebanner from "@/components/Homebanner";
-import SingleSearchbox from "@/components/SingleSearchbox";
-import Loadingspinner from "@/components/Loadingspinner";
-import SingleSearchInfo from "@/components/SingleSearchInfo";
-import SearchFilters from "@/components/SingleSearchFilters";
-import { useStore } from "@/store";
-import SingleCatalog from "@/components/SingleCatalog";
-import { useUser } from '@/utils/useUser'
-import PriceHistory from '@/components/PriceHistory'
+import { type NextPage } from 'next';
+import Head from 'next/head';
+import Homebanner from '@/components/Homebanner';
+import SingleSearchbox from '@/components/SingleSearchbox';
+import Loadingspinner from '@/components/Loadingspinner';
+import SingleSearchInfo from '@/components/SingleSearchInfo';
+import SearchFilters from '@/components/SingleSearchFilters';
+import { useStore } from '@/store';
+import SingleCatalog from '@/components/SingleCatalog';
+import { useUser } from '@/utils/useUser';
+import PriceHistory from '@/components/PriceHistory';
+import Script from 'next/script';
 
 const Home: NextPage = () => {
-  const { singleSearchResults, singleSearchResultsLoading, priceChartLoading, singleSearchPriceList, singleSearchStarted } = useStore();
-  const { user, isLoading, subscription } = useUser()
+  const {
+    singleSearchResults,
+    singleSearchResultsLoading,
+    priceChartLoading,
+    singleSearchPriceList,
+    singleSearchStarted
+  } = useStore();
+  const { user, isLoading, subscription } = useUser();
   return (
     <>
       <HomeHead />
       <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-8">
         <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
-          {Object.keys(singleSearchResults).length === 0 && !singleSearchStarted && (
-            <div>
-              <Homebanner />
-            </div>
-          )}
+          {Object.keys(singleSearchResults).length === 0 &&
+            !singleSearchStarted && (
+              <div>
+                <Homebanner />
+              </div>
+            )}
           {/* <SingleSearchbox includePriceChart={subscription?.status === "active"}/> */}
-          <SingleSearchbox includePriceChart={true}/>
-
+          <SingleSearchbox includePriceChart={true} />
+          <div className="flex justify-center items-center h-36 my-2 bg-gray-600">
+          <ins
+            className="adsbygoogle"
+            //  style="display:block"
+            data-ad-client="ca-pub-6026504058618942"
+            data-ad-slot="4085824286"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
+          </div>
+          {/* Lazy Script */}
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
               <Loadingspinner />
@@ -34,21 +52,21 @@ const Home: NextPage = () => {
           {Object.keys(singleSearchResults).length > 0 && (
             <>
               {
-                // subscription?.status === "active" && 
-                !priceChartLoading && (
-                  <PriceHistory />
-                )
+                // subscription?.status === "active" &&
+                !priceChartLoading && <PriceHistory />
               }
               <SingleSearchInfo />
               <SearchFilters />
               <SingleCatalog />
             </>
           )}
-          {singleSearchStarted && !singleSearchResultsLoading &&  Object.keys(singleSearchResults).length === 0 && (
-            <div className="flex items-center justify-center pt-5">
-              <p className="text-gray-500">No results found</p>
-                
-                  </div>)}
+          {singleSearchStarted &&
+            !singleSearchResultsLoading &&
+            Object.keys(singleSearchResults).length === 0 && (
+              <div className="flex items-center justify-center pt-5">
+                <p className="text-gray-500">No results found</p>
+              </div>
+            )}
         </div>
       </main>
     </>
@@ -77,8 +95,6 @@ const HomeHead = () => {
       <meta property="og:type" content="website" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href="/favicon.ico" />
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6026504058618942"
-     crossOrigin="anonymous"></script>
     </Head>
   );
 };

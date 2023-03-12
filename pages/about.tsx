@@ -20,8 +20,6 @@ export default function About({}: Props) {
             />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link rel="icon" href="/favicon.ico" />
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6026504058618942"
-     crossOrigin="anonymous"></script>
           </Head>
           <main className="flex flex-col justify-between items-center p-8 min-h-screen">
             <div className="flex-col items-center justify-center flex-1 text-left max-w-xl">
