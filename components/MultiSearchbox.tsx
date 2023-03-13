@@ -12,8 +12,7 @@ const parseMultiSearchInput = (input: string) => {
     const line = lines[i]
     // if the line is empty, skip it
     if (line === '') continue
-    // if the line is a number, skip it
-    if (!isNaN(parseInt(line))) continue
+
     // remove any numbers from the start of the line
     const lineWithoutCount = line.replace(/^\d+/, '')
     // remove any whitespace from the start of the line

@@ -552,6 +552,7 @@ export const useStore = create<State>((set, get) => ({
     const websiteCodes = selectedWebsites.map((website) => {
       return get().websites.find((w) => w.name === website)?.code;
     });
+    console.log('multiSearchInput: ', multiSearchInput);
     const cardNames = multiSearchInput.split('\n');
     // remove any empty strings
     const filteredCardNames = cardNames.filter((cardName) => cardName !== '');
