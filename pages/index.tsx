@@ -10,6 +10,7 @@ import SingleCatalog from '@/components/SingleCatalog';
 import { useUser } from '@/utils/useUser';
 import PriceHistory from '@/components/PriceHistory';
 import Script from 'next/script';
+import Updates from '@/components/Updates';
 
 const Home: NextPage = () => {
   const {
@@ -21,6 +22,23 @@ const Home: NextPage = () => {
     singleSearchQuery
   } = useStore();
   const { user, isLoading, subscription } = useUser();
+  const updates = [
+    { title: "Gamezilla, Aethervault, Atlas, BorderCity added to sealed.",
+      date: "Mar 13 2023"
+    },
+    {
+      title: "HairyT, Chimera, ComicHunter, TopdeckHero added to sealed.",
+      date: "Mar 12 2023"
+    },
+    {
+      title: "Price history graphs added to single search.",
+      date: "Mar 11 2023"
+    },
+    {
+      title: "Chimera Gaming added to single search.",
+      date: "Mar 11 2023"
+    },
+  ]
   return (
     <>
       <HomeHead />
@@ -44,6 +62,11 @@ const Home: NextPage = () => {
             data-full-width-responsive="true"
           ></ins> 
           </div>
+          {
+           !singleSearchStarted && !singleSearchResultsLoading && (
+            <Updates data={updates}/>
+           ) 
+          }
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
               <Loadingspinner />

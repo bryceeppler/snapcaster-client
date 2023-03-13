@@ -29,7 +29,7 @@ const CheckIcon = () => (
       r="81.5"
       fill="url(#paint0_radial_14_4)"
       stroke="#ED64A6"
-      stroke-width="20"
+      strokeWidth="20"
     />
     <defs>
       <radialGradient
@@ -40,8 +40,8 @@ const CheckIcon = () => (
         gradientUnits="userSpaceOnUse"
         gradientTransform="translate(91.5 91.5) rotate(90) scale(91.5)"
       >
-        <stop stop-color="#EA80B8" />
-        <stop offset="1" stop-color="#CC629A" />
+        <stop stopColor="#EA80B8" />
+        <stop offset="1" stopColor="#CC629A" />
       </radialGradient>
     </defs>
   </svg>
@@ -61,7 +61,7 @@ const DisabledCheckIcon = () => (
       r="81.5"
       fill="url(#paint0_radial_14_5)"
       stroke="#3F3F46"
-      stroke-width="20"
+      strokeWidth="20"
     />
     <defs>
       <radialGradient
@@ -72,7 +72,7 @@ const DisabledCheckIcon = () => (
         gradientUnits="userSpaceOnUse"
         gradientTransform="translate(91.5 91.5) rotate(90) scale(91.5)"
       >
-        <stop stop-color="#5A5A5A" />
+        <stop stopColor="#5A5A5A" />
         <stop offset="1" stop-opacity="0" />
       </radialGradient>
     </defs>
