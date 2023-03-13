@@ -285,9 +285,11 @@ export const useStore = create<State>((set, get) => ({
   singleSearchPriceList: undefined,
   fetchPriceChart: async (cardName) => {
     set({ priceChartLoading: true })
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/prices/${cardName}/`)
+    // encode cardName as utf-8
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/prices/`, {
+      cardName: cardName
+    })
     set({ singleSearchPriceList: response.data })
-    console.log(response.data)
     set({ priceChartLoading: false })
 
   },

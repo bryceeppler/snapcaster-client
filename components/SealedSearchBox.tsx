@@ -88,6 +88,7 @@ export default function SealedSearchBox({}: Props) {
           ) {
             const item = autocompleteResults[selectedAutocompleteIndex];
             item && handleAutocompleteItemClick(item);
+            item && fetchSealedSearchResults(item);
           }
           break;
 
