@@ -70,7 +70,7 @@ const websites: Website[] = [
   {
     name: 'Enter the Battlefield',
     code: 'enterthebattlefield',
-    image: 'https://i.ibb.co/hdnH9fY/enterthebattlefield.png'
+    image: 'https://cdn.shopify.com/s/files/1/0496/0098/7297/files/Logo_1_Newmarket_large.jpg?v=1658954718'
   },
   {
     name: 'Everything Games',
