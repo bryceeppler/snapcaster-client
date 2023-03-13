@@ -50,7 +50,7 @@ export default function StoreSelector({}: Props) {
         rounded
         focus:outline-none
         focus:shadow-outline
-        mb-4
+        my-4
         mx-auto
       "
         onClick={() => {
