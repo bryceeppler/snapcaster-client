@@ -50,7 +50,7 @@ const websites: Website[] = [
   {
     name: 'Atlas Collectables',
     code: 'atlas',
-    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/atlascollectables/a9e1fed8d2d549cba92c6406b18f8969/large/logo-v2-small-v2.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/atlas.png'
   },
   {
     name: 'Border City Games',
@@ -65,7 +65,7 @@ const websites: Website[] = [
   {
     name: 'The Connection Games',
     code: 'connectiongames',
-    image: 'https://i.ibb.co/Qp1kqrB/connectiongames-inverted.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/connection.png'
   },
   {
     name: 'Enter the Battlefield',
@@ -135,7 +135,7 @@ const websites: Website[] = [
   {
     name: 'Jeux 3 Dragons',
     code: 'jeux3dragons',
-    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/jeux3dragons/ef00baaca6ad43cfb51939c1af74c2c7/large/logo.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/jeux3dragons.png'
   },
   {
     name: 'Manaforce',
@@ -165,7 +165,7 @@ const websites: Website[] = [
   {
     name: 'Topdeck Hero',
     code: 'topdeckhero',
-    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/topdeckhero/1fdf9e60cbd911e7aefa7116e0c551f9/large/topdeckhero.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/topdeckhero.png'
   },
   {
     name: "Wizard's Tower (kanatacg)",
