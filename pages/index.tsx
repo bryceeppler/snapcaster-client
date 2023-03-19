@@ -23,6 +23,9 @@ const Home: NextPage = () => {
   } = useStore();
   const { user, isLoading, subscription } = useUser();
   const updates = [
+    { title: "EnterTheBattlefield added to sealed search.",
+      date: "Mar 18 2023"
+    },
     { title: "Gamezilla, Aethervault, Atlas, BorderCity added to sealed.",
       date: "Mar 13 2023"
     },
