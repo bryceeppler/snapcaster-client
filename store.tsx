@@ -45,7 +45,7 @@ const websites: Website[] = [
   {
     name: 'Aether Vault Games',
     code: 'aethervault',
-    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/aethervaultgames/baa99644755e44c2a11d7bc20494e7b0/large/AetherVaultGames.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/AetherVaultGames.png'
   },
   {
     name: 'Atlas Collectables',
@@ -95,7 +95,7 @@ const websites: Website[] = [
   {
     name: 'FirstPlayer',
     code: 'firstplayer',
-    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/firstplayer/ab9075a71d2949aa8dd1e032f54cf7d8/large/g901%20medium.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/firstplayer.png'
   },
   {
     name: '401 Games',
@@ -160,7 +160,7 @@ const websites: Website[] = [
   {
     name: 'The Comic Hunter',
     code: 'thecomichunter',
-    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/comichunter/77344716f796416590aa7e3ec91af534/large/ComicHunter.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/ComicHunter.png'
   },
   {
     name: 'Topdeck Hero',

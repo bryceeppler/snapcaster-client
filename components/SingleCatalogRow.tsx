@@ -38,15 +38,15 @@ const websiteLogos: WebsiteLogo = {
     manaforce:
       "https://dpfsqcxc2c82e.cloudfront.net/store/manaforce/e58b802e2e334d17aacfbf9954a5400e/large/manaforce%20logo%20attempt%204.png",
     firstplayer:
-      "https://dpfsqcxc2c82e.cloudfront.net/store/firstplayer/ab9075a71d2949aa8dd1e032f54cf7d8/large/g901%20medium.png",
+      "https://bryces-images.s3.us-west-2.amazonaws.com/firstplayer.png",
     orchardcity:
       "https://d1rw89lz12ur5s.cloudfront.net/store/orchardcitygames/eb6cb32f84b34b5cbb1c025fc41c9821/large/logo_v1.png",
     bordercity:
       "https://i.ibb.co/cvNCbXx/Border-City-Games-Large-85873391-3559-47f7-939a-420461a0033f-201x-removebg-preview.png",
     aethervault:
-      "https://dpfsqcxc2c82e.cloudfront.net/store/aethervaultgames/baa99644755e44c2a11d7bc20494e7b0/large/AetherVaultGames.png",
+      "https://bryces-images.s3.us-west-2.amazonaws.com/AetherVaultGames.png",
     thecomichunter:
-      "https://dpfsqcxc2c82e.cloudfront.net/store/comichunter/77344716f796416590aa7e3ec91af534/large/ComicHunter.png",
+      "https://bryces-images.s3.us-west-2.amazonaws.com/ComicHunter.png",
       fantasyforged:
       "https://bryces-images.s3.us-west-2.amazonaws.com/ff.png",
   };
