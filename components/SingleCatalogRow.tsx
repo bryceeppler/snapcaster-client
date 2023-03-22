@@ -36,7 +36,7 @@ const websiteLogos: WebsiteLogo = {
       "https://cdn.shopify.com/s/files/1/0367/8204/7276/files/GK-Logo-Full-Text-Below-1-768x603.png?v=1618430878",
     enterthebattlefield: "https://i.ibb.co/hdnH9fY/enterthebattlefield.png",
     manaforce:
-      "https://dpfsqcxc2c82e.cloudfront.net/store/manaforce/e58b802e2e334d17aacfbf9954a5400e/large/manaforce%20logo%20attempt%204.png",
+      "https://bryces-images.s3.us-west-2.amazonaws.com/manaforce.png",
     firstplayer:
       "https://bryces-images.s3.us-west-2.amazonaws.com/firstplayer.png",
     orchardcity:

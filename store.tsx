@@ -140,7 +140,7 @@ const websites: Website[] = [
   {
     name: 'Manaforce',
     code: 'manaforce',
-    image: 'https://dpfsqcxc2c82e.cloudfront.net/store/manaforce/e58b802e2e334d17aacfbf9954a5400e/large/manaforce%20logo%20attempt%204.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/manaforce.png'
   },
   {
     name: 'Magic Stronghold',
