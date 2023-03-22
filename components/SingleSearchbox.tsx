@@ -76,6 +76,7 @@ export default function SingleSearchbox({ includePriceChart }: Props) {
             const item = autocompleteResults[selectedAutocompleteIndex];
             item && handleAutocompleteItemClick(item);
             item && fetchSingleSearchResults(item);
+            item && includePriceChart && fetchPriceChart(item);
           }
           break;
 
@@ -87,6 +88,8 @@ export default function SingleSearchbox({ includePriceChart }: Props) {
             const item = autocompleteResults[selectedAutocompleteIndex];
             item && handleAutocompleteItemClick(item);
             item && fetchSingleSearchResults(item);
+            item && includePriceChart && fetchPriceChart(item);
+
           }
           break;
 
