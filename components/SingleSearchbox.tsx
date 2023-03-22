@@ -138,11 +138,10 @@ export default function SingleSearchbox({ includePriceChart }: Props) {
             ref={searchRef}
             onKeyDown={(e) => handleAutocompleteKeyDown(e)}
           />
-          <div
+          <button
+            type="submit"
             className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-pink-500"
-            onClick={(e) => {
-              handleFormSubmit
-            }}
+            
           >
             <svg
               width="14"
@@ -158,7 +157,7 @@ export default function SingleSearchbox({ includePriceChart }: Props) {
                 fill="currentColor"
               />
             </svg>
-          </div>
+          </button>
           {showAutocomplete && (
             <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-300  py-1 shadow-md bg-zinc-900">
               {autocompleteResults &&
