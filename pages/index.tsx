@@ -12,8 +12,16 @@ import PriceHistory from '@/components/PriceHistory';
 import Script from 'next/script';
 import Updates from '@/components/Updates';
 import PopularCards from '@/components/PopularCards';
+import { GetServerSideProps } from 'next';
+import axios from 'axios';
+import { CardInfo } from '@/components/PopularCards';
 
-const Home: NextPage = () => {
+type Props = {
+  popularCards: CardInfo[];
+};
+
+
+const Home: NextPage<Props> = ({ popularCards }) => {
   const {
     singleSearchResults,
     singleSearchResultsLoading,
@@ -69,7 +77,7 @@ const Home: NextPage = () => {
           {
            !singleSearchStarted && !singleSearchResultsLoading && (
             <>
-              <PopularCards />
+              <PopularCards popularCards={popularCards}/>
               <Updates data={updates}/>
             </>
            ) 
@@ -126,4 +134,31 @@ const HomeHead = () => {
       <link rel="icon" href="/favicon.ico" />
     </Head>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_cards/`
+    );
+    let popularCards = [...res.data.monthly, ...res.data.weekly];
+    // remove duplicates
+    popularCards = popularCards.filter(
+      (card, index, self) =>
+        index === self.findIndex((t) => t.name === card.name)
+    );
+
+    return {
+      props: {
+        popularCards,
+      },
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      props: {
+        popularCards: [],
+      },
+    };
+  }
 };
