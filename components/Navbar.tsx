@@ -26,7 +26,7 @@ export default function Navbar({}: Props) {
       current: currentPath === '/multisearch'
     },
     { name: 'Sealed', href: '/sealed', current: currentPath === '/sealed' },
-    { name: 'Membership', href: '/pricing', current: currentPath === '/pricing' },
+    // { name: 'Membership', href: '/pricing', current: currentPath === '/pricing' },
     { name: 'About', href: '/about', current: currentPath === '/about' },
     { name: 'Profile', href: '/account', current: currentPath === '/account' }
   ];

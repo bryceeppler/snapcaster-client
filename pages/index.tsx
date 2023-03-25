@@ -32,6 +32,10 @@ const Home: NextPage<Props> = ({ popularCards }) => {
   } = useStore();
   const { user, isLoading, subscription } = useUser();
   const updates = [
+    {
+      title: "Bug fixes and popular card carousel added.",
+      date: "Mar 25 2023"
+    },
     { title: "EnterTheBattlefield added to sealed search.",
       date: "Mar 18 2023"
     },
@@ -54,7 +58,7 @@ const Home: NextPage<Props> = ({ popularCards }) => {
   return (
     <>
       <HomeHead />
-      <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-8">
+      <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-8 mb-16">
         <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
@@ -76,10 +80,10 @@ const Home: NextPage<Props> = ({ popularCards }) => {
           </div> */}
           {
            !singleSearchStarted && !singleSearchResultsLoading && (
-            <>
+            <div className="space-y-16 mt-16">
               <PopularCards popularCards={popularCards}/>
               <Updates data={updates}/>
-            </>
+            </div>
            ) 
           }
           {singleSearchResultsLoading && (

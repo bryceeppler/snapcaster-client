@@ -34,9 +34,6 @@ export default function Sealed({}: Props) {
             <div className="text-3xl font-extrabold">Search for a set</div>
           )}
           <SealedSearchBox />
-          {showBanner && (
-            <div className="w-full bg-pink-900 bg-opacity-50 p-2 rounded-md mt-3">Sealed search only supports 15 stores and is still in development.</div>
-          )}
           {loading && (
             <div className="flex justify-center items-center pt-5">
               <Loadingspinner />

@@ -82,8 +82,8 @@ export default function PopularCards({ popularCards }: Props) {
                   alt={card.name}
                 />
               </div>
-              <p className="text-center mt-2 truncate w-36">{card.name}</p>
-              <p className="text-center text-gray-600">
+              <p className="text-center mt-2 truncate w-36 text-sm">{card.name}</p>
+              <p className="text-center text-sm font-mono text-pink-300">
                 {card.price
                   ? `$${card.price.toFixed(2)}`
                   : 'Price not available'}
