@@ -11,6 +11,7 @@ import { useUser } from '@/utils/useUser';
 import PriceHistory from '@/components/PriceHistory';
 import Script from 'next/script';
 import Updates from '@/components/Updates';
+import PopularCards from '@/components/PopularCards';
 
 const Home: NextPage = () => {
   const {
@@ -67,7 +68,10 @@ const Home: NextPage = () => {
           </div> */}
           {
            !singleSearchStarted && !singleSearchResultsLoading && (
-            <Updates data={updates}/>
+            <>
+              <PopularCards />
+              <Updates data={updates}/>
+            </>
            ) 
           }
           {singleSearchResultsLoading && (
