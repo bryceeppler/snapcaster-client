@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Loadingspinner from './Loadingspinner';
+import LoadingDots from './ui/LoadingDots';
 
 type Props = {};
 
@@ -87,8 +88,7 @@ export default function PopularCards({}: Props) {
       </div>
         ) : (
             <div className="flex items-center justify-center pt-5">
-                {/* <Loadingspinner /> */}
-                Loading...
+                <LoadingDots /> 
 
                     </div>
         )}
