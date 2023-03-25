@@ -87,7 +87,8 @@ export default function PopularCards({}: Props) {
       </div>
         ) : (
             <div className="flex items-center justify-center pt-5">
-                <Loadingspinner />
+                {/* <Loadingspinner /> */}
+                Loading...
 
                     </div>
         )}
