@@ -59,7 +59,7 @@ const Home: NextPage<Props> = ({ popularCards }) => {
     <>
       <HomeHead />
       <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-8 mb-16">
-        <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
+     <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
               <div>

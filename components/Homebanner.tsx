@@ -7,7 +7,7 @@ export default function Homebanner({}: Props) {
     <div className="pt-24">
       {" "}
       <img
-        className="w-24 mx-auto hidden sm:flex"
+        className="w-24 mx-auto hidden sm:flex z-30"
         src="/logo-small.svg"
         alt="snapcaster logo"
       />

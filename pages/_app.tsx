@@ -30,7 +30,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     }
 }, []);
   return (
-    <div className="bg-black">
+    <div className="">
       <SessionContextProvider supabaseClient={supabaseClient}>
         <MyUserContextProvider>
           <Layout>

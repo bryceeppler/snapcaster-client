@@ -7,6 +7,9 @@ type Props = {};
 export default function Layout({ children }: React.PropsWithChildren<Props>) {
   return (
     <>
+     <div
+        className="header-bg"
+      ></div>        
       <Navbar />
       {children}
       <Footer />
