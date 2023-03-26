@@ -155,7 +155,7 @@ const websites: Website[] = [
   {
     name: 'Sequence Gaming Brockville',
     code: 'sequencegaming',
-    image: 'https://i.ibb.co/C2jXrmD/sequence-no-bg-inverted.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/sequence-no-bg-inverted.png'
   },
   {
     name: 'The Comic Hunter',
