@@ -6,7 +6,7 @@ type Props = {}
 export default function About({}: Props) {
     const openDonationLink = () => {
         window.open(
-          "https://www.paypal.com/donate/?business=KK537LVP4TZ5Q&no_recurring=0&item_name=Thank+you+for+donating+to+snapcaster%2C+I+really+appreciate+your+support+%3A%29&currency_code=CAD",
+          "https://www.paypal.com/donate/?business=KK537LVP4TZ5Q&no_recurring=0&item_name=Thank+you+for+supporting+snapcaster%21+Your+generosity+keeps+snapcaster+running+by+covering+server+costs.&currency_code=CAD",
           "_blank"
         );
       };
@@ -33,15 +33,15 @@ export default function About({}: Props) {
                 <div>
                   <h2 className="text-xl font-extrabold text-pink-500">Support</h2>
                   <p className="mt-4">
-                  If you're interested in contributing to the development of Snapcaster, you can contact me at the same email address or submit a pull request on GitHub.
+                  If you're interested in contributing to the development of Snapcaster, you can contact me at the same email address.
                   </p>
                   <p className="mt-4">
                     Snapcaster is a service I created in my spare time, and I rely on donations to cover the server costs. If you find Snapcaster helpful, please consider donating to support the project.
                   </p>
                 </div>
                 <div className="flex justify-center">
-                <button className="bg-zinc-700 first-letter:mt-4 py-1 px-2 rounded-md" onClick={openDonationLink}>
-                    Donate
+                <button className="bg-pink-400 first-letter:mt-4 py-2 px-4 rounded-md font-mono font-bold hover:bg-pink-500 transition-colors" onClick={openDonationLink}>
+                    Donate with PayPal
                   </button>
                 </div>
                 <div>
