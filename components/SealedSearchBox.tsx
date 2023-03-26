@@ -159,6 +159,7 @@ export default function SealedSearchBox({}: Props) {
           {showAutocomplete && (
             <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-300  py-1 shadow-md bg-zinc-900">
               {autocompleteResults &&
+               autocompleteResults.length > 0 &&
                 autocompleteResults?.map((result, index) => (
                   <div
                     key={result}
