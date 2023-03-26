@@ -57,12 +57,12 @@ export default function PopularCards({ popularCards }: Props) {
   ];
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Popular Cards</h2>
+    <div className="mx-auto mt-6 w-full max-w-3xl rounded-md p-4 outline outline-1 outline-zinc-800 backdrop-blur-sm backdrop-brightness-75 ">
+      <h2 className="mb-4 text-center text-2xl font-bold">Popular Cards</h2>
       {popularCards.length > 0 ? (
-        <div className="flex justify-center items-center">
+        <div className="flex items-center justify-center">
           <button
-            className="bg-white bg-opacity-75 p-2 rounded-r"
+            className="rounded-r bg-white bg-opacity-75 p-2"
             onClick={prevCard}
           >
             &lt;
@@ -70,20 +70,22 @@ export default function PopularCards({ popularCards }: Props) {
           {visibleCards.map((card, index) => (
             <div
               key={index}
-              className={`sm:w-1/3 mx-2 flex flex-col items-center ${
+              className={`mx-2 flex flex-col items-center sm:w-1/3 ${
                 //  if small or below, hide all but index 0
                 index === 0 ? 'block' : 'hidden sm:block'
               }`}
             >
-              <div className="h-48 w-full flex items-center">
+              <div className="flex h-48 w-full items-center">
                 <img
-                  className="max-h-full max-w-full object-contain mx-auto"
+                  className="mx-auto max-h-full max-w-full object-contain"
                   src={card.image_url}
                   alt={card.name}
                 />
               </div>
-              <p className="text-center mt-2 truncate w-36 text-sm">{card.name}</p>
-              <p className="text-center text-sm font-mono text-pink-300">
+              <p className="mt-2 w-36 truncate text-center text-sm">
+                {card.name}
+              </p>
+              <p className="text-center font-mono text-sm text-pink-300">
                 {card.price
                   ? `$${card.price.toFixed(2)}`
                   : 'Price not available'}
@@ -91,7 +93,7 @@ export default function PopularCards({ popularCards }: Props) {
             </div>
           ))}
           <button
-            className="bg-white bg-opacity-75 p-2 rounded-l"
+            className="rounded-l bg-white bg-opacity-75 p-2"
             onClick={nextCard}
           >
             &gt;

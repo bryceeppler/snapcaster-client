@@ -59,8 +59,7 @@ export default function PopularSealed({ popularSealed }: Props) {
   ];
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-12">
-      <h2 className="text-2xl font-bold mb-4 text-center">Popular searches</h2>
+    <div className="mx-auto mt-6 w-full max-w-3xl rounded-md p-4 outline outline-1 outline-zinc-800 backdrop-blur-sm backdrop-brightness-75 ">      <h2 className="text-2xl font-bold mb-4 text-center">Popular searches</h2>
       {popularSealed.length > 0 ? (
         <div className="flex justify-center items-center">
           <button

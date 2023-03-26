@@ -8,7 +8,7 @@ export default function StoreSelector({}: Props) {
 
   return (
     <div className="flex flex-col">
-      <div className="grid w-full grid-cols-2 md:grid-cols-3">
+      <div className="grid w-full grid-cols-2 md:grid-cols-3 rounded-md p-2 outline outline-1 outline-zinc-800 backdrop-blur-sm backdrop-brightness-75">
         {websites.map((website, index) => {
           return (
             <div
@@ -33,7 +33,7 @@ export default function StoreSelector({}: Props) {
                     }
                 `}
               />
-              <label className="ml-2 text-sm text-left">{website.name}</label>
+              <label className="ml-2 text-xs text-left truncate">{website.name}</label>
             </div>
           );
         })}
