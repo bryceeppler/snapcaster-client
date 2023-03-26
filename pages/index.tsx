@@ -33,7 +33,7 @@ const Home: NextPage<Props> = ({ popularCards }) => {
   const { user, isLoading, subscription } = useUser();
   const updates = [
     {
-      title: "Popular set carousel and Everything Games added to sealed.",
+      title: "Popular set carousel added and Everything Games, Exor Games added to sealed.",
       date: "Mar 26 2023"
     },
     {
