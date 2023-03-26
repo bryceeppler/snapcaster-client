@@ -33,7 +33,11 @@ const Home: NextPage<Props> = ({ popularCards }) => {
   const { user, isLoading, subscription } = useUser();
   const updates = [
     {
-      title: "Popular set carousel added. Everything Games, Exor Games, FantasyForged, FirstPlayer, GameKnight, Orchard City, Sequence Gaming added to sealed.",
+      title: "Everything Games, Exor Games, FantasyForged, FirstPlayer, GameKnight, Orchard City, Sequence Gaming added to sealed.",
+      date: "Mar 26 2023"
+    },
+    {
+      title: "Popular set carousel added.",
       date: "Mar 26 2023"
     },
     {
