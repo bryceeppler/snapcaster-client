@@ -33,7 +33,7 @@ const Home: NextPage<Props> = ({ popularCards }) => {
   const { user, isLoading, subscription } = useUser();
   const updates = [
     {
-      title: "FaceToFace added to sealed search.",
+      title: "Bug fixes and FaceToFace added to sealed search.",
       date: "Mar 27 2023"
     },
     {
