@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect, use} from 'react';
 import Head from 'next/head';
 import { useUser } from '@/utils/useUser';
 import { useRouter } from 'next/router';
@@ -6,11 +6,13 @@ import { useStore } from '@/store';
 import GlassPanel from '@/components/ui/GlassPanel';
 import Button from '@/components/ui/Button';
 import StoreSelector from '@/components/StoreSelector';
-type WatchlistItem = {
-  name: string;
-  currentPrice: number;
-  priceThreshold: number;
-  lastUpdated: string;
+import { getPriceWatchEntries } from '@/utils/supabase-client';
+
+export type WatchlistItem = {
+  card_name: string;
+  current_price: number;
+  threshold: number;
+  last_checked: string;
 };
 
 type Props = {};
@@ -31,7 +33,35 @@ const dummyWatchList = [
 export default function Watchlist({}: Props) {
   const [selectedScreen, setSelectedScreen] = React.useState('home'); // home, add, edit
   const [selectedWatchlistItem, setSelectedWatchlistItem] = React.useState<WatchlistItem | null>(null);
-
+  const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
+  const { user } = useUser();
+  useEffect(() => {
+    if (user) {
+      getPriceWatchEntries(user).then((res) => {
+        setWatchlist(res as WatchlistItem[]);
+      });
+    }
+  }, [user]);
+ 
+  if (!user) {
+    return (
+      <>
+            <Head>
+        <title>Price Watchlist - snapcaster</title>
+        <meta
+          name="description"
+          content="Search Magic the Gathering sealed products in Canada"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className="flex flex-col justify-between items-center px-2 py-8 sm:p-8 min-h-screen">
+        <div className="flex-col justify-center flex-1 text-center max-w-xl w-full">
+          <div className="text-3xl font-extrabold mb-16">Log in to view your watch list.</div>{' '}
+          </div></main>
+          </>
+    );
+  }
   return (
     <>
       <Head>
@@ -48,7 +78,7 @@ export default function Watchlist({}: Props) {
           <div className="text-3xl font-extrabold mb-16">Price Monitoring</div>{' '}
           <GlassPanel color={'dark'} tailwindProps="text-left px-6">
             {selectedScreen === 'home' && (
-              <WatchListHome watchlist={dummyWatchList} />
+              <WatchListHome watchlist={watchlist} />
             )}
             {selectedScreen === 'add' && <WatchlistAdd />}
             {selectedScreen === 'edit' && selectedWatchlistItem && (
@@ -239,7 +269,7 @@ export default function Watchlist({}: Props) {
                 <GlassPanel
                   color={'light'}
                   tailwindProps={`bg-white bg-opacity-10 hover:bg-opacity-0 transition-all ${
-                    item.currentPrice < item.priceThreshold
+                    item.current_price < item.threshold
                       ? 'outline-green-500'
                       : ''
                   }`}
@@ -251,26 +281,26 @@ export default function Watchlist({}: Props) {
                 >
                   <div className="flex flex-row justify-between">
                     <div className="flex flex-col">
-                      <div className="text-sm font-bold">{item.name}</div>
+                      <div className="text-sm font-bold">{item.card_name}</div>
                       <div className="text-sm">
-                        Current price: ${item.currentPrice}
+                        Current price: ${item.current_price}
                       </div>
                     </div>
                     <div className="flex flex-col text-right">
                       <div className="text-sm">
-                        Last checked: {item.lastUpdated}
+                        Last checked: {item.last_checked}
                       </div>
                       <div className="text-sm">
-                        Price threshold: ${item.priceThreshold}
+                        Price threshold: ${item.threshold}
                       </div>
                       <div
                         className={`text-sm ${
-                          item.currentPrice < item.priceThreshold
+                          item.current_price < item.threshold
                             ? 'text-green-500'
                             : 'text-yellow-500'
                         }`}
                       >
-                        {item.currentPrice < item.priceThreshold
+                        {item.current_price < item.threshold
                           ? 'Below threshold'
                           : 'Above threshold'}
                       </div>
@@ -322,7 +352,7 @@ export default function Watchlist({}: Props) {
               id="name"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
               placeholder="Card Name"
-              defaultValue={watchlistItem.name}
+              defaultValue={watchlistItem.card_name}
             />
           </div>
         </div>
