@@ -6,10 +6,31 @@ import { useStore } from '@/store';
 import GlassPanel from '@/components/ui/GlassPanel';
 import Button from '@/components/ui/Button';
 import StoreSelector from '@/components/StoreSelector';
-type Props = {};
+type WatchlistItem = {
+  name: string;
+  currentPrice: number;
+  priceThreshold: number;
+  lastUpdated: string;
+};
 
+type Props = {};
+const dummyWatchList = [
+  {
+    name: 'Dockside Extortionist',
+    currentPrice: 76.87,
+    priceThreshold: 75,
+    lastUpdated: '2021-07-01T09:21'
+  },
+  {
+    name: 'Craterhoof Behemoth',
+    currentPrice: 72.87,
+    priceThreshold: 75,
+    lastUpdated: '2021-07-01T09:35'
+  }
+];
 export default function Watchlist({}: Props) {
   const [selectedScreen, setSelectedScreen] = React.useState('home'); // home, add, edit
+  const [selectedWatchlistItem, setSelectedWatchlistItem] = React.useState<WatchlistItem | null>(null);
 
   return (
     <>
@@ -26,8 +47,13 @@ export default function Watchlist({}: Props) {
         <div className="flex-col justify-center flex-1 text-center max-w-xl w-full">
           <div className="text-3xl font-extrabold mb-16">Price Monitoring</div>{' '}
           <GlassPanel color={'dark'} tailwindProps="text-left px-6">
-            {selectedScreen === 'home' && <WatchListHome />}
+            {selectedScreen === 'home' && (
+              <WatchListHome watchlist={dummyWatchList} />
+            )}
             {selectedScreen === 'add' && <WatchlistAdd />}
+            {selectedScreen === 'edit' && selectedWatchlistItem && (
+              <WatchlistEdit watchlistItem={selectedWatchlistItem} />
+            )}
           </GlassPanel>
         </div>
       </main>
@@ -75,68 +101,79 @@ export default function Watchlist({}: Props) {
             </form>
           </div>
         </div>
-   {/* Settings */}
-<div className="mt-6">
-  <div className="text-xl font-extrabold">Settings</div>
-  <div className="text-xs mb-2">
-    You can set the price threshold for this card. If the price of the
-    card drops below this threshold, you will be notified.
-  </div>
-  <div>
-    {/* Interval selector */}
-    <label htmlFor="interval" className="block text-sm font-medium text-white">
-      Check Interval
-    </label>
-    <select
-      id="interval"
-      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
-    >
-      <option>2 hours</option>
-      <option>12 hours</option>
-      <option>24 hours</option>
-    </select>
+        {/* Settings */}
+        <div className="mt-6">
+          <div className="text-xl font-extrabold">Settings</div>
+          <div className="text-xs mb-2">
+            You can set the price threshold for this card. If the price of the
+            card drops below this threshold, you will be notified.
+          </div>
+          <div>
+            {/* Interval selector */}
+            <label
+              htmlFor="interval"
+              className="block text-sm font-medium text-white"
+            >
+              Check Interval
+            </label>
+            <select
+              id="interval"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
+            >
+              <option>2 hours</option>
+              <option>12 hours</option>
+              <option>24 hours</option>
+            </select>
 
-    {/* Price input field */}
-    <label htmlFor="price" className="block mt-4 text-sm font-medium text-white">
-      Price Threshold (CAD)
-    </label>
-    <input
-      id="price"
-      type="number"
-      step="0.01"
-      min="0"
-      className="mt-1 block w-full px-3 py-2 rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm bg-zinc-800"
-    />
+            {/* Price input field */}
+            <label
+              htmlFor="price"
+              className="block mt-4 text-sm font-medium text-white"
+            >
+              Price Threshold (CAD)
+            </label>
+            <input
+              id="price"
+              type="number"
+              step="0.01"
+              min="0"
+              className="mt-1 block w-full px-3 py-2 rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 sm:text-sm bg-zinc-800"
+            />
 
-    {/* Condition selector */}
-    <label htmlFor="condition" className="block mt-4 text-sm font-medium text-white">
-      Minimum Card Condition
-    </label>
-    <select
-      id="condition"
-      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
-    >
-      <option>NM</option>
-      <option>LP</option>
-      <option>MP</option>
-      <option>HP</option>
-      <option>DMG</option>
-    </select>
+            {/* Condition selector */}
+            <label
+              htmlFor="condition"
+              className="block mt-4 text-sm font-medium text-white"
+            >
+              Minimum Card Condition
+            </label>
+            <select
+              id="condition"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
+            >
+              <option>NM</option>
+              <option>LP</option>
+              <option>MP</option>
+              <option>HP</option>
+              <option>DMG</option>
+            </select>
 
-    {/* Notification method selector */}
-    <label htmlFor="notification" className="block mt-4 text-sm font-medium text-white">
-      Notify me via
-    </label>
-    <select
-      id="notification"
-      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
-    >
-      <option>Email</option>
-      <option>SMS</option>
-    </select>
-  </div>
-</div>
-
+            {/* Notification method selector */}
+            <label
+              htmlFor="notification"
+              className="block mt-4 text-sm font-medium text-white"
+            >
+              Notify me via
+            </label>
+            <select
+              id="notification"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
+            >
+              <option>Email</option>
+              <option>SMS</option>
+            </select>
+          </div>
+        </div>
 
         {/* Stores */}
         <div className="mt-6">
@@ -188,13 +225,67 @@ export default function Watchlist({}: Props) {
     );
   }
 
-  function WatchListHome() {
+  function WatchListHome({ watchlist }: { watchlist: WatchlistItem[] }) {
     return (
       <div>
         <div className="text-xl font-extrabold">Watchlist</div>
-        <div className="text-md">
-          You don't have any cards on your watchlist yet.
-        </div>
+        {watchlist.length > 0 ? (
+          <div className="my-4">
+            <div className="text-xs mb-2">
+              You have {watchlist.length} cards on your watchlist.
+            </div>
+            <div className="flex flex-col space-y-4">
+              {watchlist.map((item, index) => (
+                <GlassPanel
+                  color={'light'}
+                  tailwindProps={`bg-white bg-opacity-10 hover:bg-opacity-0 transition-all ${
+                    item.currentPrice < item.priceThreshold
+                      ? 'outline-green-500'
+                      : ''
+                  }`}
+                  onClick={() => {
+                    setSelectedScreen('edit');
+                    setSelectedWatchlistItem(item);
+                  }}
+                  key={index}
+                >
+                  <div className="flex flex-row justify-between">
+                    <div className="flex flex-col">
+                      <div className="text-sm font-bold">{item.name}</div>
+                      <div className="text-sm">
+                        Current price: ${item.currentPrice}
+                      </div>
+                    </div>
+                    <div className="flex flex-col text-right">
+                      <div className="text-sm">
+                        Last checked: {item.lastUpdated}
+                      </div>
+                      <div className="text-sm">
+                        Price threshold: ${item.priceThreshold}
+                      </div>
+                      <div
+                        className={`text-sm ${
+                          item.currentPrice < item.priceThreshold
+                            ? 'text-green-500'
+                            : 'text-yellow-500'
+                        }`}
+                      >
+                        {item.currentPrice < item.priceThreshold
+                          ? 'Below threshold'
+                          : 'Above threshold'}
+                      </div>
+                    </div>
+                  </div>
+                </GlassPanel>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="text-md">
+            You don't have any cards on your watchlist yet.
+          </div>
+        )}
+
         <Button
           onClick={() => {
             setSelectedScreen('add');
@@ -205,6 +296,58 @@ export default function Watchlist({}: Props) {
         >
           Add a card
         </Button>
+      </div>
+    );
+  }
+
+  function WatchlistEdit( { watchlistItem }: { watchlistItem: WatchlistItem }) {
+    return (
+      <div>
+        <div className="text-xl font-extrabold">Edit Watchlist Item</div>
+        <div className="text-xs mb-2">
+          You can edit the details of your watchlist item here.
+        </div>
+        <div className="flex flex-row space-x-4">
+          <div className="flex flex-col w-1/2">
+            {/* Card name */}
+            <label
+              htmlFor="name"
+              className="block mt-4 text-sm font-medium text-white"
+            >
+              Card Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
+              placeholder="Card Name"
+              defaultValue={watchlistItem.name}
+            />
+          </div>
+        </div>
+        <div className="w-full flex justify-center space-x-6 mt-6">
+          <Button
+            onClick={() => {
+              setSelectedScreen('home');
+            }}
+            color="primary"
+            className=""
+            variant="slim"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              setSelectedScreen('home');
+            }}
+            color="primary"
+            className=""
+            variant="slim"
+          >
+            Submit
+          </Button>
+        </div>
       </div>
     );
   }
