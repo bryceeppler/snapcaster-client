@@ -47,3 +47,25 @@ export const getPriceWatchEntries = async (user: User) => {
 
   return data as WatchlistItem | []
 }
+
+
+export const addPriceWatchEntry = async (
+  user: User,
+  cardName: string,
+  threshold: number
+) => {
+  const { data, error } = await supabase
+    .from('price_watch_entries')
+    .insert({
+      user_id: user.id,
+      card_name: cardName,
+      threshold
+    });
+
+  if (error) {
+    console.log(error.message);
+  }
+
+  return data;
+}
+

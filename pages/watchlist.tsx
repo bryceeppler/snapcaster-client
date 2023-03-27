@@ -1,4 +1,4 @@
-import React, {useState, useEffect, use} from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Head from 'next/head';
 import { useUser } from '@/utils/useUser';
 import { useRouter } from 'next/router';
@@ -6,7 +6,10 @@ import { useStore } from '@/store';
 import GlassPanel from '@/components/ui/GlassPanel';
 import Button from '@/components/ui/Button';
 import StoreSelector from '@/components/StoreSelector';
-import { getPriceWatchEntries } from '@/utils/supabase-client';
+import {
+  getPriceWatchEntries,
+  addPriceWatchEntry
+} from '@/utils/supabase-client';
 
 export type WatchlistItem = {
   card_name: string;
@@ -31,8 +34,11 @@ const dummyWatchList = [
   }
 ];
 export default function Watchlist({}: Props) {
+  const [cardName, setCardName] = useState('');
+  const [threshold, setThreshold] = useState(0);
   const [selectedScreen, setSelectedScreen] = React.useState('home'); // home, add, edit
-  const [selectedWatchlistItem, setSelectedWatchlistItem] = React.useState<WatchlistItem | null>(null);
+  const [selectedWatchlistItem, setSelectedWatchlistItem] =
+    React.useState<WatchlistItem | null>(null);
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
   const { user } = useUser();
   useEffect(() => {
@@ -42,24 +48,53 @@ export default function Watchlist({}: Props) {
       });
     }
   }, [user]);
- 
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setCardName(value);
+
+    // if (value.trim().length > 0) {
+    //   // add artificial delay, only send on odd-numbered keystrokes
+    //   if (value.length > 2 && value.length % 2 != 0) {
+      
+    //   fetch(autocompleteEndpoint + value)
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       setAutocompleteResults(data.data);
+    //       setShowAutocomplete(true);
+    //       setSelectedAutocompleteIndex(-1);
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error fetching autocomplete results: ", error);
+    //     });
+    //   }
+    // } else {
+    //   setAutocompleteResults([]);
+    //   setShowAutocomplete(false);
+    //   setSelectedAutocompleteIndex(-1);
+    // }
+  };
+
   if (!user) {
     return (
       <>
-            <Head>
-        <title>Price Watchlist - snapcaster</title>
-        <meta
-          name="description"
-          content="Search Magic the Gathering sealed products in Canada"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="flex flex-col justify-between items-center px-2 py-8 sm:p-8 min-h-screen">
-        <div className="flex-col justify-center flex-1 text-center max-w-xl w-full">
-          <div className="text-3xl font-extrabold mb-16">Log in to view your watch list.</div>{' '}
-          </div></main>
-          </>
+        <Head>
+          <title>Price Watchlist - snapcaster</title>
+          <meta
+            name="description"
+            content="Search Magic the Gathering sealed products in Canada"
+          />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <main className="flex flex-col justify-between items-center px-2 py-8 sm:p-8 min-h-screen">
+          <div className="flex-col justify-center flex-1 text-center max-w-xl w-full">
+            <div className="text-3xl font-extrabold mb-16">
+              Log in to view your watch list.
+            </div>{' '}
+          </div>
+        </main>
+      </>
     );
   }
   return (
@@ -103,10 +138,17 @@ export default function Watchlist({}: Props) {
         <div className="mt-6 w-full">
           <div className="relative">
             <form>
+              
+
+     
+
+
               <input
                 type="text"
                 className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
                 placeholder="Search"
+                value={cardName}
+                onChange={handleInputChange}
                 spellCheck="false"
               />
               <button
@@ -241,7 +283,9 @@ export default function Watchlist({}: Props) {
             Cancel
           </Button>
           <Button
-            onClick={() => {
+            onClick={async () => {
+              user &&
+              await addPriceWatchEntry(user, cardName, threshold);
               setSelectedScreen('home');
             }}
             color="primary"
@@ -330,7 +374,7 @@ export default function Watchlist({}: Props) {
     );
   }
 
-  function WatchlistEdit( { watchlistItem }: { watchlistItem: WatchlistItem }) {
+  function WatchlistEdit({ watchlistItem }: { watchlistItem: WatchlistItem }) {
     return (
       <div>
         <div className="text-xl font-extrabold">Edit Watchlist Item</div>
