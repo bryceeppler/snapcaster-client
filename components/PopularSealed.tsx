@@ -15,24 +15,15 @@ export type SealedProductInfo = {
 };
 
 export default function PopularSealed({ popularSealed }: Props) {
-  // const [popularSealed, setPopularSealed] = useState<SealedProductInfo[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   // useEffect(() => {
-  //   axios
-  //     .get(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_cards/`)
-  //     .then((res) => {
-  //       let popularSealed = [...res.data.monthly, ...res.data.weekly];
-  //       // remove duplicates
-  //       popularSealed = popularSealed.filter(
-  //         (card, index, self) =>
-  //           index === self.findIndex((t) => t.name === card.name)
-  //       );
-  //       setPopularSealed(popularSealed);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
+  //   // Remove duplicates
+  //   popularSealed = popularSealed.filter(
+  //     (card, index, self) =>
+  //       index === self.findIndex((t) => t.name === card.name)
+  //   );
+  //   console.log(popularSealed)
   // }, []);
 
   const nextSealedProduct = () => {

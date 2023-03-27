@@ -115,10 +115,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
       `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_sealed/`
     );
     let popularSealedProduct = [...res.data.monthly, ...res.data.weekly];
-    // remove duplicates
     popularSealedProduct = popularSealedProduct.filter(
       (prod, index, self) =>
-        index === self.findIndex((t) => t.name === prod.name)
+        index === self.findIndex((t) => t.product_name === prod.product_name)
     );
 
     return {

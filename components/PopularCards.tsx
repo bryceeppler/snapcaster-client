@@ -13,25 +13,7 @@ export type CardInfo = {
 };
 
 export default function PopularCards({ popularCards }: Props) {
-  // const [popularCards, setPopularCards] = useState<CardInfo[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_cards/`)
-  //     .then((res) => {
-  //       let popularCards = [...res.data.monthly, ...res.data.weekly];
-  //       // remove duplicates
-  //       popularCards = popularCards.filter(
-  //         (card, index, self) =>
-  //           index === self.findIndex((t) => t.name === card.name)
-  //       );
-  //       setPopularCards(popularCards);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
 
   const nextCard = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % popularCards.length);
