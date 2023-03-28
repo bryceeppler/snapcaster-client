@@ -187,28 +187,27 @@ const HomeHead = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_cards/`
-    );
-    let popularCards = [...res.data.monthly, ...res.data.weekly];
-    // remove duplicates
-    popularCards = popularCards.filter(
-      (card, index, self) =>
-        index === self.findIndex((t) => t.name === card.name)
-    );
+  // try {
+  //   const res = await axios.get(
+  //     `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_cards/`
+  //   );
+  //   let popularCards = [...res.data.monthly, ...res.data.weekly];
+  //   // remove duplicates
+  //   popularCards = popularCards.filter(
+  //     (card, index, self) =>
+  //       index === self.findIndex((t) => t.name === card.name)
+  //   );
 
+  //   return {
+  //     props: {
+  //       popularCards,
+  //     },
+  //   };
+  // } catch (err) {
+  //   console.log(err);
     return {
       props: {
-        popularCards,
-      },
-    };
-  } catch (err) {
-    console.log(err);
-    return {
-      props: {
-        popularCards: [],
+        // popularCards: [],
       },
     };
   }
-};
