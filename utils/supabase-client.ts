@@ -52,14 +52,22 @@ export const getPriceWatchEntries = async (user: User) => {
 export const addPriceWatchEntry = async (
   user: User,
   cardName: string,
-  threshold: number
+  threshold: number,
+  interval_hrs: number,
+  minimum_condition: string,
+  notification_type: string,
+  websites: string
 ) => {
   const { data, error } = await supabase
     .from('price_watch_entries')
     .insert({
       user_id: user.id,
       card_name: cardName,
-      threshold
+      threshold,
+      interval_hrs,
+      minimum_condition,
+      notification_type,
+      websites
     });
 
   if (error) {
