@@ -27,7 +27,7 @@ export default function Watchlist({}: Props) {
   const [selectedAutocompleteIndex, setSelectedAutocompleteIndex] =
     useState(-1);
   const searchRef = useRef<HTMLInputElement>(null);
-  const [intervalHours, setIntervalHours] = useState(24);
+  const [intervalHours, setIntervalHours] = useState(12);
   const [cardName, setCardName] = useState('');
   const [minimumCondition, setMinimumCondition] = useState('dmg'); // NM, LP, MP, HP, DMG
   const [threshold, setThreshold] = useState(0);
@@ -38,7 +38,7 @@ export default function Watchlist({}: Props) {
 
   // state for edit item screen
   const [editCardName, setEditCardName] = useState('');
-  const [editIntervalHours, setEditIntervalHours] = useState(24);
+  const [editIntervalHours, setEditIntervalHours] = useState(12);
   const [editMinimumCondition, setEditMinimumCondition] = useState('dmg'); // NM, LP, MP, HP, DMG
   const [editThreshold, setEditThreshold] = useState(0);
 

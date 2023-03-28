@@ -139,13 +139,13 @@ const WatchlistAdd: React.FC<Props> = ({
               value={intervalHours}
               onChange={(e) => setIntervalHours(parseInt(e.target.value))}
             >
-              <option value={2} disabled={subscription === null}>{`2 hours ${
+              <option value={1} disabled={subscription === null}>{`1 hours ${
                 subscription === null ? '(Pro members only)' : ''
               }`}</option>
-              <option value={12} disabled={subscription === null}>{`12 hours ${
+              <option value={6} disabled={subscription === null}>{`6 hours ${
                 subscription === null ? '(Pro members only)' : ''
               }`}</option>
-              <option value={24}>24 hours</option>
+              <option value={12}>12 hours</option>
             </select>
             {/* Price input field */}
             <label
