@@ -9,17 +9,13 @@ import { useStore } from '@/store';
 import SingleCatalog from '@/components/SingleCatalog';
 import { useUser } from '@/utils/useUser';
 import PriceHistory from '@/components/PriceHistory';
-import Script from 'next/script';
 import Updates from '@/components/Updates';
 import PopularCards from '@/components/PopularCards';
-import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { CardInfo } from '@/components/PopularCards';
 import { useEffect, useState } from 'react';
 
 type Props = {
-  // popularCards: CardInfo[];
-  
 };
 
 
@@ -186,28 +182,3 @@ const HomeHead = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  // try {
-  //   const res = await axios.get(
-  //     `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_cards/`
-  //   );
-  //   let popularCards = [...res.data.monthly, ...res.data.weekly];
-  //   // remove duplicates
-  //   popularCards = popularCards.filter(
-  //     (card, index, self) =>
-  //       index === self.findIndex((t) => t.name === card.name)
-  //   );
-
-  //   return {
-  //     props: {
-  //       popularCards,
-  //     },
-  //   };
-  // } catch (err) {
-  //   console.log(err);
-    return {
-      props: {
-        // popularCards: [],
-      },
-    };
-  }
