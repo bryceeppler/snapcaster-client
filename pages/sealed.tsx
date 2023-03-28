@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Loadingspinner from '@/components/Loadingspinner';
 import SealedSearchBox from '@/components/SealedSearchBox';
-import { useUser } from '@/utils/useUser';
+// import { useUser } from '@/utils/useUser';
 import { useRouter } from 'next/router';
 import { useStore } from '@/store';
 import SealedCatalogRow from '@/components/SealedCatalogRow';
@@ -10,13 +10,11 @@ import SealedSearchInfo from '@/components/SealedSearchInfo';
 import SealedSearchFilters from '@/components/SealedSearchFilters';
 import { SealedProductInfo } from '@/components/PopularSealed';
 import PopularSealed from '@/components/PopularSealed';
-import { GetServerSideProps } from 'next';
 import axios from 'axios';
 type Props = {
-  popularSealed: SealedProductInfo[];
 };
 
-export default function Sealed({ popularSealed }: Props) {
+export default function Sealed() {
   const {
     filteredSealedSearchResults: results,
     sealedSearchResultsLoading: loading,
@@ -24,8 +22,21 @@ export default function Sealed({ popularSealed }: Props) {
   } = useStore();
   const router = useRouter();
   const showBanner = true;
-  const { user, isLoading, subscription } = useUser();
+  // const { user, isLoading, subscription } = useUser();
 
+  const [popularSealed, setPopularSealed] = React.useState<SealedProductInfo[]>([]);
+  useEffect(() => {
+    const res = axios.get(
+      `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_sealed/`
+    ).then(res => res.data).then(data => {
+    let popularSealedProduct = [...data.monthly, ...data.weekly];
+    popularSealedProduct = popularSealedProduct.filter(
+      (prod, index, self) =>
+        index === self.findIndex((t) => t.product_name === prod.product_name)
+    );
+    setPopularSealed(popularSealedProduct);
+  })
+  }, []);
   // if (subscription?.status === "active")
   return (
     <>
@@ -108,29 +119,3 @@ export default function Sealed({ popularSealed }: Props) {
     </>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_sealed/`
-    );
-    let popularSealedProduct = [...res.data.monthly, ...res.data.weekly];
-    popularSealedProduct = popularSealedProduct.filter(
-      (prod, index, self) =>
-        index === self.findIndex((t) => t.product_name === prod.product_name)
-    );
-
-    return {
-      props: {
-        popularSealed: popularSealedProduct
-      }
-    };
-  } catch (err) {
-    console.log(err);
-    return {
-      props: {
-        popularSealed: []
-      }
-    };
-  }
-};
