@@ -33,11 +33,19 @@ const Home: NextPage<Props> = ({ popularCards }) => {
   const { user, isLoading, subscription } = useUser();
   const updates = [
     {
+      title: "Price monitoring and watchlist added.",
+      date: "Mar 28 2023"
+    },
+    {
       title: "Bug fixes and FaceToFace added to sealed search.",
       date: "Mar 27 2023"
     },
     {
-      title: "Everything Games, Exor Games, FantasyForged, FirstPlayer, GameKnight, Orchard City, Sequence Gaming added to sealed.",
+      title: "GameKnight, OrchardCity, ExorGames, SequenceGaming added to sealed.",
+      date: "Mar 26 2023"
+    },
+    {
+      title: "EverythingGames,  FantasyForged, FirstPlayer added to sealed.",
       date: "Mar 26 2023"
     },
     {
