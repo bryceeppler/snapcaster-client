@@ -24,11 +24,11 @@ export default function About({}: Props) {
       <main className="flex min-h-screen flex-col items-center justify-between px-2 py-8 sm:p-8">
         <div className="max-w-xl flex-1 flex-col items-center justify-center text-left">
           <div className="mx-auto space-y-7">
-            <h1 className="text-center text-4xl font-extrabold text-pink-500">
+            <h1 className="text-center text-4xl font-extrabold text-white">
               About
             </h1>
 
-            <div className="rounded-md p-4 outline outline-1 outline-zinc-800 backdrop-blur backdrop-brightness-50 space-y-8">
+            <div className="rounded-md p-4 outline outline-1 outline-zinc-600 backdrop-blur backdrop-brightness-50 space-y-8">
               <div>
               <div className="text-pink-400">Welcome to snapcaster!</div>
                 <p className="my-4">
@@ -45,16 +45,11 @@ export default function About({}: Props) {
                   Support
                 </h2>
                 <p className="mt-4">
-                  If you're interested in contributing to the development of
-                  snapcaster, you can contact me at the same email address.
-                </p>
-                <p className="mt-4">
                   snapcaster is a service I created in my spare time, and I rely
                   on donations to cover the server costs. If you find snapcaster
                   helpful, please consider donating to support the project.
                 </p>
-              </div>
-              <div className="flex justify-center">
+                <div className="flex justify-center mt-4">
                 <button
                   className="rounded-md bg-pink-400 py-2 px-4 font-mono font-bold transition-colors first-letter:mt-4 hover:bg-pink-500"
                   onClick={openDonationLink}
@@ -63,6 +58,13 @@ export default function About({}: Props) {
                 </button>
               </div>
             </div>
+                <p className="mt-4">
+                  If you're interested in contributing to the development of
+                  snapcaster, you can contact me at the same email address.
+                </p>
+
+              </div>
+
           </div>
         </div>
       </main>

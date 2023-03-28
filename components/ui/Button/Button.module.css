@@ -22,6 +22,12 @@
   @apply py-2 transform-none normal-case;
 }
 
+.error {
+  @apply py-2 bg-red-700 text-white border-red-600;
+}
+
+
+
 .disabled,
 .disabled:hover {
   @apply text-zinc-400 border-zinc-600 bg-zinc-700 cursor-not-allowed;
