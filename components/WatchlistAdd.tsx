@@ -171,11 +171,15 @@ const WatchlistAdd: React.FC<Props> = ({
             >
               Minimum Card Condition
             </label>
+            <div className="text-xs mb-2">
+            Disabled for now. DMG is default and will notify if any card goes below the threshold.
+          </div>
             <select
               id="condition"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
               value={minimumCondition}
               onChange={(e) => setMinimumCondition(e.target.value)}
+              disabled
             >
               <option value={'nm'}>NM</option>
               <option value={'lp'}>LP</option>
@@ -190,6 +194,9 @@ const WatchlistAdd: React.FC<Props> = ({
             >
               Notify me via
             </label>
+            <div className="text-xs mb-2 text-pink-400">
+            Notifications will only function if you are a beta tester. They are still in development.
+          </div>
             <select
               id="notification"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md bg-zinc-800"
@@ -203,13 +210,16 @@ const WatchlistAdd: React.FC<Props> = ({
         <div className="mt-6">
           <div className="text-xl font-extrabold">Stores</div>
           <div className="text-xs mb-2">
+            We will support store-specific price monitoring in the future, for now all stores are monitored by default.
+          </div>
+          {/* <div className="text-xs mb-2">
             You can select which stores you want to monitor for this card. If
             you don't select any stores, all stores will be monitored.
-          </div>
-          <StoreSelector />
+          </div> */}
+          {/* <StoreSelector /> */}
         </div>
         {/* Disclaimer */}
-        <p className="text-xs my-2">
+        <p className="text-xs my-2 mt-8">
           Please note that I cannot guarantee the accuracy or completeness of
           the data used for price monitoring. This service is provided on a
           best-effort basis and relies on the availability and status of the

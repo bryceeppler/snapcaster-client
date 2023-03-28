@@ -44,21 +44,21 @@ const WatchlistHome: React.FC<Props> = ({
                   </div>
                   <div className="flex flex-col text-right">
                     <div className="text-sm">
-                      Last checked: {item.last_checked}
+                    Last checked: {new Date(new Date(item.last_checked).getTime() - 25200000).toLocaleString()}
                     </div>
                     <div className="text-sm">
                       Price threshold: ${item.threshold}
                     </div>
                     <div
                       className={`text-sm ${
-                        item.current_price < item.threshold
+                        (item.current_price < item.threshold && item.current_price != null)
                           ? 'text-green-500'
                           : 'text-yellow-500'
                       }`}
                     >
-                      {item.current_price < item.threshold
+                      {(item.current_price < item.threshold && item.current_price != null)
                         ? 'Below threshold'
-                        : 'Above threshold'}
+                        : item.current_price === null ? 'No price data yet' : 'Above threshold'}
                     </div>
                   </div>
                 </div>
