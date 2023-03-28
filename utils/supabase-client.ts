@@ -45,9 +45,8 @@ export const getPriceWatchEntries = async (user: User) => {
     console.log(error.message);
   }
 
-  return data as WatchlistItem | []
-}
-
+  return data as WatchlistItem | [];
+};
 
 export const addPriceWatchEntry = async (
   user: User,
@@ -58,22 +57,61 @@ export const addPriceWatchEntry = async (
   notification_type: string,
   websites: string
 ) => {
-  const { data, error } = await supabase
-    .from('price_watch_entries')
-    .insert({
-      user_id: user.id,
-      card_name: cardName,
-      threshold,
-      interval_hrs,
-      minimum_condition,
-      notification_type,
-      websites
-    });
+  const { data, error } = await supabase.from('price_watch_entries').insert({
+    user_id: user.id,
+    card_name: cardName,
+    threshold,
+    interval_hrs,
+    minimum_condition,
+    notification_type,
+    websites
+  });
 
   if (error) {
     console.log(error.message);
   }
 
   return data;
-}
+};
 
+export const deletePriceWatchEntry = async (user: User, entryId: number) => {
+  const { error } = await supabase
+    .from('price_watch_entries')
+    .delete()
+    .eq('user_id', user.id)
+    .eq('id', entryId);
+
+  if (error) {
+    console.log(error.message);
+  }
+};
+
+export const updatePriceWatchEntry = async (
+  user: User,
+  entryId: number,
+  cardName: string,
+  threshold: number,
+  interval_hrs: number,
+  minimum_condition: string,
+  notification_type: string,
+  websites: string
+) => {
+  const { data, error } = await supabase
+    .from('price_watch_entries')
+    .update({
+      card_name: cardName,
+      threshold,
+      interval_hrs,
+      minimum_condition,
+      notification_type,
+      websites
+    })
+    .eq('user_id', user.id)
+    .eq('id', entryId);
+
+  if (error) {
+    console.log(error.message);
+  }
+
+  return data;
+};
