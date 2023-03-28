@@ -238,7 +238,9 @@ const WatchlistEdit: React.FC<WatchlistEditProps> = ({
         </div>
         <div className="w-full flex justify-center space-x-6 mt-6">
         <Button
-            onClick={() => {
+            onClick={async () => {
+              await deletePriceWatchEntry(user, selectedWatchlistItem.id);
+              refreshWatchlist();
               setSelectedScreen('home');
             }}
             className=""
