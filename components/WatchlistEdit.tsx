@@ -246,7 +246,7 @@ const WatchlistEdit: React.FC<WatchlistEditProps> = ({
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-center space-x-6 mt-6">
+        <div className="w-full flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 mt-6">
         <Button
             onClick={async () => {
               await deletePriceWatchEntry(user, selectedWatchlistItem.id);

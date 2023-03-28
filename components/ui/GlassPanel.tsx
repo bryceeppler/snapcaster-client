@@ -19,7 +19,7 @@ const GlassPanel: React.FC<GlassPanelProps> = ({
     <div
       className={`${
         color === 'dark' ? 'backdrop-brightness-75' : 'backdrop-brightness-125'
-      } backdrop-blur-md rounded-md p-4 shadow-md outline outline-1 outline-zinc-600
+      } backdrop-blur-md rounded-md p-4 shadow-md border border-1 border-zinc-600 
       ${tailwindProps ? tailwindProps : ''}
       `}
       onClick={onClick}

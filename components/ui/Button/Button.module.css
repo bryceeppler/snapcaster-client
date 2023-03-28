@@ -23,7 +23,7 @@
 }
 
 .error {
-  @apply py-2 bg-red-700 text-white border-red-600;
+  @apply py-2 transform-none bg-red-700 text-white border-red-600;
 }
 
 
