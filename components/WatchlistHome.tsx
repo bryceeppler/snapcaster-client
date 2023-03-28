@@ -20,7 +20,7 @@ const WatchlistHome: React.FC<Props> = ({
       {watchlist.length > 0 ? (
         <div className="my-4">
           <div className="text-xs mb-2">
-            You have {watchlist.length} cards on your watchlist.
+            You have {watchlist.length} cards on your watchlist. This feature is in testing and card prices refresh every 12 hours.
           </div>
           <div className="flex flex-col space-y-4">
             {watchlist.map((item, index) => (
