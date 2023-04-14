@@ -55,6 +55,10 @@ const Home: NextPage<Props> = () => {
   
   const updates = [
     {
+      title: "Bug fixes for Fantasy Forged.",
+      date: "Apr 14 2023"
+    },
+    {
       title: "Price monitoring and watchlist added.",
       date: "Mar 28 2023"
     },
