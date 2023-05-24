@@ -87,11 +87,11 @@ const websites: Website[] = [
     code: 'facetoface',
     image: 'https://i.ibb.co/W2bPWdK/logo-colored-1.png'
   },
-  {
-    name: 'Fantasy Forged Games',
-    code: 'fantasyforged',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/ff.png'
-  },
+  // {
+  //   name: 'Fantasy Forged Games',
+  //   code: 'fantasyforged',
+  //   image: 'https://bryces-images.s3.us-west-2.amazonaws.com/ff.png'
+  // },
   {
     name: 'FirstPlayer',
     code: 'firstplayer',
