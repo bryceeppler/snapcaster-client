@@ -11,6 +11,7 @@ const websiteLogos: WebsiteLogo = {
       "http://cc-client-assets.s3.amazonaws.com/store/gauntletgamesvictoria/7c8176e703db451bad3277bb6d4b8631/medium/Transparent_logo.png",
     houseOfCards: "https://i.ibb.co/qnytc5Q/house-of-cards-logo.png",
     kanatacg: "https://i.ibb.co/hm3qKWc/wizardstower-removebg-preview.png",
+    dragoncards: "https://bryces-images.s3.us-west-2.amazonaws.com/dragon_cards_and_games_white.png",
     fusion: "https://i.ibb.co/GkKmry9/fusiongaminglogo.png",
     four01: "https://i.ibb.co/h9x3Ksb/401games.png",
     everythinggames:
