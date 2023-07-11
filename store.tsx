@@ -113,6 +113,11 @@ const websites: Website[] = [
     image: 'https://i.ibb.co/GkKmry9/fusiongaminglogo.png'
   },
   {
+    name: "Game Breakers",
+    code: 'gamebreakers',
+    image: 'https://gamebreakers.ca/cdn/shop/files/GameBreakersLogo_REV_2.png?v=1655901364'
+  },
+  {
     name: 'GameKnight',
     code: 'gameknight',
     image: 'https://cdn.shopify.com/s/files/1/0367/8204/7276/files/GK-Logo-Full-Text-Below-1-768x603.png?v=1618430878'

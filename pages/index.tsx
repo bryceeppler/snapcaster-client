@@ -55,11 +55,11 @@ const Home: NextPage<Props> = () => {
   
   const updates = [
     {
-      title: "Bug fixes for FantasyForged, added Dragon Cards and Games Kelowna",
+      title: "Added GameBreakers and Dragon Cards & Games to single search",
       date: "July 11 2023"
     },
     {
-      title: "Bug fixes for 401 Games, OrachardCity, Kanatacg, EnterTheBattlefield, GameKnight",
+      title: "Bug fixes for FantasyForged, 401 Games, OrachardCity, Kanatacg, EnterTheBattlefield, GameKnight",
       date: "July 11 2023"
     },
     {

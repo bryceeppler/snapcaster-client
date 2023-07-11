@@ -50,6 +50,8 @@ const websiteLogos: WebsiteLogo = {
       "https://bryces-images.s3.us-west-2.amazonaws.com/ComicHunter.png",
       fantasyforged:
       "https://bryces-images.s3.us-west-2.amazonaws.com/ff.png",
+      gamebreakers:
+      "https://gamebreakers.ca/cdn/shop/files/GameBreakersLogo_REV_2.png?v=1655901364",
   };
 
 export default function SingleCatalogRow({cardData}: Props) {
