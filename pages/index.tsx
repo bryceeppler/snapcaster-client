@@ -55,6 +55,10 @@ const Home: NextPage<Props> = () => {
   
   const updates = [
     {
+      title: "Bug fixes for 401 Games, OrachardCity, Kanatacg, EnterTheBattlefield, GameKnight",
+      date: "July 11 2023"
+    },
+    {
       title: "Bug fixes for Fantasy Forged.",
       date: "Apr 14 2023"
     },
