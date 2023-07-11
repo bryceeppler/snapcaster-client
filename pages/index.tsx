@@ -55,7 +55,7 @@ const Home: NextPage<Props> = () => {
   
   const updates = [
     {
-      title: "Added GameBreakers and Dragon Cards & Games to single search",
+      title: "Added 8 new stores to single search and multi search.",
       date: "July 11 2023"
     },
     {
