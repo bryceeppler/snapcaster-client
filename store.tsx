@@ -183,6 +183,11 @@ const websites: Website[] = [
     image: 'https://bryces-images.s3.us-west-2.amazonaws.com/topdeckhero.png'
   },
   {
+    name: 'Vortex Games',
+    code: 'vortexgames',
+    image: 'https://vortexgames.ca/cdn/shop/files/favico_x60_2x_c557b87f-6e22-4c6d-a5ad-dc202785f3e1_100x.png?v=1652245334'
+  },
+  {
     name: "Wizard's Tower (kanatacg)",
     code: 'kanatacg',
     image: 'https://i.ibb.co/hm3qKWc/wizardstower-removebg-preview.png'
