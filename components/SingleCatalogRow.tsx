@@ -6,6 +6,7 @@ type Props = {
 type WebsiteLogo = Record<string, string>;
 
 const websiteLogos: WebsiteLogo = {
+    abyss: 'https://bryces-images.s3.us-west-2.amazonaws.com/Abyss_White_Bold_230x%402x.avif',
     chimera: 'https://cdn.shopify.com/s/files/1/0131/2463/2640/files/logo_large.png?v=1672686974',
     gauntlet:
       "http://cc-client-assets.s3.amazonaws.com/store/gauntletgamesvictoria/7c8176e703db451bad3277bb6d4b8631/medium/Transparent_logo.png",

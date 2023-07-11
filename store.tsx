@@ -43,6 +43,11 @@ export interface Website {
 }
 const websites: Website[] = [
   {
+    name: "Abyss Game Store",
+    code: 'abyss',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/Abyss_White_Bold_230x%402x.avif"
+  },
+  {
     name: 'Aether Vault Games',
     code: 'aethervault',
     image: 'https://bryces-images.s3.us-west-2.amazonaws.com/AetherVaultGames.png'
