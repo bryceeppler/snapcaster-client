@@ -56,7 +56,13 @@ const websiteLogos: WebsiteLogo = {
       mythicstore:
       "https://themythicstore.com/cdn/shop/files/prise3.png?v=1677464824",
       vortexgames:
-      "https://vortexgames.ca/cdn/shop/files/favico_x60_2x_c557b87f-6e22-4c6d-a5ad-dc202785f3e1_100x.png?v=1652245334"
+      "https://vortexgames.ca/cdn/shop/files/favico_x60_2x_c557b87f-6e22-4c6d-a5ad-dc202785f3e1_100x.png?v=1652245334",
+      northofexile:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/northofexile.avif",
+      crypt:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/crypte.avif",
+      silvergoblin:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/silvergoblin.avif",
   };
 
 export default function SingleCatalogRow({cardData}: Props) {

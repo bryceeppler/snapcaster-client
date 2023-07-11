@@ -196,7 +196,22 @@ const websites: Website[] = [
     name: "Wizard's Tower (kanatacg)",
     code: 'kanatacg',
     image: 'https://i.ibb.co/hm3qKWc/wizardstower-removebg-preview.png'
-  }
+  },
+  {
+    name: "Crypt",
+    code: 'crypt',
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/crypte.avif'
+  },
+  {
+    name: "Silver Goblin",
+    code: 'silvergoblin',
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/silvergoblin.avif'
+  },
+  {
+    name: "North of Exile",
+    code: 'northofexile',
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/northofexile.avif'
+  },
 ];
 
 export type FilterTag = {
