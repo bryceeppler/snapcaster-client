@@ -52,6 +52,8 @@ const websiteLogos: WebsiteLogo = {
       "https://bryces-images.s3.us-west-2.amazonaws.com/ff.png",
       gamebreakers:
       "https://gamebreakers.ca/cdn/shop/files/GameBreakersLogo_REV_2.png?v=1655901364",
+      mythicstore:
+      "https://themythicstore.com/cdn/shop/files/prise3.png?v=1677464824"
   };
 
 export default function SingleCatalogRow({cardData}: Props) {

@@ -158,6 +158,11 @@ const websites: Website[] = [
     image: 'https://magicstronghold-images.s3.amazonaws.com/customizations/logo.png'
   },
   {
+    name: "The Mythic Store",
+    code: 'mythicstore',
+    image: "https://themythicstore.com/cdn/shop/files/prise3.png?v=1677464824"
+  },
+  {
     name: 'Orchard City Games',
     code: 'orchardcity',
     image: 'https://d1rw89lz12ur5s.cloudfront.net/store/orchardcitygames/eb6cb32f84b34b5cbb1c025fc41c9821/large/logo_v1.png'
