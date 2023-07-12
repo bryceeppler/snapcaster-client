@@ -55,7 +55,11 @@ const Home: NextPage<Props> = () => {
   
   const updates = [
     {
-      title: "Added 8 new stores to single search and multi search.",
+      title: "Added 14 new stores to single search.",
+      date: "July 12 2023"
+    },
+    {
+      title: "Added 8 new stores to single search.",
       date: "July 11 2023"
     },
     {

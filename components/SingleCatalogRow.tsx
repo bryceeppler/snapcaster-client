@@ -63,6 +63,41 @@ const websiteLogos: WebsiteLogo = {
       "https://bryces-images.s3.us-west-2.amazonaws.com/crypte.avif",
       silvergoblin:
       "https://bryces-images.s3.us-west-2.amazonaws.com/silvergoblin.avif",
+
+      blackknight:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/blackknightgames.webp",
+
+      eastridge:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/eastridge.avif",
+
+      hfxgames:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/hfxgames.avif",
+
+      kesselrun:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/kesselrun.avif",
+      nerdzcafe: "https://bryces-images.s3.us-west-2.amazonaws.com/nerdzcafe.webp",
+      omg:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/omggames.webp",
+      outofthebox:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/outofthebox.avif",
+      pandorasboox:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/pandorasboox.avif",
+      reddragon:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/reddragon.webp",
+      skyfox:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/skyfox.avif",
+      taps:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/tapsgames.avif",
+      timevault:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/timevault.avif",
+      upnorth:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/upnorth.avif",
+      waypoint:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/waypoint.webp",
+
+
+
+
   };
 
 export default function SingleCatalogRow({cardData}: Props) {
