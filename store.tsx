@@ -212,6 +212,76 @@ const websites: Website[] = [
     code: 'northofexile',
     image: 'https://bryces-images.s3.us-west-2.amazonaws.com/northofexile.avif'
   },
+  {
+    name: "Black Knight",
+    code: 'blackknight',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/blackknightgames.webp"
+  },
+  {
+    name: "East Ridge Games",
+    code: 'eastridge',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/eastridge.avif"
+  },
+  {
+    name: "HFX Games",
+    code: 'hfx',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/hfxgames.avif"
+  },
+  {
+    name: "Kessel Run",
+    code: 'kesselrun',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/kesselrun.avif"
+  },
+  {
+    name: "Nerdz Cafe",
+    code: 'nerdzcafe',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/nerdzcafe.webp"
+  },
+  {
+    name: "OMG Games",
+    code: 'omg',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/omggames.webp"
+  },
+  {
+    name: "Out of The Box",
+    code: 'outofthebox',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/outofthebox.avif"
+  },
+  {
+    name: "Pandora's Boox",
+    code: 'pandorasboox',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/pandorasboox.avif"
+  },
+  {
+    name: "Red Dragon",
+    code: 'reddragon',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/reddragon.webp"
+  },
+  {
+    name: "Sky Fox",
+    code: 'skyfox',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/skyfox.avif"
+  },
+  {
+    name: "Taps Games",
+    code: 'taps',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/tapsgames.avif"
+  },
+  {
+    name: "Time Vault",
+    code: 'timevault',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/timevault.avif"
+  },
+  {
+    name: "Up North Games",
+    code: 'upnorth',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/upnorth.avif"
+  },
+  {
+    name: "Waypoint Games",
+    code: 'waypoint',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/waypoint.webp"
+  },
 ];
 
 export type FilterTag = {
