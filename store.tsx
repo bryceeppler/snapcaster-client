@@ -224,7 +224,7 @@ const websites: Website[] = [
   },
   {
     name: "HFX Games",
-    code: 'hfxgames',
+    code: 'hfx',
     image: "https://bryces-images.s3.us-west-2.amazonaws.com/hfxgames.avif"
   },
   {

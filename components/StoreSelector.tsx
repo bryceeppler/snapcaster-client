@@ -9,7 +9,9 @@ export default function StoreSelector({}: Props) {
   return (
     <div className="flex flex-col">
       <div className="grid w-full grid-cols-2 md:grid-cols-3 rounded-md p-2 outline outline-1 outline-zinc-800 backdrop-blur-sm backdrop-brightness-75">
-        {websites.map((website, index) => {
+        {websites.sort(
+          (a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+          ).map((website, index) => {
           return (
             <div
               key={index}
