@@ -26,10 +26,10 @@ export default function Navbar({}: Props) {
       current: currentPath === '/multisearch'
     },
     { name: 'Sealed', href: '/sealed', current: currentPath === '/sealed' },
-    { name: 'Watchlist', href: '/watchlist', current: currentPath === '/watchlist' },
+    // { name: 'Watchlist', href: '/watchlist', current: currentPath === '/watchlist' },
     // { name: 'Membership', href: '/pricing', current: currentPath === '/pricing' },
     { name: 'About', href: '/about', current: currentPath === '/about' },
-    { name: 'Profile', href: '/account', current: currentPath === '/account' }
+    // { name: 'Profile', href: '/account', current: currentPath === '/account' }
   ];
   return (
     <div>
@@ -116,7 +116,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
 
                   {/* User ? */}
                   <div className="flex-1" />
-                  <div
+                  {/* <div
                     className={`
  rounded-md py-2 px-3 text-sm font-medium hover:bg-zinc-600
 `}
@@ -133,7 +133,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                     ) : (
                       <Link href="/signin">Sign in</Link>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -158,7 +158,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                 </Link>
               ))}
               {/* USER STUFF */}
-                                <div
+                                {/* <div
                     className={`
  rounded-md py-2 px-3 text-sm font-medium hover:bg-zinc-400
 `}
@@ -175,7 +175,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                     ) : (
                       <Link href="/signin">Sign in</Link>
                     )}
-                  </div>
+                  </div> */}
             </div>
           </div>
         </div>
