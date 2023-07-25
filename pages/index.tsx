@@ -55,6 +55,10 @@ const Home: NextPage<Props> = () => {
   
   const updates = [
     {
+      title: "Bugfixes for multiple BinderPOS stores.",
+      date: "July 24, 2023"
+    },
+    {
       title: "Added 14 new stores to single search.",
       date: "July 12 2023"
     },
