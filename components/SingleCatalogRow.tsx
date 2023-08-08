@@ -10,7 +10,7 @@ const websiteLogos: WebsiteLogo = {
     chimera: 'https://cdn.shopify.com/s/files/1/0131/2463/2640/files/logo_large.png?v=1672686974',
     gauntlet:
       "http://cc-client-assets.s3.amazonaws.com/store/gauntletgamesvictoria/7c8176e703db451bad3277bb6d4b8631/medium/Transparent_logo.png",
-    houseOfCards: "https://i.ibb.co/qnytc5Q/house-of-cards-logo.png",
+    houseOfCards: "https://bryces-images.s3.us-west-2.amazonaws.com/houseofcards.webp",
     kanatacg: "https://i.ibb.co/hm3qKWc/wizardstower-removebg-preview.png",
     dragoncards: "https://bryces-images.s3.us-west-2.amazonaws.com/dragon_cards_and_games_white.png",
     fusion: "https://i.ibb.co/GkKmry9/fusiongaminglogo.png",
@@ -70,7 +70,7 @@ const websiteLogos: WebsiteLogo = {
       eastridge:
       "https://bryces-images.s3.us-west-2.amazonaws.com/eastridge.avif",
 
-      hfxgames:
+      hfx:
       "https://bryces-images.s3.us-west-2.amazonaws.com/hfxgames.avif",
 
       kesselrun:
@@ -94,6 +94,8 @@ const websiteLogos: WebsiteLogo = {
       "https://bryces-images.s3.us-west-2.amazonaws.com/upnorth.avif",
       waypoint:
       "https://bryces-images.s3.us-west-2.amazonaws.com/waypoint.webp",
+      levelup:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/levelup.webp",
 
 
 
