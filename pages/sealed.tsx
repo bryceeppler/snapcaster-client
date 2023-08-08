@@ -51,6 +51,18 @@ export default function Sealed() {
       </Head>
       <main className="flex flex-col justify-between items-center px-2 py-8 sm:p-8 min-h-screen">
         <div className="flex-col justify-center flex-1 text-center max-w-xl w-full">
+                      {/* message box for updates */}
+                      <div className="h-auto w-full rounded bg-red-500 py-2 opacity-80">
+              <div className="flex h-full items-center justify-center">
+                <div className="text-md text-white">
+                  Sealed search is undergoing some changes and may not work as
+                  expected. <span>
+                    {/* date */}
+                    <span className="font-bold">August 8, 2023</span>
+                  </span>
+                </div>
+              </div>
+            </div>
           {showBanner && (
             <div className="text-3xl font-extrabold">Search for a set</div>
           )}

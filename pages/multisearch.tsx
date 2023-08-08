@@ -1,16 +1,17 @@
-import React from 'react'
-import Head from 'next/head'
-import { useStore } from 'store'
-import Loadingspinner from '@/components/Loadingspinner'
-import MultiCatalog from '@/components/MultiCatalog'
-import MultiSearchbox from '@/components/MultiSearchbox'
-import StoreSelector from '@/components/StoreSelector'
-type Props = {}
+import React from 'react';
+import Head from 'next/head';
+import { useStore } from 'store';
+import Loadingspinner from '@/components/Loadingspinner';
+import MultiCatalog from '@/components/MultiCatalog';
+import MultiSearchbox from '@/components/MultiSearchbox';
+import StoreSelector from '@/components/StoreSelector';
+type Props = {};
 
 export default function Multisearch({}: Props) {
-    // const mode: string = "search";
-    const { multiSearchResultsLoading: loading, multiSearchMode: mode } = useStore();
-    // const loading = false;
+  // const mode: string = "search";
+  const { multiSearchResultsLoading: loading, multiSearchMode: mode } =
+    useStore();
+  // const loading = false;
   return (
     <>
       <Head>
@@ -22,12 +23,25 @@ export default function Multisearch({}: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="w-full max-w-2xl min-h-screen flex flex-col items-center p-2 sm:p-8 mx-auto">
-        {mode === "search" && !loading && (
-          <div className="flex-col items-center justify-center flex-1 text-center max-w-2xl">
+      <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center p-2 sm:p-8">
+        {mode === 'search' && !loading && (
+          <div className="max-w-2xl flex-1 flex-col items-center justify-center text-center">
             {/* checkboxes for selecting the stores */}
-            <div className="text-3xl font-extrabold my-2">Select stores to search</div>
-            <div className="text-sm text-white mb-4">Select which stores you would like to search. The more stores, the longer the search will take.</div>
+            <div className="h-auto w-full rounded bg-red-500 py-2 opacity-80">
+              <div className="flex h-full items-center justify-center">
+                <div className="text-md text-white">
+                  Multisearch is undergoing some changes and may not work as
+                  expected. Please use the single search for now.
+                </div>
+              </div>
+            </div>
+            <div className="my-2 text-3xl font-extrabold">
+              Select stores to search
+            </div>
+            <div className="mb-4 text-sm text-white">
+              Select which stores you would like to search. The more stores, the
+              longer the search will take.
+            </div>
             {/* <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
             <ins
             className="adsbygoogle"
@@ -44,20 +58,20 @@ export default function Multisearch({}: Props) {
           </div>
         )}
         {loading && (
-          <div className="flex flex-col space-y-2 justify-center items-center pt-5">
+          <div className="flex flex-col items-center justify-center space-y-2 pt-5">
             <Loadingspinner />
-            <div className="text-sm p-3">
+            <div className="p-3 text-sm">
               This might take a minute, depending on the number of cards and
               selected stores.
             </div>
           </div>
         )}
-        {mode == "results" && (
-          <div className="flex-col w-full max-w-xl">
+        {mode == 'results' && (
+          <div className="w-full max-w-xl flex-col">
             <MultiCatalog />
           </div>
         )}
       </main>
     </>
-  )
+  );
 }
