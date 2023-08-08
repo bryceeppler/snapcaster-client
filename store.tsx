@@ -145,7 +145,7 @@ const websites: Website[] = [
   {
     name: 'House of Cards',
     code: 'houseofcards',
-    image: 'https://i.ibb.co/qnytc5Q/house-of-cards-logo.png'
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/houseofcards.webp'
   },
   {
     name: 'Jeux 3 Dragons',
@@ -282,6 +282,11 @@ const websites: Website[] = [
     code: 'waypoint',
     image: "https://bryces-images.s3.us-west-2.amazonaws.com/waypoint.webp"
   },
+  {
+    name: "Level Up Games",
+    code: 'levelup',
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/levelup.webp"
+  }
 ];
 
 export type FilterTag = {
