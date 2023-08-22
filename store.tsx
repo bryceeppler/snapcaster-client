@@ -286,6 +286,16 @@ const websites: Website[] = [
     name: "Level Up Games",
     code: 'levelup',
     image: "https://bryces-images.s3.us-west-2.amazonaws.com/levelup.webp"
+  },
+  {
+    name: "Kingdom of the Titans",
+    code: "kingdomtitans",
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/kingdomtitans.webp"
+  },
+  {
+    name: "Fan of the Sport",
+    code: "fanofthesport",
+    image: "https://bryces-images.s3.us-west-2.amazonaws.com/fanofthesport.avif"
   }
 ];
 
