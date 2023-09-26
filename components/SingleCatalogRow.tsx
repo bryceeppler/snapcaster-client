@@ -99,7 +99,9 @@ const websiteLogos: WebsiteLogo = {
       fanofthesport:
       "https://bryces-images.s3.us-west-2.amazonaws.com/fanofthesport.avif",
       kingdomtitans:
-      "https://bryces-images.s3.us-west-2.amazonaws.com/kingdomtitans.webp"
+      "https://bryces-images.s3.us-west-2.amazonaws.com/kingdomtitans.webp",
+      untouchables:
+      "https://bryces-images.s3.us-west-2.amazonaws.com/untouchables.webp"
 
 
 
