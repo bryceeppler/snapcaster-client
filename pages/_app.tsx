@@ -7,6 +7,8 @@ import { Analytics } from '@vercel/analytics/react';
 import Layout from '@/components/Layout';
 import { MyUserContextProvider } from '@/utils/useUser';
 import type { Database } from 'types_db';
+import { initGA, logPageView } from '../utils/analytics';
+
 import Script from 'next/script';
 
 import 'styles/main.css';
@@ -28,6 +30,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         (adsbygoogle = (window as any).adsbygoogle || []).push({});
       } catch (e) { }
     }
+}, []);
+useEffect(() => {
+  if (process.env.NODE_ENV === 'production') {
+    initGA();
+    logPageView();
+  }
 }, []);
   return (
     <div className="">

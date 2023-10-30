@@ -23,6 +23,7 @@
     "react": "^18.2.0",
     "react-charts": "3.0.0-beta.54",
     "react-dom": "^18.2.0",
+    "react-ga4": "^2.1.0",
     "react-merge-refs": "^2.0.1",
     "react-resizable": "^3.0.4",
     "recharts": "^2.4.3",
