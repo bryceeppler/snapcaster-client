@@ -97,11 +97,6 @@ const websiteLogos: WebsiteLogo = {
 };
 
 export default function SingleCatalogRow({ cardData }: Props) {
-  const handleClick = () => {
-    const strippedLink = cardData.link.split('/')[2];
-    trackOutboundLink(strippedLink);
-    window.open(cardData.link, '_blank');
-  };
 
   return (
     <>
@@ -142,12 +137,13 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 )}
                 <div className="text-sm font-bold">{cardData.condition}</div>
               </div>
-              <button
+              <a
                 className="transition-all bg-zinc-800 hover:bg-zinc-900 text-white font-bold p-1 px-2 sm:py-1 sm:px-4 rounded focus:outline-none focus:shadow-outline mt-4 "
-                onClick={handleClick}
+                href={cardData.link}
+                target="_blank"
               >
                 Buy
-              </button>
+              </a>
             </div>
           </div>
         </div>
