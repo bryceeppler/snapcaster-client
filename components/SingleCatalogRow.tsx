@@ -97,6 +97,13 @@ const websiteLogos: WebsiteLogo = {
 };
 
 export default function SingleCatalogRow({ cardData }: Props) {
+  function handleBuyClick(link:string, price:number) {
+    // extract the domain from the link
+    const domain = link.split('/')[2];
+    // convert price to cents
+    const priceInCents = price * 100;
+    trackOutboundLink(domain, priceInCents);
+  }
 
   return (
     <>
@@ -141,6 +148,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 className="transition-all bg-zinc-800 hover:bg-zinc-900 text-white font-bold p-1 px-2 sm:py-1 sm:px-4 rounded focus:outline-none focus:shadow-outline mt-4 "
                 href={cardData.link}
                 target="_blank"
+                onClick={() => handleBuyClick(cardData.link, cardData.price)}
               >
                 Buy
               </a>
