@@ -36,6 +36,9 @@ useEffect(() => {
     initGA();
     logPageView();
   }
+  else {
+    initGA();
+  }
 }, []);
   return (
     <div className="">
