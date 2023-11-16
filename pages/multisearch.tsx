@@ -27,14 +27,14 @@ export default function Multisearch({}: Props) {
         {mode === 'search' && !loading && (
           <div className="max-w-2xl flex-1 flex-col items-center justify-center text-center">
             {/* checkboxes for selecting the stores */}
-            <div className="h-auto w-full rounded bg-red-500 py-2 opacity-80">
+            {/* <div className="h-auto w-full rounded bg-red-500 py-2 opacity-80">
               <div className="flex h-full items-center justify-center">
                 <div className="text-md text-white">
                   Multisearch is undergoing some changes and may not work as
                   expected. Please use the single search for now.
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="my-2 text-3xl font-extrabold">
               Select stores to search
             </div>
