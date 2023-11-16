@@ -3,6 +3,14 @@ import axios from 'axios';
 import LoadingDots from './ui/LoadingDots';
 import { useStore } from "store";
 
+// Preload images function
+const preloadImages = (imageUrls: string[]): void => {
+  imageUrls.forEach((url) => {
+    const img = new Image();
+    img.src = url;
+  });
+};
+
 type Props = {
   popularCards: CardInfo[];
 };
@@ -52,7 +60,12 @@ export default function PopularCards({ popularCards }: Props) {
     // Filter out any undefined elements
     const filteredVisibleCards = visibleCards.filter(card => card !== undefined);
 
-
+    useEffect(() => {
+      // Extract image URLs from popularCards
+      const imageUrls = popularCards.map(card => card.image_url);
+      preloadImages(imageUrls);
+    }, [popularCards]); // Dependency array ensures this runs on mount and when popularCards updates
+  
 
   return (
     <div className="mx-auto mt-6 w-full max-w-3xl rounded-md p-4 border border-1 border-zinc-600 backdrop-blur-md backdrop-brightness-75 ">
@@ -68,7 +81,8 @@ export default function PopularCards({ popularCards }: Props) {
           {filteredVisibleCards.map((card, index) => (
             <div
               key={index}
-              className={`mx-2 flex flex-col items-center sm:w-1/3 ${
+              // hover shoudl show hand pointer
+              className={`mx-2 flex flex-col items-center sm:w-1/3 cursor-pointer ${
                 //  if small or below, hide all but index 0
                 index === 0 ? 'block' : 'hidden sm:block'
               }`}
