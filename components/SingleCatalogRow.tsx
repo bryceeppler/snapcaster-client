@@ -3,6 +3,7 @@ import { SingleSearchResult } from 'store';
 type Props = {
   cardData: SingleSearchResult;
 };
+import { useStore } from 'store';
 type WebsiteLogo = Record<string, string>;
 import { trackOutboundLink } from '../utils/analytics';
 
@@ -97,7 +98,13 @@ const websiteLogos: WebsiteLogo = {
 };
 
 export default function SingleCatalogRow({ cardData }: Props) {
-  function handleBuyClick(link:string, price:number) {
+  const { websites } = useStore();
+
+  const findWebsiteNameByCode = (code: string): string => {
+    const website = websites.find((website) => website.code === code);
+    return website ? website.name : 'Website not found';
+  };
+  function handleBuyClick(link: string, price: number) {
     // extract the domain from the link
     const domain = link.split('/')[2];
     // convert price to cents
@@ -119,17 +126,20 @@ export default function SingleCatalogRow({ cardData }: Props) {
           </div>
           <div className="col-span-5 mt-2">
             <div className="flex flex-col text-left">
-              <div className="text-md font-bold">{cardData.name}</div>
               <div className="text-sm">{cardData.set}</div>
+              <div className="text-md font-bold">{cardData.name}</div>
+
               {/* match cardData.website to it's websiteLogo from the map */}
-              <div className="h-16 w-16">
+              {/* <div className="h-16 w-16">
                 <img
                   //   map string of website to the image key
                   src={websiteLogos[cardData.website]}
                   alt="website logo"
                   className="h-16 w-16 object-contain"
                 />
-                {/* <div className="text-sm">{cardData.website}</div> */}
+              </div> */}
+              <div className="text-sm">
+                {findWebsiteNameByCode(cardData.website)}
               </div>
             </div>
           </div>
@@ -149,8 +159,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 href={cardData.link}
                 data-price={cardData.price}
                 target="_blank"
-                id='buy-button'
-                
+                id="buy-button"
                 onClick={() => handleBuyClick(cardData.link, cardData.price)}
               >
                 Buy
