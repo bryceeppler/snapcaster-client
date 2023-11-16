@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import LoadingDots from './ui/LoadingDots';
-import { useStore } from "store";
 
 type Props = {
   popularCards: CardInfo[];
@@ -15,24 +14,6 @@ export type CardInfo = {
 
 export default function PopularCards({ popularCards }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [visibleCards, setVisibleCards] = useState<CardInfo[]>([]);
-  const { setSingleSearchInput, fetchSingleSearchResults } = useStore();
-
-  useEffect(() => {
-    const getCardIndex = (offset: number) => {
-      const newIndex = activeIndex + offset;
-      return newIndex >= 0
-        ? newIndex % popularCards.length
-        : popularCards.length + newIndex;
-    };
-
-    setVisibleCards([
-      popularCards[getCardIndex(-1)],
-      popularCards[getCardIndex(0)],
-      popularCards[getCardIndex(1)],
-    ]);
-  }, [activeIndex, popularCards]);
-
 
   const nextCard = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % popularCards.length);
@@ -44,15 +25,18 @@ export default function PopularCards({ popularCards }: Props) {
     );
   };
 
-  const handleCardClick = (cardName: string) => {
-    setSingleSearchInput(cardName);
-    fetchSingleSearchResults(cardName);
+  const getCardIndex = (offset: number) => {
+    const newIndex = activeIndex + offset;
+    return newIndex >= 0
+      ? newIndex % popularCards.length
+      : popularCards.length + newIndex;
   };
 
-    // Filter out any undefined elements
-    const filteredVisibleCards = visibleCards.filter(card => card !== undefined);
-
-
+  const visibleCards = [
+    popularCards[getCardIndex(-1)],
+    popularCards[getCardIndex(0)],
+    popularCards[getCardIndex(1)]
+  ];
 
   return (
     <div className="mx-auto mt-6 w-full max-w-3xl rounded-md p-4 border border-1 border-zinc-600 backdrop-blur-md backdrop-brightness-75 ">
@@ -65,21 +49,19 @@ export default function PopularCards({ popularCards }: Props) {
           >
             &lt;
           </button>
-          {filteredVisibleCards.map((card, index) => (
+          {visibleCards.map((card, index) => (
             <div
               key={index}
-              // hover shoudl show hand pointer
-              className={`mx-2 flex flex-col items-center sm:w-1/3 cursor-pointer ${
+              className={`mx-2 flex flex-col items-center sm:w-1/3 ${
                 //  if small or below, hide all but index 0
                 index === 0 ? 'block' : 'hidden sm:block'
               }`}
-              onClick={() => handleCardClick(card.name)}
             >
               <div className="flex h-48 w-full items-center">
                 <img
                   className="mx-auto max-h-full max-w-full object-contain"
-                  src={card?.image_url}
-                  alt={card?.name}
+                  src={card.image_url}
+                  alt={card.name}
                 />
               </div>
               <p className="mt-2 w-36 truncate text-center text-sm">
