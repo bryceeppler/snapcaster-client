@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import LoadingDots from './ui/LoadingDots';
+import { useStore } from "store";
 
 type Props = {
   popularCards: CardInfo[];
@@ -15,6 +16,7 @@ export type CardInfo = {
 export default function PopularCards({ popularCards }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [visibleCards, setVisibleCards] = useState<CardInfo[]>([]);
+  const { setSingleSearchInput, fetchSingleSearchResults } = useStore();
 
   useEffect(() => {
     const getCardIndex = (offset: number) => {
@@ -42,6 +44,11 @@ export default function PopularCards({ popularCards }: Props) {
     );
   };
 
+  const handleCardClick = (cardName: string) => {
+    setSingleSearchInput(cardName);
+    fetchSingleSearchResults(cardName);
+  };
+
     // Filter out any undefined elements
     const filteredVisibleCards = visibleCards.filter(card => card !== undefined);
 
@@ -65,6 +72,7 @@ export default function PopularCards({ popularCards }: Props) {
                 //  if small or below, hide all but index 0
                 index === 0 ? 'block' : 'hidden sm:block'
               }`}
+              onClick={() => handleCardClick(card.name)}
             >
               <div className="flex h-48 w-full items-center">
                 <img

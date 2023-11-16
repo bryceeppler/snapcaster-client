@@ -111,6 +111,13 @@ export default function SingleSearchbox({ includePriceChart }: Props) {
   );
 
   useEffect(() => {
+    if (singleSearchInput && singleSearchInput.trim().length > 0) {
+      // Optionally, you can also call fetchPriceChart here if needed
+      fetchSingleSearchResults(singleSearchInput);
+    }
+  }, [singleSearchInput, fetchSingleSearchResults, fetchPriceChart]);
+
+  useEffect(() => {
     if (searchRef.current) {
       searchRef.current.focus();
     }
