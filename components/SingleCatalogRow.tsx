@@ -148,6 +148,8 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 className="transition-all bg-zinc-800 hover:bg-zinc-900 text-white font-bold p-1 px-2 sm:py-1 sm:px-4 rounded focus:outline-none focus:shadow-outline mt-4 "
                 href={cardData.link}
                 target="_blank"
+                id='buy-button'
+                
                 onClick={() => handleBuyClick(cardData.link, cardData.price)}
               >
                 Buy
