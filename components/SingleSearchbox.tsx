@@ -2,11 +2,10 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useStore } from "store";
 
 type Props = {
-  includePriceChart?: boolean;
 };
 
-export default function SingleSearchbox({ includePriceChart }: Props) {
-  const { singleSearchInput, setSingleSearchInput, fetchSingleSearchResults, fetchPriceChart } =
+export default function SingleSearchbox({}: Props) {
+  const { singleSearchInput, setSingleSearchInput, fetchSingleSearchResults} =
     useStore();
   const autocompleteEndpoint = "https://api.scryfall.com/cards/autocomplete?q=";
   const [autocompleteResults, setAutocompleteResults] = useState<string[]>([]);
@@ -76,7 +75,6 @@ export default function SingleSearchbox({ includePriceChart }: Props) {
             const item = autocompleteResults[selectedAutocompleteIndex];
             item && handleAutocompleteItemClick(item);
             item && fetchSingleSearchResults(item);
-            item && includePriceChart && fetchPriceChart(item);
           }
           break;
 
@@ -88,8 +86,6 @@ export default function SingleSearchbox({ includePriceChart }: Props) {
             const item = autocompleteResults[selectedAutocompleteIndex];
             item && handleAutocompleteItemClick(item);
             item && fetchSingleSearchResults(item);
-            item && includePriceChart && fetchPriceChart(item);
-
           }
           break;
 
@@ -121,9 +117,6 @@ export default function SingleSearchbox({ includePriceChart }: Props) {
     setShowAutocomplete(false);
     if (singleSearchInput.trim().length > 0) {
       fetchSingleSearchResults(singleSearchInput);
-      if (includePriceChart) {
-        fetchPriceChart(singleSearchInput);  
-      }
     }
   };
 
