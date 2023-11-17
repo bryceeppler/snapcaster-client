@@ -337,8 +337,6 @@ export type CardPrices = {
 
 type State = {
   singleSearchStarted: boolean;
-  priceChartLoading: boolean;
-  fetchPriceChart: (cardName: string) => void;
   sortMultiSearchVariants: (card: MultiSearchCardState, orderBy: string) => void;
   calculateSetMultiSearchSelectedCost: () => void;
   multiSearchSelectedCost: number;
@@ -416,18 +414,7 @@ type State = {
 export const useStore = create<State>((set, get) => ({
   sealedSearchHasResults: false,
   singleSearchStarted: false,
-  priceChartLoading: false,
   singleSearchPriceList: undefined,
-  fetchPriceChart: async (cardName) => {
-    set({ priceChartLoading: true })
-    // encode cardName as utf-8
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/prices/`, {
-      cardName: cardName
-    })
-    set({ singleSearchPriceList: response.data })
-    set({ priceChartLoading: false })
-
-  },
   setSealedSearchOrderBy: (sealedSearchOrderBy) => {
     set({ sealedSearchOrderBy });
     get().filterSealedSearchResults();

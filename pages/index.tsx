@@ -8,7 +8,6 @@ import SearchFilters from '@/components/SingleSearchFilters';
 import { useStore } from '@/store';
 import SingleCatalog from '@/components/SingleCatalog';
 import { useUser } from '@/utils/useUser';
-import PriceHistory from '@/components/PriceHistory';
 import Updates from '@/components/Updates';
 import PopularCards from '@/components/PopularCards';
 import axios from 'axios';
@@ -23,7 +22,6 @@ const Home: NextPage<Props> = () => {
   const {
     singleSearchResults,
     singleSearchResultsLoading,
-    priceChartLoading,
     singleSearchPriceList,
     singleSearchStarted,
     singleSearchQuery
@@ -135,8 +133,7 @@ const Home: NextPage<Props> = () => {
                 <Homebanner />
               </div>
             )}
-          {/* <SingleSearchbox includePriceChart={subscription?.status === "active"}/> */}
-          <SingleSearchbox includePriceChart={true} />
+          <SingleSearchbox />
           {/* <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
           <ins
             className="adsbygoogle"
@@ -160,9 +157,6 @@ const Home: NextPage<Props> = () => {
               <Loadingspinner />
             </div>
           )}
-          {!priceChartLoading && singleSearchQuery &&
-            <PriceHistory />
-          }
           {Object.keys(singleSearchResults).length > 0 && (
             <>
               <SingleSearchInfo />
