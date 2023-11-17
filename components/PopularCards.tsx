@@ -12,6 +12,12 @@ export type CardInfo = {
   price: number | null;
 };
 
+const preloadImage = (src: string) => {
+  const img = new Image();
+  img.src = src;
+};
+
+
 export default function PopularCards({ popularCards }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -37,6 +43,11 @@ export default function PopularCards({ popularCards }: Props) {
     popularCards[getCardIndex(0)],
     popularCards[getCardIndex(1)]
   ];
+
+  useEffect(() => {
+    popularCards.forEach(card => preloadImage(card.image_url));
+  }, [popularCards]);
+  
 
   return (
     <div className="mx-auto mt-6 w-full max-w-3xl rounded-md p-4 border border-1 border-zinc-600 backdrop-blur-md backdrop-brightness-75 ">
