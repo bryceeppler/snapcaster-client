@@ -62,7 +62,7 @@ export default function PopularCards({ popularCards }: Props) {
           </button>
           {visibleCards.map((card, index) => (
             <div
-              key={index}
+              key={card.image_url}
               className={`mx-2 flex flex-col items-center sm:w-1/3 ${
                 //  if small or below, hide all but index 0
                 index === 0 ? 'block' : 'hidden sm:block'
@@ -73,6 +73,7 @@ export default function PopularCards({ popularCards }: Props) {
                   className="mx-auto max-h-full max-w-full object-contain"
                   src={card.image_url}
                   alt={card.name}
+                  // key={card.image_url}
                 />
               </div>
               <p className="mt-2 w-36 truncate text-center text-sm">
