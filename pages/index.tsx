@@ -17,6 +17,13 @@ import { useEffect, useState } from 'react';
 type Props = {
 };
 
+const MaintenanceBanner = () => {
+  return (
+    <div className="bg-red-500 text-white p-2 text-center">
+      <p className="text-lg">We are currently undergoing maintenance. Please check back later.</p>
+    </div>
+  )
+}
 
 const Home: NextPage<Props> = () => {
   const {
@@ -133,6 +140,7 @@ const Home: NextPage<Props> = () => {
                 <Homebanner />
               </div>
             )}
+          <MaintenanceBanner />
           <SingleSearchbox />
           {/* <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
           <ins
