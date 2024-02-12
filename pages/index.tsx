@@ -34,29 +34,6 @@ const Home: NextPage<Props> = () => {
     singleSearchQuery
   } = useStore();
   const { user, isLoading, subscription } = useUser();
-  const [popularCards, setPopularCards] = useState<CardInfo[]>([]);
-
-  useEffect(() => {
-    const res = axios.get(
-      `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/utils/popular_cards/`
-    ).then(res => res.data).then(data => {
-      let popularCards = [...data.monthly, ...data.weekly];
-      // remove duplicates
-      popularCards = popularCards.filter(
-        (card, index, self) =>
-          index === self.findIndex((t) => t.name === card.name)
-      );
-      setPopularCards(popularCards);
-    })
-
-    // let popularCards = [...res.data.monthly, ...res.data.weekly];
-    // // remove duplicates
-    // popularCards = popularCards.filter(
-    //   (card, index, self) =>
-    //     index === self.findIndex((t) => t.name === card.name)
-    // );
-    // setPopularCards(popularCards);
-  }, []);
   
   const updates = [
     {title:"Bug fixes for multi search.", date: "Nov 15, 2023"},
@@ -154,8 +131,8 @@ const Home: NextPage<Props> = () => {
           {
            !singleSearchStarted && !singleSearchResultsLoading && (
             <div className="space-y-16 mt-16">
-              <PopularCards popularCards={popularCards}/>
-              <Updates data={updates}/>
+              {/* <PopularCards popularCards={popularCards}/> */}
+              {/* <Updates data={updates}/> */}
             </div>
            ) 
           }
