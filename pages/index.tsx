@@ -140,7 +140,6 @@ const Home: NextPage<Props> = () => {
                 <Homebanner />
               </div>
             )}
-          <MaintenanceBanner />
           <SingleSearchbox />
           {/* <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
           <ins
