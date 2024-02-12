@@ -264,9 +264,8 @@ export default function Pricing({ products }: Props) {
                       /{billingInterval}
                     </span>
                   </p>
-                  <Button
-                    variant="slim"
-                    type="button"
+                  {/* <Button
+                    variant="primary"
                     disabled={isLoading}
                     loading={priceIdLoading === price.id}
                     onClick={() => handleCheckout(price)}
@@ -275,7 +274,7 @@ export default function Pricing({ products }: Props) {
                     {product.name === subscription?.prices?.products?.name
                       ? 'Manage'
                       : 'Subscribe'}
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             );
