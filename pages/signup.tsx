@@ -32,7 +32,7 @@ const Signup: NextPage<Props> = () => {
       }
 
       // const data = await response.json();
-      setMessage('Registration successful! Please check your email to confirm your account.');
+      setMessage('Registration successful!');
       // Reset form or redirect user
     } catch (error: any) {
       setMessage(error?.message || 'Something went wrong with the registration process');
