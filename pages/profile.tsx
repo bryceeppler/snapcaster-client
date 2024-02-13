@@ -33,28 +33,22 @@ const Profile: NextPage<Props> = () => {
               </div>
             </div>
             <div className="p-6" />
-            {/* <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter">
-                Membership
-              </h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Manage your Snapcaster subscriptions
-              </p>
-            </div> */}
-            <div className="p-4"/>
+            <div className="p-4" />
 
-            <div>Current subscription</div>
-            <div className="p-4"/>
-
+            {/* <div>Current subscription</div>
+            <div className="p-4" />
             <div className="w-full p-4 bg-zinc-800 rounded-md text-center text-white">
               Subscribed
             </div>
-            <div className="p-4"/>
+            <div className="p-4" />
             <div className="w-full p-4 bg-zinc-800 rounded-md text-center text-white">
               No active subscription
             </div>
-            <div className="p-4"/>
-            <div className="w-full p-4 bg-zinc-700 rounded-md text-center text-white">Manage billing</div>
+            <div className="p-4" />
+            <div className="w-full p-4 bg-zinc-700 rounded-md text-center text-white">
+              Manage billing
+            </div> */}
+
           </section>
         </div>
       </MainLayout>
