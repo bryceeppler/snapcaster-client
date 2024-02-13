@@ -5,6 +5,7 @@ import Loadingspinner from '@/components/Loadingspinner';
 import MultiCatalog from '@/components/MultiCatalog';
 import MultiSearchbox from '@/components/MultiSearchbox';
 import StoreSelector from '@/components/StoreSelector';
+import MainLayout from '@/components/MainLayout';
 type Props = {};
 
 export default function Multisearch({}: Props) {
@@ -21,7 +22,7 @@ export default function Multisearch({}: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center p-2 sm:p-8">
+      <MainLayout>
         {mode === 'search' && !loading && (
           <div className="max-w-2xl flex-1 flex-col items-center justify-center text-center">
             {/* checkboxes for selecting the stores */}
@@ -53,7 +54,7 @@ export default function Multisearch({}: Props) {
             <MultiCatalog />
           </div>
         )}
-      </main>
+      </MainLayout>
     </>
   );
 }

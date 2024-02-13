@@ -14,29 +14,28 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     document.body.classList?.remove('loading');
   }, []);
   useEffect(() => {
-    var ads = document.getElementsByClassName("adsbygoogle").length;
-    console.log(ads)
-    for (var i = 0; i < ads -1; i++) {
+    var ads = document.getElementsByClassName('adsbygoogle').length;
+    console.log(ads);
+    for (var i = 0; i < ads - 1; i++) {
       try {
         let adsbygoogle: any;
         (adsbygoogle = (window as any).adsbygoogle || []).push({});
-      } catch (e) { }
+      } catch (e) {}
     }
-}, []);
-useEffect(() => {
-  if (process.env.NODE_ENV === 'production') {
-    initGA();
-    logPageView();
-  }
-  else {
-    initGA();
-  }
-}, []);
+  }, []);
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') {
+      initGA();
+      logPageView();
+    } else {
+      initGA();
+    }
+  }, []);
   return (
     <div className="">
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
       <Script
         id="Absence-banner"
         async

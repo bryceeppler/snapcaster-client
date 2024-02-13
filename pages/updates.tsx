@@ -1,14 +1,17 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import UpdateFeed from '@/components/UpdateFeed';
+
+import MainLayout from '@/components/MainLayout';
 type Props = {};
 
 const Updates: NextPage<Props> = () => {
   const updates = [
     {
-        title: "Big backend changes.",
-        date: "Feb 14, 2024",
-        description: "I've made some changes that should improve performance and reliability. Some stores have been temporarily removed as I work on getting them integrated with the new backend system. Thanks for your support and patience!"
+      title: 'Big backend changes.',
+      date: 'Feb 14, 2024',
+      description:
+        "I've made some changes that should improve performance and reliability. Some stores have been temporarily removed as I work on getting them integrated with the new backend system. Thanks for your support and patience!"
     },
     {
       title: 'Bug fixes for multi search.',
@@ -117,11 +120,11 @@ const Updates: NextPage<Props> = () => {
   return (
     <>
       <UpdatesHead />
-      <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-8 mb-16">
+      <MainLayout>
         <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
           <UpdateFeed updates={updates} />
         </div>
-      </main>
+      </MainLayout>
     </>
   );
 };

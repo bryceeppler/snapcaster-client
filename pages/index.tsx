@@ -12,6 +12,7 @@ import PopularCards from '@/components/PopularCards';
 import axios from 'axios';
 import { CardInfo } from '@/components/PopularCards';
 import { useEffect, useState } from 'react';
+import MainLayout from '@/components/MainLayout';
 
 type Props = {};
 
@@ -19,13 +20,13 @@ const Home: NextPage<Props> = () => {
   const {
     singleSearchResults,
     singleSearchResultsLoading,
-    singleSearchStarted,
+    singleSearchStarted
   } = useStore();
 
   return (
     <>
       <HomeHead />
-      <main className="mb-16 flex min-h-screen flex-col items-center justify-between p-2 sm:p-8">
+      <MainLayout>
         <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
@@ -35,8 +36,7 @@ const Home: NextPage<Props> = () => {
             )}
           <SingleSearchbox />
           {!singleSearchStarted && !singleSearchResultsLoading && (
-            <div className="mt-16 space-y-16">
-            </div>
+            <div className="mt-16 space-y-16"></div>
           )}
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
@@ -58,7 +58,7 @@ const Home: NextPage<Props> = () => {
               </div>
             )}
         </div>
-      </main>
+      </MainLayout>
     </>
   );
 };
