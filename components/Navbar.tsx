@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { useUser } from '@/utils/useUser';
 
 type Props = {};
 
@@ -10,10 +8,6 @@ export default function Navbar({}: Props) {
   const currentPath = useRouter().pathname;
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const supabaseClient = useSupabaseClient();
-  const { user } = useUser();
-
 
 
   const logoSrc = '/logo.png' 
@@ -117,24 +111,6 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
 
                   {/* User ? */}
                   <div className="flex-1" />
-                  {/* <div
-                    className={`
- rounded-md py-2 px-3 text-sm font-medium hover:bg-zinc-600
-`}
-                  >
-                    {user ? (
-                      <span
-                        onClick={async () => {
-                          await supabaseClient.auth.signOut();
-                          router.push('/');
-                        }}
-                      >
-                        Sign out
-                      </span>
-                    ) : (
-                      <Link href="/signin">Sign in</Link>
-                    )}
-                  </div> */}
                 </div>
               </div>
             </div>
@@ -158,25 +134,6 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                   {page.name}
                 </Link>
               ))}
-              {/* USER STUFF */}
-                                {/* <div
-                    className={`
- rounded-md py-2 px-3 text-sm font-medium hover:bg-zinc-400
-`}
-                  >
-                    {user ? (
-                      <span
-                        onClick={async () => {
-                          await supabaseClient.auth.signOut();
-                          router.push('/signin');
-                        }}
-                      >
-                        Sign out
-                      </span>
-                    ) : (
-                      <Link href="/signin">Sign in</Link>
-                    )}
-                  </div> */}
             </div>
           </div>
         </div>

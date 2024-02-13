@@ -7,110 +7,26 @@ import SingleSearchInfo from '@/components/SingleSearchInfo';
 import SearchFilters from '@/components/SingleSearchFilters';
 import { useStore } from '@/store';
 import SingleCatalog from '@/components/SingleCatalog';
-import { useUser } from '@/utils/useUser';
 import Updates from '@/components/Updates';
 import PopularCards from '@/components/PopularCards';
 import axios from 'axios';
 import { CardInfo } from '@/components/PopularCards';
 import { useEffect, useState } from 'react';
 
-type Props = {
-};
-
-const MaintenanceBanner = () => {
-  return (
-    <div className="bg-red-500 text-white p-2 text-center">
-      <p className="text-lg">We are currently undergoing maintenance. Please check back later.</p>
-    </div>
-  )
-}
+type Props = {};
 
 const Home: NextPage<Props> = () => {
   const {
     singleSearchResults,
     singleSearchResultsLoading,
-    singleSearchPriceList,
     singleSearchStarted,
-    singleSearchQuery
   } = useStore();
-  const { user, isLoading, subscription } = useUser();
-  
-  const updates = [
-    {title:"Bug fixes for multi search.", date: "Nov 15, 2023"},
-    {title: "Added Fan of the Sport and Kingdom of the Titans to single search.", date: "Aug 22, 2023"},
-    {title: "Added Level Up Games to single search.", date: "Aug 8, 2023"},
-    {
-      title: "Updates for 20+ stores using BinderPOS.",
-      date: "Aug 5, 2023"
-    },
-    {
-      title: "Bugfixes for multiple BinderPOS stores.",
-      date: "July 24, 2023"
-    },
-    {
-      title: "Added 14 new stores to single search.",
-      date: "July 12 2023"
-    },
-    {
-      title: "Added 8 new stores to single search.",
-      date: "July 11 2023"
-    },
-    {
-      title: "Bug fixes for FantasyForged, 401 Games, OrachardCity, Kanatacg, EnterTheBattlefield, GameKnight",
-      date: "July 11 2023"
-    },
-    {
-      title: "Bug fixes for Fantasy Forged.",
-      date: "Apr 14 2023"
-    },
-    {
-      title: "Price monitoring and watchlist added.",
-      date: "Mar 28 2023"
-    },
-    {
-      title: "Bug fixes and FaceToFace added to sealed search.",
-      date: "Mar 27 2023"
-    },
-    {
-      title: "GameKnight, OrchardCity, ExorGames, SequenceGaming added to sealed.",
-      date: "Mar 26 2023"
-    },
-    {
-      title: "EverythingGames,  FantasyForged, FirstPlayer added to sealed.",
-      date: "Mar 26 2023"
-    },
-    {
-      title: "Popular set carousel added.",
-      date: "Mar 26 2023"
-    },
-    {
-      title: "Bug fixes and popular card carousel added.",
-      date: "Mar 25 2023"
-    },
-    { title: "EnterTheBattlefield added to sealed search.",
-      date: "Mar 18 2023"
-    },
-    { title: "Gamezilla, Aethervault, Atlas, BorderCity added to sealed.",
-      date: "Mar 13 2023"
-    },
-    {
-      title: "HairyT, Chimera, ComicHunter, TopdeckHero added to sealed.",
-      date: "Mar 12 2023"
-    },
-    {
-      title: "Price history graphs added to single search.",
-      date: "Mar 11 2023"
-    },
-    {
-      title: "Chimera Gaming added to single search.",
-      date: "Mar 11 2023"
-    },
-  ]
+
   return (
     <>
       <HomeHead />
-      <main className="flex min-h-screen flex-col items-center justify-between p-2 sm:p-8 mb-16">
-     <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
+      <main className="mb-16 flex min-h-screen flex-col items-center justify-between p-2 sm:p-8">
+        <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
               <div>
@@ -118,24 +34,10 @@ const Home: NextPage<Props> = () => {
               </div>
             )}
           <SingleSearchbox />
-          {/* <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
-          <ins
-            className="adsbygoogle"
-            //  style="display:block"
-            data-ad-client="ca-pub-6026504058618942"
-            data-ad-slot="4085824286"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins> 
-          </div> */}
-          {
-           !singleSearchStarted && !singleSearchResultsLoading && (
-            <div className="space-y-16 mt-16">
-              {/* <PopularCards popularCards={popularCards}/> */}
-              {/* <Updates data={updates}/> */}
+          {!singleSearchStarted && !singleSearchResultsLoading && (
+            <div className="mt-16 space-y-16">
             </div>
-           ) 
-          }
+          )}
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
               <Loadingspinner />
@@ -166,18 +68,18 @@ export default Home;
 const HomeHead = () => {
   return (
     <Head>
-      <title>snapcaster</title>
+      <title>Snapcaster</title>
       <meta
         name="description"
         content="Search for Magic the Gathering singles in Canada"
       />
       <meta
         property="og:title"
-        content={`snapcaster - Search for Magic: the Gathering cards across Canada`}
+        content={`Snapcaster - Search for Magic: the Gathering cards across Canada`}
       />
       <meta
         property="og:description"
-        content={`Find your Magic the Gathering singles and sealed product using snapcaster. Search over 20 Canadian stores.`}
+        content={`Find your Magic the Gathering singles and sealed product using snapcaster. Search your favourite Canadian stores.`}
       />
       <meta property="og:url" content={`https://snapcaster.ca`} />
       <meta property="og:type" content="website" />
@@ -186,4 +88,3 @@ const HomeHead = () => {
     </Head>
   );
 };
-
