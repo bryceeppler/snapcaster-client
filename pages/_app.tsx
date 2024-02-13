@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import React from 'react';
 import { AppProps } from 'next/app';
 import Layout from '@/components/Layout';

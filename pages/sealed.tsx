@@ -22,7 +22,6 @@ export default function Sealed() {
   } = useStore();
   const router = useRouter();
   const showBanner = true;
-  // const { user, isLoading, subscription } = useUser();
 
   const [popularSealed, setPopularSealed] = React.useState<SealedProductInfo[]>([]);
   useEffect(() => {
