@@ -11,8 +11,8 @@ export default function UpdateFeed(
     <section className="w-full py-6 md:py-12">
       <div className="container grid max-[1fr_900px] px-4 md:px-6 items-start gap-6">
         <div className="space-y-2">
-          <h2 className="text-3xl font-bold tracking-tighter">What's New with Snapcaster</h2>
-          <p className="text-gray-500 dark:text-gray-400">Stay up to date with the latest features and improvements.</p>
+          <h2 className="text-3xl font-bold tracking-tighter">Updates</h2>
+          <p className="text-gray-500 dark:text-gray-400">Stay up to date with the latest changes.</p>
         </div>
         <div className="grid gap-4 md:gap-4">
           {props.updates.map((update, index) => (
