@@ -72,15 +72,15 @@ const HomeHead = () => {
       <title>Snapcaster</title>
       <meta
         name="description"
-        content="Search for Magic the Gathering singles in Canada"
+        content="Search Magic the Gathering cards across Canada"
       />
       <meta
         property="og:title"
-        content={`Snapcaster - Search for Magic: the Gathering cards across Canada`}
+        content={`Snapcaster - Search Magic the Gathering cards across Canada`}
       />
       <meta
         property="og:description"
-        content={`Find your Magic the Gathering singles and sealed product using snapcaster. Search your favourite Canadian stores.`}
+        content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
       />
       <meta property="og:url" content={`https://snapcaster.ca`} />
       <meta property="og:type" content="website" />

@@ -14,11 +14,21 @@ export default function Multisearch({}: Props) {
   return (
     <>
       <Head>
-        <title>Multi Search - snapcaster</title>
+        <title>Multi Search</title>
         <meta
           name="description"
-          content="Search for bulk Magic the Gathering singles in Canada"
+          content="Search Magic the Gathering cards across Canada"
         />
+        <meta
+          property="og:title"
+          content={`Snapcaster - Search Magic the Gathering cards across Canada`}
+        />
+        <meta
+          property="og:description"
+          content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
+        />
+        <meta property="og:url" content={`https://snapcaster.ca`} />
+        <meta property="og:type" content="website" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
