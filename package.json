@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-subscription-payments",
+  "name": "snapcaster-client",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -10,23 +10,15 @@
   },
   "dependencies": {
     "@stripe/stripe-js": "^1.48.0",
-    "@supabase/auth-helpers-nextjs": "^0.5.4",
-    "@supabase/auth-helpers-react": "^0.3.1",
-    "@supabase/auth-ui-react": "^0.3.3",
-    "@supabase/auth-ui-shared": "^0.1.2",
-    "@supabase/supabase-js": "^2.10.0",
-    "@vercel/analytics": "^0.1.11",
     "axios": "^1.3.4",
     "classnames": "^2.3.2",
     "next": "^13.2.3",
     "prop-types": ">=15.6.0 <16.0.0",
     "react": "^18.2.0",
-    "react-charts": "3.0.0-beta.54",
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
     "react-merge-refs": "^2.0.1",
     "react-resizable": "^3.0.4",
-    "recharts": "^2.4.3",
     "stripe": "^11.13.0",
     "swr": "^2.0.4",
     "zustand": "^4.3.6"
@@ -38,7 +30,6 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.5",
-    "supabase": "^1.45.2",
     "tailwindcss": "^3.2.7",
     "typescript": "^4.9.5"
   },
