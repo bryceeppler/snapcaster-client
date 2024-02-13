@@ -27,11 +27,11 @@ export default function Component() {
       <p className="text-xl text-gray-400 dark:text-gray-300">
         Your payment was successful and your subscription is now active.
       </p>
-      <Button variant="slim">
+      {/* <Button variant="slim">
         <Link className="" href="/">
           Return to Homepage
         </Link>
-      </Button>
+      </Button> */}
     </section>
   )
 }

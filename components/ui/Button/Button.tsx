@@ -1,64 +1,40 @@
-import cn from 'classnames';
-import React, { forwardRef, useRef, ButtonHTMLAttributes } from 'react';
-import { mergeRefs } from 'react-merge-refs';
+import React from 'react';
 
-import LoadingDots from '@/components/ui/LoadingDots';
-
-import styles from './Button.module.css';
-
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'slim' | 'flat' | 'error';
-  active?: boolean;
-  width?: number;
-  loading?: boolean;
-  Component?: React.ComponentType;
+interface ButtonProps {
+  variant?: 'primary' | 'secondary' | 'danger'; // Add more variants as needed
+  size?: 'small' | 'medium' | 'large'; // Add more sizes as needed
+  children: React.ReactNode;
+  onClick?: () => void;
+  className?: string;
 }
 
-const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
-  const {
-    className,
-    variant = 'flat',
-    children,
-    active,
-    width,
-    loading = false,
-    disabled = false,
-    style = {},
-    Component = 'button',
-    ...rest
-  } = props;
-  const ref = useRef(null);
-  const rootClassName = cn(
-    styles.root,
-    {
-      [styles.slim]: variant === 'slim',
-      [styles.error]: variant === 'error',
-      [styles.loading]: loading,
-      [styles.disabled]: disabled
-    },
-    className
-  );
+const Button: React.FC<ButtonProps> = ({
+  variant = 'primary',
+  size = 'medium',
+  children,
+  onClick,
+  className = '',
+}) => {
+  const baseClasses = 'focus:outline-none transition ease-in-out duration-300 inline-block rounded-xl';
+  const variantClasses = {
+    primary: 'bg-blue-500 hover:bg-blue-600 text-white',
+    secondary: 'bg-zinc-800 hover:bg-zinc-600 text-white',
+    danger: 'bg-red-500 hover:bg-red-600 text-white',
+  };
+  const sizeClasses = {
+    small: 'px-4 py-2 text-sm',
+    medium: 'px-6 py-3 text-base',
+    large: 'px-8 py-4 text-lg',
+  };
+
   return (
-    <Component
-      aria-pressed={active}
-      data-variant={variant}
-      ref={mergeRefs([ref, buttonRef])}
-      className={rootClassName}
-      disabled={disabled}
-      style={{
-        width,
-        ...style
-      }}
-      {...rest}
+    <button
+      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      onClick={onClick}
     >
       {children}
-      {loading && (
-        <i className="pl-2 m-0 flex">
-          <LoadingDots />
-        </i>
-      )}
-    </Component>
+    </button>
   );
-});
+};
 
 export default Button;

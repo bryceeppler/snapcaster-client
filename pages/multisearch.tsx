@@ -42,6 +42,9 @@ export default function Multisearch({}: Props) {
               Select which stores you would like to search. The more stores, the
               longer the search will take.
             </div>
+            <div className="my-4 text-md content-center p-4 bg-red-900 text-white rounded-lg">
+              Some websites have been temporarily disabled.
+            </div>
             {/* <div className="flex justify-center items-center h-28 bg-zinc-900 bg-opacity-5 w-full">
             <ins
             className="adsbygoogle"

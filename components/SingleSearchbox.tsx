@@ -7,7 +7,9 @@ type Props = {
 export default function SingleSearchbox({}: Props) {
   const { singleSearchInput, setSingleSearchInput, fetchSingleSearchResults} =
     useStore();
-  const autocompleteEndpoint = "https://api.scryfall.com/cards/autocomplete?q=";
+  // const autocompleteEndpoint = "http://localhost/autocomplete/cards?query=";
+  // load url from env vars
+  const autocompleteEndpoint = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + "/cards?query=";
   const [autocompleteResults, setAutocompleteResults] = useState<string[]>([]);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [selectedAutocompleteIndex, setSelectedAutocompleteIndex] =

@@ -105,14 +105,14 @@ export default function Account({ user }: { user: User }) {
               <p className="pb-4 sm:pb-0">
                 Manage your subscription on Stripe.
               </p>
-              <Button
+              {/* <Button
                 variant="slim"
                 loading={loading}
                 disabled={loading || !subscription}
                 onClick={redirectToCustomerPortal}
               >
                 Open customer portal
-              </Button>
+              </Button> */}
             </div>
           }
         >
