@@ -3,18 +3,18 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 type Props = {};
 
-const Signin: NextPage<Props> = () => {
+const Signup: NextPage<Props> = () => {
   return (
     <>
-      <SigninHead />
+      <SignupHead />
       <MainLayout>
         <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
             <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter">Signin</h2>
+                <h2 className="text-3xl font-bold tracking-tighter">Signup</h2>
                 <p className="text-gray-500 dark:text-gray-400">
-                  Log in to your Snapcaster account. 
+                    Create your Snapcaster account. 
                 </p>
               </div>
               <div className="grid gap-4 md:gap-4">
@@ -32,18 +32,25 @@ const Signin: NextPage<Props> = () => {
                     placeholder="Password"
                   />
                 </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
+                    placeholder="Full Name"
+                  />
+                </div>
                 <button
                   onClick={() => {
                     window.location.href = '/api/auth/signin';
                   }}
                   className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
                 >
-                  Signin
+                  Signup
                 </button>
                 <button
                     className=''
                 >
-                <a href="/signup">Dont have an account? Signup</a>
+                <a href="/signin">Already have an account? Sign in</a>
                 </button>
               </div>
             </div>
@@ -54,12 +61,12 @@ const Signin: NextPage<Props> = () => {
   );
 };
 
-export default Signin;
+export default Signup;
 
-const SigninHead = () => {
+const SignupHead = () => {
   return (
     <Head>
-      <title>Signin</title>
+      <title>Signup</title>
       <meta
         name="description"
         content="Search Magic the Gathering cards across Canada"
