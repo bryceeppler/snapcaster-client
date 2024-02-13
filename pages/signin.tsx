@@ -34,7 +34,7 @@ const Signin: NextPage<Props> = () => {
                 </div>
                 <button
                   onClick={() => {
-                    window.location.href = '/api/auth/signin';
+                    // window.location.href = '/api/auth/signin';
                   }}
                   className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
                 >
