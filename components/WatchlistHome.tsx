@@ -79,7 +79,7 @@ const WatchlistHome: React.FC<Props> = ({
           You don't have any cards on your watchlist yet.
         </div>
       )}
-
+{/* 
       <Button
         onClick={() => {
           setSelectedScreen('add');
@@ -89,7 +89,7 @@ const WatchlistHome: React.FC<Props> = ({
         variant="slim"
       >
         Add a card
-      </Button>
+      </Button> */}
     </div>
   );
 };

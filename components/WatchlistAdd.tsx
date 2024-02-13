@@ -233,7 +233,7 @@ const WatchlistAdd: React.FC<Props> = ({
           discretion and risk.
         </p>
         <div className="w-full flex justify-center space-x-6 mt-6">
-          <Button
+          {/* <Button
             onClick={() => {
               setSelectedScreen('home');
             }}
@@ -245,7 +245,7 @@ const WatchlistAdd: React.FC<Props> = ({
           </Button>
           <Button type="submit" color="primary" className="" variant="slim">
             Submit
-          </Button>
+          </Button> */}
         </div>
       </form>
     </div>
