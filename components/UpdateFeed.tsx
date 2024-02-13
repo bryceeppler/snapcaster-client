@@ -9,7 +9,7 @@ export default function UpdateFeed(
 ) {
   return (
     <section className="w-full py-6 md:py-12">
-      <div className="container grid max-[1fr_900px] px-4 md:px-6 items-start gap-6">
+      <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
         <div className="space-y-2">
           <h2 className="text-3xl font-bold tracking-tighter">Updates</h2>
           <p className="text-gray-500 dark:text-gray-400">Stay up to date with the latest changes.</p>

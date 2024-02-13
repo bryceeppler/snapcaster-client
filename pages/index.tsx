@@ -31,6 +31,7 @@ const Home: NextPage<Props> = () => {
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
               <div>
+                <div className="p-4" />
                 <Homebanner />
               </div>
             )}
