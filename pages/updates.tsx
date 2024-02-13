@@ -6,9 +6,9 @@ type Props = {};
 const Updates: NextPage<Props> = () => {
   const updates = [
     {
-        title: "Big backend changes, new stores added.",
+        title: "Big backend changes.",
         date: "Feb 14, 2024",
-        description: "I've made some big changes that should greatly improve performance and reliability. I've also added several new stores at request. Some stores have been temporarily removed as I work on getting them integrated with the new backend system. Thanks for your support and patience!"
+        description: "I've made some changes that should improve performance and reliability. Some stores have been temporarily removed as I work on getting them integrated with the new backend system. Thanks for your support and patience!"
     },
     {
       title: 'Bug fixes for multi search.',
