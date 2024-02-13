@@ -1,5 +1,4 @@
 import MainLayout from '@/components/MainLayout';
-import Button from '@/components/ui/Button';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 type Props = {};
@@ -32,16 +31,15 @@ const About: NextPage<Props> = () => {
                   on donations to cover the server costs. If you find Snapcaster
                   helpful, please consider donating to support the project.
                 </p>
-                <Button
+                <button
                   onClick={() => {
                     window.location.href =
                       'https://www.paypal.com/donate/?business=KK537LVP4TZ5Q&no_recurring=0&item_name=I+appreciate+your+support%21+If+you+have+any+suggestions+or+feedback%2C+please+feel+free+to+email+me+at+epplerdev%40gmail.com.&currency_code=CAD';
                   }}
-                  className="mt-2"
-                  variant="secondary"
+                  className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
                 >
                   Donate with PayPal
-                </Button>
+                </button>
               </div>
             </div>
           </section>

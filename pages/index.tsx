@@ -7,11 +7,6 @@ import SingleSearchInfo from '@/components/SingleSearchInfo';
 import SearchFilters from '@/components/SingleSearchFilters';
 import { useStore } from '@/store';
 import SingleCatalog from '@/components/SingleCatalog';
-import Updates from '@/components/Updates';
-import PopularCards from '@/components/PopularCards';
-import axios from 'axios';
-import { CardInfo } from '@/components/PopularCards';
-import { useEffect, useState } from 'react';
 import MainLayout from '@/components/MainLayout';
 
 type Props = {};

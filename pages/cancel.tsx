@@ -3,7 +3,6 @@
  * @see https://v0.dev/t/imAWHLrtjsE
  */
 import Link from "next/link"
-import Button from "@/components/ui/Button"
 
 export default function Component() {
   return (
