@@ -1,5 +1,5 @@
 import React from 'react'
-import {useStore} from 'store'
+import {useStore} from '@/stores/store'
 import SingleCatalogRow from './SingleCatalogRow'
 type Props = {}
 

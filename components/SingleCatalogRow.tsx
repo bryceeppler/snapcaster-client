@@ -1,9 +1,9 @@
 import React from 'react';
-import { SingleSearchResult } from 'store';
+import { SingleSearchResult } from '@/stores/store';
 type Props = {
   cardData: SingleSearchResult;
 };
-import { useStore } from 'store';
+import { useStore } from '@/stores/store';
 import { trackOutboundLink } from '../utils/analytics';
 
 
