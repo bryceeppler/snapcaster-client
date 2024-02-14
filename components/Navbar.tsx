@@ -1,30 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import useAuthStore from '@/stores/authStore';
 
 type Props = {};
 
 export default function Navbar({}: Props) {
   const currentPath = useRouter().pathname;
-  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuthStore();
+  const clearTokens = useAuthStore((state) => state.clearTokens);
+  const router = useRouter();
+  const handleLogout = () => {
+    clearTokens();
+    router.push('/');
+  }
 
 
   const logoSrc = '/logo.png' 
   const pages = [
     { name: 'Home', href: '/', current: currentPath === '/' },
-    // { name: "Stocks", href: "/stocks", current: currentPath === "/stocks" },
     {
       name: 'Multi-search',
       href: '/multisearch',
       current: currentPath === '/multisearch'
     },
-    // { name: 'Sealed', href: '/sealed', current: currentPath === '/sealed' },
-    // { name: 'Watchlist', href: '/watchlist', current: currentPath === '/watchlist' },
-    // { name: 'Membership', href: '/pricing', current: currentPath === '/pricing' },
     { name: 'About', href: '/about', current: currentPath === '/about' },
     { name: 'Updates', href: '/updates', current: currentPath === '/updates'},
-    { name: 'Profile', href: '/profile', current: currentPath === '/profile' }
+    ...(isAuthenticated ? [{ name: 'Profile', href: '/profile', current: currentPath === '/profile' }] : []),
+
   ];
   return (
     <div>
@@ -134,6 +138,17 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                   {page.name}
                 </Link>
               ))}
+              {
+                isAuthenticated ? (
+                  <button onClick={handleLogout} className="block rounded-md py-2 px-3 text-sm font-medium">
+                    Logout
+                  </button>
+                ) : (
+                  <Link href="/signin" as="/signin" className="block rounded-md py-2 px-3 text-sm font-medium">
+                      Login
+                  </Link>
+                )
+              }
             </div>
           </div>
         </div>
