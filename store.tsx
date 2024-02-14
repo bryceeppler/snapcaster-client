@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import { fetchWithToken } from './utils/fetchWrapper';
 
 export interface SingleSearchResult {
   name: string;
@@ -733,11 +734,19 @@ export const useStore = create<State>((set, get) => ({
     // remove any empty strings
     const filteredCardNames = cardNames.filter((cardName) => cardName !== '');
     // match each website to it's code
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`, {
-      cardNames: filteredCardNames,
-      websites: websiteCodes,
-      worstCondition: 'nm'
+    const response = await fetchWithToken(`${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`, {
+      method: 'post',
+      data: {
+        cardNames: filteredCardNames,
+        websites: websiteCodes,
+        worstCondition: 'nm'
+      }
     });
+    // const response = await axios.post(`${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`, {
+    //   cardNames: filteredCardNames,
+    //   websites: websiteCodes,
+    //   worstCondition: 'nm'
+    // });
     let results = response.data;
     // sort results by ascending price
     // results.sort((a: MultiSearchCard, b: MultiSearchCard) => {
@@ -778,9 +787,13 @@ export const useStore = create<State>((set, get) => ({
   fetchSingleSearchResults: async (searchInput: string) => {
     set({ singleSearchStarted: true })
     set({ singleSearchResultsLoading: true });
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_SEARCH_URL}/single`, {
-      cardName: searchInput,
+    const response = await fetchWithToken(`${process.env.NEXT_PUBLIC_SEARCH_URL}/single`, {
+      method: 'post', 
+      data: {
+        cardName: searchInput 
+      }
     });
+    
     const results = response.data;
     // sort results by ascending price
     // results = [SingleSearchResult, SingleSearchResult, ...]
