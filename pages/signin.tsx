@@ -2,6 +2,8 @@ import MainLayout from '@/components/MainLayout';
 import { type NextPage } from 'next';
 import { useState } from 'react';
 import Head from 'next/head';
+import axios from 'axios';
+
 type Props = {};
 
 const Signin: NextPage<Props> = () => {
@@ -17,19 +19,13 @@ const Signin: NextPage<Props> = () => {
         };
     
         try {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-          });
+          const response = await axios.post(endpoint, userData);
     
-          if (!response.ok) {
+          if (!response.status) {
             throw new Error('Something went wrong with the registration process');
           } else {
             // on response body as "token" key 
-            const body = await response.json();
+            const body = await response.data;
             const token = body.token;
             localStorage.setItem('token', token);
           }

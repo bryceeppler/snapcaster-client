@@ -19,8 +19,8 @@ const Profile: NextPage<Props> = () => {
     const fetchUserData = async () => {
       try {
         const response = await fetchWithToken('http://localhost/user/profile');
-        if (!response.ok) throw new Error('Failed to fetch user profile');
-        const data: UserProfile = await response.json();
+        if (response.status !== 200) throw new Error('Failed to fetch user profile');
+        const data: UserProfile = await response.data
         setUserProfile(data);
       } catch (error) {
         console.error('Error fetching user data:', error);

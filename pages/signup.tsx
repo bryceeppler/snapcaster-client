@@ -2,6 +2,7 @@ import MainLayout from '@/components/MainLayout';
 import { type NextPage } from 'next';
 import { useState } from 'react';
 import Head from 'next/head';
+import axios from 'axios';
 type Props = {};
 
 const Signup: NextPage<Props> = () => {
@@ -11,7 +12,7 @@ const Signup: NextPage<Props> = () => {
   const [message, setMessage] = useState('');
 
   const handleSubmit = async () => {
-    const endpoint = process.env.NEXT_PUBLIC_USER_URL + "/register/";
+    const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/register/`
     const userData = {
       email,
       password,
@@ -19,21 +20,11 @@ const Signup: NextPage<Props> = () => {
     };
 
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
+      const response = await axios.post(endpoint, userData);
       if (response.status !== 201) {
         throw new Error('Something went wrong with the registration process');
       }
-
-      // const data = await response.json();
       setMessage('Registration successful!');
-      // Reset form or redirect user
     } catch (error: any) {
       setMessage(error?.message || 'Something went wrong with the registration process');
     }
