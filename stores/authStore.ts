@@ -6,15 +6,24 @@ type AuthState = {
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
+  initializeState: () => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
   clearTokens: () => void;
   refreshAccessToken: () => Promise<void>;
 };
 
+
 const useAuthStore = create<AuthState>((set, get) => ({
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
+  initializeState: () => {
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (accessToken && refreshToken) {
+      set({ accessToken, refreshToken, isAuthenticated: true });
+    }
+  },
   setTokens: (accessToken: string, refreshToken: string) => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
