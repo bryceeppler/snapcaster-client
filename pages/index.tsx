@@ -5,7 +5,7 @@ import SingleSearchbox from '@/components/SingleSearchbox';
 import Loadingspinner from '@/components/Loadingspinner';
 import SingleSearchInfo from '@/components/SingleSearchInfo';
 import SearchFilters from '@/components/SingleSearchFilters';
-import { useStore } from '@/store';
+import { useStore } from '@/stores/store';
 import SingleCatalog from '@/components/SingleCatalog';
 import MainLayout from '@/components/MainLayout';
 

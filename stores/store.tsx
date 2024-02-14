@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { fetchWithToken } from './utils/fetchWrapper';
+import { fetchWithToken } from '../utils/fetchWrapper';
 
 export interface SingleSearchResult {
   name: string;
