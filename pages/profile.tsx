@@ -1,9 +1,36 @@
 import MainLayout from '@/components/MainLayout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
+import { useState, useEffect } from 'react';
+import { fetchWithToken } from '@/utils/fetchWrapper';
 type Props = {};
 
+
+type UserProfile = {
+  email: string;
+  fullName: string;
+};
+
 const Profile: NextPage<Props> = () => {
+  // fetch user data
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetchWithToken('http://localhost/user/profile');
+        if (!response.ok) throw new Error('Failed to fetch user profile');
+        const data: UserProfile = await response.json();
+        setUserProfile(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Handle error (e.g., show a notification or set an error state)
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <>
       <ProfileHead />
@@ -21,13 +48,13 @@ const Profile: NextPage<Props> = () => {
                 <div className="flex w-full flex-row justify-between">
                   <div className="text-sm opacity-80">Email</div>
                   <div className="text-sm font-bold tracking-tighter">
-                    eppler97@gmail.com
+                    {userProfile?.email}
                   </div>
                 </div>
                 <div className="flex w-full flex-row justify-between">
                   <div className="text-sm opacity-80">Full Name</div>
                   <div className="text-sm font-bold tracking-tighter">
-                    Bryce Eppler
+                    {userProfile?.fullName}
                   </div>
                 </div>
               </div>

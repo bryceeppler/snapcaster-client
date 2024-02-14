@@ -25,8 +25,13 @@ const Signin: NextPage<Props> = () => {
             body: JSON.stringify(userData),
           });
     
-          if (response.status !== 200) {
+          if (!response.ok) {
             throw new Error('Something went wrong with the registration process');
+          } else {
+            // on response body as "token" key 
+            const body = await response.json();
+            const token = body.token;
+            localStorage.setItem('token', token);
           }
     
           // const data = await response.json();
