@@ -15,9 +15,7 @@ type UserProfile = {
 
 const Profile: NextPage<Props> = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  if (!isAuthenticated) {
-    return <Signin />;
-  }
+
   // fetch user data
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
@@ -36,6 +34,10 @@ const Profile: NextPage<Props> = () => {
 
     fetchUserData();
   }, []);
+  
+  if (!isAuthenticated) {
+    return <Signin />;
+  }
 
   return (
     <>

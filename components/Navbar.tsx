@@ -9,11 +9,10 @@ export default function Navbar({}: Props) {
   const currentPath = useRouter().pathname;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated } = useAuthStore();
-  const clearTokens = useAuthStore((state) => state.clearTokens);
+  const { logout } = useAuthStore();
   const router = useRouter();
   const handleLogout = () => {
-    clearTokens();
-    router.push('/');
+    logout();
   }
 
 
@@ -115,6 +114,18 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
 
                   {/* User ? */}
                   <div className="flex-1" />
+                  {
+                    isAuthenticated ? (
+                      <button onClick={handleLogout} className="block rounded-md py-2 px-3 text-sm font-medium">
+                        Logout
+                      </button>
+                    ) : (
+                      <Link href="/signin" as="/signin" className="block rounded-md py-2 px-3 text-sm font-medium">
+                        Login
+                      </Link>
+                    )
+                  }
+                  
                 </div>
               </div>
             </div>

@@ -10,6 +10,7 @@ type AuthState = {
   setTokens: (accessToken: string, refreshToken: string) => void;
   clearTokens: () => void;
   refreshAccessToken: () => Promise<void>;
+  logout: () => void;
 };
 
 
@@ -47,6 +48,11 @@ const useAuthStore = create<AuthState>((set, get) => ({
       console.error('Error refreshing access token:', error);
       get().clearTokens();
     }
+  },
+  logout: () => {
+    get().clearTokens();
+    // set isAuthenticated to false
+    set({ isAuthenticated: false });
   },
 }));
 
