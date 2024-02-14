@@ -1,9 +1,43 @@
 import MainLayout from '@/components/MainLayout';
 import { type NextPage } from 'next';
+import { useState } from 'react';
 import Head from 'next/head';
 type Props = {};
 
 const Signup: NextPage<Props> = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async () => {
+    const endpoint = process.env.NEXT_PUBLIC_USER_URL + "/register/";
+    const userData = {
+      email,
+      password,
+      fullName,
+    };
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.status !== 201) {
+        throw new Error('Something went wrong with the registration process');
+      }
+
+      // const data = await response.json();
+      setMessage('Registration successful!');
+      // Reset form or redirect user
+    } catch (error: any) {
+      setMessage(error?.message || 'Something went wrong with the registration process');
+    }
+  };
   return (
     <>
       <SignupHead />
@@ -16,6 +50,8 @@ const Signup: NextPage<Props> = () => {
                 <p className="text-gray-500 dark:text-gray-400">
                     Create your Snapcaster account. 
                 </p>
+                {message && <p>{message}</p>}
+
               </div>
               <div className="grid gap-4 md:gap-4">
                 <div className="relative">
@@ -23,6 +59,8 @@ const Signup: NextPage<Props> = () => {
                     type="text"
                     className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
                     placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="relative">
@@ -30,6 +68,8 @@ const Signup: NextPage<Props> = () => {
                     type="password"
                     className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
                     placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div className="relative">
@@ -37,12 +77,12 @@ const Signup: NextPage<Props> = () => {
                     type="text"
                     className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
                     placeholder="Full Name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
                   />
                 </div>
                 <button
-                  onClick={() => {
-                    // window.location.href = '/api/auth/signin';
-                  }}
+                  onClick={handleSubmit}
                   className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
                 >
                   Signup
