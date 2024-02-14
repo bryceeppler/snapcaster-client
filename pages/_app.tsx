@@ -15,7 +15,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, []);
   useEffect(() => {
     var ads = document.getElementsByClassName('adsbygoogle').length;
-    console.log(ads);
     for (var i = 0; i < ads - 1; i++) {
       try {
         let adsbygoogle: any;
