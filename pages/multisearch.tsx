@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { useStore } from 'store';
+import { useStore } from '@/stores/store';
 import Loadingspinner from '@/components/Loadingspinner';
 import MultiCatalog from '@/components/MultiCatalog';
 import MultiSearchbox from '@/components/MultiSearchbox';

@@ -1,6 +1,6 @@
 import React from 'react'
-import { MultiSearchCardState, SingleSearchResult } from '@/store'
-import { useStore } from '@/store'
+import { MultiSearchCardState, SingleSearchResult } from '@/stores/store'
+import { useStore } from '@/stores/store'
 import CardVariantSelector from './CardVariantSelector'
 
 type Props = {

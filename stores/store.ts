@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import axiosInstance from '@/utils/axiosWrapper';
 
 export interface SingleSearchResult {
   name: string;
@@ -21,21 +22,21 @@ export type SealedSearchResult = {
   website: string;
   language: string;
   tags: string[];
-}
+};
 
 export type MultiSearchCard = {
   cardName: string;
   variants: SingleSearchResult[];
-}
+};
 
 export type MultiSearchCardState = {
   cardName: string;
   variants: SingleSearchResult[];
   selectedVariant: SingleSearchResult;
   selected: boolean;
-}
+};
 
-// type MultiSearchResult = 
+// type MultiSearchResult =
 export interface Website {
   name: string;
   code: string;
@@ -44,15 +45,17 @@ export interface Website {
 }
 const websites: Website[] = [
   {
-    name: "Abyss Game Store",
+    name: 'Abyss Game Store',
     code: 'abyss',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/Abyss_White_Bold_230x%402x.avif",
+    image:
+      'https://bryces-images.s3.us-west-2.amazonaws.com/Abyss_White_Bold_230x%402x.avif',
     shopify: true
   },
   {
     name: 'Aether Vault Games',
     code: 'aethervault',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/AetherVaultGames.png',
+    image:
+      'https://bryces-images.s3.us-west-2.amazonaws.com/AetherVaultGames.png',
     shopify: false
   },
   {
@@ -64,13 +67,15 @@ const websites: Website[] = [
   {
     name: 'Border City Games',
     code: 'bordercity',
-    image: 'https://i.ibb.co/cvNCbXx/Border-City-Games-Large-85873391-3559-47f7-939a-420461a0033f-201x-removebg-preview.png',
+    image:
+      'https://i.ibb.co/cvNCbXx/Border-City-Games-Large-85873391-3559-47f7-939a-420461a0033f-201x-removebg-preview.png',
     shopify: true
   },
   {
     name: 'Chimera Gaming',
     code: 'chimera',
-    image: 'https://cdn.shopify.com/s/files/1/0131/2463/2640/files/logo_large.png?v=1672686974',
+    image:
+      'https://cdn.shopify.com/s/files/1/0131/2463/2640/files/logo_large.png?v=1672686974',
     shopify: true
   },
   {
@@ -82,25 +87,29 @@ const websites: Website[] = [
   {
     name: 'Dragon Cards & Games',
     code: 'dragoncards',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/dragon_cards_and_games_white.png',
+    image:
+      'https://bryces-images.s3.us-west-2.amazonaws.com/dragon_cards_and_games_white.png',
     shopify: true
   },
   {
     name: 'Enter the Battlefield',
     code: 'enterthebattlefield',
-    image: 'https://cdn.shopify.com/s/files/1/0496/0098/7297/files/Logo_1_Newmarket_large.jpg?v=1658954718',
+    image:
+      'https://cdn.shopify.com/s/files/1/0496/0098/7297/files/Logo_1_Newmarket_large.jpg?v=1658954718',
     shopify: true
   },
   {
     name: 'Everything Games',
     code: 'everythinggames',
-    image: 'https://cdn.shopify.com/s/files/1/0618/8905/2856/files/Header_76747500-dd40-4d94-8016-a1d21282e094_large.png?v=1650298823',
+    image:
+      'https://cdn.shopify.com/s/files/1/0618/8905/2856/files/Header_76747500-dd40-4d94-8016-a1d21282e094_large.png?v=1650298823',
     shopify: true
   },
   {
     name: 'Exor Games',
     code: 'exorgames',
-    image: 'https://cdn.shopify.com/s/files/1/0467/3083/8169/files/Untitled-2-01.png?v=1613706669',
+    image:
+      'https://cdn.shopify.com/s/files/1/0467/3083/8169/files/Untitled-2-01.png?v=1613706669',
     shopify: true
   },
   {
@@ -134,33 +143,38 @@ const websites: Website[] = [
     shopify: false
   },
   {
-    name: "Game Breakers",
+    name: 'Game Breakers',
     code: 'gamebreakers',
-    image: 'https://gamebreakers.ca/cdn/shop/files/GameBreakersLogo_REV_2.png?v=1655901364',
+    image:
+      'https://gamebreakers.ca/cdn/shop/files/GameBreakersLogo_REV_2.png?v=1655901364',
     shopify: true
   },
   {
     name: 'GameKnight',
     code: 'gameknight',
-    image: 'https://cdn.shopify.com/s/files/1/0367/8204/7276/files/GK-Logo-Full-Text-Below-1-768x603.png?v=1618430878',
+    image:
+      'https://cdn.shopify.com/s/files/1/0367/8204/7276/files/GK-Logo-Full-Text-Below-1-768x603.png?v=1618430878',
     shopify: true
   },
   {
     name: 'Gamezilla',
     code: 'gamezilla',
-    image: 'https://cdn.shopify.com/s/files/1/0570/6308/0145/files/Screen_Shot_2018-09-07_at_1.02.57_PM_copy_141x.png?v=1626814255',
+    image:
+      'https://cdn.shopify.com/s/files/1/0570/6308/0145/files/Screen_Shot_2018-09-07_at_1.02.57_PM_copy_141x.png?v=1626814255',
     shopify: true
   },
   {
     name: 'Gauntlet Games',
     code: 'gauntlet',
-    image: 'http://cc-client-assets.s3.amazonaws.com/store/gauntletgamesvictoria/7c8176e703db451bad3277bb6d4b8631/medium/Transparent_logo.png',
+    image:
+      'http://cc-client-assets.s3.amazonaws.com/store/gauntletgamesvictoria/7c8176e703db451bad3277bb6d4b8631/medium/Transparent_logo.png',
     shopify: false
   },
   {
     name: 'Hairy Tarantula',
     code: 'hairyt',
-    image: 'https://cdn.shopify.com/s/files/1/0266/9513/9533/files/hariyt-horizontal-logo.png?v=1615403256',
+    image:
+      'https://cdn.shopify.com/s/files/1/0266/9513/9533/files/hariyt-horizontal-logo.png?v=1615403256',
     shopify: true
   },
   {
@@ -184,25 +198,28 @@ const websites: Website[] = [
   {
     name: 'Magic Stronghold',
     code: 'magicstronghold',
-    image: 'https://magicstronghold-images.s3.amazonaws.com/customizations/logo.png',
+    image:
+      'https://magicstronghold-images.s3.amazonaws.com/customizations/logo.png',
     shopify: false
   },
   {
-    name: "The Mythic Store",
+    name: 'The Mythic Store',
     code: 'mythicstore',
-    image: "https://themythicstore.com/cdn/shop/files/prise3.png?v=1677464824",
+    image: 'https://themythicstore.com/cdn/shop/files/prise3.png?v=1677464824',
     shopify: true
   },
   {
     name: 'Orchard City Games',
     code: 'orchardcity',
-    image: 'https://d1rw89lz12ur5s.cloudfront.net/store/orchardcitygames/eb6cb32f84b34b5cbb1c025fc41c9821/large/logo_v1.png',
+    image:
+      'https://d1rw89lz12ur5s.cloudfront.net/store/orchardcitygames/eb6cb32f84b34b5cbb1c025fc41c9821/large/logo_v1.png',
     shopify: false
   },
   {
     name: 'Sequence Gaming Brockville',
     code: 'sequencegaming',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/sequence-no-bg-inverted.png',
+    image:
+      'https://bryces-images.s3.us-west-2.amazonaws.com/sequence-no-bg-inverted.png',
     shopify: false
   },
   {
@@ -220,7 +237,8 @@ const websites: Website[] = [
   {
     name: 'Vortex Games',
     code: 'vortexgames',
-    image: 'https://vortexgames.ca/cdn/shop/files/favico_x60_2x_c557b87f-6e22-4c6d-a5ad-dc202785f3e1_100x.png?v=1652245334',
+    image:
+      'https://vortexgames.ca/cdn/shop/files/favico_x60_2x_c557b87f-6e22-4c6d-a5ad-dc202785f3e1_100x.png?v=1652245334',
     shopify: true
   },
   {
@@ -230,151 +248,154 @@ const websites: Website[] = [
     shopify: false
   },
   {
-    name: "Crypt",
+    name: 'Crypt',
     code: 'crypt',
     image: 'https://bryces-images.s3.us-west-2.amazonaws.com/crypte.avif',
     shopify: true
   },
   {
-    name: "Silver Goblin",
+    name: 'Silver Goblin',
     code: 'silvergoblin',
     image: 'https://bryces-images.s3.us-west-2.amazonaws.com/silvergoblin.avif',
     shopify: true
   },
   {
-    name: "North of Exile",
+    name: 'North of Exile',
     code: 'northofexile',
     image: 'https://bryces-images.s3.us-west-2.amazonaws.com/northofexile.avif',
     shopify: true
   },
   {
-    name: "Black Knight",
+    name: 'Black Knight',
     code: 'blackknight',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/blackknightgames.webp",
+    image:
+      'https://bryces-images.s3.us-west-2.amazonaws.com/blackknightgames.webp',
     shopify: true
   },
   {
-    name: "East Ridge Games",
+    name: 'East Ridge Games',
     code: 'eastridge',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/eastridge.avif",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/eastridge.avif',
     shopify: true
   },
   {
-    name: "HFX Games",
+    name: 'HFX Games',
     code: 'hfx',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/hfxgames.avif",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/hfxgames.avif',
     shopify: true
   },
   {
-    name: "Kessel Run",
+    name: 'Kessel Run',
     code: 'kesselrun',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/kesselrun.avif",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/kesselrun.avif',
     shopify: true
   },
   {
-    name: "Nerdz Cafe",
+    name: 'Nerdz Cafe',
     code: 'nerdzcafe',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/nerdzcafe.webp",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/nerdzcafe.webp',
     shopify: true
   },
   {
-    name: "OMG Games",
+    name: 'OMG Games',
     code: 'omg',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/omggames.webp",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/omggames.webp',
     shopify: true
   },
   {
-    name: "Out of The Box",
+    name: 'Out of The Box',
     code: 'outofthebox',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/outofthebox.avif",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/outofthebox.avif',
     shopify: true
   },
   {
     name: "Pandora's Boox",
     code: 'pandorasboox',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/pandorasboox.avif",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/pandorasboox.avif',
     shopify: true
   },
   {
-    name: "Red Dragon",
+    name: 'Red Dragon',
     code: 'reddragon',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/reddragon.webp",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/reddragon.webp',
     shopify: true
   },
   {
-    name: "Sky Fox",
+    name: 'Sky Fox',
     code: 'skyfox',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/skyfox.avif",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/skyfox.avif',
     shopify: true
   },
   {
-    name: "Taps Games",
+    name: 'Taps Games',
     code: 'taps',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/tapsgames.avif",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/tapsgames.avif',
     shopify: true
   },
   {
-    name: "Time Vault",
+    name: 'Time Vault',
     code: 'timevault',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/timevault.avif",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/timevault.avif',
     shopify: true
   },
   {
-    name: "Up North Games",
+    name: 'Up North Games',
     code: 'upnorth',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/upnorth.avif",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/upnorth.avif',
     shopify: true
   },
   {
-    name: "Waypoint Games",
+    name: 'Waypoint Games',
     code: 'waypoint',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/waypoint.webp",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/waypoint.webp',
     shopify: true
   },
   {
-    name: "Level Up Games",
+    name: 'Level Up Games',
     code: 'levelup',
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/levelup.webp",
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/levelup.webp',
     shopify: true
   },
   {
-    name: "Kingdom of the Titans",
-    code: "kingdomtitans",
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/kingdomtitans.webp",
+    name: 'Kingdom of the Titans',
+    code: 'kingdomtitans',
+    image:
+      'https://bryces-images.s3.us-west-2.amazonaws.com/kingdomtitans.webp',
     shopify: true
   },
   {
-    name: "Fan of the Sport",
-    code: "fanofthesport",
-    image: "https://bryces-images.s3.us-west-2.amazonaws.com/fanofthesport.avif",
+    name: 'Fan of the Sport',
+    code: 'fanofthesport',
+    image:
+      'https://bryces-images.s3.us-west-2.amazonaws.com/fanofthesport.avif',
     shopify: true
   },
   {
-    name:"Untouchables",
-    code:"untouchables",
-    image:"https://bryces-images.s3.us-west-2.amazonaws.com/untouchables.webp",
+    name: 'Untouchables',
+    code: 'untouchables',
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/untouchables.webp',
     shopify: true
   },
   {
-    name:"Dark Fox TCG",
-    code:"darkfoxtcg",
-    image:"https://bryces-images.s3.us-west-2.amazonaws.com/darkfoxtcg.webp",
+    name: 'Dark Fox TCG',
+    code: 'darkfoxtcg',
+    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/darkfoxtcg.webp',
     shopify: true
-  },
+  }
 ];
 
 export type FilterTag = {
   name: string;
   displayName: string;
   selected: boolean;
-}
+};
 
 export type PriceListEntry = {
   price: number;
   website: string;
   foil: boolean;
   condition: string;
-}
+};
 
 export type CardPrices = {
   image: string;
@@ -386,12 +407,14 @@ export type CardPrices = {
   foil_avg?: number;
   priceList: PriceListEntry[];
   date: string;
-}
-
+};
 
 type State = {
   singleSearchStarted: boolean;
-  sortMultiSearchVariants: (card: MultiSearchCardState, orderBy: string) => void;
+  sortMultiSearchVariants: (
+    card: MultiSearchCardState,
+    orderBy: string
+  ) => void;
   calculateSetMultiSearchSelectedCost: () => void;
   multiSearchSelectedCost: number;
   missingMultiSearchResults: string[];
@@ -443,8 +466,10 @@ type State = {
   multiSearchResultsLoading: boolean;
   multiSearchResults: MultiSearchCard[];
   filteredMultiSearchResults: MultiSearchCardState[];
-  updateSelectedVariant: (cardName: string, variant: SingleSearchResult) => void;
-
+  updateSelectedVariant: (
+    cardName: string,
+    variant: SingleSearchResult
+  ) => void;
 
   // Sealed Search
   sealedSearchResults: SealedSearchResult[];
@@ -463,7 +488,7 @@ type State = {
   setSealedSearchOrder: (sealedSearchOrder: 'asc' | 'desc') => void;
   singleSearchPriceList?: CardPrices;
   sealedSearchHasResults: boolean;
-}
+};
 
 export const useStore = create<State>((set, get) => ({
   sealedSearchHasResults: false,
@@ -472,7 +497,6 @@ export const useStore = create<State>((set, get) => ({
   setSealedSearchOrderBy: (sealedSearchOrderBy) => {
     set({ sealedSearchOrderBy });
     get().filterSealedSearchResults();
-
   },
   setSealedSearchOrder: (sealedSearchOrder) => {
     set({ sealedSearchOrder });
@@ -482,47 +506,49 @@ export const useStore = create<State>((set, get) => ({
   sealedSearchOrder: 'asc',
   sealedFilterTags: [
     {
-      name: "pack",
-      displayName: "Pack",
-      selected: true,
+      name: 'pack',
+      displayName: 'Pack',
+      selected: true
     },
     {
-      name: "draft",
-      displayName: "Draft",
-      selected: true,
+      name: 'draft',
+      displayName: 'Draft',
+      selected: true
     },
     {
-      name: "jumpstart",
-      displayName: "Jumpstart",
-      selected: true,
+      name: 'jumpstart',
+      displayName: 'Jumpstart',
+      selected: true
     },
     {
-      name: "set",
-      displayName: "Set",
-      selected: true,
+      name: 'set',
+      displayName: 'Set',
+      selected: true
     },
     {
-      name: "collector",
-      displayName: "Collector",
-      selected: true,
+      name: 'collector',
+      displayName: 'Collector',
+      selected: true
     },
     {
-      name: "bundle",
-      displayName: "Bundle",
-      selected: true,
+      name: 'bundle',
+      displayName: 'Bundle',
+      selected: true
     },
     {
-      name: "box",
-      displayName: "Box",
-      selected: true,
-    },
+      name: 'box',
+      displayName: 'Box',
+      selected: true
+    }
   ],
   toggleSealedFilterTag: (tag: FilterTag) => {
-        // toggle the selected field of the tag
+    // toggle the selected field of the tag
     // update the selectedTags array
     const sealedFilterTags = get().sealedFilterTags;
     // if the selected tag is the only one selected, don't toggle it
-    const selectedTags = sealedFilterTags.filter((sealedFilterTag) => sealedFilterTag.selected);
+    const selectedTags = sealedFilterTags.filter(
+      (sealedFilterTag) => sealedFilterTag.selected
+    );
     if (selectedTags.length === 1 && selectedTags[0].name === tag.name) {
       return;
     }
@@ -538,14 +564,22 @@ export const useStore = create<State>((set, get) => ({
   filterSealedSearchResults: () => {
     const sealedSearchResults = get().sealedSearchResults;
     const sealedFilterTags = get().sealedFilterTags;
-    const filteredSealedSearchResults = sealedSearchResults.filter((sealedSearchResult) => {
-      // if the sealedSearchResult has a tag that is selected, return true
-      // otherwise return false
-      const selectedTags = sealedFilterTags.filter((sealedFilterTag) => sealedFilterTag.selected);
-      const selectedTagNames = selectedTags.map((selectedTag) => selectedTag.name);
-      const hasSelectedTag = sealedSearchResult.tags.some((tag) => selectedTagNames.includes(tag));
-      return hasSelectedTag;
-    });
+    const filteredSealedSearchResults = sealedSearchResults.filter(
+      (sealedSearchResult) => {
+        // if the sealedSearchResult has a tag that is selected, return true
+        // otherwise return false
+        const selectedTags = sealedFilterTags.filter(
+          (sealedFilterTag) => sealedFilterTag.selected
+        );
+        const selectedTagNames = selectedTags.map(
+          (selectedTag) => selectedTag.name
+        );
+        const hasSelectedTag = sealedSearchResult.tags.some((tag) =>
+          selectedTagNames.includes(tag)
+        );
+        return hasSelectedTag;
+      }
+    );
     // apply the order by and order
     const sealedSearchOrderBy = get().sealedSearchOrderBy;
     const sealedSearchOrder = get().sealedSearchOrder;
@@ -557,15 +591,17 @@ export const useStore = create<State>((set, get) => ({
       }
     } else {
       if (sealedSearchOrder === 'asc') {
-        filteredSealedSearchResults.sort((a, b) => a.website.localeCompare(b.website));
+        filteredSealedSearchResults.sort((a, b) =>
+          a.website.localeCompare(b.website)
+        );
       } else {
-        filteredSealedSearchResults.sort((a, b) => b.website.localeCompare(a.website));
+        filteredSealedSearchResults.sort((a, b) =>
+          b.website.localeCompare(a.website)
+        );
       }
     }
     set({ filteredSealedSearchResults });
-
   },
-
 
   sealedSearchInput: '',
   sealedSearchQuery: '',
@@ -575,10 +611,13 @@ export const useStore = create<State>((set, get) => ({
   sealedSearchResultsLoading: false,
   fetchSealedSearchResults: async (searchInput: string) => {
     set({ sealedSearchResultsLoading: true });
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/search/sealed/`, {
-      setName: searchInput,
-      websites: ['all']
-    });
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/search/sealed/`,
+      {
+        setName: searchInput,
+        websites: ['all']
+      }
+    );
     const results = response.data;
     // sort results by ascending price
     // results = [SingleSearchResult, SingleSearchResult, ...]
@@ -587,7 +626,7 @@ export const useStore = create<State>((set, get) => ({
       return a.price - b.price;
     });
 
-    set({ sealedSearchHasResults: true })
+    set({ sealedSearchHasResults: true });
     set({ filteredSealedSearchResults: results });
     set({ sealedSearchResults: results });
     set({ sealedSearchResultsLoading: false });
@@ -623,7 +662,6 @@ export const useStore = create<State>((set, get) => ({
     ];
     set({ filteredMultiSearchResults: newFilteredMultiSearchResults });
   },
-
 
   calculateSetMultiSearchSelectedCost: () => {
     const filteredMultiSearchResults = get().filteredMultiSearchResults;
@@ -672,7 +710,7 @@ export const useStore = create<State>((set, get) => ({
     set({ filteredMultiSearchResults: newMultiSearchResults });
     get().calculateSetMultiSearchSelectedCost();
   },
-      
+
   websites: websites,
   singleSearchInput: '',
   setSingleSearchInput: (singleSearchInput: string) =>
@@ -719,9 +757,6 @@ export const useStore = create<State>((set, get) => ({
   setSingleSearchResultsLoading: (singleSearchResultsLoading: boolean) =>
     set({ singleSearchResultsLoading }),
 
-
-
-
   fetchMultiSearchResults: async (multiSearchInput: string) => {
     set({ multiSearchResultsLoading: true });
     const selectedWebsites = get().multiSearchSelectedWebsites;
@@ -733,31 +768,51 @@ export const useStore = create<State>((set, get) => ({
     // remove any empty strings
     const filteredCardNames = cardNames.filter((cardName) => cardName !== '');
     // match each website to it's code
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`, {
-      cardNames: filteredCardNames,
-      websites: websiteCodes,
-      worstCondition: 'nm'
-    });
+
+    const response = await axiosInstance.post(
+      `${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`,
+      {
+        cardNames: filteredCardNames,
+        websites: websiteCodes,
+        worstCondition: 'nm'
+      }
+    );
+
+    console.log('response: ', response);
+
+    // const response = await fetchWithToken(`${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`, {
+    //   method: 'post',
+    //   data: {
+    //     cardNames: filteredCardNames,
+    //     websites: websiteCodes,
+    //     worstCondition: 'nm'
+    //   }
+    // });
+    // const response = await axios.post(`${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`, {
+    //   cardNames: filteredCardNames,
+    //   websites: websiteCodes,
+    //   worstCondition: 'nm'
+    // });
     let results = response.data;
     // sort results by ascending price
-    // results.sort((a: MultiSearchCard, b: MultiSearchCard) => {
-    //   return a.price - b.price;
-    // });
-    // for card in results
     for (let i = 0; i < results.length; i++) {
       // sort card's results by ascending price
-      results[i].variants.sort((a: SingleSearchResult, b: SingleSearchResult) => {
-        return a.price - b.price;
-      });
+      results[i].variants.sort(
+        (a: SingleSearchResult, b: SingleSearchResult) => {
+          return a.price - b.price;
+        }
+      );
     }
     // construct filteredMultiSearchResults by adding a 'selected' property to each card, and a 'selectedVariant' property to each card
-    const filteredResults: MultiSearchCardState[] = results.map((card: MultiSearchCard) => {
-      return {
-        ...card,
-        selected: true,
-        selectedVariant: card.variants[0]
-      };
-    });
+    const filteredResults: MultiSearchCardState[] = results.map(
+      (card: MultiSearchCard) => {
+        return {
+          ...card,
+          selected: true,
+          selectedVariant: card.variants[0]
+        };
+      }
+    );
     set({ filteredMultiSearchResults: filteredResults });
     // set({ filteredMultiSearchResults: results });
     set({ multiSearchResults: results });
@@ -766,9 +821,11 @@ export const useStore = create<State>((set, get) => ({
     set({ multiSearchMode: 'results' });
     // set missingMultiSearchResults to the card name in filteredCardNames that is not in results
     const missingMultiSearchResults = filteredCardNames.filter((cardName) => {
-      return !results.find((card:MultiSearchCard) => card.cardName.toLowerCase() === cardName.toLowerCase());
-    }
-    );
+      return !results.find(
+        (card: MultiSearchCard) =>
+          card.cardName.toLowerCase() === cardName.toLowerCase()
+      );
+    });
     set({ missingMultiSearchResults });
     get().calculateSetMultiSearchSelectedCost();
   },
@@ -776,11 +833,15 @@ export const useStore = create<State>((set, get) => ({
   filteredMultiSearchResults: [],
 
   fetchSingleSearchResults: async (searchInput: string) => {
-    set({ singleSearchStarted: true })
+    set({ singleSearchStarted: true });
     set({ singleSearchResultsLoading: true });
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_SEARCH_URL}/single`, {
-      cardName: searchInput,
-    });
+    const response = await axiosInstance.post(
+      `${process.env.NEXT_PUBLIC_SEARCH_URL}/single`,
+      {
+        cardName: searchInput
+      }
+    );
+
     const results = response.data;
     // sort results by ascending price
     // results = [SingleSearchResult, SingleSearchResult, ...]
@@ -794,9 +855,6 @@ export const useStore = create<State>((set, get) => ({
     set({ singleSearchResultsLoading: false });
     set({ singleSearchQuery: searchInput });
   },
-
-
-
 
   multiSearchMode: 'search',
   filterSingleSearchResults: () => {
@@ -929,33 +987,37 @@ export const useStore = create<State>((set, get) => ({
   },
   updateSelectedVariant: (card: string, variant: SingleSearchResult) => {
     set({
-      filteredMultiSearchResults: get().filteredMultiSearchResults.map((cardState: MultiSearchCardState) => {
-        if (cardState.cardName === card) {
-          return {
-            ...cardState,
-            selectedVariant: variant,
-            selected: true
-          };
-        } else {
-          return cardState;
+      filteredMultiSearchResults: get().filteredMultiSearchResults.map(
+        (cardState: MultiSearchCardState) => {
+          if (cardState.cardName === card) {
+            return {
+              ...cardState,
+              selectedVariant: variant,
+              selected: true
+            };
+          } else {
+            return cardState;
+          }
         }
-      })
+      )
     });
     get().calculateSetMultiSearchSelectedCost();
   },
   toggleSelectMultiSearchCard: (card: string) => {
     set({
-      filteredMultiSearchResults: get().filteredMultiSearchResults.map((cardState: MultiSearchCardState) => {
-        if (cardState.cardName === card) {
-          return {
-            ...cardState,
-            selected: !cardState.selected
-          };
-        } else {
-          return cardState;
+      filteredMultiSearchResults: get().filteredMultiSearchResults.map(
+        (cardState: MultiSearchCardState) => {
+          if (cardState.cardName === card) {
+            return {
+              ...cardState,
+              selected: !cardState.selected
+            };
+          } else {
+            return cardState;
+          }
         }
-      })
+      )
     });
     get().calculateSetMultiSearchSelectedCost();
-  },
+  }
 }));

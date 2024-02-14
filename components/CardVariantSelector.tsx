@@ -1,6 +1,6 @@
-import { MultiSearchCardState } from '@/store';
+import { MultiSearchCardState } from '@/stores/store';
 import React from 'react'
-import { useStore } from '@/store'
+import { useStore } from '@/stores/store'
 import CloseButton from './CloseButton'
 
 type Props = {
