@@ -26,7 +26,7 @@ const Signin: NextPage<Props> = () => {
           });
     
           if (!response.ok) {
-            throw new Error('Something went wrong with the registration process');
+            throw new Error('Something went wrong with the login process');
           } else {
             // on response body as "token" key 
             const body = await response.json();
