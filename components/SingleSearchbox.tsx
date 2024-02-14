@@ -1,15 +1,13 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { useStore } from "@/stores/store";
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { useStore } from '@/stores/store';
 
-type Props = {
-};
+type Props = {};
 
 export default function SingleSearchbox({}: Props) {
-  const { singleSearchInput, setSingleSearchInput, fetchSingleSearchResults} =
+  const { singleSearchInput, setSingleSearchInput, fetchSingleSearchResults } =
     useStore();
-  // const autocompleteEndpoint = "http://localhost/autocomplete/cards?query=";
-  // load url from env vars
-  const autocompleteEndpoint = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + "/cards?query=";
+  const autocompleteEndpoint =
+    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
   const [autocompleteResults, setAutocompleteResults] = useState<string[]>([]);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [selectedAutocompleteIndex, setSelectedAutocompleteIndex] =
@@ -23,17 +21,16 @@ export default function SingleSearchbox({}: Props) {
     if (value.trim().length > 0) {
       // add artificial delay, only send on odd-numbered keystrokes
       if (value.length > 2 && value.length % 2 != 0) {
-      
-      fetch(autocompleteEndpoint + value)
-        .then((response) => response.json())
-        .then((data) => {
-          setAutocompleteResults(data.data);
-          setShowAutocomplete(true);
-          setSelectedAutocompleteIndex(-1);
-        })
-        .catch((error) => {
-          console.error("Error fetching autocomplete results: ", error);
-        });
+        fetch(autocompleteEndpoint + value)
+          .then((response) => response.json())
+          .then((data) => {
+            setAutocompleteResults(data.data);
+            setShowAutocomplete(true);
+            setSelectedAutocompleteIndex(-1);
+          })
+          .catch((error) => {
+            console.error('Error fetching autocomplete results: ', error);
+          });
       }
     } else {
       setAutocompleteResults([]);
@@ -47,7 +44,6 @@ export default function SingleSearchbox({}: Props) {
     setAutocompleteResults([]);
     setShowAutocomplete(false);
     setSelectedAutocompleteIndex(-1);
-    
   };
 
   const handleAutocompleteKeyDown = useCallback(
@@ -55,21 +51,21 @@ export default function SingleSearchbox({}: Props) {
       const key = event.key;
       const totalResults = autocompleteResults.length;
       switch (key) {
-        case "ArrowDown":
+        case 'ArrowDown':
           event.preventDefault();
           setSelectedAutocompleteIndex((prevIndex) => {
             const nextIndex = prevIndex + 1;
             return nextIndex < totalResults ? nextIndex : prevIndex;
           });
           break;
-        case "ArrowUp":
+        case 'ArrowUp':
           event.preventDefault();
           setSelectedAutocompleteIndex((prevIndex) => {
             const nextIndex = prevIndex - 1;
             return nextIndex >= 0 ? nextIndex : -1;
           });
           break;
-        case "Enter":
+        case 'Enter':
           if (
             selectedAutocompleteIndex >= 0 &&
             selectedAutocompleteIndex < totalResults
@@ -80,7 +76,7 @@ export default function SingleSearchbox({}: Props) {
           }
           break;
 
-        case "ArrowRight":
+        case 'ArrowRight':
           if (
             selectedAutocompleteIndex >= 0 &&
             selectedAutocompleteIndex < totalResults
@@ -91,7 +87,7 @@ export default function SingleSearchbox({}: Props) {
           }
           break;
 
-        case "Escape":
+        case 'Escape':
           setShowAutocomplete(false);
           setSelectedAutocompleteIndex(-1);
           break;
@@ -104,7 +100,7 @@ export default function SingleSearchbox({}: Props) {
       selectedAutocompleteIndex,
       setAutocompleteResults,
       setShowAutocomplete,
-      setSelectedAutocompleteIndex,
+      setSelectedAutocompleteIndex
     ]
   );
 
@@ -139,7 +135,6 @@ export default function SingleSearchbox({}: Props) {
           <button
             type="submit"
             className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-pink-500"
-            
           >
             <svg
               width="14"
@@ -163,7 +158,7 @@ export default function SingleSearchbox({}: Props) {
                   <div
                     key={result}
                     className={`cursor-pointer px-4 py-2 mx-1 rounded ${
-                      selectedAutocompleteIndex === index ? "bg-zinc-700" : ""
+                      selectedAutocompleteIndex === index ? 'bg-zinc-700' : ''
                     } `}
                     onClick={() => handleAutocompleteItemClick(result)}
                   >

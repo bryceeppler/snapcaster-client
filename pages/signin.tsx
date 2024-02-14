@@ -4,46 +4,46 @@ import { useState } from 'react';
 import Head from 'next/head';
 import axios from 'axios';
 import useAuthStore from '@/stores/authStore';
-
+import toast from 'react-hot-toast';
+import Router from 'next/router';
 
 type Props = {};
 
 const Signin: NextPage<Props> = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = Router;
+  const setTokens = useAuthStore((state) => state.setTokens);
 
-    const setTokens = useAuthStore((state) => state.setTokens);
+  const handleSubmit = async () => {
+    const endpoint = process.env.NEXT_PUBLIC_USER_URL + '/login';
+    const userData = {
+      email,
+      password
+    };
 
-    const handleSubmit = async () => {
-        const endpoint = process.env.NEXT_PUBLIC_USER_URL + "/login/";
-        const userData = {
-          email,
-          password,
-        };
-    
-        try {
-          const response = await axios.post(endpoint, userData);
-    
-          if (!response.status) {
-            throw new Error('Something went wrong with the registration process');
-          } else {
-            // on response body as "token" key 
-            // const body = await response.data;
-            // const token = body.token;
-            // localStorage.setItem('token', token);
-            const { accessToken, refreshToken } = response.data;
-            setTokens(accessToken, refreshToken); // Use the setTokens action
-            setMessage('Login successful!');
-          }
-    
-          // const data = await response.json();
-          // setMessage('Login successful!');
-          // Reset form or redirect user
-        } catch (error: any) {
-          setMessage(error?.message || 'Something went wrong with the login process');
-        }
-      };
+    try {
+      const response = await axios.post(endpoint, userData);
+
+      if (!response.status) {
+        toast.error('Invalid response from server.');
+        throw new Error('Something went wrong with the login process');
+      } else {
+        const { accessToken, refreshToken } = response.data;
+        setTokens(accessToken, refreshToken);
+        toast.success('Login successful!');
+        router.back();
+      }
+    } catch (error: any) {
+      if (error.response.status === 401) {
+        // Unauthorized
+        toast.error('Invalid email or password');
+      } else {
+        toast.error(error?.response.status + ' ' + error?.response.statusText);
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <>
@@ -55,39 +55,35 @@ const Signin: NextPage<Props> = () => {
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter">Sign In</h2>
                 <p className="text-gray-500 dark:text-gray-400">
-                  Log in to your Snapcaster account. 
+                  Log in to your Snapcaster account.
                 </p>
-                {message && <p>{message}</p>}
               </div>
               <div className="grid gap-4 md:gap-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="relative">
-                  <input
-                    type="password"
-                    className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
+                <input
+                  type="text"
+                  className="block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+                />
+
+                <input
+                  type="password"
+                  className="block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+                />
                 <button
                   onClick={handleSubmit}
                   className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
                 >
                   Sign In
                 </button>
-                <button
-                    className=''
-                >
-                <a href="/signup">Dont have an account? Sign up!</a>
+                <button className="">
+                  <a href="/signup">Dont have an account? Sign up!</a>
                 </button>
               </div>
             </div>

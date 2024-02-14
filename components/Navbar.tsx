@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import useAuthStore from '@/stores/authStore';
+import toast from 'react-hot-toast';
 
 type Props = {};
 
@@ -9,10 +10,11 @@ export default function Navbar({}: Props) {
   const currentPath = useRouter().pathname;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated } = useAuthStore();
-  const { logout } = useAuthStore();
+  const { clearTokens } = useAuthStore();
   const router = useRouter();
   const handleLogout = () => {
-    logout();
+    clearTokens();
+    toast.success('You have been logged out');
   }
 
 

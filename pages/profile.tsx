@@ -15,14 +15,13 @@ type UserProfile = {
 
 const Profile: NextPage<Props> = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
   // fetch user data
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get('http://localhost/user/profile');
+        const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_USER_URL}/profile`);
         if (response.status !== 200) throw new Error('Failed to fetch user profile');
         const data: UserProfile = await response.data
         setUserProfile(data);

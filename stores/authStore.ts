@@ -10,7 +10,6 @@ type AuthState = {
   setTokens: (accessToken: string, refreshToken: string) => void;
   clearTokens: () => void;
   refreshAccessToken: () => Promise<void>;
-  logout: () => void;
 };
 
 
@@ -37,22 +36,19 @@ const useAuthStore = create<AuthState>((set, get) => ({
   },
   refreshAccessToken: async () => {
     try {
-      console.log('Refreshing access token...')
-      const response = await axios.post('/auth/refresh', {
+      console.log('Refreshing access token...');
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_USER_URL}/refresh`, {
         refreshToken: get().refreshToken,
       });
       const { accessToken, refreshToken } = response.data;
       get().setTokens(accessToken, refreshToken);
       console.log('Access token refreshed');
+      return accessToken; // Return the new access token
     } catch (error) {
       console.error('Error refreshing access token:', error);
       get().clearTokens();
+      throw error; // Ensure to throw the error to be caught in the interceptor
     }
-  },
-  logout: () => {
-    get().clearTokens();
-    // set isAuthenticated to false
-    set({ isAuthenticated: false });
   },
 }));
 

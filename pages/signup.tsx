@@ -3,16 +3,23 @@ import { type NextPage } from 'next';
 import { useState } from 'react';
 import Head from 'next/head';
 import axios from 'axios';
+import Router from 'next/router';
+import toast from 'react-hot-toast';
+import useAuthStore from '@/stores/authStore';
+import Profile from './profile';
+
 type Props = {};
 
 const Signup: NextPage<Props> = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [message, setMessage] = useState('');
+
+  const router = Router;
+  const { isAuthenticated } = useAuthStore();
 
   const handleSubmit = async () => {
-    const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/register/`
+    const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/register`
     const userData = {
       email,
       password,
@@ -24,11 +31,17 @@ const Signup: NextPage<Props> = () => {
       if (response.status !== 201) {
         throw new Error('Something went wrong with the registration process');
       }
-      setMessage('Registration successful!');
+      toast.success('Registration successful! You can now sign in.');
+      router.push('/signin');
     } catch (error: any) {
-      setMessage(error?.message || 'Something went wrong with the registration process');
+      console.log(error)
+      toast.error("Could not register user");
+
     }
   };
+  if (isAuthenticated) {
+    return <Profile />;
+  }
   return (
     <>
       <SignupHead />
@@ -41,28 +54,24 @@ const Signup: NextPage<Props> = () => {
                 <p className="text-gray-500 dark:text-gray-400">
                     Create your Snapcaster account. 
                 </p>
-                {message && <p>{message}</p>}
-
               </div>
               <div className="grid gap-4 md:gap-4">
-                <div className="relative">
                   <input
                     type="text"
                     className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                   />
-                </div>
-                <div className="relative">
                   <input
                     type="password"
                     className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                   />
-                </div>
                 <div className="relative">
                   <input
                     type="text"
@@ -70,6 +79,7 @@ const Signup: NextPage<Props> = () => {
                     placeholder="Full Name"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                   />
                 </div>
                 <button
