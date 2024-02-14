@@ -23,8 +23,8 @@ export default function Navbar({}: Props) {
     // { name: 'Watchlist', href: '/watchlist', current: currentPath === '/watchlist' },
     // { name: 'Membership', href: '/pricing', current: currentPath === '/pricing' },
     { name: 'About', href: '/about', current: currentPath === '/about' },
-    { name: 'Updates', href: '/updates', current: currentPath === '/updates'}
-    // { name: 'Profile', href: '/account', current: currentPath === '/account' }
+    { name: 'Updates', href: '/updates', current: currentPath === '/updates'},
+    { name: 'Profile', href: '/profile', current: currentPath === '/profile' }
   ];
   return (
     <div>
