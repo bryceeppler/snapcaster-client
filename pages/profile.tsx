@@ -2,7 +2,7 @@ import MainLayout from '@/components/MainLayout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import { fetchWithToken } from '@/utils/fetchWrapper';
+import axiosInstance from '@/utils/axiosWrapper';
 type Props = {};
 
 
@@ -18,7 +18,7 @@ const Profile: NextPage<Props> = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetchWithToken('http://localhost/user/profile');
+        const response = await axiosInstance.get('http://localhost/user/profile');
         if (response.status !== 200) throw new Error('Failed to fetch user profile');
         const data: UserProfile = await response.data
         setUserProfile(data);

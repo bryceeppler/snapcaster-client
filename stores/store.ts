@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { fetchWithToken } from '../utils/fetchWrapper';
 import axiosInstance from '@/utils/axiosWrapper';
 
 export interface SingleSearchResult {
@@ -836,13 +835,10 @@ export const useStore = create<State>((set, get) => ({
   fetchSingleSearchResults: async (searchInput: string) => {
     set({ singleSearchStarted: true });
     set({ singleSearchResultsLoading: true });
-    const response = await fetchWithToken(
+    const response = await axiosInstance.post(
       `${process.env.NEXT_PUBLIC_SEARCH_URL}/single`,
       {
-        method: 'post',
-        data: {
-          cardName: searchInput
-        }
+        cardName: searchInput
       }
     );
 

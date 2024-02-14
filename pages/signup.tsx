@@ -76,12 +76,12 @@ const Signup: NextPage<Props> = () => {
                   onClick={handleSubmit}
                   className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
                 >
-                  Signup
+                  Sign Up
                 </button>
                 <button
                     className=''
                 >
-                <a href="/signin">Already have an account? Sign in</a>
+                <a href="/signin">Already have an account? Sign in!</a>
                 </button>
               </div>
             </div>

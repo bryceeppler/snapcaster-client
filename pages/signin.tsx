@@ -53,7 +53,7 @@ const Signin: NextPage<Props> = () => {
           <section className="w-full py-6 md:py-12">
             <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter">Signin</h2>
+                <h2 className="text-3xl font-bold tracking-tighter">Sign In</h2>
                 <p className="text-gray-500 dark:text-gray-400">
                   Log in to your Snapcaster account. 
                 </p>
@@ -82,12 +82,12 @@ const Signin: NextPage<Props> = () => {
                   onClick={handleSubmit}
                   className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
                 >
-                  Signin
+                  Sign In
                 </button>
                 <button
                     className=''
                 >
-                <a href="/signup">Dont have an account? Signup</a>
+                <a href="/signup">Dont have an account? Sign up!</a>
                 </button>
               </div>
             </div>

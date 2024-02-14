@@ -2,8 +2,6 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import useAuthStore from '@/stores/authStore'; 
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL, // Assuming you have a base URL
-  // Add any other global config here
 });
 
 // Request interceptor to add the auth token header to every request
