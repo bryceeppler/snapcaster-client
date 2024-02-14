@@ -3,6 +3,8 @@ import { type NextPage } from 'next';
 import { useState } from 'react';
 import Head from 'next/head';
 import axios from 'axios';
+import useAuthStore from '@/stores/authStore';
+
 
 type Props = {};
 
@@ -10,6 +12,8 @@ const Signin: NextPage<Props> = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+
+    const setTokens = useAuthStore((state) => state.setTokens);
 
     const handleSubmit = async () => {
         const endpoint = process.env.NEXT_PUBLIC_USER_URL + "/login/";
@@ -25,13 +29,16 @@ const Signin: NextPage<Props> = () => {
             throw new Error('Something went wrong with the registration process');
           } else {
             // on response body as "token" key 
-            const body = await response.data;
-            const token = body.token;
-            localStorage.setItem('token', token);
+            // const body = await response.data;
+            // const token = body.token;
+            // localStorage.setItem('token', token);
+            const { accessToken, refreshToken } = response.data;
+            setTokens(accessToken, refreshToken); // Use the setTokens action
+            setMessage('Login successful!');
           }
     
           // const data = await response.json();
-          setMessage('Login successful!');
+          // setMessage('Login successful!');
           // Reset form or redirect user
         } catch (error: any) {
           setMessage(error?.message || 'Something went wrong with the login process');

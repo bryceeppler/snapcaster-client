@@ -1,0 +1,44 @@
+import {create} from 'zustand';
+import axios from 'axios';
+
+// Define a type for the store's state
+type AuthState = {
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  setTokens: (accessToken: string, refreshToken: string) => void;
+  clearTokens: () => void;
+  refreshAccessToken: () => Promise<void>;
+};
+
+const useAuthStore = create<AuthState>((set, get) => ({
+  accessToken: null,
+  refreshToken: null,
+  isAuthenticated: false,
+  setTokens: (accessToken: string, refreshToken: string) => {
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    set({ accessToken, refreshToken, isAuthenticated: true });
+  },
+  clearTokens: () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    set({ accessToken: null, refreshToken: null, isAuthenticated: false });
+  },
+  refreshAccessToken: async () => {
+    try {
+      console.log('Refreshing access token...')
+      const response = await axios.post('/auth/refresh', {
+        refreshToken: get().refreshToken,
+      });
+      const { accessToken, refreshToken } = response.data;
+      get().setTokens(accessToken, refreshToken);
+      console.log('Access token refreshed');
+    } catch (error) {
+      console.error('Error refreshing access token:', error);
+      get().clearTokens();
+    }
+  },
+}));
+
+export default useAuthStore;
