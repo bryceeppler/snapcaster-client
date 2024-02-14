@@ -1,29 +1,34 @@
 import MainLayout from '@/components/MainLayout';
 import { type NextPage } from 'next';
-import { useState } from 'react';
 import Head from 'next/head';
 import axios from 'axios';
 import useAuthStore from '@/stores/authStore';
 import toast from 'react-hot-toast';
 import Router from 'next/router';
+import { useForm } from 'react-hook-form';
 
 type Props = {};
 
 const Signin: NextPage<Props> = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const router = Router;
   const setTokens = useAuthStore((state) => state.setTokens);
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    }
+  });
 
-  const handleSubmit = async () => {
+  type Submision = {
+    email: string;
+    password: string;
+  };
+  const onSubmit = async (data : Submision) => {
+    const { email, password } = data;
     const endpoint = process.env.NEXT_PUBLIC_USER_URL + '/login';
-    const userData = {
-      email,
-      password
-    };
 
     try {
-      const response = await axios.post(endpoint, userData);
+      const response = await axios.post(endpoint, { email, password });
 
       if (!response.status) {
         toast.error('Invalid response from server.');
@@ -34,13 +39,12 @@ const Signin: NextPage<Props> = () => {
         toast.success('Login successful!');
         router.back();
       }
-    } catch (error: any) {
-      if (error.response.status === 401) {
-        // Unauthorized
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
         toast.error('Invalid email or password');
       } else {
-        toast.error(error?.response.status + ' ' + error?.response.statusText);
-        console.log(error);
+        toast.error('An error occurred during login');
+        console.error(error);
       }
     }
   };
@@ -58,34 +62,30 @@ const Signin: NextPage<Props> = () => {
                   Log in to your Snapcaster account.
                 </p>
               </div>
-              <div className="grid gap-4 md:gap-4">
+              <form className="grid gap-4 md:gap-4" onSubmit={handleSubmit(onSubmit)}>
                 <input
+                  {...register('email', { required: 'Email is required', pattern: /^\S+@\S+\.\S+$/ })}
                   type="text"
                   className="block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800"
                   placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                 />
-
+                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                {errors.email?.type === 'pattern' && <p className="text-red-500">Invalid email</p>}
                 <input
+                  {...register('password', { required: 'Password is required' })}
                   type="password"
                   className="block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800"
                   placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                 />
+                {errors.password && <p className="text-red-500">{errors.password.message}</p>}
                 <button
-                  onClick={handleSubmit}
+                  type="submit"
                   className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
                 >
                   Sign In
                 </button>
-                <button className="">
-                  <a href="/signup">Dont have an account? Sign up!</a>
-                </button>
-              </div>
+              </form>
+              <a href="/signup">Don't have an account? Sign up!</a>
             </div>
           </section>
         </div>
