@@ -5,11 +5,24 @@ import UpdateFeed from '@/components/UpdateFeed';
 import MainLayout from '@/components/MainLayout';
 type Props = {};
 
+// # new sites
+// "boutiqueawesome": {"url": "https://www.boutiqueawesome.com/"}, # good
+// "gamingkingdom": {"url": "https://gaming-kingdom.com/"}, # good
+// "lukescards": {"url": "https://www.lukescards.com/"}, # good
+// "mechagames": {"url": "https://mechagames.ca/"}, # good
+// "multizone": {"url": "https://multizone.ca/"}, # good
+// "trinityhobby": {"url": "https://trinityhobby.com/"}, # good
+// }
 const Updates: NextPage<Props> = () => {
   const updates = [
     {
+      title:"Adding 6 new stores.",
+      date: "Feb 14, 2024",
+      description: "Adding support for Boutique Awesome, Gaming Kingdom, Lukes Cards, Mecha Games, Multizone, and Trinity Hobby."
+    },
+    {
       title: 'Big backend changes.',
-      date: 'Feb 14, 2024',
+      date: 'Feb 11, 2024',
       description:
         "I've made some changes that should improve performance and reliability. Some stores have been temporarily removed as I work on getting them integrated with the new backend system. Thanks for your support and patience!"
     },
