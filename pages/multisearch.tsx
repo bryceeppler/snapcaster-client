@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { useStore } from '@/stores/store';
-import Loadingspinner from '@/components/LoadingSpinner';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import MultiCatalog from '@/components/MultiCatalog';
 import MultiSearchbox from '@/components/MultiSearchbox';
 import StoreSelector from '@/components/StoreSelector';
@@ -52,7 +52,7 @@ export default function Multisearch({}: Props) {
         )}
         {loading && (
           <div className="flex flex-col items-center justify-center space-y-2 pt-5">
-            <Loadingspinner />
+            <LoadingSpinner />
             <div className="p-3 text-sm">
               This might take a minute, depending on the number of cards and
               selected stores.

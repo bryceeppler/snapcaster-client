@@ -2,7 +2,7 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import Homebanner from '@/components/Homebanner';
 import SingleSearchbox from '@/components/SingleSearchbox';
-import Loadingspinner from '@/components/LoadingSpinner';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import SingleSearchInfo from '@/components/SingleSearchInfo';
 import SearchFilters from '@/components/SingleSearchFilters';
 import { useStore } from '@/stores/store';
@@ -36,7 +36,7 @@ const Home: NextPage<Props> = () => {
           )}
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
-              <Loadingspinner />
+              <LoadingSpinner />
             </div>
           )}
           {Object.keys(singleSearchResults).length > 0 && (
