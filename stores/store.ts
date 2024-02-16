@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import axios from 'axios';
 import axiosInstance from '@/utils/axiosWrapper';
 
 export interface SingleSearchResult {
@@ -12,17 +11,6 @@ export interface SingleSearchResult {
   price: number;
   website: string;
 }
-
-export type SealedSearchResult = {
-  name: string;
-  link: string;
-  image: string;
-  price: number;
-  stock: number;
-  website: string;
-  language: string;
-  tags: string[];
-};
 
 export type MultiSearchCard = {
   cardName: string;
@@ -383,13 +371,13 @@ const websites: Website[] = [
     shopify: true
   },
   {
-    name: "Boutique Awesome",
+    name: 'Boutique Awesome',
     code: 'boutiqueawesome',
     image: '',
     shopify: true
   },
   {
-    name: "Gaming Kingdom",
+    name: 'Gaming Kingdom',
     code: 'gamingkingdom',
     image: '',
     shopify: true
@@ -401,25 +389,25 @@ const websites: Website[] = [
     shopify: true
   },
   {
-    name: "Mecha Games",
+    name: 'Mecha Games',
     code: 'mechagames',
     image: '',
     shopify: true
   },
   {
-    name: "Multizone",
+    name: 'Multizone',
     code: 'multizone',
     image: '',
     shopify: true
   },
   {
-    name: "Trinity Hobby",
+    name: 'Trinity Hobby',
     code: 'trinityhobby',
     image: '',
     shopify: true
   },
   {
-    name: "Fetch Shock Games",
+    name: 'Fetch Shock Games',
     code: 'fetchshock',
     image: '',
     shopify: true
@@ -513,167 +501,12 @@ type State = {
     variant: SingleSearchResult
   ) => void;
 
-  // Sealed Search
-  sealedSearchResults: SealedSearchResult[];
-  sealedSearchQuery: string;
-  filteredSealedSearchResults: SealedSearchResult[];
-  sealedSearchOrderBy: 'price' | 'website';
-  sealedSearchOrder: 'asc' | 'desc';
-  sealedFilterTags: FilterTag[];
-  toggleSealedFilterTag: (tag: FilterTag) => void;
-  sealedSearchResultsLoading: boolean;
-  sealedSearchInput: string;
-  setSealedSearchInput: (sealedSearchInput: string) => void;
-  fetchSealedSearchResults: (sealedSearchInput: string) => Promise<void>;
-  filterSealedSearchResults: () => void;
-  setSealedSearchOrderBy: (sealedSearchOrderBy: 'price' | 'website') => void;
-  setSealedSearchOrder: (sealedSearchOrder: 'asc' | 'desc') => void;
   singleSearchPriceList?: CardPrices;
-  sealedSearchHasResults: boolean;
 };
 
 export const useStore = create<State>((set, get) => ({
-  sealedSearchHasResults: false,
   singleSearchStarted: false,
   singleSearchPriceList: undefined,
-  setSealedSearchOrderBy: (sealedSearchOrderBy) => {
-    set({ sealedSearchOrderBy });
-    get().filterSealedSearchResults();
-  },
-  setSealedSearchOrder: (sealedSearchOrder) => {
-    set({ sealedSearchOrder });
-    get().filterSealedSearchResults();
-  },
-  sealedSearchOrderBy: 'price',
-  sealedSearchOrder: 'asc',
-  sealedFilterTags: [
-    {
-      name: 'pack',
-      displayName: 'Pack',
-      selected: true
-    },
-    {
-      name: 'draft',
-      displayName: 'Draft',
-      selected: true
-    },
-    {
-      name: 'jumpstart',
-      displayName: 'Jumpstart',
-      selected: true
-    },
-    {
-      name: 'set',
-      displayName: 'Set',
-      selected: true
-    },
-    {
-      name: 'collector',
-      displayName: 'Collector',
-      selected: true
-    },
-    {
-      name: 'bundle',
-      displayName: 'Bundle',
-      selected: true
-    },
-    {
-      name: 'box',
-      displayName: 'Box',
-      selected: true
-    }
-  ],
-  toggleSealedFilterTag: (tag: FilterTag) => {
-    // toggle the selected field of the tag
-    // update the selectedTags array
-    const sealedFilterTags = get().sealedFilterTags;
-    // if the selected tag is the only one selected, don't toggle it
-    const selectedTags = sealedFilterTags.filter(
-      (sealedFilterTag) => sealedFilterTag.selected
-    );
-    if (selectedTags.length === 1 && selectedTags[0].name === tag.name) {
-      return;
-    }
-    const newSealedFilterTags = sealedFilterTags.map((sealedFilterTag) => {
-      if (sealedFilterTag.name === tag.name) {
-        return { ...sealedFilterTag, selected: !sealedFilterTag.selected };
-      }
-      return sealedFilterTag;
-    });
-    set({ sealedFilterTags: newSealedFilterTags });
-    get().filterSealedSearchResults();
-  },
-  filterSealedSearchResults: () => {
-    const sealedSearchResults = get().sealedSearchResults;
-    const sealedFilterTags = get().sealedFilterTags;
-    const filteredSealedSearchResults = sealedSearchResults.filter(
-      (sealedSearchResult) => {
-        // if the sealedSearchResult has a tag that is selected, return true
-        // otherwise return false
-        const selectedTags = sealedFilterTags.filter(
-          (sealedFilterTag) => sealedFilterTag.selected
-        );
-        const selectedTagNames = selectedTags.map(
-          (selectedTag) => selectedTag.name
-        );
-        const hasSelectedTag = sealedSearchResult.tags.some((tag) =>
-          selectedTagNames.includes(tag)
-        );
-        return hasSelectedTag;
-      }
-    );
-    // apply the order by and order
-    const sealedSearchOrderBy = get().sealedSearchOrderBy;
-    const sealedSearchOrder = get().sealedSearchOrder;
-    if (sealedSearchOrderBy === 'price') {
-      if (sealedSearchOrder === 'asc') {
-        filteredSealedSearchResults.sort((a, b) => a.price - b.price);
-      } else {
-        filteredSealedSearchResults.sort((a, b) => b.price - a.price);
-      }
-    } else {
-      if (sealedSearchOrder === 'asc') {
-        filteredSealedSearchResults.sort((a, b) =>
-          a.website.localeCompare(b.website)
-        );
-      } else {
-        filteredSealedSearchResults.sort((a, b) =>
-          b.website.localeCompare(a.website)
-        );
-      }
-    }
-    set({ filteredSealedSearchResults });
-  },
-
-  sealedSearchInput: '',
-  sealedSearchQuery: '',
-  sealedSearchResults: [],
-  filteredSealedSearchResults: [],
-  setSealedSearchInput: (sealedSearchInput) => set({ sealedSearchInput }),
-  sealedSearchResultsLoading: false,
-  fetchSealedSearchResults: async (searchInput: string) => {
-    set({ sealedSearchResultsLoading: true });
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_SNAPCASTER_API_URL}/search/sealed/`,
-      {
-        setName: searchInput,
-        websites: ['all']
-      }
-    );
-    const results = response.data;
-    // sort results by ascending price
-    // results = [SingleSearchResult, SingleSearchResult, ...]
-    // SingleSearchResult = { name: string, link: string, image: string, set: string, condition: string, foil: boolean, price: number, website: string }
-    results.sort((a: SealedSearchResult, b: SealedSearchResult) => {
-      return a.price - b.price;
-    });
-
-    set({ sealedSearchHasResults: true });
-    set({ filteredSealedSearchResults: results });
-    set({ sealedSearchResults: results });
-    set({ sealedSearchResultsLoading: false });
-    set({ sealedSearchQuery: searchInput });
-  },
 
   sortMultiSearchVariants: (card, orderBy) => {
     const filteredMultiSearchResults = get().filteredMultiSearchResults;
@@ -820,21 +653,6 @@ export const useStore = create<State>((set, get) => ({
       }
     );
 
-    console.log('response: ', response);
-
-    // const response = await fetchWithToken(`${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`, {
-    //   method: 'post',
-    //   data: {
-    //     cardNames: filteredCardNames,
-    //     websites: websiteCodes,
-    //     worstCondition: 'nm'
-    //   }
-    // });
-    // const response = await axios.post(`${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`, {
-    //   cardNames: filteredCardNames,
-    //   websites: websiteCodes,
-    //   worstCondition: 'nm'
-    // });
     let results = response.data;
     // sort results by ascending price
     for (let i = 0; i < results.length; i++) {
@@ -972,14 +790,9 @@ export const useStore = create<State>((set, get) => ({
         scn: true
       }
     });
-    // set foil to false
     set({ singleSearchFoil: false });
-    // set orderBy to price
     set({ singleSearchOrderBy: 'price' });
-    // set order to asc
     set({ singleSearchOrder: 'asc' });
-
-    // call filterSingleSearchResults
     get().filterSingleSearchResults();
   },
 
@@ -994,7 +807,6 @@ export const useStore = create<State>((set, get) => ({
     get().filterSingleSearchResults();
   },
 
-  // multiSearchSelectedWebsites = website.name for each website in websites
   multiSearchSelectedWebsites: websites.map((website: Website) => website.name),
   toggleMultiSearchSelectedWebsites: (website: string) => {
     // if website is in multiSearchSelectedWebsites, remove it
