@@ -382,12 +382,6 @@ const websites: Website[] = [
     image: 'https://bryces-images.s3.us-west-2.amazonaws.com/darkfoxtcg.webp',
     shopify: true
   },
-//   | not started | Boutique Awesome     | https://www.boutiqueawesome.com/               | Shopify         |
-// | not started | Gaming Kingdom       | https://gaming-kingdom.com/                    | Shopify         |
-// | not started | Luke's Cards         | https://www.lukescards.com/                    | Shopify         |
-// | not started | Mecha Games          | https://mechagames.ca/                         | Shopify         |
-// | not started | Multizone            | https://multizone.ca/                          | Shopify         |
-// | not started | Trinity Hobby        | https://trinityhobby.com/                      | Shopify         |
   {
     name: "Boutique Awesome",
     code: 'boutiqueawesome',
@@ -421,6 +415,12 @@ const websites: Website[] = [
   {
     name: "Trinity Hobby",
     code: 'trinityhobby',
+    image: '',
+    shopify: true
+  },
+  {
+    name: "Fetch Shock Games",
+    code: 'fetchshock',
     image: '',
     shopify: true
   }

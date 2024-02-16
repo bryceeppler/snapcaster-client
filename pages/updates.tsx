@@ -16,6 +16,11 @@ type Props = {};
 const Updates: NextPage<Props> = () => {
   const updates = [
     {
+      title:"Adding store.",
+      date: "Feb 14, 2024",
+      description: "Adding support for Fetch Shock Games."
+    },
+    {
       title:"Adding 6 new stores.",
       date: "Feb 14, 2024",
       description: "Adding support for Boutique Awesome, Gaming Kingdom, Lukes Cards, Mecha Games, Multizone, and Trinity Hobby."
