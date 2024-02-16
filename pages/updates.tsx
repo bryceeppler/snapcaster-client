@@ -10,7 +10,7 @@ const Updates: NextPage<Props> = () => {
   const updates = [
     {
       title:"Adding store.",
-      date: "Feb 14, 2024",
+      date: "Feb 15, 2024",
       description: "Adding Fetch Shock Games."
     },
     {
