@@ -5,7 +5,7 @@ type Props = {};
 export default function Footer({}: Props) {
   const openDonationLink = () => {
     window.open(
-      'https://www.paypal.com/donate/?business=KK537LVP4TZ5Q&no_recurring=0&item_name=Thank+you+for+supporting+snapcaster%21+Your+generosity+keeps+snapcaster+running+by+covering+server+costs.&currency_code=CAD',
+      'https://www.paypal.com/donate/?business=KK537LVP4TZ5Q&no_recurring=0&item_name=I+appreciate+your+support%21+If+you+have+any+suggestions+or+feedback%2C+please+feel+free+to+email+me+at+epplerdev%40gmail.com.&currency_code=CAD',
       '_blank'
     );
   };
@@ -34,10 +34,6 @@ export default function Footer({}: Props) {
           className="rounded-md bg-pink-500 bg-opacity-50 py-1 px-2 font-mono font-bold transition-colors hover:bg-pink-700"
           onClick={openDonationLink}
         >
-          {
-            // sm and above says "Support snapcaster"
-            // xs and below says "Donate"
-          }
           <span className="hidden sm:inline">Support snapcaster</span>
           <span className="sm:hidden">Donate</span>
         </button>

@@ -2,7 +2,7 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import Homebanner from '@/components/Homebanner';
 import SingleSearchbox from '@/components/SingleSearchbox';
-import Loadingspinner from '@/components/Loadingspinner';
+import Loadingspinner from '@/components/LoadingSpinner';
 import SingleSearchInfo from '@/components/SingleSearchInfo';
 import SearchFilters from '@/components/SingleSearchFilters';
 import { useStore } from '@/stores/store';

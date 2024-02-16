@@ -5,33 +5,44 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '@/utils/axiosWrapper';
 import useAuthStore from '@/stores/authStore';
 import Signin from './signin';
-type Props = {};
-
+import LoadingPage from '@/components/LoadingPage';
 
 type UserProfile = {
   email: string;
   fullName: string;
 };
 
-const Profile: NextPage<Props> = () => {
+const Profile: NextPage = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!isAuthenticated) {
+        setLoading(false);
+        return;
+      }
+      
       try {
         const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_USER_URL}/profile`);
         if (response.status !== 200) throw new Error('Failed to fetch user profile');
-        const data: UserProfile = await response.data
+        const data: UserProfile = await response.data;
         setUserProfile(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false); // Ensure loading is set to false after the fetch operation
       }
     };
 
     fetchUserData();
-  }, []);
-  
+  }, [isAuthenticated]);
+
+  if (loading) {
+    return <LoadingPage />; 
+  }
+
   if (!isAuthenticated) {
     return <Signin />;
   }
