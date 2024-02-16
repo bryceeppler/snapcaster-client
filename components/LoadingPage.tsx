@@ -1,7 +1,10 @@
 import MainLayout from '@/components/MainLayout';
+import { type NextPage } from 'next';
 import LoadingSpinner from './LoadingSpinner';
 
-const LoadingPage = () => {
+type Props = {};
+
+const LoadingPage:NextPage<Props> = () => {
   return (
     <>
       <MainLayout>

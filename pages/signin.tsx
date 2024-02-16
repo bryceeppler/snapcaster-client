@@ -6,10 +6,14 @@ import useAuthStore from '@/stores/authStore';
 import toast from 'react-hot-toast';
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
+import Profile from './profile';
+import { useState } from 'react';
 
 type Props = {};
 
 const Signin: NextPage<Props> = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   const router = Router;
   const setTokens = useAuthStore((state) => state.setTokens);
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -48,6 +52,10 @@ const Signin: NextPage<Props> = () => {
       }
     }
   };
+
+  if (isAuthenticated) {
+    return <Profile />;
+  }
 
   return (
     <>
