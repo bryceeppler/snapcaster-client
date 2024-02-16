@@ -5,20 +5,13 @@ import UpdateFeed from '@/components/UpdateFeed';
 import MainLayout from '@/components/MainLayout';
 type Props = {};
 
-// # new sites
-// "boutiqueawesome": {"url": "https://www.boutiqueawesome.com/"}, # good
-// "gamingkingdom": {"url": "https://gaming-kingdom.com/"}, # good
-// "lukescards": {"url": "https://www.lukescards.com/"}, # good
-// "mechagames": {"url": "https://mechagames.ca/"}, # good
-// "multizone": {"url": "https://multizone.ca/"}, # good
-// "trinityhobby": {"url": "https://trinityhobby.com/"}, # good
-// }
+
 const Updates: NextPage<Props> = () => {
   const updates = [
     {
       title:"Adding store.",
       date: "Feb 14, 2024",
-      description: "Adding support for Fetch Shock Games."
+      description: "Adding Fetch Shock Games."
     },
     {
       title:"Adding 6 new stores.",

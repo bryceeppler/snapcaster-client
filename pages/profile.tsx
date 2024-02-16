@@ -15,7 +15,6 @@ type UserProfile = {
 
 const Profile: NextPage<Props> = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  // fetch user data
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
@@ -27,7 +26,6 @@ const Profile: NextPage<Props> = () => {
         setUserProfile(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        // Handle error (e.g., show a notification or set an error state)
       }
     };
 
