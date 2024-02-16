@@ -89,14 +89,13 @@ export default function Navbar({}: Props) {
                 <img
                   className="block h-8 w-auto lg:hidden"
                   src="/favicon.ico"
-                  alt="Workflow"
+                  alt="Snapcaster"
                 />
-                {/* dark mode show logo.png, light mode show logo-light.png */}
                 {}
                 <img
                   className="hidden h-8 mb-2 w-auto lg:block"
                   src={logoSrc}
-                  alt="Workflow"
+                  alt="Snapcaster"
                 />
               </div>
               <div className="hidden sm:ml-6 sm:block sm:w-full">

@@ -23,10 +23,13 @@ const Profile: NextPage = () => {
         setLoading(false);
         return;
       }
-      
+
       try {
-        const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_USER_URL}/profile`);
-        if (response.status !== 200) throw new Error('Failed to fetch user profile');
+        const response = await axiosInstance.get(
+          `${process.env.NEXT_PUBLIC_USER_URL}/profile`
+        );
+        if (response.status !== 200)
+          throw new Error('Failed to fetch user profile');
         const data: UserProfile = await response.data;
         setUserProfile(data);
       } catch (error) {
@@ -40,7 +43,7 @@ const Profile: NextPage = () => {
   }, [isAuthenticated]);
 
   if (loading) {
-    return <LoadingPage />; 
+    return <LoadingPage />;
   }
 
   if (!isAuthenticated) {
@@ -77,21 +80,6 @@ const Profile: NextPage = () => {
             </div>
             <div className="p-6" />
             <div className="p-4" />
-
-            {/* <div>Current subscription</div>
-            <div className="p-4" />
-            <div className="w-full p-4 bg-zinc-800 rounded-md text-center text-white">
-              Subscribed
-            </div>
-            <div className="p-4" />
-            <div className="w-full p-4 bg-zinc-800 rounded-md text-center text-white">
-              No active subscription
-            </div>
-            <div className="p-4" />
-            <div className="w-full p-4 bg-zinc-700 rounded-md text-center text-white">
-              Manage billing
-            </div> */}
-
           </section>
         </div>
       </MainLayout>
