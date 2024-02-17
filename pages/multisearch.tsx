@@ -43,9 +43,6 @@ export default function Multisearch({}: Props) {
               Select which stores you would like to search. The more stores, the
               longer the search will take.
             </div>
-            <div className="my-4 text-md content-center p-4 bg-red-900 text-white rounded-lg">
-              Some websites have been temporarily disabled.
-            </div>
             <StoreSelector />
             <MultiSearchbox />
           </div>
