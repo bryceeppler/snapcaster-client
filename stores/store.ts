@@ -411,7 +411,38 @@ const websites: Website[] = [
     code: 'fetchshock',
     image: '',
     shopify: true
+  },
+  {
+    name:'Dragon Fyre Games',
+    code:'dragonfyre',
+    image: '',
+    shopify: false
+  },
+  {
+    name:"Carta Magica Montreal",
+    code:"cartamagicamontreal",
+    image: '',
+    shopify: false
+  },
+  {
+    name:"Carta Magica Ottawa",
+    code:"cartamagicaottawa",
+    image: '',
+    shopify: false
+  },
+  {
+    name:"Gods Arena",
+    code:"godsarena",
+    image: '',
+    shopify: false
+  },
+  {
+    name:"Free Game",
+    code:"freegame",
+    image: '',
+    shopify: false
   }
+
 ];
 
 export type FilterTag = {
