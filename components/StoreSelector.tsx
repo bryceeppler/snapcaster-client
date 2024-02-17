@@ -16,18 +16,9 @@ export default function StoreSelector({}: Props) {
             <div
               key={index}
               
-              className={`m-1 flex items-center rounded-md p-2 accent-pink-700 bg-zinc-900 hover:bg-zinc-800
-                ${
-                  // if website.shopify is true, then mke the button look disabled
-                  !website.shopify
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }
-              `}
+              className={`m-1 flex items-center rounded-md p-2 accent-pink-700 bg-zinc-900 hover:bg-zinc-800`}
               onClick={() => {
-                if (website.shopify){
                 toggleMultiSearchSelectedWebsites(website.name);
-                }
               }}
             >
 
@@ -42,7 +33,6 @@ export default function StoreSelector({}: Props) {
                         ? "bg-pink-600"
                         : "bg-zinc-600"
                     }
-                    ${!website.shopify ? "bg-zinc-800" : ""}
                 `}
               />
               <label className="ml-2 text-xs text-left truncate">{website.name}</label>
