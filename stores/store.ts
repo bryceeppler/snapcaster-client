@@ -183,13 +183,13 @@ const websites: Website[] = [
     image: 'https://bryces-images.s3.us-west-2.amazonaws.com/manaforce.png',
     shopify: false
   },
-  {
-    name: 'Magic Stronghold',
-    code: 'magicstronghold',
-    image:
-      'https://magicstronghold-images.s3.amazonaws.com/customizations/logo.png',
-    shopify: false
-  },
+  // {
+  //   name: 'Magic Stronghold',
+  //   code: 'magicstronghold',
+  //   image:
+  //     'https://magicstronghold-images.s3.amazonaws.com/customizations/logo.png',
+  //   shopify: false
+  // },
   {
     name: 'The Mythic Store',
     code: 'mythicstore',
