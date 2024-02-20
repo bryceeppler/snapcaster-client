@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 type Props = {};
 
@@ -37,6 +38,11 @@ export default function Footer({}: Props) {
           <span className="hidden sm:inline">Support snapcaster</span>
           <span className="sm:hidden">Donate</span>
         </button>
+        <div className="text-zinc-100 mr-5">
+          <Link href="/privacy" className="text-pink-500 hover:text-pink-700">
+            Privacy Policy
+          </Link>
+        </div>
       </div>
     </div>
   );
