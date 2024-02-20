@@ -669,7 +669,6 @@ export const useStore = create<State>((set, get) => ({
     const websiteCodes = selectedWebsites.map((website) => {
       return get().websites.find((w) => w.name === website)?.code;
     });
-    console.log('multiSearchInput: ', multiSearchInput);
     const cardNames = multiSearchInput.split('\n');
     // remove any empty strings
     const filteredCardNames = cardNames.filter((cardName) => cardName !== '');
@@ -688,6 +687,12 @@ export const useStore = create<State>((set, get) => ({
     // sort results by ascending price
     for (let i = 0; i < results.length; i++) {
       // sort card's results by ascending price
+      // if no veriants, remove the card
+      if (results[i].variants.length === 0) {
+        results.splice(i, 1);
+        i--;
+        continue;
+      }
       results[i].variants.sort(
         (a: SingleSearchResult, b: SingleSearchResult) => {
           return a.price - b.price;

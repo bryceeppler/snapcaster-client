@@ -9,7 +9,8 @@ export default function MultiCatalog({}: Props) {
     if (filteredMultiSearchResults.length === 0) {
       return (
         <div className="flex items-center justify-center pt-5">
-          <div className="text-sm">No results found</div>
+                 <MultiSearchResultsInfo />
+ 
         </div>
       )
     }
