@@ -19,8 +19,8 @@ export default function Footer({}: Props) {
       text-zinc-100
       "
     >
-      <div className="flex flex-row items-center space-x-2">
-        <div className="text-zinc-100 mr-5">
+      <div className="flex flex-col md:flex-row items-center gap-5">
+        <div className="text-zinc-100">
           Created by{'  '}
           <a
             href="https://www.bryceeppler.com"
@@ -38,11 +38,9 @@ export default function Footer({}: Props) {
           <span className="hidden sm:inline">Support snapcaster</span>
           <span className="sm:hidden">Donate</span>
         </button>
-        <div className="text-zinc-100 mr-5">
           <Link href="/privacy" className="text-pink-500 hover:text-pink-700">
             Privacy Policy
           </Link>
-        </div>
       </div>
     </div>
   );
