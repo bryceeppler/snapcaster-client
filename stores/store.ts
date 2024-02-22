@@ -248,12 +248,6 @@ const websites: Website[] = [
     shopify: true
   },
   {
-    name: 'North of Exile',
-    code: 'northofexile',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/northofexile.avif',
-    shopify: true
-  },
-  {
     name: 'Black Knight',
     code: 'blackknight',
     image:

@@ -9,6 +9,11 @@ type Props = {};
 const Updates: NextPage<Props> = () => {
   const updates = [
     {
+      title: "Removing Store",
+      date: "Feb 22, 2024",
+      description:"North of Exile Games no longer sells MTG singles."
+    },
+    {
       title: "5 new stores added.",
       date: "Feb 17, 2024",
       description:"Adding Dragon Fyre Games, Carta Magica Montreal, Carta Magica Ottawa, Free Game, and Gods Arena."
