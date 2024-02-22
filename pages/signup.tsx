@@ -36,7 +36,7 @@ const Signup: NextPage<Props> = () => {
         password,
         fullName
       });
-      if (response.status !== 201) {
+      if (response.status !== 200) {
         throw new Error('Something went wrong with the registration process');
       }
       toast.success('Registration successful! You can now sign in.');
@@ -56,7 +56,7 @@ const Signup: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
+            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter">Signup</h2>
                 <p className="text-gray-500 dark:text-gray-400">
@@ -73,34 +73,41 @@ const Signup: NextPage<Props> = () => {
                     pattern: /^\S+@\S+\.\S+$/
                   })}
                   type="text"
-                  className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
+                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
                   placeholder="Email"
                 />
-                          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-                {errors.email?.type === 'pattern' && <p className="text-red-500">Invalid email</p>}
-                
+                {errors.email && (
+                  <p className="text-red-500">{errors.email.message}</p>
+                )}
+                {errors.email?.type === 'pattern' && (
+                  <p className="text-red-500">Invalid email</p>
+                )}
+
                 <input
                   type="password"
                   {...register('password', {
                     required: 'Password is required'
                   })}
-                  className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
+                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
                   placeholder="Password"
                 />
-                                {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-                  <input
-                    type="text"
-                    {...register('fullName', {
-                      required: 'A name is required'
-                    })
-                    }
-                    className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
-                    placeholder="Full Name"
-                  />
-                  {errors.fullName && <p className="text-red-500">{errors.fullName.message}</p>}
+                {errors.password && (
+                  <p className="text-red-500">{errors.password.message}</p>
+                )}
+                <input
+                  type="text"
+                  {...register('fullName', {
+                    required: 'A name is required'
+                  })}
+                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
+                  placeholder="Full Name"
+                />
+                {errors.fullName && (
+                  <p className="text-red-500">{errors.fullName.message}</p>
+                )}
                 <button
                   type="submit"
-                  className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
+                  className="mt-2 rounded-lg bg-neutral-700 p-2 hover:bg-neutral-600"
                 >
                   Sign Up
                 </button>
