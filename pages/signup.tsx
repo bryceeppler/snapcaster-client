@@ -12,6 +12,7 @@ type SignupFormData = {
   email: string;
   password: string;
   fullName: string;
+  confirmPassword: string;
 };
 
 type Props = {};
@@ -20,7 +21,9 @@ const Signup: NextPage<Props> = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    watch,
+
   } = useForm<SignupFormData>();
 
   const router = Router;
@@ -46,6 +49,7 @@ const Signup: NextPage<Props> = () => {
       toast.error('Could not register user');
     }
   };
+  const password = watch('password');
 
   if (isAuthenticated) {
     return <Profile />;
@@ -93,6 +97,18 @@ const Signup: NextPage<Props> = () => {
                 />
                 {errors.password && (
                   <p className="text-red-500">{errors.password.message}</p>
+                )}
+                                <input
+                  type="password"
+                  {...register('confirmPassword', {
+                    validate: value =>
+                      value === password || 'The passwords do not match',
+                  })}
+                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
+                  placeholder="Confirm Password"
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500">{errors.confirmPassword.message}</p>
                 )}
                 <input
                   type="text"
