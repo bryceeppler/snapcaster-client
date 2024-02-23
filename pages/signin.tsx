@@ -93,6 +93,7 @@ const Signin: NextPage<Props> = () => {
                   Sign In
                 </button>
               </form>
+              <a href="/forgot-password">Forgot your password?</a>
               <a href="/signup">Don't have an account? Sign up!</a>
             </div>
           </section>

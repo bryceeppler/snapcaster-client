@@ -50,7 +50,7 @@ const ForgotPassword: NextPage<Props> = () => {
           <section className="w-full py-6 md:py-12">
             <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter">Reset Password</h2>
+                <h2 className="text-3xl font-bold tracking-tighter">Forgot Password</h2>
                 <p className="text-gray-500 dark:text-gray-400">
                     Enter your email to receive a password reset link.
                 </p>
@@ -85,7 +85,7 @@ export default ForgotPassword;
 const ForgotPasswordHead = () => {
   return (
     <Head>
-      <title>Signin</title>
+      <title>Forgot Password</title>
       <meta
         name="description"
         content="Search Magic the Gathering cards across Canada"
