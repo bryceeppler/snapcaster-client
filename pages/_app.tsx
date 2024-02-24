@@ -4,6 +4,7 @@ import { AppProps } from 'next/app';
 import Layout from '@/components/Layout';
 import { initGA, logPageView } from '../utils/analytics';
 import toast, { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 import Script from 'next/script';
 
@@ -12,6 +13,7 @@ import 'styles/chrome-bug.css';
 import { useWindowSize } from 'usehooks-ts';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
   const {width = 0, height = 0} = useWindowSize();
   useEffect(() => {
     document.body.classList?.remove('loading');
@@ -33,6 +35,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       initGA();
     }
   }, []);
+
+  const isResetPasswordPage = router.pathname.includes('/reset-password/');
+
   return (
     <div className="">
       <Layout>
@@ -53,16 +58,18 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         />
         <Component {...pageProps} />
       </Layout>
-      <Script
-        id="Absence-banner"
-        async
-        strategy="afterInteractive"
-        onError={(e) => {
-          console.error('Script failed to load', e);
-        }}
-        src={`${process.env.NEXT_PUBLIC_ADSENSE}`}
-        crossOrigin="anonymous"
-      />
+      {!isResetPasswordPage && (
+        <Script
+          id="Absence-banner"
+          async
+          strategy="afterInteractive"
+          onError={(e) => {
+            console.error('Script failed to load', e);
+          }}
+          src={`${process.env.NEXT_PUBLIC_ADSENSE}`}
+          crossOrigin="anonymous"
+        />
+      )}
       {/* <script async src="https://fundingchoicesmessages.google.com/i/pub-6026504058618942?ers=1" nonce="W0DFASoiabMy4-_cYoMhEA"></script><script nonce="W0DFASoiabMy4-_cYoMhEA">(function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent']) {if (document.body) {const iframe = document.createElement('iframe'); iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;'; iframe.style.display = 'none'; iframe.name = 'googlefcPresent'; document.body.appendChild(iframe);} else {setTimeout(signalGooglefcPresent, 0);}}}signalGooglefcPresent();})();</script> */}
       <Script id="googlefc" src="https://fundingchoicesmessages.google.com/i/pub-6026504058618942?ers=1" nonce="W0DFASoiabMy4-_cYoMhEA" />
       <Script

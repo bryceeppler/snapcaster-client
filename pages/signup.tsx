@@ -12,6 +12,7 @@ type SignupFormData = {
   email: string;
   password: string;
   fullName: string;
+  confirmPassword: string;
 };
 
 type Props = {};
@@ -20,7 +21,9 @@ const Signup: NextPage<Props> = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    watch,
+
   } = useForm<SignupFormData>();
 
   const router = Router;
@@ -46,6 +49,7 @@ const Signup: NextPage<Props> = () => {
       toast.error('Could not register user');
     }
   };
+  const password = watch('password');
 
   if (isAuthenticated) {
     return <Profile />;
@@ -73,7 +77,7 @@ const Signup: NextPage<Props> = () => {
                     pattern: /^\S+@\S+\.\S+$/
                   })}
                   type="text"
-                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
+                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
                   placeholder="Email"
                 />
                 {errors.email && (
@@ -88,18 +92,30 @@ const Signup: NextPage<Props> = () => {
                   {...register('password', {
                     required: 'Password is required'
                   })}
-                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
+                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
                   placeholder="Password"
                 />
                 {errors.password && (
                   <p className="text-red-500">{errors.password.message}</p>
+                )}
+                                <input
+                  type="password"
+                  {...register('confirmPassword', {
+                    validate: value =>
+                      value === password || 'The passwords do not match',
+                  })}
+                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
+                  placeholder="Confirm Password"
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500">{errors.confirmPassword.message}</p>
                 )}
                 <input
                   type="text"
                   {...register('fullName', {
                     required: 'A name is required'
                   })}
-                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
+                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
                   placeholder="Full Name"
                 />
                 {errors.fullName && (
@@ -107,8 +123,7 @@ const Signup: NextPage<Props> = () => {
                 )}
                 <button
                   type="submit"
-                  className="mt-2 rounded-lg bg-neutral-700 p-2 hover:bg-neutral-600"
-                >
+                  className="btn-white"                  >
                   Sign Up
                 </button>
                 <button className="">

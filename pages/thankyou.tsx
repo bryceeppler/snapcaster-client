@@ -1,6 +1,8 @@
 export default function Component() {
   return (
-    <section className="w-full h-screen flex flex-col items-center justify-center px-4 text-center space-y-8">
+    <section className="w-full h-screen flex flex-col items-center px-4 text-center space-y-8">
+            <div className="p-8"/>
+
       <svg
         className=" w-24 h-24 text-green-500 dark:text-green-300"
         fill="none"

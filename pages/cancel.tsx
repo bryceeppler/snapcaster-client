@@ -6,7 +6,8 @@ import Link from "next/link"
 
 export default function Component() {
   return (
-    <section className="w-full h-screen flex flex-col items-center justify-center px-4 text-center space-y-8">
+    <section className="w-full h-screen flex flex-col items-center px-4 text-center space-y-8">
+      <div className="p-8"/>
       <svg
           className=" h-24 w-24 text-red-500 dark:text-red-400"
           fill="none"

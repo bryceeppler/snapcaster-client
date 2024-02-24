@@ -7,7 +7,6 @@ import toast from 'react-hot-toast';
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
 import Profile from './profile';
-import { useState } from 'react';
 
 type Props = {};
 
@@ -16,10 +15,14 @@ const Signin: NextPage<Props> = () => {
 
   const router = Router;
   const setTokens = useAuthStore((state) => state.setTokens);
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
     defaultValues: {
       email: '',
-      password: '',
+      password: ''
     }
   });
 
@@ -27,7 +30,7 @@ const Signin: NextPage<Props> = () => {
     email: string;
     password: string;
   };
-  const onSubmit = async (data : Submision) => {
+  const onSubmit = async (data: Submision) => {
     const { email, password } = data;
     const endpoint = process.env.NEXT_PUBLIC_USER_URL + '/login';
 
@@ -70,29 +73,41 @@ const Signin: NextPage<Props> = () => {
                   Log in to your Snapcaster account.
                 </p>
               </div>
-              <form className="grid gap-4 md:gap-4" onSubmit={handleSubmit(onSubmit)}>
+              <form
+                className="grid gap-4 md:gap-4"
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <input
-                  {...register('email', { required: 'Email is required', pattern: /^\S+@\S+\.\S+$/ })}
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: /^\S+@\S+\.\S+$/
+                  })}
                   type="text"
-                  className="block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800"
+                  className="block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900"
                   placeholder="Email"
                 />
-                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-                {errors.email?.type === 'pattern' && <p className="text-red-500">Invalid email</p>}
+                {errors.email && (
+                  <p className="text-red-500">{errors.email.message}</p>
+                )}
+                {errors.email?.type === 'pattern' && (
+                  <p className="text-red-500">Invalid email</p>
+                )}
                 <input
-                  {...register('password', { required: 'Password is required' })}
+                  {...register('password', {
+                    required: 'Password is required'
+                  })}
                   type="password"
-                  className="block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800"
+                  className="block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900"
                   placeholder="Password"
                 />
-                {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-                <button
-                  type="submit"
-                  className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
-                >
+                {errors.password && (
+                  <p className="text-red-500">{errors.password.message}</p>
+                )}
+                <button type="submit" className="btn-white">
                   Sign In
                 </button>
               </form>
+              <a href="/forgot-password">Forgot your password?</a>
               <a href="/signup">Don't have an account? Sign up!</a>
             </div>
           </section>

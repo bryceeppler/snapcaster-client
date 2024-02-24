@@ -6,11 +6,44 @@ import MultiCatalog from '@/components/MultiCatalog';
 import MultiSearchbox from '@/components/MultiSearchbox';
 import StoreSelector from '@/components/StoreSelector';
 import MainLayout from '@/components/MainLayout';
+import useAuthStore from '@/stores/authStore';
+import Link from 'next/link';
 type Props = {};
 
 export default function Multisearch({}: Props) {
   const { multiSearchResultsLoading: loading, multiSearchMode: mode } =
     useStore();
+
+  const { hasActiveSubscription, isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return (
+      <MainLayout>
+        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
+          <section className="w-full py-6 md:py-12">
+            <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
+              <div className="space-y-2">
+                <h2 className="text-4xl font-bold tracking-tighter">
+                  Multi-search
+                </h2>
+              </div>
+              <div className="grid gap-4 md:gap-4 p-8 outlined-container">
+                <p className="text-left">
+                  You must be logged in to use this feature.
+                </p>
+                <button className="btn-dark">
+                  <Link href="/signin">Login</Link>
+                </button>
+                <button className="btn-white">
+                  <Link href="/signup">Create a free account</Link>
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </MainLayout>
+    );
+  }
   return (
     <>
       <Head>
@@ -35,16 +68,19 @@ export default function Multisearch({}: Props) {
       <MainLayout>
         {mode === 'search' && !loading && (
           <div className="max-w-2xl flex-1 flex-col items-center justify-center text-center">
-            {/* checkboxes for selecting the stores */}
-            <div className="my-2 text-3xl font-extrabold">
-              Select stores to search
+            <h2 className="text-4xl font-bold tracking-tighter">
+              Multi-search
+            </h2>
+            <div className="p-2" />
+            <div className="ext-sm outlined-container p-3">
+              Select which stores you would like to search, and enter a list of
+              card names to search for.
             </div>
-            <div className="mb-4 text-sm text-white">
-              Select which stores you would like to search. The more stores, the
-              longer the search will take.
-            </div>
+            <div className="p-2" />
+
             <StoreSelector />
-            <MultiSearchbox />
+            <div className="p-2" />
+            <MultiSearchbox hasActiveSubscription={hasActiveSubscription} />
           </div>
         )}
         {loading && (

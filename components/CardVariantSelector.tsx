@@ -8,19 +8,9 @@ type Props = {
 }
 
 export default function CardVariantSelector({card}: Props) {
-  // Basic modal that displays all of card.variants and allows us to update the selectedVariant in the zustand store
   const [modalOpen, setModalOpen] = React.useState(false);
   const { updateSelectedVariant, sortMultiSearchVariants: sortVariants } = useStore();
-  // const fetchWebsiteName = (websiteCode) => {
-  //   let website = store.websiteCodeMap.find(
-  //     (website) => website.code === websiteCode.toLowerCase()
-  //   );
-  //   if (website) {
-  //     return website.name;
-  //   } else {
-  //     return websiteCode;
-  //   }
-  // };
+
 
   return (
     <div>
@@ -28,13 +18,13 @@ export default function CardVariantSelector({card}: Props) {
         onClick={() => {
           setModalOpen(true);
         }}
-        className="m-2 p-2 rounded-md bg-pink-500 text-sm w-full transition-all hover:bg-pink-800 text-white"
+        className="p-2 text-sm w-full btn-dark"
       >
         Other results
       </button>
       {modalOpen && (
         <div
-          className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-60 backdrop-blur-sm flex justify-center items-center"
+          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 backdrop-blur-sm flex justify-center items-center"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setModalOpen(false);
@@ -42,7 +32,7 @@ export default function CardVariantSelector({card}: Props) {
           }}
         >
           <div
-            className="bg-zinc-800 rounded-md pt-4 px-2 mx-1 md:w-1/2 border-pink-500 border-2"
+            className="bg-zinc-900  pt-4 px-2 mx-1 md:w-1/2 outlined-container"
             onClick={(e) => {
               e.stopPropagation();
             }}
@@ -60,7 +50,7 @@ export default function CardVariantSelector({card}: Props) {
               >
                 <div className="font-bold font-md ">Sort by:</div>
                 <select
-                  className="m-2 p-2 rounded-md bg-black"
+                  className="m-2 p-2 input-dark"
                   onChange={(e) => {
                     sortVariants(card, e.target.value);
                   }}
@@ -84,7 +74,7 @@ export default function CardVariantSelector({card}: Props) {
                   return (
                     <div
                       key={index}
-                      className="flex flex-row m-2 p-2 bg-zinc-800 hover:bg-zinc-900 rounded"
+                      className="flex flex-row m-2 p-2 outlined-container hover:bg-zinc-800 cursor-pointer"
                       onClick={() => {
                         // store.updateSelectedVariant(card, variant);
                         updateSelectedVariant(card.cardName, variant);
