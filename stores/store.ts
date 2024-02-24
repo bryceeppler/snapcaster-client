@@ -377,12 +377,6 @@ const websites: Website[] = [
     shopify: true
   },
   {
-    name: "Luke's Cards",
-    code: 'lukescards',
-    image: '',
-    shopify: true
-  },
-  {
     name: 'Mecha Games',
     code: 'mechagames',
     image: '',
