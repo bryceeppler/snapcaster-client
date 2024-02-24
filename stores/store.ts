@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
-
+import toast from 'react-hot-toast';
 export interface SingleSearchResult {
   name: string;
   link: string;
@@ -667,57 +667,64 @@ export const useStore = create<State>((set, get) => ({
     // remove any empty strings
     const filteredCardNames = cardNames.filter((cardName) => cardName !== '');
     // match each website to it's code
-
-    const response = await axiosInstance.post(
-      `${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`,
-      {
-        cardNames: filteredCardNames,
-        websites: websiteCodes,
-        worstCondition: 'nm'
-      }
-    );
-
-    let results = response.data;
-    // sort results by ascending price
-    for (let i = 0; i < results.length; i++) {
-      // sort card's results by ascending price
-      // if no veriants, remove the card
-      if (results[i].variants.length === 0) {
-        results.splice(i, 1);
-        i--;
-        continue;
-      }
-      results[i].variants.sort(
-        (a: SingleSearchResult, b: SingleSearchResult) => {
-          return a.price - b.price;
+    
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`,
+        {
+          cardNames: filteredCardNames,
+          websites: websiteCodes,
+          worstCondition: 'nm'
         }
       );
-    }
-    // construct filteredMultiSearchResults by adding a 'selected' property to each card, and a 'selectedVariant' property to each card
-    const filteredResults: MultiSearchCardState[] = results.map(
-      (card: MultiSearchCard) => {
-        return {
-          ...card,
-          selected: true,
-          selectedVariant: card.variants[0]
-        };
+  
+      let results = response.data;
+      // sort results by ascending price
+      for (let i = 0; i < results.length; i++) {
+        // sort card's results by ascending price
+        // if no veriants, remove the card
+        if (results[i].variants.length === 0) {
+          results.splice(i, 1);
+          i--;
+          continue;
+        }
+        results[i].variants.sort(
+          (a: SingleSearchResult, b: SingleSearchResult) => {
+            return a.price - b.price;
+          }
+        );
       }
-    );
-    set({ filteredMultiSearchResults: filteredResults });
-    // set({ filteredMultiSearchResults: results });
-    set({ multiSearchResults: results });
-    set({ multiSearchResultsLoading: false });
-    set({ multiSearchQuery: multiSearchInput });
-    set({ multiSearchMode: 'results' });
-    // set missingMultiSearchResults to the card name in filteredCardNames that is not in results
-    const missingMultiSearchResults = filteredCardNames.filter((cardName) => {
-      return !results.find(
-        (card: MultiSearchCard) =>
-          card.cardName.toLowerCase() === cardName.toLowerCase()
+      // construct filteredMultiSearchResults by adding a 'selected' property to each card, and a 'selectedVariant' property to each card
+      const filteredResults: MultiSearchCardState[] = results.map(
+        (card: MultiSearchCard) => {
+          return {
+            ...card,
+            selected: true,
+            selectedVariant: card.variants[0]
+          };
+        }
       );
-    });
-    set({ missingMultiSearchResults });
-    get().calculateSetMultiSearchSelectedCost();
+      set({ filteredMultiSearchResults: filteredResults });
+      // set({ filteredMultiSearchResults: results });
+      set({ multiSearchResults: results });
+      set({ multiSearchResultsLoading: false });
+      set({ multiSearchQuery: multiSearchInput });
+      set({ multiSearchMode: 'results' });
+      // set missingMultiSearchResults to the card name in filteredCardNames that is not in results
+      const missingMultiSearchResults = filteredCardNames.filter((cardName) => {
+        return !results.find(
+          (card: MultiSearchCard) =>
+            card.cardName.toLowerCase() === cardName.toLowerCase()
+        );
+      });
+      set({ missingMultiSearchResults });
+      get().calculateSetMultiSearchSelectedCost();
+    } catch (error) {
+      toast.error(`Error fetching multi search results`);
+
+      set({ multiSearchResultsLoading: false });
+    }
+
   },
   multiSearchResults: [],
   filteredMultiSearchResults: [],

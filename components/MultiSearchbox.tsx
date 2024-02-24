@@ -79,12 +79,12 @@ Counterspell`}
           }}
         ></textarea>
         {warning && (
-          <div className="text-red-600 mt-2">Warning: Max 5 lines allowed!</div>
+          <div className="text-red-600 mt-2">Max 5 cards</div>
         )}
       </div>
       <div className="p-3" />
       <button
-                                  className="btn-white max-w-xs w-full mx-auto"
+                                  className="btn-white max-w-xs w-full mx-auto disabled:opacity-20 disabled:cursor-not-allowed"
 
         type="button"
         disabled={multiSearchInput === '' || warning}
