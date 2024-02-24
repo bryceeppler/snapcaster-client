@@ -105,13 +105,13 @@ const Profile: NextPage = () => {
                     toggleBetaFeatures={toggleBetaFeatures}
                     control={control}
                   />
-                  <SubscriptionCards
-                    createCheckoutSession={createCheckoutSession}
-                  />
                 </>
               )}
               {!hasActiveSubscription && (
                 <>
+                  <SubscriptionCards
+                    createCheckoutSession={createCheckoutSession}
+                  />
                   <UserSettings
                     email={email}
                     fullName={fullName}
@@ -120,9 +120,6 @@ const Profile: NextPage = () => {
                     createPortalSession={createPortalSession}
                     toggleBetaFeatures={toggleBetaFeatures}
                     control={control}
-                  />
-                  <SubscriptionCards
-                    createCheckoutSession={createCheckoutSession}
                   />
                 </>
               )}
@@ -210,9 +207,11 @@ const UserSettings = ({
       <div className="flex flex-col gap-2 p-3 ">
         <div className="flex flex-row justify-between p-2 outlined-container">
           <p className="text-sm text-zinc-500">Subscription</p>
-          <p className="text-sm text-zinc-400">
-            {hasActiveSubscription ? 'Active' : 'Inactive'}
-          </p>
+          {hasActiveSubscription ? (
+            <p className="text-sm text-zinc-400">Snapcaster <span className="text-pink-500 font-bold">Pro</span></p>
+          ) : (
+            <p className="text-sm text-zinc-400">Inactive</p>
+          )}
         </div>
         <Controller
           name="betaFeaturesEnabled"
@@ -246,9 +245,14 @@ const UserSettings = ({
         />
       </div>
       <div className="p-2" />
-      <button onClick={createPortalSession} className="btn-white m-2">
-        Manage subscription
-      </button>
+      {hasActiveSubscription && (
+        <div className="w-full flex flex-col p-3">
+     
+        <button onClick={createPortalSession} className="btn-white w-full">
+          Manage subscription
+        </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -264,6 +268,52 @@ const SubscriptionCards = ({
       {/* should expand to match height of premium card */}
       <div className="flex flex-col w-full">
         <div className="flex flex-col md:flex-row justify-between gap-6">
+          <div className="flex flex-col text-left p-6 outlined-container w-full neon-pink">
+            <h3 className="font-semibold text-pink-400">Pro</h3>
+            <h2 className="text-2xl font-bold">
+              $3.99 <span className="text-sm font-normal">/mo</span>
+            </h2>
+            <div className="p-1" />
+
+            {/* description */}
+            <p className="text-sm text-zinc-500">
+              Support Snapcaster and get access to premium features and future
+              updates.
+            </p>
+            <div className="p-2" />
+            {/* stack for features */}
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Search over 60 Canadian stores
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Search up to 100 cards at a time
+                </p>
+              </div>
+              {/* <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Price monitoring and email notifications
+                </p>
+              </div> */}
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Beta access to new features
+                </p>
+              </div>
+            </div>
+            <div className="p-4" />
+            {/* upgrade now btn */}
+            <button onClick={createCheckoutSession} className="btn-white">
+              Upgrade now
+            </button>
+          </div>
           <div className="flex flex-col text-left p-6 outlined-container w-full">
             <h3 className="font-semibold text-white">Free</h3>
             <h2 className="text-2xl font-bold">
@@ -296,52 +346,6 @@ const SubscriptionCards = ({
             <Link href="/" className="btn-dark">
               Start searching
             </Link>
-          </div>
-          <div className="flex flex-col text-left p-6 outlined-container w-full neon-pink">
-            <h3 className="font-semibold text-pink-400">Pro</h3>
-            <h2 className="text-2xl font-bold">
-              $3.99 <span className="text-sm font-normal">/mo</span>
-            </h2>
-            <div className="p-1" />
-
-            {/* description */}
-            <p className="text-sm text-zinc-500">
-              Support Snapcaster and get access to premium features and future
-              updates.
-            </p>
-            <div className="p-2" />
-            {/* stack for features */}
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Search over 60 Canadian stores
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Search up to 100 cards at a time
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Price monitoring and email notifications
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Beta access to new features
-                </p>
-              </div>
-            </div>
-            <div className="p-4" />
-            {/* upgrade now btn */}
-            <button onClick={createCheckoutSession} className="btn-white">
-              Upgrade now
-            </button>
           </div>
         </div>
       </div>
