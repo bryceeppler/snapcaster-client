@@ -123,8 +123,7 @@ const Signup: NextPage<Props> = () => {
                 )}
                 <button
                   type="submit"
-                  className="mt-2 p-2 bg-white text-black font-bold rounded-lg hover:bg-zinc-200"
-                >
+                  className="btn-white"                  >
                   Sign Up
                 </button>
                 <button className="">

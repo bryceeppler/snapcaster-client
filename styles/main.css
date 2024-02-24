@@ -9,7 +9,23 @@
 }
 
 *:focus {
-  @apply outline-none ring-2 ring-pink-500 ring-opacity-50;
+  @apply outline-none ring-1 ring-zinc-300 ring-opacity-50;
+}
+
+@layer components {
+  .btn-white {
+    @apply transition-all bg-white hover:bg-zinc-200 text-black text-sm font-bold rounded-md p-2 text-center;
+  };
+  .btn-dark {
+    @apply transition-all bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-bold rounded-md p-2 text-center border-2 border-zinc-700
+  }
+  .outlined-container {
+    @apply rounded-md border border-zinc-700
+  }
+  .input-dark {
+    @apply rounded-md border transition
+    ease-in-out border-zinc-500 px-4 py-2 placeholder-zinc-500 sm:text-sm text-white bg-zinc-900
+  }
 }
 
 html {

@@ -94,18 +94,38 @@ const Profile: NextPage = () => {
         <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
             <div className="w-full grid gap-6">
-              {!hasActiveSubscription &&
-                SubscriptionCards(createCheckoutSession)}
-              {hasActiveSubscription &&
-                UserSettings(
-                  email,
-                  fullName,
-                  hasActiveSubscription,
-                  emailVerified,
-                  createPortalSession,
-                  toggleBetaFeatures,
-                  control
-                )}
+              {hasActiveSubscription && (
+                <>
+                  <UserSettings
+                    email={email}
+                    fullName={fullName}
+                    hasActiveSubscription={hasActiveSubscription}
+                    emailVerified={emailVerified}
+                    createPortalSession={createPortalSession}
+                    toggleBetaFeatures={toggleBetaFeatures}
+                    control={control}
+                  />
+                  <SubscriptionCards
+                    createCheckoutSession={createCheckoutSession}
+                  />
+                </>
+              )}
+              {!hasActiveSubscription && (
+                <>
+                  <UserSettings
+                    email={email}
+                    fullName={fullName}
+                    hasActiveSubscription={hasActiveSubscription}
+                    emailVerified={emailVerified}
+                    createPortalSession={createPortalSession}
+                    toggleBetaFeatures={toggleBetaFeatures}
+                    control={control}
+                  />
+                  <SubscriptionCards
+                    createCheckoutSession={createCheckoutSession}
+                  />
+                </>
+              )}
             </div>
           </section>
         </div>
@@ -139,17 +159,25 @@ const ProfileHead = () => {
     </Head>
   );
 };
-function UserSettings(
-  email: string,
-  fullName: string,
-  hasActiveSubscription: boolean,
-  emailVerified: boolean,
-  createPortalSession: () => Promise<void>,
-  toggleBetaFeatures: () => Promise<void>,
-  control: any
-) {
+const UserSettings = ({
+  email,
+  fullName,
+  hasActiveSubscription,
+  emailVerified,
+  createPortalSession,
+  toggleBetaFeatures,
+  control
+}: {
+  email: string;
+  fullName: string;
+  hasActiveSubscription: boolean;
+  emailVerified: boolean;
+  createPortalSession: () => void;
+  toggleBetaFeatures: () => void;
+  control: any;
+}) => {
   return (
-<div className="flex flex-col text-left p-4 rounded-md outline outline-2 outline-zinc-600 max-w-full overflow-hidden">
+    <div className="flex flex-col outlined-container text-left p-4  max-w-full overflow-hidden">
       <h3 className="text-lg font-bold">Settings</h3>
       <div className="p-2" />
       {/* user info container */}
@@ -168,11 +196,11 @@ function UserSettings(
           </div>
         )}
 
-        <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md">
+        <div className="flex flex-row justify-between p-2 outlined-container">
           <p className="hidden md:flex text-sm text-zinc-500">Email</p>
           <p className="text-sm text-zinc-400 truncate max-w-full">{email}</p>
         </div>
-        <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md">
+        <div className="flex flex-row justify-between p-2 outlined-container">
           <p className="hidden md:flex text-sm text-zinc-500">Full name</p>
           <p className="text-sm text-zinc-400">{fullName}</p>
         </div>
@@ -180,7 +208,7 @@ function UserSettings(
       <div className="p-2" />
       {/* subscription container */}
       <div className="flex flex-col gap-2 p-3 ">
-        <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md">
+        <div className="flex flex-row justify-between p-2 outlined-container">
           <p className="text-sm text-zinc-500">Subscription</p>
           <p className="text-sm text-zinc-400">
             {hasActiveSubscription ? 'Active' : 'Inactive'}
@@ -190,46 +218,53 @@ function UserSettings(
           name="betaFeaturesEnabled"
           control={control}
           render={({ field }) => (
-            <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md items-center">
+            <div className="flex flex-row justify-between p-2 outlined-container items-center">
               <p className="text-sm text-zinc-500">Beta features</p>
-              <label className="inline-flex relative items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer" // Hide the checkbox but make it accessible to screen readers
-                  checked={field.value}
-                  onChange={(e) => {
-                    field.onChange(e.target.checked);
-                    toggleBetaFeatures();
-                  }}
-                  onBlur={field.onBlur}
-                  name={field.name}
-                  ref={field.ref}
-                />
-                <div className="w-11 h-6 bg-zinc-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 dark:peer-focus:ring-pink-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-600"></div>
-              </label>
+              {!hasActiveSubscription ? (
+                <p className="text-sm text-zinc-400">Disabled</p>
+              ) : (
+                <label className="inline-flex relative items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer" // Hide the checkbox but make it accessible to screen readers
+                    checked={field.value}
+                    disabled={!hasActiveSubscription}
+                    onChange={(e) => {
+                      if (!hasActiveSubscription) return;
+                      field.onChange(e.target.checked);
+                      toggleBetaFeatures();
+                    }}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                  />
+                  <div className="w-11 h-6 bg-zinc-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 dark:peer-focus:ring-pink-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-600"></div>
+                </label>
+              )}
             </div>
           )}
         />
       </div>
       <div className="p-2" />
-      <button
-        onClick={createPortalSession}
-        className=" bg-white text-black text-sm font-bold rounded-md m-3 p-2 text-center"
-      >
+      <button onClick={createPortalSession} className="btn-white m-2">
         Manage subscription
       </button>
     </div>
   );
-}
+};
 
-function SubscriptionCards(createCheckoutSession: () => Promise<void>) {
+const SubscriptionCards = ({
+  createCheckoutSession
+}: {
+  createCheckoutSession: () => Promise<void>;
+}) => {
   return (
     <div className="flex flex-row gap-2 w-full mx-auto">
       {/* free price card */}
       {/* should expand to match height of premium card */}
       <div className="flex flex-col w-full">
-        <div className="flex flex-col md:flex-row justify-between gap-4">
-          <div className="flex flex-col text-left p-6 rounded-md outline outline-2 outline-zinc-700 w-full">
+        <div className="flex flex-col md:flex-row justify-between gap-6">
+          <div className="flex flex-col text-left p-6 outlined-container w-full">
             <h3 className="font-semibold text-white">Free</h3>
             <h2 className="text-2xl font-bold">
               $0 <span className="text-sm font-normal">/mo</span>
@@ -258,14 +293,11 @@ function SubscriptionCards(createCheckoutSession: () => Promise<void>) {
             </div>
             <div className="p-4 flex-grow" />
             {/* upgrade now btn */}
-            <Link
-              href="/"
-              className="w-full outline outline-2 outline-zinc-400 text-white font-bold rounded-md text-sm p-4 text-center"
-            >
+            <Link href="/" className="btn-dark">
               Start searching
             </Link>
           </div>
-          <div className="flex flex-col text-left p-6 rounded-md outline outline-2 outline-zinc-700 w-full">
+          <div className="flex flex-col text-left p-6 outlined-container w-full neon-pink">
             <h3 className="font-semibold text-pink-400">Pro</h3>
             <h2 className="text-2xl font-bold">
               $3.99 <span className="text-sm font-normal">/mo</span>
@@ -307,10 +339,7 @@ function SubscriptionCards(createCheckoutSession: () => Promise<void>) {
             </div>
             <div className="p-4" />
             {/* upgrade now btn */}
-            <button
-              onClick={createCheckoutSession}
-              className="w-full bg-white text-black text-sm font-bold rounded-md p-4 text-center"
-            >
+            <button onClick={createCheckoutSession} className="btn-white">
               Upgrade now
             </button>
           </div>
@@ -318,4 +347,4 @@ function SubscriptionCards(createCheckoutSession: () => Promise<void>) {
       </div>
     </div>
   );
-}
+};

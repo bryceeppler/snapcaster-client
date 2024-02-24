@@ -6,11 +6,14 @@ import MultiCatalog from '@/components/MultiCatalog';
 import MultiSearchbox from '@/components/MultiSearchbox';
 import StoreSelector from '@/components/StoreSelector';
 import MainLayout from '@/components/MainLayout';
+import useAuthStore from '@/stores/authStore';
 type Props = {};
 
 export default function Multisearch({}: Props) {
   const { multiSearchResultsLoading: loading, multiSearchMode: mode } =
     useStore();
+
+  const { hasActiveSubscription } = useAuthStore();
   return (
     <>
       <Head>
@@ -35,7 +38,6 @@ export default function Multisearch({}: Props) {
       <MainLayout>
         {mode === 'search' && !loading && (
           <div className="max-w-2xl flex-1 flex-col items-center justify-center text-center">
-            {/* checkboxes for selecting the stores */}
             <div className="my-2 text-3xl font-extrabold">
               Select stores to search
             </div>
@@ -44,7 +46,8 @@ export default function Multisearch({}: Props) {
               longer the search will take.
             </div>
             <StoreSelector />
-            <MultiSearchbox />
+            <div className="p-2" />
+            <MultiSearchbox hasActiveSubscription={hasActiveSubscription} />
           </div>
         )}
         {loading && (

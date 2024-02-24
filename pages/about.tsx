@@ -14,7 +14,7 @@ const About: NextPage<Props> = () => {
               <div className="space-y-2">
                 <h2 className="text-4xl font-bold tracking-tighter">About</h2>
               </div>
-              <div className="grid gap-4 md:gap-4 p-4 md:p-8 outline outline-1 outline-zinc-500 rounded-md">
+              <div className="grid gap-4 md:gap-4 p-8 outlined-container">
                 <p className="text-left">
                   This is a project that I created to help Magic: The Gathering
                   players search for singles on Canadian websites. With
@@ -32,7 +32,8 @@ const About: NextPage<Props> = () => {
                     window.location.href =
                       'https://www.paypal.com/donate/?business=KK537LVP4TZ5Q&no_recurring=0&item_name=I+appreciate+your+support%21+If+you+have+any+suggestions+or+feedback%2C+please+feel+free+to+email+me+at+epplerdev%40gmail.com.&currency_code=CAD';
                   }}
-                  className="mt-2 p-2 bg-white text-black font-bold rounded-lg hover:bg-zinc-200"                >
+                  className="btn-white"
+                >
                   Donate with PayPal
                 </button>
               </div>

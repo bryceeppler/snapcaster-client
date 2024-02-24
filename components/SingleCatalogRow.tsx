@@ -85,7 +85,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 <div className="text-sm font-bold">{cardData.condition}</div>
               </div>
               <a
-                className="transition-all bg-zinc-900 hover:bg-zinc-700 outline outline-1 outline-zinc-600 text-white font-bold p-1 px-2 sm:py-1 sm:px-4 rounded focus:outline-none focus:shadow-outline mt-4 "
+                className="btn-white p-1 px-2 sm:py-1 sm:px-4 mt-4 "
                 href={cardData.link}
                 data-price={cardData.price}
                 target="_blank"

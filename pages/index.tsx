@@ -50,7 +50,7 @@ const Home: NextPage<Props> = () => {
             !singleSearchResultsLoading &&
             Object.keys(singleSearchResults).length === 0 && (
               <div className="flex items-center justify-center pt-5">
-                <p className="text-gray-500">No results found</p>
+                <p className="text-zinc-500">No results found</p>
               </div>
             )}
         </div>

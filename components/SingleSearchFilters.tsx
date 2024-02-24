@@ -43,7 +43,7 @@ export default function SearchFilters({}: Props) {
               <div className="flex flex-row justify-between items-center p-2">
                 <label className="text-sm mr-2">Sort By</label>
                 <select
-                  className="p-1 rounded-md text-sm bg-zinc-800"
+                  className="p-1 text-sm input-dark"
                   onChange={(e) => {
                     // store.setSortBy(e.target.value);
                     setSingleSearchOrderBy(e.target.value);
@@ -58,7 +58,7 @@ export default function SearchFilters({}: Props) {
               </div>
               <div>
                 <select
-                  className="p-1 rounded-md text-sm bg-zinc-800"
+                  className="p-1 text-sm input-dark"
                   value={singleSearchOrder}
                   onChange={(e) => {
                     // store.setSortOrder(e.target.value);
@@ -119,7 +119,7 @@ export default function SearchFilters({}: Props) {
 
             <div className="flex flex-row space-x-2">
               <button
-                className="transition-all outline outline-2 -outline-offset-2 outline-zinc-500 hover:bg-pink-500 hover:bg-opacity-50 font-bold py-1 px-4 rounded focus:outline-pink-900 focus:shadow-outline mt-1 mx-auto"
+                className="btn-dark px-4 mt-1 mx-auto"
                 onClick={() => {
                   resetSingleSearchFilters();
                 }}
