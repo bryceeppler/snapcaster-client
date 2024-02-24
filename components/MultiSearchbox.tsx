@@ -5,7 +5,7 @@ type Props = {
   hasActiveSubscription: boolean;
 };
 
-const parseMultiSearchInput = (input: string) => {
+const parseMultiSearchInput = (input: string, numAllowedLines:number) => {
   const lines = input.split(/\n/);
   let count = 0;
   let returnString = '';
@@ -15,7 +15,7 @@ const parseMultiSearchInput = (input: string) => {
     // if the line is empty, skip it
     if (line === '') continue;
 
-    if (count < 5) {
+    if (count < numAllowedLines) {
       // remove any numbers from the start of the line
       const lineWithoutCount = line.replace(/^\d+/, '');
       // remove any whitespace from the start of the line
@@ -90,7 +90,8 @@ Counterspell`}
         disabled={multiSearchInput === '' || warning}
         // onClick={() => store.handleSubmit()}
         onClick={() => {
-          const result = parseMultiSearchInput(multiSearchInput);
+          const numAllowedLines = hasActiveSubscription ? 100 : 5;
+          const result = parseMultiSearchInput(multiSearchInput, numAllowedLines);
           fetchMultiSearchResults(result);
         }}
       >
