@@ -30,7 +30,6 @@ const Profile: NextPage = () => {
       if (response.status !== 200) throw new Error('Failed to create session');
       const data = await response.data;
       console.log('Checkout session created:', data);
-      // Redirect to Stripe checkout
       window.location.href = data.url;
     } catch (error) {
       console.error('Error creating checkout session:', error);
@@ -58,7 +57,7 @@ const Profile: NextPage = () => {
   });
 
   useEffect(() => {
-    reset({ betaFeaturesEnabled }); // This will update the form state to reflect the current prop value
+    reset({ betaFeaturesEnabled });
   }, [betaFeaturesEnabled, reset]);
 
   useEffect(() => {
@@ -92,9 +91,9 @@ const Profile: NextPage = () => {
     <>
       <ProfileHead />
       <MainLayout>
-        <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12 max-w-2xl mx-auto">
-            <div className="w-full container grid md:px-6 gap-6">
+        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
+          <section className="w-full py-6 md:py-12">
+            <div className="w-full grid gap-6">
               {!hasActiveSubscription &&
                 SubscriptionCards(createCheckoutSession)}
               {hasActiveSubscription &&
@@ -103,14 +102,11 @@ const Profile: NextPage = () => {
                   fullName,
                   hasActiveSubscription,
                   emailVerified,
-                  betaFeaturesEnabled,
                   createPortalSession,
                   toggleBetaFeatures,
                   control
                 )}
             </div>
-            <div className="p-6" />
-            <div className="p-4" />
           </section>
         </div>
       </MainLayout>
@@ -148,13 +144,12 @@ function UserSettings(
   fullName: string,
   hasActiveSubscription: boolean,
   emailVerified: boolean,
-  betaFeaturesEnabled: boolean,
   createPortalSession: () => Promise<void>,
   toggleBetaFeatures: () => Promise<void>,
   control: any
 ) {
   return (
-    <div className="flex flex-col text-left p-4 rounded-md outline outline-2 outline-zinc-600 w-full">
+<div className="flex flex-col text-left p-4 rounded-md outline outline-2 outline-zinc-600 max-w-full overflow-hidden">
       <h3 className="text-lg font-bold">Settings</h3>
       <div className="p-2" />
       {/* user info container */}
@@ -175,7 +170,7 @@ function UserSettings(
 
         <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md">
           <p className="hidden md:flex text-sm text-zinc-500">Email</p>
-          <p className="text-sm text-zinc-400">{email}</p>
+          <p className="text-sm text-zinc-400 truncate max-w-full">{email}</p>
         </div>
         <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md">
           <p className="hidden md:flex text-sm text-zinc-500">Full name</p>

@@ -124,7 +124,7 @@ export default function SingleSearchbox({}: Props) {
         <form onSubmit={handleFormSubmit}>
           <input
             type="text"
-            className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800`}
+            className={`block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-900`}
             placeholder="Search"
             value={singleSearchInput}
             onChange={handleInputChange}

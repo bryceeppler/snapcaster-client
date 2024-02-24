@@ -77,7 +77,7 @@ const Signup: NextPage<Props> = () => {
                     pattern: /^\S+@\S+\.\S+$/
                   })}
                   type="text"
-                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
+                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
                   placeholder="Email"
                 />
                 {errors.email && (
@@ -92,7 +92,7 @@ const Signup: NextPage<Props> = () => {
                   {...register('password', {
                     required: 'Password is required'
                   })}
-                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
+                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
                   placeholder="Password"
                 />
                 {errors.password && (
@@ -104,7 +104,7 @@ const Signup: NextPage<Props> = () => {
                     validate: value =>
                       value === password || 'The passwords do not match',
                   })}
-                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
+                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
                   placeholder="Confirm Password"
                 />
                 {errors.confirmPassword && (
@@ -115,7 +115,7 @@ const Signup: NextPage<Props> = () => {
                   {...register('fullName', {
                     required: 'A name is required'
                   })}
-                  className={`block w-full rounded-md border border-zinc-300 bg-zinc-800 px-4 py-2 text-white placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm`}
+                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
                   placeholder="Full Name"
                 />
                 {errors.fullName && (
@@ -123,7 +123,7 @@ const Signup: NextPage<Props> = () => {
                 )}
                 <button
                   type="submit"
-                  className="mt-2 rounded-lg bg-neutral-700 p-2 hover:bg-neutral-600"
+                  className="mt-2 p-2 bg-white text-black font-bold rounded-lg hover:bg-zinc-200"
                 >
                   Sign Up
                 </button>
