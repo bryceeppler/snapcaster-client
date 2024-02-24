@@ -70,13 +70,15 @@ Counterspell`}
           value={multiSearchInput}
           onChange={(e) => {
             setMultiSearchInput(e.target.value);
-            setWarning(
-              e.target.value.split(/\n/).filter((line) => line.trim() !== '')
-                .length > 5
-            );
+            // if hasActiveSubscription is true, set warning to true if the number of lines is greater than 100. Otherwise, set warning to true if the number of lines is greater than 5
+            if (hasActiveSubscription) {
+              setWarning(e.target.value.split(/\n/).length > 100);
+            } else {
+              setWarning(e.target.value.split(/\n/).length > 5);
+            }
           }}
         ></textarea>
-        {warning && !hasActiveSubscription && (
+        {warning && (
           <div className="text-red-600 mt-2">Warning: Max 5 lines allowed!</div>
         )}
       </div>
