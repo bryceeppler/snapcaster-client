@@ -22,7 +22,6 @@ export default function SingleCatalogRow({ cardData }: Props) {
     setIsModalOpen(false);
   };
 
-  // The modal component
   const ImageModal = ({ src, alt }: { src: string, alt: string }) => {
     if (!isModalOpen) return null;
 
