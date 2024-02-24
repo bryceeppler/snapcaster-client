@@ -16,26 +16,12 @@ const About: NextPage<Props> = () => {
               </div>
               <div className="grid gap-4 md:gap-4 p-8 outlined-container">
                 <p className="text-left">
-                  This is a project that I created to help Magic: The Gathering
-                  players search for singles on Canadian websites. With
-                  Snapcaster, you can search multiple websites at once and see
-                  all the results in one place. If you have any suggestions or
-                  feedback, please feel free to email me at epplerdev@gmail.com.
+                  Snapcaster is a search tool designed for Magic: The Gathering players, letting you search for MTG singles across Canadian websites.
+                  It allows users to efficiently search multiple
+                  websites simultaneously, aggregating results in a single,
+                  convenient location. We are excited to continuously
+                  improve the service and welcome all suggestions or feedback.
                 </p>
-                <p className="text-left">
-                  Snapcaster is a service I created in my spare time, and I rely
-                  on donations to cover the server costs. If you find Snapcaster
-                  helpful, please consider donating to support the project.
-                </p>
-                <button
-                  onClick={() => {
-                    window.location.href =
-                      'https://www.paypal.com/donate/?business=KK537LVP4TZ5Q&no_recurring=0&item_name=I+appreciate+your+support%21+If+you+have+any+suggestions+or+feedback%2C+please+feel+free+to+email+me+at+epplerdev%40gmail.com.&currency_code=CAD';
-                  }}
-                  className="btn-white"
-                >
-                  Donate with PayPal
-                </button>
               </div>
             </div>
           </section>
