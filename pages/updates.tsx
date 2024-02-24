@@ -10,6 +10,11 @@ const Updates: NextPage<Props> = () => {
   const updates = [
     {
       title: "Removing Store",
+      date: "Feb 24, 2024",
+      description:"Luke's Cards domain no longer exists."
+    },
+    {
+      title: "Removing Store",
       date: "Feb 22, 2024",
       description:"North of Exile Games no longer sells MTG singles."
     },
