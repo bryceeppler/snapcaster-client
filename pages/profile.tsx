@@ -55,7 +55,7 @@ const Profile: NextPage = () => {
       <ProfileHead />
       <MainLayout>
         <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12 max-w-md mx-auto">
+          <section className="w-full py-6 md:py-12 max-w-2xl mx-auto">
             <div className="w-full container grid md:px-6 gap-6">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter">Profile</h2>
@@ -63,17 +63,90 @@ const Profile: NextPage = () => {
                   Manage your Snapcaster profile
                 </p>
               </div>
-              <div className="flex flex-col gap-2 w-full mx-auto">
-                <div className="flex w-full flex-row justify-between">
-                  <div className="text-sm opacity-80">Email</div>
-                  <div className="text-sm font-bold tracking-tighter">
-                    {userProfile?.email}
-                  </div>
-                </div>
-                <div className="flex w-full flex-row justify-between">
-                  <div className="text-sm opacity-80">Full Name</div>
-                  <div className="text-sm font-bold tracking-tighter">
-                    {userProfile?.fullName}
+              <div className="flex flex-row gap-2 w-full mx-auto">
+                {/* free price card */}
+                {/* should expand to match height of premium card */}
+                <div className="flex flex-col w-full">
+                  <div className="flex flex-col md:flex-row justify-between gap-4">
+                    <div className="flex flex-col text-left p-6 rounded-md outline outline-2 outline-zinc-700 w-full">
+                      <h3 className="font-semibold text-white">Free</h3>
+                      <h2 className="text-2xl font-bold">
+                        $0 <span className="text-sm font-normal">/mo</span>
+                      </h2>
+                      <div className="p-1" />
+
+                      {/* description */}
+                      <p className="text-sm text-zinc-500">
+                        Search for MTG singles across Canada.
+                      </p>
+                      <div className="p-2" />
+                      {/* stack for features */}
+                      <div className="flex flex-col gap-4">
+                        <div className="flex flex-row items-center gap-2">
+                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                          <p className="text-sm text-zinc-400">
+                            Search over 60 Canadian stores
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-2">
+                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                          <p className="text-sm font-semibold text-zinc-400">
+                            Search up to 5 cards at a time{' '}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="p-4 flex-grow" />
+                      {/* upgrade now btn */}
+                      <button className="w-full outline outline-2 outline-zinc-400 text-white font-bold rounded-md text-sm p-4">
+                        Start searching
+                      </button>
+                    </div>
+                    <div className="flex flex-col text-left p-6 rounded-md outline outline-2 outline-zinc-700 w-full">
+                      <h3 className="font-semibold text-pink-400">Pro</h3>
+                      <h2 className="text-2xl font-bold">
+                        $3.99 <span className="text-sm font-normal">/mo</span>
+                      </h2>
+                      <div className="p-1" />
+
+                      {/* description */}
+                      <p className="text-sm text-zinc-500">
+                        Support Snapcaster and get access to premium features
+                        and future updates.
+                      </p>
+                      <div className="p-2" />
+                      {/* stack for features */}
+                      <div className="flex flex-col gap-4">
+                        <div className="flex flex-row items-center gap-2">
+                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                          <p className="text-sm font-semibold text-zinc-400">
+                            Search over 60 Canadian stores
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-2">
+                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                          <p className="text-sm font-semibold text-zinc-400">
+                            Search up to 100 cards at a time
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-2">
+                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                          <p className="text-sm font-semibold text-zinc-400">
+                            Price monitoring and email notifications
+                          </p>
+                        </div>
+                        <div className="flex flex-row items-center gap-2">
+                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                          <p className="text-sm font-semibold text-zinc-400">
+                            Beta access to new features
+                          </p>
+                        </div>
+                      </div>
+                      <div className="p-4" />
+                      {/* upgrade now btn */}
+                      <button className="w-full bg-white text-black text-sm font-bold rounded-md p-4">
+                        Upgrade now
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
