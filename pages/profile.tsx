@@ -6,16 +6,60 @@ import axiosInstance from '@/utils/axiosWrapper';
 import useAuthStore from '@/stores/authStore';
 import Signin from './signin';
 import LoadingPage from '@/components/LoadingPage';
-
-type UserProfile = {
-  email: string;
-  fullName: string;
-};
+import Link from 'next/link';
+import { useForm, Controller } from 'react-hook-form';
 
 const Profile: NextPage = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const {
+    fetchUser,
+    hasActiveSubscription,
+    email,
+    fullName,
+    emailVerified,
+    betaFeaturesEnabled,
+    toggleBetaFeatures
+  } = useAuthStore();
+  const [loading, setLoading] = useState(true);
+
+  const createCheckoutSession = async () => {
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_PAYMENT_URL}/createcheckoutsession`
+      );
+      if (response.status !== 200) throw new Error('Failed to create session');
+      const data = await response.data;
+      console.log('Checkout session created:', data);
+      // Redirect to Stripe checkout
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+    }
+  };
+
+  const createPortalSession = async () => {
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_PAYMENT_URL}/createportalsession`
+      );
+      if (response.status !== 200) throw new Error('Failed to create session');
+      const data = await response.data;
+      console.log('Portal session created:', data);
+      // Redirect to Stripe portal
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Error creating portal session:', error);
+    }
+  };
+  const { control, reset } = useForm({
+    defaultValues: {
+      betaFeaturesEnabled: betaFeaturesEnabled
+    }
+  });
+
+  useEffect(() => {
+    reset({ betaFeaturesEnabled }); // This will update the form state to reflect the current prop value
+  }, [betaFeaturesEnabled, reset]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -25,17 +69,11 @@ const Profile: NextPage = () => {
       }
 
       try {
-        const response = await axiosInstance.get(
-          `${process.env.NEXT_PUBLIC_USER_URL}/profile`
-        );
-        if (response.status !== 200)
-          throw new Error('Failed to fetch user profile');
-        const data: UserProfile = await response.data;
-        setUserProfile(data);
+        fetchUser();
       } catch (error) {
         console.error('Error fetching user data:', error);
       } finally {
-        setLoading(false); // Ensure loading is set to false after the fetch operation
+        setLoading(false);
       }
     };
 
@@ -57,99 +95,19 @@ const Profile: NextPage = () => {
         <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12 max-w-2xl mx-auto">
             <div className="w-full container grid md:px-6 gap-6">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter">Profile</h2>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Manage your Snapcaster profile
-                </p>
-              </div>
-              <div className="flex flex-row gap-2 w-full mx-auto">
-                {/* free price card */}
-                {/* should expand to match height of premium card */}
-                <div className="flex flex-col w-full">
-                  <div className="flex flex-col md:flex-row justify-between gap-4">
-                    <div className="flex flex-col text-left p-6 rounded-md outline outline-2 outline-zinc-700 w-full">
-                      <h3 className="font-semibold text-white">Free</h3>
-                      <h2 className="text-2xl font-bold">
-                        $0 <span className="text-sm font-normal">/mo</span>
-                      </h2>
-                      <div className="p-1" />
-
-                      {/* description */}
-                      <p className="text-sm text-zinc-500">
-                        Search for MTG singles across Canada.
-                      </p>
-                      <div className="p-2" />
-                      {/* stack for features */}
-                      <div className="flex flex-col gap-4">
-                        <div className="flex flex-row items-center gap-2">
-                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                          <p className="text-sm text-zinc-400">
-                            Search over 60 Canadian stores
-                          </p>
-                        </div>
-                        <div className="flex flex-row items-center gap-2">
-                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                          <p className="text-sm font-semibold text-zinc-400">
-                            Search up to 5 cards at a time{' '}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="p-4 flex-grow" />
-                      {/* upgrade now btn */}
-                      <button className="w-full outline outline-2 outline-zinc-400 text-white font-bold rounded-md text-sm p-4">
-                        Start searching
-                      </button>
-                    </div>
-                    <div className="flex flex-col text-left p-6 rounded-md outline outline-2 outline-zinc-700 w-full">
-                      <h3 className="font-semibold text-pink-400">Pro</h3>
-                      <h2 className="text-2xl font-bold">
-                        $3.99 <span className="text-sm font-normal">/mo</span>
-                      </h2>
-                      <div className="p-1" />
-
-                      {/* description */}
-                      <p className="text-sm text-zinc-500">
-                        Support Snapcaster and get access to premium features
-                        and future updates.
-                      </p>
-                      <div className="p-2" />
-                      {/* stack for features */}
-                      <div className="flex flex-col gap-4">
-                        <div className="flex flex-row items-center gap-2">
-                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                          <p className="text-sm font-semibold text-zinc-400">
-                            Search over 60 Canadian stores
-                          </p>
-                        </div>
-                        <div className="flex flex-row items-center gap-2">
-                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                          <p className="text-sm font-semibold text-zinc-400">
-                            Search up to 100 cards at a time
-                          </p>
-                        </div>
-                        <div className="flex flex-row items-center gap-2">
-                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                          <p className="text-sm font-semibold text-zinc-400">
-                            Price monitoring and email notifications
-                          </p>
-                        </div>
-                        <div className="flex flex-row items-center gap-2">
-                          <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                          <p className="text-sm font-semibold text-zinc-400">
-                            Beta access to new features
-                          </p>
-                        </div>
-                      </div>
-                      <div className="p-4" />
-                      {/* upgrade now btn */}
-                      <button className="w-full bg-white text-black text-sm font-bold rounded-md p-4">
-                        Upgrade now
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {!hasActiveSubscription &&
+                SubscriptionCards(createCheckoutSession)}
+              {hasActiveSubscription &&
+                UserSettings(
+                  email,
+                  fullName,
+                  hasActiveSubscription,
+                  emailVerified,
+                  betaFeaturesEnabled,
+                  createPortalSession,
+                  toggleBetaFeatures,
+                  control
+                )}
             </div>
             <div className="p-6" />
             <div className="p-4" />
@@ -185,3 +143,184 @@ const ProfileHead = () => {
     </Head>
   );
 };
+function UserSettings(
+  email: string,
+  fullName: string,
+  hasActiveSubscription: boolean,
+  emailVerified: boolean,
+  betaFeaturesEnabled: boolean,
+  createPortalSession: () => Promise<void>,
+  toggleBetaFeatures: () => Promise<void>,
+  control: any
+) {
+  return (
+    <div className="flex flex-col text-left p-4 rounded-md outline outline-2 outline-zinc-600 w-full">
+      <h3 className="text-lg font-bold">Settings</h3>
+      <div className="p-2" />
+      {/* user info container */}
+      <div className="flex flex-col gap-2 p-3">
+        {/* email container */}
+        {emailVerified && (
+          <div className="flex flex-row gap-2 text-xs items-center">
+            <div className="aspect-square w-2 h-2 bg-green-400 rounded-full"></div>
+            <p className="text-sm text-zinc-500">Email verified</p>
+          </div>
+        )}
+        {!emailVerified && (
+          <div className="flex flex-row gap-2 text-xs items-center">
+            <div className="aspect-square w-2 h-2 bg-red-400 rounded-full"></div>
+            <p className="text-sm text-zinc-500">Email not verified</p>
+          </div>
+        )}
+
+        <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md">
+          <p className="hidden md:flex text-sm text-zinc-500">Email</p>
+          <p className="text-sm text-zinc-400">{email}</p>
+        </div>
+        <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md">
+          <p className="hidden md:flex text-sm text-zinc-500">Full name</p>
+          <p className="text-sm text-zinc-400">{fullName}</p>
+        </div>
+      </div>
+      <div className="p-2" />
+      {/* subscription container */}
+      <div className="flex flex-col gap-2 p-3 ">
+        <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md">
+          <p className="text-sm text-zinc-500">Subscription</p>
+          <p className="text-sm text-zinc-400">
+            {hasActiveSubscription ? 'Active' : 'Inactive'}
+          </p>
+        </div>
+        <Controller
+          name="betaFeaturesEnabled"
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-row justify-between p-2 outline outline-1 outline-zinc-600 rounded-md items-center">
+              <p className="text-sm text-zinc-500">Beta features</p>
+              <label className="inline-flex relative items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer" // Hide the checkbox but make it accessible to screen readers
+                  checked={field.value}
+                  onChange={(e) => {
+                    field.onChange(e.target.checked);
+                    toggleBetaFeatures();
+                  }}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  ref={field.ref}
+                />
+                <div className="w-11 h-6 bg-zinc-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 dark:peer-focus:ring-pink-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-600"></div>
+              </label>
+            </div>
+          )}
+        />
+      </div>
+      <div className="p-2" />
+      <button
+        onClick={createPortalSession}
+        className=" bg-white text-black text-sm font-bold rounded-md m-3 p-2 text-center"
+      >
+        Manage subscription
+      </button>
+    </div>
+  );
+}
+
+function SubscriptionCards(createCheckoutSession: () => Promise<void>) {
+  return (
+    <div className="flex flex-row gap-2 w-full mx-auto">
+      {/* free price card */}
+      {/* should expand to match height of premium card */}
+      <div className="flex flex-col w-full">
+        <div className="flex flex-col md:flex-row justify-between gap-4">
+          <div className="flex flex-col text-left p-6 rounded-md outline outline-2 outline-zinc-700 w-full">
+            <h3 className="font-semibold text-white">Free</h3>
+            <h2 className="text-2xl font-bold">
+              $0 <span className="text-sm font-normal">/mo</span>
+            </h2>
+            <div className="p-1" />
+
+            {/* description */}
+            <p className="text-sm text-zinc-500">
+              Search for MTG singles across Canada.
+            </p>
+            <div className="p-2" />
+            {/* stack for features */}
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm text-zinc-400">
+                  Search over 60 Canadian stores
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Search up to 5 cards at a time{' '}
+                </p>
+              </div>
+            </div>
+            <div className="p-4 flex-grow" />
+            {/* upgrade now btn */}
+            <Link
+              href="/"
+              className="w-full outline outline-2 outline-zinc-400 text-white font-bold rounded-md text-sm p-4 text-center"
+            >
+              Start searching
+            </Link>
+          </div>
+          <div className="flex flex-col text-left p-6 rounded-md outline outline-2 outline-zinc-700 w-full">
+            <h3 className="font-semibold text-pink-400">Pro</h3>
+            <h2 className="text-2xl font-bold">
+              $3.99 <span className="text-sm font-normal">/mo</span>
+            </h2>
+            <div className="p-1" />
+
+            {/* description */}
+            <p className="text-sm text-zinc-500">
+              Support Snapcaster and get access to premium features and future
+              updates.
+            </p>
+            <div className="p-2" />
+            {/* stack for features */}
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Search over 60 Canadian stores
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Search up to 100 cards at a time
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Price monitoring and email notifications
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Beta access to new features
+                </p>
+              </div>
+            </div>
+            <div className="p-4" />
+            {/* upgrade now btn */}
+            <button
+              onClick={createCheckoutSession}
+              className="w-full bg-white text-black text-sm font-bold rounded-md p-4 text-center"
+            >
+              Upgrade now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
