@@ -59,14 +59,14 @@ const ForgotPassword: NextPage<Props> = () => {
                 <input
                   {...register('email', { required: 'Email is required', pattern: /^\S+@\S+\.\S+$/ })}
                   type="text"
-                  className="block w-full rounded-md border border-zinc-300 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm text-white bg-zinc-800"
+                  className="block w-full input-dark px-4 py-2"
                   placeholder="Email"
                 />
                 {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                 {errors.email?.type === 'pattern' && <p className="text-red-500">Invalid email</p>}
                 <button
                   type="submit"
-                  className="mt-2 p-2 bg-neutral-700 rounded-lg hover:bg-neutral-600"
+                  className="mt-2 p-2 btn-white"
                 >
                  Send reset link 
                 </button>

@@ -34,9 +34,9 @@ export default function Multisearch({}: Props) {
                 <Link href="/signin" className="btn-dark">
                  Login
                 </Link>
-                <button className="btn-white">
-                  <Link href="/signup">Create a free account</Link>
-                </button>
+                <Link href="/signup" className="btn-white">
+                 Create a free account
+                </Link>
               </div>
             </div>
           </section>
