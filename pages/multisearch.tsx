@@ -31,9 +31,9 @@ export default function Multisearch({}: Props) {
                 <p className="text-left">
                   You must be logged in to use this feature.
                 </p>
-                <button className="btn-dark">
-                  <Link href="/signin">Login</Link>
-                </button>
+                <Link href="/signin" className="btn-dark">
+                 Login
+                </Link>
                 <button className="btn-white">
                   <Link href="/signup">Create a free account</Link>
                 </button>
