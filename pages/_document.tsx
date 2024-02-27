@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@/components/theme-provider';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 class MyDocument extends Document {
@@ -18,6 +19,12 @@ class MyDocument extends Document {
           {/* End Google Tag Manager */}
         </Head>
         <body className="loading">
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
           {/* Google Tag Manager (noscript) */}
           <noscript>
             <iframe
@@ -30,6 +37,7 @@ class MyDocument extends Document {
           {/* End Google Tag Manager (noscript) */}
           <Main />
           <NextScript />
+          </ThemeProvider>
         </body>
       </Html>
     );

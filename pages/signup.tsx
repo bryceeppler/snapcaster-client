@@ -3,10 +3,12 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
 import Router from 'next/router';
-import toast from 'react-hot-toast';
+import { toast } from "sonner";
 import useAuthStore from '@/stores/authStore';
 import Profile from './profile';
 import { useForm } from 'react-hook-form';
+import { Input } from "@/components/ui/input"
+import { Button } from '@/components/ui/button';
 
 type SignupFormData = {
   email: string;
@@ -71,13 +73,13 @@ const Signup: NextPage<Props> = () => {
                 className="grid gap-4 md:gap-4"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <input
+                <Input
                   {...register('email', {
                     required: 'Email is required',
                     pattern: /^\S+@\S+\.\S+$/
                   })}
                   type="text"
-                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
+                  className={``}
                   placeholder="Email"
                 />
                 {errors.email && (
@@ -87,48 +89,48 @@ const Signup: NextPage<Props> = () => {
                   <p className="text-red-500">Invalid email</p>
                 )}
 
-                <input
+                <Input
                   type="password"
                   {...register('password', {
                     required: 'Password is required'
                   })}
-                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
+                  className={``}
                   placeholder="Password"
                 />
                 {errors.password && (
                   <p className="text-red-500">{errors.password.message}</p>
                 )}
-                                <input
+                                <Input
                   type="password"
                   {...register('confirmPassword', {
                     validate: value =>
                       value === password || 'The passwords do not match',
                   })}
-                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
+                  className={``}
                   placeholder="Confirm Password"
                 />
                 {errors.confirmPassword && (
                   <p className="text-red-500">{errors.confirmPassword.message}</p>
                 )}
-                <input
+                <Input
                   type="text"
                   {...register('fullName', {
                     required: 'A name is required'
                   })}
-                  className={`block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900`}
+                  className={``}
                   placeholder="Full Name"
                 />
                 {errors.fullName && (
                   <p className="text-red-500">{errors.fullName.message}</p>
                 )}
-                <button
+                <Button
                   type="submit"
-                  className="btn-white"                  >
+                              >
                   Sign Up
-                </button>
-                <button className="">
+                </Button>
+                <Button className="">
                   <a href="/signin">Already have an account? Sign in!</a>
-                </button>
+                </Button>
               </form>
             </div>
           </section>

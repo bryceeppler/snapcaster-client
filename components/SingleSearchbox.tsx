@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useStore } from '@/stores/store';
-
+import { Input } from './ui/input';
 type Props = {};
 
 export default function SingleSearchbox({}: Props) {
@@ -122,9 +122,8 @@ export default function SingleSearchbox({}: Props) {
     <div className="mt-6 w-full">
       <div className="relative">
         <form onSubmit={handleFormSubmit}>
-          <input
+          <Input
             type="text"
-            className={`block  focus:neon-pink  w-full input-dark`}
             placeholder="Search"
             value={singleSearchInput}
             onChange={handleInputChange}

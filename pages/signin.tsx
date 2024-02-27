@@ -3,10 +3,13 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
 import useAuthStore from '@/stores/authStore';
-import toast from 'react-hot-toast';
+import { toast } from "sonner";
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
 import Profile from './profile';
+import { Input } from "@/components/ui/input"
+import { Button } from '@/components/ui/button';
+
 
 type Props = {};
 
@@ -77,13 +80,13 @@ const Signin: NextPage<Props> = () => {
                 className="grid gap-4 md:gap-4"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <input
+                <Input
                   {...register('email', {
                     required: 'Email is required',
                     pattern: /^\S+@\S+\.\S+$/
                   })}
                   type="text"
-                  className="block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900"
+                  className=""
                   placeholder="Email"
                 />
                 {errors.email && (
@@ -92,20 +95,20 @@ const Signin: NextPage<Props> = () => {
                 {errors.email?.type === 'pattern' && (
                   <p className="text-red-500">Invalid email</p>
                 )}
-                <input
+                <Input
                   {...register('password', {
                     required: 'Password is required'
                   })}
                   type="password"
-                  className="block w-full rounded-md border border-zinc-500 px-4 py-2 placeholder-zinc-500 shadow-sm focus:border-white focus:outline-none focus:ring-zinc-500 sm:text-sm text-white bg-zinc-900"
+                  className=""
                   placeholder="Password"
                 />
                 {errors.password && (
                   <p className="text-red-500">{errors.password.message}</p>
                 )}
-                <button type="submit" className="btn-white">
+                <Button type="submit">
                   Sign In
-                </button>
+                </Button>
               </form>
               <a href="/forgot-password">Forgot your password?</a>
               <a href="/signup">Don't have an account? Sign up!</a>

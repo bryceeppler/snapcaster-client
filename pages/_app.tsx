@@ -3,7 +3,7 @@ import React from 'react';
 import { AppProps } from 'next/app';
 import Layout from '@/components/Layout';
 import { initGA, logPageView } from '../utils/analytics';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from "@/components/ui/sonner"
 import { useRouter } from 'next/router';
 
 import Script from 'next/script';
@@ -11,7 +11,11 @@ import Script from 'next/script';
 import 'styles/main.css';
 import 'styles/chrome-bug.css';
 import { useWindowSize } from 'usehooks-ts';
-
+import { Inter as FontSans } from "next/font/google"
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const {width = 0, height = 0} = useWindowSize();
@@ -39,7 +43,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const isResetPasswordPage = router.pathname.includes('/reset-password/');
 
   return (
-    <div className="">
+    <div className="font-sans antialiased">
       <Layout>
         <Toaster 
           position={

@@ -9,10 +9,15 @@
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter"
   },
   "dependencies": {
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-slot": "^1.0.2",
     "@stripe/stripe-js": "^1.48.0",
     "axios": "^1.3.4",
+    "class-variance-authority": "^0.7.0",
     "classnames": "^2.3.2",
+    "clsx": "^2.1.0",
     "next": "^13.2.3",
+    "next-themes": "^0.2.1",
     "prop-types": ">=15.6.0 <16.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -21,8 +26,11 @@
     "react-hot-toast": "^2.4.1",
     "react-merge-refs": "^2.0.1",
     "react-resizable": "^3.0.4",
+    "sonner": "^1.4.2",
     "stripe": "^11.13.0",
     "swr": "^2.0.4",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^2.14.0",
     "zustand": "^4.3.6"
   },

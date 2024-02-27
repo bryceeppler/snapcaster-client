@@ -2,7 +2,7 @@ import MainLayout from '@/components/MainLayout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import { toast } from "sonner";
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 

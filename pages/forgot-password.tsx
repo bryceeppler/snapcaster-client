@@ -3,7 +3,7 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
 import useAuthStore from '@/stores/authStore';
-import toast from 'react-hot-toast';
+import { toast } from "sonner";
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
 

@@ -30,10 +30,10 @@ export default function Layout({ children }: React.PropsWithChildren<Props>) {
   }, [hasInitializedStore]);
 
   return (
-    <>
+    <div className="min-h-screen bg-background">
       <Navbar />
       {children}
       <Footer />
-    </>
+    </div>
   );
 }
