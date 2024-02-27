@@ -51,10 +51,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           }
           toastOptions={
             {
-              style: {
-                color: '#FFFFFF',
-                background: '#27272a', // zinc 800
-              },
+              // style: {
+              //   color: '#FFFFFF',
+              //   background: '#27272a', // zinc 800
+              // },
             }
           }
 

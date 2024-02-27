@@ -21,7 +21,7 @@ class MyDocument extends Document {
         <body className="loading">
         <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
