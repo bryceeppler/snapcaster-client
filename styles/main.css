@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .outlined-container {
+    @apply rounded-md border border-zinc-700;
+  }
+}
