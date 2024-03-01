@@ -313,7 +313,7 @@ const SubscriptionCards = ({
             <button onClick={createCheckoutSession} className="btn-white">
               Upgrade now
             </button>
-            <p className='text-xs mt-2.5'>By placing an order, you affirm that you have read, understood, and consent to the  <a href="https://www.snapcaster.ca/privacy" target="_blank" className="text-pink-500 hover:text-pink-700">Privacy Notices</a> and <a href="https://www.snapcaster.ca/privacy" target="_blank" className="text-pink-500 hover:text-pink-700">Terms of Use</a>.</p>
+            <p className='text-xs mt-2.5'>By placing an order, you affirm that you have read, understood, and consent to the  <a href="https://www.snapcaster.ca/privacy" target="_blank" className="text-pink-500 hover:text-pink-700">Privacy Notices</a> and <a href="https://www.snapcaster.ca/privacy" target="_blank" className="text-pink-500 hover:text-pink-700">Terms of Use</a></p>
           </div>
           <div className="flex flex-col text-left p-6 outlined-container w-full">
             <h3 className="font-semibold text-white">Free</h3>
