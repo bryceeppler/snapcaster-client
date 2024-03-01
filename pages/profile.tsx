@@ -8,6 +8,7 @@ import Signin from './signin';
 import LoadingPage from '@/components/LoadingPage';
 import Link from 'next/link';
 import { useForm, Controller } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
 
 const Profile: NextPage = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -208,7 +209,9 @@ const UserSettings = ({
         <div className="flex flex-row justify-between p-2 outlined-container">
           <p className="text-sm text-zinc-500">Subscription</p>
           {hasActiveSubscription ? (
-            <p className="text-sm text-zinc-400">Snapcaster <span className="text-pink-500 font-bold">Pro</span></p>
+            <p className="text-sm text-zinc-400">
+              Snapcaster <span className="text-pink-500 font-bold">Pro</span>
+            </p>
           ) : (
             <p className="text-sm text-zinc-400">Inactive</p>
           )}
@@ -247,10 +250,9 @@ const UserSettings = ({
       <div className="p-2" />
       {hasActiveSubscription && (
         <div className="w-full flex flex-col p-3">
-     
-        <button onClick={createPortalSession} className="btn-white w-full">
-          Manage subscription
-        </button>
+          <button onClick={createPortalSession} className="btn-white w-full">
+            Manage subscription
+          </button>
         </div>
       )}
     </div>
@@ -344,8 +346,8 @@ const SubscriptionCards = ({
             </div>
             <div className="p-4 flex-grow" />
             {/* upgrade now btn */}
-            <Link href="/" className="btn-dark">
-              Start searching
+            <Link className='w-full' href="/">
+              <Button className="w-full">Start searching</Button>
             </Link>
           </div>
         </div>

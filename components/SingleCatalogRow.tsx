@@ -6,6 +6,8 @@ type Props = {
 
 import { useStore } from '@/stores/store';
 import { trackOutboundLink } from '../utils/analytics';
+import { Button } from './ui/button';
+import Link from 'next/link';
 
 
 export default function SingleCatalogRow({ cardData }: Props) {
@@ -50,10 +52,11 @@ export default function SingleCatalogRow({ cardData }: Props) {
     trackOutboundLink(domain, priceInCents);
   }
 
+
   return (
     <>
       <>
-        <div className="grid grid-cols-12 gap-4 my-2 p-2 sm:my-3 sm:p-4 rounded-md outline outline-1 outline-zinc-600 transition-all bg-zinc-900">
+        <div className="grid grid-cols-12 gap-4 my-2 p-2 sm:my-3 sm:p-4 outlined-container transition-all shadow-sm">
           <div className="col-span-3 flex">
           <img
           src={cardData.image}
@@ -84,16 +87,22 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 )}
                 <div className="text-sm font-bold">{cardData.condition}</div>
               </div>
-              <a
-                className="btn-white p-1 px-2 sm:py-1 sm:px-4 mt-4 "
-                href={cardData.link}
-                data-price={cardData.price}
-                target="_blank"
-                id="buy-button"
-                onClick={() => handleBuyClick(cardData.link, cardData.price)}
+              <div className="p-2"/ >
+              <Button
+               asChild
+                onClick={() => {
+                  handleBuyClick(cardData.link, cardData.price)
+                }
+              }
               >
-                Buy
-              </a>
+               <Link href={cardData.link} 
+                target="_blank" 
+                rel="noreferrer" 
+               >
+                  Buy
+                
+              </Link> 
+              </Button>
             </div>
           </div>
         </div>

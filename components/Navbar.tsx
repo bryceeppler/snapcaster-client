@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import useAuthStore from '@/stores/authStore';
-import toast from 'react-hot-toast';
+import {toast} from 'sonner'
 
 type Props = {};
 
