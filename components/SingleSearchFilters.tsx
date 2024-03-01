@@ -1,5 +1,8 @@
 import React from 'react';
 import { useStore } from '@/stores/store';
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { Button } from './ui/button';
 
 type Props = {};
 
@@ -34,14 +37,14 @@ export default function SearchFilters({}: Props) {
       <div
         className={`transition-all flex flex-col justify-center items-center w-full ${
           showSingleSearchFilters ? 'opacity-100 h-80' : 'opacity-0 h-0'
-        } bg-zinc-900 shadow rounded-md`}
+        } outlined-container`}
       >
         {showSingleSearchFilters && (
           <>
             {/* selector for sort by */}
             <div className="flex flex-row justify-between items-center p-2">
               <div className="flex flex-row justify-between items-center p-2">
-                <label className="text-sm mr-2">Sort By</label>
+                <label className="text-sm">Sort By</label>
                 <select
                   className="p-1 text-sm input-dark"
                   onChange={(e) => {
@@ -70,7 +73,11 @@ export default function SearchFilters({}: Props) {
                 </select>
               </div>
             </div>
-            {/* foil only toggle */}
+            {/* foil only toggle
+            <div className="flex items-center space-x-2">
+      <Switch id="airplane-mode" />
+      <Label htmlFor="airplane-mode">Foil only</Label>
+    </div> */}
             <div className="flex flex-row justify-between items-center p-2">
               <span className="mr-3 text-sm font-medium">Foil only</span>
               <label className="relative inline-flex items-center cursor-pointer">
@@ -118,14 +125,14 @@ export default function SearchFilters({}: Props) {
             </div>
 
             <div className="flex flex-row space-x-2">
-              <button
-                className="btn-dark px-4 mt-1 mx-auto"
+              <Button
                 onClick={() => {
                   resetSingleSearchFilters();
                 }}
               >
                 Clear
-              </button>
+              </Button>
+
 
               {/* <button
                 className="transition-all bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-4 rounded focus:outline-pink-900 focus:shadow-outline mt-1 mx-auto"

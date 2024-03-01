@@ -2,6 +2,7 @@ import React from 'react';
 import { MultiSearchCardState, SingleSearchResult } from '@/stores/store';
 import { useStore } from '@/stores/store';
 import CardVariantSelector from './CardVariantSelector';
+import { Button } from './ui/button';
 
 type Props = {
   cardData: MultiSearchCardState;
@@ -18,7 +19,7 @@ export default function MultiCatalogRow({ cardData: card }: Props) {
   return (
     <div
       className={`transition-all outlined-container mt-6 p-3 sm:p-6 my-2 ${
-        card.selected && `neon-pink`
+        card.selected && `bg-zinc-900 border-zinc-500`
       }`}
       onClick={() => {
         toggleSelectMultiSearchCard(card.cardName);
@@ -48,14 +49,14 @@ export default function MultiCatalogRow({ cardData: card }: Props) {
         </div>
         <div className="flex flex-col gap-4">
           <CardVariantSelector card={card} />
-          <button
-            className="p-2 w-full text-sm btn-white"
+          <Button
+            className=""
             onClick={() => {
               openWebsiteNewTab(selectedVariant.link);
             }}
           >
             Buy
-          </button>
+          </Button>
         </div>
       </div>
       <div className="hidden sm:flex sm:flex-col gap-3 p-5 sm:p-8">
@@ -87,14 +88,14 @@ export default function MultiCatalogRow({ cardData: card }: Props) {
 
         <div className="flex flex-col gap-4">
           <CardVariantSelector card={card} />
-          <button
-            className="p-2 w-full text-sm btn-white"
+          <Button
+            className=""
             onClick={() => {
               openWebsiteNewTab(selectedVariant.link);
             }}
           >
             Buy
-          </button>
+          </Button>
         </div>
       </div>
     </div>

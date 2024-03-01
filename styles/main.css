@@ -2,76 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
-
-*:focus {
-  @apply outline-none ring-1 ring-zinc-300 ring-opacity-50;
-}
-
 @layer components {
-  .btn-white {
-    @apply transition-all bg-white hover:bg-zinc-200 text-black text-sm font-bold rounded-md p-2 text-center;
-  };
-  .btn-dark {
-    @apply transition-all bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-bold rounded-md p-2 text-center border-2 border-zinc-700
-  }
   .outlined-container {
-    @apply rounded-md border border-zinc-700
+    @apply rounded-lg border border-zinc-700;
   }
-  .input-dark {
-    @apply rounded-md border transition
-    ease-in-out border-zinc-500 px-4 py-2 placeholder-zinc-500 sm:text-sm text-white bg-zinc-900
-  }
-}
 
-html {
-  height: 100%;
-  box-sizing: border-box;
-  touch-action: manipulation;
-  font-feature-settings: 'case' 1, 'rlig' 1, 'calt' 0;
-}
-
-html,
-body {
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue',
-    'Helvetica', sans-serif;
-  text-rendering: optimizeLegibility;
-  -moz-osx-font-smoothing: grayscale;
-  @apply text-white bg-zinc-900 antialiased -z-10;
-}
-
-body {
-  position: relative;
-  min-height: 100%;
-  margin: 0;
-}
-
-a {
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-.animated {
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-}
-
-.height-screen-helper {
-  height: calc(100vh - 80px);
-}
-
-.header-bg {
-  background-size: cover;
-  background-position: center;
-  height: 700px;
-  width: 100%;
-  position: absolute;
-  z-index: -1;
 }

@@ -2,6 +2,7 @@ import { MultiSearchCardState } from '@/stores/store';
 import React from 'react'
 import { useStore } from '@/stores/store'
 import CloseButton from './CloseButton'
+import { Button } from './ui/button'
 
 type Props = {
   card: MultiSearchCardState
@@ -14,14 +15,14 @@ export default function CardVariantSelector({card}: Props) {
 
   return (
     <div>
-      <button
+      <Button
         onClick={() => {
           setModalOpen(true);
         }}
         className="p-2 text-sm w-full btn-dark"
       >
         Other results
-      </button>
+      </Button>
       {modalOpen && (
         <div
           className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 backdrop-blur-sm flex justify-center items-center"

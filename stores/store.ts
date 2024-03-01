@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
-import toast from 'react-hot-toast';
+import { toast } from "sonner";
 export interface SingleSearchResult {
   name: string;
   link: string;

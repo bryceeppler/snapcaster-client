@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '@/stores/store';
-
+import { Textarea } from './ui/textarea';
+import { Button } from './ui/button';
 type Props = {
   hasActiveSubscription: boolean;
 };
@@ -56,8 +57,8 @@ export default function MultiSearchbox({
         <div className="mb-2 text-sm text-gray-400">
           Enter card names, one per line {hasActiveSubscription ? '(max 100 lines)' : '(max 5 lines)'}
         </div>
-        <textarea
-          className={`block w-full input-dark px-4 py-2 sm:text-sm
+        <Textarea
+          className={`sm:text-sm
           bg-clip-padding
         `}
           id="multisearchFormControlTextarea1"
@@ -77,14 +78,14 @@ Counterspell`}
               setWarning(e.target.value.split(/\n/).length > 5);
             }
           }}
-        ></textarea>
+        ></Textarea>
         {warning && (
           <div className="text-red-600 mt-2">Max 5 cards</div>
         )}
       </div>
       <div className="p-3" />
-      <button
-                                  className="btn-white max-w-xs w-full mx-auto disabled:opacity-20 disabled:cursor-not-allowed"
+      <Button
+                                  className="disabled:cursor-not-allowed"
 
         type="button"
         disabled={multiSearchInput === '' || warning}
@@ -96,7 +97,7 @@ Counterspell`}
         }}
       >
         Search
-      </button>
+      </Button>
     </div>
   );
 }
