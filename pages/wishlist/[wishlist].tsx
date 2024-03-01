@@ -199,7 +199,7 @@ export const columns: ColumnDef<Card>[] = [
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" className="bg-zinc-800">Save changes</Button>
             </DialogFooter>
           </DialogContent>
           <DropdownMenu>
@@ -237,7 +237,7 @@ const CardPreview = ({ card }: { card: Card | null }) => {
       <div className="flex-1 text-sm text-muted-foreground text-left">
         {card ? (
           <div className="">
-            <Image alt={card.name} src={card.image} width={200} height={200} />
+            <Image alt={card.name} src={card.image} className="rounded-lg" width={200} height={200} />
             <div className="p-3">
             <p className="text-md font-bold">{card.name}</p>
             <p className="text-zinc-400">{card.website}</p>

@@ -18,11 +18,7 @@ const Wishlist: NextPage<Props> = () => {
                             <div className="space-y-2">
                                 <h2 className="text-4xl font-bold tracking-tighter">Wishlists</h2>
                             </div>
-                            <div className="grid gap-4 md:gap-4 p-8 outlined-container">
-                                <p className="text-left">
-                                    This is a wishlist page.
-                                </p>
-                            </div>
+
                             <Link href={`/wishlist/${1}`}>
                             <Card className="w-full">
                                 <CardHeader>

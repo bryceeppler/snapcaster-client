@@ -61,30 +61,37 @@ export function DataTable<TData, TValue>({
       {' '}
       <div className="flex flex-col gap-4 items-center py-4">
         <div className="flex flex-row gap-4 w-full">
-        <Input placeholder="Add cards..." className="" />
-    <Button>Add</Button>
+          <Input placeholder="Add cards..." className="" />
+          <Button>Add</Button>
         </div>
       </div>
-      {/* if any cards are selected, show delete all button */}
-      <div className="flex-1 text-sm text-muted-foreground text-left">
-        {table.getFilteredSelectedRowModel().rows.length} of{' '}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div>
-      <div className="p-1"/>
-      {table.getFilteredSelectedRowModel().rows.length > 0 && (
-        <div className="flex items-center justify-center gap-4">
-          <Button
-            onClick={() => {
-              table
-                .getFilteredSelectedRowModel()
-                .rows.forEach((row) => row.toggleSelected(false));
-            }}
-          >
-            Delete {table.getFilteredSelectedRowModel().rows.length} row(s)
-          </Button>
+      <div className="flex flex-row justify-between items-center gap-4 py-2">
+        {/* if any cards are selected, show delete all button */}
+        <div className="flex-1 text-sm text-muted-foreground text-left">
+          {table.getFilteredSelectedRowModel().rows.length} of{' '}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-      )}
-      <div className="rounded-md border text-left w-full">
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <div className="flex items-center justify-center gap-4">
+            <Button
+              variant="default"
+              onClick={() => table.getFilteredRowModel().rows.forEach((row) => row.toggleSelected(false))}
+              
+            >Clear selection</Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                table
+                  .getFilteredSelectedRowModel()
+                  .rows.forEach((row) => row.toggleSelected(false));
+              }}
+            >
+              Delete {table.getFilteredSelectedRowModel().rows.length} row(s)
+            </Button>
+          </div>
+        )}
+      </div>
+      <div className="rounded-md border text-left w-full border-zinc-700">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -111,11 +118,9 @@ export function DataTable<TData, TValue>({
                   onMouseEnter={() => {
                     if (setHoveredCard) {
                       setHoveredCard(row.original);
-                      console.log("setting card to hovered", row.original);
+                      console.log('setting card to hovered', row.original);
                     }
                   }}
-
-                  
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
