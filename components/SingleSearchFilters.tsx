@@ -2,6 +2,7 @@ import React from 'react';
 import { useStore } from '@/stores/store';
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { Button } from './ui/button';
 
 type Props = {};
 
@@ -124,14 +125,14 @@ export default function SearchFilters({}: Props) {
             </div>
 
             <div className="flex flex-row space-x-2">
-              <button
-                className="btn-dark px-4 mt-1 mx-auto"
+              <Button
                 onClick={() => {
                   resetSingleSearchFilters();
                 }}
               >
                 Clear
-              </button>
+              </Button>
+
 
               {/* <button
                 className="transition-all bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-4 rounded focus:outline-pink-900 focus:shadow-outline mt-1 mx-auto"

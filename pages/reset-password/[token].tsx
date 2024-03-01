@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from "sonner";
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
 
 type Props = {};
 
@@ -95,12 +96,7 @@ const ResetPassword: NextPage<Props> = () => {
                     {errors.confirmPassword.message}
                   </p>
                 )}
-                <button
-                  type="submit"
-                  className="mt-2 p-2 btn-white"
-                >
-                    Reset Password 
-                </button>
+               <Button type="submit" className="w-full">Reset Password</Button> 
               </form>
             </div>
           </section>

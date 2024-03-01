@@ -6,6 +6,7 @@ import useAuthStore from '@/stores/authStore';
 import { toast } from "sonner";
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
 
 type Props = {};
 
@@ -64,12 +65,7 @@ const ForgotPassword: NextPage<Props> = () => {
                 />
                 {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                 {errors.email?.type === 'pattern' && <p className="text-red-500">Invalid email</p>}
-                <button
-                  type="submit"
-                  className="mt-2 p-2 btn-white"
-                >
-                 Send reset link 
-                </button>
+                <Button type="submit" className="w-full">Send reset link</Button> 
               </form>
               <a href="/signin">Know your password? Sign in.</a>
             </div>

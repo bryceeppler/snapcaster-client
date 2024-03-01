@@ -19,7 +19,7 @@ export default function MultiCatalogRow({ cardData: card }: Props) {
   return (
     <div
       className={`transition-all outlined-container mt-6 p-3 sm:p-6 my-2 ${
-        card.selected && `neon-pink`
+        card.selected && `bg-zinc-900 border-zinc-500`
       }`}
       onClick={() => {
         toggleSelectMultiSearchCard(card.cardName);

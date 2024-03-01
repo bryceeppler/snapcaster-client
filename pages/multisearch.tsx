@@ -8,6 +8,7 @@ import StoreSelector from '@/components/StoreSelector';
 import MainLayout from '@/components/MainLayout';
 import useAuthStore from '@/stores/authStore';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 type Props = {};
 
 export default function Multisearch({}: Props) {
@@ -31,12 +32,12 @@ export default function Multisearch({}: Props) {
                 <p className="text-left">
                   You must be logged in to use this feature.
                 </p>
-                <Link href="/signin" className="btn-dark">
-                 Login
+                <Link href="/signin">
+                  <Button className="w-full">Login</Button>
                 </Link>
-                <Link href="/signup" className="btn-white">
-                 Create a free account
-                </Link>
+                <Link href="/signup">
+                  <Button className="w-full">Sign up</Button>
+                </Link> 
               </div>
             </div>
           </section>
