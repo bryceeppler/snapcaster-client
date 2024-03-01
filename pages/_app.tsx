@@ -41,6 +41,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   const isResetPasswordPage = router.pathname.includes('/reset-password/');
+  const isWishlistIdPage = router.pathname.includes('/wishlist/');
 
   return (
     <div className="font-sans antialiased">
@@ -62,7 +63,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         />
         <Component {...pageProps} />
       </Layout>
-      {!isResetPasswordPage && (
+      {/* for whatever reason, this script bugs out on slug pages with url params` */}
+      {/* e.g. [token].tsx */}
+      {!isResetPasswordPage && !isWishlistIdPage && (
         <Script
           id="Absence-banner"
           async

@@ -22,7 +22,7 @@ class MyDocument extends Document {
         <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem
+            // enableSystem
             disableTransitionOnChange
           >
           {/* Google Tag Manager (noscript) */}
