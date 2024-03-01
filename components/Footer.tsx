@@ -42,7 +42,13 @@ export default function Footer({}: Props) {
           <Link href="/privacy" className="text-pink-500 hover:text-pink-700">
             Privacy Policy
           </Link>
+
+        <div className="w-1 h-1 aspect-square bg-pink-500 rounded-full"></div>
+          <Link href="/terms" className="text-pink-500 hover:text-pink-700">
+            Terms and Conditions
+          </Link>
       </div>
+
     </div>
   );
 }
