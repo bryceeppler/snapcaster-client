@@ -250,9 +250,9 @@ const UserSettings = ({
       <div className="p-2" />
       {hasActiveSubscription && (
         <div className="w-full flex flex-col p-3">
-          <button onClick={createPortalSession} className="btn-white w-full">
+          <Button onClick={createPortalSession} >
             Manage subscription
-          </button>
+          </Button>
         </div>
       )}
     </div>
@@ -312,10 +312,11 @@ const SubscriptionCards = ({
             </div>
             <div className="p-4" />
             {/* upgrade now btn */}
-            <button onClick={createCheckoutSession} className="btn-white">
+
+            <p className='text-xs mb-2.5 text-zinc-400'>By placing an order, you affirm that you have read, understood, and consent to the  <a href="/privacy" target="_blank" className="text-pink-500 hover:text-pink-700">Privacy Notices</a> and <a href="/terms" target="_blank" className="text-pink-500 hover:text-pink-700">Terms of Use</a></p>
+            <Button onClick={createCheckoutSession} className="w-full">
               Upgrade now
-            </button>
-            <p className='text-xs mt-2.5'>By placing an order, you affirm that you have read, understood, and consent to the  <a href="/privacy" target="_blank" className="text-pink-500 hover:text-pink-700">Privacy Notices</a> and <a href="/terms" target="_blank" className="text-pink-500 hover:text-pink-700">Terms of Use</a></p>
+            </Button>
           </div>
           <div className="flex flex-col text-left p-6 outlined-container w-full">
             <h3 className="font-semibold text-white">Free</h3>
