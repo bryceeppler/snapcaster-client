@@ -131,6 +131,7 @@ const Signup: NextPage<Props> = () => {
                 <Button className="">
                   <a href="/signin">Already have an account? Sign in!</a>
                 </Button>
+                <p className='text-xs'>By Creating an account, you affirm that you have read, understood, and consent to the <a href="/terms" target="_blank" className="text-pink-500 hover:text-pink-700">Terms of Use</a></p>
               </form>
             </div>
           </section>
