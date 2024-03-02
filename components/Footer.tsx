@@ -20,7 +20,7 @@ export default function Footer({}: Props) {
       "
     >
       <div className="flex flex-col md:flex-row items-center gap-5">
-        <div className="text-zinc-100">
+        {/* <div className="text-zinc-100">
           Created by{'  '}
           <a
             href="https://www.bryceeppler.com"
@@ -30,7 +30,7 @@ export default function Footer({}: Props) {
           >
             Bryce Eppler
           </a>
-        </div>
+        </div> */}
         {/* <button
           className="rounded-md bg-pink-500 bg-opacity-50 py-1 px-2 font-mono font-bold transition-colors hover:bg-pink-700"
           onClick={openDonationLink}
@@ -38,7 +38,6 @@ export default function Footer({}: Props) {
           <span className="hidden sm:inline">Support snapcaster</span>
           <span className="sm:hidden">Donate</span>
         </button> */}
-        <div className="w-1 h-1 aspect-square bg-pink-500 rounded-full"></div>
           <Link href="/privacy" className="text-pink-500 hover:text-pink-700">
             Privacy Policy
           </Link>
