@@ -11,6 +11,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
+import LoadingPage from '@/components/LoadingPage';
+import Signin from '@/pages/signin';
+import useWishlistStore from '@/stores/wishlistStore';
+import { useEffect } from 'react';
+import useAuthStore from '@/stores/authStore';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,6 +56,7 @@ import {
 } from '@/components/ui/select';
 import { useState } from 'react';
 import Image from 'next/image';
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -259,8 +265,10 @@ const CardPreview = ({ card }: { card: Card | null }) => {
 };
 const WishlistId: NextPage<Props> = () => {
   const router = useRouter();
-  const { wishlist } = router.query;
-
+  const { wishlist } = router.query as { wishlist: string };
+  const { isAuthenticated } = useAuthStore();
+  const { wishlistView, fetchWishlistView } = useWishlistStore();
+  const [loading, setLoading] = useState(true);
   const data = {
     name: "Magda's Dwarf Booty",
     num_cards: 31,
@@ -291,7 +299,34 @@ const WishlistId: NextPage<Props> = () => {
   };
 
   const [hoveredCard, setHoveredCard] = useState<Card | null>(null);
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      if (!isAuthenticated) {
+        setLoading(false);
+        return;
+      }
 
+      try {
+        if (wishlist)
+        fetchWishlistView(Number(wishlist));
+
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInitialData();
+  }, [isAuthenticated, wishlist]);
+
+  if (loading) {
+    return <LoadingPage />;
+  }
+
+  if (!isAuthenticated) {
+    return <Signin />;
+  }
   return (
     <>
       <WishlistIdHead />
@@ -301,11 +336,11 @@ const WishlistId: NextPage<Props> = () => {
             <div className="container grid md:px-6 items-start gap-6">
               <div className="space-y-2 text-left">
                 <h2 className="text-3xl font-bold tracking-tighter">
-                  Magda's Dwarf Booty
+                  {wishlistView.name}
                 </h2>
                 <p className="text-gray-500 dark:text-gray-400">
                   {/* Updated in relative time */}
-                  Created {dayjs(data.created_at).fromNow()}
+                  Created {dayjs(wishlistView.created_at).fromNow()}
                 </p>
               </div>
               <div className="flex flex-row gap-8 w-full">
@@ -315,7 +350,16 @@ const WishlistId: NextPage<Props> = () => {
                 <div className="flex-1">
                   <DataTable
                     columns={columns}
-                    data={data.cards}
+                    data={wishlistView.items.map((item) => {
+                      return {
+                        name: item.card_name,
+                        condition: item.cheapest_price_doc.condition,
+                        price: item.cheapest_price_doc.price,
+                        link: item.cheapest_price_doc.link,
+                        image: item.cheapest_price_doc.image,
+                        website: item.cheapest_price_doc.website
+                      };
+                    })}
                     setHoveredCard={setHoveredCard}
                   />
                 </div>

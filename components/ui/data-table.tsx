@@ -21,6 +21,8 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from './button';
+import axiosInstance from '@/utils/axiosWrapper';
+import axios from 'axios';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,8 +39,34 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<string[]>([]);
+const [searchTerm, setSearchTerm] = React.useState('');
 
+  const [rowSelection, setRowSelection] = React.useState({});
+  const debounce = (func: Function, wait: number) => {
+    let timeout: NodeJS.Timeout;
+    return function executedFunction(...args: any) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  };
+  
+  // Fetch autocomplete suggestions (mocked as an example)
+  const fetchAutocompleteSuggestions = async (searchTerm: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL}/cards?query=${searchTerm}`);
+    setAutocompleteSuggestions(response.data.data);
+  };
+  
+  const debouncedFetchAutocompleteSuggestions = debounce(fetchAutocompleteSuggestions, 300);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedFetchAutocompleteSuggestions(value);
+  };
   const table = useReactTable({
     data,
     columns,
@@ -60,11 +88,23 @@ export function DataTable<TData, TValue>({
     <div>
       {' '}
       <div className="flex flex-col gap-4 items-center py-4">
-        <div className="flex flex-row gap-4 w-full">
-          <Input placeholder="Add cards..." className="" />
-          <Button>Add</Button>
-        </div>
-      </div>
+  <div className="flex flex-row gap-4 w-full">
+    <Input
+      placeholder="Add cards..."
+      value={searchTerm}
+      onChange={handleSearchChange}
+      className=""
+    />
+    <Button>Add</Button>
+  </div>
+  <ul className="list-disc">
+    {autocompleteSuggestions.map((suggestion, index) => (
+      <li key={index} className="cursor-pointer">
+        {suggestion}
+      </li>
+    ))}
+  </ul>
+</div>
       <div className="flex flex-row justify-between items-center gap-4 py-2">
         {/* if any cards are selected, show delete all button */}
         <div className="flex-1 text-sm text-muted-foreground text-left">
