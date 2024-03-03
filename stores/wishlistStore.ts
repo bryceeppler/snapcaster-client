@@ -16,6 +16,7 @@ type PriceEntry = {
 };
 export type WishlistCard = {
   wishlist_item_id: number;
+  quantity: number;
   card_name: string;
   oracle_id: string;
   cheapest_price_doc: PriceEntry;
@@ -62,7 +63,9 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
         `${process.env.NEXT_PUBLIC_WISHLIST_URL}/wishlist-item/create`,
         {
           wishlist_id: wishlistId,
-          oracle_id: oracleId
+          oracle_id: oracleId,
+          quantity: 1,
+          minimum_condition: 'NM'
         }
       );
       toast.success('Card added to wishlist');

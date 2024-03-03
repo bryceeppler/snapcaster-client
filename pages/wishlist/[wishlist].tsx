@@ -5,7 +5,15 @@ import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/en';
-import { ArrowUpDown, Check, Edit, MoreHorizontal, X } from 'lucide-react';
+import {
+  ArrowUpDown,
+  Check,
+  Edit,
+  MoreHorizontal,
+  RefreshCcw,
+  Settings,
+  X
+} from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -16,6 +24,7 @@ import Signin from '@/pages/signin';
 import useWishlistStore from '@/stores/wishlistStore';
 import { useEffect } from 'react';
 import useAuthStore from '@/stores/authStore';
+import { useStore } from '@/stores/store';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,6 +59,7 @@ import Image from 'next/image';
 import WishlistSearchbox from '@/components/WishlistSearchbox';
 import { WishlistCard } from '@/stores/wishlistStore';
 import { Item } from '@radix-ui/react-dropdown-menu';
+import Link from 'next/link';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -65,8 +75,13 @@ export type Card = {
   website: string;
 };
 
-
-const CardPreview = ({ card }: { card: WishlistCard | null }) => {
+const CardPreview = ({
+  card,
+  getWebsiteNameByCode
+}: {
+  card: WishlistCard | null;
+  getWebsiteNameByCode: (code: string) => string;
+}) => {
   return (
     <div className="flex flex-col items-center gap-4 py-4">
       <div className="flex-1 text-sm text-muted-foreground text-left">
@@ -75,31 +90,58 @@ const CardPreview = ({ card }: { card: WishlistCard | null }) => {
             <Image
               alt={card.card_name}
               src={card.cheapest_price_doc.image}
-              className="rounded-lg"
+              className="rounded-lg h-auto"
               width={200}
               height={200}
             />
-            <div className="p-3">
-              <p className="text-md font-bold">{card.cheapest_price_doc.name}</p>
-              <p className="text-zinc-400">{card.cheapest_price_doc.website}</p>
-              <p className="font-bold">{card.cheapest_price_doc.condition}</p>
-              <p className="text-lg font-bold">
+            <div className="p-3" />
+            {/* <p className="text-md font-bold">{card.cheapest_price_doc.name}</p> */}
+
+            <Button
+              variant="default"
+              className="justify-between w-[200px] text-sm tracking-tight"
+              onClick={() =>
+                window.open(card.cheapest_price_doc.link, '_blank')
+              }
+            >
+              <p className="text-left overflow-ellipsis whitespace-nowrap overflow-hidden">
+                Buy @ {getWebsiteNameByCode(card.cheapest_price_doc.website)}{' '}
+              </p>
+              <p className="font-bold ">
                 {new Intl.NumberFormat('en-CA', {
                   style: 'currency',
                   currency: 'CAD'
                 }).format(card.cheapest_price_doc.price)}
               </p>
-            </div>
+            </Button>
+            {/* <Button variant="ghost" className="w-[200px] text-sm tracking-tight" onClick={() => {
+              console.log("open modal")
+            }}>
+              Change settings
+            </Button> */}
           </div>
         ) : (
-          <p>No card selected</p>
+          <div>
+            <div
+              // image placeholder
+              className="w-[200px] h-[280px] bg-zinc-800 opacity-70 rounded-lg"
+            ></div>
+            <div className="p-2" />
+            <div
+              // button placeholder
+              className="w-[200px] h-9 bg-zinc-800 opacity-70 rounded-lg"
+            ></div>
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-function getColumns(deleteWishlistItem: (id: number) => void): ColumnDef<WishlistCard>[] {
+function getColumns(
+  deleteWishlistItem: (wishlistItemId: number) => void,
+  getWebsiteNameByCode: (code: string) => string
+): ColumnDef<WishlistCard>[] {
   return [
     {
       id: 'select',
@@ -124,6 +166,11 @@ function getColumns(deleteWishlistItem: (id: number) => void): ColumnDef<Wishlis
       enableHiding: false
     },
     {
+      header: 'Qty',
+      accessorKey: 'quantity'
+
+    },
+    {
       header: ({ column }) => {
         return (
           <Button
@@ -137,11 +184,19 @@ function getColumns(deleteWishlistItem: (id: number) => void): ColumnDef<Wishlis
         );
       },
       accessorKey: 'card_name',
-      enableSorting: true
+      enableSorting: true,
+      cell: ({ row }) => {
+        const card = row.original;
+        return (
+          <div className="text-left max-w-[200px] overflow-ellipsis overflow-hidden whitespace-nowrap">
+            {card.card_name}
+          </div>
+        );
+      }
     },
     {
       header: 'Condition',
-      accessorKey: 'cheapest_price_doc.condition',
+      accessorKey: 'cheapest_price_doc.condition'
     },
     {
       header: ({ column }) => (
@@ -156,16 +211,18 @@ function getColumns(deleteWishlistItem: (id: number) => void): ColumnDef<Wishlis
       ),
       cell: ({ row }) => {
         // Access the nested property using dot notation
-        const price = parseFloat(row.original.cheapest_price_doc.price.toFixed(2));
-        console.log(row)
+        const price = parseFloat(
+          row.original.cheapest_price_doc.price.toFixed(2)
+        );
+        console.log(row);
         const formatted = new Intl.NumberFormat('en-CA', {
           style: 'currency',
-          currency: 'CAD',
+          currency: 'CAD'
         }).format(price);
         return <div className="text-left font-medium">{formatted}</div>;
       },
       accessorKey: 'cheapest_price_doc.price',
-      enableSorting: true,
+      enableSorting: true
     },
     {
       id: 'actions',
@@ -256,9 +313,10 @@ function getColumns(deleteWishlistItem: (id: number) => void): ColumnDef<Wishlis
                 <DropdownMenuItem
                   onClick={() => {
                     deleteWishlistItem(wishlistCard.wishlist_item_id);
-  
                   }}
-                >Delete</DropdownMenuItem>
+                >
+                  Delete
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </Dialog>
@@ -273,12 +331,20 @@ const WishlistId: NextPage<Props> = () => {
   const router = useRouter();
   const { wishlist } = router.query as { wishlist: string };
   const { isAuthenticated } = useAuthStore();
-  const { wishlistView, fetchWishlistView, updateWishlist, deleteWishlistItem } =
-    useWishlistStore();
+  const {
+    wishlistView,
+    fetchWishlistView,
+    updateWishlist,
+    deleteWishlistItem
+  } = useWishlistStore();
+  const { getWebsiteNameByCode } = useStore();
   const [loading, setLoading] = useState(true);
   const [editName, setEditName] = useState('');
   const [edit, setEdit] = useState(false);
-  const columns: ColumnDef<WishlistCard>[] = getColumns(deleteWishlistItem);
+  const columns: ColumnDef<WishlistCard>[] = getColumns(
+    deleteWishlistItem,
+    getWebsiteNameByCode
+  );
 
   const saveChanges = (wishlist_id: number) => {
     try {
@@ -332,6 +398,8 @@ const WishlistId: NextPage<Props> = () => {
   useEffect(() => {
     if (wishlistView.items.length > 0 && !hoveredCard) {
       setHoveredCard(wishlistView.items[0]);
+    } else if (wishlistView.items.length === 0) {
+      setHoveredCard(null);
     }
   }, [wishlistView]);
 
@@ -348,7 +416,7 @@ const WishlistId: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-6xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid md:px-6 items-start gap-6">
+            <div className="container grid items-start gap-6">
               <div className="space-y-2 text-left">
                 <div className="flex flex-row gap-4">
                   {edit ? (
@@ -389,16 +457,51 @@ const WishlistId: NextPage<Props> = () => {
               </div>
               <div className="flex flex-row gap-8 w-full">
                 <div className="hidden md:flex max-w-xs w-[200px]">
-                  <CardPreview card={hoveredCard} />
-                </div>
-                <div className="flex-1">
-                  <WishlistSearchbox wishlistId={wishlistView.wishlist_id} />
-                  <DataTable
-                    columns={columns}
-                    deleteRow={deleteWishlistItem}
-                    data={wishlistView.items}
-                    setHoveredCard={setHoveredCard}
+                  <CardPreview
+                    card={hoveredCard}
+                    getWebsiteNameByCode={getWebsiteNameByCode}
                   />
+                </div>
+                <div className="w-full">
+                  <div className="flex flex-row justify-between items-center">
+                    <div className="hidden sm:flex sm:flex-row gap-4 items-center">
+                      {/* <Button variant="outline" className="w-35">
+                        Settings
+                      </Button> */}
+                      {/* button for toggling bulk edit */}
+                      <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
+                      <Button variant="outline" className="w-35">
+                        Bulk edit
+                      </Button>
+                      </Link>
+                      <RefreshCcw size={16} />
+                      <div className="p-2" />
+                    </div>
+                    <WishlistSearchbox
+                      wishlistId={wishlistView.wishlist_id}
+                      className="max-w-md"
+                    />
+                  </div>
+                  {wishlistView.items.length === 0 ? (
+                    <div className="w-full h-full rounded-lg flex flex-col items-center justify-center relative">
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10">
+                        <p className="text-lg font-bold">No cards found</p>
+                        <p className="text-sm">
+                          Add cards by search or bulk edit. 
+                        </p>
+                      </div>
+                      <div className="w-full h-16 bg-zinc-800 opacity-70 rounded-lg mt-4 justify-center flex items-center" />
+                      <div className="w-full h-60 bg-zinc-800 opacity-70 rounded-lg mt-4 justify-center flex items-center" />
+                    </div>
+                  ) : (
+                    <DataTable
+                    
+                      columns={columns}
+                      deleteRow={deleteWishlistItem}
+                      data={wishlistView.items}
+                      setHoveredCard={setHoveredCard}
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -414,7 +517,7 @@ export default WishlistId;
 const WishlistIdHead = () => {
   return (
     <Head>
-      <title>Reset Password</title>
+      <title>Wishlist</title>
       <meta
         name="description"
         content="Search Magic the Gathering cards across Canada"

@@ -6,25 +6,29 @@ import { Search } from 'lucide-react';
 import { Button } from './ui/button';
 import { toast } from 'sonner';
 type Props = {
-    wishlistId: number;
+  wishlistId: number;
+  className?: string;
 };
 type AutocompleteResult = {
-    name: string;
-    oracle_id: string;
-  };
-  
-export default function WishlistSearchbox({wishlistId}: Props) {
+  name: string;
+  oracle_id: string;
+};
+
+export default function WishlistSearchbox({ wishlistId, className }: Props) {
   const { addCardInput, setAddCardInput, addCardToWishlist } =
     useWishlistStore();
   const autocompleteEndpoint =
     process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards_details?query=';
-    const [autocompleteResults, setAutocompleteResults] = useState<AutocompleteResult[]>([]);
-    const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [autocompleteResults, setAutocompleteResults] = useState<
+    AutocompleteResult[]
+  >([]);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [selectedAutocompleteIndex, setSelectedAutocompleteIndex] =
     useState(-1);
-    const [selectedItem, setSelectedItem] = useState<AutocompleteResult | null>(null);
+  const [selectedItem, setSelectedItem] = useState<AutocompleteResult | null>(
+    null
+  );
   const searchRef = useRef<HTMLInputElement>(null);
-
 
   const fetchAutocompleteResults = useCallback(
     (value: string) => {
@@ -95,7 +99,8 @@ export default function WishlistSearchbox({wishlistId}: Props) {
           ) {
             const item = autocompleteResults[selectedAutocompleteIndex];
             item && handleAutocompleteItemClick(item);
-            item && addCardToWishlist(wishlistId, item.oracle_id);          }
+            item && addCardToWishlist(wishlistId, item.oracle_id);
+          }
           break;
 
         case 'ArrowRight':
@@ -145,14 +150,14 @@ export default function WishlistSearchbox({wishlistId}: Props) {
   };
 
   return (
-    <div className="mt-6 w-full">
+    <div className={` w-full ${className}`}>
       <div className="relative">
         {' '}
         <form onSubmit={handleFormSubmit} className="flex relative gap-4">
           {' '}
           <Input
             type="text"
-            placeholder="Search"
+            placeholder="Search cards to add to your wishlist..."
             value={addCardInput}
             onChange={handleInputChange}
             spellCheck="false"
@@ -160,18 +165,18 @@ export default function WishlistSearchbox({wishlistId}: Props) {
             onKeyDown={(e) => handleAutocompleteKeyDown(e)}
             className="flex-1"
           />
-    <Button
-          type="submit"
-          className={`cursor-pointer bg-pink-500 hover:bg-pink-600 disabled:cursor-not-allowed disabled:bg-zinc-500`}
-          disabled={!selectedItem} 
-        >
-          <Search size={16} />
-        </Button>
+          <Button
+            type="submit"
+            className={`cursor-pointer bg-pink-500 hover:bg-pink-600 disabled:cursor-not-allowed disabled:bg-zinc-500`}
+            disabled={!selectedItem}
+          >
+            <Search size={16} />
+          </Button>
           {showAutocomplete && (
             <div className="absolute z-50 top-full mt-1 text-left max-w-md w-full max-h-60 overflow-y-auto rounded-md border border-zinc-500 shadow-md bg-zinc-700">
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
-                    <div
+                  <div
                     key={result.oracle_id}
                     className={`cursor-pointer px-4 py-2 mx-1 rounded ${
                       selectedAutocompleteIndex === index ? 'bg-zinc-800' : ''
