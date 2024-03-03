@@ -189,7 +189,7 @@ function getColumns(
       cell: ({ row }) => {
         const card = row.original;
         return (
-          <div className="text-left max-w-[200px] overflow-ellipsis overflow-hidden whitespace-nowrap">
+          <div className="text-left max-w-[100px] md:max-w-[200px] overflow-ellipsis overflow-hidden whitespace-nowrap">
             {card.card_name}
           </div>
         );
@@ -463,7 +463,7 @@ const WishlistId: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-6xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid items-center mx-auto gap-6">
+            <div className="items-center mx-auto gap-6">
               <div className="space-y-2 text-left">
                 <div className="flex flex-row gap-4">
                   {edit ? (

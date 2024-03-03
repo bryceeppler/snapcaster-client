@@ -25,13 +25,14 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
+import { SubscriptionCards } from '../profile';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { Edit } from 'lucide-react';
 import { toast } from 'sonner';
 import dayjs from 'dayjs';
-
+import axiosInstance from '@/utils/axiosWrapper';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/en';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -46,7 +47,7 @@ const Wishlist: NextPage<Props> = () => {
     updateWishlist,
     deleteWishlist
   } = useWishlistStore();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, hasActiveSubscription } = useAuthStore();
   const [loading, setLoading] = useState(true);
   // can be null or number
   const [editWishlistId, setEditWishlistId] = useState<number | null>(null);
@@ -107,7 +108,19 @@ const Wishlist: NextPage<Props> = () => {
   });
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const createCheckoutSession = async () => {
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_PAYMENT_URL}/createcheckoutsession`
+      );
+      if (response.status !== 200) throw new Error('Failed to create session');
+      const data = await response.data;
+      console.log('Checkout session created:', data);
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+    }
+  };
   useEffect(() => {
     const fetchUserWishlists = async () => {
       if (!isAuthenticated) {
@@ -132,7 +145,57 @@ const Wishlist: NextPage<Props> = () => {
   // }
 
   if (!isAuthenticated) {
-    return <Signin />;
+    return (
+      <MainLayout>
+        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
+          <section className="w-full py-6 md:py-12">
+            <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
+              <div className="space-y-2">
+                <h2 className="text-4xl font-bold tracking-tighter">
+                  Wishlists
+                </h2>
+              </div>
+              <div className="grid gap-4 md:gap-4 p-8 outlined-container">
+                <p className="text-left">
+                  You must be logged in to use this feature.
+                </p>
+                <Link href="/signin">
+                  <Button className="w-full">Login</Button>
+                </Link>
+                <Link href="/signup">
+                  <Button className="w-full">Sign up</Button>
+                </Link> 
+              </div>
+            </div>
+          </section>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (!hasActiveSubscription) {
+      return (
+        <MainLayout>
+          <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
+            <section className="w-full py-6 md:py-12">
+              <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
+                <div className="space-y-2">
+                  <h2 className="text-4xl font-bold tracking-tighter">
+                    Wishlists 
+                  </h2>
+                </div>
+                <div className="grid gap-4 md:gap-4 p-8 outlined-container">
+                  <p className="text-left">
+                    You must have an active subscription to use this feature.
+                  </p>
+                  </div>
+                <SubscriptionCards
+                    createCheckoutSession={createCheckoutSession}
+                  />              </div>
+            </section>
+          </div>
+        </MainLayout>
+      );
   }
 
   return (

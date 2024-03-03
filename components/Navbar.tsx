@@ -28,6 +28,7 @@ export default function Navbar({}: Props) {
     },
     { name: 'About', href: '/about', current: currentPath === '/about' },
     { name: 'Updates', href: '/updates', current: currentPath === '/updates'},
+    ...(isAuthenticated ? [{ name: 'Wishlists', href: '/wishlist', current: currentPath === '/wishlist' }] : []),
     ...(isAuthenticated ? [{ name: 'Profile', href: '/profile', current: currentPath === '/profile' }] : []),
 
   ];
