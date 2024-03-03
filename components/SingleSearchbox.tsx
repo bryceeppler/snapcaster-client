@@ -151,13 +151,13 @@ export default function SingleSearchbox({}: Props) {
             </svg>
           </button>
           {showAutocomplete && (
-            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-300  py-1 shadow-md bg-zinc-900">
+            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  py-1 shadow-md bg-zinc-700">
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
                     key={result}
                     className={`cursor-pointer px-4 py-2 mx-1 rounded ${
-                      selectedAutocompleteIndex === index ? 'bg-zinc-700' : ''
+                      selectedAutocompleteIndex === index ? 'bg-zinc-800' : ''
                     } `}
                     onClick={() => handleAutocompleteItemClick(result)}
                   >
