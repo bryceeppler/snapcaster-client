@@ -1,22 +1,29 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import useWishlistStore from '@/stores/wishlistStore';
 import { useDebounceCallback } from 'usehooks-ts';
-
+import { useRouter } from 'next/router';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
 import { Button } from './ui/button';
-type Props = {};
-
-export default function WishlistSearchbox({}: Props) {
+type Props = {
+    wishlistId: number;
+};
+type AutocompleteResult = {
+    name: string;
+    oracle_id: string;
+  };
+  
+export default function WishlistSearchbox({wishlistId}: Props) {
   const { addCardInput, setAddCardInput, addCardToWishlist } =
     useWishlistStore();
   const autocompleteEndpoint =
-    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
-  const [autocompleteResults, setAutocompleteResults] = useState<string[]>([]);
-  const [showAutocomplete, setShowAutocomplete] = useState(false);
+    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards_details?query=';
+    const [autocompleteResults, setAutocompleteResults] = useState<AutocompleteResult[]>([]);
+    const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [selectedAutocompleteIndex, setSelectedAutocompleteIndex] =
     useState(-1);
   const searchRef = useRef<HTMLInputElement>(null);
+
 
   const fetchAutocompleteResults = useCallback(
     (value: string) => {
@@ -51,8 +58,9 @@ export default function WishlistSearchbox({}: Props) {
     }
   };
 
-  const handleAutocompleteItemClick = (item: string) => {
-    setAddCardInput(item);
+  const handleAutocompleteItemClick = (item: AutocompleteResult) => {
+    setAddCardInput(item.name);
+    addCardToWishlist(wishlistId, item.oracle_id);
     setAutocompleteResults([]);
     setShowAutocomplete(false);
     setSelectedAutocompleteIndex(-1);
@@ -84,8 +92,7 @@ export default function WishlistSearchbox({}: Props) {
           ) {
             const item = autocompleteResults[selectedAutocompleteIndex];
             item && handleAutocompleteItemClick(item);
-            item && addCardToWishlist(1, item);
-          }
+            item && addCardToWishlist(wishlistId, item.oracle_id);          }
           break;
 
         case 'ArrowRight':
@@ -95,7 +102,7 @@ export default function WishlistSearchbox({}: Props) {
           ) {
             const item = autocompleteResults[selectedAutocompleteIndex];
             item && handleAutocompleteItemClick(item);
-            item && addCardToWishlist(1, item);
+            item && addCardToWishlist(wishlistId, item.oracle_id);
           }
           break;
 
@@ -126,7 +133,7 @@ export default function WishlistSearchbox({}: Props) {
     event.preventDefault();
     setShowAutocomplete(false);
     if (addCardInput.trim().length > 0) {
-      addCardToWishlist(1, addCardInput);
+      addCardToWishlist(wishlistId, addCardInput);
     }
   };
 
@@ -158,14 +165,14 @@ export default function WishlistSearchbox({}: Props) {
             <div className="absolute z-50 top-full mt-1 text-left max-w-md w-full max-h-60 overflow-y-auto rounded-md border border-zinc-500 shadow-md bg-zinc-700">
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
-                  <div
-                    key={result}
+                    <div
+                    key={result.oracle_id} // key should be unique, so use oracle_id
                     className={`cursor-pointer px-4 py-2 mx-1 rounded ${
                       selectedAutocompleteIndex === index ? 'bg-zinc-800' : ''
                     } `}
                     onClick={() => handleAutocompleteItemClick(result)}
                   >
-                    {result}
+                    {result.name}
                   </div>
                 ))}
             </div>

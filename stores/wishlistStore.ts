@@ -56,11 +56,14 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
     setAddCardInput: (input: string) => {
         set({ addCardInput: input });
     },
-    addCardToWishlist: async (id: number, cardName: string) => {
+    addCardToWishlist: async (wishlistId: number, oracleId: string) => {
         try {
-            const response = await axiosInstance.post(`${process.env.NEXT_PUBLIC_WISHLIST_URL}/add/${id}`, { cardName });
+            const response = await axiosInstance.post(`${process.env.NEXT_PUBLIC_WISHLIST_URL}/wishlist-item/create`, { 
+                wishlist_id: wishlistId,
+                oracle_id: oracleId
+             });
             toast.success('Card added to wishlist');
-            get().fetchWishlistView(id);
+            get().fetchWishlistView(wishlistId);
         } catch (error) {
             console.error(error);
         }

@@ -35,15 +35,6 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 dayjs.extend(relativeTime);
-type Props = {};
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import {
   Select,
@@ -130,7 +121,6 @@ export const columns: ColumnDef<Card>[] = [
     },
     cell: ({ row }) => {
       const price = parseFloat(row.getValue('price'));
-      // formate price without CA infront
       const formatted = new Intl.NumberFormat('en-CA', {
         style: 'currency',
         currency: 'CAD'
@@ -140,10 +130,6 @@ export const columns: ColumnDef<Card>[] = [
     accessorKey: 'price',
     enableSorting: true
   },
-  //   {
-  //     header: 'Website',
-  //     accessorKey: 'website'
-  //   },
   {
     id: 'actions',
     cell: ({ row }) => {
@@ -180,15 +166,12 @@ export const columns: ColumnDef<Card>[] = [
                 </Select>
               </div>
               <div className="flex flex-row justify-between items-center">
-                {/* toggle email notifications */}
                 <Label htmlFor="email-notifications" className="text-left">
                   Email Notifications
                 </Label>
                 <Switch id="email-notifications" />
               </div>
-              {/* if email notifications enabled */}
               <div className="flex flex-row justify-between items-center">
-                {/* target price */}
                 <Label htmlFor="target-price" className="text-left">
                   Target Price
                 </Label>
@@ -269,41 +252,14 @@ const CardPreview = ({ card }: { card: Card | null }) => {
     </div>
   );
 };
+
+type Props = {};
 const WishlistId: NextPage<Props> = () => {
   const router = useRouter();
   const { wishlist } = router.query as { wishlist: string };
   const { isAuthenticated } = useAuthStore();
   const { wishlistView, fetchWishlistView } = useWishlistStore();
   const [loading, setLoading] = useState(true);
-  const data = {
-    name: "Magda's Dwarf Booty",
-    num_cards: 31,
-    worst_acceptable_condition: 'LP',
-    created_at: '2021-10-10T00:00:00.000Z',
-    updated_at: '2021-10-10T00:00:00.000Z',
-    cards: [
-      {
-        name: 'Whispersilk Cloak',
-        condition: 'NM',
-        price: 5.0,
-        link: 'https://cdn.shopify.com/s/files/1/1704/1809/files/Whispersilk-Cloak-Foil-PHED.jpg?v=1698654032',
-        image:
-          'https://cdn.shopify.com/s/files/1/1704/1809/files/Whispersilk-Cloak-Foil-PHED.jpg?v=1698654032',
-        website: '401 Games',
-        email_notifications: true
-      },
-      {
-        name: 'Dockside Extortionist',
-        condition: 'LP',
-        price: 55.45,
-        link: '',
-        image:
-          'https://cdn.shopify.com/s/files/1/0533/4912/2222/products/ff188554-0e12-5639-93a1-70698148b309_99746e05-e355-4b11-94a4-f341b63764db.jpg?v=1656439738',
-        website: 'Gauntlet',
-        email_notifications: true
-      }
-    ]
-  };
 
   const [hoveredCard, setHoveredCard] = useState<Card | null>(null);
   useEffect(() => {
@@ -344,7 +300,6 @@ const WishlistId: NextPage<Props> = () => {
                   {wishlistView.name}
                 </h2>
                 <p className="text-gray-500 dark:text-gray-400">
-                  {/* Updated in relative time */}
                   Created {dayjs(wishlistView.created_at).fromNow()}
                 </p>
               </div>
@@ -353,17 +308,7 @@ const WishlistId: NextPage<Props> = () => {
                   <CardPreview card={hoveredCard} />
                 </div>
                 <div className="flex-1">
-                  {/* <div className="flex flex-col gap-4 items-center py-4">
-                    <div className="flex flex-row gap-4 w-full">
-                      <Input
-                        placeholder="Add cards..."
-                        value="temp"
-                        className=""
-                      />
-                      <Button>Add</Button>
-                    </div>
-                  </div> */}
-                  <WishlistSearchbox />
+                  <WishlistSearchbox wishlistId={wishlistView.wishlist_id} />
                   <DataTable
                     columns={columns}
                     data={wishlistView.items.map((item) => {
