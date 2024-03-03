@@ -60,6 +60,7 @@ import WishlistSearchbox from '@/components/WishlistSearchbox';
 import { WishlistCard } from '@/stores/wishlistStore';
 import { Item } from '@radix-ui/react-dropdown-menu';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -90,12 +91,11 @@ const CardPreview = ({
             <Image
               alt={card.card_name}
               src={card.cheapest_price_doc.image}
-              className="rounded-lg h-auto"
+              className="rounded-lg h-auto transition-all"
               width={200}
               height={200}
             />
             <div className="p-3" />
-            {/* <p className="text-md font-bold">{card.cheapest_price_doc.name}</p> */}
 
             <Button
               variant="default"
@@ -114,11 +114,6 @@ const CardPreview = ({
                 }).format(card.cheapest_price_doc.price)}
               </p>
             </Button>
-            {/* <Button variant="ghost" className="w-[200px] text-sm tracking-tight" onClick={() => {
-              console.log("open modal")
-            }}>
-              Change settings
-            </Button> */}
           </div>
         ) : (
           <div>
@@ -210,7 +205,6 @@ function getColumns(
         </Button>
       ),
       cell: ({ row }) => {
-        // Access the nested property using dot notation
         const price = parseFloat(
           row.original.cheapest_price_doc.price.toFixed(2)
         );
@@ -234,7 +228,6 @@ function getColumns(
               <DialogHeader>
                 <DialogTitle>Edit card</DialogTitle>
                 <DialogDescription className="text-pink-500">
-                  {/* Adjust preferences for this card and save when you're done. */}
                   This feature is in development
                 </DialogDescription>
               </DialogHeader>
@@ -341,6 +334,8 @@ const WishlistId: NextPage<Props> = () => {
   const [loading, setLoading] = useState(true);
   const [editName, setEditName] = useState('');
   const [edit, setEdit] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false); // controls refresh icon rotation
+
   const columns: ColumnDef<WishlistCard>[] = getColumns(
     deleteWishlistItem,
     getWebsiteNameByCode
@@ -375,7 +370,17 @@ const WishlistId: NextPage<Props> = () => {
 
     setEdit(true);
   };
-
+  const fetchWishlistData = async (wishlistId: number) => {
+    setIsRefreshing(true); // Start rotation
+    try {
+      await fetchWishlistView(wishlistId);
+    } catch (error) {
+      console.error('Error refreshing wishlist data:', error);
+    } finally {
+      setIsRefreshing(false); // Stop rotation
+      toast.success('Wishlist refreshed');
+    }
+  };
   useEffect(() => {
     const fetchInitialData = async () => {
       if (!isAuthenticated) {
@@ -416,7 +421,7 @@ const WishlistId: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-6xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid items-start gap-6">
+            <div className="container grid items-center mx-auto gap-6">
               <div className="space-y-2 text-left">
                 <div className="flex flex-row gap-4">
                   {edit ? (
@@ -465,16 +470,15 @@ const WishlistId: NextPage<Props> = () => {
                 <div className="w-full">
                   <div className="flex flex-row justify-between items-center">
                     <div className="hidden sm:flex sm:flex-row gap-4 items-center">
-                      {/* <Button variant="outline" className="w-35">
-                        Settings
-                      </Button> */}
-                      {/* button for toggling bulk edit */}
                       <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
                       <Button variant="outline" className="w-35">
                         Bulk edit
                       </Button>
                       </Link>
-                      <RefreshCcw size={16} />
+                      <RefreshCcw size={16} 
+                        className={`hover:cursor-pointer ${isRefreshing ? 'animate-spin' : ''}`}
+                        onClick={() => fetchWishlistData(wishlistView.wishlist_id)}
+                      />
                       <div className="p-2" />
                     </div>
                     <WishlistSearchbox
