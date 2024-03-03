@@ -56,7 +56,7 @@ import {
 } from '@/components/ui/select';
 import { useState } from 'react';
 import Image from 'next/image';
-
+import WishlistSearchbox from '@/components/WishlistSearchbox';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -185,7 +185,6 @@ export const columns: ColumnDef<Card>[] = [
                   Email Notifications
                 </Label>
                 <Switch id="email-notifications" />
-
               </div>
               {/* if email notifications enabled */}
               <div className="flex flex-row justify-between items-center">
@@ -200,12 +199,13 @@ export const columns: ColumnDef<Card>[] = [
                   step={0.01}
                   placeholder="Enter target price"
                   className="w-[180px] text-left"
-
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" className="bg-zinc-800">Save changes</Button>
+              <Button type="submit" className="bg-zinc-800">
+                Save changes
+              </Button>
             </DialogFooter>
           </DialogContent>
           <DropdownMenu>
@@ -243,18 +243,24 @@ const CardPreview = ({ card }: { card: Card | null }) => {
       <div className="flex-1 text-sm text-muted-foreground text-left">
         {card ? (
           <div className="">
-            <Image alt={card.name} src={card.image} className="rounded-lg" width={200} height={200} />
+            <Image
+              alt={card.name}
+              src={card.image}
+              className="rounded-lg"
+              width={200}
+              height={200}
+            />
             <div className="p-3">
-            <p className="text-md font-bold">{card.name}</p>
-            <p className="text-zinc-400">{card.website}</p>
-            <p className="font-bold">{card.condition}</p>
-            <p className="text-lg font-bold">
-              {new Intl.NumberFormat('en-CA', {
-                style: 'currency',
-                currency: 'CAD'
-              }).format(card.price)}
-            </p>
-          </div>
+              <p className="text-md font-bold">{card.name}</p>
+              <p className="text-zinc-400">{card.website}</p>
+              <p className="font-bold">{card.condition}</p>
+              <p className="text-lg font-bold">
+                {new Intl.NumberFormat('en-CA', {
+                  style: 'currency',
+                  currency: 'CAD'
+                }).format(card.price)}
+              </p>
+            </div>
           </div>
         ) : (
           <p>No card selected</p>
@@ -291,7 +297,8 @@ const WishlistId: NextPage<Props> = () => {
         condition: 'LP',
         price: 55.45,
         link: '',
-        image: 'https://cdn.shopify.com/s/files/1/0533/4912/2222/products/ff188554-0e12-5639-93a1-70698148b309_99746e05-e355-4b11-94a4-f341b63764db.jpg?v=1656439738',
+        image:
+          'https://cdn.shopify.com/s/files/1/0533/4912/2222/products/ff188554-0e12-5639-93a1-70698148b309_99746e05-e355-4b11-94a4-f341b63764db.jpg?v=1656439738',
         website: 'Gauntlet',
         email_notifications: true
       }
@@ -307,9 +314,7 @@ const WishlistId: NextPage<Props> = () => {
       }
 
       try {
-        if (wishlist)
-        fetchWishlistView(Number(wishlist));
-
+        if (wishlist) fetchWishlistView(Number(wishlist));
       } catch (error) {
         console.error('Error fetching user data:', error);
       } finally {
@@ -348,6 +353,17 @@ const WishlistId: NextPage<Props> = () => {
                   <CardPreview card={hoveredCard} />
                 </div>
                 <div className="flex-1">
+                  {/* <div className="flex flex-col gap-4 items-center py-4">
+                    <div className="flex flex-row gap-4 w-full">
+                      <Input
+                        placeholder="Add cards..."
+                        value="temp"
+                        className=""
+                      />
+                      <Button>Add</Button>
+                    </div>
+                  </div> */}
+                  <WishlistSearchbox />
                   <DataTable
                     columns={columns}
                     data={wishlistView.items.map((item) => {

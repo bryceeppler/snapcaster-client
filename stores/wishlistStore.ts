@@ -32,20 +32,16 @@ type PriceEntry = {
 type WishlistState = {
     wishlists: any[];
     wishlistView: WishlistView;
+    addCardInput: string;
+    setAddCardInput: (input: string) => void;
+    addCardToWishlist: (id: number, cardName: string) => void;
     fetchWishlists: () => void;
     fetchWishlistView: (id: number) => void;
     createWishlist: (name: string) => void;
     deleteWishlist: (id: number) => void;
     updateWishlist: (id: number, name: string) => void;
 };
-// const response = await axiosInstance.post(
-//     `${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`,
-//     {
-//       cardNames: filteredCardNames,
-//       websites: websiteCodes,
-//       worstCondition: 'nm'
-//     }
-//   );
+
 const useWishlistStore = create<WishlistState>((set, get) => ({
     wishlists: [],
     wishlistView: {
@@ -55,6 +51,19 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
         created_at: '',
         item_count: 0,
         items: []
+    },
+    addCardInput: '',
+    setAddCardInput: (input: string) => {
+        set({ addCardInput: input });
+    },
+    addCardToWishlist: async (id: number, cardName: string) => {
+        try {
+            const response = await axiosInstance.post(`${process.env.NEXT_PUBLIC_WISHLIST_URL}/add/${id}`, { cardName });
+            toast.success('Card added to wishlist');
+            get().fetchWishlistView(id);
+        } catch (error) {
+            console.error(error);
+        }
     },
     fetchWishlists: async () => {
         try {
