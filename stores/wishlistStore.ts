@@ -98,9 +98,9 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
         `${process.env.NEXT_PUBLIC_WISHLIST_URL}/view/${id}`
       );
       set({ wishlistView: response.data });
-      console.log(response.data);
     } catch (error) {
       console.error(error);
+        toast.error('Failed to fetch updated wishlist view');
     }
   },
   createWishlist: async (name: string) => {
@@ -132,9 +132,14 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
         `${process.env.NEXT_PUBLIC_WISHLIST_URL}/update/${id}`,
         { name }
       );
-      toast.success('Wishlist updated');
-      get().fetchWishlists();
+      if (response.status === 200) {
+        toast.success('Wishlist updated');
+        await get().fetchWishlistView(id); // Make sure to await this fetch call
+      } else {
+        toast.error('Wishlist update was not successful');
+      }
     } catch (error) {
+      toast.error('Failed to update wishlist');
       console.error(error);
     }
   }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/en';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, Check, Edit, MoreHorizontal, X } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -139,8 +139,9 @@ export const columns: ColumnDef<Card>[] = [
           <DialogContent className="sm:max-w-xl">
             <DialogHeader>
               <DialogTitle>Edit card</DialogTitle>
-              <DialogDescription>
-                Adjust preferences for this card and save when you're done.
+              <DialogDescription className="text-pink-500">
+                {/* Adjust preferences for this card and save when you're done. */}
+                This feature is in development
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4">
@@ -149,7 +150,10 @@ export const columns: ColumnDef<Card>[] = [
                 <Label htmlFor="name" className="text-left">
                   Minimum Condition
                 </Label>
-                <Select>
+                <Select
+                  // disabled
+                  disabled
+                >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Condition" />
                   </SelectTrigger>
@@ -169,7 +173,7 @@ export const columns: ColumnDef<Card>[] = [
                 <Label htmlFor="email-notifications" className="text-left">
                   Email Notifications
                 </Label>
-                <Switch id="email-notifications" />
+                <Switch id="email-notifications" disabled />
               </div>
               <div className="flex flex-row justify-between items-center">
                 <Label htmlFor="target-price" className="text-left">
@@ -182,11 +186,12 @@ export const columns: ColumnDef<Card>[] = [
                   step={0.01}
                   placeholder="Enter target price"
                   className="w-[180px] text-left"
+                  disabled
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" className="bg-zinc-800">
+              <Button type="submit" disabled className="bg-zinc-800">
                 Save changes
               </Button>
             </DialogFooter>
@@ -258,10 +263,40 @@ const WishlistId: NextPage<Props> = () => {
   const router = useRouter();
   const { wishlist } = router.query as { wishlist: string };
   const { isAuthenticated } = useAuthStore();
-  const { wishlistView, fetchWishlistView } = useWishlistStore();
+  const { wishlistView, fetchWishlistView, updateWishlist } =
+    useWishlistStore();
   const [loading, setLoading] = useState(true);
+  const [editName, setEditName] = useState('');
+  const [edit, setEdit] = useState(false);
+  const saveChanges = (wishlist_id: number) => {
+    try {
+      updateWishlist(wishlist_id, editName);
 
+      exitEditMode();
+    } catch (error) {
+      console.error('Failed to save changes:', error);
+    }
+  };
+  const toggleEditMode = () => {
+    if (edit) {
+      exitEditMode();
+    } else {
+      enterEnterMode();
+    }
+  };
+  const handleEditNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditName(e.target.value);
+  };
   const [hoveredCard, setHoveredCard] = useState<Card | null>(null);
+  const exitEditMode = () => {
+    setEditName('');
+    setEdit(false);
+  };
+  const enterEnterMode = () => {
+    setEditName(wishlistView.name);
+
+    setEdit(true);
+  };
   useEffect(() => {
     const fetchInitialData = async () => {
       if (!isAuthenticated) {
@@ -281,6 +316,12 @@ const WishlistId: NextPage<Props> = () => {
     fetchInitialData();
   }, [isAuthenticated, wishlist]);
 
+  useEffect(() => {
+    if (wishlistView.items.length > 0 && !hoveredCard) {
+      setHoveredCard(wishlistView.items[0].cheapest_price_doc);
+    }
+  }, [wishlistView]);
+
   if (loading) {
     return <LoadingPage />;
   }
@@ -296,9 +337,39 @@ const WishlistId: NextPage<Props> = () => {
           <section className="w-full py-6 md:py-12">
             <div className="container grid md:px-6 items-start gap-6">
               <div className="space-y-2 text-left">
-                <h2 className="text-3xl font-bold tracking-tighter">
-                  {wishlistView.name}
-                </h2>
+                <div className="flex flex-row gap-4">
+                  {edit ? (
+                    <div className="flex flex-row gap-4 items-center">
+                      <Input
+                        value={editName}
+                        onChange={handleEditNameChange}
+                        autoFocus
+                        className="max-w-md"
+                      />
+                      <Check
+                        size={16}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          saveChanges(wishlistView.wishlist_id);
+                        }}
+                      />
+                      <X size={16} onClick={exitEditMode} />
+                    </div>
+                  ) : (
+                    <div className="flex flex-row gap-4 items-center">
+                      <h2 className="text-3xl font-bold tracking-tighter">
+                        {wishlistView.name}
+                      </h2>
+                      <Edit
+                        size={16}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleEditMode();
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
                 <p className="text-gray-500 dark:text-gray-400">
                   Created {dayjs(wishlistView.created_at).fromNow()}
                 </p>
