@@ -14,7 +14,7 @@ type PriceEntry = {
   timestamp: string;
   foil: boolean;
 };
-type WishlistCard = {
+export type WishlistCard = {
   wishlist_item_id: number;
   card_name: string;
   oracle_id: string;
@@ -32,6 +32,7 @@ type WishlistState = {
   wishlists: any[];
   wishlistView: WishlistView;
   addCardInput: string;
+  deleteWishlistItem: (wishlist_item_id:number) => void;
   setAddCardInput: (input: string) => void;
   addCardToWishlist: (id: number, cardName: string) => void;
   fetchWishlists: () => void;
@@ -79,6 +80,17 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
       } else {
         toast.error('An unexpected error occurred');
       }
+      console.error(error);
+    }
+  },
+  deleteWishlistItem: async (wishlistItemId: number) => {
+    try {
+      const response = await axiosInstance.delete(
+        `${process.env.NEXT_PUBLIC_WISHLIST_URL}/wishlist-item/delete/${wishlistItemId}`
+      );
+      toast.success('Card removed from wishlist');
+      get().fetchWishlistView(get().wishlistView.wishlist_id);
+    } catch (error) {
       console.error(error);
     }
   },

@@ -20,17 +20,20 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Button } from './button';
+import { WishlistCard } from '@/stores/wishlistStore';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   setHoveredCard?: React.Dispatch<React.SetStateAction<TData | null>>;
+  deleteRow?: (wishlistItemId: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  setHoveredCard
+  setHoveredCard,
+  deleteRow
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -80,6 +83,15 @@ export function DataTable<TData, TValue>({
               onClick={() => {
                 table
                   .getFilteredSelectedRowModel()
+                  .rows.forEach((row) => {
+                    if (deleteRow) {
+                      deleteRow((row.original as WishlistCard).wishlist_item_id);
+                    }
+                  }
+                );
+                // clear selection
+                table
+                  .getFilteredRowModel()
                   .rows.forEach((row) => row.toggleSelected(false));
               }}
             >

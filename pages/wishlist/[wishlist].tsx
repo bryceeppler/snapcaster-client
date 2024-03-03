@@ -48,6 +48,8 @@ import {
 import { useState } from 'react';
 import Image from 'next/image';
 import WishlistSearchbox from '@/components/WishlistSearchbox';
+import { WishlistCard } from '@/stores/wishlistStore';
+import { Item } from '@radix-ui/react-dropdown-menu';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -63,190 +65,29 @@ export type Card = {
   website: string;
 };
 
-export const columns: ColumnDef<Card>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="px-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    accessorKey: 'name',
-    enableSorting: true
-  },
-  {
-    header: 'Condition',
-    accessorKey: 'condition'
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="px-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue('price'));
-      const formatted = new Intl.NumberFormat('en-CA', {
-        style: 'currency',
-        currency: 'CAD'
-      }).format(price);
-      return <div className="text-left font-medium">{formatted}</div>;
-    },
-    accessorKey: 'price',
-    enableSorting: true
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => {
-      const payment = row.original;
-      return (
-        <Dialog>
-          <DialogContent className="sm:max-w-xl">
-            <DialogHeader>
-              <DialogTitle>Edit card</DialogTitle>
-              <DialogDescription className="text-pink-500">
-                {/* Adjust preferences for this card and save when you're done. */}
-                This feature is in development
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col gap-4">
-              <p className="font-bold">Dockside Extortionist</p>
-              <div className="flex flex-row justify-between items-center">
-                <Label htmlFor="name" className="text-left">
-                  Minimum Condition
-                </Label>
-                <Select
-                  // disabled
-                  disabled
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Condition" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Condition</SelectLabel>
-                      <SelectItem value="NM">NM</SelectItem>
-                      <SelectItem value="LP">LP</SelectItem>
-                      <SelectItem value="MP">MP</SelectItem>
-                      <SelectItem value="HP">HP</SelectItem>
-                      <SelectItem value="DMG">DMG</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-row justify-between items-center">
-                <Label htmlFor="email-notifications" className="text-left">
-                  Email Notifications
-                </Label>
-                <Switch id="email-notifications" disabled />
-              </div>
-              <div className="flex flex-row justify-between items-center">
-                <Label htmlFor="target-price" className="text-left">
-                  Target Price
-                </Label>
-                <Input
-                  id="target-price"
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  placeholder="Enter target price"
-                  className="w-[180px] text-left"
-                  disabled
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit" disabled className="bg-zinc-800">
-                Save changes
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => {
-                  window.open(payment.link, '_blank');
-                }}
-              >
-                Open link in new tab
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DialogTrigger asChild>
-                <DropdownMenuItem>Email Settings</DropdownMenuItem>
-              </DialogTrigger>
-              <DropdownMenuItem>Delete</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </Dialog>
-      );
-    }
-  }
-];
 
-const CardPreview = ({ card }: { card: Card | null }) => {
+const CardPreview = ({ card }: { card: WishlistCard | null }) => {
   return (
     <div className="flex flex-col items-center gap-4 py-4">
       <div className="flex-1 text-sm text-muted-foreground text-left">
         {card ? (
           <div className="">
             <Image
-              alt={card.name}
-              src={card.image}
+              alt={card.card_name}
+              src={card.cheapest_price_doc.image}
               className="rounded-lg"
               width={200}
               height={200}
             />
             <div className="p-3">
-              <p className="text-md font-bold">{card.name}</p>
-              <p className="text-zinc-400">{card.website}</p>
-              <p className="font-bold">{card.condition}</p>
+              <p className="text-md font-bold">{card.cheapest_price_doc.name}</p>
+              <p className="text-zinc-400">{card.cheapest_price_doc.website}</p>
+              <p className="font-bold">{card.cheapest_price_doc.condition}</p>
               <p className="text-lg font-bold">
                 {new Intl.NumberFormat('en-CA', {
                   style: 'currency',
                   currency: 'CAD'
-                }).format(card.price)}
+                }).format(card.cheapest_price_doc.price)}
               </p>
             </div>
           </div>
@@ -258,16 +99,187 @@ const CardPreview = ({ card }: { card: Card | null }) => {
   );
 };
 
+function getColumns(deleteWishlistItem: (id: number) => void): ColumnDef<WishlistCard>[] {
+  return [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false
+    },
+    {
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            className="px-0"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      accessorKey: 'card_name',
+      enableSorting: true
+    },
+    {
+      header: 'Condition',
+      accessorKey: 'cheapest_price_doc.condition',
+    },
+    {
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="px-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Price
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        // Access the nested property using dot notation
+        const price = parseFloat(row.original.cheapest_price_doc.price.toFixed(2));
+        console.log(row)
+        const formatted = new Intl.NumberFormat('en-CA', {
+          style: 'currency',
+          currency: 'CAD',
+        }).format(price);
+        return <div className="text-left font-medium">{formatted}</div>;
+      },
+      accessorKey: 'cheapest_price_doc.price',
+      enableSorting: true,
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const wishlistCard = row.original;
+        return (
+          <Dialog>
+            <DialogContent className="sm:max-w-xl">
+              <DialogHeader>
+                <DialogTitle>Edit card</DialogTitle>
+                <DialogDescription className="text-pink-500">
+                  {/* Adjust preferences for this card and save when you're done. */}
+                  This feature is in development
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col gap-4">
+                <p className="font-bold">Dockside Extortionist</p>
+                <div className="flex flex-row justify-between items-center">
+                  <Label htmlFor="name" className="text-left">
+                    Minimum Condition
+                  </Label>
+                  <Select
+                    // disabled
+                    disabled
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Condition" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Condition</SelectLabel>
+                        <SelectItem value="NM">NM</SelectItem>
+                        <SelectItem value="LP">LP</SelectItem>
+                        <SelectItem value="MP">MP</SelectItem>
+                        <SelectItem value="HP">HP</SelectItem>
+                        <SelectItem value="DMG">DMG</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-row justify-between items-center">
+                  <Label htmlFor="email-notifications" className="text-left">
+                    Email Notifications
+                  </Label>
+                  <Switch id="email-notifications" disabled />
+                </div>
+                <div className="flex flex-row justify-between items-center">
+                  <Label htmlFor="target-price" className="text-left">
+                    Target Price
+                  </Label>
+                  <Input
+                    id="target-price"
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    placeholder="Enter target price"
+                    className="w-[180px] text-left"
+                    disabled
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="submit" disabled className="bg-zinc-800">
+                  Save changes
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={() => {
+                    window.open(wishlistCard.cheapest_price_doc.link, '_blank');
+                  }}
+                >
+                  Open link in new tab
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DialogTrigger asChild>
+                  <DropdownMenuItem>Email Settings</DropdownMenuItem>
+                </DialogTrigger>
+                <DropdownMenuItem
+                  onClick={() => {
+                    deleteWishlistItem(wishlistCard.wishlist_item_id);
+  
+                  }}
+                >Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </Dialog>
+        );
+      }
+    }
+  ];
+}
+
 type Props = {};
 const WishlistId: NextPage<Props> = () => {
   const router = useRouter();
   const { wishlist } = router.query as { wishlist: string };
   const { isAuthenticated } = useAuthStore();
-  const { wishlistView, fetchWishlistView, updateWishlist } =
+  const { wishlistView, fetchWishlistView, updateWishlist, deleteWishlistItem } =
     useWishlistStore();
   const [loading, setLoading] = useState(true);
   const [editName, setEditName] = useState('');
   const [edit, setEdit] = useState(false);
+  const columns: ColumnDef<WishlistCard>[] = getColumns(deleteWishlistItem);
+
   const saveChanges = (wishlist_id: number) => {
     try {
       updateWishlist(wishlist_id, editName);
@@ -287,7 +299,7 @@ const WishlistId: NextPage<Props> = () => {
   const handleEditNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditName(e.target.value);
   };
-  const [hoveredCard, setHoveredCard] = useState<Card | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<WishlistCard | null>(null);
   const exitEditMode = () => {
     setEditName('');
     setEdit(false);
@@ -297,6 +309,7 @@ const WishlistId: NextPage<Props> = () => {
 
     setEdit(true);
   };
+
   useEffect(() => {
     const fetchInitialData = async () => {
       if (!isAuthenticated) {
@@ -318,7 +331,7 @@ const WishlistId: NextPage<Props> = () => {
 
   useEffect(() => {
     if (wishlistView.items.length > 0 && !hoveredCard) {
-      setHoveredCard(wishlistView.items[0].cheapest_price_doc);
+      setHoveredCard(wishlistView.items[0]);
     }
   }, [wishlistView]);
 
@@ -382,16 +395,8 @@ const WishlistId: NextPage<Props> = () => {
                   <WishlistSearchbox wishlistId={wishlistView.wishlist_id} />
                   <DataTable
                     columns={columns}
-                    data={wishlistView.items.map((item) => {
-                      return {
-                        name: item.card_name,
-                        condition: item.cheapest_price_doc.condition,
-                        price: item.cheapest_price_doc.price,
-                        link: item.cheapest_price_doc.link,
-                        image: item.cheapest_price_doc.image,
-                        website: item.cheapest_price_doc.website
-                      };
-                    })}
+                    deleteRow={deleteWishlistItem}
+                    data={wishlistView.items}
                     setHoveredCard={setHoveredCard}
                   />
                 </div>
