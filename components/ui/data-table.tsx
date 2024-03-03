@@ -60,9 +60,9 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <div className="flex flex-row justify-between items-center gap-4 py-2">
-        <div className="flex-1 text-sm text-muted-foreground text-left">
+    <div className="w-full">
+      <div className="flex flex-row justify-between items-center gap-4 py-2 w-full">
+        <div className="flex text-sm text-muted-foreground text-left">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>

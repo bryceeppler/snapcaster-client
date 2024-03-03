@@ -474,7 +474,7 @@ type State = {
   setSingleSearchInput: (singleSearchInput: string) => void;
   singleSearchQuery: string;
   setSingleSearchQuery: (singleSearchQuery: string) => void;
-
+  getWebsiteNameByCode: (code: string) => string;
   multiSearchInput: string;
   multiSearchQuery: string;
   multiSearchSelectedWebsites: string[];
@@ -526,7 +526,9 @@ type State = {
 export const useStore = create<State>((set, get) => ({
   singleSearchStarted: false,
   singleSearchPriceList: undefined,
-
+  getWebsiteNameByCode: (code: string) => {
+    return get().websites.find((w) => w.code === code)?.name || '';
+  },
   sortMultiSearchVariants: (card, orderBy) => {
     const filteredMultiSearchResults = get().filteredMultiSearchResults;
     const cardIndex = filteredMultiSearchResults.findIndex(

@@ -30,6 +30,12 @@ import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { Edit } from 'lucide-react';
 import { toast } from 'sonner';
+import dayjs from 'dayjs';
+
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/en';
+import LoadingSpinner from '@/components/LoadingSpinner';
+dayjs.extend(relativeTime);
 type Props = {};
 
 const Wishlist: NextPage<Props> = () => {
@@ -121,9 +127,9 @@ const Wishlist: NextPage<Props> = () => {
     fetchUserWishlists();
   }, [isAuthenticated]);
 
-  if (loading) {
-    return <LoadingPage />;
-  }
+  // if (loading) {
+  //   return <LoadingPage />;
+  // }
 
   if (!isAuthenticated) {
     return <Signin />;
@@ -143,13 +149,18 @@ const Wishlist: NextPage<Props> = () => {
               </div>
 
               <div className="grid gap-4">
-                {wishlists.map((wishlist) => (
+                {loading && <LoadingSpinner classNameProps='w-full mt-7 mx-auto' />}
+                {wishlists && wishlists.length === 0 && !loading && (
+                  <p>No wishlists found. Create one to keep track of multiple cards.</p>
+                
+                )}
+                {wishlists && wishlists.map((wishlist) => (
                   <Link href={`/wishlist/${wishlist.id}`}>
                     <Card
                       key={wishlist.id}
                       className="hover:shadow-lg cursor-pointer transition-shadow duration-300 ease-in-out hover:border-zinc-500"
                     >
-                      <CardHeader className="flex-row justify-between items-center gap-4">
+                      <CardHeader className="flex flex-row justify-between items-center gap-4">
                         {editWishlistId === wishlist.id ? (
                           <Input
                             value={editName}
@@ -168,8 +179,12 @@ const Wishlist: NextPage<Props> = () => {
                         />
                       </CardHeader>
                       <CardContent>
-                        <CardDescription>
-                          {wishlist.item_count} cards
+                        <CardDescription
+                          className="text-zinc-400"
+                        >
+                                                    <p>{wishlist.item_count} cards</p>
+
+                          <p>Created {dayjs(wishlist.created_at).fromNow()}</p>
                         </CardDescription>
                       </CardContent>
                       {editWishlistId === wishlist.id && (
