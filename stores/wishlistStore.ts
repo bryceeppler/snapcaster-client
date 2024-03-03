@@ -19,7 +19,10 @@ export type WishlistCard = {
   quantity: number;
   card_name: string;
   oracle_id: string;
+  target_price: number;
+  minimum_condition: string;
   cheapest_price_doc: PriceEntry;
+  email_notifications: boolean;
 };
 type WishlistView = {
   wishlist_id: number;
@@ -31,7 +34,7 @@ type WishlistView = {
 };
 type WishlistState = {
   wishlists: any[];
-  wishlistView: WishlistView;
+   wishlistView: WishlistView;
   addCardInput: string;
   deleteWishlistItem: (wishlist_item_id:number) => void;
   setAddCardInput: (input: string) => void;
@@ -41,6 +44,7 @@ type WishlistState = {
   createWishlist: (name: string) => void;
   deleteWishlist: (id: number) => void;
   updateWishlist: (id: number, name: string) => void;
+  updateWishlistItem: (wishlistItemId: number, quantity: number, minimumCondition: string, targetPrice: number, emailNotifications: boolean) => void;
 };
 
 const useWishlistStore = create<WishlistState>((set, get) => ({
@@ -157,7 +161,22 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
       toast.error('Failed to update wishlist');
       console.error(error);
     }
+  },
+  updateWishlistItem: async (wishlistItemId: number, quantity: number, minimumCondition: string, targetPrice: number, emailNotifications: boolean) => {
+    
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_WISHLIST_URL}/wishlist-item/update/${wishlistItemId}`,
+        // only include the fields if they are not undefined
+        { quantity, minimum_condition: minimumCondition, target_price: targetPrice, email_notifications: emailNotifications }
+      );
+      toast.success('Wishlist item updated');
+      get().fetchWishlistView(get().wishlistView.wishlist_id);
+    } catch (error) {
+      console.error(error);
+    }
   }
+
 }));
 
 export default useWishlistStore;

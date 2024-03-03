@@ -135,7 +135,14 @@ const CardPreview = ({
 
 function getColumns(
   deleteWishlistItem: (wishlistItemId: number) => void,
-  getWebsiteNameByCode: (code: string) => string
+  getWebsiteNameByCode: (code: string) => string,
+  updateWishlistItem: (
+    wishlistItemId: number,
+    quantity: number,
+    minimumCondition: string,
+    targetPrice: number,
+    emailNotifications: boolean
+  ) => void
 ): ColumnDef<WishlistCard>[] {
   return [
     {
@@ -163,7 +170,6 @@ function getColumns(
     {
       header: 'Qty',
       accessorKey: 'quantity'
-
     },
     {
       header: ({ column }) => {
@@ -222,24 +228,54 @@ function getColumns(
       id: 'actions',
       cell: ({ row }) => {
         const wishlistCard = row.original;
+        const [newMinimumCondition, setNewMinimumCondition] = useState(row.original.minimum_condition);
+        const [newQuantity, setNewQuantity] = useState(row.original.quantity);
+        const handleSaveChanges = () => {
+          updateWishlistItem(
+            row.original.wishlist_item_id,
+            newQuantity,
+            newMinimumCondition,
+            row.original.target_price, // Use state-managed value if this is editable
+            row.original.email_notifications // Use state-managed value if this is editable
+          );
+        };
+  
         return (
           <Dialog>
             <DialogContent className="sm:max-w-xl">
               <DialogHeader>
-                <DialogTitle>Edit card</DialogTitle>
+                <DialogTitle>{wishlistCard.card_name}</DialogTitle>
                 <DialogDescription className="text-pink-500">
                   This feature is in development
                 </DialogDescription>
               </DialogHeader>
               <div className="flex flex-col gap-4">
-                <p className="font-bold">Dockside Extortionist</p>
                 <div className="flex flex-row justify-between items-center">
-                  <Label htmlFor="name" className="text-left">
+                  {/* Quantity */}
+                  <Label htmlFor="quantity" className="text-left">
+                    Quantity
+                  </Label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    min={0}
+                    step={1}
+                    defaultValue={row.original.quantity}
+                    className="w-[180px] text-left"
+                    onChange={(e) => {
+                      setNewQuantity(parseInt(e.target.value));
+                    }
+                    }
+                  />
+                </div>
+                <div className="flex flex-row justify-between items-center">
+                  <Label htmlFor="name" className="text-left"
+                  >
                     Minimum Condition
                   </Label>
                   <Select
-                    // disabled
-                    disabled
+                    defaultValue={row.original.minimum_condition}
+                    onValueChange={setNewMinimumCondition}
                   >
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Condition" />
@@ -278,9 +314,13 @@ function getColumns(
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" disabled className="bg-zinc-800">
-                  Save changes
-                </Button>
+              <Button
+                type="submit"
+                className="bg-zinc-800"
+                onClick={handleSaveChanges}
+              >
+                Save changes
+              </Button>
               </DialogFooter>
             </DialogContent>
             <DropdownMenu>
@@ -301,7 +341,7 @@ function getColumns(
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DialogTrigger asChild>
-                  <DropdownMenuItem>Email Settings</DropdownMenuItem>
+                  <DropdownMenuItem>Edit</DropdownMenuItem>
                 </DialogTrigger>
                 <DropdownMenuItem
                   onClick={() => {
@@ -328,7 +368,8 @@ const WishlistId: NextPage<Props> = () => {
     wishlistView,
     fetchWishlistView,
     updateWishlist,
-    deleteWishlistItem
+    deleteWishlistItem,
+    updateWishlistItem
   } = useWishlistStore();
   const { getWebsiteNameByCode } = useStore();
   const [loading, setLoading] = useState(true);
@@ -338,7 +379,8 @@ const WishlistId: NextPage<Props> = () => {
 
   const columns: ColumnDef<WishlistCard>[] = getColumns(
     deleteWishlistItem,
-    getWebsiteNameByCode
+    getWebsiteNameByCode,
+    updateWishlistItem
   );
 
   const saveChanges = (wishlist_id: number) => {
@@ -471,13 +513,18 @@ const WishlistId: NextPage<Props> = () => {
                   <div className="flex flex-row justify-between items-center">
                     <div className="hidden sm:flex sm:flex-row gap-4 items-center">
                       <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
-                      <Button variant="outline" className="w-35">
-                        Bulk edit
-                      </Button>
+                        <Button variant="outline" className="w-35">
+                          Bulk edit
+                        </Button>
                       </Link>
-                      <RefreshCcw size={16} 
-                        className={`hover:cursor-pointer ${isRefreshing ? 'animate-spin' : ''}`}
-                        onClick={() => fetchWishlistData(wishlistView.wishlist_id)}
+                      <RefreshCcw
+                        size={16}
+                        className={`hover:cursor-pointer ${
+                          isRefreshing ? 'animate-spin' : ''
+                        }`}
+                        onClick={() =>
+                          fetchWishlistData(wishlistView.wishlist_id)
+                        }
                       />
                       <div className="p-2" />
                     </div>
@@ -491,7 +538,7 @@ const WishlistId: NextPage<Props> = () => {
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10">
                         <p className="text-lg font-bold">No cards found</p>
                         <p className="text-sm">
-                          Add cards by search or bulk edit. 
+                          Add cards by search or bulk edit.
                         </p>
                       </div>
                       <div className="w-full h-16 bg-zinc-800 opacity-70 rounded-lg mt-4 justify-center flex items-center" />
@@ -499,7 +546,6 @@ const WishlistId: NextPage<Props> = () => {
                     </div>
                   ) : (
                     <DataTable
-                    
                       columns={columns}
                       deleteRow={deleteWishlistItem}
                       data={wishlistView.items}
