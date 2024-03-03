@@ -19,54 +19,29 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
 import { Button } from './button';
-import axiosInstance from '@/utils/axiosWrapper';
-import axios from 'axios';
+import { WishlistCard } from '@/stores/wishlistStore';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   setHoveredCard?: React.Dispatch<React.SetStateAction<TData | null>>;
+  deleteRow?: (wishlistItemId: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  setHoveredCard
+  setHoveredCard,
+  deleteRow
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<string[]>([]);
-const [searchTerm, setSearchTerm] = React.useState('');
 
   const [rowSelection, setRowSelection] = React.useState({});
-  const debounce = (func: Function, wait: number) => {
-    let timeout: NodeJS.Timeout;
-    return function executedFunction(...args: any) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  };
-  
-  // Fetch autocomplete suggestions (mocked as an example)
-  const fetchAutocompleteSuggestions = async (searchTerm: string) => {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL}/cards?query=${searchTerm}`);
-    setAutocompleteSuggestions(response.data.data);
-  };
-  
-  const debouncedFetchAutocompleteSuggestions = debounce(fetchAutocompleteSuggestions, 300);
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    debouncedFetchAutocompleteSuggestions(value);
-  };
+
   const table = useReactTable({
     data,
     columns,
@@ -86,27 +61,7 @@ const [searchTerm, setSearchTerm] = React.useState('');
 
   return (
     <div>
-      {' '}
-      <div className="flex flex-col gap-4 items-center py-4">
-  <div className="flex flex-row gap-4 w-full">
-    <Input
-      placeholder="Add cards..."
-      value={searchTerm}
-      onChange={handleSearchChange}
-      className=""
-    />
-    <Button>Add</Button>
-  </div>
-  <ul className="list-disc">
-    {autocompleteSuggestions.map((suggestion, index) => (
-      <li key={index} className="cursor-pointer">
-        {suggestion}
-      </li>
-    ))}
-  </ul>
-</div>
       <div className="flex flex-row justify-between items-center gap-4 py-2">
-        {/* if any cards are selected, show delete all button */}
         <div className="flex-1 text-sm text-muted-foreground text-left">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -115,14 +70,28 @@ const [searchTerm, setSearchTerm] = React.useState('');
           <div className="flex items-center justify-center gap-4">
             <Button
               variant="default"
-              onClick={() => table.getFilteredRowModel().rows.forEach((row) => row.toggleSelected(false))}
-              
-            >Clear selection</Button>
+              onClick={() =>
+                table
+                  .getFilteredRowModel()
+                  .rows.forEach((row) => row.toggleSelected(false))
+              }
+            >
+              Clear selection
+            </Button>
             <Button
               variant="destructive"
               onClick={() => {
                 table
                   .getFilteredSelectedRowModel()
+                  .rows.forEach((row) => {
+                    if (deleteRow) {
+                      deleteRow((row.original as WishlistCard).wishlist_item_id);
+                    }
+                  }
+                );
+                // clear selection
+                table
+                  .getFilteredRowModel()
                   .rows.forEach((row) => row.toggleSelected(false));
               }}
             >
@@ -182,7 +151,6 @@ const [searchTerm, setSearchTerm] = React.useState('');
                 </TableCell>
               </TableRow>
             )}
-            {/* add card row */}
           </TableBody>
         </Table>
       </div>

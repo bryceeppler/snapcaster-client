@@ -29,11 +29,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { Edit } from 'lucide-react';
-import { toast} from "sonner";
+import { toast } from 'sonner';
 type Props = {};
 
 const Wishlist: NextPage<Props> = () => {
-  const { wishlists, fetchWishlists, createWishlist, updateWishlist, deleteWishlist } = useWishlistStore();
+  const {
+    wishlists,
+    fetchWishlists,
+    createWishlist,
+    updateWishlist,
+    deleteWishlist
+  } = useWishlistStore();
   const { isAuthenticated } = useAuthStore();
   const [loading, setLoading] = useState(true);
   // can be null or number
@@ -47,11 +53,11 @@ const Wishlist: NextPage<Props> = () => {
   const saveChanges = (wishlist_id: number) => {
     try {
       updateWishlist(wishlist_id, editName);
-      
+      fetchWishlists();
       exitEditMode();
     } catch (error) {
-      console.error("Failed to save changes:", error);
-      toast.error("Failed to save changes");
+      console.error('Failed to save changes:', error);
+      toast.error('Failed to save changes');
     }
   };
 
@@ -59,22 +65,21 @@ const Wishlist: NextPage<Props> = () => {
     try {
       deleteWishlist(id);
     } catch (error) {
-      console.error("Failed to delete wishlist:", error);
-      toast.error("Failed to delete wishlist");
+      console.error('Failed to delete wishlist:', error);
+      toast.error('Failed to delete wishlist');
     }
-  }
-
+  };
 
   const onSubmit = async (data: { name: string }) => {
     createWishlist(data.name);
     setIsDialogOpen(false);
   };
   const enterEditMode = (id: number) => {
-  const wishlistToEdit = wishlists.find(wishlist => wishlist.id === id);
-  if (wishlistToEdit) {
-    setEditName(wishlistToEdit.name);
-  }
-  setEditWishlistId(id);
+    const wishlistToEdit = wishlists.find((wishlist) => wishlist.id === id);
+    if (wishlistToEdit) {
+      setEditName(wishlistToEdit.name);
+    }
+    setEditWishlistId(id);
   };
 
   const toggleEditMode = (id: number) => {
@@ -83,7 +88,7 @@ const Wishlist: NextPage<Props> = () => {
     } else {
       enterEditMode(id);
     }
-  }
+  };
 
   const exitEditMode = () => {
     setEditWishlistId(null);
@@ -140,7 +145,8 @@ const Wishlist: NextPage<Props> = () => {
               <div className="grid gap-4">
                 {wishlists.map((wishlist) => (
                   <Link href={`/wishlist/${wishlist.id}`}>
-                    <Card key={wishlist.id}
+                    <Card
+                      key={wishlist.id}
                       className="hover:shadow-lg cursor-pointer transition-shadow duration-300 ease-in-out hover:border-zinc-500"
                     >
                       <CardHeader className="flex-row justify-between items-center gap-4">
@@ -173,21 +179,23 @@ const Wishlist: NextPage<Props> = () => {
                           }}
                           className="flex flex-row justify-between"
                         >
-                          <Button variant="destructive" onClick={() => handleDeleteWishlist(wishlist.id)}>
+                          <Button
+                            variant="destructive"
+                            onClick={() => handleDeleteWishlist(wishlist.id)}
+                          >
                             Delete
                           </Button>
                           <div className="flex gap-2">
-                                        <Button variant="default" onClick={exitEditMode}>
-                            Cancel
-                          </Button>
-                          <Button
-                            variant="default"
-                            onClick={() => saveChanges(wishlist.id)}
-                          >
-                            Save
-                          </Button>
+                            <Button variant="default" onClick={exitEditMode}>
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="default"
+                              onClick={() => saveChanges(wishlist.id)}
+                            >
+                              Save
+                            </Button>
                           </div>
-            
                         </CardFooter>
                       )}
                     </Card>
