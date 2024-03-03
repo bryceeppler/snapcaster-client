@@ -9,6 +9,11 @@ type Props = {};
 const Updates: NextPage<Props> = () => {
   const updates = [
     {
+      title: "New Feature: Wishlists",
+      date: "Mar 3, 2024",
+      description: "You can now create and manage wishlists. Wishlist email notifications are coming soon."
+    },
+    {
       title: "Terms and Conditions Update",
       date: "Feb 30, 2024",
       description:"If you have any questions please reach out at epplerdev@gmail.com."
