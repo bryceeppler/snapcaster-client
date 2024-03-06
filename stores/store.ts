@@ -429,6 +429,18 @@ const websites: Website[] = [
     code:"freegame",
     image: '',
     shopify: false
+  },
+  {
+    name:"J&J Cards",
+    code:"jjcards",
+    image: '',
+    shopify: false
+  },
+  {
+    name:"MTG North",
+    code:"mtgnorth",
+    image: '',
+    shopify: false
   }
 
 ];
