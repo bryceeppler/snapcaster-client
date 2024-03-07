@@ -441,7 +441,26 @@ const websites: Website[] = [
     code:"mtgnorth",
     image: '',
     shopify: false
+  },
+  {
+    name:"Luke's Cards",
+    code:"lukescards",
+    image: '',
+    shopify: true
+  },
+  {
+    name:"Dark Crystal Cards",
+    code:"darkcrystal",
+    image: '',
+    shopify: true
+  },
+  {
+    name: "Bootown's Games",
+    code: "bootown",
+    image: '',
+    shopify: true
   }
+  
 
 ];
 
