@@ -1,6 +1,6 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import UpdateFeed from '@/components/UpdateFeed';
+import BlogFeed from '@/components/BlogFeed';
 
 import MainLayout from '@/components/MainLayout';
 type Props = {};
@@ -173,7 +173,7 @@ const Updates: NextPage<Props> = () => {
       <UpdatesHead />
       <MainLayout>
         <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
-          <UpdateFeed updates={updates} />
+          <BlogFeed updates={updates} />
         </div>
       </MainLayout>
     </>
