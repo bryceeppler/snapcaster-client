@@ -94,7 +94,7 @@ const Profile: NextPage = () => {
       <MainLayout>
         <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="w-full grid gap-6">
+            <div className="grid w-full gap-6">
               {hasActiveSubscription && (
                 <>
                   <UserSettings
@@ -175,42 +175,42 @@ const UserSettings = ({
   control: any;
 }) => {
   return (
-    <div className="flex flex-col outlined-container text-left p-4  max-w-full overflow-hidden">
+    <div className="outlined-container flex max-w-full flex-col overflow-hidden  p-4 text-left">
       <h3 className="text-lg font-bold">Settings</h3>
       <div className="p-2" />
       {/* user info container */}
       <div className="flex flex-col gap-2 p-3">
         {/* email container */}
         {emailVerified && (
-          <div className="flex flex-row gap-2 text-xs items-center">
-            <div className="aspect-square w-2 h-2 bg-green-400 rounded-full"></div>
+          <div className="flex flex-row items-center gap-2 text-xs">
+            <div className="aspect-square h-2 w-2 rounded-full bg-green-400"></div>
             <p className="text-sm text-zinc-500">Email verified</p>
           </div>
         )}
         {!emailVerified && (
-          <div className="flex flex-row gap-2 text-xs items-center">
-            <div className="aspect-square w-2 h-2 bg-red-400 rounded-full"></div>
+          <div className="flex flex-row items-center gap-2 text-xs">
+            <div className="aspect-square h-2 w-2 rounded-full bg-red-400"></div>
             <p className="text-sm text-zinc-500">Email not verified</p>
           </div>
         )}
 
-        <div className="flex flex-row justify-between p-2 outlined-container">
-          <p className="hidden md:flex text-sm text-zinc-500">Email</p>
-          <p className="text-sm text-zinc-400 truncate max-w-full">{email}</p>
+        <div className="outlined-container flex flex-row justify-between p-2">
+          <p className="hidden text-sm text-zinc-500 md:flex">Email</p>
+          <p className="max-w-full truncate text-sm text-zinc-400">{email}</p>
         </div>
-        <div className="flex flex-row justify-between p-2 outlined-container">
-          <p className="hidden md:flex text-sm text-zinc-500">Full name</p>
+        <div className="outlined-container flex flex-row justify-between p-2">
+          <p className="hidden text-sm text-zinc-500 md:flex">Full name</p>
           <p className="text-sm text-zinc-400">{fullName}</p>
         </div>
       </div>
       <div className="p-2" />
       {/* subscription container */}
       <div className="flex flex-col gap-2 p-3 ">
-        <div className="flex flex-row justify-between p-2 outlined-container">
+        <div className="outlined-container flex flex-row justify-between p-2">
           <p className="text-sm text-zinc-500">Subscription</p>
           {hasActiveSubscription ? (
             <p className="text-sm text-zinc-400">
-              Snapcaster <span className="text-pink-500 font-bold">Pro</span>
+              Snapcaster <span className="font-bold text-pink-500">Pro</span>
             </p>
           ) : (
             <p className="text-sm text-zinc-400">Inactive</p>
@@ -220,15 +220,15 @@ const UserSettings = ({
           name="betaFeaturesEnabled"
           control={control}
           render={({ field }) => (
-            <div className="flex flex-row justify-between p-2 outlined-container items-center">
+            <div className="outlined-container flex flex-row items-center justify-between p-2">
               <p className="text-sm text-zinc-500">Beta features</p>
               {!hasActiveSubscription ? (
                 <p className="text-sm text-zinc-400">Disabled</p>
               ) : (
-                <label className="inline-flex relative items-center cursor-pointer">
+                <label className="relative inline-flex cursor-pointer items-center">
                   <input
                     type="checkbox"
-                    className="sr-only peer" // Hide the checkbox but make it accessible to screen readers
+                    className="peer sr-only" // Hide the checkbox but make it accessible to screen readers
                     checked={field.value}
                     disabled={!hasActiveSubscription}
                     onChange={(e) => {
@@ -240,7 +240,7 @@ const UserSettings = ({
                     name={field.name}
                     ref={field.ref}
                   />
-                  <div className="w-11 h-6 bg-zinc-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 dark:peer-focus:ring-pink-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-pink-600"></div>
+                  <div className="peer h-6 w-11 rounded-full bg-zinc-500 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-pink-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 dark:border-gray-600 dark:peer-focus:ring-pink-800"></div>
                 </label>
               )}
             </div>
@@ -249,10 +249,8 @@ const UserSettings = ({
       </div>
       <div className="p-2" />
       {hasActiveSubscription && (
-        <div className="w-full flex flex-col p-3">
-          <button onClick={createPortalSession} className="btn-white w-full">
-            Manage subscription
-          </button>
+        <div className="flex w-full flex-col p-3">
+          <Button onClick={createPortalSession}>Manage subscription</Button>
         </div>
       )}
     </div>
@@ -265,12 +263,12 @@ const SubscriptionCards = ({
   createCheckoutSession: () => Promise<void>;
 }) => {
   return (
-    <div className="flex flex-row gap-2 w-full mx-auto">
+    <div className="mx-auto flex w-full flex-row gap-2">
       {/* free price card */}
       {/* should expand to match height of premium card */}
-      <div className="flex flex-col w-full">
-        <div className="flex flex-col md:flex-row justify-between gap-6">
-          <div className="flex flex-col text-left p-6 outlined-container w-full neon-pink">
+      <div className="flex w-full flex-col">
+        <div className="flex flex-col justify-between gap-6 md:flex-row">
+          <div className="outlined-container neon-pink flex w-full flex-col p-6 text-left">
             <h3 className="font-semibold text-pink-400">Pro</h3>
             <h2 className="text-2xl font-bold">
               $3.99 <span className="text-sm font-normal">/mo</span>
@@ -286,13 +284,13 @@ const SubscriptionCards = ({
             {/* stack for features */}
             <div className="flex flex-col gap-4">
               <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
                 <p className="text-sm font-semibold text-zinc-400">
                   Search over 60 Canadian stores
                 </p>
               </div>
               <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
                 <p className="text-sm font-semibold text-zinc-400">
                   Search up to 100 cards at a time
                 </p>
@@ -304,7 +302,7 @@ const SubscriptionCards = ({
                 </p>
               </div> */}
               <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
                 <p className="text-sm font-semibold text-zinc-400">
                   Beta access to new features
                 </p>
@@ -312,12 +310,31 @@ const SubscriptionCards = ({
             </div>
             <div className="p-4" />
             {/* upgrade now btn */}
-            <p className='text-xs mt-2.5 pb-2'>By placing an order, you affirm that you have read, understood, and consent to the  <a href="/privacy" target="_blank" className="text-pink-500 hover:text-pink-700">Privacy Notices</a> and <a href="/terms" target="_blank" className="text-pink-500 hover:text-pink-700">Terms of Use</a></p>
-            <Button onClick={createCheckoutSession} className="btn-white">
+
+            <p className="mb-2.5 text-xs text-zinc-400">
+              By placing an order, you affirm that you have read, understood,
+              and consent to the{' '}
+              <a
+                href="/privacy"
+                target="_blank"
+                className="text-pink-500 hover:text-pink-700"
+              >
+                Privacy Notices
+              </a>{' '}
+              and{' '}
+              <a
+                href="/terms"
+                target="_blank"
+                className="text-pink-500 hover:text-pink-700"
+              >
+                Terms of Use
+              </a>
+            </p>
+            <Button onClick={createCheckoutSession} className="w-full">
               Upgrade now
             </Button>
           </div>
-          <div className="flex flex-col text-left p-6 outlined-container w-full">
+          <div className="outlined-container flex w-full flex-col p-6 text-left">
             <h3 className="font-semibold text-white">Free</h3>
             <h2 className="text-2xl font-bold">
               $0 <span className="text-sm font-normal">/mo</span>
@@ -332,21 +349,21 @@ const SubscriptionCards = ({
             {/* stack for features */}
             <div className="flex flex-col gap-4">
               <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
                 <p className="text-sm text-zinc-400">
                   Search over 60 Canadian stores
                 </p>
               </div>
               <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
+                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
                 <p className="text-sm font-semibold text-zinc-400">
                   Search up to 5 cards at a time{' '}
                 </p>
               </div>
             </div>
-            <div className="p-4 flex-grow" />
+            <div className="flex-grow p-4" />
             {/* upgrade now btn */}
-            <Link className='w-full' href="/">
+            <Link className="w-full" href="/">
               <Button className="w-full">Start searching</Button>
             </Link>
           </div>
