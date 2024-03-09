@@ -19,24 +19,27 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
 import { Button } from './button';
+import { WishlistCard } from '@/stores/wishlistStore';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   setHoveredCard?: React.Dispatch<React.SetStateAction<TData | null>>;
+  deleteRow?: (wishlistItemId: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  setHoveredCard
+  setHoveredCard,
+  deleteRow
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
@@ -44,7 +47,6 @@ export function DataTable<TData, TValue>({
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
     getSortedRowModel: getSortedRowModel(),
@@ -57,17 +59,9 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      {' '}
-      <div className="flex flex-col gap-4 items-center py-4">
-        <div className="flex flex-row gap-4 w-full">
-          <Input placeholder="Add cards..." className="" />
-          <Button>Add</Button>
-        </div>
-      </div>
-      <div className="flex flex-row justify-between items-center gap-4 py-2">
-        {/* if any cards are selected, show delete all button */}
-        <div className="flex-1 text-sm text-muted-foreground text-left">
+    <div className="w-full">
+      <div className="flex flex-row justify-between items-center gap-4 py-2 w-full">
+        <div className="flex text-sm text-muted-foreground text-left">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
@@ -75,14 +69,28 @@ export function DataTable<TData, TValue>({
           <div className="flex items-center justify-center gap-4">
             <Button
               variant="default"
-              onClick={() => table.getFilteredRowModel().rows.forEach((row) => row.toggleSelected(false))}
-              
-            >Clear selection</Button>
+              onClick={() =>
+                table
+                  .getFilteredRowModel()
+                  .rows.forEach((row) => row.toggleSelected(false))
+              }
+            >
+              Clear selection
+            </Button>
             <Button
               variant="destructive"
               onClick={() => {
                 table
                   .getFilteredSelectedRowModel()
+                  .rows.forEach((row) => {
+                    if (deleteRow) {
+                      deleteRow((row.original as WishlistCard).wishlist_item_id);
+                    }
+                  }
+                );
+                // clear selection
+                table
+                  .getFilteredRowModel()
                   .rows.forEach((row) => row.toggleSelected(false));
               }}
             >
@@ -142,7 +150,6 @@ export function DataTable<TData, TValue>({
                 </TableCell>
               </TableRow>
             )}
-            {/* add card row */}
           </TableBody>
         </Table>
       </div>

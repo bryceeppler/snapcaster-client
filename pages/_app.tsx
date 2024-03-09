@@ -22,15 +22,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     document.body.classList?.remove('loading');
   }, []);
-  useEffect(() => {
-    var ads = document.getElementsByClassName('adsbygoogle').length;
-    for (var i = 0; i < ads - 1; i++) {
-      try {
-        let adsbygoogle: any;
-        (adsbygoogle = (window as any).adsbygoogle || []).push({});
-      } catch (e) {}
-    }
-  }, []);
+  // useEffect(() => {
+  //   var ads = document.getElementsByClassName('adsbygoogle').length;
+  //   for (var i = 0; i < ads - 1; i++) {
+  //     try {
+  //       let adsbygoogle: any;
+  //       (adsbygoogle = (window as any).adsbygoogle || []).push({});
+  //     } catch (e) {}
+  //   }
+  // }, []);
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       initGA();
@@ -65,7 +65,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </Layout>
       {/* for whatever reason, this script bugs out on slug pages with url params` */}
       {/* e.g. [token].tsx */}
-      {!isResetPasswordPage && !isWishlistIdPage && (
+      {/* {!isResetPasswordPage && !isWishlistIdPage && (
         <Script
           id="Absence-banner"
           async
@@ -76,7 +76,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           src={`${process.env.NEXT_PUBLIC_ADSENSE}`}
           crossOrigin="anonymous"
         />
-      )}
+      )} */}
       {/* <script async src="https://fundingchoicesmessages.google.com/i/pub-6026504058618942?ers=1" nonce="W0DFASoiabMy4-_cYoMhEA"></script><script nonce="W0DFASoiabMy4-_cYoMhEA">(function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent']) {if (document.body) {const iframe = document.createElement('iframe'); iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;'; iframe.style.display = 'none'; iframe.name = 'googlefcPresent'; document.body.appendChild(iframe);} else {setTimeout(signalGooglefcPresent, 0);}}}signalGooglefcPresent();})();</script> */}
       <Script id="googlefc" src="https://fundingchoicesmessages.google.com/i/pub-6026504058618942?ers=1" nonce="W0DFASoiabMy4-_cYoMhEA" />
       <Script
