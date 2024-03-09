@@ -26,6 +26,11 @@ export default function Navbar({}: Props) {
       href: '/multisearch',
       current: currentPath === '/multisearch'
     },
+    {
+      name: 'Advanced Search',
+      href: '/advancedsearch',
+      current: currentPath === '/advancedsearch'
+    },
     { name: 'About', href: '/about', current: currentPath === '/about' },
     { name: 'Updates', href: '/updates', current: currentPath === '/updates'},
     ...(isAuthenticated ? [{ name: 'Profile', href: '/profile', current: currentPath === '/profile' }] : []),
