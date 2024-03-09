@@ -257,7 +257,7 @@ const UserSettings = ({
   );
 };
 
-const SubscriptionCards = ({
+export const SubscriptionCards = ({
   createCheckoutSession
 }: {
   createCheckoutSession: () => Promise<void>;

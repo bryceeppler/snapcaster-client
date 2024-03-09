@@ -429,7 +429,38 @@ const websites: Website[] = [
     code:"freegame",
     image: '',
     shopify: false
+  },
+  {
+    name:"J&J Cards",
+    code:"jjcards",
+    image: '',
+    shopify: false
+  },
+  {
+    name:"MTG North",
+    code:"mtgnorth",
+    image: '',
+    shopify: false
+  },
+  {
+    name:"Luke's Cards",
+    code:"lukescards",
+    image: '',
+    shopify: true
+  },
+  {
+    name:"Dark Crystal Cards",
+    code:"darkcrystal",
+    image: '',
+    shopify: true
+  },
+  {
+    name: "Bootown's Games",
+    code: "bootown",
+    image: '',
+    shopify: true
   }
+  
 
 ];
 
@@ -474,7 +505,7 @@ type State = {
   setSingleSearchInput: (singleSearchInput: string) => void;
   singleSearchQuery: string;
   setSingleSearchQuery: (singleSearchQuery: string) => void;
-
+  getWebsiteNameByCode: (code: string) => string;
   multiSearchInput: string;
   multiSearchQuery: string;
   multiSearchSelectedWebsites: string[];
@@ -526,7 +557,9 @@ type State = {
 export const useStore = create<State>((set, get) => ({
   singleSearchStarted: false,
   singleSearchPriceList: undefined,
-
+  getWebsiteNameByCode: (code: string) => {
+    return get().websites.find((w) => w.code === code)?.name || '';
+  },
   sortMultiSearchVariants: (card, orderBy) => {
     const filteredMultiSearchResults = get().filteredMultiSearchResults;
     const cardIndex = filteredMultiSearchResults.findIndex(
