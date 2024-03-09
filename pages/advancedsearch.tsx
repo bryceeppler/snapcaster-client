@@ -19,6 +19,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
 
 import Link from 'next/link';
+import { SubscriptionCards } from './profile';
+import axiosInstance from '@/utils/axiosWrapper';
 type Props = {};
 
 export default function AdvancedSearch({}: Props) {
@@ -85,15 +87,29 @@ export default function AdvancedSearch({}: Props) {
     setShoeSoryBy(false);
   });
 
+  const createCheckoutSession = async () => {
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_PAYMENT_URL}/createcheckoutsession`
+      );
+      if (response.status !== 200) throw new Error('Failed to create session');
+      const data = await response.data;
+      console.log('Checkout session created:', data);
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <MainLayout>
-        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center ">
+        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
             <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="space-y-2">
                 <h2 className="text-4xl font-bold tracking-tighter">
-                  Multi-search
+                  Wishlists
                 </h2>
               </div>
               <div className="outlined-container grid gap-4 p-8 md:gap-4">
@@ -107,6 +123,32 @@ export default function AdvancedSearch({}: Props) {
                   <Button className="w-full">Sign up</Button>
                 </Link>
               </div>
+            </div>
+          </section>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (!hasActiveSubscription) {
+    return (
+      <MainLayout>
+        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
+          <section className="w-full py-6 md:py-12">
+            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
+              <div className="space-y-2">
+                <h2 className="text-4xl font-bold tracking-tighter">
+                  Wishlists
+                </h2>
+              </div>
+              <div className="outlined-container grid gap-4 p-8 md:gap-4">
+                <p className="text-left">
+                  You must have an active subscription to use this feature.
+                </p>
+              </div>
+              <SubscriptionCards
+                createCheckoutSession={createCheckoutSession}
+              />
             </div>
           </section>
         </div>

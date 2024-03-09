@@ -149,13 +149,13 @@ const Wishlist: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
+            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="space-y-2">
                 <h2 className="text-4xl font-bold tracking-tighter">
                   Wishlists
                 </h2>
               </div>
-              <div className="grid gap-4 md:gap-4 p-8 outlined-container">
+              <div className="outlined-container grid gap-4 p-8 md:gap-4">
                 <p className="text-left">
                   You must be logged in to use this feature.
                 </p>
@@ -164,7 +164,7 @@ const Wishlist: NextPage<Props> = () => {
                 </Link>
                 <Link href="/signup">
                   <Button className="w-full">Sign up</Button>
-                </Link> 
+                </Link>
               </div>
             </div>
           </section>
@@ -174,28 +174,29 @@ const Wishlist: NextPage<Props> = () => {
   }
 
   if (!hasActiveSubscription) {
-      return (
-        <MainLayout>
-          <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
-            <section className="w-full py-6 md:py-12">
-              <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
-                <div className="space-y-2">
-                  <h2 className="text-4xl font-bold tracking-tighter">
-                    Wishlists 
-                  </h2>
-                </div>
-                <div className="grid gap-4 md:gap-4 p-8 outlined-container">
-                  <p className="text-left">
-                    You must have an active subscription to use this feature.
-                  </p>
-                  </div>
-                <SubscriptionCards
-                    createCheckoutSession={createCheckoutSession}
-                  />              </div>
-            </section>
-          </div>
-        </MainLayout>
-      );
+    return (
+      <MainLayout>
+        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
+          <section className="w-full py-6 md:py-12">
+            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
+              <div className="space-y-2">
+                <h2 className="text-4xl font-bold tracking-tighter">
+                  Wishlists
+                </h2>
+              </div>
+              <div className="outlined-container grid gap-4 p-8 md:gap-4">
+                <p className="text-left">
+                  You must have an active subscription to use this feature.
+                </p>
+              </div>
+              <SubscriptionCards
+                createCheckoutSession={createCheckoutSession}
+              />{' '}
+            </div>
+          </section>
+        </div>
+      </MainLayout>
+    );
   }
 
   return (
@@ -204,7 +205,7 @@ const Wishlist: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
+            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="space-y-2">
                 <h2 className="text-4xl font-bold tracking-tighter">
                   Wishlists
@@ -212,73 +213,78 @@ const Wishlist: NextPage<Props> = () => {
               </div>
 
               <div className="grid gap-4">
-                {loading && <LoadingSpinner classNameProps='w-full mt-7 mx-auto' />}
-                {wishlists && wishlists.length === 0 && !loading && (
-                  <p>No wishlists found. Create one to keep track of multiple cards.</p>
-                
+                {loading && (
+                  <LoadingSpinner classNameProps="w-full mt-7 mx-auto" />
                 )}
-                {wishlists && wishlists.map((wishlist) => (
-                  <Link href={`/wishlist/${wishlist.id}`}>
-                    <Card
-                      key={wishlist.id}
-                      className="hover:shadow-lg cursor-pointer transition-shadow duration-300 ease-in-out hover:border-zinc-500"
-                    >
-                      <CardHeader className="flex flex-row justify-between items-center gap-4">
-                        {editWishlistId === wishlist.id ? (
-                          <Input
-                            value={editName}
-                            onChange={handleEditChange}
-                            autoFocus
+                {wishlists && wishlists.length === 0 && !loading && (
+                  <p>
+                    No wishlists found. Create one to keep track of multiple
+                    cards.
+                  </p>
+                )}
+                {wishlists &&
+                  wishlists.map((wishlist) => (
+                    <Link href={`/wishlist/${wishlist.id}`}>
+                      <Card
+                        key={wishlist.id}
+                        className="cursor-pointer transition-shadow duration-300 ease-in-out hover:border-zinc-500 hover:shadow-lg"
+                      >
+                        <CardHeader className="flex flex-row items-center justify-between gap-4">
+                          {editWishlistId === wishlist.id ? (
+                            <Input
+                              value={editName}
+                              onChange={handleEditChange}
+                              autoFocus
+                            />
+                          ) : (
+                            <CardTitle>{wishlist.name}</CardTitle>
+                          )}
+                          <Edit
+                            size={16}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              toggleEditMode(wishlist.id);
+                            }}
                           />
-                        ) : (
-                          <CardTitle>{wishlist.name}</CardTitle>
-                        )}
-                        <Edit
-                          size={16}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            toggleEditMode(wishlist.id);
-                          }}
-                        />
-                      </CardHeader>
-                      <CardContent>
-                        <CardDescription
-                          className="text-zinc-400"
-                        >
-                                                    <p>{wishlist.item_count} cards</p>
+                        </CardHeader>
+                        <CardContent>
+                          <CardDescription className="text-zinc-400">
+                            <p>{wishlist.item_count} cards</p>
 
-                          <p>Created {dayjs(wishlist.created_at).fromNow()}</p>
-                        </CardDescription>
-                      </CardContent>
-                      {editWishlistId === wishlist.id && (
-                        <CardFooter
-                          onClick={(e) => {
-                            e.preventDefault();
-                          }}
-                          className="flex flex-row justify-between"
-                        >
-                          <Button
-                            variant="destructive"
-                            onClick={() => handleDeleteWishlist(wishlist.id)}
+                            <p>
+                              Created {dayjs(wishlist.created_at).fromNow()}
+                            </p>
+                          </CardDescription>
+                        </CardContent>
+                        {editWishlistId === wishlist.id && (
+                          <CardFooter
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            className="flex flex-row justify-between"
                           >
-                            Delete
-                          </Button>
-                          <div className="flex gap-2">
-                            <Button variant="default" onClick={exitEditMode}>
-                              Cancel
-                            </Button>
                             <Button
-                              variant="default"
-                              onClick={() => saveChanges(wishlist.id)}
+                              variant="destructive"
+                              onClick={() => handleDeleteWishlist(wishlist.id)}
                             >
-                              Save
+                              Delete
                             </Button>
-                          </div>
-                        </CardFooter>
-                      )}
-                    </Card>
-                  </Link>
-                ))}
+                            <div className="flex gap-2">
+                              <Button variant="default" onClick={exitEditMode}>
+                                Cancel
+                              </Button>
+                              <Button
+                                variant="default"
+                                onClick={() => saveChanges(wishlist.id)}
+                              >
+                                Save
+                              </Button>
+                            </div>
+                          </CardFooter>
+                        )}
+                      </Card>
+                    </Link>
+                  ))}
               </div>
               <Button variant="default" onClick={() => setIsDialogOpen(true)}>
                 New wishlist
