@@ -85,13 +85,13 @@ const CardPreview = ({
 }) => {
   return (
     <div className="flex flex-col items-center gap-4 py-4">
-      <div className="flex-1 text-sm text-muted-foreground text-left">
+      <div className="text-muted-foreground flex-1 text-left text-sm">
         {card ? (
           <div className="">
             <Image
               alt={card.card_name}
               src={card.cheapest_price_doc.image}
-              className="rounded-lg h-auto transition-all"
+              className="h-auto rounded-lg transition-all"
               width={200}
               height={200}
             />
@@ -99,12 +99,12 @@ const CardPreview = ({
 
             <Button
               variant="default"
-              className="justify-between w-[200px] text-sm tracking-tight"
+              className="w-[200px] justify-between text-sm tracking-tight"
               onClick={() =>
                 window.open(card.cheapest_price_doc.link, '_blank')
               }
             >
-              <p className="text-left overflow-ellipsis whitespace-nowrap overflow-hidden">
+              <p className="overflow-hidden overflow-ellipsis whitespace-nowrap text-left">
                 Buy @ {getWebsiteNameByCode(card.cheapest_price_doc.website)}{' '}
               </p>
               <p className="font-bold ">
@@ -119,12 +119,12 @@ const CardPreview = ({
           <div>
             <div
               // image placeholder
-              className="w-[200px] h-[280px] bg-zinc-800 opacity-70 rounded-lg"
+              className="h-[280px] w-[200px] rounded-lg bg-zinc-800 opacity-70"
             ></div>
             <div className="p-2" />
             <div
               // button placeholder
-              className="w-[200px] h-9 bg-zinc-800 opacity-70 rounded-lg"
+              className="h-9 w-[200px] rounded-lg bg-zinc-800 opacity-70"
             ></div>
           </div>
         )}
@@ -189,7 +189,7 @@ function getColumns(
       cell: ({ row }) => {
         const card = row.original;
         return (
-          <div className="text-left max-w-[100px] md:max-w-[200px] overflow-ellipsis overflow-hidden whitespace-nowrap">
+          <div className="max-w-[100px] overflow-hidden overflow-ellipsis whitespace-nowrap text-left md:max-w-[200px]">
             {card.card_name}
           </div>
         );
@@ -228,7 +228,9 @@ function getColumns(
       id: 'actions',
       cell: ({ row }) => {
         const wishlistCard = row.original;
-        const [newMinimumCondition, setNewMinimumCondition] = useState(row.original.minimum_condition);
+        const [newMinimumCondition, setNewMinimumCondition] = useState(
+          row.original.minimum_condition
+        );
         const [newQuantity, setNewQuantity] = useState(row.original.quantity);
         const handleSaveChanges = () => {
           updateWishlistItem(
@@ -239,7 +241,7 @@ function getColumns(
             row.original.email_notifications // Use state-managed value if this is editable
           );
         };
-  
+
         return (
           <Dialog>
             <DialogContent className="sm:max-w-xl">
@@ -250,7 +252,7 @@ function getColumns(
                 </DialogDescription>
               </DialogHeader>
               <div className="flex flex-col gap-4">
-                <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row items-center justify-between">
                   {/* Quantity */}
                   <Label htmlFor="quantity" className="text-left">
                     Quantity
@@ -264,13 +266,11 @@ function getColumns(
                     className="w-[180px] text-left"
                     onChange={(e) => {
                       setNewQuantity(parseInt(e.target.value));
-                    }
-                    }
+                    }}
                   />
                 </div>
-                <div className="flex flex-row justify-between items-center">
-                  <Label htmlFor="name" className="text-left"
-                  >
+                <div className="flex flex-row items-center justify-between">
+                  <Label htmlFor="name" className="text-left">
                     Minimum Condition
                   </Label>
                   <Select
@@ -292,13 +292,13 @@ function getColumns(
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row items-center justify-between">
                   <Label htmlFor="email-notifications" className="text-left">
                     Email Notifications
                   </Label>
                   <Switch id="email-notifications" disabled />
                 </div>
-                <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row items-center justify-between">
                   <Label htmlFor="target-price" className="text-left">
                     Target Price
                   </Label>
@@ -314,13 +314,13 @@ function getColumns(
                 </div>
               </div>
               <DialogFooter>
-              <Button
-                type="submit"
-                className="bg-zinc-800"
-                onClick={handleSaveChanges}
-              >
-                Save changes
-              </Button>
+                <Button
+                  type="submit"
+                  className="bg-zinc-800"
+                  onClick={handleSaveChanges}
+                >
+                  Save changes
+                </Button>
               </DialogFooter>
             </DialogContent>
             <DropdownMenu>
@@ -463,11 +463,11 @@ const WishlistId: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-6xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="items-center mx-auto gap-6">
+            <div className="mx-auto items-center gap-6">
               <div className="space-y-2 text-left">
                 <div className="flex flex-row gap-4">
                   {edit ? (
-                    <div className="flex flex-row gap-4 items-center">
+                    <div className="flex flex-row items-center gap-4">
                       <Input
                         value={editName}
                         onChange={handleEditNameChange}
@@ -484,7 +484,7 @@ const WishlistId: NextPage<Props> = () => {
                       <X size={16} onClick={exitEditMode} />
                     </div>
                   ) : (
-                    <div className="flex flex-row gap-4 items-center">
+                    <div className="flex flex-row items-center gap-4">
                       <h2 className="text-3xl font-bold tracking-tighter">
                         {wishlistView.name}
                       </h2>
@@ -502,16 +502,16 @@ const WishlistId: NextPage<Props> = () => {
                   Created {dayjs(wishlistView.created_at).fromNow()}
                 </p>
               </div>
-              <div className="flex flex-row gap-8 w-full">
-                <div className="hidden md:flex max-w-xs w-[200px]">
+              <div className="flex w-full flex-row gap-8">
+                <div className="hidden w-[200px] max-w-xs md:flex">
                   <CardPreview
                     card={hoveredCard}
                     getWebsiteNameByCode={getWebsiteNameByCode}
                   />
                 </div>
                 <div className="w-full">
-                  <div className="flex flex-row justify-between items-center">
-                    <div className="hidden sm:flex sm:flex-row gap-4 items-center">
+                  <div className="flex flex-row items-center justify-between">
+                    <div className="hidden items-center gap-4 sm:flex sm:flex-row">
                       <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
                         <Button variant="outline" className="w-35">
                           Bulk edit
@@ -534,15 +534,15 @@ const WishlistId: NextPage<Props> = () => {
                     />
                   </div>
                   {wishlistView.items.length === 0 ? (
-                    <div className="w-full h-full rounded-lg flex flex-col items-center justify-center relative">
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10">
+                    <div className="relative flex h-full w-full flex-col items-center justify-center rounded-lg">
+                      <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform text-center">
                         <p className="text-lg font-bold">No cards found</p>
                         <p className="text-sm">
                           Add cards by search or bulk edit.
                         </p>
                       </div>
-                      <div className="w-full h-16 bg-zinc-800 opacity-70 rounded-lg mt-4 justify-center flex items-center" />
-                      <div className="w-full h-60 bg-zinc-800 opacity-70 rounded-lg mt-4 justify-center flex items-center" />
+                      <div className="mt-4 flex h-16 w-full items-center justify-center rounded-lg bg-zinc-800 opacity-70" />
+                      <div className="mt-4 flex h-60 w-full items-center justify-center rounded-lg bg-zinc-800 opacity-70" />
                     </div>
                   ) : (
                     <DataTable
