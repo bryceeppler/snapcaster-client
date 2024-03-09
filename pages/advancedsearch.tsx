@@ -109,7 +109,7 @@ export default function AdvancedSearch({}: Props) {
             <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="space-y-2">
                 <h2 className="text-4xl font-bold tracking-tighter">
-                  Wishlists
+                  Advanced Search Beta
                 </h2>
               </div>
               <div className="outlined-container grid gap-4 p-8 md:gap-4">
@@ -138,7 +138,7 @@ export default function AdvancedSearch({}: Props) {
             <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="space-y-2">
                 <h2 className="text-4xl font-bold tracking-tighter">
-                  Wishlists
+                  Advanced Search Beta
                 </h2>
               </div>
               <div className="outlined-container grid gap-4 p-8 md:gap-4">
