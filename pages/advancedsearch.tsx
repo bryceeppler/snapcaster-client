@@ -157,26 +157,8 @@ export default function AdvancedSearch({}: Props) {
   }
   return (
     <>
-      <Head>
-        <title>Advanced Search</title>
-        <meta
-          name="description"
-          content="Search Magic the Gathering cards across Canada"
-        />
-        <meta
-          property="og:title"
-          content={`Snapcaster - Search Magic the Gathering cards across Canada`}
-        />
-        <meta
-          property="og:description"
-          content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
-        />
-        <meta property="og:url" content={`https://snapcaster.ca`} />
-        <meta property="og:type" content="website" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div className="mb-16 min-h-screen flex-col items-center justify-between px-1 py-2 md:px-6 lg:px-32 ">
+      <AdvancedSearchHead />
+      <div className="mb-16 min-h-screen w-full flex-col items-center justify-between px-4 py-2 md:px-6 lg:px-32 ">
         {/*Container 1 */}
         <div className="pb-2 text-center">
           <h2 className="pb-2 text-4xl font-bold tracking-tighter">
@@ -189,32 +171,25 @@ export default function AdvancedSearch({}: Props) {
         </div>
 
         {/*Container 2 */}
-        <div className="mb-4 flex items-center">
-          <div className="w-full flex-initial px-2">
-            <Input
-              ref={searchRef}
-              type="text"
-              placeholder="Card Base Name"
-              defaultValue={''}
-              className="h-8"
-            ></Input>
-          </div>
-          <div className="flex-initial">
-            <Button
-              className="flex h-8 w-28 rounded lg:w-48 "
-              onClick={() => {
-                setShowFilters(!showFilters);
-              }}
-            >
-              <div className="flex-1 text-center">
-                <p>Show Filters</p>
-              </div>
-              <div className=" ">
-                <CaretSortIcon className=" h-6 w-6" />
-              </div>
-            </Button>
-          </div>
+        <div className="flex items-center gap-2">
+          <Input
+            ref={searchRef}
+            type="text"
+            placeholder="Card Base Name"
+            defaultValue={''}
+          ></Input>
+
+          <Button
+            className="flex justify-between rounded lg:w-48"
+            onClick={() => {
+              setShowFilters(!showFilters);
+            }}
+          >
+            <p>Show Filters</p>
+            <CaretSortIcon className=" h-6 w-6" />
+          </Button>
         </div>
+        <div className="p-2"></div>
         {/*Container 2.5 */}
         {showFilters == true && (
           <div className="mb-4">
@@ -339,7 +314,7 @@ export default function AdvancedSearch({}: Props) {
                           Number
                         </label>
                       </div>
-                      <input
+                      <Input
                         min="0"
                         type="number"
                         id="cardNumInput"
@@ -347,12 +322,9 @@ export default function AdvancedSearch({}: Props) {
                         placeholder="Card Number"
                         ref={numberRef}
                         onChange={(e) => {}}
-                        className={
-                          numberChecked == false
-                            ? 'pointer-events-none h-7 rounded-md bg-zinc-500 px-1 text-slate-700 '
-                            : 'h-7 rounded-md bg-zinc-800 px-1 text-white outline-none'
-                        }
-                      ></input>
+                        disabled={!numberChecked}
+                        className="h-7"
+                      ></Input>
                     </div>
                     <AdvancedCheckBox
                       title="Pre Release"
@@ -455,7 +427,7 @@ export default function AdvancedSearch({}: Props) {
                         Number
                       </label>
                     </div>
-                    <input
+                    <Input
                       min="0"
                       type="number"
                       id="cardNumInput"
@@ -463,12 +435,9 @@ export default function AdvancedSearch({}: Props) {
                       placeholder="Card Number"
                       ref={numberRef}
                       onChange={(e) => {}}
-                      className={
-                        numberChecked == false
-                          ? 'pointer-events-none h-7 px-1'
-                          : 'webkit-appearnace-none h-7 px-1'
-                      }
-                    ></input>
+                      className="h-7"
+                      disabled={!numberChecked}
+                    ></Input>
                   </div>
                   <AdvancedCheckBox
                     title="Pre Release"
@@ -556,29 +525,24 @@ export default function AdvancedSearch({}: Props) {
         )}
 
         {/*Container 3 */}
-        <div className=" flex justify-end">
-          <div ref={sortRadioRef}>
+        <div className=" flex flex-col gap-2 sm:flex-row sm:justify-end">
+          <div ref={sortRadioRef} className="relative">
             <Button
               onClick={() => {
                 setShoeSoryBy(!showSortBy);
               }}
-              className="mr-4 flex min-w-32 max-w-32 "
+              className="w-full"
             >
-              <div className="flex-1 text-center">
-                <p>
-                  Sort:{' '}
-                  {selectedSortBy.charAt(0).toUpperCase() +
-                    selectedSortBy.slice(1)}
-                </p>
-              </div>
+              Sort:{' '}
+              {selectedSortBy.charAt(0).toUpperCase() + selectedSortBy.slice(1)}
             </Button>
-            <div className="no-scrollbar absolute z-10  max-h-52 w-max min-w-32 max-w-32 overflow-y-auto rounded-md bg-zinc-900 shadow-2xl">
+            <div className="no-scrollbar absolute z-10 max-h-52 w-full overflow-y-auto rounded bg-zinc-900 shadow-2xl sm:w-max">
               {showSortBy &&
                 sortByList.map((state) => (
-                  <div key={state.abbreviation} className="">
-                    <fieldset className={` grid grid-cols-1 `}>
+                  <div key={state.abbreviation}>
+                    <fieldset>
                       <div
-                        className="flex hover:bg-zinc-600"
+                        className="flex cursor-pointer items-center gap-1 rounded py-1 px-2 hover:bg-zinc-700"
                         onClick={() => {
                           updateSortByFilter(state.abbreviation);
                         }}
@@ -589,7 +553,7 @@ export default function AdvancedSearch({}: Props) {
                           name="sortRadio"
                           onChange={(e) => {}}
                           className={
-                            'm-auto mx-1 aspect-square h-2 w-2 cursor-pointer appearance-none rounded-full ' +
+                            ' aspect-square h-2 w-2 cursor-pointer appearance-none rounded-full ' +
                             (selectedSortBy.includes(state.abbreviation)
                               ? ' bg-pink-600'
                               : 'bg-zinc-600')
@@ -607,55 +571,68 @@ export default function AdvancedSearch({}: Props) {
                 ))}
             </div>
           </div>
-          <div>
-            <Button
-              onClick={() => {
-                resetFilters();
-              }}
-              className="mr-4 min-w-32"
-            >
-              <div>
-                <p>Reset Filters</p>
-              </div>
-            </Button>
-          </div>
-          <div>
-            <Button
-              onClick={() => {
-                if (searchRef.current) {
-                  updateAdvnacedSearchTextBoxValue(searchRef.current.value);
-                }
-                if (numberRef.current) {
-                  updateNumberText(Number(numberRef.current.value));
-                }
+          <Button
+            onClick={() => {
+              resetFilters();
+            }}
+          >
+            Reset Filters
+          </Button>
+          <Button
+            onClick={() => {
+              if (searchRef.current) {
+                updateAdvnacedSearchTextBoxValue(searchRef.current.value);
+              }
+              if (numberRef.current) {
+                updateNumberText(Number(numberRef.current.value));
+              }
 
-                fetchAdvancedSearchResults();
-              }}
-              className="min-w-32"
-            >
-              <div>
-                <p>Search</p>
-              </div>
-            </Button>
-          </div>
+              fetchAdvancedSearchResults();
+            }}
+            className="min-w-32"
+          >
+            Search
+          </Button>
         </div>
 
         {/*Container 4 */}
-        <MainLayout>
-          <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
-            {advancedSearchLoading == true && (
-              <div className="m-auto block w-min">
-                <LoadingSpinner />
-              </div>
-            )}
-            {Object.keys(advancedSearchResults).length > 0 && (
-              <>
-                <AdvancedCatalog></AdvancedCatalog>
-              </>
-            )}
-          </div>
-        </MainLayout>
+        <div className="justify-centertext-center mx-auto w-full max-w-xl flex-1 flex-col">
+          {advancedSearchLoading == true && (
+            <div className="m-auto block w-min">
+              <LoadingSpinner />
+            </div>
+          )}
+          {Object.keys(advancedSearchResults).length > 0 && (
+            <div>
+              <AdvancedCatalog></AdvancedCatalog>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
 }
+
+const AdvancedSearchHead = () => {
+  return (
+    <Head>
+      <title>Advanced Search</title>
+      <meta
+        name="description"
+        content="Search Magic the Gathering cards across Canada"
+      />
+      <meta
+        property="og:title"
+        content={`Snapcaster - Search Magic the Gathering cards across Canada`}
+      />
+      <meta
+        property="og:description"
+        content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
+      />
+      <meta property="og:url" content={`https://snapcaster.ca`} />
+      <meta property="og:type" content="website" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
+  );
+};

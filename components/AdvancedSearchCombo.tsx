@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useOutsideClick } from '@/stores/advancedStore';
 import { Filter } from '@/stores/advancedStore';
+import { Button } from './ui/button';
 
 type PropsOption = {
   option: Filter[];
@@ -26,7 +27,7 @@ export default function AdvancedSearchCombo(props: PropsOption) {
   return (
     <div ref={ref}>
       <div className="relative space-y-1">
-        <div className="grid min-h-14">
+        <div className="min-h-14 grid">
           <label className="text-midTone  truncate pb-1 text-sm">
             <div className="flex">
               <p className="font-medium">{props.label}</p>
@@ -35,14 +36,14 @@ export default function AdvancedSearchCombo(props: PropsOption) {
               </p>
             </div>
           </label>
-          <button
+          <Button
             type="button"
-            className="flex h-7  w-full overflow-hidden rounded-md bg-zinc-800 py-1 hover:bg-zinc-700"
+            className="h-7  w-full overflow-hidden pl-2"
             onClick={() => {
               setOpen(!open);
             }}
           >
-            <span className="w-full truncate pl-2 text-left text-xs ">
+            <span className="w-full truncate pl-2 text-left text-xs">
               {props.selectedList.length > 0 ? `${props.selectedList}` : 'Any'}
             </span>
             <svg
@@ -59,7 +60,7 @@ export default function AdvancedSearchCombo(props: PropsOption) {
                 d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
               />
             </svg>
-          </button>
+          </Button>
         </div>
         {open && (
           <div className="no-scrollbar absolute z-10 max-h-52 w-max min-w-full overflow-y-auto rounded-md bg-zinc-900 shadow-2xl ">

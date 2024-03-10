@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { SingleSearchResult } from '@/stores/store';
 type Props = {
   cardData: SingleSearchResult;
@@ -9,12 +9,10 @@ import { trackOutboundLink } from '../utils/analytics';
 import { Button } from './ui/button';
 import Link from 'next/link';
 
-
 export default function SingleCatalogRow({ cardData }: Props) {
   const { websites } = useStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // ... other hooks and functions
 
   const handleImageClick = () => {
     setIsModalOpen(true);
@@ -24,22 +22,24 @@ export default function SingleCatalogRow({ cardData }: Props) {
     setIsModalOpen(false);
   };
 
-  const ImageModal = ({ src, alt }: { src: string, alt: string }) => {
+  const ImageModal = ({ src, alt }: { src: string; alt: string }) => {
     if (!isModalOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4" onClick={closeModal}>
-      <div className="p-4 rounded-lg max-w-xl w-full shadow-lg">
-        <img 
-          src={src} 
-          alt={alt} 
-          className="max-w-full max-h-[70vh] h-auto rounded-lg mx-auto" 
-        />
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+        onClick={closeModal}
+      >
+        <div className="w-full max-w-xl rounded-lg p-4 shadow-lg">
+          <img
+            src={src}
+            alt={alt}
+            className="mx-auto h-auto max-h-[70vh] max-w-full rounded-lg"
+          />
+        </div>
       </div>
-    </div>
     );
   };
-
 
   const findWebsiteNameByCode = (code: string): string => {
     const website = websites.find((website) => website.code === code);
@@ -52,18 +52,17 @@ export default function SingleCatalogRow({ cardData }: Props) {
     trackOutboundLink(domain, priceInCents);
   }
 
-
   return (
     <>
       <>
-        <div className="grid grid-cols-12 gap-4 my-2 p-2 sm:my-3 sm:p-4 outlined-container transition-all shadow-sm">
+        <div className="outlined-container my-2 grid grid-cols-12 gap-4 p-2 shadow-sm transition-all sm:my-3 sm:p-4">
           <div className="col-span-3 flex">
-          <img
-          src={cardData.image}
-          alt="card"
-          className="w-16 md:w-24 rounded-md object-contain cursor-pointer"
-          onClick={handleImageClick}
-        />
+            <img
+              src={cardData.image}
+              alt="card"
+              className="w-16 cursor-pointer rounded-md object-contain md:w-24"
+              onClick={handleImageClick}
+            />
           </div>
           {isModalOpen && <ImageModal src={cardData.image} alt="card" />}
 
@@ -87,21 +86,16 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 )}
                 <div className="text-sm font-bold">{cardData.condition}</div>
               </div>
-              <div className="p-2"/ >
+              <div className="p-2" />
               <Button
-               asChild
+                asChild
                 onClick={() => {
-                  handleBuyClick(cardData.link, cardData.price)
-                }
-              }
+                  handleBuyClick(cardData.link, cardData.price);
+                }}
               >
-               <Link href={cardData.link} 
-                target="_blank" 
-                rel="noreferrer" 
-               >
+                <Link href={cardData.link} target="_blank" rel="noreferrer">
                   Buy
-                
-              </Link> 
+                </Link>
               </Button>
             </div>
           </div>

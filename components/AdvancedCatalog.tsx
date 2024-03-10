@@ -1,6 +1,7 @@
 import React from 'react';
 import AdvancedCatalogRow from './AdvancedCatalogRow';
 import { advancedUseStore } from '@/stores/advancedStore';
+import { Button } from './ui/button';
 
 type Props = {};
 
@@ -21,16 +22,15 @@ export default function AdvancedCatalog({}: Props) {
           <AdvancedCatalogRow cardData={cardData}></AdvancedCatalogRow>
         </div>
       ))}
-      {/* if cardData is longer than 10, have a back to top button */}
       {advancedSearchResults.length > 10 && (
-        <button
+        <Button
           onClick={() => {
             window.scrollTo(0, 0);
           }}
-          className="btn-small mt-4"
+          className="mt-4 w-full"
         >
           Back to Top
-        </button>
+        </Button>
       )}
     </div>
   );
