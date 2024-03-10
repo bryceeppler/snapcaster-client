@@ -35,8 +35,8 @@ export default function Navbar({}: Props) {
       href: '/wishlist',
       current: currentPath === '/wishlist'
     },
-    { name: 'About', href: '/about', current: currentPath === '/about' },
-    { name: 'Updates', href: '/updates', current: currentPath === '/updates' },
+    // { name: 'About', href: '/about', current: currentPath === '/about' },
+    // { name: 'Updates', href: '/updates', current: currentPath === '/updates' },
     // ...(isAuthenticated ? [{ name: 'Wishlists', href: '/wishlist', current: currentPath === '/wishlist' }] : []),
     ...(isAuthenticated
       ? [
@@ -110,13 +110,13 @@ export default function Navbar({}: Props) {
                 />
                 {}
                 <img
-                  className="hidden h-8 mb-2 w-auto lg:block"
+                  className="mb-2 hidden h-8 w-auto lg:block"
                   src={logoSrc}
                   alt="Snapcaster"
                 />
               </div>
               <div className="hidden sm:ml-6 sm:block sm:w-full">
-                <div className="flex space-x-4 w-full">
+                <div className="flex w-full space-x-4">
                   {pages.map((page) => (
                     <a
                       key={page.name}
