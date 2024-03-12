@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
-import { toast } from "sonner";
+import { toast } from 'sonner';
 export interface SingleSearchResult {
   name: string;
   link: string;
@@ -183,13 +183,13 @@ const websites: Website[] = [
     image: 'https://bryces-images.s3.us-west-2.amazonaws.com/manaforce.png',
     shopify: false
   },
-  // {
-  //   name: 'Magic Stronghold',
-  //   code: 'magicstronghold',
-  //   image:
-  //     'https://magicstronghold-images.s3.amazonaws.com/customizations/logo.png',
-  //   shopify: false
-  // },
+  {
+    name: 'Magic Stronghold',
+    code: 'magicstronghold',
+    image:
+      'https://magicstronghold-images.s3.amazonaws.com/customizations/logo.png',
+    shopify: false
+  },
   {
     name: 'The Mythic Store',
     code: 'mythicstore',
@@ -401,67 +401,71 @@ const websites: Website[] = [
     shopify: true
   },
   {
-    name:'Dragon Fyre Games',
-    code:'dragonfyre',
+    name: 'Dragon Fyre Games',
+    code: 'dragonfyre',
     image: '',
     shopify: false
   },
   {
-    name:"Carta Magica Montreal",
-    code:"cartamagicamontreal",
+    name: 'Carta Magica Montreal',
+    code: 'cartamagicamontreal',
     image: '',
     shopify: false
   },
   {
-    name:"Carta Magica Ottawa",
-    code:"cartamagicaottawa",
+    name: 'Carta Magica Ottawa',
+    code: 'cartamagicaottawa',
     image: '',
     shopify: false
   },
   {
-    name:"Gods Arena",
-    code:"godsarena",
+    name: 'Gods Arena',
+    code: 'godsarena',
     image: '',
     shopify: false
   },
   {
-    name:"Free Game",
-    code:"freegame",
+    name: 'Free Game',
+    code: 'freegame',
     image: '',
     shopify: false
   },
   {
-    name:"J&J Cards",
-    code:"jjcards",
+    name: 'J&J Cards',
+    code: 'jjcards',
     image: '',
     shopify: false
   },
   {
-    name:"MTG North",
-    code:"mtgnorth",
+    name: 'MTG North',
+    code: 'mtgnorth',
     image: '',
     shopify: false
   },
   {
-    name:"Luke's Cards",
-    code:"lukescards",
+    name: "Luke's Cards",
+    code: 'lukescards',
     image: '',
     shopify: true
   },
   {
-    name:"Dark Crystal Cards",
-    code:"darkcrystal",
+    name: 'Dark Crystal Cards',
+    code: 'darkcrystal',
     image: '',
     shopify: true
   },
   {
     name: "Bootown's Games",
-    code: "bootown",
+    code: 'bootown',
     image: '',
     shopify: true
+  },
+  {
+    name: 'Prisma Games',
+    code: 'prismatcg',
+    image: '',
+    shopify: false
   }
-  
-
 ];
 
 export type FilterTag = {
@@ -694,7 +698,7 @@ export const useStore = create<State>((set, get) => ({
     // remove any empty strings
     const filteredCardNames = cardNames.filter((cardName) => cardName !== '');
     // match each website to it's code
-    
+
     try {
       const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_SEARCH_URL}/bulk`,
@@ -704,7 +708,7 @@ export const useStore = create<State>((set, get) => ({
           worstCondition: 'nm'
         }
       );
-  
+
       let results = response.data;
       // sort results by ascending price
       for (let i = 0; i < results.length; i++) {
@@ -751,7 +755,6 @@ export const useStore = create<State>((set, get) => ({
 
       set({ multiSearchResultsLoading: false });
     }
-
   },
   multiSearchResults: [],
   filteredMultiSearchResults: [],
