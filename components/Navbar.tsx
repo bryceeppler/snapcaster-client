@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import useAuthStore from '@/stores/authStore';
@@ -11,7 +11,6 @@ export default function Navbar({}: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated } = useAuthStore();
   const { clearTokens } = useAuthStore();
-  const router = useRouter();
   const handleLogout = () => {
     clearTokens();
     toast.success('You have been logged out');
@@ -118,7 +117,7 @@ export default function Navbar({}: Props) {
               <div className="hidden sm:ml-6 sm:block sm:w-full">
                 <div className="flex w-full space-x-4">
                   {pages.map((page) => (
-                    <a
+                    <Link
                       key={page.name}
                       href={page.href}
                       className={`
@@ -127,7 +126,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
 `}
                     >
                       {page.name}
-                    </a>
+                    </Link>
                   ))}
 
                   {/* User ? */}

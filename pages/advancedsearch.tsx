@@ -81,7 +81,11 @@ export default function AdvancedSearch({}: Props) {
   const [showFilters, setShowFilters] = React.useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const numberRef = useRef<HTMLInputElement>(null);
-  const { hasActiveSubscription, isAuthenticated } = useAuthStore();
+
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const hasActiveSubscription = useAuthStore(
+    (state) => state.hasActiveSubscription
+  );
   const [showSortBy, setShoeSoryBy] = React.useState(false);
   const sortRadioRef = useOutsideClick(() => {
     setShoeSoryBy(false);

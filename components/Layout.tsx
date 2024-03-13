@@ -1,9 +1,8 @@
-import React from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import { useState, useEffect } from "react";
-import useAuthStore from "@/stores/authStore";
-
+import React from 'react';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import { useState, useEffect } from 'react';
+import useAuthStore from '@/stores/authStore';
 
 type Props = {};
 
@@ -30,7 +29,7 @@ export default function Layout({ children }: React.PropsWithChildren<Props>) {
   }, [hasInitializedStore]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       <Navbar />
       {children}
       <Footer />
