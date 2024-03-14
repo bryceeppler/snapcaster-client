@@ -76,6 +76,211 @@ export type Card = {
   website: string;
 };
 
+type Props = {};
+const WishlistId: NextPage<Props> = () => {
+  const router = useRouter();
+  const { wishlist } = router.query as { wishlist: string };
+  const { isAuthenticated } = useAuthStore();
+  const {
+    wishlistView,
+    fetchWishlistView,
+    updateWishlist,
+    deleteWishlistItem,
+    updateWishlistItem
+  } = useWishlistStore();
+  const { getWebsiteNameByCode } = useStore();
+  const [loading, setLoading] = useState(true);
+  const [editName, setEditName] = useState('');
+  const [edit, setEdit] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false); // controls refresh icon rotation
+
+  const columns: ColumnDef<WishlistCard>[] = getColumns(
+    deleteWishlistItem,
+    getWebsiteNameByCode,
+    updateWishlistItem
+  );
+
+  const saveChanges = (wishlist_id: number) => {
+    try {
+      updateWishlist(wishlist_id, editName);
+
+      exitEditMode();
+    } catch (error) {
+      console.error('Failed to save changes:', error);
+    }
+  };
+  const toggleEditMode = () => {
+    if (edit) {
+      exitEditMode();
+    } else {
+      enterEnterMode();
+    }
+  };
+  const handleEditNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditName(e.target.value);
+  };
+  const [hoveredCard, setHoveredCard] = useState<WishlistCard | null>(null);
+  const exitEditMode = () => {
+    setEditName('');
+    setEdit(false);
+  };
+  const enterEnterMode = () => {
+    setEditName(wishlistView.name);
+
+    setEdit(true);
+  };
+  const fetchWishlistData = async (wishlistId: number) => {
+    setIsRefreshing(true); // Start rotation
+    try {
+      await fetchWishlistView(wishlistId);
+    } catch (error) {
+      console.error('Error refreshing wishlist data:', error);
+    } finally {
+      setIsRefreshing(false); // Stop rotation
+      toast.success('Wishlist refreshed');
+    }
+  };
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      if (!isAuthenticated) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        if (wishlist) fetchWishlistView(Number(wishlist));
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInitialData();
+  }, [isAuthenticated, wishlist]);
+
+  useEffect(() => {
+    if (wishlistView.items.length > 0 && !hoveredCard) {
+      setHoveredCard(wishlistView.items[0]);
+    } else if (wishlistView.items.length === 0) {
+      setHoveredCard(null);
+    }
+  }, [wishlistView]);
+
+  if (loading) {
+    return <LoadingPage />;
+  }
+
+  if (!isAuthenticated) {
+    return <Signin />;
+  }
+  return (
+    <>
+      <WishlistIdHead />
+      <MainLayout>
+        <div className="w-full max-w-6xl flex-1 flex-col justify-center text-center">
+          <section className="w-full py-6 md:py-12">
+            <div className="mx-auto items-center gap-6">
+              <div className="space-y-2 text-left">
+                <div className="flex flex-row gap-4">
+                  {edit ? (
+                    <div className="flex flex-row items-center gap-4">
+                      <Input
+                        value={editName}
+                        onChange={handleEditNameChange}
+                        autoFocus
+                        className="max-w-md"
+                      />
+                      <Check
+                        size={16}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          saveChanges(wishlistView.wishlist_id);
+                        }}
+                      />
+                      <X size={16} onClick={exitEditMode} />
+                    </div>
+                  ) : (
+                    <div className="flex flex-row items-center gap-4">
+                      <h2 className="text-3xl font-bold tracking-tighter">
+                        {wishlistView.name}
+                      </h2>
+                      <Edit
+                        size={16}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleEditMode();
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Created {dayjs(wishlistView.created_at).fromNow()}
+                </p>
+              </div>
+              <div className="flex w-full flex-row gap-8">
+                <div className="w-[200px] max-w-xs md:flex">
+                  <CardPreview
+                    card={hoveredCard}
+                    getWebsiteNameByCode={getWebsiteNameByCode}
+                  />
+                </div>
+                <div className="w-full">
+                  <div className="flex flex-row items-center justify-between">
+                    <div className="hidden items-center gap-4 sm:flex sm:flex-row">
+                      <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
+                        <Button variant="outline" className="w-35">
+                          Bulk edit
+                        </Button>
+                      </Link>
+                      <RefreshCcw
+                        size={16}
+                        className={`hover:cursor-pointer ${
+                          isRefreshing ? 'animate-spin' : ''
+                        }`}
+                        onClick={() =>
+                          fetchWishlistData(wishlistView.wishlist_id)
+                        }
+                      />
+                      <div className="p-2" />
+                    </div>
+                    <WishlistSearchbox
+                      wishlistId={wishlistView.wishlist_id}
+                      className="max-w-md"
+                    />
+                  </div>
+                  {wishlistView.items.length === 0 ? (
+                    <div className="relative flex h-full w-full flex-col items-center justify-center rounded-lg">
+                      <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform text-center">
+                        <p className="text-lg font-bold">No cards found</p>
+                        <p className="text-sm">
+                          Add cards by search or bulk edit.
+                        </p>
+                      </div>
+                      <div className="mt-4 flex h-16 w-full items-center justify-center rounded-lg bg-zinc-800 opacity-70" />
+                      <div className="mt-4 flex h-60 w-full items-center justify-center rounded-lg bg-zinc-800 opacity-70" />
+                    </div>
+                  ) : (
+                    <DataTable
+                      columns={columns}
+                      deleteRow={deleteWishlistItem}
+                      data={wishlistView.items}
+                      setHoveredCard={setHoveredCard}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </MainLayout>
+    </>
+  );
+};
+
+export default WishlistId;
+
 const CardPreview = ({
   card,
   getWebsiteNameByCode
@@ -358,211 +563,6 @@ function getColumns(
     }
   ];
 }
-
-type Props = {};
-const WishlistId: NextPage<Props> = () => {
-  const router = useRouter();
-  const { wishlist } = router.query as { wishlist: string };
-  const { isAuthenticated } = useAuthStore();
-  const {
-    wishlistView,
-    fetchWishlistView,
-    updateWishlist,
-    deleteWishlistItem,
-    updateWishlistItem
-  } = useWishlistStore();
-  const { getWebsiteNameByCode } = useStore();
-  const [loading, setLoading] = useState(true);
-  const [editName, setEditName] = useState('');
-  const [edit, setEdit] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false); // controls refresh icon rotation
-
-  const columns: ColumnDef<WishlistCard>[] = getColumns(
-    deleteWishlistItem,
-    getWebsiteNameByCode,
-    updateWishlistItem
-  );
-
-  const saveChanges = (wishlist_id: number) => {
-    try {
-      updateWishlist(wishlist_id, editName);
-
-      exitEditMode();
-    } catch (error) {
-      console.error('Failed to save changes:', error);
-    }
-  };
-  const toggleEditMode = () => {
-    if (edit) {
-      exitEditMode();
-    } else {
-      enterEnterMode();
-    }
-  };
-  const handleEditNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditName(e.target.value);
-  };
-  const [hoveredCard, setHoveredCard] = useState<WishlistCard | null>(null);
-  const exitEditMode = () => {
-    setEditName('');
-    setEdit(false);
-  };
-  const enterEnterMode = () => {
-    setEditName(wishlistView.name);
-
-    setEdit(true);
-  };
-  const fetchWishlistData = async (wishlistId: number) => {
-    setIsRefreshing(true); // Start rotation
-    try {
-      await fetchWishlistView(wishlistId);
-    } catch (error) {
-      console.error('Error refreshing wishlist data:', error);
-    } finally {
-      setIsRefreshing(false); // Stop rotation
-      toast.success('Wishlist refreshed');
-    }
-  };
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      if (!isAuthenticated) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        if (wishlist) fetchWishlistView(Number(wishlist));
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchInitialData();
-  }, [isAuthenticated, wishlist]);
-
-  useEffect(() => {
-    if (wishlistView.items.length > 0 && !hoveredCard) {
-      setHoveredCard(wishlistView.items[0]);
-    } else if (wishlistView.items.length === 0) {
-      setHoveredCard(null);
-    }
-  }, [wishlistView]);
-
-  if (loading) {
-    return <LoadingPage />;
-  }
-
-  if (!isAuthenticated) {
-    return <Signin />;
-  }
-  return (
-    <>
-      <WishlistIdHead />
-      <MainLayout>
-        <div className="w-full max-w-6xl flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="mx-auto items-center gap-6">
-              <div className="space-y-2 text-left">
-                <div className="flex flex-row gap-4">
-                  {edit ? (
-                    <div className="flex flex-row items-center gap-4">
-                      <Input
-                        value={editName}
-                        onChange={handleEditNameChange}
-                        autoFocus
-                        className="max-w-md"
-                      />
-                      <Check
-                        size={16}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          saveChanges(wishlistView.wishlist_id);
-                        }}
-                      />
-                      <X size={16} onClick={exitEditMode} />
-                    </div>
-                  ) : (
-                    <div className="flex flex-row items-center gap-4">
-                      <h2 className="text-3xl font-bold tracking-tighter">
-                        {wishlistView.name}
-                      </h2>
-                      <Edit
-                        size={16}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          toggleEditMode();
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Created {dayjs(wishlistView.created_at).fromNow()}
-                </p>
-              </div>
-              <div className="flex w-full flex-row gap-8">
-                <div className="w-[200px] max-w-xs md:flex">
-                  <CardPreview
-                    card={hoveredCard}
-                    getWebsiteNameByCode={getWebsiteNameByCode}
-                  />
-                </div>
-                <div className="w-full">
-                  <div className="flex flex-row items-center justify-between">
-                    <div className="hidden items-center gap-4 sm:flex sm:flex-row">
-                      <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
-                        <Button variant="outline" className="w-35">
-                          Bulk edit
-                        </Button>
-                      </Link>
-                      <RefreshCcw
-                        size={16}
-                        className={`hover:cursor-pointer ${
-                          isRefreshing ? 'animate-spin' : ''
-                        }`}
-                        onClick={() =>
-                          fetchWishlistData(wishlistView.wishlist_id)
-                        }
-                      />
-                      <div className="p-2" />
-                    </div>
-                    <WishlistSearchbox
-                      wishlistId={wishlistView.wishlist_id}
-                      className="max-w-md"
-                    />
-                  </div>
-                  {wishlistView.items.length === 0 ? (
-                    <div className="relative flex h-full w-full flex-col items-center justify-center rounded-lg">
-                      <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform text-center">
-                        <p className="text-lg font-bold">No cards found</p>
-                        <p className="text-sm">
-                          Add cards by search or bulk edit.
-                        </p>
-                      </div>
-                      <div className="mt-4 flex h-16 w-full items-center justify-center rounded-lg bg-zinc-800 opacity-70" />
-                      <div className="mt-4 flex h-60 w-full items-center justify-center rounded-lg bg-zinc-800 opacity-70" />
-                    </div>
-                  ) : (
-                    <DataTable
-                      columns={columns}
-                      deleteRow={deleteWishlistItem}
-                      data={wishlistView.items}
-                      setHoveredCard={setHoveredCard}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-      </MainLayout>
-    </>
-  );
-};
-
-export default WishlistId;
 
 const WishlistIdHead = () => {
   return (
