@@ -101,7 +101,7 @@ const Profile: NextPage = () => {
     <>
       <ProfileHead />
       <MainLayout>
-        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
+        <div className="container flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
             <div className="grid w-full gap-6">
               {hasActiveSubscription && (
@@ -120,9 +120,6 @@ const Profile: NextPage = () => {
               )}
               {!hasActiveSubscription && (
                 <>
-                  <SubscriptionCards
-                    createCheckoutSession={createCheckoutSession}
-                  />
                   <UserSettings
                     email={email}
                     fullName={fullName}
@@ -132,6 +129,9 @@ const Profile: NextPage = () => {
                     toggleBetaFeatures={toggleBetaFeatures}
                     control={control}
                     handleLogout={handleLogout}
+                  />
+                  <SubscriptionCards
+                    createCheckoutSession={createCheckoutSession}
                   />
                 </>
               )}
@@ -188,7 +188,7 @@ const UserSettings = ({
   handleLogout: () => void;
 }) => {
   return (
-    <div className="outlined-container flex max-w-full flex-col overflow-hidden  p-4 text-left">
+    <div className="outlined-container container flex max-w-xl flex-col overflow-hidden  p-4 text-left">
       <h3 className="text-lg font-bold">Settings</h3>
       <div className="p-2" />
       {/* user info container */}

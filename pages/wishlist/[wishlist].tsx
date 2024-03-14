@@ -211,7 +211,7 @@ const WishlistId: NextPage<Props> = () => {
               </p>
             </div>
             <div className="flex w-full flex-row gap-8">
-              <div className="max-w-[200px]">
+              <div className="hidden lg:flex">
                 <CardPreview
                   card={hoveredCard}
                   getWebsiteNameByCode={getWebsiteNameByCode}
@@ -219,7 +219,7 @@ const WishlistId: NextPage<Props> = () => {
               </div>
               <div className="w-full">
                 <div className="flex flex-row items-center justify-between">
-                  <div className="hidden items-center gap-4 sm:flex sm:flex-row">
+                  <div className="hidden items-center gap-4 md:flex md:flex-row">
                     <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
                       <Button variant="outline" className="w-35">
                         Bulk edit

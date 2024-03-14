@@ -8,7 +8,7 @@ export default function Homebanner({}: Props) {
   return (
     <div className="">
       <Image
-        className="crisp-edges mx-auto hidden h-16 w-auto sm:flex"
+        className="crisp-edges mx-auto hidden h-16 w-auto md:flex"
         src={logo}
         alt="Snapcaster"
       />

@@ -38,7 +38,7 @@ export default function NavbarNew() {
   return (
     <>
       {/* MOBILE NAV */}
-      <div className="relative flex h-16 items-center justify-between bg-muted sm:hidden">
+      <div className="relative flex h-16 items-center justify-between bg-muted md:hidden">
         <div className="absolute inset-y-0 left-0 flex items-center">
           <Button
             variant="ghost"
@@ -52,7 +52,7 @@ export default function NavbarNew() {
             />
           </Button>
         </div>
-        <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+        <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
           <div className="flex flex-shrink-0 items-center">
             <Link href="/" as="/">
               <Image
@@ -67,7 +67,7 @@ export default function NavbarNew() {
       <div
         className={`${
           mobileMenuOpen ? 'outlined-container m-1 block h-fit p-2' : 'hidden'
-        } animate-in sm:hidden`}
+        } animate-in md:hidden`}
         id="mobile-menu"
       >
         <div className="space-y-1 px-2 pt-2 pb-3">
@@ -162,7 +162,7 @@ export default function NavbarNew() {
       </div>
 
       {/* DESKTOP NAV SM+ */}
-      <div className="hidden items-center justify-between p-3 sm:flex">
+      <div className="hidden items-center justify-between p-3 md:flex">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
