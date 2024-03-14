@@ -34,6 +34,11 @@ export default function Navbar({}: Props) {
       href: '/wishlist',
       current: currentPath === '/wishlist'
     },
+    {
+      name: 'Discord',
+      href: 'https://discord.gg/EnKKHxSq75',
+      target: '_blank'
+    },
     // { name: 'About', href: '/about', current: currentPath === '/about' },
     // { name: 'Updates', href: '/updates', current: currentPath === '/updates' },
     // ...(isAuthenticated ? [{ name: 'Wishlists', href: '/wishlist', current: currentPath === '/wishlist' }] : []),

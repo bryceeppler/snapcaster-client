@@ -181,6 +181,17 @@ export default function AdvancedSearch({}: Props) {
             type="text"
             placeholder="Card Base Name"
             defaultValue={''}
+            onKeyDown={(e) => {
+              if (e.key == 'Enter') {
+                if (searchRef.current) {
+                  updateAdvnacedSearchTextBoxValue(searchRef.current.value);
+                }
+                if (numberRef.current) {
+                  updateNumberText(Number(numberRef.current.value));
+                }
+                fetchAdvancedSearchResults();
+              }
+            }}
           ></Input>
 
           <Button
