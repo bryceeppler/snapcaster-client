@@ -9,6 +9,8 @@ import MainLayout from '@/components/MainLayout';
 import useAuthStore from '@/stores/authStore';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import LoginRequired from '@/components/login-required';
+import PageTitle from '@/components/ui/page-title';
 type Props = {};
 
 export default function Multisearch({}: Props) {
@@ -19,32 +21,13 @@ export default function Multisearch({}: Props) {
 
   if (!isAuthenticated) {
     return (
-      <MainLayout>
-        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
-              <div className="space-y-2">
-                <h2 className="text-4xl font-bold tracking-tighter">
-                  Multi-search
-                </h2>
-              </div>
-              <div className="grid gap-4 md:gap-4 p-8 outlined-container">
-                <p className="text-left">
-                  You must be logged in to use this feature.
-                </p>
-                <Link href="/signin">
-                  <Button className="w-full">Login</Button>
-                </Link>
-                <Link href="/signup">
-                  <Button className="w-full">Sign up</Button>
-                </Link> 
-              </div>
-            </div>
-          </section>
-        </div>
-      </MainLayout>
+      <LoginRequired
+        title="Multi-search"
+        message="You must be logged in to use this feature."
+      />
     );
   }
+
   return (
     <>
       <Head>
@@ -68,10 +51,8 @@ export default function Multisearch({}: Props) {
       </Head>
       <MainLayout>
         {mode === 'search' && !loading && (
-          <div className="max-w-2xl flex-1 flex-col items-center justify-center text-center">
-            <h2 className="text-4xl font-bold tracking-tighter">
-              Multi-search
-            </h2>
+          <div className="container w-full flex-1 flex-col items-center justify-center text-center">
+            <PageTitle title="Multi Search" />
             <div className="p-2" />
             <div className="ext-sm outlined-container p-3">
               Select which stores you would like to search, and enter a list of
@@ -94,7 +75,7 @@ export default function Multisearch({}: Props) {
           </div>
         )}
         {mode == 'results' && (
-          <div className="w-full max-w-xl flex-col">
+          <div className="container w-full flex-col">
             <MultiCatalog />
           </div>
         )}

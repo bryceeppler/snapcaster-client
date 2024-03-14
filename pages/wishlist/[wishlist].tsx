@@ -85,10 +85,10 @@ const CardPreview = ({
 }) => {
   return (
     <div className="flex flex-col items-center gap-4 py-4">
-      <div className="text-muted-foreground flex-1 text-left text-sm">
+      <div className="flex-1 text-left text-sm text-muted-foreground">
         {card ? (
           <div className="">
-            <Image
+            <img
               alt={card.card_name}
               src={card.cheapest_price_doc.image}
               className="h-auto rounded-lg transition-all"
@@ -116,10 +116,10 @@ const CardPreview = ({
             </Button>
           </div>
         ) : (
-          <div>
+          <div className="">
             <div
               // image placeholder
-              className="h-[280px] w-[200px] rounded-lg bg-zinc-800 opacity-70"
+              className="h-[280px] w-[200px] rounded-lg bg-red-800 opacity-70"
             ></div>
             <div className="p-2" />
             <div
@@ -503,7 +503,7 @@ const WishlistId: NextPage<Props> = () => {
                 </p>
               </div>
               <div className="flex w-full flex-row gap-8">
-                <div className="hidden w-[200px] max-w-xs md:flex">
+                <div className="w-[200px] max-w-xs md:flex">
                   <CardPreview
                     card={hoveredCard}
                     getWebsiteNameByCode={getWebsiteNameByCode}

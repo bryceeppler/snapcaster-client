@@ -518,6 +518,7 @@ type State = {
   setMultiSearchQuery: (multiSearchQuery: string) => void;
   singleSearchOrderBy: string;
   setSingleSearchOrderBy: (singleSearchOrderBy: string) => void;
+  toggleSingleSearchOrderBy: () => void;
   singleSearchOrder: string;
   setSingleSearchOrder: (singleSearchOrder: string) => void;
   toggleSelectMultiSearchCard: (cardName: string) => void;
@@ -559,6 +560,14 @@ type State = {
 };
 
 export const useStore = create<State>((set, get) => ({
+  toggleSingleSearchOrderBy: () => {
+    const order = get().singleSearchOrder;
+    if (order === 'asc') {
+      get().setSingleSearchOrder('desc');
+      return;
+    }
+    get().setSingleSearchOrder('asc');
+  },
   singleSearchStarted: false,
   singleSearchPriceList: undefined,
   getWebsiteNameByCode: (code: string) => {
@@ -876,8 +885,6 @@ export const useStore = create<State>((set, get) => ({
 
   multiSearchSelectedWebsites: websites.map((website: Website) => website.name),
   toggleMultiSearchSelectedWebsites: (website: string) => {
-    // if website is in multiSearchSelectedWebsites, remove it
-    // else add it
     if (get().multiSearchSelectedWebsites.includes(website)) {
       set({
         multiSearchSelectedWebsites: get().multiSearchSelectedWebsites.filter(
