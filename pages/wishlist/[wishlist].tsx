@@ -170,101 +170,99 @@ const WishlistId: NextPage<Props> = () => {
     <>
       <WishlistIdHead />
       <MainLayout>
-        <div className="w-full flex-col justify-center text-center">
-          <section className="py-6 md:py-12">
-            <div className="mx-auto items-center gap-6">
-              <div className="space-y-2 text-left">
-                <div className="flex flex-row gap-4">
-                  {edit ? (
-                    <div className="flex flex-row items-center gap-4">
-                      <Input
-                        value={editName}
-                        onChange={handleEditNameChange}
-                        autoFocus
-                        className="max-w-md"
-                      />
-                      <Check
-                        size={16}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          saveChanges(wishlistView.wishlist_id);
-                        }}
-                      />
-                      <X size={16} onClick={exitEditMode} />
-                    </div>
-                  ) : (
-                    <div className="flex flex-row items-center gap-4">
-                      <h2 className="text-3xl font-bold tracking-tighter">
-                        {wishlistView.name}
-                      </h2>
-                      <Edit
-                        size={16}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          toggleEditMode();
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Created {dayjs(wishlistView.created_at).fromNow()}
-                </p>
-              </div>
-              <div className="flex w-full flex-row gap-8">
-                <div className="w-[200px] max-w-xs md:flex">
-                  <CardPreview
-                    card={hoveredCard}
-                    getWebsiteNameByCode={getWebsiteNameByCode}
-                  />
-                </div>
-                <div className="w-full">
-                  <div className="flex flex-row items-center justify-between">
-                    <div className="hidden items-center gap-4 sm:flex sm:flex-row">
-                      <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
-                        <Button variant="outline" className="w-35">
-                          Bulk edit
-                        </Button>
-                      </Link>
-                      <RefreshCcw
-                        size={16}
-                        className={`hover:cursor-pointer ${
-                          isRefreshing ? 'animate-spin' : ''
-                        }`}
-                        onClick={() =>
-                          fetchWishlistData(wishlistView.wishlist_id)
-                        }
-                      />
-                      <div className="p-2" />
-                    </div>
-                    <WishlistSearchbox
-                      wishlistId={wishlistView.wishlist_id}
+        <div className="container">
+          <div className="mx-auto items-center gap-6">
+            <div className="space-y-2 text-left">
+              <div className="flex flex-row gap-4">
+                {edit ? (
+                  <div className="flex flex-row items-center gap-4">
+                    <Input
+                      value={editName}
+                      onChange={handleEditNameChange}
+                      autoFocus
                       className="max-w-md"
                     />
-                  </div>
-                  {wishlistView.items.length === 0 ? (
-                    <div className="relative flex h-full w-full flex-col items-center justify-center rounded-lg">
-                      <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform text-center">
-                        <p className="text-lg font-bold">No cards found</p>
-                        <p className="text-sm">
-                          Add cards by search or bulk edit.
-                        </p>
-                      </div>
-                      <div className="mt-4 flex h-16 w-full items-center justify-center rounded-lg bg-muted opacity-70" />
-                      <div className="mt-4 flex h-60 w-full items-center justify-center rounded-lg bg-muted opacity-70" />
-                    </div>
-                  ) : (
-                    <DataTable
-                      columns={columns}
-                      deleteRow={deleteWishlistItem}
-                      data={wishlistView.items}
-                      setHoveredCard={setHoveredCard}
+                    <Check
+                      size={16}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        saveChanges(wishlistView.wishlist_id);
+                      }}
                     />
-                  )}
+                    <X size={16} onClick={exitEditMode} />
+                  </div>
+                ) : (
+                  <div className="flex flex-row items-center gap-4">
+                    <h2 className="text-4xl font-bold tracking-tighter">
+                      {wishlistView.name}
+                    </h2>
+                    <Edit
+                      size={16}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleEditMode();
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+              <p className="text-gray-500 dark:text-gray-400">
+                Created {dayjs(wishlistView.created_at).fromNow()}
+              </p>
+            </div>
+            <div className="flex w-full flex-row gap-8">
+              <div className="max-w-[200px]">
+                <CardPreview
+                  card={hoveredCard}
+                  getWebsiteNameByCode={getWebsiteNameByCode}
+                />
+              </div>
+              <div className="w-full">
+                <div className="flex flex-row items-center justify-between">
+                  <div className="hidden items-center gap-4 sm:flex sm:flex-row">
+                    <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
+                      <Button variant="outline" className="w-35">
+                        Bulk edit
+                      </Button>
+                    </Link>
+                    <RefreshCcw
+                      size={16}
+                      className={`hover:cursor-pointer ${
+                        isRefreshing ? 'animate-spin' : ''
+                      }`}
+                      onClick={() =>
+                        fetchWishlistData(wishlistView.wishlist_id)
+                      }
+                    />
+                    <div className="p-2" />
+                  </div>
+                  <WishlistSearchbox
+                    wishlistId={wishlistView.wishlist_id}
+                    className="max-w-md"
+                  />
                 </div>
+                {wishlistView.items.length === 0 ? (
+                  <div className="relative flex h-full w-full flex-col items-center justify-center rounded-lg">
+                    <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform text-center">
+                      <p className="text-lg font-bold">No cards found</p>
+                      <p className="text-sm">
+                        Add cards by search or bulk edit.
+                      </p>
+                    </div>
+                    <div className="mt-4 flex h-16 w-full items-center justify-center rounded-lg bg-muted opacity-70" />
+                    <div className="mt-4 flex h-60 w-full items-center justify-center rounded-lg bg-muted opacity-70" />
+                  </div>
+                ) : (
+                  <DataTable
+                    columns={columns}
+                    deleteRow={deleteWishlistItem}
+                    data={wishlistView.items}
+                    setHoveredCard={setHoveredCard}
+                  />
+                )}
               </div>
             </div>
-          </section>
+          </div>
         </div>
       </MainLayout>
     </>
