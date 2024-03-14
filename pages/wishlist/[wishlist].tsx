@@ -258,8 +258,8 @@ const WishlistId: NextPage<Props> = () => {
                           Add cards by search or bulk edit.
                         </p>
                       </div>
-                      <div className="mt-4 flex h-16 w-full items-center justify-center rounded-lg bg-zinc-800 opacity-70" />
-                      <div className="mt-4 flex h-60 w-full items-center justify-center rounded-lg bg-zinc-800 opacity-70" />
+                      <div className="mt-4 flex h-16 w-full items-center justify-center rounded-lg bg-muted opacity-70" />
+                      <div className="mt-4 flex h-60 w-full items-center justify-center rounded-lg bg-muted opacity-70" />
                     </div>
                   ) : (
                     <DataTable
@@ -329,7 +329,7 @@ const CardPreview = ({
             <div className="p-2" />
             <div
               // button placeholder
-              className="h-9 w-[200px] rounded-lg bg-zinc-800 opacity-70"
+              className="h-9 w-[200px] rounded-lg bg-muted opacity-70"
             ></div>
           </div>
         )}
@@ -521,7 +521,7 @@ function getColumns(
               <DialogFooter>
                 <Button
                   type="submit"
-                  className="bg-zinc-800"
+                  className="bg-muted"
                   onClick={handleSaveChanges}
                 >
                   Save changes
