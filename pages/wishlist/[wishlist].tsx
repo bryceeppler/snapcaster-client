@@ -11,7 +11,6 @@ import {
   Edit,
   MoreHorizontal,
   RefreshCcw,
-  Settings,
   X
 } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
@@ -55,17 +54,10 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useState } from 'react';
-import Image from 'next/image';
 import WishlistSearchbox from '@/components/WishlistSearchbox';
 import { WishlistCard } from '@/stores/wishlistStore';
-import { Item } from '@radix-ui/react-dropdown-menu';
 import Link from 'next/link';
 import { toast } from 'sonner';
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
 
 export type Card = {
   name: string;
@@ -178,8 +170,8 @@ const WishlistId: NextPage<Props> = () => {
     <>
       <WishlistIdHead />
       <MainLayout>
-        <div className="w-full max-w-6xl flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12">
+        <div className="w-full flex-col justify-center text-center">
+          <section className="py-6 md:py-12">
             <div className="mx-auto items-center gap-6">
               <div className="space-y-2 text-left">
                 <div className="flex flex-row gap-4">
