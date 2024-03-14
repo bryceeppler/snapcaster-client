@@ -139,6 +139,10 @@ const foilList: Filter[] = [
     abbreviation: 'Foil'
   },
   {
+    name: 'Confetti',
+    abbreviation: 'Confetti'
+  },
+  {
     name: 'Etched',
     abbreviation: 'Etched'
   },
@@ -2557,7 +2561,7 @@ export const advancedUseStore = create<State>((set, get) => ({
         `${process.env.NEXT_PUBLIC_SEARCH_URL}/advanced`,
         {
           cardCategory: get().selectedCardCategory,
-          cardName: get().advnacedSearchTextBoxValue,
+          cardName: get().advnacedSearchTextBoxValue.trim(),
           website: get().selectedWebsiteList,
           condition: get().selectedConditionsList,
           foil: get().selectedFoilList,
