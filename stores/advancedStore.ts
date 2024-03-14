@@ -139,6 +139,10 @@ const foilList: Filter[] = [
     abbreviation: 'Foil'
   },
   {
+    name: 'Confetti',
+    abbreviation: 'Confetti'
+  },
+  {
     name: 'Etched',
     abbreviation: 'Etched'
   },
