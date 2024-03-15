@@ -211,12 +211,12 @@ const WishlistId: NextPage<Props> = () => {
               </p>
             </div>
             <div className="flex w-full flex-row gap-8">
-              <div className="hidden lg:flex">
+              <div className="hidden md:flex">
                 <CardPreview
                   card={hoveredCard}
                   getWebsiteNameByCode={getWebsiteNameByCode}
                 />
-              </div>
+                </div>
               <div className="w-full">
                 <div className="flex flex-row items-center justify-between">
                   <div className="hidden items-center gap-4 md:flex md:flex-row">
@@ -280,7 +280,7 @@ const CardPreview = ({
 }) => {
   return (
     <div className="flex flex-col items-center gap-4 py-4">
-      <div className="flex-1 text-left text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex-1 text-left text-sm">
         {card ? (
           <div className="">
             <img
@@ -311,15 +311,15 @@ const CardPreview = ({
             </Button>
           </div>
         ) : (
-          <div className="">
+          <div>
             <div
               // image placeholder
-              className="h-[280px] w-[200px] rounded-lg bg-red-800 opacity-70"
+              className="h-[280px] w-[200px] rounded-lg bg-zinc-800 opacity-70"
             ></div>
             <div className="p-2" />
             <div
               // button placeholder
-              className="h-9 w-[200px] rounded-lg bg-muted opacity-70"
+              className="h-9 w-[200px] rounded-lg bg-zinc-800 opacity-70"
             ></div>
           </div>
         )}

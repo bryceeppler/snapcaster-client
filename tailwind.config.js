@@ -3,8 +3,11 @@ const { fontFamily } = require('tailwindcss/defaultTheme');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
-  content: ['app/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}'],
-  theme: {
+  content: [
+    'app/**/*.{ts,tsx}',
+    'components/**/*.{ts,tsx}',
+    'pages/**/*.{ts,tsx}'
+  ],  theme: {
     screens: {
       sm: '480px',
       md: '768px',
