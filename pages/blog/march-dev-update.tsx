@@ -4,6 +4,7 @@ import BlogFeed from '@/components/BlogFeed';
 
 import MainLayout from '@/components/MainLayout';
 import Image from 'next/image';
+import { Button } from '@/components/ui/button';
 type Props = {};
 
 const Updates: NextPage<Props> = () => {
@@ -11,7 +12,7 @@ const Updates: NextPage<Props> = () => {
     <>
       <UpdatesHead />
       <MainLayout>
-        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-left">
+        <div className="container max-w-2xl flex-1 flex-col justify-center text-left">
           <div className="p-6"></div>
 
           <h1 className="text-2xl font-bold">#1 March Development Blog</h1>
@@ -27,8 +28,17 @@ const Updates: NextPage<Props> = () => {
             maintenance of Snapcaster. Moving forward, new features will
             primarily be exclusive to Pro members. We've already begun
             implementing some of these features, and users can anticipate seeing
-            them evolve over time.
+            them evolve over time. Note that we intend on keeping the core search and multisearch functionality free.
           </p>
+          <div className="p-4"></div>
+          <p>
+            {/* discord launch , join to give us feedback, report bugs and keep up with updates~! */}
+            We have also launched our Discord server, where you can join to give us feedback, report bugs, and keep up with updates. We're excited to have you join our community and look forward to hearing your thoughts and suggestions.
+          </p>
+          <div className="p-4"></div>
+          {/* <Button
+            className='w-full mx-auto bg-indigo-500 text-white'
+          >Join the Snapcaster Discord</Button> */}
           <div className="p-4"></div>
           <h2 className="text-xl font-bold">New Features</h2>
           <div className="p-4"></div>
@@ -70,7 +80,7 @@ const Updates: NextPage<Props> = () => {
             </li>
           </ul>
           <div className="p-4"></div>
-          <Image src="/2-advanced-search.png" alt="Advanced search feature" width={500} height={300} className="mx-auto rounded-lg border border-zinc-600" />
+          <Image src="/1-advanced.png" alt="Advanced search feature" width={500} height={300} className="mx-auto rounded-lg border border-zinc-600" />
           <div className="p-4"></div>
 
           <h3
@@ -85,7 +95,7 @@ const Updates: NextPage<Props> = () => {
 
           <h2
             className="text-xl font-bold"
-          >16 New Stores</h2>
+          >17 New Stores</h2>
             <div className="p-2"></div>
           <p>
             We've revisited our to-do list this month and added a substantial
@@ -111,6 +121,7 @@ const Updates: NextPage<Props> = () => {
             <li>Luke’s Cards</li>
             <li>Dark Crystal Cards</li>
             <li>Bootown’s Games</li>
+            <li>Prisma Games Edmonton</li>
           </ul>
           <div className="p-4"></div>
 
