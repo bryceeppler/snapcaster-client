@@ -20,7 +20,7 @@ import favicon from 'public/favicon.ico';
 const components: { title: string; href: string; description: string }[] = [
   {
     title: 'Blog',
-    href: '/updates',
+    href: '/blog',
     description:
       'Stay up to date with the latest Snapcaster news, updates, and features.'
   },
@@ -120,7 +120,7 @@ export default function NavbarNew() {
             </Button>
           </Link>
           {/* Blog */}
-          <Link href="/updates" as="/updates">
+          <Link href="/blog" as="/blog">
             <Button
               variant="ghost"
               className="block w-full text-left text-sm"
