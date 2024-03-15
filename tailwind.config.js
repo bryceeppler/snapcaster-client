@@ -14,13 +14,6 @@ module.exports = {
       lg: '976px',
       xl: '1440px'
     },
-<<<<<<< HEAD
-  },
-  plugins: [
-    require('@tailwindcss/line-clamp'),
-  ],
-  
-=======
     extend: {
       container: {
         center: true,
@@ -93,6 +86,6 @@ module.exports = {
       }
     }
   },
-  plugins: [require('tailwindcss-animate')]
->>>>>>> c95b2de6dc387ba19faad4dff4bac361bb2ff4cf
+  plugins: [require('tailwindcss-animate'),
+  require('@tailwindcss/line-clamp'),]
 };
