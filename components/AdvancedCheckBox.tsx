@@ -10,12 +10,12 @@ type Props = {
 export default function AdvancedCheckBox(props: Props) {
   return (
     <div
-      className="min-h-14 flex cursor-pointer items-end "
+      className="flex min-h-14 cursor-pointer items-end "
       onClick={() => {
         advancedUseStore.getState().toggleRegularCheckboxes(props.value);
       }}
     >
-      <div className="flex h-7 w-full items-center rounded-md bg-zinc-800 px-2 py-1 hover:bg-zinc-700">
+      <div className="flex h-7 w-full items-center rounded-md bg-primary px-2 py-1 hover:bg-zinc-900">
         <input
           id="numberCheckBox"
           checked={props.checkedState}

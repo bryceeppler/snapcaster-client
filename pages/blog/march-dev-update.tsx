@@ -21,19 +21,23 @@ const Updates: NextPage<Props> = () => {
           <p className="">
             This month has been a significant one for Snapcaster! I've optimized
             the backend infrastructure, which has greatly improved both
-            reliability and performance for searches. With these enhancements out of the way,
-            we can now focus on developing new features.
+            reliability and performance for searches. With these enhancements
+            out of the way, we can now focus on developing new features.
             Additionally, we've introduced the Snapcaster Pro membership,
             providing an avenue for users to support the development and
             maintenance of Snapcaster. Moving forward, new features will
             primarily be exclusive to Pro members. We've already begun
             implementing some of these features, and users can anticipate seeing
-            them evolve over time. Note that we intend on keeping the core search and multisearch functionality free.
+            them evolve over time. Note that we intend on keeping the core
+            search and multisearch functionality free.
           </p>
           <div className="p-4"></div>
           <p>
             {/* discord launch , join to give us feedback, report bugs and keep up with updates~! */}
-            We have also launched our Discord server, where you can join to give us feedback, report bugs, and keep up with updates. We're excited to have you join our community and look forward to hearing your thoughts and suggestions.
+            We have also launched our Discord server, where you can join to give
+            us feedback, report bugs, and keep up with updates. We're excited to
+            have you join our community and look forward to hearing your
+            thoughts and suggestions.
           </p>
           <div className="p-4"></div>
           {/* <Button
@@ -46,9 +50,7 @@ const Updates: NextPage<Props> = () => {
           <h3 className="text-lg font-bold">Wishlists</h3>
           <div className="p-2"></div>
 
-          <ul
-            className="list-disc list-outside space-y-2 px-6"
-          >
+          <ul className="list-outside list-disc space-y-2 px-6">
             <li>
               Users can now create lists of cards for easy price checking.
             </li>
@@ -58,13 +60,19 @@ const Updates: NextPage<Props> = () => {
               available.
             </li>
           </ul>
-            <div className="p-4"></div>
-          <Image src="/1-wishlist.png" alt="Wishlist feature" width={500} height={300} className="mx-auto rounded-lg border border-zinc-600" />
+          <div className="p-4"></div>
+          <Image
+            src="/1-wishlist.png"
+            alt="Wishlist feature"
+            width={500}
+            height={300}
+            className="mx-auto rounded-lg border border-zinc-600"
+          />
           <div className="p-4"></div>
 
           <h3 className="text-lg font-bold">Advanced Search</h3>
           <div className="p-2"></div>
-          <ul className="list-disc list-outside space-y-2 px-6">
+          <ul className="list-outside list-disc space-y-2 px-6">
             <li>
               An advanced search feature now supports the majority of stores on
               Snapcaster.
@@ -80,31 +88,31 @@ const Updates: NextPage<Props> = () => {
             </li>
           </ul>
           <div className="p-4"></div>
-          <Image src="/1-advanced.png" alt="Advanced search feature" width={500} height={300} className="mx-auto rounded-lg border border-zinc-600" />
+          <Image
+            src="/1-advanced.png"
+            alt="Advanced search feature"
+            width={500}
+            height={300}
+            className="mx-auto rounded-lg border border-zinc-600"
+          />
           <div className="p-4"></div>
 
-          <h3
-            className="text-lg font-bold"
-          >100 Card Multisearch</h3>
-            <div className="p-2"></div>
+          <h3 className="text-lg font-bold">100 Card Multisearch</h3>
+          <div className="p-2"></div>
           <p>
             Pro users can now search for up to 100 cards simultaneously using
             the multisearch tool.
           </p>
           <div className="p-4"></div>
 
-          <h2
-            className="text-xl font-bold"
-          >17 New Stores</h2>
-            <div className="p-2"></div>
+          <h2 className="text-xl font-bold">17 New Stores</h2>
+          <div className="p-2"></div>
           <p>
             We've revisited our to-do list this month and added a substantial
             number of the requested stores, with more to come soon!
           </p>
-            <div className="p-4"></div>
-          <ul
-            className="list-disc list-outside space-y-2 px-6 sm:columns-2"
-          >
+          <div className="p-4"></div>
+          <ul className="list-outside list-disc space-y-2 px-6 sm:columns-2">
             <li>J&J Cards</li>
             <li>MTG North</li>
             <li>Dragon Fyre Games</li>
@@ -125,13 +133,11 @@ const Updates: NextPage<Props> = () => {
           </ul>
           <div className="p-4"></div>
 
-          <h2
-            className="text-xl font-bold"
-          >Websites Removed from Snapcaster</h2>
-            <div className="p-2"></div>
-          <ul
-            className="list-disc list-outside space-y-2 px-6"
-          >
+          <h2 className="text-xl font-bold">
+            Websites Removed from Snapcaster
+          </h2>
+          <div className="p-2"></div>
+          <ul className="list-outside list-disc space-y-2 px-6">
             <li>North of Exile Games</li>
           </ul>
           <div className="p-4"></div>
@@ -139,8 +145,9 @@ const Updates: NextPage<Props> = () => {
           <p>
             This development journey continues to be an exciting one, and your
             support, especially through the Pro membership, is invaluable to us.
-            Stay tuned for more updates and enhancements as we continue to work on Snapcaster and introduce some cool features. Thank you for
-            being a part of our community!
+            Stay tuned for more updates and enhancements as we continue to work
+            on Snapcaster and introduce some cool features. Thank you for being
+            a part of our community!
           </p>
         </div>
       </MainLayout>

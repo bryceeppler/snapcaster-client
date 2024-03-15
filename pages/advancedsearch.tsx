@@ -477,7 +477,7 @@ export default function AdvancedSearch({}: Props) {
                 onClick={() => {
                   setShoeSoryBy(!showSortBy);
                 }}
-                className="w-full"
+                className="w-full min-w-32"
               >
                 Sort:{' '}
                 {selectedSortBy.charAt(0).toUpperCase() +
@@ -489,7 +489,7 @@ export default function AdvancedSearch({}: Props) {
                     <div key={state.abbreviation}>
                       <fieldset>
                         <div
-                          className="flex cursor-pointer items-center gap-1 rounded py-1 px-2 hover:bg-zinc-700"
+                          className="flex cursor-pointer items-center gap-1 rounded px-2 py-1 hover:bg-zinc-700"
                           onClick={() => {
                             updateSortByFilter(state.abbreviation);
                           }}
@@ -522,6 +522,7 @@ export default function AdvancedSearch({}: Props) {
               onClick={() => {
                 resetFilters();
               }}
+              className="min-w-32"
             >
               Reset Filters
             </Button>
