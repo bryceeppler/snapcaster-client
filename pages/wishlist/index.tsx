@@ -21,6 +21,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -167,7 +168,7 @@ const Wishlist: NextPage<Props> = () => {
     <>
       <WishlistHead />
       <MainLayout>
-        <div className="container w-full flex-1 flex-col justify-center text-center">
+        <div className="container w-full max-w-xl flex-1 flex-col justify-center text-center">
           <div className="grid items-start gap-6 md:px-6">
             <PageTitle title="Wishlists" />
 
@@ -183,10 +184,13 @@ const Wishlist: NextPage<Props> = () => {
               )}
               {wishlists &&
                 wishlists.map((wishlist) => (
-                  <Link href={`/wishlist/${wishlist.id}`}>
+                  <Link href={`/wishlist/${wishlist.id}`}
+                    as={`/wishlist/${wishlist.id}`}
+                    key={wishlist.id}
+                  >
                     <Card
                       key={wishlist.id}
-                      className="cursor-pointer transition-shadow duration-300 ease-in-out hover:border-zinc-500 hover:shadow-lg"
+                      className="cursor-pointer text-left transition-shadow duration-300 ease-in-out hover:border-zinc-500 hover:shadow-lg"
                     >
                       <CardHeader className="flex flex-row items-center justify-between gap-4">
                         {editWishlistId === wishlist.id ? (
@@ -208,9 +212,11 @@ const Wishlist: NextPage<Props> = () => {
                       </CardHeader>
                       <CardContent>
                         <CardDescription className="text-zinc-400">
-                          <p>{wishlist.item_count} cards</p>
+                          {wishlist.item_count} cards
 
-                          <p>Created {dayjs(wishlist.created_at).fromNow()}</p>
+                        </CardDescription>
+                        <CardDescription className="text-zinc-400">
+                          Created {dayjs(wishlist.created_at).fromNow()}
                         </CardDescription>
                       </CardContent>
                       {editWishlistId === wishlist.id && (
@@ -246,7 +252,13 @@ const Wishlist: NextPage<Props> = () => {
             <Button variant="default" onClick={() => setIsDialogOpen(true)}>
               New wishlist
             </Button>
-            <Dialog open={isDialogOpen}>
+            <Dialog open={isDialogOpen}
+              onOpenChange={
+                (isOpen) => {
+                  setIsDialogOpen(isOpen);
+                }
+              }
+            >
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>New wishlist</DialogTitle>
@@ -277,6 +289,11 @@ const Wishlist: NextPage<Props> = () => {
                     </div>
                   </div>
                   <DialogFooter>
+                  <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
                     <DialogTrigger asChild>
                       <Button type="submit">Save</Button>
                     </DialogTrigger>
