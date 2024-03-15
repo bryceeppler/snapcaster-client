@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOutsideClick } from '@/stores/advancedStore';
 import { Filter } from '@/stores/advancedStore';
 import { Button } from './ui/button';
@@ -23,11 +23,15 @@ export default function AdvancedSearchCombo(props: PropsOption) {
   const ref = useOutsideClick(() => {
     setOpen(false);
   });
-
+  useEffect(() => {
+    props.option.sort(function (a, b) {
+      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+    });
+  }, []);
   return (
     <div ref={ref}>
       <div className="relative space-y-1">
-        <div className="min-h-14 grid">
+        <div className="grid min-h-14">
           <label className="text-midTone  truncate pb-1 text-sm">
             <div className="flex">
               <p className="font-medium">{props.label}</p>
