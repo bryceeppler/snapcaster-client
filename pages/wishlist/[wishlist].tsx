@@ -170,7 +170,7 @@ const WishlistId: NextPage<Props> = () => {
     <>
       <WishlistIdHead />
       <MainLayout>
-        <div className="container">
+        <div className="lg:container w-full">
           <div className="mx-auto items-center gap-6">
             <div className="space-y-2 text-left">
               <div className="flex flex-row gap-4">
@@ -218,7 +218,8 @@ const WishlistId: NextPage<Props> = () => {
                 />
                 </div>
               <div className="w-full">
-                <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-row w-full items-center justify-between">
+                  {/* Bulk edit and search box row */}
                   <div className="hidden items-center gap-4 md:flex md:flex-row">
                     <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
                       <Button variant="outline" className="w-35">
