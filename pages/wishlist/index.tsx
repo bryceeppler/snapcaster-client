@@ -14,8 +14,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import useAuthStore from '@/stores/authStore';
-import Signin from '@/pages/signin';
-import LoadingPage from '@/components/LoadingPage';
 import {
   Dialog,
   DialogContent,
@@ -23,9 +21,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { SubscriptionCards } from '../profile';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
@@ -36,6 +34,9 @@ import axiosInstance from '@/utils/axiosWrapper';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/en';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import LoginRequired from '@/components/login-required';
+import SubscriptionRequired from '@/components/subscription-required';
+import PageTitle from '@/components/ui/page-title';
 dayjs.extend(relativeTime);
 type Props = {};
 
@@ -146,56 +147,20 @@ const Wishlist: NextPage<Props> = () => {
 
   if (!isAuthenticated) {
     return (
-      <MainLayout>
-        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-              <div className="space-y-2">
-                <h2 className="text-4xl font-bold tracking-tighter">
-                  Wishlists
-                </h2>
-              </div>
-              <div className="outlined-container grid gap-4 p-8 md:gap-4">
-                <p className="text-left">
-                  You must be logged in to use this feature.
-                </p>
-                <Link href="/signin">
-                  <Button className="w-full">Login</Button>
-                </Link>
-                <Link href="/signup">
-                  <Button className="w-full">Sign up</Button>
-                </Link>
-              </div>
-            </div>
-          </section>
-        </div>
-      </MainLayout>
+      <LoginRequired
+        title="Wishlists"
+        message="You must be logged in to use this feature."
+      />
     );
   }
 
   if (!hasActiveSubscription) {
     return (
-      <MainLayout>
-        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-              <div className="space-y-2">
-                <h2 className="text-4xl font-bold tracking-tighter">
-                  Wishlists
-                </h2>
-              </div>
-              <div className="outlined-container grid gap-4 p-8 md:gap-4">
-                <p className="text-left">
-                  You must have an active subscription to use this feature.
-                </p>
-              </div>
-              <SubscriptionCards
-                createCheckoutSession={createCheckoutSession}
-              />{' '}
-            </div>
-          </section>
-        </div>
-      </MainLayout>
+      <SubscriptionRequired
+        title="Wishlists"
+        message="You must have an active subscription to use this feature."
+        createCheckoutSession={createCheckoutSession}
+      />
     );
   }
 
@@ -203,132 +168,140 @@ const Wishlist: NextPage<Props> = () => {
     <>
       <WishlistHead />
       <MainLayout>
-        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-              <div className="space-y-2">
-                <h2 className="text-4xl font-bold tracking-tighter">
-                  Wishlists
-                </h2>
-              </div>
+        <div className="container w-full max-w-xl flex-1 flex-col justify-center text-center">
+          <div className="grid items-start gap-6 md:px-6">
+            <PageTitle title="Wishlists" />
 
-              <div className="grid gap-4">
-                {loading && (
-                  <LoadingSpinner classNameProps="w-full mt-7 mx-auto" />
-                )}
-                {wishlists && wishlists.length === 0 && !loading && (
-                  <p>
-                    No wishlists found. Create one to keep track of multiple
-                    cards.
-                  </p>
-                )}
-                {wishlists &&
-                  wishlists.map((wishlist) => (
-                    <Link href={`/wishlist/${wishlist.id}`}>
-                      <Card
-                        key={wishlist.id}
-                        className="cursor-pointer transition-shadow duration-300 ease-in-out hover:border-zinc-500 hover:shadow-lg"
-                      >
-                        <CardHeader className="flex flex-row items-center justify-between gap-4">
-                          {editWishlistId === wishlist.id ? (
-                            <Input
-                              value={editName}
-                              onChange={handleEditChange}
-                              autoFocus
-                            />
-                          ) : (
-                            <CardTitle>{wishlist.name}</CardTitle>
-                          )}
-                          <Edit
-                            size={16}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              toggleEditMode(wishlist.id);
-                            }}
+            <div className="grid gap-4">
+              {loading && (
+                <LoadingSpinner classNameProps="w-full mt-7 mx-auto" />
+              )}
+              {wishlists && wishlists.length === 0 && !loading && (
+                <p>
+                  No wishlists found. Create one to keep track of multiple
+                  cards.
+                </p>
+              )}
+              {wishlists &&
+                wishlists.map((wishlist) => (
+                  <Link href={`/wishlist/${wishlist.id}`}
+                    as={`/wishlist/${wishlist.id}`}
+                    key={wishlist.id}
+                  >
+                    <Card
+                      key={wishlist.id}
+                      className="cursor-pointer text-left transition-shadow duration-300 ease-in-out hover:border-zinc-500 hover:shadow-lg"
+                    >
+                      <CardHeader className="flex flex-row items-center justify-between gap-4">
+                        {editWishlistId === wishlist.id ? (
+                          <Input
+                            value={editName}
+                            onChange={handleEditChange}
+                            autoFocus
                           />
-                        </CardHeader>
-                        <CardContent>
-                          <CardDescription className="text-zinc-400">
-                            <p>{wishlist.item_count} cards</p>
-
-                            <p>
-                              Created {dayjs(wishlist.created_at).fromNow()}
-                            </p>
-                          </CardDescription>
-                        </CardContent>
-                        {editWishlistId === wishlist.id && (
-                          <CardFooter
-                            onClick={(e) => {
-                              e.preventDefault();
-                            }}
-                            className="flex flex-row justify-between"
-                          >
-                            <Button
-                              variant="destructive"
-                              onClick={() => handleDeleteWishlist(wishlist.id)}
-                            >
-                              Delete
-                            </Button>
-                            <div className="flex gap-2">
-                              <Button variant="default" onClick={exitEditMode}>
-                                Cancel
-                              </Button>
-                              <Button
-                                variant="default"
-                                onClick={() => saveChanges(wishlist.id)}
-                              >
-                                Save
-                              </Button>
-                            </div>
-                          </CardFooter>
+                        ) : (
+                          <CardTitle>{wishlist.name}</CardTitle>
                         )}
-                      </Card>
-                    </Link>
-                  ))}
-              </div>
-              <Button variant="default" onClick={() => setIsDialogOpen(true)}>
-                New wishlist
-              </Button>
-              <Dialog open={isDialogOpen}>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>New wishlist</DialogTitle>
-                    <DialogDescription>
-                      Create a new wishlist to keep track of your cards.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
-                          Name
-                        </Label>
-                        <Input
-                          {...register('name', {
-                            required: 'Name is required'
-                          })}
-                          type="text"
-                          id="name"
-                          className="col-span-3"
-                          placeholder="My Wishlist"
+                        <Edit
+                          size={16}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            toggleEditMode(wishlist.id);
+                          }}
                         />
-                        {formState.errors.name && (
-                          <p className="text-red-500">
-                            {formState.errors.name.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <DialogTrigger asChild>
-                        <Button type="submit">Save</Button>
-                      </DialogTrigger>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="text-zinc-400">
+                          {wishlist.item_count} cards
+
+                        </CardDescription>
+                        <CardDescription className="text-zinc-400">
+                          Created {dayjs(wishlist.created_at).fromNow()}
+                        </CardDescription>
+                      </CardContent>
+                      {editWishlistId === wishlist.id && (
+                        <CardFooter
+                          onClick={(e) => {
+                            e.preventDefault();
+                          }}
+                          className="flex flex-row justify-between"
+                        >
+                          <Button
+                            variant="destructive"
+                            onClick={() => handleDeleteWishlist(wishlist.id)}
+                          >
+                            Delete
+                          </Button>
+                          <div className="flex gap-2">
+                            <Button variant="default" onClick={exitEditMode}>
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="default"
+                              onClick={() => saveChanges(wishlist.id)}
+                            >
+                              Save
+                            </Button>
+                          </div>
+                        </CardFooter>
+                      )}
+                    </Card>
+                  </Link>
+                ))}
             </div>
-          </section>
+            <Button variant="default" onClick={() => setIsDialogOpen(true)}>
+              New wishlist
+            </Button>
+            <Dialog open={isDialogOpen}
+              onOpenChange={
+                (isOpen) => {
+                  setIsDialogOpen(isOpen);
+                }
+              }
+            >
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>New wishlist</DialogTitle>
+                  <DialogDescription>
+                    Create a new wishlist to keep track of your cards.
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="name" className="text-right">
+                        Name
+                      </Label>
+                      <Input
+                        {...register('name', {
+                          required: 'Name is required'
+                        })}
+                        type="text"
+                        id="name"
+                        className="col-span-3"
+                        placeholder="My Wishlist"
+                      />
+                      {formState.errors.name && (
+                        <p className="text-red-500">
+                          {formState.errors.name.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <DialogFooter>
+                  <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+                    <DialogTrigger asChild>
+                      <Button type="submit">Save</Button>
+                    </DialogTrigger>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </MainLayout>
     </>
