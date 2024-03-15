@@ -1,7 +1,5 @@
 import React from 'react';
 import { useStore } from '@/stores/store';
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 import { Button } from './ui/button';
 
 type Props = {};
@@ -19,10 +17,8 @@ export default function SearchFilters({}: Props) {
     setSingleSearchOrder,
     singleSearchOrderBy,
     singleSearchOrder
-
   } = useStore();
   const conditionCheckboxes = [
-    // checkbox should have a label, and a reference to the store value
     { label: 'NM', value: false },
     { label: 'LP', value: false },
     { label: 'PL', value: false },
@@ -32,23 +28,20 @@ export default function SearchFilters({}: Props) {
     { label: 'SCAN', value: false }
   ];
   return (
-    <div className="flex flex-col justify-center items-center w-full sm:p-2">
-      {/* div for filters should always render but not be visible unless showFilters is true */}
+    <div className="flex w-full flex-col items-center justify-center">
       <div
-        className={`transition-all flex flex-col justify-center items-center w-full ${
-          showSingleSearchFilters ? 'opacity-100 h-80' : 'opacity-0 h-0'
+        className={`flex w-full flex-col items-center justify-center transition-all ${
+          showSingleSearchFilters ? 'h-80 opacity-100' : 'h-0 opacity-0'
         } outlined-container`}
       >
         {showSingleSearchFilters && (
           <>
-            {/* selector for sort by */}
-            <div className="flex flex-row justify-between items-center p-2">
-              <div className="flex flex-row justify-between items-center p-2">
+            <div className="flex flex-row items-center justify-between p-2">
+              <div className="flex flex-row items-center justify-between p-2">
                 <label className="text-sm">Sort By</label>
                 <select
-                  className="p-1 text-sm input-dark"
+                  className="input-dark p-1 text-sm"
                   onChange={(e) => {
-                    // store.setSortBy(e.target.value);
                     setSingleSearchOrderBy(e.target.value);
                   }}
                   value={singleSearchOrderBy}
@@ -61,10 +54,9 @@ export default function SearchFilters({}: Props) {
               </div>
               <div>
                 <select
-                  className="p-1 text-sm input-dark"
+                  className="input-dark p-1 text-sm"
                   value={singleSearchOrder}
                   onChange={(e) => {
-                    // store.setSortOrder(e.target.value);
                     setSingleSearchOrder(e.target.value);
                   }}
                 >
@@ -73,49 +65,34 @@ export default function SearchFilters({}: Props) {
                 </select>
               </div>
             </div>
-            {/* foil only toggle
-            <div className="flex items-center space-x-2">
-      <Switch id="airplane-mode" />
-      <Label htmlFor="airplane-mode">Foil only</Label>
-    </div> */}
-            <div className="flex flex-row justify-between items-center p-2">
+            <div className="flex flex-row items-center justify-between p-2">
               <span className="mr-3 text-sm font-medium">Foil only</span>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex cursor-pointer items-center">
                 <input
                   type="checkbox"
-                  className="sr-only peer"
-                  // checked={store.foilOnly}
+                  className="peer sr-only"
                   checked={singleSearchFoil}
                   onChange={() => {
-                    // store.setFoilOnly(!store.foilOnly);
                     toggleSingleSearchFoil();
                   }}
                 />
-                <div className="w-7 h-4 bg-zinc-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-pink-300 dark:peer-focus:ring-pink-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-zinc-600 peer-checked:bg-pink-600"></div>
+                <div className="peer h-4 w-7 rounded-full bg-zinc-800 after:absolute after:top-[2px] after:left-[2px] after:h-3 after:w-3 after:rounded-full after:border after:border-zinc-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-pink-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-pink-300 dark:border-zinc-600 dark:peer-focus:ring-pink-800"></div>
               </label>
             </div>
-            <div className="text-sm font-bold mt-2">Condition</div>
-            {/* two columns for condition checkboxes */}
-            <div className="grid grid-cols-2 py-4 max-w-md gap-x-10">
-              {/* map checkboxes */}
+            <div className="mt-2 text-sm font-bold">Condition</div>
+            <div className="grid max-w-md grid-cols-2 gap-x-10 py-4">
               {conditionCheckboxes.map((checkbox, index) => (
                 <div
                   key={index}
-                  className="col-span-1 flex flex-row justify-between text-left items-center w-full"
+                  className="col-span-1 flex w-full flex-row items-center justify-between text-left"
                 >
-                  <label className="text-sm mr-1">{checkbox.label}</label>
+                  <label className="mr-1 text-sm">{checkbox.label}</label>
                   <input
                     type="checkbox"
                     className="text-sm accent-pink-300"
                     checked={
                       singleSearchConditions[checkbox.label.toLowerCase()]
                     }
-                    // onChange={() => {
-                    //   store.setConditions({
-                    //     ...store.conditions,
-                    //     [checkbox.label.toLowerCase()]: !checkbox.value,
-                    //   });
-                    // }}
                     onChange={() => {
                       toggleSingleSearchCondition(checkbox.label.toLowerCase());
                     }}
@@ -132,25 +109,13 @@ export default function SearchFilters({}: Props) {
               >
                 Clear
               </Button>
-
-
-              {/* <button
-                className="transition-all bg-pink-600 hover:bg-pink-700 text-white font-bold py-1 px-4 rounded focus:outline-pink-900 focus:shadow-outline mt-1 mx-auto"
-                onClick={() => {
-                  console.log("Apply Filter");
-                  // console.log("store.conditions", store.conditions);
-                  // applyFilters(store);
-                }}
-              >
-                Apply
-              </button> */}
             </div>
           </>
         )}
       </div>
 
       <button
-        className="text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 dark:focus:ring-pink-800 focus:ring-opacity-50"
+        className="text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-opacity-50 dark:focus:ring-pink-800"
         onClick={() => {
           toggleShowSingleSearchFilters();
         }}

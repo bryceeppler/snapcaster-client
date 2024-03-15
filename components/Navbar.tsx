@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import useAuthStore from '@/stores/authStore';
-import {toast} from 'sonner'
+import { toast } from 'sonner';
 
 type Props = {};
 
@@ -15,10 +15,9 @@ export default function Navbar({}: Props) {
   const handleLogout = () => {
     clearTokens();
     toast.success('You have been logged out');
-  }
+  };
 
-
-  const logoSrc = '/logo.png' 
+  const logoSrc = '/logo.png';
   const pages = [
     { name: 'Home', href: '/', current: currentPath === '/' },
     {
@@ -26,11 +25,28 @@ export default function Navbar({}: Props) {
       href: '/multisearch',
       current: currentPath === '/multisearch'
     },
-    { name: 'About', href: '/about', current: currentPath === '/about' },
-    { name: 'Blog', href: '/blog', current: currentPath === '/blog'},
-    ...(isAuthenticated ? [{ name: 'Wishlists', href: '/wishlist', current: currentPath === '/wishlist' }] : []),
-    ...(isAuthenticated ? [{ name: 'Profile', href: '/profile', current: currentPath === '/profile' }] : []),
-
+    {
+      name: 'Advanced Search',
+      href: '/advancedsearch',
+      current: currentPath === '/advancedsearch'
+    },
+    {
+      name: 'Wishlists',
+      href: '/wishlist',
+      current: currentPath === '/wishlist'
+    },
+    // { name: 'About', href: '/about', current: currentPath === '/about' },
+    // { name: 'Updates', href: '/updates', current: currentPath === '/updates' },
+    // ...(isAuthenticated ? [{ name: 'Wishlists', href: '/wishlist', current: currentPath === '/wishlist' }] : []),
+    ...(isAuthenticated
+      ? [
+          {
+            name: 'Profile',
+            href: '/profile',
+            current: currentPath === '/profile'
+          }
+        ]
+      : [])
   ];
   return (
     <div>
@@ -94,13 +110,13 @@ export default function Navbar({}: Props) {
                 />
                 {}
                 <img
-                  className="hidden h-8 mb-2 w-auto lg:block"
+                  className="mb-2 hidden h-8 w-auto lg:block"
                   src={logoSrc}
                   alt="Snapcaster"
                 />
               </div>
               <div className="hidden sm:ml-6 sm:block sm:w-full">
-                <div className="flex space-x-4 w-full">
+                <div className="flex w-full space-x-4">
                   {pages.map((page) => (
                     <a
                       key={page.name}
@@ -116,18 +132,22 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
 
                   {/* User ? */}
                   <div className="flex-1" />
-                  {
-                    isAuthenticated ? (
-                      <button onClick={handleLogout} className="block rounded-md py-2 px-3 text-sm font-medium">
-                        Logout
-                      </button>
-                    ) : (
-                      <Link href="/signin" as="/signin" className="block rounded-md py-2 px-3 text-sm font-medium">
-                        Login
-                      </Link>
-                    )
-                  }
-                  
+                  {isAuthenticated ? (
+                    <button
+                      onClick={handleLogout}
+                      className="block rounded-md py-2 px-3 text-sm font-medium"
+                    >
+                      Logout
+                    </button>
+                  ) : (
+                    <Link
+                      href="/signin"
+                      as="/signin"
+                      className="block rounded-md py-2 px-3 text-sm font-medium"
+                    >
+                      Login
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -151,17 +171,22 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                   {page.name}
                 </Link>
               ))}
-              {
-                isAuthenticated ? (
-                  <button onClick={handleLogout} className="block rounded-md py-2 px-3 text-sm font-medium">
-                    Logout
-                  </button>
-                ) : (
-                  <Link href="/signin" as="/signin" className="block rounded-md py-2 px-3 text-sm font-medium">
-                      Login
-                  </Link>
-                )
-              }
+              {isAuthenticated ? (
+                <button
+                  onClick={handleLogout}
+                  className="block rounded-md py-2 px-3 text-sm font-medium"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link
+                  href="/signin"
+                  as="/signin"
+                  className="block rounded-md py-2 px-3 text-sm font-medium"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>

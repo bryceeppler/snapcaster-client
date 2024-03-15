@@ -2,11 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [{
-      hostname: 'cdn.shopify.com',
-      // pathname: '/.*',
-      protocol: 'https'
-    }]
+    remotePatterns: [
+      {
+        hostname: 'cdn.shopify.com',
+        // pathname: '/.*',
+        protocol: 'https'
+      }
+    ]
   }
 };
 

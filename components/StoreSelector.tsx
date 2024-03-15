@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStore } from '@/stores/store';
+import { Button } from './ui/button';
 
 type Props = {};
 
@@ -12,8 +13,8 @@ export default function StoreSelector({}: Props) {
   } = useStore();
 
   return (
-    <div className="flex flex-col">
-      <div className="grid w-full grid-cols-2 md:grid-cols-3 p-2 outlined-container gap-2">
+    <div>
+      <div className="outlined-container grid w-full grid-cols-2 gap-2 p-2 md:grid-cols-3">
         {websites
           .sort((a, b) =>
             a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
@@ -22,7 +23,7 @@ export default function StoreSelector({}: Props) {
             return (
               <div
                 key={index}
-                className={`transition-allm-1 flex items-center p-2 outlined-container hover:bg-zinc-800`}
+                className={`transition-allm-1 outlined-container flex items-center p-2 hover:bg-zinc-800`}
                 onClick={() => {
                   toggleMultiSearchSelectedWebsites(website.name);
                 }}
@@ -30,9 +31,9 @@ export default function StoreSelector({}: Props) {
                 <div
                   className={`
 
-                    h-2 w-2
-                    aspect-square
-                    mx-1
+                    mx-1 aspect-square
+                    h-2
+                    w-2
                     rounded-full
                     ${
                       multiSearchSelectedWebsites.includes(website.name)
@@ -41,22 +42,23 @@ export default function StoreSelector({}: Props) {
                     }
                 `}
                 />
-                <label className="ml-2 text-xs text-left truncate">
+                <label className="ml-2 truncate text-left text-xs">
                   {website.name}
                 </label>
               </div>
             );
           })}
       </div>
-          <div className="p-2"/>
-      <button
-        className="btn-dark"
+      <div className="p-2" />
+      <Button
+        className="w-full"
+        variant="outline"
         onClick={() => {
           toggleMultiSearchSelectAllStores();
         }}
       >
         Select All
-      </button>
+      </Button>
     </div>
   );
 }

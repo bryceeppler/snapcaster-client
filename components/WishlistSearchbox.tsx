@@ -153,7 +153,7 @@ export default function WishlistSearchbox({ wishlistId, className }: Props) {
     <div className={` w-full ${className}`}>
       <div className="relative">
         {' '}
-        <form onSubmit={handleFormSubmit} className="flex relative gap-4">
+        <form onSubmit={handleFormSubmit} className="relative flex gap-4">
           {' '}
           <Input
             type="text"
@@ -173,12 +173,12 @@ export default function WishlistSearchbox({ wishlistId, className }: Props) {
             <Search size={16} />
           </Button>
           {showAutocomplete && (
-            <div className="absolute z-50 top-full mt-1 text-left max-w-md w-full max-h-60 overflow-y-auto rounded-md border border-zinc-500 shadow-md bg-zinc-700">
+            <div className="absolute top-full z-50 mt-1 max-h-60 w-full max-w-md overflow-y-auto rounded-md border border-zinc-500 bg-zinc-700 text-left shadow-md">
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
                     key={result.oracle_id}
-                    className={`cursor-pointer px-4 py-2 mx-1 rounded ${
+                    className={`mx-1 cursor-pointer rounded px-4 py-2 ${
                       selectedAutocompleteIndex === index ? 'bg-zinc-800' : ''
                     } `}
                     onClick={() => handleAutocompleteItemClick(result)}
