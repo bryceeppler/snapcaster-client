@@ -135,6 +135,10 @@ const sortByList: Filter[] = [
 
 const foilList: Filter[] = [
   {
+    name: 'All Foils',
+    abbreviation: 'All Foils'
+  },
+  {
     name: 'Regular Foil',
     abbreviation: 'Foil'
   },

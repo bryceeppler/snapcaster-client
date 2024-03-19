@@ -5,18 +5,18 @@ import BlogFeed from '@/components/BlogFeed';
 import MainLayout from '@/components/MainLayout';
 type Props = {};
 
-
 const Updates: NextPage<Props> = () => {
   const blogs = [
     {
-      title: "March Development Blog",
-      date: "March 1, 2022",
-      link: "/blog/march-dev-update",
-      description: "This month has been a significant one for Snapcaster! I've optimized the backend infrastructure, which has greatly improved both reliability and performance for searches. With these enhancements out of the way, we can now focus on developing new features.",
-      image: "/1-wishlist.png",
-      imageAlt: "Wishlist feature",
+      title: 'March Development Blog',
+      date: 'March 1, 2024',
+      link: '/blog/march-dev-update',
+      description:
+        "This month has been a significant one for Snapcaster! I've optimized the backend infrastructure, which has greatly improved both reliability and performance for searches. With these enhancements out of the way, we can now focus on developing new features.",
+      image: '/1-wishlist.png',
+      imageAlt: 'Wishlist feature'
     }
-  ]
+  ];
   return (
     <>
       <UpdatesHead />
