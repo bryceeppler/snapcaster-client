@@ -25,6 +25,11 @@ const components: { title: string; href: string; description: string }[] = [
       'Stay up to date with the latest Snapcaster news, updates, and features.'
   },
   {
+    title: 'Card Guide',
+    href: '/card-guide',
+    description: 'A shopping guide for all the different types of Magic cards.'
+  },
+  {
     title: 'Discord',
     href: 'https://discord.gg/EnKKHxSq75',
     description:
@@ -70,7 +75,7 @@ export default function NavbarNew() {
         } animate-in md:hidden`}
         id="mobile-menu"
       >
-        <div className="space-y-1 px-2 pt-2 pb-3">
+        <div className="space-y-1 px-2 pb-3 pt-2">
           <Link href="/" as="/">
             <Button
               variant="ghost"
@@ -131,13 +136,18 @@ export default function NavbarNew() {
               Blog
             </Button>
           </Link>
+          {/* Card Guide */}
+          <Link className="" href="/card-guide" as="/card-guide">
+            <Button variant="ghost" className="block w-full text-left text-sm">
+              Card Guide
+            </Button>
+          </Link>
           {/* Discord */}
           <Link className="" href="https://discord.gg/EnKKHxSq75">
             <Button variant="ghost" className="block w-full text-left text-sm">
               Discord
             </Button>
           </Link>
-
           {!isAuthenticated && (
             <Link href="/signin">
               <Button

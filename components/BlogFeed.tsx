@@ -17,6 +17,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 // ]
 export default function BlogFeed(props: {
+  pagetitle: string;
+  pageDescription: string;
   blogs: {
     title: string;
     date: string;
@@ -25,15 +27,16 @@ export default function BlogFeed(props: {
     image: string;
     imageAlt: string;
   }[];
-  
 }) {
   return (
-    <section className="w-full py-6 md:py-12 flex justify-center">
+    <section className="flex w-full justify-center py-6 md:py-12">
       <div className="container grid items-start gap-6">
         <div className="space-y-2">
-          <h2 className="text-4xl font-bold tracking-tighter">Snapcaster Blog</h2>
+          <h2 className="text-4xl font-bold tracking-tighter">
+            {props.pagetitle}
+          </h2>
           <p className="text-zinc-500 dark:text-zinc-400">
-            Stay up to date with the latest changes.
+            {props.pageDescription}
           </p>
         </div>
         <div className="flex flex-col gap-4">
@@ -41,18 +44,22 @@ export default function BlogFeed(props: {
             <Link
               href={blog.link}
               key={index}
-              className="outlined-container p-4 md:p-8 flex flex-col md:gap-2 text-left w-full hover:bg-zinc-900 hover:border-zinc-500 hover:cursor-pointer"
+              className="outlined-container flex w-full flex-col p-4 text-left hover:cursor-pointer hover:border-zinc-500 hover:bg-zinc-900 md:gap-2 md:p-8"
             >
-              <div className="relative w-full h-64 rounded-lg overflow-hidden">
+              <div className="relative h-64 w-full overflow-hidden rounded-lg">
                 {/* Image fills the wrapper */}
-                <Image src={blog.image} alt={blog.imageAlt} fill style={
-                  { objectFit: 'cover' }
-                } />
-              </div>  <div className="p-2"></div>
+                <Image
+                  src={blog.image}
+                  alt={blog.imageAlt}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              </div>{' '}
+              <div className="p-2"></div>
               {/* TITLE + DATE */}
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                  <h3 className="font-semibold overflow-hidden overflow-ellipsis tracking-tight">
+                  <h3 className="overflow-hidden overflow-ellipsis font-semibold tracking-tight">
                     {blog.title}
                   </h3>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -63,7 +70,7 @@ export default function BlogFeed(props: {
               {/* DESCRIPTION */}
               <div className="text-sm text-white">
                 <div className="line-clamp-2">
-                <p className="">{blog.description}</p>
+                  <p className="">{blog.description}</p>
                 </div>
               </div>
             </Link>

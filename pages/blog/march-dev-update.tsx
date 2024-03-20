@@ -89,7 +89,7 @@ const Updates: NextPage<Props> = () => {
           </ul>
           <div className="p-4"></div>
           <Image
-            src="/1-advanced.png"
+            src="/2-advanced.png"
             alt="Advanced search feature"
             width={500}
             height={300}
