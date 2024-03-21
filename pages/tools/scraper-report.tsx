@@ -50,13 +50,13 @@ const CompletenessChart: React.FC<CompletenessChartProps> = ({ data }) => {
       {
         label: 'Field Completeness (%)',
         data: completenessValues,
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        backgroundColor: '#6366f1',
         stack: 'stack0'
       },
       {
         label: 'Missing (%)',
         data: missingValues,
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        backgroundColor: '#fb7185',
         stack: 'stack0' // Same stack as completeness data
       }
     ]
@@ -92,7 +92,7 @@ const UniquenessChart: React.FC<CompletenessChartProps> = ({ data }) => {
     datasets: [
       {
         data: uniquenessValues,
-        backgroundColor: ['#166534', '#991b1b']
+        backgroundColor: ['#6366f1', '#fb7185']
       }
     ]
   };
@@ -104,6 +104,7 @@ const ScraperReport = () => {
   const [reports, setReports] = useState<Report[]>([]);
 
   useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_ANALYTICS_URL);
     fetch(`${process.env.NEXT_PUBLIC_ANALYTICS_URL}/report`)
       .then((response) => response.json())
       .then((data) => setReports(data))
