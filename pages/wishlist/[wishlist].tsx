@@ -58,6 +58,7 @@ import WishlistSearchbox from '@/components/WishlistSearchbox';
 import { WishlistCard } from '@/stores/wishlistStore';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export type Card = {
   name: string;
@@ -78,13 +79,14 @@ const WishlistId: NextPage<Props> = () => {
     fetchWishlistView,
     updateWishlist,
     deleteWishlistItem,
-    updateWishlistItem
+    updateWishlistItem,
+    fetching
   } = useWishlistStore();
   const { getWebsiteNameByCode } = useStore();
   const [loading, setLoading] = useState(true);
   const [editName, setEditName] = useState('');
   const [edit, setEdit] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false); // controls refresh icon rotation
+  // const [isRefreshing, setIsRefreshing] = useState(false); // controls refresh icon rotation
 
   const columns: ColumnDef<WishlistCard>[] = getColumns(
     deleteWishlistItem,
@@ -122,13 +124,13 @@ const WishlistId: NextPage<Props> = () => {
     setEdit(true);
   };
   const fetchWishlistData = async (wishlistId: number) => {
-    setIsRefreshing(true); // Start rotation
+    // setIsRefreshing(true); // Start rotation
     try {
       await fetchWishlistView(wishlistId);
     } catch (error) {
       console.error('Error refreshing wishlist data:', error);
     } finally {
-      setIsRefreshing(false); // Stop rotation
+      // setIsRefreshing(false); // Stop rotation
       toast.success('Wishlist refreshed');
     }
   };
@@ -170,7 +172,7 @@ const WishlistId: NextPage<Props> = () => {
     <>
       <WishlistIdHead />
       <MainLayout>
-        <div className="lg:container w-full">
+        <div className="w-full lg:container">
           <div className="mx-auto items-center gap-6">
             <div className="space-y-2 text-left">
               <div className="flex flex-row gap-4">
@@ -216,9 +218,9 @@ const WishlistId: NextPage<Props> = () => {
                   card={hoveredCard}
                   getWebsiteNameByCode={getWebsiteNameByCode}
                 />
-                </div>
+              </div>
               <div className="w-full">
-                <div className="flex flex-row w-full items-center justify-between">
+                <div className="flex w-full flex-row items-center justify-between">
                   {/* Bulk edit and search box row */}
                   <div className="hidden items-center gap-4 md:flex md:flex-row">
                     <Link href={`/wishlist/${wishlistView.wishlist_id}/edit`}>
@@ -229,7 +231,7 @@ const WishlistId: NextPage<Props> = () => {
                     <RefreshCcw
                       size={16}
                       className={`hover:cursor-pointer ${
-                        isRefreshing ? 'animate-spin' : ''
+                        fetching ? 'animate-spin' : ''
                       }`}
                       onClick={() =>
                         fetchWishlistData(wishlistView.wishlist_id)
@@ -242,7 +244,7 @@ const WishlistId: NextPage<Props> = () => {
                     className="max-w-md"
                   />
                 </div>
-                {wishlistView.items.length === 0 ? (
+                {wishlistView.items.length === 0 && !fetching && (
                   <div className="relative flex h-full w-full flex-col items-center justify-center rounded-lg">
                     <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform text-center">
                       <p className="text-lg font-bold">No cards found</p>
@@ -253,7 +255,12 @@ const WishlistId: NextPage<Props> = () => {
                     <div className="mt-4 flex h-16 w-full items-center justify-center rounded-lg bg-muted opacity-70" />
                     <div className="mt-4 flex h-60 w-full items-center justify-center rounded-lg bg-muted opacity-70" />
                   </div>
-                ) : (
+                )}
+                {
+                  // Loading spinner
+                  fetching && <LoadingPage />
+                }
+                {wishlistView.items.length > 0 && (
                   <DataTable
                     columns={columns}
                     deleteRow={deleteWishlistItem}
@@ -281,7 +288,7 @@ const CardPreview = ({
 }) => {
   return (
     <div className="flex flex-col items-center gap-4 py-4">
-      <div className="text-muted-foreground flex-1 text-left text-sm">
+      <div className="flex-1 text-left text-sm text-muted-foreground">
         {card ? (
           <div className="">
             <img
