@@ -22,13 +22,10 @@ export interface AdvancedSearchResult {
   preRelease: boolean;
   promoPack: boolean;
   showcase: string;
-  artType: string;
+  frame: string;
   alternateArt: boolean;
-  retro: boolean;
   artSeries: boolean;
   goldenStampedSeries: boolean;
-  other: string;
-  number: number;
 }
 
 export const useOutsideClick = (callback: () => void) => {
@@ -81,35 +78,39 @@ const conditionList: Filter[] = [
     abbreviation: 'DMG'
   }
 ];
-const artTypeList: Filter[] = [
+const frameList: Filter[] = [
   {
     name: 'Borderless',
-    abbreviation: 'Borderless'
+    abbreviation: 'borderless'
   },
   {
     name: 'Extended Art',
-    abbreviation: 'Extended Art'
+    abbreviation: 'extended-art'
   },
   {
     name: 'Full Art',
-    abbreviation: 'Full Art'
+    abbreviation: 'full-art'
+  },
+  {
+    name: 'Retro',
+    abbreviation: 'retro'
   }
 ];
 
-const otherList: Filter[] = [
-  {
-    name: 'Anime',
-    abbreviation: 'Anime'
-  },
-  {
-    name: 'Manga',
-    abbreviation: 'Manga'
-  },
-  {
-    name: 'The Moonlit Lands',
-    abbreviation: 'The Moonlit Lands'
-  }
-];
+// const otherList: Filter[] = [
+//   {
+//     name: 'Anime',
+//     abbreviation: 'Anime'
+//   },
+//   {
+//     name: 'Manga',
+//     abbreviation: 'Manga'
+//   },
+//   {
+//     name: 'The Moonlit Lands',
+//     abbreviation: 'The Moonlit Lands'
+//   }
+// ];
 const sortByList: Filter[] = [
   {
     name: 'Price',
@@ -136,67 +137,67 @@ const sortByList: Filter[] = [
 const foilList: Filter[] = [
   {
     name: 'All Foils',
-    abbreviation: 'All Foils'
+    abbreviation: 'all-foils'
   },
   {
     name: 'Regular Foil',
-    abbreviation: 'Foil'
+    abbreviation: 'foil'
   },
   {
     name: 'Confetti',
-    abbreviation: 'Confetti'
+    abbreviation: 'confetti'
   },
   {
     name: 'Etched',
-    abbreviation: 'Etched'
+    abbreviation: 'etched'
   },
   {
     name: 'Ampersand',
-    abbreviation: 'Ampersand'
+    abbreviation: 'ampersand'
   },
   {
     name: 'Neon Ink',
-    abbreviation: 'Neon Ink'
+    abbreviation: 'neon-ink'
   },
   {
     name: 'Gilded',
-    abbreviation: 'Gilded'
+    abbreviation: 'gilded'
   },
   {
     name: 'Galaxy',
-    abbreviation: 'Galaxy'
+    abbreviation: 'galaxy'
   },
   {
     name: 'Surge',
-    abbreviation: 'Surge'
+    abbreviation: 'surge'
   },
   {
     name: 'Textured',
-    abbreviation: 'Textured'
+    abbreviation: 'textured'
   },
   {
     name: 'Serialized',
-    abbreviation: 'Serialized'
+    abbreviation: 'serialized'
   },
   {
     name: 'Step and Compleat',
-    abbreviation: 'Compleat'
+    abbreviation: 'compleat'
   },
   {
     name: 'Oil Slick',
-    abbreviation: 'Oil Slick'
+    abbreviation: 'oil-slick'
   },
   {
     name: 'Halo',
-    abbreviation: 'Halo'
+    abbreviation: 'halo'
   },
   {
     name: 'Invisible Ink',
-    abbreviation: 'Invisible Ink'
+    abbreviation: 'invisible-ink'
   },
   {
-    name: 'Rainbow',
-    abbreviation: 'Rainbow'
+    name: 'rainbow',
+    abbreviation: 'rainbow'
   }
 ];
 
@@ -2209,7 +2210,7 @@ const setList: Filter[] = [
 ];
 
 type State = {
-  selectedCardCategory: string;
+  // selectedCardCategory: string;
 
   advancedSearchResults: AdvancedSearchResult[];
 
@@ -2221,13 +2222,13 @@ type State = {
   selectedConditionsCount: number;
   selectedConditionsList: string[];
 
-  artTypeList: Filter[];
-  selectedArtTypeCount: number;
-  selectedhArtTypeList: string[];
+  frameList: Filter[];
+  selectedFrameCount: number;
+  selectedhFrameList: string[];
 
-  otherList: Filter[];
-  selectedOtherCount: number;
-  selectedOtherList: string[];
+  // otherList: Filter[];
+  // selectedOtherCount: number;
+  // selectedOtherList: string[];
 
   websiteList: Filter[];
   selectedWebsiteCount: number;
@@ -2256,10 +2257,9 @@ type State = {
 
   advancedSearchLoading: boolean;
 
-  changeCardCategory: (textField: string) => void;
+  // changeCardCategory: (textField: string) => void;
   updateAdvnacedSearchTextBoxValue: (textField: string) => void;
   toggleRegularCheckboxes: (checkBoxTitle: string) => void;
-  updateNumberText: (textField: number) => void;
   toggle: (fieldName: string, category: string) => void;
 
   updateSortByFilter: (sortValue: string) => void;
@@ -2273,7 +2273,7 @@ export const advancedUseStore = create<State>((set, get) => ({
 
   advnacedSearchTextBoxValue: '',
 
-  selectedCardCategory: 'allCards',
+  // selectedCardCategory: 'allCards',
 
   websiteList: websiteList,
   selectedWebsiteList: [],
@@ -2295,13 +2295,13 @@ export const advancedUseStore = create<State>((set, get) => ({
   selectedShowcaseTreatmentList: [],
   selectedShowcaseTreatmentCount: 0,
 
-  artTypeList: artTypeList,
-  selectedhArtTypeList: [],
-  selectedArtTypeCount: 0,
+  frameList: frameList,
+  selectedhFrameList: [],
+  selectedFrameCount: 0,
 
-  otherList: otherList,
-  selectedOtherList: [],
-  selectedOtherCount: 0,
+  // otherList: otherList,
+  // selectedOtherList: [],
+  // selectedOtherCount: 0,
 
   preReleaseChecked: false,
   promoChecked: false,
@@ -2319,12 +2319,12 @@ export const advancedUseStore = create<State>((set, get) => ({
     set({ advnacedSearchTextBoxValue: textField });
   },
 
-  changeCardCategory: (textField: string) => {
-    if (get().selectedCardCategory != textField) {
-      set({ selectedCardCategory: textField });
-      get().resetFilters();
-    }
-  },
+  // changeCardCategory: (textField: string) => {
+  //   if (get().selectedCardCategory != textField) {
+  //     set({ selectedCardCategory: textField });
+  //     get().resetFilters();
+  //   }
+  // },
 
   toggleRegularCheckboxes: (checkBoxTitle: string) => {
     switch (checkBoxTitle) {
@@ -2354,27 +2354,21 @@ export const advancedUseStore = create<State>((set, get) => ({
         break;
     }
   },
-
-  updateNumberText: (textField: number) => {
-    set({
-      cardNumber: textField
-    });
-  },
   resetFilters: () => {
     set({
       advnacedSearchTextBoxValue: '',
 
       selectedConditionsList: [],
-      selectedhArtTypeList: [],
-      selectedOtherList: [],
+      selectedhFrameList: [],
+      // selectedOtherList: [],
       selectedWebsiteList: [],
       selectedFoilList: [],
       selectedShowcaseTreatmentList: [],
       selectedSetList: [],
 
       selectedConditionsCount: 0,
-      selectedArtTypeCount: 0,
-      selectedOtherCount: 0,
+      selectedFrameCount: 0,
+      // selectedOtherCount: 0,
       selectedWebsiteCount: 0,
       selectedFoilCount: 0,
       selectedShowcaseTreatmentCount: 0,
@@ -2407,31 +2401,17 @@ export const advancedUseStore = create<State>((set, get) => ({
         });
       }
     } else if (category == 'Art Type') {
-      if (get().selectedhArtTypeList.includes(fieldName)) {
+      if (get().selectedhFrameList.includes(fieldName)) {
         set({
-          selectedhArtTypeList: get().selectedhArtTypeList.filter(
+          selectedhFrameList: get().selectedhFrameList.filter(
             (selectedField: string) => selectedField !== fieldName
           ),
-          selectedArtTypeCount: get().selectedArtTypeCount - 1
+          selectedFrameCount: get().selectedFrameCount - 1
         });
       } else {
         set({
-          selectedhArtTypeList: [...get().selectedhArtTypeList, fieldName],
-          selectedArtTypeCount: get().selectedArtTypeCount + 1
-        });
-      }
-    } else if (category == 'Other') {
-      if (get().selectedOtherList.includes(fieldName)) {
-        set({
-          selectedOtherList: get().selectedOtherList.filter(
-            (selectedField: string) => selectedField !== fieldName
-          ),
-          selectedOtherCount: get().selectedOtherCount - 1
-        });
-      } else {
-        set({
-          selectedOtherList: [...get().selectedOtherList, fieldName],
-          selectedOtherCount: get().selectedOtherCount + 1
+          selectedhFrameList: [...get().selectedhFrameList, fieldName],
+          selectedFrameCount: get().selectedFrameCount + 1
         });
       }
     } else if (category == 'Websites') {
@@ -2564,25 +2544,17 @@ export const advancedUseStore = create<State>((set, get) => ({
       const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_SEARCH_URL}/advanced`,
         {
-          cardCategory: get().selectedCardCategory,
           cardName: get().advnacedSearchTextBoxValue.trim(),
           website: get().selectedWebsiteList,
           condition: get().selectedConditionsList,
           foil: get().selectedFoilList,
           showcaseTreatment: get().selectedShowcaseTreatmentList,
-          artType: get().selectedhArtTypeList,
-          other: get().selectedOtherList,
+          frame: get().selectedhFrameList,
           preRelease: get().preReleaseChecked,
           promo: get().promoChecked,
           alternateArt: get().alternateArtChecked,
-          retro: get().retroChecked,
           artSeries: get().artSeriesChecked,
           goldenStampedSeries: get().goldenStampedChecked,
-          numberChecked: get().numberChecked,
-          cardNumber:
-            get().numberChecked == true && get().cardNumber != 0
-              ? get().cardNumber
-              : -1,
           set: get().selectedSetList
         }
       );

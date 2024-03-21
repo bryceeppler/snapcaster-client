@@ -47,7 +47,7 @@ export default function AdvancedSearchCombo(props: PropsOption) {
               setOpen(!open);
             }}
           >
-            <span className="w-full truncate pl-2 text-left text-xs">
+            <span className="w-full truncate pl-2 text-left text-xs capitalize">
               {props.selectedList.length > 0 ? `${props.selectedList}` : 'Any'}
             </span>
             <svg
@@ -92,7 +92,7 @@ export default function AdvancedSearchCombo(props: PropsOption) {
                     />
                     <label
                       htmlFor={`input-${state.abbreviation}`}
-                      className="w-full cursor-pointer px-1 text-[13px]"
+                      className="w-full cursor-pointer px-1 text-[13px] "
                     >
                       {state.name}
                     </label>

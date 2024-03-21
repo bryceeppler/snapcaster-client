@@ -104,60 +104,44 @@ export default function SingleCatalogRow({ cardData }: Props) {
           <div className="col-span-9">
             <div className=" flex flex-wrap  text-xs">
               {cardData.preRelease == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Pre-Release</p>
                 </div>
               )}
               {cardData.promoPack == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Promo-Pack</p>
                 </div>
               )}
               {cardData.foil != null && cardData.foil != 'Foil' && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>{cardData.foil}</p>
                 </div>
               )}
               {cardData.showcase != null && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>{cardData.showcase}</p>
                 </div>
               )}
 
-              {cardData.artType != null && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
-                  <p>{cardData.artType}</p>
+              {cardData.frame != null && (
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                  <p>{cardData.frame}</p>
                 </div>
               )}
 
-              {cardData.other != null && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
-                  <p>{cardData.other}</p>
-                </div>
-              )}
-
-              {cardData.number > 0 && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
-                  <p>{cardData.number}</p>
-                </div>
-              )}
               {cardData.alternateArt == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Alternate-Art</p>
                 </div>
               )}
-              {cardData.retro == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
-                  <p>Retro</p>
-                </div>
-              )}
               {cardData.artSeries == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Art-Series</p>
                 </div>
               )}
               {cardData.goldenStampedSeries == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1">
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Golden-Stamped</p>
                 </div>
               )}

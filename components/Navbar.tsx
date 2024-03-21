@@ -135,7 +135,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                   {isAuthenticated ? (
                     <button
                       onClick={handleLogout}
-                      className="block rounded-md py-2 px-3 text-sm font-medium"
+                      className="block rounded-md px-3 py-2 text-sm font-medium"
                     >
                       Logout
                     </button>
@@ -143,7 +143,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                     <Link
                       href="/signin"
                       as="/signin"
-                      className="block rounded-md py-2 px-3 text-sm font-medium"
+                      className="block rounded-md px-3 py-2 text-sm font-medium"
                     >
                       Login
                     </Link>
@@ -174,7 +174,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
               {isAuthenticated ? (
                 <button
                   onClick={handleLogout}
-                  className="block rounded-md py-2 px-3 text-sm font-medium"
+                  className="block rounded-md px-3 py-2 text-sm font-medium"
                 >
                   Logout
                 </button>
@@ -182,7 +182,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                 <Link
                   href="/signin"
                   as="/signin"
-                  className="block rounded-md py-2 px-3 text-sm font-medium"
+                  className="block rounded-md px-3 py-2 text-sm font-medium"
                 >
                   Login
                 </Link>
