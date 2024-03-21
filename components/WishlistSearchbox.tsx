@@ -18,7 +18,7 @@ export default function WishlistSearchbox({ wishlistId, className }: Props) {
   const { addCardInput, setAddCardInput, addCardToWishlist } =
     useWishlistStore();
   const autocompleteEndpoint =
-    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards_details?query=';
+    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
   const [autocompleteResults, setAutocompleteResults] = useState<
     AutocompleteResult[]
   >([]);
