@@ -70,6 +70,10 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
     set({ addCardInput: input });
   },
   addCardToWishlist: async (wishlistId: number, oracleId: string) => {
+    if (get().wishlistView.item_count >= 100) {
+      toast.error('Wishlist is full (100 items max)');
+      return;
+    }
     try {
       const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_WISHLIST_URL}/wishlist-item/create`,
@@ -87,6 +91,8 @@ const useWishlistStore = create<WishlistState>((set, get) => ({
         const status = error.response?.status;
         if (status === 409) {
           toast.error('Card already in wishlist');
+        } else if (error.response?.data.message) {
+          toast.error(`${error.response?.data.message}`);
         } else {
           toast.error(
             'An error occurred while adding the card to the wishlist'
