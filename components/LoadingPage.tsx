@@ -4,13 +4,13 @@ import LoadingSpinner from './LoadingSpinner';
 
 type Props = {};
 
-const LoadingPage:NextPage<Props> = () => {
+const LoadingPage: NextPage<Props> = () => {
   return (
     <>
       <MainLayout>
         <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
+            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="mx-auto">
                 <LoadingSpinner />
               </div>

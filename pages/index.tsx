@@ -8,7 +8,7 @@ import SearchFilters from '@/components/SingleSearchFilters';
 import { useStore } from '@/stores/store';
 import SingleCatalog from '@/components/SingleCatalog';
 import MainLayout from '@/components/MainLayout';
-
+import SingleSearchFilter from '@/components/single-search-filters';
 type Props = {};
 
 const Home: NextPage<Props> = () => {
@@ -22,7 +22,7 @@ const Home: NextPage<Props> = () => {
     <>
       <HomeHead />
       <MainLayout>
-        <div className="w-full max-w-xl flex-1 flex-col justify-center text-center">
+        <div className="container flex w-full flex-col justify-center text-center">
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
               <div>
@@ -42,7 +42,7 @@ const Home: NextPage<Props> = () => {
           {Object.keys(singleSearchResults).length > 0 && (
             <>
               <SingleSearchInfo />
-              <SearchFilters />
+              <SingleSearchFilter />
               <SingleCatalog />
             </>
           )}

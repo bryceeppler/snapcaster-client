@@ -9,6 +9,8 @@ import LoadingPage from '@/components/LoadingPage';
 import Link from 'next/link';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
+import SubscriptionCards from '@/components/SubscriptionCards';
+import { toast } from 'sonner';
 
 const Profile: NextPage = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -19,8 +21,15 @@ const Profile: NextPage = () => {
     fullName,
     emailVerified,
     betaFeaturesEnabled,
-    toggleBetaFeatures
+    toggleBetaFeatures,
+    clearTokens
   } = useAuthStore();
+
+  const handleLogout = () => {
+    clearTokens();
+    toast.success('You have been logged out');
+  };
+
   const [loading, setLoading] = useState(true);
 
   const createCheckoutSession = async () => {
@@ -92,7 +101,7 @@ const Profile: NextPage = () => {
     <>
       <ProfileHead />
       <MainLayout>
-        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
+        <div className="container flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
             <div className="grid w-full gap-6">
               {hasActiveSubscription && (
@@ -105,14 +114,12 @@ const Profile: NextPage = () => {
                     createPortalSession={createPortalSession}
                     toggleBetaFeatures={toggleBetaFeatures}
                     control={control}
+                    handleLogout={handleLogout}
                   />
                 </>
               )}
               {!hasActiveSubscription && (
                 <>
-                  <SubscriptionCards
-                    createCheckoutSession={createCheckoutSession}
-                  />
                   <UserSettings
                     email={email}
                     fullName={fullName}
@@ -121,6 +128,10 @@ const Profile: NextPage = () => {
                     createPortalSession={createPortalSession}
                     toggleBetaFeatures={toggleBetaFeatures}
                     control={control}
+                    handleLogout={handleLogout}
+                  />
+                  <SubscriptionCards
+                    createCheckoutSession={createCheckoutSession}
                   />
                 </>
               )}
@@ -164,7 +175,8 @@ const UserSettings = ({
   emailVerified,
   createPortalSession,
   toggleBetaFeatures,
-  control
+  control,
+  handleLogout
 }: {
   email: string;
   fullName: string;
@@ -173,9 +185,10 @@ const UserSettings = ({
   createPortalSession: () => void;
   toggleBetaFeatures: () => void;
   control: any;
+  handleLogout: () => void;
 }) => {
   return (
-    <div className="outlined-container flex max-w-full flex-col overflow-hidden  p-4 text-left">
+    <div className="outlined-container container flex max-w-xl flex-col overflow-hidden  p-4 text-left">
       <h3 className="text-lg font-bold">Settings</h3>
       <div className="p-2" />
       {/* user info container */}
@@ -253,121 +266,8 @@ const UserSettings = ({
           <Button onClick={createPortalSession}>Manage subscription</Button>
         </div>
       )}
-    </div>
-  );
-};
-
-export const SubscriptionCards = ({
-  createCheckoutSession
-}: {
-  createCheckoutSession: () => Promise<void>;
-}) => {
-  return (
-    <div className="mx-auto flex w-full flex-row gap-2">
-      {/* free price card */}
-      {/* should expand to match height of premium card */}
-      <div className="flex w-full flex-col">
-        <div className="flex flex-col justify-between gap-6 md:flex-row">
-          <div className="outlined-container neon-pink flex w-full flex-col p-6 text-left">
-            <h3 className="font-semibold text-pink-400">Pro</h3>
-            <h2 className="text-2xl font-bold">
-              $3.99 <span className="text-sm font-normal">/mo</span>
-            </h2>
-            <div className="p-1" />
-
-            {/* description */}
-            <p className="text-sm text-zinc-500">
-              Support Snapcaster and get access to premium features and future
-              updates.
-            </p>
-            <div className="p-2" />
-            {/* stack for features */}
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Search over 60 Canadian stores
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Search up to 100 cards at a time
-                </p>
-              </div>
-              {/* <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square w-3 h-3 bg-pink-400 rounded-full"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Price monitoring and email notifications
-                </p>
-              </div> */}
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Beta access to new features
-                </p>
-              </div>
-            </div>
-            <div className="p-4" />
-            {/* upgrade now btn */}
-
-            <p className="mb-2.5 text-xs text-zinc-400">
-              By placing an order, you affirm that you have read, understood,
-              and consent to the{' '}
-              <a
-                href="/privacy"
-                target="_blank"
-                className="text-pink-500 hover:text-pink-700"
-              >
-                Privacy Notices
-              </a>{' '}
-              and{' '}
-              <a
-                href="/terms"
-                target="_blank"
-                className="text-pink-500 hover:text-pink-700"
-              >
-                Terms of Use
-              </a>
-            </p>
-            <Button onClick={createCheckoutSession} className="w-full">
-              Upgrade now
-            </Button>
-          </div>
-          <div className="outlined-container flex w-full flex-col p-6 text-left">
-            <h3 className="font-semibold text-white">Free</h3>
-            <h2 className="text-2xl font-bold">
-              $0 <span className="text-sm font-normal">/mo</span>
-            </h2>
-            <div className="p-1" />
-
-            {/* description */}
-            <p className="text-sm text-zinc-500">
-              Search for MTG singles across Canada.
-            </p>
-            <div className="p-2" />
-            {/* stack for features */}
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
-                <p className="text-sm text-zinc-400">
-                  Search over 60 Canadian stores
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-3 w-3 rounded-full bg-pink-400"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Search up to 5 cards at a time{' '}
-                </p>
-              </div>
-            </div>
-            <div className="flex-grow p-4" />
-            {/* upgrade now btn */}
-            <Link className="w-full" href="/">
-              <Button className="w-full">Start searching</Button>
-            </Link>
-          </div>
-        </div>
+      <div className="flex w-full flex-col p-3">
+        <Button onClick={handleLogout}>Logout</Button>
       </div>
     </div>
   );

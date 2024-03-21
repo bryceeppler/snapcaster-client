@@ -15,7 +15,7 @@ export default function AdvancedCheckBox(props: Props) {
         advancedUseStore.getState().toggleRegularCheckboxes(props.value);
       }}
     >
-      <div className="flex h-7 w-full items-center rounded-md bg-zinc-800 hover:bg-zinc-700">
+      <div className="flex h-7 w-full items-center rounded-md bg-primary px-2 py-1 hover:bg-zinc-900">
         <input
           id="numberCheckBox"
           checked={props.checkedState}
