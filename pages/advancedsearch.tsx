@@ -16,7 +16,6 @@ import { advancedUseStore, useOutsideClick } from '@/stores/advancedStore';
 import { CaretSortIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import LoginRequired from '@/components/login-required';
 import SubscriptionRequired from '@/components/subscription-required';
@@ -27,8 +26,6 @@ export default function AdvancedSearch({}: Props) {
   const {
     advancedSearchLoading,
     advancedSearchResults,
-
-    selectedCardCategory,
 
     websiteList,
     selectedWebsiteCount,
@@ -50,37 +47,28 @@ export default function AdvancedSearch({}: Props) {
     selectedShowcaseTreatmentCount,
     selectedShowcaseTreatmentList,
 
-    artTypeList,
-    selectedhArtTypeList,
-    selectedArtTypeCount,
-
-    otherList,
-    selectedOtherCount,
-    selectedOtherList,
+    frameList,
+    selectedhFrameList,
+    selectedFrameCount,
 
     preReleaseChecked,
     promoChecked,
     alternateArtChecked,
-    retroChecked,
     artSeriesChecked,
     goldenStampedChecked,
-    numberChecked,
 
     sortByList,
     selectedSortBy,
 
     updateSortByFilter,
     updateAdvnacedSearchTextBoxValue,
-    changeCardCategory,
     resetFilters,
-    toggleRegularCheckboxes,
-    updateNumberText,
     toggle,
     fetchAdvancedSearchResults
   } = advancedUseStore();
+
   const [showFilters, setShowFilters] = React.useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
-  const numberRef = useRef<HTMLInputElement>(null);
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
   const [showSortBy, setShoeSoryBy] = React.useState(false);
   const sortRadioRef = useOutsideClick(() => {
@@ -119,6 +107,7 @@ export default function AdvancedSearch({}: Props) {
       />
     );
   }
+
   return (
     <>
       <AdvancedSearchHead />
@@ -126,7 +115,7 @@ export default function AdvancedSearch({}: Props) {
       <MainLayout>
         {/* Parent Container */}
         <div className="container flex w-full flex-col justify-center text-center">
-          {/*Container 1 */}
+          {/*Container 1 - Page Title*/}
           <div className="pb-2 text-center">
             <PageTitle title="Advanced Search" />
             <p className="text-xs text-pink-600">
@@ -136,7 +125,7 @@ export default function AdvancedSearch({}: Props) {
             </p>
           </div>
 
-          {/*Container 2 */}
+          {/*Container 2 - Search Bar & Show Filters Button*/}
           <div className="flex items-center gap-2">
             <Input
               ref={searchRef}
@@ -156,321 +145,82 @@ export default function AdvancedSearch({}: Props) {
             </Button>
           </div>
           <div className="p-2"></div>
-          {/*Container 2.5 */}
+          {/*Container 2.5 - Filter Dropdown Options */}
           {showFilters == true && (
             <div className="mb-4">
-              <Tabs value={selectedCardCategory}>
-                <TabsList className="">
-                  <TabsTrigger
-                    value="allCards"
-                    onClick={() => {
-                      changeCardCategory('allCards');
-                    }}
-                  >
-                    All Cards
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="nonShowcase"
-                    onClick={() => {
-                      changeCardCategory('nonShowcase');
-                    }}
-                  >
-                    Non-Showcase
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="showcase"
-                    onClick={() => {
-                      changeCardCategory('showcase');
-                    }}
-                  >
-                    Showcase
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="allCards">
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                    <AdvancedSearchCombo
-                      option={websiteList}
-                      selectedList={selectedWebsiteList}
-                      selectCount={selectedWebsiteCount}
-                      toggle={toggle}
-                      label="Websites"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={setList}
-                      selectedList={selectedSetList}
-                      selectCount={selectedSetCount}
-                      toggle={toggle}
-                      label="Set"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={conditionList}
-                      selectedList={selectedConditionsList}
-                      selectCount={selectedConditionsCount}
-                      toggle={toggle}
-                      label="Condition"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={foilList}
-                      selectedList={selectedFoilList}
-                      selectCount={selectedFoilCount}
-                      toggle={toggle}
-                      label="Foil"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={showcaseTreatmentList}
-                      selectedList={selectedShowcaseTreatmentList}
-                      selectCount={selectedShowcaseTreatmentCount}
-                      toggle={toggle}
-                      label="Showcase Treatment"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={artTypeList}
-                      selectedList={selectedhArtTypeList}
-                      selectCount={selectedArtTypeCount}
-                      toggle={toggle}
-                      label="Art Type"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={otherList}
-                      selectedList={selectedOtherList}
-                      selectCount={selectedOtherCount}
-                      toggle={toggle}
-                      label="Other"
-                    ></AdvancedSearchCombo>
-                    <div className="flex flex-col justify-end">
-                      <div className="mb-2 flex items-end">
-                        <input
-                          id="numberCheckBox"
-                          checked={numberChecked}
-                          type="checkbox"
-                          onClick={() => {
-                            toggleRegularCheckboxes('numberCheckBox');
-                          }}
-                          onChange={(e) => {}}
-                          className={
-                            'm-auto mx-1 aspect-square h-[11px] w-[11px] cursor-pointer appearance-none rounded-full ' +
-                            (numberChecked == true
-                              ? ' bg-pink-600'
-                              : 'bg-zinc-600')
-                          }
-                        />
-                        <label
-                          htmlFor="numberCheckBox"
-                          className="w-full cursor-pointer pl-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Number
-                        </label>
-                      </div>
-                      <Input
-                        min="0"
-                        type="number"
-                        id="cardNumInput"
-                        name="cardNumInput"
-                        placeholder="Card Number"
-                        ref={numberRef}
-                        onChange={(e) => {}}
-                        disabled={!numberChecked}
-                        className="h-7"
-                      ></Input>
-                    </div>
-                    <AdvancedCheckBox
-                      title="Pre Release"
-                      value="preReleaseCheckBox"
-                      checkedState={preReleaseChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Promo"
-                      value="promoCheckBox"
-                      checkedState={promoChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Alternate Art"
-                      value="alternateArtCheckBox"
-                      checkedState={alternateArtChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Retro"
-                      value="retroCheckBox"
-                      checkedState={retroChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Art Series"
-                      value="artSeriesCheckBox"
-                      checkedState={artSeriesChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Golden Stamped"
-                      value="goldenStampedSeriesCheckBox"
-                      checkedState={goldenStampedChecked}
-                    ></AdvancedCheckBox>
-                  </div>
-                </TabsContent>
-                <TabsContent value="nonShowcase">
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                    <AdvancedSearchCombo
-                      option={websiteList}
-                      selectedList={selectedWebsiteList}
-                      selectCount={selectedWebsiteCount}
-                      toggle={toggle}
-                      label="Websites"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={setList}
-                      selectedList={selectedSetList}
-                      selectCount={selectedSetCount}
-                      toggle={toggle}
-                      label="Set"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={conditionList}
-                      selectedList={selectedConditionsList}
-                      selectCount={selectedConditionsCount}
-                      toggle={toggle}
-                      label="Condition"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={foilList}
-                      selectedList={selectedFoilList}
-                      selectCount={selectedFoilCount}
-                      toggle={toggle}
-                      label="Foil"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={artTypeList}
-                      selectedList={selectedhArtTypeList}
-                      selectCount={selectedArtTypeCount}
-                      toggle={toggle}
-                      label="Art Type"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={otherList}
-                      selectedList={selectedOtherList}
-                      selectCount={selectedOtherCount}
-                      toggle={toggle}
-                      label="Other"
-                    ></AdvancedSearchCombo>
-                    <div className="flex flex-col justify-end">
-                      <div className="mb-2 flex cursor-pointer items-end rounded hover:bg-zinc-800">
-                        <input
-                          id="numberCheckBox"
-                          checked={numberChecked}
-                          type="checkbox"
-                          onClick={() => {
-                            toggleRegularCheckboxes('numberCheckBox');
-                          }}
-                          onChange={(e) => {}}
-                          className={
-                            'm-auto mx-1 aspect-square h-[11px] w-[11px] cursor-pointer appearance-none rounded-full ' +
-                            (numberChecked == true
-                              ? ' bg-pink-600'
-                              : 'bg-zinc-600')
-                          }
-                        />
-                        <label
-                          htmlFor="numberCheckBox"
-                          className="w-full cursor-pointer pl-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Number
-                        </label>
-                      </div>
-                      <Input
-                        min="0"
-                        type="number"
-                        id="cardNumInput"
-                        name="cardNumInput"
-                        placeholder="Card Number"
-                        ref={numberRef}
-                        onChange={(e) => {}}
-                        className="h-7"
-                        disabled={!numberChecked}
-                      ></Input>
-                    </div>
-                    <AdvancedCheckBox
-                      title="Pre Release"
-                      value="preReleaseCheckBox"
-                      checkedState={preReleaseChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Promo"
-                      value="promoCheckBox"
-                      checkedState={promoChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Alternate Art"
-                      value="alternateArtCheckBox"
-                      checkedState={alternateArtChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Retro"
-                      value="retroCheckBox"
-                      checkedState={retroChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Art Series"
-                      value="artSeriesCheckBox"
-                      checkedState={artSeriesChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Golden Stamped"
-                      value="goldenStampedSeriesCheckBox"
-                      checkedState={goldenStampedChecked}
-                    ></AdvancedCheckBox>
-                  </div>
-                </TabsContent>
-                <TabsContent value="showcase">
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                    <AdvancedSearchCombo
-                      option={websiteList}
-                      selectedList={selectedWebsiteList}
-                      selectCount={selectedWebsiteCount}
-                      toggle={toggle}
-                      label="Websites"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={setList}
-                      selectedList={selectedSetList}
-                      selectCount={selectedSetCount}
-                      toggle={toggle}
-                      label="Set"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={conditionList}
-                      selectedList={selectedConditionsList}
-                      selectCount={selectedConditionsCount}
-                      toggle={toggle}
-                      label="Condition"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={foilList}
-                      selectedList={selectedFoilList}
-                      selectCount={selectedFoilCount}
-                      toggle={toggle}
-                      label="Foil"
-                    ></AdvancedSearchCombo>
-                    <AdvancedSearchCombo
-                      option={showcaseTreatmentList}
-                      selectedList={selectedShowcaseTreatmentList}
-                      selectCount={selectedShowcaseTreatmentCount}
-                      toggle={toggle}
-                      label="Showcase Treatment"
-                    ></AdvancedSearchCombo>
-                    <AdvancedCheckBox
-                      title="Pre Release"
-                      value="preReleaseCheckBox"
-                      checkedState={preReleaseChecked}
-                    ></AdvancedCheckBox>
-                    <AdvancedCheckBox
-                      title="Promo"
-                      value="promoCheckBox"
-                      checkedState={promoChecked}
-                    ></AdvancedCheckBox>
-                  </div>
-                </TabsContent>
-              </Tabs>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                <AdvancedSearchCombo
+                  option={websiteList}
+                  selectedList={selectedWebsiteList}
+                  selectCount={selectedWebsiteCount}
+                  toggle={toggle}
+                  label="Websites"
+                ></AdvancedSearchCombo>
+                <AdvancedSearchCombo
+                  option={setList}
+                  selectedList={selectedSetList}
+                  selectCount={selectedSetCount}
+                  toggle={toggle}
+                  label="Set"
+                ></AdvancedSearchCombo>
+                <AdvancedSearchCombo
+                  option={conditionList}
+                  selectedList={selectedConditionsList}
+                  selectCount={selectedConditionsCount}
+                  toggle={toggle}
+                  label="Condition"
+                ></AdvancedSearchCombo>
+                <AdvancedSearchCombo
+                  option={foilList}
+                  selectedList={selectedFoilList}
+                  selectCount={selectedFoilCount}
+                  toggle={toggle}
+                  label="Foil"
+                ></AdvancedSearchCombo>
+                <AdvancedSearchCombo
+                  option={showcaseTreatmentList}
+                  selectedList={selectedShowcaseTreatmentList}
+                  selectCount={selectedShowcaseTreatmentCount}
+                  toggle={toggle}
+                  label="Showcase Treatment"
+                ></AdvancedSearchCombo>
+                <AdvancedSearchCombo
+                  option={frameList}
+                  selectedList={selectedhFrameList}
+                  selectCount={selectedFrameCount}
+                  toggle={toggle}
+                  label="Frame"
+                ></AdvancedSearchCombo>
+                <AdvancedCheckBox
+                  title="Pre Release"
+                  value="preReleaseCheckBox"
+                  checkedState={preReleaseChecked}
+                ></AdvancedCheckBox>
+                <AdvancedCheckBox
+                  title="Promo"
+                  value="promoCheckBox"
+                  checkedState={promoChecked}
+                ></AdvancedCheckBox>
+                <AdvancedCheckBox
+                  title="Alternate Art"
+                  value="alternateArtCheckBox"
+                  checkedState={alternateArtChecked}
+                ></AdvancedCheckBox>
+                <AdvancedCheckBox
+                  title="Art Series"
+                  value="artSeriesCheckBox"
+                  checkedState={artSeriesChecked}
+                ></AdvancedCheckBox>
+                <AdvancedCheckBox
+                  title="Golden Stamped"
+                  value="goldenStampedSeriesCheckBox"
+                  checkedState={goldenStampedChecked}
+                ></AdvancedCheckBox>
+              </div>
             </div>
           )}
 
-          {/*Container 3 */}
+          {/*Container 3 - Sort, Reset Filters, and Search Buttons*/}
           <div className=" flex flex-col gap-2 sm:flex-row sm:justify-end">
             <div ref={sortRadioRef} className="relative">
               <Button
@@ -530,9 +280,6 @@ export default function AdvancedSearch({}: Props) {
               onClick={() => {
                 if (searchRef.current) {
                   updateAdvnacedSearchTextBoxValue(searchRef.current.value);
-                }
-                if (numberRef.current) {
-                  updateNumberText(Number(numberRef.current.value));
                 }
 
                 fetchAdvancedSearchResults();
