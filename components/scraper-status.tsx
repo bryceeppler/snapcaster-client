@@ -45,7 +45,7 @@ type Props = {
 };
 
 const ScraperStatus = ({ data }: Props) => {
-  const numCols = data.timePoints.length + 2;
+  const numCols = data.timePoints.length + 3;
   return (
     <div className="w-full rounded bg-zinc-800 p-4">
       <h3 className="">Scraper Status</h3>

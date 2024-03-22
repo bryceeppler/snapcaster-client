@@ -95,7 +95,7 @@ const ScraperReport = () => {
 
   return (
     <MainLayout>
-      <div className="container flex flex-col gap-4">
+      <div className="flex w-full flex-col gap-4 lg:container">
         <PageTitle title="Scraper Report" />
         <ScraperMonitor tasks={scraperTasks} />
         <DataQuality reports={dataQuality} />
