@@ -36,21 +36,18 @@ export interface IScraperTaskData {
 
 export interface IDocumentCountData {
   labels: string[];
-  datasets: [
-    {
-      label: string;
-      data: number[];
-    }
-  ];
+  datasets: Array<{
+    label: string;
+    data: number[];
+  }>;
 }
 
 export interface IScraperStatusData {
-  scrapers: [
-    {
-      name: string;
-      data: 'ok' | 'error' | 'warning';
-    }
-  ];
+  scrapers: Array<{
+    name: string;
+    data: Array<'complete' | 'error' | 'in_progress'>;
+  }>;
+  timePoints: string[];
 }
 
 export interface IDataQualityData {
@@ -74,8 +71,14 @@ export interface IReportResponse {
 
 const ScraperReport = () => {
   const [dataQuality, setDataQuality] = useState<IDataQualityData[]>([]);
-  const [scraperStatus, setScraperStatus] = useState<IScraperStatusData[]>([]);
-  const [documentCounts, setDocumentCounts] = useState<IDocumentCountData>();
+  const [scraperStatus, setScraperStatus] = useState<IScraperStatusData>({
+    scrapers: [],
+    timePoints: []
+  });
+  const [documentCounts, setDocumentCounts] = useState<IDocumentCountData>({
+    labels: [],
+    datasets: []
+  });
   const [scraperTasks, setScraperTasks] = useState<IScraperTaskData[]>([]);
 
   useEffect(() => {
@@ -96,8 +99,8 @@ const ScraperReport = () => {
         <PageTitle title="Scraper Report" />
         <ScraperMonitor tasks={scraperTasks} />
         <DataQuality reports={dataQuality} />
-        <ScraperStatus />
-        <DocumentCount />
+        <ScraperStatus data={scraperStatus} />
+        <DocumentCount data={documentCounts} />
       </div>
     </MainLayout>
   );

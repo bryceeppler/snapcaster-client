@@ -87,7 +87,6 @@ const ScraperMonitor: React.FC<Props> = ({
   // ];
 
   const [datasets, setDatasets] = useState<Array<Dataset>>([]);
-  console.log(tasks);
 
   useEffect(() => {
     const newDatasets: Dataset[] = tasks.map((task, index) => ({
