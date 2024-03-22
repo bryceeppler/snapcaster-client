@@ -26,7 +26,34 @@ ChartJS.register(
   Legend
 );
 
-export interface Report {
+export interface IScraperTaskData {
+  name: string;
+  timestamps: Array<{
+    time: string;
+    status: 'complete' | 'error' | 'in_progress';
+  }>;
+}
+
+export interface IDocumentCountData {
+  labels: string[];
+  datasets: [
+    {
+      label: string;
+      data: number[];
+    }
+  ];
+}
+
+export interface IScraperStatusData {
+  scrapers: [
+    {
+      name: string;
+      data: 'ok' | 'error' | 'warning';
+    }
+  ];
+}
+
+export interface IDataQualityData {
   database: string;
   analysis_time: string;
   total_documents: number;
@@ -38,13 +65,28 @@ export interface Report {
   };
 }
 
+export interface IReportResponse {
+  data_quality: IDataQualityData;
+  scraper_status: IScraperStatusData;
+  document_count: IDocumentCountData;
+  scraper_task: IScraperTaskData;
+}
+
 const ScraperReport = () => {
-  const [reports, setReports] = useState<Report[]>([]);
+  const [dataQuality, setDataQuality] = useState<IDataQualityData[]>([]);
+  const [scraperStatus, setScraperStatus] = useState<IScraperStatusData[]>([]);
+  const [documentCounts, setDocumentCounts] = useState<IDocumentCountData>();
+  const [scraperTasks, setScraperTasks] = useState<IScraperTaskData[]>([]);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_ANALYTICS_URL}/report`)
       .then((response) => response.json())
-      .then((data) => setReports(data))
+      .then((data) => {
+        setDataQuality(data.data_quality);
+        setScraperStatus(data.scraper_status);
+        setDocumentCounts(data.document_count);
+        setScraperTasks(data.scraper_tasks);
+      })
       .catch((error) => console.error('Error fetching data:', error));
   }, []);
 
@@ -52,8 +94,8 @@ const ScraperReport = () => {
     <MainLayout>
       <div className="container flex flex-col gap-4">
         <PageTitle title="Scraper Report" />
-        <ScraperMonitor />
-        <DataQuality reports={reports} />
+        <ScraperMonitor tasks={scraperTasks} />
+        <DataQuality reports={dataQuality} />
         <ScraperStatus />
         <DocumentCount />
       </div>

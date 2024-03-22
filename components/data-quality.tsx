@@ -1,8 +1,8 @@
 import React from 'react';
-import { Report } from '@/pages/tools/scraper-report';
+import { IDataQualityData } from '@/pages/tools/scraper-report';
 
 type Props = {
-  reports: Report[];
+  reports: IDataQualityData[];
 };
 const getColorFromPercentage = (value: number) => {
   let red = 255,
@@ -42,7 +42,7 @@ const DataQuality = ({ reports }: Props) => {
   );
 };
 
-const DataQualityRow = ({ report }: { report: Report }) => {
+const DataQualityRow = ({ report }: { report: IDataQualityData }) => {
   return (
     <>
       <div className="col-span-2 text-left text-xs">

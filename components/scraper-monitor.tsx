@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Scatter } from 'react-chartjs-2';
+import { IScraperTaskData } from '@/pages/tools/scraper-report';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -51,14 +52,6 @@ ChartJS.register(
   TimeScale
 );
 
-interface ScraperTask {
-  name: string;
-  timestamps: Array<{
-    time: string;
-    status: 'complete' | 'error' | 'in_progress';
-  }>;
-}
-
 interface Dataset {
   label: string;
   data: Array<{ x: string; y: number }>;
@@ -71,59 +64,30 @@ const colorMapping: { [status: string]: string } = {
   in_progress: 'blue'
 };
 
-const ScraperMonitor: React.FC = () => {
-  const tasks: ScraperTask[] = [
-    {
-      name: 'conductcommerce',
-      timestamps: [
-        { time: '2022-09-16T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-17T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-18T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-19T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-20T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-21T08:00:00.000Z', status: 'complete' },
-        { time: '2022-09-22T09:00:00.000Z', status: 'complete' }
-      ]
-    },
-    {
-      name: 'shopify',
-      timestamps: [
-        { time: '2022-09-16T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-17T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-18T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-19T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-20T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-21T10:00:00.000Z', status: 'complete' },
-        { time: '2022-09-22T11:00:00.000Z', status: 'in_progress' }
-      ]
-    },
-    {
-      name: 'crystalcommerce',
-      timestamps: [
-        { time: '2022-09-16T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-17T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-18T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-19T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-20T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-21T08:00:00.000Z', status: 'complete' },
-        { time: '2022-09-22T09:00:00.000Z', status: 'error' }
-      ]
-    },
-    {
-      name: 'facetoface',
-      timestamps: [
-        { time: '2022-09-16T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-17T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-18T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-19T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-20T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-21T10:00:00.000Z', status: 'complete' },
-        { time: '2022-09-22T11:00:00.000Z', status: 'complete' }
-      ]
-    }
-  ];
+type Props = {
+  tasks: IScraperTaskData[];
+};
+
+const ScraperMonitor: React.FC<Props> = ({
+  tasks
+}: Props): React.ReactElement => {
+  // const tasks: IScraperTaskData[] = [
+  //   {
+  //     name: 'conductcommerce',
+  //     timestamps: [
+  //       { time: '2022-09-16T09:00:00.000Z', status: 'complete' },
+  //       { time: '2022-09-17T09:00:00.000Z', status: 'complete' },
+  //       { time: '2022-09-18T09:00:00.000Z', status: 'complete' },
+  //       { time: '2022-09-19T09:00:00.000Z', status: 'complete' },
+  //       { time: '2022-09-20T09:00:00.000Z', status: 'complete' },
+  //       { time: '2022-09-21T08:00:00.000Z', status: 'complete' },
+  //       { time: '2022-09-22T09:00:00.000Z', status: 'complete' }
+  //     ]
+  //   },
+  // ];
 
   const [datasets, setDatasets] = useState<Array<Dataset>>([]);
+  console.log(tasks);
 
   useEffect(() => {
     const newDatasets: Dataset[] = tasks.map((task, index) => ({
@@ -138,7 +102,7 @@ const ScraperMonitor: React.FC = () => {
     }));
 
     setDatasets(newDatasets);
-  }, []);
+  }, [tasks]);
 
   return (
     <div className="w-full rounded bg-zinc-800 p-4">
