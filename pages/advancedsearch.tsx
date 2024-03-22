@@ -189,7 +189,7 @@ export default function AdvancedSearch({}: Props) {
                   selectedList={selectedhFrameList}
                   selectCount={selectedFrameCount}
                   toggle={toggle}
-                  label="Art Type"
+                  label="Frame"
                 ></AdvancedSearchCombo>
                 <AdvancedCheckBox
                   title="Pre Release"

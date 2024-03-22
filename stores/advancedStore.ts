@@ -2400,7 +2400,7 @@ export const advancedUseStore = create<State>((set, get) => ({
           selectedConditionsCount: get().selectedConditionsCount + 1
         });
       }
-    } else if (category == 'Art Type') {
+    } else if (category == 'Frame') {
       if (get().selectedhFrameList.includes(fieldName)) {
         set({
           selectedhFrameList: get().selectedhFrameList.filter(
