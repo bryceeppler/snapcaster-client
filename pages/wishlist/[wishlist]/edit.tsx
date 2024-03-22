@@ -6,11 +6,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/en';
 import axios from 'axios';
-import {
-  Check,
-  Edit,
-  X
-} from 'lucide-react';
+import { Check, Edit, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LoadingPage from '@/components/LoadingPage';
 import Signin from '@/pages/signin';
@@ -85,32 +81,39 @@ const WishlistId: NextPage<Props> = () => {
   };
 
   const submitBulkEdit = async () => {
-    // split cardNames by new line and submit as an array to /wishlist/:id/bulk
     const cardNamesArray = cardNames.trim().split('\n');
     // remove any empty strings or new lines
-    const filteredCardNamesArray = cardNamesArray.filter((cardName) => cardName.trim() !== '');
+    const filteredCardNamesArray = cardNamesArray.filter(
+      (cardName) => cardName.trim() !== ''
+    );
+
+    // if > 100 cards, raise toast and return
+    if (filteredCardNamesArray.length > 100) {
+      toast.error('You can only have 100 cards in a wishlist.');
+      return;
+    }
     try {
-      const res = await axiosInstance
-        .post(`${process.env.NEXT_PUBLIC_WISHLIST_URL}/${wishlistView.wishlist_id}/bulk`, {
+      const res = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_WISHLIST_URL}/${wishlistView.wishlist_id}/bulk`,
+        {
           cardNames: filteredCardNamesArray
-        })
-
-        // clear old missing cards
-        setMissingCards([]);
-        toast.success('Changes saved!');
-
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            // handle axios error in toast
-            if (error.response?.status === 404) {
-                toast.error('Some cards were not found in the database');
-                setMissingCards(error.response.data.missingCardNames);
-            } else {
-            toast.error('Failed to submit bulk edit: ' + error.message);
-            }
-
         }
-        console.error('Failed to submit bulk edit:', error);
+      );
+
+      // clear old missing cards
+      setMissingCards([]);
+      toast.success('Changes saved!');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        // handle axios error in toast
+        if (error.response?.status === 404) {
+          toast.error('Some cards were not found in the database');
+          setMissingCards(error.response.data.missingCardNames);
+        } else {
+          toast.error('Failed to submit bulk edit: ' + error.message);
+        }
+      }
+      console.error('Failed to submit bulk edit:', error);
     }
   };
 
@@ -133,17 +136,15 @@ const WishlistId: NextPage<Props> = () => {
     fetchInitialData();
   }, [isAuthenticated, wishlist]);
 
-
   useEffect(() => {
     // Check if there are items in the wishlist
     if (wishlistView.items.length > 0) {
       // Concatenate the names of each card, separated by new lines
-    //   we want quantity + name
-    const namesWithQuantity = wishlistView.items.map((item) => {
+      //   we want quantity + name
+      const namesWithQuantity = wishlistView.items.map((item) => {
         return `${item.quantity} ${item.card_name}`;
-      }
-    );
-        setCardNames(namesWithQuantity.join('\n'));
+      });
+      setCardNames(namesWithQuantity.join('\n'));
     } else {
       // If there are no items, clear the content
       setCardNames('');
@@ -163,11 +164,11 @@ const WishlistId: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-6xl flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid md:px-6 items-start gap-6">
+            <div className="container grid items-start gap-6 md:px-6">
               <div className="space-y-2 text-left">
                 <div className="flex flex-row gap-4">
                   {edit ? (
-                    <div className="flex flex-row gap-4 items-center">
+                    <div className="flex flex-row items-center gap-4">
                       <Input
                         value={editName}
                         onChange={handleEditNameChange}
@@ -184,7 +185,7 @@ const WishlistId: NextPage<Props> = () => {
                       <X size={16} onClick={exitEditMode} />
                     </div>
                   ) : (
-                    <div className="flex flex-row gap-4 items-center">
+                    <div className="flex flex-row items-center gap-4">
                       <h2 className="text-3xl font-bold tracking-tighter">
                         {wishlistView.name}
                       </h2>
@@ -204,12 +205,16 @@ const WishlistId: NextPage<Props> = () => {
               </div>
 
               {/* textarea */}
-              <Textarea value={cardNames} className="h-48"
+              <Textarea
+                value={cardNames}
+                className="h-48"
                 onChange={(e) => setCardNames(e.target.value)}
               />
-                            {missingCards.length > 0 && (
-                <div className="outlined-container p-6 text-left overflow-ellipsis">
-                  <strong className="font-bold">Some cards were not found:</strong>
+              {missingCards.length > 0 && (
+                <div className="outlined-container overflow-ellipsis p-6 text-left">
+                  <strong className="font-bold">
+                    Some cards were not found:
+                  </strong>
                   {/* divider */}
                   <div className="h-2" />
                   <ul className="text-xs">
@@ -223,13 +228,11 @@ const WishlistId: NextPage<Props> = () => {
               <div className="flex flex-row">
                 <div className="flex-1" />
                 <div className="flex flex-row gap-4">
-                    <Link href={`/wishlist/${wishlistView.wishlist_id}`}>
-                  <Button>Cancel</Button>
-                    </Link>
+                  <Link href={`/wishlist/${wishlistView.wishlist_id}`}>
+                    <Button>Cancel</Button>
+                  </Link>
 
-                  <Button
-                    onClick={submitBulkEdit}
-                  >Save</Button>
+                  <Button onClick={submitBulkEdit}>Save</Button>
                   <Button>Save & Continue Editing</Button>
                 </div>
               </div>

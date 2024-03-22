@@ -3,13 +3,18 @@ import { useStore } from '@/stores/store';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
 type Props = {};
-
+interface AutocompleteResult {
+  name: string;
+  oracle_id: string;
+}
 export default function SingleSearchbox({}: Props) {
   const { singleSearchInput, setSingleSearchInput, fetchSingleSearchResults } =
     useStore();
   const autocompleteEndpoint =
     process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
-  const [autocompleteResults, setAutocompleteResults] = useState<string[]>([]);
+  const [autocompleteResults, setAutocompleteResults] = useState<
+    AutocompleteResult[]
+  >([]);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [selectedAutocompleteIndex, setSelectedAutocompleteIndex] =
     useState(-1);
@@ -72,8 +77,8 @@ export default function SingleSearchbox({}: Props) {
             selectedAutocompleteIndex < totalResults
           ) {
             const item = autocompleteResults[selectedAutocompleteIndex];
-            item && handleAutocompleteItemClick(item);
-            item && fetchSingleSearchResults(item);
+            item && handleAutocompleteItemClick(item.name);
+            item && fetchSingleSearchResults(item.name);
           }
           break;
 
@@ -83,8 +88,8 @@ export default function SingleSearchbox({}: Props) {
             selectedAutocompleteIndex < totalResults
           ) {
             const item = autocompleteResults[selectedAutocompleteIndex];
-            item && handleAutocompleteItemClick(item);
-            item && fetchSingleSearchResults(item);
+            item && handleAutocompleteItemClick(item.name);
+            item && fetchSingleSearchResults(item.name);
           }
           break;
 
@@ -143,13 +148,13 @@ export default function SingleSearchbox({}: Props) {
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
-                    key={result}
+                    key={index}
                     className={`mx-1 cursor-pointer rounded px-4 py-2 ${
                       selectedAutocompleteIndex === index ? 'bg-zinc-800' : ''
                     } `}
-                    onClick={() => handleAutocompleteItemClick(result)}
+                    onClick={() => handleAutocompleteItemClick(result.name)}
                   >
-                    {result}
+                    {result.name}
                   </div>
                 ))}
             </div>
