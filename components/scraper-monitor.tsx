@@ -22,8 +22,6 @@ const rowBackgroundPlugin = {
     const chartArea: ChartArea = chart.chartArea;
     const yAxis = chart.scales.y;
 
-    console.log(yAxis);
-
     chart.data.datasets.forEach((dataset, index) => {
       const yTop = yAxis?.getPixelForValue(index + 0.5); // Top of the row
       const yBottom = yAxis?.getPixelForValue(index - 0.5); // Bottom of the row
@@ -84,7 +82,7 @@ const ScraperMonitor: React.FC = () => {
         { time: '2022-09-19T09:00:00.000Z', status: 'complete' },
         { time: '2022-09-20T09:00:00.000Z', status: 'complete' },
         { time: '2022-09-21T08:00:00.000Z', status: 'complete' },
-        { time: '2022-09-22T09:00:00.000Z', status: 'error' }
+        { time: '2022-09-22T09:00:00.000Z', status: 'complete' }
       ]
     },
     {
@@ -95,8 +93,8 @@ const ScraperMonitor: React.FC = () => {
         { time: '2022-09-18T09:00:00.000Z', status: 'complete' },
         { time: '2022-09-19T09:00:00.000Z', status: 'complete' },
         { time: '2022-09-20T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-21T10:00:00.000Z', status: 'in_progress' },
-        { time: '2022-09-22T11:00:00.000Z', status: 'complete' }
+        { time: '2022-09-21T10:00:00.000Z', status: 'complete' },
+        { time: '2022-09-22T11:00:00.000Z', status: 'in_progress' }
       ]
     },
     {
@@ -119,7 +117,7 @@ const ScraperMonitor: React.FC = () => {
         { time: '2022-09-18T09:00:00.000Z', status: 'complete' },
         { time: '2022-09-19T09:00:00.000Z', status: 'complete' },
         { time: '2022-09-20T09:00:00.000Z', status: 'complete' },
-        { time: '2022-09-21T10:00:00.000Z', status: 'in_progress' },
+        { time: '2022-09-21T10:00:00.000Z', status: 'complete' },
         { time: '2022-09-22T11:00:00.000Z', status: 'complete' }
       ]
     }

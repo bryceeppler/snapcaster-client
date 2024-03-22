@@ -9,10 +9,12 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import { Bar, Pie } from 'react-chartjs-2';
 import PageTitle from '@/components/ui/page-title';
 import MainLayout from '@/components/MainLayout';
 import ScraperMonitor from '@/components/scraper-monitor';
+import DataQuality from '@/components/data-quality';
+import ScraperStatus from '@/components/scraper-status';
+import DocumentCount from '@/components/document-count';
 
 ChartJS.register(
   CategoryScale,
@@ -24,7 +26,7 @@ ChartJS.register(
   Legend
 );
 
-interface Report {
+export interface Report {
   database: string;
   analysis_time: string;
   total_documents: number;
@@ -36,76 +38,10 @@ interface Report {
   };
 }
 
-interface CompletenessChartProps {
-  data: Report;
-}
-
-const CompletenessChart: React.FC<CompletenessChartProps> = ({ data }) => {
-  const completenessLabels = Object.keys(data.field_completeness);
-  const completenessValues = Object.values(data.field_completeness);
-  const missingValues = completenessValues.map((value) => 100 - value);
-
-  const chartData = {
-    labels: completenessLabels,
-    datasets: [
-      {
-        label: 'Field Completeness (%)',
-        data: completenessValues,
-        backgroundColor: '#6366f1',
-        stack: 'stack0'
-      },
-      {
-        label: 'Missing (%)',
-        data: missingValues,
-        backgroundColor: '#fb7185',
-        stack: 'stack0' // Same stack as completeness data
-      }
-    ]
-  };
-
-  const options = {
-    scales: {
-      x: {
-        stacked: true
-      },
-      y: {
-        stacked: true
-      }
-    },
-    plugins: {
-      legend: {
-        display: false
-      }
-    }
-  };
-
-  return <Bar data={chartData} options={options} />;
-};
-
-const UniquenessChart: React.FC<CompletenessChartProps> = ({ data }) => {
-  const uniquenessLabels = ['Unique Document Combinations', 'Total Duplicates'];
-  const uniquenessValues = [
-    data.unique_document_combinations,
-    data.total_duplicates
-  ];
-  const chartData = {
-    labels: uniquenessLabels,
-    datasets: [
-      {
-        data: uniquenessValues,
-        backgroundColor: ['#6366f1', '#fb7185']
-      }
-    ]
-  };
-
-  return <Pie data={chartData} />;
-};
-
 const ScraperReport = () => {
   const [reports, setReports] = useState<Report[]>([]);
 
   useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_ANALYTICS_URL);
     fetch(`${process.env.NEXT_PUBLIC_ANALYTICS_URL}/report`)
       .then((response) => response.json())
       .then((data) => setReports(data))
@@ -114,24 +50,12 @@ const ScraperReport = () => {
 
   return (
     <MainLayout>
-      <PageTitle title="Scraper Report" />
-      <ScraperMonitor />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {reports.map((report, index) => (
-          <div key={index} className="outlined-container col-span-1 p-4">
-            <h2 className="text-xl font-bold">{report.database}</h2>
-            <p className="text-sm">
-              Analysis Time: {new Date(report.analysis_time).toLocaleString()}
-            </p>
-            <div className="p-2"></div>
-            <h3 className="text-lg font-bold">Field Completeness</h3>
-            <CompletenessChart data={report} />
-            <div className="p-2"></div>
-
-            <h3 className="text-lg font-bold">Document Uniqueness</h3>
-            <UniquenessChart data={report} />
-          </div>
-        ))}
+      <div className="container flex flex-col gap-4">
+        <PageTitle title="Scraper Report" />
+        <ScraperMonitor />
+        <DataQuality reports={reports} />
+        <ScraperStatus />
+        <DocumentCount />
       </div>
     </MainLayout>
   );
