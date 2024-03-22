@@ -22,7 +22,11 @@ const Updates: NextPage<Props> = () => {
       <UpdatesHead />
       <MainLayout>
         <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
-          <BlogFeed blogs={blogs} />
+          <BlogFeed
+            pagetitle="Snapcaster Blog"
+            pageDescription="Stay up to date with the latest changes."
+            blogs={blogs}
+          />
         </div>
       </MainLayout>
     </>

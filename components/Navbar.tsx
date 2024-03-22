@@ -122,7 +122,7 @@ export default function Navbar({}: Props) {
                       key={page.name}
                       href={page.href}
                       className={`
- rounded-md py-2 px-3 text-sm font-medium hover:bg-zinc-600 
+ rounded-md px-3 py-2 text-sm font-medium hover:bg-zinc-600 
 ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'} 
 `}
                     >
@@ -135,7 +135,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                   {isAuthenticated ? (
                     <button
                       onClick={handleLogout}
-                      className="block rounded-md py-2 px-3 text-sm font-medium"
+                      className="block rounded-md px-3 py-2 text-sm font-medium"
                     >
                       Logout
                     </button>
@@ -143,7 +143,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                     <Link
                       href="/signin"
                       as="/signin"
-                      className="block rounded-md py-2 px-3 text-sm font-medium"
+                      className="block rounded-md px-3 py-2 text-sm font-medium"
                     >
                       Login
                     </Link>
@@ -157,14 +157,14 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
             className={`${mobileMenuOpen ? 'block h-fit' : 'hidden'} sm:hidden`}
             id="mobile-menu"
           >
-            <div className="space-y-1 px-2 pt-2 pb-3">
+            <div className="space-y-1 px-2 pb-3 pt-2">
               {pages.map((page) => (
                 <Link
                   href={page.href}
                   as={page.href}
                   key={page.name}
                   className={`
-                    block rounded-md py-2 px-3 text-sm font-medium
+                    block rounded-md px-3 py-2 text-sm font-medium
                     ${page.current && 'bg-zinc-600 text-white'} 
                     `}
                 >
@@ -174,7 +174,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
               {isAuthenticated ? (
                 <button
                   onClick={handleLogout}
-                  className="block rounded-md py-2 px-3 text-sm font-medium"
+                  className="block rounded-md px-3 py-2 text-sm font-medium"
                 >
                   Logout
                 </button>
@@ -182,7 +182,7 @@ ${page.current && 'bg-zinc-800 text-white hover:bg-zinc-600'}
                 <Link
                   href="/signin"
                   as="/signin"
-                  className="block rounded-md py-2 px-3 text-sm font-medium"
+                  className="block rounded-md px-3 py-2 text-sm font-medium"
                 >
                   Login
                 </Link>

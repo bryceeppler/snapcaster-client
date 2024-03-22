@@ -184,7 +184,8 @@ const Wishlist: NextPage<Props> = () => {
               )}
               {wishlists &&
                 wishlists.map((wishlist) => (
-                  <Link href={`/wishlist/${wishlist.id}`}
+                  <Link
+                    href={`/wishlist/${wishlist.id}`}
                     as={`/wishlist/${wishlist.id}`}
                     key={wishlist.id}
                   >
@@ -213,7 +214,6 @@ const Wishlist: NextPage<Props> = () => {
                       <CardContent>
                         <CardDescription className="text-zinc-400">
                           {wishlist.item_count} cards
-
                         </CardDescription>
                         <CardDescription className="text-zinc-400">
                           Created {dayjs(wishlist.created_at).fromNow()}
@@ -252,12 +252,11 @@ const Wishlist: NextPage<Props> = () => {
             <Button variant="default" onClick={() => setIsDialogOpen(true)}>
               New wishlist
             </Button>
-            <Dialog open={isDialogOpen}
-              onOpenChange={
-                (isOpen) => {
-                  setIsDialogOpen(isOpen);
-                }
-              }
+            <Dialog
+              open={isDialogOpen}
+              onOpenChange={(isOpen) => {
+                setIsDialogOpen(isOpen);
+              }}
             >
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -289,11 +288,11 @@ const Wishlist: NextPage<Props> = () => {
                     </div>
                   </div>
                   <DialogFooter>
-                  <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
+                    <DialogClose asChild>
+                      <Button type="button" variant="secondary">
+                        Close
+                      </Button>
+                    </DialogClose>
                     <DialogTrigger asChild>
                       <Button type="submit">Save</Button>
                     </DialogTrigger>

@@ -197,6 +197,13 @@ const websites: Website[] = [
     shopify: true
   },
   {
+    name: 'Obsidian Games',
+    code: 'obsidian',
+    image:
+      'https://obsidiangames.ca/cdn/shop/files/Logo_White_Bkd.png?v=1704045920',
+    shopify: true
+  },
+  {
     name: 'Orchard City Games',
     code: 'orchardcity',
     image:
@@ -350,12 +357,6 @@ const websites: Website[] = [
     code: 'fanofthesport',
     image:
       'https://bryces-images.s3.us-west-2.amazonaws.com/fanofthesport.avif',
-    shopify: true
-  },
-  {
-    name: 'Untouchables',
-    code: 'untouchables',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/untouchables.webp',
     shopify: true
   },
   {
