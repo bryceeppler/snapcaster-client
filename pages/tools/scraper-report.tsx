@@ -12,6 +12,7 @@ import {
 import { Bar, Pie } from 'react-chartjs-2';
 import PageTitle from '@/components/ui/page-title';
 import MainLayout from '@/components/MainLayout';
+import ScraperMonitor from '@/components/scraper-monitor';
 
 ChartJS.register(
   CategoryScale,
@@ -114,6 +115,7 @@ const ScraperReport = () => {
   return (
     <MainLayout>
       <PageTitle title="Scraper Report" />
+      <ScraperMonitor />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {reports.map((report, index) => (
           <div key={index} className="outlined-container col-span-1 p-4">
