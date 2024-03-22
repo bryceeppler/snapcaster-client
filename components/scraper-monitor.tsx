@@ -12,24 +12,21 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 
-// ... other imports
 import { Chart, ChartArea } from 'chart.js';
-const rowColors: string[] = [
-  '#3f3f46', // Row 1 color
-  '#27272a' // Row 2 color
-];
-// Define a plugin to draw background colors for each row
+const rowColors: string[] = ['#3f3f46', '#27272a'];
+// plugin to draw background colors for each row
 const rowBackgroundPlugin = {
   id: 'rowBackgroundPlugin',
   beforeDraw: (chart: Chart) => {
     const ctx = chart.ctx;
     const chartArea: ChartArea = chart.chartArea;
-    const yAxis = chart.scales.y; // Corrected Y-axis access
+    const yAxis = chart.scales.y;
 
-    // Loop through each dataset to draw the background rectangles
+    console.log(yAxis);
+
     chart.data.datasets.forEach((dataset, index) => {
-      const yTop = yAxis.getPixelForValue(index + 0.5); // Top of the row
-      const yBottom = yAxis.getPixelForValue(index - 0.5); // Bottom of the row
+      const yTop = yAxis?.getPixelForValue(index + 0.5); // Top of the row
+      const yBottom = yAxis?.getPixelForValue(index - 0.5); // Bottom of the row
       const color = rowColors[index % rowColors.length]; // Get color for the row
 
       // Set the fill style to the row color and draw the rectangle
@@ -44,7 +41,6 @@ const rowBackgroundPlugin = {
   }
 };
 
-// Register the plugin globally
 ChartJS.register(rowBackgroundPlugin);
 
 ChartJS.register(
@@ -78,9 +74,7 @@ const colorMapping: { [status: string]: string } = {
 };
 
 const ScraperMonitor: React.FC = () => {
-  // Replace with actual tasks fetched from the API or define dummy data here
   const tasks: ScraperTask[] = [
-    // Dummy data for demonstration
     {
       name: 'conductcommerce',
       timestamps: [
@@ -134,12 +128,11 @@ const ScraperMonitor: React.FC = () => {
   const [datasets, setDatasets] = useState<Array<Dataset>>([]);
 
   useEffect(() => {
-    // Process the dummy data into the format needed by Chart.js
     const newDatasets: Dataset[] = tasks.map((task, index) => ({
       label: task.name,
       data: task.timestamps.map((entry) => ({
         x: entry.time,
-        y: index // Y-axis will be the index in the tasks array
+        y: index // Yaxis will be the index in the tasks array
       })),
       backgroundColor: task.timestamps.map(
         (entry) => colorMapping[entry.status]
@@ -158,26 +151,21 @@ const ScraperMonitor: React.FC = () => {
           data={{
             datasets: datasets.map((dataset, i) => ({
               ...dataset,
-              pointRadius: 8 // Set the radius of the points here
+              pointRadius: 8
             }))
           }}
           options={{
-            layout: {
-              padding: 5
-            },
             responsive: true,
 
             scales: {
               y: {
                 beginAtZero: true,
                 ticks: {
-                  // Corrected the callback to use the tasks array defined within the component
                   callback: function (
                     tickValue: number | string,
                     index: number,
                     ticks: any
                   ) {
-                    // Convert tickValue to number if necessary and then get the task name
                     return (
                       tasks[
                         typeof tickValue === 'number'
@@ -205,7 +193,6 @@ const ScraperMonitor: React.FC = () => {
                 display: false
               }
             },
-            // Maintain the aspect ratio or not
             maintainAspectRatio: false
           }}
         />
