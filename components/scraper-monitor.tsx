@@ -89,8 +89,8 @@ const ScraperMonitor: React.FC<Props> = ({
   }, [tasks]);
 
   return (
-    <div className="w-full rounded bg-zinc-800 p-4">
-      <h3>Scraper Tasks</h3>
+    <div className="w-full rounded bg-zinc-800 p-5 md:p-8">
+      <h3 className="text-xl font-semibold">Scraper Tasks</h3>
       <div className="p-2"></div>
       <div className="w-full overflow-x-scroll sm:overflow-x-auto">
         <div className=" h-48 w-full min-w-[425px]">

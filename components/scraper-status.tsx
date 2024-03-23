@@ -1,31 +1,5 @@
 import React from 'react';
 import { IScraperStatusData } from '@/pages/tools/scraper-report';
-const scrapers = [
-  {
-    name: 'face to face',
-    timestamps: ['complete', 'complete', 'complete', 'complete', 'error']
-  },
-  {
-    name: 'crystal-commerce',
-    timestamps: ['complete', 'complete', 'complete', 'in_progress', 'complete']
-  },
-  {
-    name: 'shopify',
-    timestamps: ['complete', 'error', 'complete', 'complete', 'complete']
-  },
-  {
-    name: 'conduct-commerce',
-    timestamps: ['complete', 'complete', 'complete', 'complete', 'complete']
-  }
-];
-
-const timePoints = [
-  '09/15 2:00',
-  '09/15 2:00',
-  '09/15 2:00',
-  '09/15 2:00',
-  '09/15 2:00'
-];
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -34,9 +8,9 @@ const getStatusColor = (status: string) => {
     case 'warning':
       return 'bg-yellow-500';
     case 'error':
-      return 'bg-red-500';
+      return 'bg-rose-600';
     default:
-      return 'bg-gray-500';
+      return 'bg-zinc-700';
   }
 };
 
@@ -45,36 +19,33 @@ type Props = {
 };
 
 const ScraperStatus = ({ data }: Props) => {
-  const numCols = data.timePoints.length + 3;
+  console.log(data);
   return (
-    <div className="w-full rounded bg-zinc-800 p-4">
-      <h3 className="">Scraper Status</h3>
-      <div className="flex flex-col text-xs">
-        <div
-          className={`grid grid-cols-${numCols} items-center gap-1 p-4 text-sm`}
-        >
-          {data.scrapers.map((scraper, index) => (
-            <>
-              <div className="col-span-2 line-clamp-1 text-left text-xs">
-                {scraper.name}
-              </div>
-              {scraper.data.map((status, index) => (
-                <div
-                  key={index}
-                  className={`col-span-1 h-3 w-3 md:h-6 md:w-6 ${getStatusColor(
-                    status
-                  )} mx-auto`}
-                ></div>
-              ))}
-            </>
-          ))}
-          <div className="col-span-2"></div>
-          {data.timePoints.map((timePoint, index) => (
-            <div key={index} className="text-center text-xs">
-              {timePoint}
+    <div className="w-full rounded bg-zinc-800  p-5 md:p-8">
+      <h3 className="text-xl font-semibold">Scraper Status</h3>
+      <div className="p-2"></div>
+      <div className={`grid grid-cols-9 items-center gap-0.5 p-4 text-sm`}>
+        {data.scrapers.map((scraper, index) => (
+          <>
+            <div className="col-span-2 line-clamp-1 w-full text-right text-xs">
+              {scraper.name}
             </div>
-          ))}
-        </div>
+            {scraper.data.map((status, index) => (
+              <div
+                key={index}
+                className={`col-span-1 h-4 w-4 md:h-6 md:w-6 ${getStatusColor(
+                  status
+                )} mx-auto`}
+              ></div>
+            ))}
+          </>
+        ))}
+        <div className="col-span-2"></div>
+        {data.timePoints.map((timePoint, index) => (
+          <div key={index} className="text-center text-xs">
+            {timePoint}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -66,12 +66,11 @@ interface IChartDataSet {
 }
 
 const chartColors = [
-  'rgb(255, 0, 0)',
-  'rgb(54, 162, 235)',
-  'rgb(255, 205, 86)',
-  'rgb(75, 192, 192)',
-  'rgb(153, 102, 255)',
-  'rgb(255, 159, 64)'
+  // rose-400, purple-400 sky-400 cyan-400
+  '#EB5286',
+  '#9F7AEA',
+  '#60A5FA',
+  '#fdba74'
 ];
 
 const DocumentCount = ({ data }: Props) => {
@@ -91,8 +90,10 @@ const DocumentCount = ({ data }: Props) => {
   }, [data]);
 
   return (
-    <div className="w-full rounded bg-zinc-800 p-4">
-      <h3 className="">Document Count</h3>
+    <div className="w-full rounded bg-zinc-800  p-5 md:p-8">
+      <h3 className="text-xl font-semibold">Document Count</h3>
+      <div className="p-2"></div>
+
       <div className="flex h-96 flex-col">
         <Line data={chartData} options={options} />
       </div>
