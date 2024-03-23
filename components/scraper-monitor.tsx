@@ -59,9 +59,9 @@ interface Dataset {
 }
 
 const colorMapping: { [status: string]: string } = {
-  complete: 'green',
-  error: 'red',
-  in_progress: 'blue'
+  complete: '#15803d', // green-700
+  error: '#be123c', // rose-700
+  in_progress: '#eab308' // yellow
 };
 
 type Props = {
@@ -71,21 +71,6 @@ type Props = {
 const ScraperMonitor: React.FC<Props> = ({
   tasks
 }: Props): React.ReactElement => {
-  // const tasks: IScraperTaskData[] = [
-  //   {
-  //     name: 'conductcommerce',
-  //     timestamps: [
-  //       { time: '2022-09-16T09:00:00.000Z', status: 'complete' },
-  //       { time: '2022-09-17T09:00:00.000Z', status: 'complete' },
-  //       { time: '2022-09-18T09:00:00.000Z', status: 'complete' },
-  //       { time: '2022-09-19T09:00:00.000Z', status: 'complete' },
-  //       { time: '2022-09-20T09:00:00.000Z', status: 'complete' },
-  //       { time: '2022-09-21T08:00:00.000Z', status: 'complete' },
-  //       { time: '2022-09-22T09:00:00.000Z', status: 'complete' }
-  //     ]
-  //   },
-  // ];
-
   const [datasets, setDatasets] = useState<Array<Dataset>>([]);
 
   useEffect(() => {
@@ -93,7 +78,7 @@ const ScraperMonitor: React.FC<Props> = ({
       label: task.name,
       data: task.timestamps.map((entry) => ({
         x: entry.time,
-        y: index // Yaxis will be the index in the tasks array
+        y: index
       })),
       backgroundColor: task.timestamps.map(
         (entry) => colorMapping[entry.status]
@@ -104,59 +89,61 @@ const ScraperMonitor: React.FC<Props> = ({
   }, [tasks]);
 
   return (
-    <div className="w-full rounded bg-zinc-800 p-4">
-      <h3>Scraper Tasks</h3>
+    <div className="w-full rounded bg-zinc-800 p-5 md:p-8">
+      <h3 className="text-xl font-semibold">Scraper Tasks</h3>
       <div className="p-2"></div>
-      <div className=" h-48 w-full">
-        <Scatter
-          data={{
-            datasets: datasets.map((dataset, i) => ({
-              ...dataset,
-              pointRadius: 8
-            }))
-          }}
-          options={{
-            responsive: true,
+      <div className="w-full overflow-x-scroll sm:overflow-x-auto">
+        <div className=" h-48 w-full min-w-[425px]">
+          <Scatter
+            data={{
+              datasets: datasets.map((dataset, i) => ({
+                ...dataset,
+                pointRadius: 8
+              }))
+            }}
+            options={{
+              responsive: true,
 
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  callback: function (
-                    tickValue: number | string,
-                    index: number,
-                    ticks: any
-                  ) {
-                    return (
-                      tasks[
-                        typeof tickValue === 'number'
-                          ? tickValue
-                          : parseInt(tickValue)
-                      ]?.name || ''
-                    );
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function (
+                      tickValue: number | string,
+                      index: number,
+                      ticks: any
+                    ) {
+                      return (
+                        tasks[
+                          typeof tickValue === 'number'
+                            ? tickValue
+                            : parseInt(tickValue)
+                        ]?.name || ''
+                      );
+                    }
+                  }
+                },
+                x: {
+                  type: 'time',
+                  time: {
+                    unit: 'hour',
+                    tooltipFormat: 'dd:HH'
+                  },
+                  title: {
+                    display: true,
+                    text: 'Time'
                   }
                 }
               },
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'hour',
-                  tooltipFormat: 'dd:HH'
-                },
-                title: {
-                  display: true,
-                  text: 'Time'
+              plugins: {
+                legend: {
+                  display: false
                 }
-              }
-            },
-            plugins: {
-              legend: {
-                display: false
-              }
-            },
-            maintainAspectRatio: false
-          }}
-        />
+              },
+              maintainAspectRatio: false
+            }}
+          />
+        </div>
       </div>
     </div>
   );
