@@ -15,6 +15,7 @@ import ScraperMonitor from '@/components/scraper-monitor';
 import DataQuality from '@/components/data-quality';
 import ScraperStatus from '@/components/scraper-status';
 import DocumentCount from '@/components/document-count';
+import QueueStats from '@/components/queue-stats';
 
 ChartJS.register(
   CategoryScale,
@@ -69,6 +70,11 @@ export interface IReportResponse {
   scraper_task: IScraperTaskData;
 }
 
+export interface IQueueStats {
+  messages_available: number;
+  messages_in_flight: number;
+}
+
 const ScraperReport = () => {
   const [dataQuality, setDataQuality] = useState<IDataQualityData[]>([]);
   const [scraperStatus, setScraperStatus] = useState<IScraperStatusData>({
@@ -81,6 +87,11 @@ const ScraperReport = () => {
   });
   const [scraperTasks, setScraperTasks] = useState<IScraperTaskData[]>([]);
 
+  const [imageQueueStats, setImageQueueStats] = useState<IQueueStats>({
+    messages_available: 0,
+    messages_in_flight: 0
+  });
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_ANALYTICS_URL}/report`)
       .then((response) => response.json())
@@ -91,12 +102,20 @@ const ScraperReport = () => {
         setScraperTasks(data.scraper_tasks);
       })
       .catch((error) => console.error('Error fetching data:', error));
+
+    fetch(`${process.env.NEXT_PUBLIC_ANALYTICS_URL}/sqs-stats`)
+      .then((response) => response.json())
+      .then((data) => {
+        setImageQueueStats(data);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
   }, []);
 
   return (
     <MainLayout>
       <div className="flex w-full flex-col gap-4 lg:container">
         <PageTitle title="Scraper Report" />
+        <QueueStats data={imageQueueStats} />
         <ScraperMonitor tasks={scraperTasks} />
         <DataQuality reports={dataQuality} />
         <ScraperStatus data={scraperStatus} />
