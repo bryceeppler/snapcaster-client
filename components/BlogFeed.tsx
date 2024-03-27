@@ -24,7 +24,7 @@ export default function BlogFeed(props: {
     date: string;
     link: string;
     description: string;
-    image: string;
+    image?: string;
     imageAlt: string;
   }[];
 }) {
@@ -46,16 +46,20 @@ export default function BlogFeed(props: {
               key={index}
               className="outlined-container flex w-full flex-col p-4 text-left hover:cursor-pointer hover:border-zinc-500 hover:bg-zinc-900 md:gap-2 md:p-8"
             >
-              <div className="relative h-64 w-full overflow-hidden rounded-lg">
-                {/* Image fills the wrapper */}
-                <Image
-                  src={blog.image}
-                  alt={blog.imageAlt}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
-              </div>{' '}
-              <div className="p-2"></div>
+              {blog.image && (
+                <>
+                  <div className="relative h-64 w-full overflow-hidden rounded-lg">
+                    {/* Image fills the wrapper */}
+                    <Image
+                      src={blog.image}
+                      alt={blog.imageAlt}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div className="p-2"></div>
+                </>
+              )}
               {/* TITLE + DATE */}
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
