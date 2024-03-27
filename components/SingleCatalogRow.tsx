@@ -67,7 +67,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
         </div>
       </div>
       <div className="w-full flex-col text-right sm:hidden">
-        <div className="flex flex-row justify-end">
+        <div className="ml-1 flex flex-row justify-start">
           <div className="flex flex-row gap-3">
             {cardData.foil && (
               <div className="text-lg font-extrabold text-pink-500">Foil</div>
