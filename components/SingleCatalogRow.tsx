@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SingleSearchResult } from '@/stores/store';
 type Props = {
   cardData: SingleSearchResult;
@@ -8,38 +8,10 @@ import { useStore } from '@/stores/store';
 import { trackOutboundLink } from '../utils/analytics';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import CardImage from './card-image';
 
 export default function SingleCatalogRow({ cardData }: Props) {
   const { websites } = useStore();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleImageClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const ImageModal = ({ src, alt }: { src: string; alt: string }) => {
-    if (!isModalOpen) return null;
-
-    return (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
-        onClick={closeModal}
-      >
-        <div className="w-full max-w-xl rounded-lg p-4 shadow-lg">
-          <img
-            src={src}
-            alt={alt}
-            className="mx-auto h-auto max-h-[70vh] max-w-full rounded-lg"
-          />
-        </div>
-      </div>
-    );
-  };
 
   const findWebsiteNameByCode = (code: string): string => {
     const website = websites.find((website) => website.code === code);
@@ -53,20 +25,13 @@ export default function SingleCatalogRow({ cardData }: Props) {
   }
 
   return (
-    <>
-      <>
-        <div className="outlined-container my-2 grid grid-cols-12 gap-4 p-2 shadow-sm transition-all sm:my-3 sm:p-4">
-          <div className="col-span-3 flex">
-            <img
-              src={cardData.image}
-              alt="card"
-              className="w-16 cursor-pointer rounded-md object-contain md:w-24"
-              onClick={handleImageClick}
-            />
-          </div>
-          {isModalOpen && <ImageModal src={cardData.image} alt="card" />}
-
-          <div className="col-span-5 mt-2">
+    <div className="outlined-container mx-auto my-2 flex max-w-3xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4">
+      <div className="flex w-full gap-4">
+        <div className="w-20">
+          <CardImage imageUrl={cardData.s3_image_url} alt={cardData.name} />
+        </div>
+        <div className="grid w-full grid-cols-9">
+          <div className="col-span-9 mt-2 sm:col-span-5">
             <div className="flex flex-col text-left">
               <div className="text-sm">{cardData.set}</div>
               <div className="text-md font-bold">{cardData.name}</div>
@@ -75,7 +40,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
               </div>
             </div>
           </div>
-          <div className="col-span-4 mt-2">
+          <div className="col-span-4 mt-2 hidden sm:grid">
             <div className="flex flex-col items-end">
               <div className="text-lg font-bold">${cardData.price}</div>
               <div className="flex flex-row space-x-2">
@@ -100,7 +65,26 @@ export default function SingleCatalogRow({ cardData }: Props) {
             </div>
           </div>
         </div>
-      </>
-    </>
+      </div>
+      <div className="w-full flex-col text-right sm:hidden">
+        <div className="flex flex-row justify-end">
+          <div className="flex flex-row gap-3">
+            {cardData.foil && (
+              <div className="text-lg font-extrabold text-pink-500">Foil</div>
+            )}
+            <div className="text-lg font-bold">{cardData.condition}</div>{' '}
+            <div className="text-lg font-bold">${cardData.price}</div>
+          </div>
+        </div>
+        <Button
+          onClick={() => {
+            handleBuyClick(cardData.link, cardData.price);
+          }}
+          className="w-full"
+        >
+          Buy
+        </Button>
+      </div>
+    </div>
   );
 }

@@ -10,6 +10,7 @@ export interface SingleSearchResult {
   foil: boolean;
   price: number;
   website: string;
+  s3_image_url?: string;
 }
 
 export type MultiSearchCard = {
