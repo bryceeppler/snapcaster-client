@@ -5,6 +5,44 @@ export interface ArticleObject {
   imageTitle: string;
 }
 
+export const conditionContent: ArticleObject[] = [
+  {
+    header: 'Near Mint (NM):',
+    content:
+      'Near Mint condition describes cards with minimal to no wear from general play. The edges, surfaces, and corners are in excellent condition but may have a tiny nick or flaw if it’s nearly imperceivable. Near Mint is the coined term for the best condition cards, not to be mistaken for the term “Mint”. Mint is normally not used since it’s extremely challenging to guarantee that a card is absolutely perfect.',
+    image: '/buyers-guide-images/thawing-near-mint.jpg',
+    imageTitle: 'Thawing Glaciers (Near Mint)'
+  },
+  {
+    header: 'Lightly Played (LP):',
+    content:
+      'Lightly Played cards have slight imperfections that are slightly noticeable without affecting the card appearance unless inspected closely. Examples of wear include minor edge wear, tiny nicks, or very slight card face scuffs. These cards are still in good condition and imperfections are hardly noticeable when played in a sleeve.',
+    image: '/buyers-guide-images/lightning-lightly-played.jpg',
+    imageTitle: 'Lightning Bolt (Lightly Played)'
+  },
+  {
+    header: 'Moderately Played (MP):',
+    content:
+      'Moderately Played cards show noticeable wear and are still legal for tournament play when sleeved. Signs of wear include moderate scratches, border wear, or creases that don’t affect the structural integrity of the card. These cards are a great option to get popular cards for a significantly lower price.',
+    image: '/buyers-guide-images/counterspell-moderatly-played.jpg',
+    imageTitle: 'Counterspell (Moderately Played)'
+  },
+  {
+    header: 'Heavily Played (HP):',
+    content:
+      'Heavily Played cards have major wear including deep scratches, significant border wear, creases, fading, etc. Despite all the wear, these cards are in fact tournament legal if they are still easily identifiable and sleeved.',
+    image: '/buyers-guide-images/thawing-heavily-played.jpg',
+    imageTitle: 'Thawing Glaciers (Heavily Played)'
+  },
+  {
+    header: 'Damaged (DMG):',
+    content:
+      'Damaged cards have the most severe flaws and can affect their playability even if sleeved. Signs of a “Damaged” card include water damage, tears, holes, discolouration, damaged borders, and more. Cards in the Damaged conditions are not legal for tournament play.',
+    image: '/buyers-guide-images/ancestral-damaged.jpg',
+    imageTitle: 'Ancestral Recall (Damaged)'
+  }
+];
+
 export const prereleasePromoContent: ArticleObject[] = [
   {
     header: 'Pre-release Cards',

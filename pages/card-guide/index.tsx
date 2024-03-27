@@ -7,6 +7,15 @@ type Props = {};
 const BuyersGuide: NextPage<Props> = () => {
   const blogs = [
     {
+      title: 'Card Conditions Explained',
+      date: 'March 28, 2024',
+      link: '/card-guide/condition',
+      description:
+        'The condition of a card can significantly affect its value. Players can save alot of money when constructing their decks by purchasing cards in lower condtions.',
+      image: '/buyers-guide-images/1-showcase-page.jpg',
+      imageAlt: 'Condition Guide Image'
+    },
+    {
       title: 'Showcase Cards Explained',
       date: 'March 20, 2024',
       link: '/card-guide/showcase',
@@ -50,7 +59,7 @@ const BuyersGuide: NextPage<Props> = () => {
         <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
           <BlogFeed
             pagetitle="MTG Card Guide"
-            pageDescription="A Player's Guide to Magic the Gathering Cards."
+            pageDescription="A Players Guide to Magic the Gathering Cards."
             blogs={blogs}
           />
         </div>
