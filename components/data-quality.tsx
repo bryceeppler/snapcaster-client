@@ -42,10 +42,10 @@ const DataQualityRow = ({ report }: { report: IDataQualityData }) => {
       <div
         className={`col-span-1 flex h-14 flex-col items-center justify-center md:h-10 ${
           report.field_completeness.name < 75
-            ? 'bg-gradient-to-br from-red-700 to-red-500'
+            ? 'bg-gradient-to-r from-rose-700 to-rose-600'
             : report.field_completeness.name < 90
-            ? 'bg-gradient-to-br from-yellow-700 to-yellow-500'
-            : 'bg-gradient-to-br from-green-700 to-green-500'
+            ? 'bg-gradient-to-r from-yellow-700 to-yellow-600'
+            : 'bg-gradient-to-r from-green-700 to-green-600'
         } py-0.5 text-xs`}
       >
         <span className="text-white md:hidden">name</span>
@@ -55,10 +55,10 @@ const DataQualityRow = ({ report }: { report: IDataQualityData }) => {
       <div
         className={`col-span-1 flex h-14 flex-col items-center justify-center md:h-10 ${
           report.field_completeness.price < 75
-            ? 'bg-gradient-to-br from-red-700 to-red-500'
+            ? 'bg-gradient-to-r from-rose-700 to-rose-600'
             : report.field_completeness.price < 90
-            ? 'bg-gradient-to-br from-yellow-700 to-yellow-500'
-            : 'bg-gradient-to-br from-green-700 to-green-500'
+            ? 'bg-gradient-to-r from-yellow-700 to-yellow-600'
+            : 'bg-gradient-to-r from-green-700 to-green-600'
         } py-0.5 text-xs`}
       >
         <span className="text-white md:hidden">price</span>
@@ -67,10 +67,10 @@ const DataQualityRow = ({ report }: { report: IDataQualityData }) => {
       <div
         className={`col-span-1 flex h-14 flex-col items-center justify-center md:h-10 ${
           report.field_completeness.set < 75
-            ? 'bg-gradient-to-br from-red-700 to-red-500'
+            ? 'bg-gradient-to-r from-rose-700 to-rose-600'
             : report.field_completeness.set < 90
-            ? 'bg-gradient-to-br from-yellow-700 to-yellow-500'
-            : 'bg-gradient-to-br from-green-700 to-green-500'
+            ? 'bg-gradient-to-r from-yellow-700 to-yellow-600'
+            : 'bg-gradient-to-r from-green-700 to-green-600'
         } py-0.5 text-xs`}
       >
         <span className="text-white md:hidden">set</span>
@@ -79,10 +79,10 @@ const DataQualityRow = ({ report }: { report: IDataQualityData }) => {
       <div
         className={`col-span-1 flex h-14 flex-col items-center justify-center md:h-10 ${
           report.field_completeness.foil < 75
-            ? 'bg-gradient-to-br from-red-700 to-red-500'
+            ? 'bg-gradient-to-r from-rose-700 to-rose-600'
             : report.field_completeness.foil < 90
-            ? 'bg-gradient-to-br from-yellow-700 to-yellow-500'
-            : 'bg-gradient-to-br from-green-700 to-green-500'
+            ? 'bg-gradient-to-r from-yellow-700 to-yellow-600'
+            : 'bg-gradient-to-r from-green-700 to-green-600'
         } py-0.5 text-xs`}
       >
         <span className="text-white md:hidden">foil</span>
@@ -91,10 +91,10 @@ const DataQualityRow = ({ report }: { report: IDataQualityData }) => {
       <div
         className={`col-span-1 flex h-14 flex-col items-center justify-center md:h-10 ${
           report.field_completeness.condition < 75
-            ? 'bg-gradient-to-br from-red-700 to-red-500'
+            ? 'bg-gradient-to-r from-rose-700 to-rose-600'
             : report.field_completeness.condition < 90
-            ? 'bg-gradient-to-br from-yellow-700 to-yellow-500'
-            : 'bg-gradient-to-br from-green-700 to-green-500'
+            ? 'bg-gradient-to-r from-yellow-700 to-yellow-600'
+            : 'bg-gradient-to-r from-green-700 to-green-600'
         } py-0.5 text-xs`}
       >
         <span className="text-white md:hidden">condition</span>
@@ -103,10 +103,10 @@ const DataQualityRow = ({ report }: { report: IDataQualityData }) => {
       <div
         className={`col-span-1 flex h-14 flex-col items-center justify-center md:h-10 ${
           report.field_completeness.image < 75
-            ? 'bg-gradient-to-br from-red-700 to-red-500'
+            ? 'bg-gradient-to-r from-rose-700 to-rose-600'
             : report.field_completeness.image < 90
-            ? 'bg-gradient-to-br from-yellow-700 to-yellow-500'
-            : 'bg-gradient-to-br from-green-700 to-green-500'
+            ? 'bg-gradient-to-r from-yellow-700 to-yellow-600'
+            : 'bg-gradient-to-r from-green-700 to-green-600'
         } py-0.5 text-xs`}
       >
         <span className="text-white md:hidden">image</span>
@@ -115,10 +115,10 @@ const DataQualityRow = ({ report }: { report: IDataQualityData }) => {
       <div
         className={`col-span-1 flex h-14 flex-col items-center justify-center md:h-10 ${
           report.field_completeness.link < 75
-            ? 'bg-gradient-to-br from-red-700 to-red-500'
+            ? 'bg-gradient-to-r from-rose-700 to-rose-600'
             : report.field_completeness.link < 90
-            ? 'bg-gradient-to-br from-yellow-700 to-yellow-500'
-            : 'bg-gradient-to-br from-green-700 to-green-500'
+            ? 'bg-gradient-to-r from-yellow-700 to-yellow-600'
+            : 'bg-gradient-to-r from-green-700 to-green-600'
         } py-0.5 text-xs`}
       >
         <span className="text-white md:hidden">link</span>
@@ -127,10 +127,10 @@ const DataQualityRow = ({ report }: { report: IDataQualityData }) => {
       <div
         className={`col-span-1 flex h-14 flex-col items-center justify-center md:h-10 ${
           report.uniqueness_ratio < 0.75
-            ? 'bg-gradient-to-br from-red-700 to-red-500'
+            ? 'bg-gradient-to-r from-rose-700 to-rose-600'
             : report.uniqueness_ratio < 0.9
-            ? 'bg-gradient-to-br from-yellow-700 to-yellow-500'
-            : 'bg-gradient-to-br from-green-700 to-green-500'
+            ? 'bg-gradient-to-r from-yellow-700 to-yellow-600'
+            : 'bg-gradient-to-r from-green-700 to-green-600'
         } py-0.5 text-xs`}
       >
         <span className="text-white md:hidden">% unique</span>
