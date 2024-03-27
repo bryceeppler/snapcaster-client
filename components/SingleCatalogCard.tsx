@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SingleSearchResult } from '@/stores/store';
 type Props = {
   cardData: SingleSearchResult;
@@ -31,9 +31,11 @@ export default function SingleCatalogCard({ cardData }: Props) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardImage imageUrl={cardData.s3_image_url} />
+    <Card className="flex flex-col">
+      <CardHeader className="items-center justify-center">
+        <div className="w-full max-w-[300px]">
+          <CardImage imageUrl={cardData.s3_image_url} alt={cardData.name} />
+        </div>
       </CardHeader>
       <CardContent className="text-left">
         <p className="text-xs opacity-70">{cardData.set}</p>
@@ -45,6 +47,7 @@ export default function SingleCatalogCard({ cardData }: Props) {
         <p className="text-sm">{cardData.condition}</p>
         <p className="text-sm font-bold">${cardData.price}</p>
       </CardContent>
+      <div className="flex-grow"></div>
       <CardFooter>
         <Link
           href={cardData.link}

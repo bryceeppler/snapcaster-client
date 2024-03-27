@@ -33,9 +33,8 @@ const CardImage: React.FC<Props> = ({ imageUrl, alt }) => {
             <Image
               src="/logo.png"
               alt={alt || 'Logo'}
-              width={100}
-              height={100}
-              className="opacity-10"
+              fill
+              className="p-5 opacity-5"
             />
           </div>
         )}
