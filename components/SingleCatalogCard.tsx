@@ -14,7 +14,7 @@ import {
   CardFooter,
   CardHeader
 } from '@/components/ui/card';
-import Image from 'next/image';
+import CardImage from './card-image';
 
 export default function SingleCatalogCard({ cardData }: Props) {
   const { websites } = useStore();
@@ -33,11 +33,7 @@ export default function SingleCatalogCard({ cardData }: Props) {
   return (
     <Card>
       <CardHeader>
-        <img
-          src={cardData.image}
-          alt="card"
-          className="max-w-36 mx-auto rounded-lg object-contain"
-        />
+        <CardImage imageUrl={cardData.s3_image_url} />
       </CardHeader>
       <CardContent className="text-left">
         <p className="text-xs opacity-70">{cardData.set}</p>
