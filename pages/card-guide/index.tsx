@@ -7,12 +7,21 @@ type Props = {};
 const BuyersGuide: NextPage<Props> = () => {
   const blogs = [
     {
+      title: 'Card Conditions Explained',
+      date: 'March 28, 2024',
+      link: '/card-guide/condition',
+      description:
+        'The condition of a card can significantly affect its value. Players can save alot of money when constructing their decks by purchasing cards in lower condtions.',
+      image: '/buyers-guide-images/5-condition-page.jpg',
+      imageAlt: 'Condition Guide Image'
+    },
+    {
       title: 'Showcase Cards Explained',
       date: 'March 20, 2024',
       link: '/card-guide/showcase',
       description:
         'Showcase is a catch all term for an alternate version of a card within a set. This guide presents every showcase frame, treatment, and illustration printed.',
-      image: '/buyers-guide-images/1-showcase-page.png',
+      image: '/buyers-guide-images/1-showcase-page.jpg',
       imageAlt: 'Showcase Cards'
     },
     {
@@ -21,7 +30,7 @@ const BuyersGuide: NextPage<Props> = () => {
       link: '/card-guide/prerelease-and-promo',
       description:
         'In this article we discuss what Prerelease Cards and Promo Cards are as well as the key differences between the two.',
-      image: '/buyers-guide-images/2-prerelease-promo-page.png',
+      image: '/buyers-guide-images/2-prerelease-promo-page.jpg',
       imageAlt: 'Pre-release and Promo'
     },
     {
@@ -30,7 +39,7 @@ const BuyersGuide: NextPage<Props> = () => {
       link: '/card-guide/frame-and-border',
       description:
         'Prices vary depending on the framing and the border of a card. This guide will do a deep dive on the diffenences between each type of frame and border.',
-      image: '/buyers-guide-images/3-frame-border-page.png',
+      image: '/buyers-guide-images/3-frame-border-page.jpg',
       imageAlt: 'Frames and Borders'
     },
     {
@@ -39,7 +48,7 @@ const BuyersGuide: NextPage<Props> = () => {
       link: '/card-guide/foil',
       description:
         'Foiling plays a significant role in the value of your cards. Here, we will go over the 15+ foil treatment options you can buy.',
-      image: '/buyers-guide-images/4-foil-page.png',
+      image: '/buyers-guide-images/4-foil-page.jpg',
       imageAlt: 'Foil Types'
     }
   ];
@@ -50,7 +59,7 @@ const BuyersGuide: NextPage<Props> = () => {
         <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
           <BlogFeed
             pagetitle="MTG Card Guide"
-            pageDescription="A player's guide to Magic the Gathering Cards."
+            pageDescription="A Players Guide to Magic the Gathering Cards."
             blogs={blogs}
           />
         </div>

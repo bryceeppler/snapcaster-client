@@ -18,29 +18,29 @@ export default function MultiCatalogRow({ cardData: card }: Props) {
 
   return (
     <div
-      className={`transition-all outlined-container mt-6 p-3 sm:p-6 my-2 ${
-        card.selected && `bg-zinc-900 border-zinc-500`
+      className={`outlined-container my-2 mt-6 p-3 transition-all sm:p-6 ${
+        card.selected && `border-zinc-500 bg-zinc-900`
       }`}
       onClick={() => {
         toggleSelectMultiSearchCard(card.cardName);
       }}
     >
-      <div className="flex sm:hidden flex-col gap-3 p-5 sm:p-8">
+      <div className="flex flex-col gap-3 p-5 sm:hidden sm:p-8">
         {/* Image */}
-        <div className="sm:items-center sm:justify-center max-w-xs mx-auto">
+        <div className="mx-auto max-w-xs sm:items-center sm:justify-center">
           <img
             src={selectedVariant.image}
             alt={selectedVariant.name}
-            className="h-fit rounded-lg"
+            className="max-h-[65svh] rounded-lg"
           />
         </div>
         {/* Card Info */}
         <div className="flex flex-col text-left">
-          <div className="text-lg font-bold mt-2">{selectedVariant.name}</div>
+          <div className="mt-2 text-lg font-bold">{selectedVariant.name}</div>
 
-          <div className="font-bold text-lg">{selectedVariant.condition}</div>
+          <div className="text-lg font-bold">{selectedVariant.condition}</div>
           {selectedVariant.foil && (
-            <div className="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-zinc-300 to-zinc-400">
+            <div className="bg-gradient-to-r from-zinc-300 to-zinc-400 bg-clip-text text-lg font-bold text-transparent">
               Foil
             </div>
           )}
@@ -59,7 +59,7 @@ export default function MultiCatalogRow({ cardData: card }: Props) {
           </Button>
         </div>
       </div>
-      <div className="hidden sm:flex sm:flex-col gap-3 p-5 sm:p-8">
+      <div className="hidden gap-3 p-5 sm:flex sm:flex-col sm:p-8">
         <div className="flex flex-row">
           {/* Image */}
 
@@ -67,17 +67,17 @@ export default function MultiCatalogRow({ cardData: card }: Props) {
             <img
               src={selectedVariant.image}
               alt={selectedVariant.name}
-              className="w-36 h-fit rounded-lg"
+              className="h-fit w-36 rounded-lg"
             />
           </div>
           <div className="p-4" />
           {/* Card Info */}
           <div className="flex flex-col text-left">
-            <div className="text-lg font-bold mt-2">{selectedVariant.name}</div>
+            <div className="mt-2 text-lg font-bold">{selectedVariant.name}</div>
 
-            <div className="font-bold text-lg">{selectedVariant.condition}</div>
+            <div className="text-lg font-bold">{selectedVariant.condition}</div>
             {selectedVariant.foil && (
-              <div className="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-zinc-300 to-zinc-400">
+              <div className="bg-gradient-to-r from-zinc-300 to-zinc-400 bg-clip-text text-lg font-bold text-transparent">
                 Foil
               </div>
             )}
