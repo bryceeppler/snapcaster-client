@@ -31,7 +31,7 @@ export default function MultiCatalogRow({ cardData: card }: Props) {
           <img
             src={selectedVariant.image}
             alt={selectedVariant.name}
-            className="h-fit rounded-lg"
+            className="max-h-[65svh] rounded-lg"
           />
         </div>
         {/* Card Info */}

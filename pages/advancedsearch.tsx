@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRef } from 'react';
 import axiosInstance from '@/utils/axiosWrapper';
 
@@ -64,8 +64,13 @@ export default function AdvancedSearch({}: Props) {
     updateAdvnacedSearchTextBoxValue,
     resetFilters,
     toggle,
-    fetchAdvancedSearchResults
+    fetchAdvancedSearchResults,
+    initSetInformation
   } = advancedUseStore();
+
+  useEffect(() => {
+    initSetInformation();
+  }, []);
 
   const [showFilters, setShowFilters] = React.useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -132,6 +137,14 @@ export default function AdvancedSearch({}: Props) {
               type="text"
               placeholder="Card Base Name"
               defaultValue={''}
+              onKeyDown={(e) => {
+                if (e.key == 'Enter') {
+                  if (searchRef.current) {
+                    updateAdvnacedSearchTextBoxValue(searchRef.current.value);
+                  }
+                  fetchAdvancedSearchResults();
+                }
+              }}
             ></Input>
 
             <Button

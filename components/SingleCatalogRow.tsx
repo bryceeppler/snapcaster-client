@@ -33,7 +33,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
         <div className="grid w-full grid-cols-9">
           <div className="col-span-9 mt-2 sm:col-span-5">
             <div className="flex flex-col text-left">
-              <div className="text-sm">{cardData.set}</div>
+              <div className="text-sm capitalize">{cardData.set}</div>
               <div className="text-md font-bold">{cardData.name}</div>
               <div className="text-sm">
                 {findWebsiteNameByCode(cardData.website)}
