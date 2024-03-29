@@ -76,7 +76,7 @@ export default function SearchFilters({}: Props) {
                     toggleSingleSearchFoil();
                   }}
                 />
-                <div className="peer h-4 w-7 rounded-full bg-zinc-800 after:absolute after:top-[2px] after:left-[2px] after:h-3 after:w-3 after:rounded-full after:border after:border-zinc-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-pink-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-pink-300 dark:border-zinc-600 dark:peer-focus:ring-pink-800"></div>
+                <div className="peer h-4 w-7 rounded-full bg-zinc-800 after:absolute after:left-[2px] after:top-[2px] after:h-3 after:w-3 after:rounded-full after:border after:border-zinc-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-pink-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-pink-300 dark:border-zinc-600 dark:peer-focus:ring-pink-800"></div>
               </label>
             </div>
             <div className="mt-2 text-sm font-bold">Condition</div>

@@ -9,7 +9,7 @@ export const logPageView = () => {
   ReactGA.send({ hitType: 'pageview', page: window.location.pathname });
 };
 
-export const trackOutboundLink = (url: string, price:number) => {
+export const trackOutboundLink = (url: string, price: number) => {
   ReactGA.event({
     category: 'Outbound Link',
     action: 'outgoing_conversion',

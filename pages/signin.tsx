@@ -3,13 +3,12 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
 import useAuthStore from '@/stores/authStore';
-import { toast } from "sonner";
+import { toast } from 'sonner';
 import Router from 'next/router';
 import { useForm } from 'react-hook-form';
 import Profile from './profile';
-import { Input } from "@/components/ui/input"
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
 
 type Props = {};
 
@@ -69,7 +68,7 @@ const Signin: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
+            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter">Sign In</h2>
                 <p className="text-gray-500 dark:text-gray-400">
@@ -106,9 +105,7 @@ const Signin: NextPage<Props> = () => {
                 {errors.password && (
                   <p className="text-red-500">{errors.password.message}</p>
                 )}
-                <Button type="submit">
-                  Sign In
-                </Button>
+                <Button type="submit">Sign In</Button>
               </form>
               <a href="/forgot-password">Forgot your password?</a>
               <a href="/signup">Don't have an account? Sign up!</a>
