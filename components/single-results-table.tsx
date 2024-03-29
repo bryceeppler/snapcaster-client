@@ -46,7 +46,7 @@ const SingleResultsTable = (props: Props) => {
           <TableRow key={index}>
             <TableCell>{cardData.name}</TableCell>
 
-            <TableCell>{cardData.set}</TableCell>
+            <TableCell className="capitalize">{cardData.set}</TableCell>
             <TableCell>{findWebsiteNameByCode(cardData.website)}</TableCell>
             <TableCell>{cardData.condition}</TableCell>
             <TableCell>{cardData.price}</TableCell>

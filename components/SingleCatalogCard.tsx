@@ -38,7 +38,7 @@ export default function SingleCatalogCard({ cardData }: Props) {
         </div>
       </CardHeader>
       <CardContent className="text-left">
-        <p className="text-xs opacity-70">{cardData.set}</p>
+        <p className="text-xs capitalize opacity-70">{cardData.set}</p>
         <p className="text-sm font-bold">{cardData.name}</p>
         <div className="p-1"></div>
         <p className="text-xs opacity-70">
