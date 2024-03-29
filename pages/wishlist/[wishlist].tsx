@@ -438,11 +438,16 @@ function getColumns(
               <SelectValue placeholder="Variant" />
             </SelectTrigger>
             <SelectContent>
-              {row.original.prices.map((price, index) => (
+              {row.original.prices.map((wishlistItem, index) => (
                 <SelectItem
-                  value={price.website + price.condition + price.price}
+                  value={
+                    wishlistItem.website +
+                    wishlistItem.condition +
+                    wishlistItem.price
+                  }
                 >
-                  {price.condition} - ${price.price} - {price.website}
+                  {wishlistItem.condition} - ${wishlistItem.price} -{' '}
+                  {wishlistItem.website}
                 </SelectItem>
               ))}
             </SelectContent>
