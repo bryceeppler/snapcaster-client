@@ -52,16 +52,19 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 <div className="text-sm font-bold">{cardData.condition}</div>
               </div>
               <div className="p-2" />
-              <Button
-                asChild
-                onClick={() => {
-                  handleBuyClick(cardData.link, cardData.price);
-                }}
+              <Link
+                href={cardData.link}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full"
               >
-                <Link href={cardData.link} target="_blank" rel="noreferrer">
+                <Button
+                  onClick={() => handleBuyClick(cardData.link, cardData.price)}
+                  className="w-full"
+                >
                   Buy
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
