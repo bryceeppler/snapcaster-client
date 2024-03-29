@@ -7,7 +7,8 @@ module.exports = {
     'app/**/*.{ts,tsx}',
     'components/**/*.{ts,tsx}',
     'pages/**/*.{ts,tsx}'
-  ],  theme: {
+  ],
+  theme: {
     screens: {
       sm: '480px',
       md: '768px',
@@ -86,6 +87,5 @@ module.exports = {
       }
     }
   },
-  plugins: [require('tailwindcss-animate'),
-  require('@tailwindcss/line-clamp'),]
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/line-clamp')]
 };

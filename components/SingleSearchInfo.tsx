@@ -1,5 +1,5 @@
-import React from "react";
-import { useStore } from "@/stores/store";
+import React from 'react';
+import { useStore } from '@/stores/store';
 
 type Props = {};
 
@@ -7,7 +7,7 @@ export default function SingleSearchinfo({}: Props) {
   const {
     singleSearchResults,
     filteredSingleSearchResults,
-    singleSearchQuery,
+    singleSearchQuery
   } = useStore();
   return (
     <div className="flex w-full flex-col items-center justify-center p-2">
@@ -15,16 +15,16 @@ export default function SingleSearchinfo({}: Props) {
         {singleSearchResults.length != filteredSingleSearchResults.length ? (
           <div className="text-sm">
             <>
-            Displaying {filteredSingleSearchResults.length} of{" "}
-            {singleSearchResults.length} results for &quot;{singleSearchQuery}
-            &quot;
+              Displaying {filteredSingleSearchResults.length} of{' '}
+              {singleSearchResults.length} results for &quot;{singleSearchQuery}
+              &quot;
             </>
           </div>
         ) : (
           <div className="text-sm ">
             <>
-            {singleSearchResults.length} results for &quot;{singleSearchQuery}
-            &quot;
+              {singleSearchResults.length} results for &quot;{singleSearchQuery}
+              &quot;
             </>
           </div>
         )}
