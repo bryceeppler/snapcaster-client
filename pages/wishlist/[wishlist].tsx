@@ -428,6 +428,29 @@ function getColumns(
       enableSorting: true
     },
     {
+      // select dropdown to browse all available conditions
+      header: 'Variant',
+      accessorKey: 'variant',
+      cell: ({ row }) => {
+        return (
+          <Select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Variant" />
+            </SelectTrigger>
+            <SelectContent>
+              {row.original.prices.map((price, index) => (
+                <SelectItem
+                  value={price.website + price.condition + price.price}
+                >
+                  {price.condition} - ${price.price} - {price.website}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      }
+    },
+    {
       id: 'actions',
       cell: ({ row }) => {
         const wishlistCard = row.original;
