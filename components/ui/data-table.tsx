@@ -60,8 +60,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <div className="flex flex-row justify-between items-center gap-4 py-2 w-full">
-        <div className="flex text-sm text-muted-foreground text-left">
+      <div className="flex w-full flex-row items-center justify-between gap-4 py-2">
+        <div className="flex text-left text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
@@ -80,14 +80,11 @@ export function DataTable<TData, TValue>({
             <Button
               variant="destructive"
               onClick={() => {
-                table
-                  .getFilteredSelectedRowModel()
-                  .rows.forEach((row) => {
-                    if (deleteRow) {
-                      deleteRow((row.original as WishlistCard).wishlist_item_id);
-                    }
+                table.getFilteredSelectedRowModel().rows.forEach((row) => {
+                  if (deleteRow) {
+                    deleteRow((row.original as WishlistCard).wishlist_item_id);
                   }
-                );
+                });
                 // clear selection
                 table
                   .getFilteredRowModel()
@@ -99,7 +96,7 @@ export function DataTable<TData, TValue>({
           </div>
         )}
       </div>
-      <div className="rounded-md border text-left w-full border-zinc-700">
+      <div className="w-full rounded-md border border-zinc-700 text-left">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

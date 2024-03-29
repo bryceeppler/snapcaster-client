@@ -3,11 +3,11 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
 import Router from 'next/router';
-import { toast } from "sonner";
+import { toast } from 'sonner';
 import useAuthStore from '@/stores/authStore';
 import Profile from './profile';
 import { useForm } from 'react-hook-form';
-import { Input } from "@/components/ui/input"
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 type SignupFormData = {
@@ -24,8 +24,7 @@ const Signup: NextPage<Props> = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
-
+    watch
   } = useForm<SignupFormData>();
 
   const router = Router;
@@ -100,17 +99,19 @@ const Signup: NextPage<Props> = () => {
                 {errors.password && (
                   <p className="text-red-500">{errors.password.message}</p>
                 )}
-                                <Input
+                <Input
                   type="password"
                   {...register('confirmPassword', {
-                    validate: value =>
-                      value === password || 'The passwords do not match',
+                    validate: (value) =>
+                      value === password || 'The passwords do not match'
                   })}
                   className={``}
                   placeholder="Confirm Password"
                 />
                 {errors.confirmPassword && (
-                  <p className="text-red-500">{errors.confirmPassword.message}</p>
+                  <p className="text-red-500">
+                    {errors.confirmPassword.message}
+                  </p>
                 )}
                 <Input
                   type="text"
@@ -123,15 +124,21 @@ const Signup: NextPage<Props> = () => {
                 {errors.fullName && (
                   <p className="text-red-500">{errors.fullName.message}</p>
                 )}
-                <Button
-                  type="submit"
-                              >
-                  Sign Up
-                </Button>
+                <Button type="submit">Sign Up</Button>
                 <Button className="">
                   <a href="/signin">Already have an account? Sign in!</a>
                 </Button>
-                <p className='text-xs'>By Creating an account, you affirm that you have read, understood, and consent to the <a href="/terms" target="_blank" className="text-pink-500 hover:text-pink-700">Terms of Use</a></p>
+                <p className="text-xs">
+                  By Creating an account, you affirm that you have read,
+                  understood, and consent to the{' '}
+                  <a
+                    href="/terms"
+                    target="_blank"
+                    className="text-pink-500 hover:text-pink-700"
+                  >
+                    Terms of Use
+                  </a>
+                </p>
               </form>
             </div>
           </section>

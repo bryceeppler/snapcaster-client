@@ -19,7 +19,7 @@ export default function Footer({}: Props) {
       text-zinc-100
       "
     >
-      <div className="flex flex-col md:flex-row items-center gap-5">
+      <div className="flex flex-col items-center gap-5 md:flex-row">
         {/* <div className="text-zinc-100">
           Created by{'  '}
           <a
@@ -38,16 +38,15 @@ export default function Footer({}: Props) {
           <span className="hidden sm:inline">Support snapcaster</span>
           <span className="sm:hidden">Donate</span>
         </button> */}
-          <Link href="/privacy" className="text-pink-500 hover:text-pink-700">
-            Privacy Policy
-          </Link>
+        <Link href="/privacy" className="text-pink-500 hover:text-pink-700">
+          Privacy Policy
+        </Link>
 
-        <div className="w-1 h-1 aspect-square bg-pink-500 rounded-full"></div>
-          <Link href="/terms" className="text-pink-500 hover:text-pink-700">
-            Terms and Conditions
-          </Link>
+        <div className="aspect-square h-1 w-1 rounded-full bg-pink-500"></div>
+        <Link href="/terms" className="text-pink-500 hover:text-pink-700">
+          Terms and Conditions
+        </Link>
       </div>
-
     </div>
   );
 }

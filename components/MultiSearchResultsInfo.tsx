@@ -12,12 +12,12 @@ export default function MultiSearchResultsInfo({}: Props) {
     multiSearchSelectedCost
   } = useStore();
   return (
-    <div className="w-full outlined-container p-3 md:p-6">
-      <div className="flex flex-col justify-center items-center h-full ">
+    <div className="outlined-container w-full p-3 md:p-6">
+      <div className="flex h-full flex-col items-center justify-center ">
         {/* Missing Cards */}
         {missingCards.length > 0 && (
-          <div className="justify-center w-full">
-            <div className="outlined-container p-3 flex flex-col space-y-1 max-w-sm mx-auto mb-2">
+          <div className="w-full justify-center">
+            <div className="outlined-container mx-auto mb-2 flex max-w-sm flex-col space-y-1 p-3">
               <div className="text-center">No results found for</div>
 
               {missingCards.map((card, index) => (
@@ -28,15 +28,15 @@ export default function MultiSearchResultsInfo({}: Props) {
             </div>
           </div>
         )}
-        <div className="flex justify-center mb-4">
+        <div className="mb-4 flex justify-center">
           <Button onClick={resetMultiSearch}>Reset</Button>
           <div className="p-4"></div>
 
           <Button onClick={selectAllMultiSearchResults}>Select All</Button>
         </div>
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col items-center justify-center">
           {/* Total cost of selected cards */}
-          <div className=" font-bold text-2xl">
+          <div className=" text-2xl font-bold">
             ${multiSearchSelectedCost.toFixed(2)}
           </div>
           {/* Num Selected Cards */}

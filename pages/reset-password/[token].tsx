@@ -2,7 +2,7 @@ import MainLayout from '@/components/MainLayout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
-import { toast } from "sonner";
+import { toast } from 'sonner';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
@@ -41,7 +41,9 @@ const ResetPassword: NextPage<Props> = () => {
         throw new Error('Something went wrong with the password reset process');
       } else {
         if (response.status !== 200) {
-          throw new Error('Something went wrong with the password reset process');
+          throw new Error(
+            'Something went wrong with the password reset process'
+          );
         }
         toast.success('Your password has been reset! You can now sign in.');
         router.push('/signin');
@@ -58,7 +60,7 @@ const ResetPassword: NextPage<Props> = () => {
       <MainLayout>
         <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
           <section className="w-full py-6 md:py-12">
-            <div className="container grid max-[1fr_900px] md:px-6 items-start gap-6">
+            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter">
                   Reset Password
@@ -76,7 +78,7 @@ const ResetPassword: NextPage<Props> = () => {
                   {...register('password', {
                     required: 'Password is required'
                   })}
-                  className={`block input-dark w-full px-4 py-2`}
+                  className={`input-dark block w-full px-4 py-2`}
                   placeholder="Password"
                 />
                 {errors.password && (
@@ -88,7 +90,7 @@ const ResetPassword: NextPage<Props> = () => {
                     validate: (value) =>
                       value === password || 'The passwords do not match'
                   })}
-                  className={`block input-dark w-full px-4 py-2`}
+                  className={`input-dark block w-full px-4 py-2`}
                   placeholder="Confirm Password"
                 />
                 {errors.confirmPassword && (
@@ -96,7 +98,9 @@ const ResetPassword: NextPage<Props> = () => {
                     {errors.confirmPassword.message}
                   </p>
                 )}
-               <Button type="submit" className="w-full">Reset Password</Button> 
+                <Button type="submit" className="w-full">
+                  Reset Password
+                </Button>
               </form>
             </div>
           </section>
