@@ -565,6 +565,7 @@ function getColumns(
                 >
                   Open link in new tab
                 </DropdownMenuItem>
+                <DropdownMenuItem>Search</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DialogTrigger asChild>
                   <DropdownMenuItem>Edit</DropdownMenuItem>
