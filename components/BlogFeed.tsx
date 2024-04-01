@@ -13,7 +13,7 @@
 // featureDescriptions: [
 //   "Users can now create lists of cards for easy price checking. A price notification feature is in the works, which will allow users to be notified when a card matching their criteria becomes available.",
 //   "An advanced search feature now supports the majority of stores on Snapcaster."
-import Image from 'next/image';
+
 import Link from 'next/link';
 // ]
 export default function BlogFeed(props: {
@@ -44,17 +44,21 @@ export default function BlogFeed(props: {
             <Link
               href={blog.link}
               key={index}
-              className="outlined-container flex w-full flex-col p-4 text-left hover:cursor-pointer hover:border-zinc-500 hover:bg-zinc-900 md:gap-2 md:p-8"
+              className="outlined-container flex w-full flex-col overflow-hidden p-4 text-left hover:cursor-pointer hover:border-zinc-500 hover:bg-zinc-900 md:gap-2 md:p-8"
             >
               {blog.image && (
                 <>
                   <div className="relative h-64 w-full overflow-hidden rounded-lg">
                     {/* Image fills the wrapper */}
-                    <Image
+                    <img
                       src={blog.image}
                       alt={blog.imageAlt}
-                      fill
-                      style={{ objectFit: 'cover' }}
+                      style={{
+                        objectFit: 'cover',
+                        flexShrink: '0',
+                        // minWidth: '100%',
+                        minHeight: '100%'
+                      }}
                     />
                   </div>
                   <div className="p-2"></div>

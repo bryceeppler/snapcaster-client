@@ -55,53 +55,24 @@ export default function SingleCatalogRow({ cardData }: Props) {
 
   return (
     <>
-      <>
-        <div className="outlined-container my-2 grid grid-cols-12 gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:p-4">
-          {' '}
-          <div className="col-span-3 flex">
-            <img
-              src={cardData.image}
-              alt="card"
-              className="w-16 cursor-pointer rounded-md object-contain md:w-24"
-              onClick={handleImageClick}
-            />
-          </div>
-          {isModalOpen && <ImageModal src={cardData.image} alt="card" />}
-          <div className="col-span-5 mt-2">
-            <div className="flex flex-col text-left">
-              <div className="text-sm">{cardData.set}</div>
-              <div className="text-md font-bold">{cardData.name}</div>
-              <div className="pb-2 text-sm">
-                {findWebsiteNameByCode(cardData.website)}
-              </div>
+      <div className="outlined-container mx-auto my-2 flex gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:w-[100%] sm:p-4 md:w-[60%]">
+        {' '}
+        <div className="">
+          <img
+            src={cardData.image}
+            alt="card"
+            className="w-32 cursor-pointer rounded-md object-contain"
+            onClick={handleImageClick}
+          />
+        </div>
+        {isModalOpen && <ImageModal src={cardData.image} alt="card" />}
+        <div className="mt-2 w-full">
+          <div className="text-left">
+            <div className="text-sm capitalize">{cardData.set}</div>
+            <div className="text-md font-bold">{cardData.name}</div>
+            <div className="pb-2 text-sm">
+              {findWebsiteNameByCode(cardData.website)}
             </div>
-          </div>
-          <div className="col-span-4 mt-2">
-            <div className="flex flex-col items-end">
-              <div className="text-lg font-bold">${cardData.price}</div>
-              <div className="flex flex-row space-x-2">
-                {cardData.foil && (
-                  <div className="text-sm font-extrabold text-pink-500">
-                    Foil
-                  </div>
-                )}
-                <div className="text-sm font-bold">{cardData.condition}</div>
-              </div>
-              <div className="p-2" />
-              <Button
-                asChild
-                onClick={() => {
-                  handleBuyClick(cardData.link, cardData.price);
-                }}
-              >
-                <Link href={cardData.link} target="_blank" rel="noreferrer">
-                  Buy
-                </Link>
-              </Button>
-            </div>
-          </div>
-          <div className="col-span-3"></div>
-          <div className="col-span-9">
             <div className=" flex flex-wrap  text-xs">
               {cardData.preRelease == true && (
                 <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
@@ -148,7 +119,29 @@ export default function SingleCatalogRow({ cardData }: Props) {
             </div>
           </div>
         </div>
-      </>
+        <div className=" ml-auto mt-2">
+          <div className="flex flex-col items-end">
+            <div className="text-lg font-bold">${cardData.price}</div>
+            <div className="flex flex-row space-x-2">
+              {cardData.foil && (
+                <div className="text-sm font-extrabold text-pink-500">Foil</div>
+              )}
+              <div className="text-sm font-bold">{cardData.condition}</div>
+            </div>
+            <div className="p-2" />
+            <Button
+              asChild
+              onClick={() => {
+                handleBuyClick(cardData.link, cardData.price);
+              }}
+            >
+              <Link href={cardData.link} target="_blank" rel="noreferrer">
+                Buy
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

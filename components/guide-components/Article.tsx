@@ -1,5 +1,5 @@
 import { ArticleObject } from '@/articles/buyers-guide-mtg';
-import Image from 'next/image';
+
 type Props = {
   content: ArticleObject[];
 };
@@ -12,7 +12,7 @@ export default function Article(props: Props) {
           <h2 className="mb-3 text-2xl font-medium">{state.header}</h2>
           <p className="mb-6">{state.content}</p>
 
-          <Image
+          <img
             src={state.image}
             alt={state.imageTitle}
             width={250}

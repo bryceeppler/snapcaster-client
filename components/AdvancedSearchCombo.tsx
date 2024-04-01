@@ -71,7 +71,7 @@ export default function AdvancedSearchCombo(props: PropsOption) {
             {props.option.map((state) => (
               <div key={state.abbreviation}>
                 <fieldset className={` grid grid-cols-1 `}>
-                  <div className="flex hover:bg-zinc-600 ">
+                  <div className="flex hover:bg-zinc-700 ">
                     <input
                       id={`input-${state.abbreviation}`}
                       type="checkbox"
@@ -86,13 +86,18 @@ export default function AdvancedSearchCombo(props: PropsOption) {
                       className={
                         'm-auto mx-1 aspect-square h-2 w-2 cursor-pointer appearance-none rounded-full ' +
                         (props.selectedList.includes(state.abbreviation)
-                          ? ' bg-pink-600'
-                          : 'bg-zinc-600')
+                          ? ' bg-pink-600 outline-none'
+                          : 'bg-zinc-600 outline outline-1 outline-black')
                       }
                     />
                     <label
                       htmlFor={`input-${state.abbreviation}`}
-                      className="w-full cursor-pointer px-1 text-[13px] "
+                      className={
+                        'ml-1 w-full cursor-pointer px-1 text-left text-[13px] font-medium capitalize ' +
+                        (props.selectedList.includes(state.abbreviation)
+                          ? ' text-pink-600'
+                          : 'w-full')
+                      }
                     >
                       {state.name}
                     </label>
