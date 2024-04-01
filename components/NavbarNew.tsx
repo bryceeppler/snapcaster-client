@@ -146,6 +146,12 @@ export default function NavbarNew() {
               Discord
             </Button>
           </Link>
+          {/* About */}
+          <Link className="" href="/about">
+            <Button variant="ghost" className="block w-full text-left text-sm">
+              About
+            </Button>
+          </Link>
           {!isAuthenticated && (
             <Link href="/signin">
               <Button

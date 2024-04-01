@@ -12,7 +12,7 @@ const BuyersGuide: NextPage<Props> = () => {
       link: '/card-guide/condition',
       description:
         'The condition of a card can significantly affect its value. Players can save alot of money when constructing their decks by purchasing cards in lower condtions.',
-      image: '/buyers-guide-images/5-condition-page.jpg',
+      image: '/buyers-guide-images/5-condition-page.JPG',
       imageAlt: 'Condition Guide Image'
     },
     {
