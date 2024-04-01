@@ -1,15 +1,13 @@
-import Image from 'next/image';
 import React from 'react';
-import logo from 'public/logo.png';
 
 type Props = {};
 
 export default function Homebanner({}: Props) {
   return (
     <div className="">
-      <Image
+      <img
         className="crisp-edges mx-auto hidden h-16 w-auto md:flex"
-        src={logo}
+        src="/logo.png"
         alt="Snapcaster"
       />
 

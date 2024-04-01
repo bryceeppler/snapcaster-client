@@ -61,7 +61,7 @@ const Updates: NextPage<Props> = () => {
             </li>
           </ul>
           <div className="p-4"></div>
-          <Image
+          <img
             src="/1-wishlist.png"
             alt="Wishlist feature"
             width={500}
@@ -88,7 +88,7 @@ const Updates: NextPage<Props> = () => {
             </li>
           </ul>
           <div className="p-4"></div>
-          <Image
+          <img
             src="/2-advanced.png"
             alt="Advanced search feature"
             width={500}
