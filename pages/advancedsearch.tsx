@@ -266,7 +266,7 @@ export default function AdvancedSearch({}: Props) {
                             name="sortRadio"
                             onChange={(e) => {}}
                             className={
-                              ' aspect-square h-2 w-2 cursor-pointer appearance-none rounded-full ' +
+                              ' aspect-square h-2 w-2 cursor-pointer appearance-none  rounded-full ' +
                               (selectedSortBy.includes(state.abbreviation)
                                 ? ' bg-pink-600 outline-none'
                                 : 'bg-zinc-600 outline outline-1 outline-black')
@@ -274,7 +274,7 @@ export default function AdvancedSearch({}: Props) {
                           />
                           <label
                             htmlFor={`input-${state.abbreviation}`}
-                            className="w-full cursor-pointer px-1 text-sm"
+                            className="w-full cursor-pointer px-1 text-sm font-medium"
                           >
                             {state.name}
                           </label>
@@ -288,7 +288,7 @@ export default function AdvancedSearch({}: Props) {
               onClick={() => {
                 resetFilters();
               }}
-              className="min-w-32"
+              className="min-w-36"
             >
               Reset Filters
             </Button>
@@ -300,7 +300,7 @@ export default function AdvancedSearch({}: Props) {
 
                 fetchAdvancedSearchResults();
               }}
-              className="min-w-32"
+              className="min-w-36"
             >
               Search
             </Button>
@@ -313,13 +313,7 @@ export default function AdvancedSearch({}: Props) {
                 <LoadingSpinner />
               </div>
             )}
-            {/* {Object.keys(advancedSearchResults).length > 0 && (
-              <div>
-                <SingleSearchInfo />
-                <SingleSearchFilter />
-                <SingleCatalog />
-              </div>
-            )} */}
+
             {Object.keys(advancedSearchResults).length > 0 && (
               <div>
                 <AdvancedCatalog></AdvancedCatalog>
