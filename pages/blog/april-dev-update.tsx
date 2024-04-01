@@ -41,7 +41,7 @@ const Updates: NextPage<Props> = () => {
           <ul className="list-outside list-disc space-y-2 px-6">
             <li>
               Users can now switch between a list, catalog/grid, and table view
-              when doing single searches
+              when doing single searches.
             </li>
           </ul>
 
@@ -59,9 +59,9 @@ const Updates: NextPage<Props> = () => {
           <div className="p-2"></div>
           <ul className="list-outside list-disc space-y-2 px-6">
             <li>
-              Improved wish list performance and loading times through caching
+              Improved wish list performance and loading times through caching.
             </li>
-            <li>Set a limit of 100 cards per wishlist.</li>
+            <li>Set a limit of 100 cards per wish list.</li>
           </ul>
 
           <div className="p-4"></div>
@@ -69,7 +69,7 @@ const Updates: NextPage<Props> = () => {
           <div className="p-2"></div>
           <ul className="list-outside list-disc space-y-2 px-6">
             <li>
-              Refactored filtering options due to card data inconsiticenies
+              Refactored filtering options due to card data inconsistencies
               between different websites.
             </li>
             <li>
@@ -112,11 +112,11 @@ const Updates: NextPage<Props> = () => {
 
           <div className="p-4"></div>
           <p>
-            During the first half of the upcoming month we’ll be focusing on
+            During the first half of the upcoming month, we’ll be focusing on
             bugs and UX enhancements from our to-do list. After we’re satisfied
-            with those changes, the plan is to spend time fleshing out our
-            wishlist feature while integrating the remaining 23 websites missing
-            in advanced search.
+            with those changes, the plan is to spend time fleshing out our wish
+            list feature while integrating the remaining 23 websites missing in
+            advanced search.
           </p>
 
           <div className="p-4"></div>

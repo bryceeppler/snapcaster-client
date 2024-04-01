@@ -29,7 +29,7 @@ const Updates: NextPage<Props> = () => {
             primarily be exclusive to Pro members. We've already begun
             implementing some of these features, and users can anticipate seeing
             them evolve over time. Note that we intend on keeping the core
-            search and multisearch functionality free.
+            search and multi search functionality free.
           </p>
           <div className="p-4"></div>
           <p>
@@ -47,7 +47,7 @@ const Updates: NextPage<Props> = () => {
           <h2 className="text-xl font-bold">New Features</h2>
           <div className="p-4"></div>
 
-          <h3 className="text-lg font-bold">Wishlists</h3>
+          <h3 className="text-lg font-bold">Wish Lists</h3>
           <div className="p-2"></div>
 
           <ul className="list-outside list-disc space-y-2 px-6">
@@ -97,11 +97,11 @@ const Updates: NextPage<Props> = () => {
           />
           <div className="p-4"></div>
 
-          <h3 className="text-lg font-bold">100 Card Multisearch</h3>
+          <h3 className="text-lg font-bold">100 Card Multi Search</h3>
           <div className="p-2"></div>
           <p>
             Pro users can now search for up to 100 cards simultaneously using
-            the multisearch tool.
+            the multi search tool.
           </p>
           <div className="p-4"></div>
 

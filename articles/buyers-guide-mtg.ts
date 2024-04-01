@@ -79,7 +79,7 @@ export const borderFrameContent: ArticleObject[] = [
   {
     header: 'Borderless',
     content:
-      'Borderless cards feature art that extends all the way to the edges of the card leaving no no border remaining, except for at the bottom where the artist name and set symbol are printed. Although many alternate art cards are borderless, these characteristics can often be found in other categories such as Showcase cards.',
+      'Borderless cards feature art that extends all the way to the edges of the card leaving no border remaining, except for at the bottom where the artist name and set symbol are printed. Although many alternate art cards are borderless, these characteristics can often be found in other categories such as Showcase cards.',
     image: '/buyers-guide-images/azami-borderless.jpg',
     imageTitle: 'Azami, Lady of Scrolls (CMM) - Borderless'
   },
