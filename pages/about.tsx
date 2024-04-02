@@ -25,7 +25,7 @@ const About: NextPage<Props> = () => {
                     Gathering players, letting you search for MTG singles across
                     70 Canadian websites. It allows users to efficiently search
                     multiple websites simultaneously, aggregating results in a
-                    single, convenient location. We are excited to continuously
+                    single convenient location. We are excited to continuously
                     improve the service and welcome any suggestions and feed
                     back in our official{' '}
                     <a
