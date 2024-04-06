@@ -185,13 +185,26 @@ const Wishlist: NextPage<Props> = () => {
               {wishlists &&
                 wishlists.map((wishlist) => (
                   <Link
-                    href={`/wishlist/${wishlist.id}`}
-                    as={`/wishlist/${wishlist.id}`}
+                    href={
+                      editWishlistId === wishlist.id
+                        ? ''
+                        : `/wishlist/${wishlist.id}`
+                    }
+                    as={
+                      editWishlistId === wishlist.id
+                        ? ''
+                        : `/wishlist/${wishlist.id}`
+                    }
                     key={wishlist.id}
+                    className="cursor-default"
                   >
                     <Card
                       key={wishlist.id}
-                      className="cursor-pointer text-left transition-shadow duration-300 ease-in-out hover:border-zinc-500 hover:shadow-lg"
+                      className={
+                        editWishlistId === wishlist.id
+                          ? 'cursor-default text-left transition-shadow duration-300 ease-in-out hover:border-zinc-500 hover:shadow-lg'
+                          : 'cursor-pointer text-left transition-shadow duration-300 ease-in-out hover:border-zinc-500 hover:shadow-lg'
+                      }
                     >
                       <CardHeader className="flex flex-row items-center justify-between gap-4">
                         {editWishlistId === wishlist.id ? (
@@ -209,6 +222,7 @@ const Wishlist: NextPage<Props> = () => {
                             e.preventDefault();
                             toggleEditMode(wishlist.id);
                           }}
+                          className="cursor-pointer"
                         />
                       </CardHeader>
                       <CardContent>
