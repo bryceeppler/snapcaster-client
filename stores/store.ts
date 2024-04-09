@@ -777,7 +777,7 @@ export const useStore = create<State>((set, get) => ({
     const response = await axiosInstance.post(
       `${process.env.NEXT_PUBLIC_SEARCH_URL}/single`,
       {
-        cardName: searchInput
+        cardName: searchInput.trim()
       }
     );
 
