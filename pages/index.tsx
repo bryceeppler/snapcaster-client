@@ -4,11 +4,11 @@ import Homebanner from '@/components/Homebanner';
 import SingleSearchbox from '@/components/SingleSearchbox';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SingleSearchInfo from '@/components/SingleSearchInfo';
-import SearchFilters from '@/components/SingleSearchFilters';
 import { useStore } from '@/stores/store';
 import SingleCatalog from '@/components/SingleCatalog';
 import MainLayout from '@/components/MainLayout';
 import SingleSearchFilter from '@/components/single-search-filters';
+import PopularSearchCarousel from '@/components/popular-search-carousel';
 type Props = {};
 
 const Home: NextPage<Props> = () => {
@@ -31,6 +31,7 @@ const Home: NextPage<Props> = () => {
               </div>
             )}
           <SingleSearchbox />
+          <PopularSearchCarousel />
           {!singleSearchStarted && !singleSearchResultsLoading && (
             <div className="mt-16 space-y-16"></div>
           )}

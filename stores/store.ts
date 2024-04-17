@@ -494,7 +494,10 @@ export type CardPrices = {
   priceList: PriceListEntry[];
   date: string;
 };
-
+export type CarouselItemType = {
+  name: string;
+  image_url: string;
+};
 type State = {
   singleSearchStarted: boolean;
   sortMultiSearchVariants: (
