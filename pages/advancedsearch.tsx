@@ -7,18 +7,15 @@ import MainLayout from '@/components/MainLayout';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 import AdvancedCatalog from '@/components/AdvancedCatalog';
-import AdvancedSearchCombo from '@/components/AdvancedSearchCombo';
+import AdvancedSearchDropDown from '@/components/AdvancedSearchDropDown';
 import AdvancedCheckBox from '@/components/AdvancedCheckBox';
-import SingleSearchInfo from '@/components/SingleSearchInfo';
-import SingleCatalog from '@/components/SingleCatalog';
-import SingleSearchFilter from '@/components/single-search-filters';
+import AutoFillSearchBox from '@/components/AutoFillSearchBox';
 
 import useAuthStore from '@/stores/authStore';
 import { advancedUseStore, useOutsideClick } from '@/stores/advancedStore';
 
-import { CaretSortIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { ChevronDown } from 'lucide-react';
 
 import LoginRequired from '@/components/login-required';
 import SubscriptionRequired from '@/components/subscription-required';
@@ -57,13 +54,16 @@ export default function AdvancedSearch({}: Props) {
     preReleaseChecked,
     promoChecked,
     alternateArtChecked,
+    alternateArtJapaneseChecked,
     artSeriesChecked,
     goldenStampedChecked,
 
     sortByList,
     selectedSortBy,
 
+    advancedSearchInput,
     updateSortByFilter,
+    setAdvancedSearchInput,
     updateAdvnacedSearchTextBoxValue,
     resetFilters,
     toggle,
@@ -122,7 +122,17 @@ export default function AdvancedSearch({}: Props) {
       {/* Base Page layout */}
       <MainLayout>
         {/* Parent Container */}
-        <div className="container flex w-full flex-col justify-center text-center">
+        <div className="container flex w-full flex-col justify-center text-center ">
+          <a
+            target="_blank"
+            href="https://red-dragon.ca/collections/mtg-singles-instock"
+          >
+            <img
+              src="./home_banner_4.jpg"
+              alt="Home Banner"
+              className="rounded-lg"
+            ></img>
+          </a>
           {/*Container 1 - Page Title*/}
           <div className="pb-2 text-center">
             <PageTitle title="Advanced Search" />
@@ -135,7 +145,7 @@ export default function AdvancedSearch({}: Props) {
 
           {/*Container 2 - Search Bar & Show Filters Button*/}
           <div className="flex items-center gap-2">
-            <Input
+            {/* <Input
               ref={searchRef}
               type="text"
               placeholder="Card Base Name"
@@ -148,8 +158,12 @@ export default function AdvancedSearch({}: Props) {
                   fetchAdvancedSearchResults();
                 }
               }}
-            ></Input>
-
+            ></Input> */}
+            <AutoFillSearchBox
+              searchFunction={fetchAdvancedSearchResults}
+              setSearchInput={setAdvancedSearchInput}
+              searchInput={advancedSearchInput}
+            ></AutoFillSearchBox>
             <Button
               className="flex justify-between rounded lg:w-48"
               onClick={() => {
@@ -157,7 +171,7 @@ export default function AdvancedSearch({}: Props) {
               }}
             >
               <p>Show Filters</p>
-              <CaretSortIcon className=" h-6 w-6" />
+              <ChevronDown className="h-4 w-4" />
             </Button>
           </div>
           <div className="p-2"></div>
@@ -165,48 +179,48 @@ export default function AdvancedSearch({}: Props) {
           {showFilters == true && (
             <div className="mb-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                <AdvancedSearchCombo
+                <AdvancedSearchDropDown
                   option={websiteList}
                   selectedList={selectedWebsiteList}
                   selectCount={selectedWebsiteCount}
                   toggle={toggle}
                   label="Websites"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
+                ></AdvancedSearchDropDown>
+                <AdvancedSearchDropDown
                   option={setList}
                   selectedList={selectedSetList}
                   selectCount={selectedSetCount}
                   toggle={toggle}
                   label="Set"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
+                ></AdvancedSearchDropDown>
+                <AdvancedSearchDropDown
                   option={conditionList}
                   selectedList={selectedConditionsList}
                   selectCount={selectedConditionsCount}
                   toggle={toggle}
                   label="Condition"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
+                ></AdvancedSearchDropDown>
+                <AdvancedSearchDropDown
                   option={foilList}
                   selectedList={selectedFoilList}
                   selectCount={selectedFoilCount}
                   toggle={toggle}
                   label="Foil"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
+                ></AdvancedSearchDropDown>
+                <AdvancedSearchDropDown
                   option={showcaseTreatmentList}
                   selectedList={selectedShowcaseTreatmentList}
                   selectCount={selectedShowcaseTreatmentCount}
                   toggle={toggle}
                   label="Showcase Treatment"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
+                ></AdvancedSearchDropDown>
+                <AdvancedSearchDropDown
                   option={frameList}
                   selectedList={selectedhFrameList}
                   selectCount={selectedFrameCount}
                   toggle={toggle}
                   label="Frame"
-                ></AdvancedSearchCombo>
+                ></AdvancedSearchDropDown>
                 <AdvancedCheckBox
                   title="Pre Release"
                   value="preReleaseCheckBox"
@@ -221,6 +235,11 @@ export default function AdvancedSearch({}: Props) {
                   title="Alternate Art"
                   value="alternateArtCheckBox"
                   checkedState={alternateArtChecked}
+                ></AdvancedCheckBox>
+                <AdvancedCheckBox
+                  title="Japanese Alternate Art"
+                  value="alternateArtJapaneseCheckBox"
+                  checkedState={alternateArtJapaneseChecked}
                 ></AdvancedCheckBox>
                 <AdvancedCheckBox
                   title="Art Series"
@@ -292,7 +311,7 @@ export default function AdvancedSearch({}: Props) {
             >
               Reset Filters
             </Button>
-            <Button
+            {/* <Button
               onClick={() => {
                 if (searchRef.current) {
                   updateAdvnacedSearchTextBoxValue(searchRef.current.value);
@@ -303,7 +322,7 @@ export default function AdvancedSearch({}: Props) {
               className="min-w-36"
             >
               Search
-            </Button>
+            </Button> */}
           </div>
 
           {/*Container 4 */}
@@ -316,7 +335,7 @@ export default function AdvancedSearch({}: Props) {
 
             {Object.keys(advancedSearchResults).length > 0 && (
               <div>
-                <AdvancedCatalog></AdvancedCatalog>
+                <AdvancedCatalog />
               </div>
             )}
           </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useStore } from '@/stores/store';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
+import { useOutsideClick } from '@/stores/store';
 type Props = {};
 interface AutocompleteResult {
   name: string;
@@ -124,8 +125,12 @@ export default function SingleSearchbox({}: Props) {
     }
   };
 
+  const ref = useOutsideClick(() => {
+    setShowAutocomplete(false);
+  });
+
   return (
-    <div className="mt-6 w-full">
+    <div className="mt-6 w-full" ref={ref}>
       <div className="relative">
         <form onSubmit={handleFormSubmit}>
           <Input
@@ -144,12 +149,12 @@ export default function SingleSearchbox({}: Props) {
             <Search size={15} />
           </button>
           {showAutocomplete && (
-            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-700 py-1 shadow-md">
+            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-950 py-1 shadow-md">
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
                     key={index}
-                    className={`mx-1 cursor-pointer rounded px-4 py-2 ${
+                    className={`mx-1 cursor-pointer rounded px-4 py-2 hover:bg-neutral-900 ${
                       selectedAutocompleteIndex === index ? 'bg-zinc-800' : ''
                     } `}
                     onClick={() => handleAutocompleteItemClick(result.name)}

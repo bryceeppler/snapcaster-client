@@ -52,6 +52,16 @@ export default function Multisearch({}: Props) {
       <MainLayout>
         {mode === 'search' && !loading && (
           <div className="container w-full flex-1 flex-col items-center justify-center text-center">
+            <a
+              target="_blank"
+              href="https://red-dragon.ca/collections/mtg-singles-instock"
+            >
+              <img
+                src="./home_banner_4.jpg"
+                alt="Home Banner"
+                className="rounded-lg"
+              ></img>
+            </a>
             <PageTitle title="Multi Search" />
             <div className="p-2" />
             <div className="ext-sm outlined-container p-3">

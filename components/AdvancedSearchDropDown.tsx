@@ -47,7 +47,7 @@ export default function AdvancedSearchCombo(props: PropsOption) {
               setOpen(!open);
             }}
           >
-            <span className="w-full truncate pl-2 text-left text-xs capitalize">
+            <span className="w-full truncate pl-2 text-left text-sm capitalize">
               {props.selectedList.length > 0 ? `${props.selectedList}` : 'Any'}
             </span>
             <svg
@@ -67,7 +67,7 @@ export default function AdvancedSearchCombo(props: PropsOption) {
           </Button>
         </div>
         {open && (
-          <div className="no-scrollbar absolute z-10 max-h-52 w-max min-w-full overflow-y-auto rounded-md bg-zinc-900 shadow-2xl ">
+          <div className="no-scrollbar absolute z-10 max-h-52 w-max min-w-full overflow-y-auto rounded-md bg-zinc-900">
             {props.option.map((state) => (
               <div key={state.abbreviation}>
                 <fieldset className={` grid grid-cols-1 `}>

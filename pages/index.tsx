@@ -9,13 +9,17 @@ import { useStore } from '@/stores/store';
 import SingleCatalog from '@/components/SingleCatalog';
 import MainLayout from '@/components/MainLayout';
 import SingleSearchFilter from '@/components/single-search-filters';
+import AutoFillSearchBox from '@/components/AutoFillSearchBox';
 type Props = {};
 
 const Home: NextPage<Props> = () => {
   const {
     singleSearchResults,
     singleSearchResultsLoading,
-    singleSearchStarted
+    singleSearchStarted,
+    singleSearchInput,
+    setSingleSearchInput,
+    fetchSingleSearchResults
   } = useStore();
 
   return (
@@ -23,14 +27,32 @@ const Home: NextPage<Props> = () => {
       <HomeHead />
       <MainLayout>
         <div className="container flex w-full flex-col justify-center text-center">
+          <a
+            target="_blank"
+            href="https://red-dragon.ca/collections/mtg-singles-instock"
+          >
+            <img
+              src="./home_banner_4.jpg"
+              alt="Home Banner"
+              className="rounded-lg pb-12"
+            ></img>
+          </a>
+
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
               <div>
-                <div className="p-4" />
+                <div />
                 <Homebanner />
               </div>
             )}
-          <SingleSearchbox />
+          <div className="mt-6">
+            <AutoFillSearchBox
+              searchFunction={fetchSingleSearchResults}
+              setSearchInput={setSingleSearchInput}
+              searchInput={singleSearchInput}
+            />
+          </div>
+
           {!singleSearchStarted && !singleSearchResultsLoading && (
             <div className="mt-16 space-y-16"></div>
           )}

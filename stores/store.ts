@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
+import { useEffect, useRef } from 'react';
 
 export interface SingleSearchResult {
   name: string;
@@ -496,7 +497,28 @@ export type CardPrices = {
   date: string;
 };
 
+export const useOutsideClick = (callback: () => void) => {
+  const sortRadioRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sortRadioRef.current &&
+        !sortRadioRef.current.contains(event.target as Node)
+      ) {
+        callback();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [callback]);
+  return sortRadioRef;
+};
+
 type State = {
+  sponsor: string;
+
   singleSearchStarted: boolean;
   sortMultiSearchVariants: (
     card: MultiSearchCardState,
@@ -563,6 +585,7 @@ type State = {
 };
 
 export const useStore = create<State>((set, get) => ({
+  sponsor: 'reddragon',
   toggleSingleSearchOrderBy: () => {
     const order = get().singleSearchOrder;
     if (order === 'asc') {

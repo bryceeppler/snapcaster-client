@@ -24,6 +24,7 @@ export interface AdvancedSearchResult {
   showcase: string;
   frame: string;
   alternateArt: boolean;
+  alternateArtJapanese: boolean;
   artSeries: boolean;
   goldenStampedSeries: boolean;
 }
@@ -85,11 +86,11 @@ const frameList: Filter[] = [
   },
   {
     name: 'Extended Art',
-    abbreviation: 'extended-art'
+    abbreviation: 'extended art'
   },
   {
     name: 'Full Art',
-    abbreviation: 'full-art'
+    abbreviation: 'full art'
   },
   {
     name: 'Retro',
@@ -123,7 +124,7 @@ const sortByList: Filter[] = [
 const foilList: Filter[] = [
   {
     name: 'All Foils',
-    abbreviation: 'all-foils'
+    abbreviation: 'all foils'
   },
   {
     name: 'Regular Foil',
@@ -143,7 +144,7 @@ const foilList: Filter[] = [
   },
   {
     name: 'Neon Ink',
-    abbreviation: 'neon-ink'
+    abbreviation: 'neon ink'
   },
   {
     name: 'Gilded',
@@ -171,7 +172,7 @@ const foilList: Filter[] = [
   },
   {
     name: 'Oil Slick',
-    abbreviation: 'oil-slick'
+    abbreviation: 'oil slick'
   },
   {
     name: 'Halo',
@@ -179,82 +180,62 @@ const foilList: Filter[] = [
   },
   {
     name: 'Invisible Ink',
-    abbreviation: 'invisible-ink'
+    abbreviation: 'invisible ink'
   },
   {
     name: 'rainbow',
     abbreviation: 'rainbow'
+  },
+  {
+    name: 'Raised',
+    abbreviation: 'raised'
   }
 ];
 
 const showcaseTreatmentList: Filter[] = [
   {
+    name: 'All Showcases',
+    abbreviation: 'all showcases'
+  },
+  {
     name: 'Regular Showcase',
-    abbreviation: 'Showcase'
+    abbreviation: 'showcase'
   },
+
   {
-    name: 'Ninja',
-    abbreviation: 'Ninja'
+    name: 'Concept Praetors',
+    abbreviation: 'concept praetors'
   },
+
   {
-    name: 'Samurai',
-    abbreviation: 'Samurai'
+    name: 'Poster',
+    abbreviation: 'poster'
   },
-  {
-    name: 'Golden Age',
-    abbreviation: 'Golden Age'
-  },
-  {
-    name: 'Art Deco',
-    abbreviation: 'Art Deco'
-  },
-  {
-    name: 'Skyscraper',
-    abbreviation: 'Skyscraper'
-  },
-  {
-    name: 'Ring Frame',
-    abbreviation: 'Ring Frame'
-  },
-  {
-    name: 'Fang Frame',
-    abbreviation: 'Fang Frame'
-  },
-  {
-    name: 'Eternal Night',
-    abbreviation: 'Eternal Night'
-  },
-  {
-    name: 'Sketch',
-    abbreviation: 'Sketch'
-  },
+
   {
     name: 'Dungeon Module',
-    abbreviation: 'Dungeon Module'
+    abbreviation: 'dungeon module'
   },
-  {
-    name: 'Ichor',
-    abbreviation: 'Ichor'
-  },
+
   {
     name: 'Phyrexian',
-    abbreviation: 'Phyrexian'
+    abbreviation: 'phyrexian'
   },
   {
     name: 'Scrolls',
-    abbreviation: 'Scrolls'
+    abbreviation: 'scrolls'
   },
   {
     name: 'Anime',
-    abbreviation: 'Anime'
+    abbreviation: 'anime'
   },
   {
     name: 'Manga',
-    abbreviation: 'Manga'
+    abbreviation: 'manga'
   },
   {
     name: 'The Moonlit Lands',
-    abbreviation: 'The Moonlit Lands'
+    abbreviation: 'the moonlit lands'
   }
 ];
 
@@ -265,6 +246,8 @@ type State = {
 
   sortByList: Filter[];
   selectedSortBy: string;
+  advancedSearchInput: string;
+
   advnacedSearchTextBoxValue: string;
 
   conditionList: Filter[];
@@ -294,6 +277,7 @@ type State = {
   preReleaseChecked: boolean;
   promoChecked: boolean;
   alternateArtChecked: boolean;
+  alternateArtJapaneseChecked: boolean;
   retroChecked: boolean;
   artSeriesChecked: boolean;
   goldenStampedChecked: boolean;
@@ -302,13 +286,14 @@ type State = {
 
   advancedSearchLoading: boolean;
 
+  setAdvancedSearchInput: (advancedSearchInput: string) => void;
   updateAdvnacedSearchTextBoxValue: (textField: string) => void;
   toggleRegularCheckboxes: (checkBoxTitle: string) => void;
   toggle: (fieldName: string, category: string) => void;
 
   updateSortByFilter: (sortValue: string) => void;
   resetFilters: () => void;
-  fetchAdvancedSearchResults: () => Promise<void>;
+  fetchAdvancedSearchResults: (searchText: string) => Promise<void>;
   initSetInformation: () => Promise<void>;
 };
 
@@ -316,6 +301,7 @@ export const advancedUseStore = create<State>((set, get) => ({
   advancedSearchLoading: false,
   advancedSearchResults: [],
 
+  advancedSearchInput: '',
   advnacedSearchTextBoxValue: '',
 
   websiteList: websiteList,
@@ -345,6 +331,7 @@ export const advancedUseStore = create<State>((set, get) => ({
   preReleaseChecked: false,
   promoChecked: false,
   alternateArtChecked: false,
+  alternateArtJapaneseChecked: false,
   retroChecked: false,
   artSeriesChecked: false,
   goldenStampedChecked: false,
@@ -377,6 +364,11 @@ export const advancedUseStore = create<State>((set, get) => ({
         break;
       case 'alternateArtCheckBox':
         set({ alternateArtChecked: !get().alternateArtChecked });
+        break;
+      case 'alternateArtJapaneseCheckBox':
+        set({
+          alternateArtJapaneseChecked: !get().alternateArtJapaneseChecked
+        });
         break;
       case 'promoCheckBox':
         set({ promoChecked: !get().promoChecked });
@@ -567,14 +559,17 @@ export const advancedUseStore = create<State>((set, get) => ({
       });
     }
   },
-  fetchAdvancedSearchResults: async () => {
+  setAdvancedSearchInput: (advancedSearchInput: string) =>
+    set({ advancedSearchInput }),
+  fetchAdvancedSearchResults: async (searchText: string) => {
     try {
       set({ advancedSearchResults: [] });
       set({ advancedSearchLoading: true });
       const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_SEARCH_URL}/advanced`,
         {
-          cardName: get().advnacedSearchTextBoxValue.trim(),
+          // cardName: get().advnacedSearchTextBoxValue.trim(),
+          cardName: searchText.trim(),
           website: get().selectedWebsiteList,
           condition: get().selectedConditionsList,
           foil: get().selectedFoilList,
@@ -583,6 +578,7 @@ export const advancedUseStore = create<State>((set, get) => ({
           preRelease: get().preReleaseChecked,
           promo: get().promoChecked,
           alternateArt: get().alternateArtChecked,
+          alternateArtJapanese: get().alternateArtJapaneseChecked,
           artSeries: get().artSeriesChecked,
           goldenStampedSeries: get().goldenStampedChecked,
           set: get().selectedSetList

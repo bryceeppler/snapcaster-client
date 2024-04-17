@@ -11,7 +11,7 @@ import { Button } from './ui/button';
 import Link from 'next/link';
 
 export default function SingleCatalogRow({ cardData }: Props) {
-  const { websites } = useStore();
+  const { websites, sponsor } = useStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -55,9 +55,14 @@ export default function SingleCatalogRow({ cardData }: Props) {
 
   return (
     <>
-      <div className="outlined-container mx-auto my-2 flex gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:w-[100%] sm:p-4 md:w-[60%]">
-        {' '}
-        <div className="">
+      <div
+        className={` outlined-container mx-auto my-2 flex gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:w-[100%] sm:p-4 md:w-[60%] ${
+          sponsor == cardData.website
+            ? 'border-2 border-red-800 bg-red-950'
+            : ''
+        }`}
+      >
+        <div>
           <img
             src={cardData.image}
             alt="card"
@@ -73,7 +78,15 @@ export default function SingleCatalogRow({ cardData }: Props) {
             <div className="pb-2 text-sm">
               {findWebsiteNameByCode(cardData.website)}
             </div>
-            <div className=" flex flex-wrap  text-xs">
+
+            <div className=" flex  flex-wrap font-serif text-xs font-semibold">
+              {sponsor == cardData.website && (
+                <div>
+                  <div className="mr-1 max-w-fit rounded-sm bg-gradient-to-tl from-red-600 to-orange-600 px-1 text-center align-middle text-xs ">
+                    With -5% SNAPCASTER2024
+                  </div>
+                </div>
+              )}
               {cardData.preRelease == true && (
                 <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Pre-Release</p>
@@ -84,12 +97,17 @@ export default function SingleCatalogRow({ cardData }: Props) {
                   <p>Promo-Pack</p>
                 </div>
               )}
-              {cardData.foil != null && cardData.foil != 'Foil' && (
+              {cardData.foil != null && cardData.foil != 'foil' && (
                 <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
-                  <p>{cardData.foil}</p>
+                  <p>{cardData.foil + ' foil'}</p>
                 </div>
               )}
               {cardData.showcase != null && (
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                  <p>showcase</p>
+                </div>
+              )}
+              {cardData.showcase != null && cardData.showcase != 'showcase' && (
                 <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>{cardData.showcase}</p>
                 </div>
@@ -103,42 +121,51 @@ export default function SingleCatalogRow({ cardData }: Props) {
 
               {cardData.alternateArt == true && (
                 <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
-                  <p>Alternate-Art</p>
+                  <p>Alternate Art</p>
+                </div>
+              )}
+              {cardData.alternateArtJapanese == true && (
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                  <p>Japanese</p>
                 </div>
               )}
               {cardData.artSeries == true && (
                 <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
-                  <p>Art-Series</p>
+                  <p>Art Series</p>
                 </div>
               )}
               {cardData.goldenStampedSeries == true && (
                 <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
-                  <p>Golden-Stamped</p>
+                  <p>Golden Stamped</p>
                 </div>
               )}
             </div>
           </div>
         </div>
         <div className=" ml-auto mt-2">
-          <div className="flex flex-col items-end">
-            <div className="text-lg font-bold">${cardData.price}</div>
-            <div className="flex flex-row space-x-2">
-              {cardData.foil && (
-                <div className="text-sm font-extrabold text-pink-500">Foil</div>
-              )}
-              <div className="text-sm font-bold">{cardData.condition}</div>
+          <div className="flex">
+            <div className="flex flex-col items-end">
+              <div className="text-lg font-bold">${cardData.price}</div>
+              <div className="flex flex-row space-x-2">
+                {cardData.foil && (
+                  <div className="text-sm font-extrabold text-pink-500">
+                    Foil
+                  </div>
+                )}
+                <div className="text-sm font-bold">{cardData.condition}</div>
+              </div>
+              <div className="p-2" />
+              <Button
+                asChild
+                onClick={() => {
+                  handleBuyClick(cardData.link, cardData.price);
+                }}
+              >
+                <Link href={cardData.link} target="_blank" rel="noreferrer">
+                  Buy
+                </Link>
+              </Button>
             </div>
-            <div className="p-2" />
-            <Button
-              asChild
-              onClick={() => {
-                handleBuyClick(cardData.link, cardData.price);
-              }}
-            >
-              <Link href={cardData.link} target="_blank" rel="noreferrer">
-                Buy
-              </Link>
-            </Button>
           </div>
         </div>
       </div>
