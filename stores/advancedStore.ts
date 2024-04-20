@@ -3,32 +3,6 @@ import { useRef, useEffect } from 'react';
 import { useStore } from '@/stores/store';
 import axiosInstance from '@/utils/axiosWrapper';
 
-// The huge Filter lists are temporary. I'll have the scraper store it in the mongo database so I dont have to manually update it here
-
-export interface Filter {
-  name: string;
-  abbreviation: string;
-}
-
-export interface AdvancedSearchResult {
-  name: string;
-  link: string;
-  image: string;
-  set: string;
-  condition: string;
-  foil: string;
-  price: number;
-  website: string;
-  preRelease: boolean;
-  promoPack: boolean;
-  showcase: string;
-  frame: string;
-  alternateArt: boolean;
-  alternateArtJapanese: boolean;
-  artSeries: boolean;
-  goldenStampedSeries: boolean;
-}
-
 export const useOutsideClick = (callback: () => void) => {
   const sortRadioRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -48,6 +22,33 @@ export const useOutsideClick = (callback: () => void) => {
   return sortRadioRef;
 };
 
+export interface Filter {
+  name: string;
+  abbreviation: string;
+}
+
+export interface AdvancedSearchResult {
+  name: string;
+  link: string;
+  image: string;
+  set: string;
+  condition: string;
+  foil: string;
+  price: number;
+  website: string;
+  preRelease: boolean;
+  promo: boolean;
+  promoPack: boolean;
+  showcase: string;
+  frame: string;
+  alternateArt: boolean;
+  alternateArtJapanese: boolean;
+  artSeries: boolean;
+  goldenStampedSeries: boolean;
+}
+
+// const setList: Filter[] = [];
+
 const shopifyOnlySites = useStore.getState().websites.filter(function (item) {
   return item.shopify == true;
 });
@@ -55,6 +56,11 @@ const shopifyOnlySites = useStore.getState().websites.filter(function (item) {
 const websiteList: Filter[] = shopifyOnlySites.map((item) => ({
   name: item.name,
   abbreviation: item.code
+}));
+
+const setList: Filter[] = useStore.getState().setList.map((item) => ({
+  name: item.name,
+  abbreviation: item.abbreviation
 }));
 
 const conditionList: Filter[] = [
@@ -239,8 +245,6 @@ const showcaseTreatmentList: Filter[] = [
   }
 ];
 
-const setList: Filter[] = [];
-
 type State = {
   advancedSearchResults: AdvancedSearchResult[];
 
@@ -275,6 +279,7 @@ type State = {
   selectedSetList: string[];
 
   preReleaseChecked: boolean;
+  promoPackChecked: boolean;
   promoChecked: boolean;
   alternateArtChecked: boolean;
   alternateArtJapaneseChecked: boolean;
@@ -294,7 +299,7 @@ type State = {
   updateSortByFilter: (sortValue: string) => void;
   resetFilters: () => void;
   fetchAdvancedSearchResults: (searchText: string) => Promise<void>;
-  initSetInformation: () => Promise<void>;
+  // initSetInformation: () => Promise<void>;
 };
 
 export const advancedUseStore = create<State>((set, get) => ({
@@ -329,6 +334,7 @@ export const advancedUseStore = create<State>((set, get) => ({
   selectedFrameCount: 0,
 
   preReleaseChecked: false,
+  promoPackChecked: false,
   promoChecked: false,
   alternateArtChecked: false,
   alternateArtJapaneseChecked: false,
@@ -375,6 +381,9 @@ export const advancedUseStore = create<State>((set, get) => ({
         break;
       case 'preReleaseCheckBox':
         set({ preReleaseChecked: !get().preReleaseChecked });
+        break;
+      case 'promoPackCheckBox':
+        set({ promoPackChecked: !get().promoPackChecked });
         break;
     }
   },
@@ -576,6 +585,7 @@ export const advancedUseStore = create<State>((set, get) => ({
           showcaseTreatment: get().selectedShowcaseTreatmentList,
           frame: get().selectedhFrameList,
           preRelease: get().preReleaseChecked,
+          promoPack: get().promoPackChecked,
           promo: get().promoChecked,
           alternateArt: get().alternateArtChecked,
           alternateArtJapanese: get().alternateArtJapaneseChecked,
@@ -589,18 +599,6 @@ export const advancedUseStore = create<State>((set, get) => ({
       set({ advancedSearchLoading: false });
     } catch {
       set({ advancedSearchLoading: false });
-    }
-  },
-  initSetInformation: async () => {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_SEARCH_URL}/sets`,
-        {}
-      );
-      let data = response.data;
-      set({ setList: data.setList });
-    } catch {
-      console.log('getSetInformation ERROR');
     }
   }
 }));

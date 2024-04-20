@@ -87,14 +87,24 @@ export default function SingleCatalogRow({ cardData }: Props) {
                   </div>
                 </div>
               )}
+              {cardData.promo == true && (
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                  <p>Promo</p>
+                </div>
+              )}
               {cardData.preRelease == true && (
                 <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
-                  <p>Pre-Release</p>
+                  <p>Pre Release</p>
                 </div>
               )}
               {cardData.promoPack == true && (
                 <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
-                  <p>Promo-Pack</p>
+                  <p>Promo Pack</p>
+                </div>
+              )}
+              {cardData.foil == 'foil' && (
+                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                  <p>{cardData.foil}</p>
                 </div>
               )}
               {cardData.foil != null && cardData.foil != 'foil' && (

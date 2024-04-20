@@ -52,6 +52,7 @@ export default function AdvancedSearch({}: Props) {
     selectedFrameCount,
 
     preReleaseChecked,
+    promoPackChecked,
     promoChecked,
     alternateArtChecked,
     alternateArtJapaneseChecked,
@@ -67,13 +68,13 @@ export default function AdvancedSearch({}: Props) {
     updateAdvnacedSearchTextBoxValue,
     resetFilters,
     toggle,
-    fetchAdvancedSearchResults,
-    initSetInformation
+    fetchAdvancedSearchResults
+    // initSetInformation
   } = advancedUseStore();
 
-  useEffect(() => {
-    initSetInformation();
-  }, []);
+  // useEffect(() => {
+  //   initSetInformation();
+  // }, []);
 
   const [showFilters, setShowFilters] = React.useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -123,20 +124,10 @@ export default function AdvancedSearch({}: Props) {
       <MainLayout>
         {/* Parent Container */}
         <div className="container flex w-full flex-col justify-center text-center ">
-          <a
-            target="_blank"
-            href="https://red-dragon.ca/collections/mtg-singles-instock"
-          >
-            <img
-              src="./home_banner_4.jpg"
-              alt="Home Banner"
-              className="rounded-lg"
-            ></img>
-          </a>
           {/*Container 1 - Page Title*/}
           <div className="pb-2 text-center">
             <PageTitle title="Advanced Search" />
-            <p className="text-xs text-pink-600">
+            <p className="pb-2 text-xs text-pink-600">
               Notice: We appreciate your patience as we continue to add missing
               websites from Single Search and Multi Search and fine tune our
               API.
@@ -145,20 +136,6 @@ export default function AdvancedSearch({}: Props) {
 
           {/*Container 2 - Search Bar & Show Filters Button*/}
           <div className="flex items-center gap-2">
-            {/* <Input
-              ref={searchRef}
-              type="text"
-              placeholder="Card Base Name"
-              defaultValue={''}
-              onKeyDown={(e) => {
-                if (e.key == 'Enter') {
-                  if (searchRef.current) {
-                    updateAdvnacedSearchTextBoxValue(searchRef.current.value);
-                  }
-                  fetchAdvancedSearchResults();
-                }
-              }}
-            ></Input> */}
             <AutoFillSearchBox
               searchFunction={fetchAdvancedSearchResults}
               setSearchInput={setAdvancedSearchInput}
@@ -222,14 +199,19 @@ export default function AdvancedSearch({}: Props) {
                   label="Frame"
                 ></AdvancedSearchDropDown>
                 <AdvancedCheckBox
+                  title="Promo"
+                  value="promoCheckBox"
+                  checkedState={promoChecked}
+                ></AdvancedCheckBox>
+                <AdvancedCheckBox
                   title="Pre Release"
                   value="preReleaseCheckBox"
                   checkedState={preReleaseChecked}
                 ></AdvancedCheckBox>
                 <AdvancedCheckBox
-                  title="Promo"
+                  title="Promo Pack"
                   value="promoCheckBox"
-                  checkedState={promoChecked}
+                  checkedState={promoPackChecked}
                 ></AdvancedCheckBox>
                 <AdvancedCheckBox
                   title="Alternate Art"
@@ -247,7 +229,7 @@ export default function AdvancedSearch({}: Props) {
                   checkedState={artSeriesChecked}
                 ></AdvancedCheckBox>
                 <AdvancedCheckBox
-                  title="Golden Stamped"
+                  title="Golden Art Series"
                   value="goldenStampedSeriesCheckBox"
                   checkedState={goldenStampedChecked}
                 ></AdvancedCheckBox>

@@ -27,17 +27,6 @@ const Home: NextPage<Props> = () => {
       <HomeHead />
       <MainLayout>
         <div className="container flex w-full flex-col justify-center text-center">
-          <a
-            target="_blank"
-            href="https://red-dragon.ca/collections/mtg-singles-instock"
-          >
-            <img
-              src="./home_banner_4.jpg"
-              alt="Home Banner"
-              className="rounded-lg pb-12"
-            ></img>
-          </a>
-
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
               <div>
