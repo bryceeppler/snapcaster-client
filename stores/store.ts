@@ -398,7 +398,6 @@ export const useStore = create<State>((set, get) => ({
         item.price = (
           item.price * get().promoMap[item.website]['discount']
         ).toFixed(2);
-        console.log(item.website);
       }
     }
     const results = response.data;
@@ -589,7 +588,7 @@ export const useStore = create<State>((set, get) => ({
         }
       }
       set({ promoMap: tempMap });
-      console.log(get().promoMap);
+
       set({
         multiSearchSelectedWebsites: get().websites.map(
           (website: Website) => website.name
