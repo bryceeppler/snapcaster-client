@@ -11,7 +11,7 @@ import Link from 'next/link';
 import CardImage from './card-image';
 
 export default function SingleCatalogRow({ cardData }: Props) {
-  const { websites, sponsor } = useStore();
+  const { websites, sponsor, promoMap } = useStore();
 
   const findWebsiteNameByCode = (code: string): string => {
     const website = websites.find((website) => website.code === code);
@@ -26,9 +26,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
 
   return (
     <div
-      className={` outlined-container  mx-auto my-2 flex max-w-3xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4 ${
-        sponsor == cardData.website ? 'border-2 border-red-800 bg-red-950' : ''
-      }`}
+      className={` outlined-container  mx-auto my-2 flex max-w-3xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4`}
     >
       <div className="flex w-full gap-4">
         <div className="w-20">
@@ -45,10 +43,13 @@ export default function SingleCatalogRow({ cardData }: Props) {
               <div className="text-sm">
                 {findWebsiteNameByCode(cardData.website)}
               </div>
-              {sponsor == cardData.website && (
+              {cardData.website in promoMap && (
                 <div className="mt-1">
-                  <div className=" max-w-fit rounded-sm bg-gradient-to-tl from-red-600 to-orange-600 text-center align-middle font-serif text-xs font-semibold ">
-                    -5% SNAPCASTER2024
+                  <div className=" max-w-fit rounded-sm bg-gradient-to-tl from-rose-600 to-rose-800 px-1 text-center align-middle font-serif text-xs font-semibold ">
+                    {`-${(
+                      (1 - promoMap[cardData.website]['discount']) *
+                      100
+                    ).toFixed(0)}% ${promoMap[cardData.website]['promoCode']}`}
                   </div>
                 </div>
               )}
@@ -57,17 +58,16 @@ export default function SingleCatalogRow({ cardData }: Props) {
 
           <div className="col-span-4 mt-2 hidden sm:grid">
             <div className="flex">
-              {sponsor == cardData.website && (
-                <img src="./red_dragon_logo.png" className="max-h-10"></img>
-              )}
-
               <div className="ml-auto flex flex-col items-end ">
-                {sponsor == cardData.website ? (
+                {cardData.website in promoMap ? (
                   <div className="flex text-lg font-bold ">
-                    <p>${cardData.price}</p>
+                    <p className="pr-1 text-green-600">${cardData.price}</p>
+                    <p className="text-red-600 line-through decoration-2">
+                      ${cardData.priceBeforeDiscount}
+                    </p>
                   </div>
                 ) : (
-                  <div className="text-lg font-bold">${cardData.price}</div>
+                  <div className="text-lg font-bold ">${cardData.price}</div>
                 )}
                 {/* <div className="text-lg font-bold">${cardData.price}</div> */}
                 <div className="flex flex-row space-x-2">

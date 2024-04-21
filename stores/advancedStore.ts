@@ -34,6 +34,7 @@ export interface AdvancedSearchResult {
   set: string;
   condition: string;
   foil: string;
+  priceBeforeDiscount: number;
   price: number;
   website: string;
   preRelease: boolean;
@@ -594,6 +595,16 @@ export const advancedUseStore = create<State>((set, get) => ({
           set: get().selectedSetList
         }
       );
+      for (const item of response.data) {
+        item.priceBeforeDiscount = item.price;
+        if (item.website in useStore.getState().promoMap) {
+          item.price = (
+            item.price * useStore.getState().promoMap[item.website]['discount']
+          ).toFixed(2);
+          console.log(item.website);
+        }
+      }
+
       set({ advancedSearchResults: response.data });
       get().updateSortByFilter(get().selectedSortBy);
       set({ advancedSearchLoading: false });

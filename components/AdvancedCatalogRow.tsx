@@ -11,7 +11,7 @@ import { Button } from './ui/button';
 import Link from 'next/link';
 
 export default function SingleCatalogRow({ cardData }: Props) {
-  const { websites, sponsor } = useStore();
+  const { websites, sponsor, promoMap } = useStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -56,11 +56,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
   return (
     <>
       <div
-        className={` outlined-container mx-auto my-2 flex gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:w-[100%] sm:p-4 md:w-[60%] ${
-          sponsor == cardData.website
-            ? 'border-2 border-red-800 bg-red-950'
-            : ''
-        }`}
+        className={` outlined-container mx-auto my-2 flex gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:w-[100%] sm:p-4 md:w-[60%] `}
       >
         <div>
           <img
@@ -80,72 +76,73 @@ export default function SingleCatalogRow({ cardData }: Props) {
             </div>
 
             <div className=" flex  flex-wrap font-serif text-xs font-semibold">
-              {sponsor == cardData.website && (
-                <div>
-                  <div className="mr-1 max-w-fit rounded-sm bg-gradient-to-tl from-red-600 to-orange-600 px-1 text-center align-middle text-xs ">
-                    With -5% SNAPCASTER2024
-                  </div>
+              {cardData.website in promoMap && (
+                <div className="mb-1 mr-1 max-w-fit rounded-sm bg-gradient-to-tl from-rose-600 to-rose-800 px-1 text-center align-middle text-xs ">
+                  {`-${(
+                    (1 - promoMap[cardData.website]['discount']) *
+                    100
+                  ).toFixed(0)}% ${promoMap[cardData.website]['promoCode']}`}
                 </div>
               )}
               {cardData.promo == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Promo</p>
                 </div>
               )}
               {cardData.preRelease == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Pre Release</p>
                 </div>
               )}
               {cardData.promoPack == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Promo Pack</p>
                 </div>
               )}
               {cardData.foil == 'foil' && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>{cardData.foil}</p>
                 </div>
               )}
               {cardData.foil != null && cardData.foil != 'foil' && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>{cardData.foil + ' foil'}</p>
                 </div>
               )}
               {cardData.showcase != null && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>showcase</p>
                 </div>
               )}
               {cardData.showcase != null && cardData.showcase != 'showcase' && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>{cardData.showcase}</p>
                 </div>
               )}
 
               {cardData.frame != null && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>{cardData.frame}</p>
                 </div>
               )}
 
               {cardData.alternateArt == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Alternate Art</p>
                 </div>
               )}
               {cardData.alternateArtJapanese == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Japanese</p>
                 </div>
               )}
               {cardData.artSeries == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Art Series</p>
                 </div>
               )}
               {cardData.goldenStampedSeries == true && (
-                <div className="mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
                   <p>Golden Stamped</p>
                 </div>
               )}
@@ -155,7 +152,17 @@ export default function SingleCatalogRow({ cardData }: Props) {
         <div className=" ml-auto mt-2">
           <div className="flex">
             <div className="flex flex-col items-end">
-              <div className="text-lg font-bold">${cardData.price}</div>
+              {cardData.website in promoMap ? (
+                <div className="flex text-lg font-bold ">
+                  <p className="pr-1 text-green-600">${cardData.price}</p>
+                  <p className="text-red-600 line-through decoration-2">
+                    ${cardData.priceBeforeDiscount}
+                  </p>
+                </div>
+              ) : (
+                <div className="text-lg font-bold ">${cardData.price}</div>
+              )}
+
               <div className="flex flex-row space-x-2">
                 {cardData.foil && (
                   <div className="text-sm font-extrabold text-pink-500">

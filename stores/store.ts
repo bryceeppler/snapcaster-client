@@ -22,6 +22,13 @@ export const useOutsideClick = (callback: () => void) => {
   return sortRadioRef;
 };
 
+export interface PromoInformation {
+  promoCode: string;
+  discount: number;
+}
+export interface PromoMap {
+  [key: string]: PromoInformation;
+}
 export interface Filter {
   name: string;
   abbreviation: string;
@@ -35,6 +42,7 @@ export interface SingleSearchResult {
   condition: string;
   foil: boolean;
   price: number;
+  priceBeforeDiscount: number;
   website: string;
   s3_image_url?: string;
 }
@@ -51,13 +59,6 @@ export type MultiSearchCardState = {
   selected: boolean;
 };
 
-// type MultiSearchResult =
-// export interface Website {
-//   name: string;
-//   code: string;
-//   image: string;
-//   shopify: boolean;
-// }
 export interface Website {
   name: string;
   code: string;
@@ -70,7 +71,7 @@ export interface Website {
 }
 const websites: Website[] = [];
 const setList: Filter[] = [];
-
+const promoMap: PromoMap = {};
 export type FilterTag = {
   name: string;
   displayName: string;
@@ -98,6 +99,9 @@ export type CardPrices = {
 
 type State = {
   sponsor: string;
+  websites: Website[];
+  promoMap: PromoMap;
+  setList: Filter[];
 
   singleSearchStarted: boolean;
   sortMultiSearchVariants: (
@@ -109,8 +113,7 @@ type State = {
   missingMultiSearchResults: string[];
   resetMultiSearch: () => void;
   selectAllMultiSearchResults: () => void;
-  websites: Website[];
-  setList: Filter[];
+
   singleSearchInput: string;
   setSingleSearchInput: (singleSearchInput: string) => void;
   singleSearchQuery: string;
@@ -262,6 +265,7 @@ export const useStore = create<State>((set, get) => ({
   },
 
   websites: websites,
+  promoMap: promoMap,
   setList: setList,
   singleSearchInput: '',
   setSingleSearchInput: (singleSearchInput: string) =>
@@ -388,7 +392,15 @@ export const useStore = create<State>((set, get) => ({
         cardName: searchInput.trim()
       }
     );
-
+    for (const item of response.data) {
+      item.priceBeforeDiscount = item.price;
+      if (item.website in get().promoMap) {
+        item.price = (
+          item.price * get().promoMap[item.website]['discount']
+        ).toFixed(2);
+        console.log(item.website);
+      }
+    }
     const results = response.data;
     // sort results by ascending price
     // results = [SingleSearchResult, SingleSearchResult, ...]
@@ -494,7 +506,7 @@ export const useStore = create<State>((set, get) => ({
     get().filterSingleSearchResults();
   },
 
-  multiSearchSelectedWebsites: websites.map((website: Website) => website.name),
+  multiSearchSelectedWebsites: [],
   toggleMultiSearchSelectedWebsites: (website: string) => {
     if (get().multiSearchSelectedWebsites.includes(website)) {
       set({
@@ -514,11 +526,11 @@ export const useStore = create<State>((set, get) => ({
     }
   },
   toggleMultiSearchSelectAllStores: () => {
-    if (get().multiSearchSelectedWebsites.length === websites.length) {
+    if (get().multiSearchSelectedWebsites.length === get().websites.length) {
       set({ multiSearchSelectedWebsites: [] });
     } else {
       set({
-        multiSearchSelectedWebsites: websites.map(
+        multiSearchSelectedWebsites: get().websites.map(
           (website: Website) => website.name
         )
       });
@@ -566,8 +578,25 @@ export const useStore = create<State>((set, get) => ({
       );
       let data = response.data;
       set({ websites: data.websiteList });
+
+      let tempMap: PromoMap = {};
+      for (const website of data.websiteList) {
+        if (website['promoCode'] !== null) {
+          tempMap[website['code']] = {
+            promoCode: website['promoCode'],
+            discount: website['discount']
+          };
+        }
+      }
+      set({ promoMap: tempMap });
+      console.log(get().promoMap);
+      set({
+        multiSearchSelectedWebsites: get().websites.map(
+          (website: Website) => website.name
+        )
+      });
     } catch {
-      console.log('getWebsiteInformation ERROR');
+      console.log('getWebsiteInformation or promoMap ERROR');
     }
   },
   initSetInformation: async () => {
