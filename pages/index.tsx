@@ -45,7 +45,7 @@ const Home: NextPage<Props> = () => {
           {!singleSearchStarted && !singleSearchResultsLoading && (
             <div className="mt-8 space-y-16">
               <div className=" sm:flex ">
-                <div className="mb-4 mr-1 rounded-md bg-[#151518] sm:mb-0 sm:w-1/3  ">
+                <div className="outlined-container mb-4 mr-1 rounded-md bg-[#0f0f11] sm:mb-0 sm:w-1/3  ">
                   <div className="">
                     <p className="mb-4 mt-2 pl-2 text-left font-serif text-xl font-bold">
                       Snapcaster Updates
@@ -94,13 +94,14 @@ const Home: NextPage<Props> = () => {
                     </div>
                   </div>
                 </div>
-                <div className="ml-1 flex flex-col  rounded-md bg-[#151518] sm:w-2/3">
+                <div className="outlined-container ml-1 flex flex-col  rounded-md bg-[#0f0f11] sm:w-2/3">
                   <div className="">
                     <p className="mb-4 mt-2 pl-2 text-left font-serif text-xl font-bold">
                       Development Blogs
                     </p>
                   </div>
-                  <div>
+                  <div className="h-[2px] bg-black"></div>
+                  <div className="hover:bg-[#151518]">
                     <div className="flex h-36">
                       <div className="flex w-1/4 flex-col ">
                         <img
@@ -127,7 +128,7 @@ const Home: NextPage<Props> = () => {
                   <div className="h-[2px] bg-black"></div>
                   <a href="https://www.snapcaster.ca/blog/april-dev-update">
                     <div>
-                      <div className="flex h-36 hover:bg-[#0f0f11]">
+                      <div className="flex h-36 hover:bg-[#151518]">
                         <div className="flex w-1/4 flex-col ">
                           <img
                             src="./april-dev.png"
@@ -159,7 +160,7 @@ const Home: NextPage<Props> = () => {
                   <div className="h-[2px] bg-black"></div>
                   <a href="https://www.snapcaster.ca/blog/march-dev-update">
                     <div>
-                      <div className="flex h-36 hover:bg-[#0f0f11]">
+                      <div className="flex h-36 hover:bg-[#151518]">
                         <div className="flex w-1/4 flex-col ">
                           <img
                             src="./march-dev.png"
@@ -189,11 +190,12 @@ const Home: NextPage<Props> = () => {
                         </div>
                       </div>
                     </div>
+                    <div className="h-[2px] bg-black"></div>
                   </a>
-                  <div className=" mt-auto  hover:bg-[#0f0f11]">
+                  <div className=" mt-auto h-8 text-muted-foreground hover:bg-[#151518] hover:text-slate-200">
                     <a href="https://www.snapcaster.ca/blog/">
-                      <div className="flex">
-                        <p className="ml-auto text-sm">More</p>
+                      <div className="flex h-full">
+                        <p className="my-auto ml-auto text-sm">More</p>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="18"
@@ -204,7 +206,7 @@ const Home: NextPage<Props> = () => {
                           stroke-width="2"
                           stroke-linecap="round"
                           stroke-linejoin="round"
-                          className="lucide lucide-chevron-right"
+                          className="lucide lucide-chevron-right my-auto"
                         >
                           <path d="m9 18 6-6-6-6" />
                         </svg>
