@@ -137,7 +137,7 @@ const Home: NextPage<Props> = () => {
                         <div className="flex w-3/4 flex-col ">
                           <div className="flex">
                             <p className="ml-2 text-lg font-medium">
-                              May Dev Blog
+                              April Dev Blog
                             </p>
                             <p className="ml-auto mr-2 ">April 1 2024</p>
                           </div>
@@ -169,7 +169,7 @@ const Home: NextPage<Props> = () => {
                         <div className="flex w-3/4 flex-col ">
                           <div className="flex">
                             <p className="ml-2 text-lg font-medium">
-                              May Dev Blog
+                              March Dev Blog
                             </p>
                             <p className="ml-auto mr-2 ">March 1 2024</p>
                           </div>
