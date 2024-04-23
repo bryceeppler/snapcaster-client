@@ -126,7 +126,7 @@ const Home: NextPage<Props> = () => {
                   </div>
 
                   <div className="h-[2px] bg-black"></div>
-                  <a href="https://www.snapcaster.ca/blog/april-dev-update">
+                  <a href="/blog/april-dev-update">
                     <div>
                       <div className="flex h-36 hover:bg-[#151518]">
                         <div className="flex w-1/4 flex-col ">
@@ -158,7 +158,7 @@ const Home: NextPage<Props> = () => {
                   </a>
 
                   <div className="h-[2px] bg-black"></div>
-                  <a href="https://www.snapcaster.ca/blog/march-dev-update">
+                  <a href="/blog/march-dev-update">
                     <div>
                       <div className="flex h-36 hover:bg-[#151518]">
                         <div className="flex w-1/4 flex-col ">
@@ -193,7 +193,7 @@ const Home: NextPage<Props> = () => {
                     <div className="h-[2px] bg-black"></div>
                   </a>
                   <div className=" mt-auto h-8 text-muted-foreground hover:bg-[#151518] hover:text-slate-200">
-                    <a href="https://www.snapcaster.ca/blog/">
+                    <a href="/blog/">
                       <div className="flex h-full">
                         <p className="my-auto ml-auto text-sm">More</p>
                         <svg
@@ -203,7 +203,7 @@ const Home: NextPage<Props> = () => {
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="2"
+                          strokeWidth="2"
                           stroke-linecap="round"
                           stroke-linejoin="round"
                           className="lucide lucide-chevron-right my-auto"
