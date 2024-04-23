@@ -204,8 +204,8 @@ const Home: NextPage<Props> = () => {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           className="lucide lucide-chevron-right my-auto"
                         >
                           <path d="m9 18 6-6-6-6" />
