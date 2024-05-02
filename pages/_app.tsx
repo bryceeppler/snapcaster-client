@@ -33,7 +33,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       initGA();
     }
   }, []);
-  useLayoutEffect(() => {
+  useEffect(() => {
     initSetInformation();
     initWebsiteInformation();
   }, []);
