@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import React from 'react';
 import { AppProps } from 'next/app';
 import Layout from '@/components/Layout';
@@ -33,7 +33,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       initGA();
     }
   }, []);
-  useEffect(() => {
+  useLayoutEffect(() => {
     initSetInformation();
     initWebsiteInformation();
   }, []);
