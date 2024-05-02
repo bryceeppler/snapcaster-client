@@ -17,7 +17,7 @@ import {
 import CardImage from './card-image';
 
 export default function SingleCatalogCard({ cardData }: Props) {
-  const { websites, sponsor } = useStore();
+  const { websites } = useStore();
 
   const findWebsiteNameByCode = (code: string): string => {
     const website = websites.find((website) => website.code === code);
@@ -31,16 +31,7 @@ export default function SingleCatalogCard({ cardData }: Props) {
   }
 
   return (
-    <Card
-      className={`flex flex-col ${
-        sponsor == cardData.website ? 'border-2 border-red-800 bg-red-950' : ''
-      }`}
-    >
-      {/* <div
-      className={` outlined-container  mx-auto my-2 flex max-w-3xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4 ${
-        sponsor == cardData.website ? 'border-2 border-red-800 bg-red-950' : ''
-      }`}
-    ></div> */}
+    <Card>
       <CardHeader className="items-center justify-center">
         <div className="w-full max-w-[300px]">
           <CardImage imageUrl={cardData.s3_image_url} alt={cardData.name} />
