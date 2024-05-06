@@ -4,7 +4,7 @@ export default function HomeUpdates({}: Props) {
   return (
     <div className="mt-16 space-y-16">
       <div className=" md:flex ">
-        <div className="outlined-container mb-4 mr-1  w-full rounded-md bg-[#0f0f11] sm:w-full md:mb-0 lg:w-1/3 ">
+        <div className="outlined-container mb-4 mr-1  w-full rounded-md bg-transparent sm:w-full md:mb-0 lg:w-1/3 ">
           <div className="">
             <p className="mb-4 mt-2 pl-2 text-left font-serif text-xl font-bold">
               Snapcaster Updates
@@ -58,14 +58,14 @@ export default function HomeUpdates({}: Props) {
           </div>
         </div>
 
-        <div className="outlined-container flex w-full  flex-col rounded-md bg-[#0f0f11] sm:w-full md:ml-1">
+        <div className="outlined-container flex w-full  flex-col rounded-md bg-transparent sm:w-full md:ml-1">
           <div className="">
             <p className="mb-4 mt-2 pl-2 text-left font-serif text-xl font-bold">
               Development Blogs
             </p>
           </div>
 
-          <div className="hover:scale-104 rounded-md outline-2 outline-offset-1 outline-slate-400 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:bg-[#151518] hover:outline ">
+          <div className="hover:scale-104 rounded-md outline-2  outline-slate-400 transition delay-150 duration-300 ease-in-out  hover:bg-[#151518] hover:outline ">
             <div className="flex h-36">
               <div className="flex w-1/2  flex-col  lg:w-3/4 ">
                 <div className="lg:flex">
@@ -88,9 +88,9 @@ export default function HomeUpdates({}: Props) {
               </div>
             </div>
           </div>
-          <div className="h-[2px] bg-black"></div>
+          <div className="h-[2px] bg-transparent"></div>
           <a href="/blog/april-dev-update">
-            <div className="hover:scale-104 rounded-md outline-2 outline-offset-1 outline-pink-700 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:bg-[#151518] hover:outline ">
+            <div className="hover:scale-104 rounded-md outline-2  outline-pink-700 transition delay-150 duration-300 ease-in-out  hover:bg-[#151518] hover:outline ">
               <div className="flex h-36">
                 <div className="flex w-1/2  flex-col  lg:w-3/4 ">
                   <div className="lg:flex">
@@ -119,9 +119,9 @@ export default function HomeUpdates({}: Props) {
               </div>
             </div>
           </a>
-          <div className="h-[2px] bg-black"></div>
+          <div className="h-[2px] bg-transparent"></div>
           <a href="/blog/march-dev-update">
-            <div className="hover:scale-104 rounded-md outline-2 outline-offset-1 outline-pink-700 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:bg-[#151518] hover:outline ">
+            <div className="hover:scale-104 rounded-md outline-2  outline-pink-700 transition delay-150 duration-300 ease-in-out  hover:bg-[#151518] hover:outline ">
               <div className="flex h-36">
                 <div className="flex w-1/2  flex-col  lg:w-3/4 ">
                   <div className="lg:flex">
@@ -130,8 +130,8 @@ export default function HomeUpdates({}: Props) {
                     </p>
                     <p className="ml-auto text-center lg:mr-2">March 1 2024</p>
                   </div>
-                  <div className="h-full overflow-hidden">
-                    <p className="mr-1 h-full pl-1 text-left  text-muted-foreground lg:ml-2 ">
+                  <div className="h-full overflow-hidden  text-ellipsis">
+                    <p className="mr-1 h-full pl-1 text-left  text-muted-foreground lg:ml-2  ">
                       This month has been a significant one for Snapcaster! I've
                       optimized the backend infrastructure, which has greatly
                       improved both reliability and performance for searches.
@@ -144,15 +144,12 @@ export default function HomeUpdates({}: Props) {
                   </div>
                 </div>
                 <div className="flex w-1/2 flex-col overflow-hidden rounded-md lg:w-1/4 ">
-                  <img
-                    src="./march-dev.png"
-                    className=" h-full w-full object-cover"
-                  ></img>
+                  <img src="./march-dev.png" className=" h-full w-full "></img>
                 </div>
               </div>
             </div>
           </a>
-          <div className="h-[2px] bg-black"></div>
+          <div className="h-[2px] bg-transparent"></div>
           <div className=" mt-auto h-8 text-muted-foreground hover:bg-[#151518] hover:text-slate-200">
             <a href="/blog/">
               <div className="flex h-full">

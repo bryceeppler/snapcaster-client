@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { useRef } from 'react';
 import axiosInstance from '@/utils/axiosWrapper';
-
+import { Filter, Website } from '@/stores/store';
 import Head from 'next/head';
 import MainLayout from '@/components/MainLayout';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 import AdvancedCatalog from '@/components/AdvancedCatalog';
-import AdvancedSearchDropDown from '@/components/AdvancedSearchDropDown';
 import AdvancedCheckBox from '@/components/AdvancedCheckBox';
 import AutoFillSearchBox from '@/components/AutoFillSearchBox';
 
@@ -20,6 +19,10 @@ import { ChevronDown } from 'lucide-react';
 import LoginRequired from '@/components/login-required';
 import SubscriptionRequired from '@/components/subscription-required';
 import PageTitle from '@/components/ui/page-title';
+
+import { FilterDropdownBox } from '@/components/FilterDropdownBox';
+import { useStore } from '@/stores/store';
+import { Checkbox } from '@/components/ui/checkbox';
 type Props = {};
 
 export default function AdvancedSearch({}: Props) {
@@ -65,24 +68,47 @@ export default function AdvancedSearch({}: Props) {
     advancedSearchInput,
     updateSortByFilter,
     setAdvancedSearchInput,
-    updateAdvnacedSearchTextBoxValue,
     resetFilters,
     toggle,
     fetchAdvancedSearchResults
-    // initSetInformation
   } = advancedUseStore();
 
-  // useEffect(() => {
-  //   initSetInformation();
-  // }, []);
-
   const [showFilters, setShowFilters] = React.useState(false);
-  const searchRef = useRef<HTMLInputElement>(null);
+
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
   const [showSortBy, setShoeSoryBy] = React.useState(false);
   const sortRadioRef = useOutsideClick(() => {
     setShoeSoryBy(false);
   });
+
+  //Temporarily instantiating a website list for advanced search here that only displays shopify stores for now.
+  const [websites, setWebsites] = React.useState([]);
+  async function initWebsites() {
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
+      );
+      let data = response.data.websiteList;
+
+      let list = data.filter((obj: Website) => obj.backend === 'shopify');
+      for (let i = 0; i < list.length; i++) {
+        list[i].abbreviation = list[i].code;
+        delete list[i].promoCode;
+        delete list[i].backend;
+        delete list[i].discount;
+        delete list[i].image;
+        delete list[i].url;
+        delete list[i].shopify;
+        delete list[i].code;
+      }
+      setWebsites(list);
+    } catch {
+      console.log('getWebsiteInformation or promoMap ERROR');
+    }
+  }
+  useEffect(() => {
+    initWebsites();
+  }, []);
 
   const createCheckoutSession = async () => {
     try {
@@ -142,100 +168,107 @@ export default function AdvancedSearch({}: Props) {
               searchInput={advancedSearchInput}
             ></AutoFillSearchBox>
             <Button
-              className="flex justify-between rounded lg:w-48"
+              className="flex justify-between rounded bg-transparent outline outline-1 outline-muted lg:w-48"
               onClick={() => {
                 setShowFilters(!showFilters);
               }}
             >
               <p>Show Filters</p>
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown
+                className={`h-4 w-4 transform transition-all ${
+                  showFilters ? 'rotate-180' : ''
+                }`}
+              />
             </Button>
           </div>
           <div className="p-2"></div>
           {/*Container 2.5 - Filter Dropdown Options */}
-          {showFilters == true && (
-            <div className="mb-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                <AdvancedSearchDropDown
-                  option={websiteList}
-                  selectedList={selectedWebsiteList}
-                  selectCount={selectedWebsiteCount}
-                  toggle={toggle}
-                  label="Websites"
-                ></AdvancedSearchDropDown>
-                <AdvancedSearchDropDown
-                  option={setList}
-                  selectedList={selectedSetList}
-                  selectCount={selectedSetCount}
-                  toggle={toggle}
-                  label="Set"
-                ></AdvancedSearchDropDown>
-                <AdvancedSearchDropDown
-                  option={conditionList}
-                  selectedList={selectedConditionsList}
-                  selectCount={selectedConditionsCount}
-                  toggle={toggle}
-                  label="Condition"
-                ></AdvancedSearchDropDown>
-                <AdvancedSearchDropDown
-                  option={foilList}
-                  selectedList={selectedFoilList}
-                  selectCount={selectedFoilCount}
-                  toggle={toggle}
-                  label="Foil"
-                ></AdvancedSearchDropDown>
-                <AdvancedSearchDropDown
-                  option={showcaseTreatmentList}
-                  selectedList={selectedShowcaseTreatmentList}
-                  selectCount={selectedShowcaseTreatmentCount}
-                  toggle={toggle}
-                  label="Showcase Treatment"
-                ></AdvancedSearchDropDown>
-                <AdvancedSearchDropDown
-                  option={frameList}
-                  selectedList={selectedhFrameList}
-                  selectCount={selectedFrameCount}
-                  toggle={toggle}
-                  label="Frame"
-                ></AdvancedSearchDropDown>
-                <AdvancedCheckBox
-                  title="Promo"
-                  value="promoCheckBox"
-                  checkedState={promoChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Pre Release"
-                  value="preReleaseCheckBox"
-                  checkedState={preReleaseChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Promo Pack"
-                  value="promoCheckBox"
-                  checkedState={promoPackChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Alternate Art"
-                  value="alternateArtCheckBox"
-                  checkedState={alternateArtChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Japanese Alternate Art"
-                  value="alternateArtJapaneseCheckBox"
-                  checkedState={alternateArtJapaneseChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Art Series"
-                  value="artSeriesCheckBox"
-                  checkedState={artSeriesChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Golden Art Series"
-                  value="goldenStampedSeriesCheckBox"
-                  checkedState={goldenStampedChecked}
-                ></AdvancedCheckBox>
+          <div>
+            {showFilters == true && (
+              <div className="mb-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                  <FilterDropdownBox
+                    option={websites}
+                    selectedList={selectedWebsiteList}
+                    selectCount={selectedWebsiteCount}
+                    toggle={toggle}
+                    label="Websites"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={useStore.getState().setList}
+                    selectedList={selectedSetList}
+                    selectCount={selectedSetCount}
+                    toggle={toggle}
+                    label="Set"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={conditionList}
+                    selectedList={selectedConditionsList}
+                    selectCount={selectedConditionsCount}
+                    toggle={toggle}
+                    label="Condition"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={foilList}
+                    selectedList={selectedFoilList}
+                    selectCount={selectedFoilCount}
+                    toggle={toggle}
+                    label="Foil"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={showcaseTreatmentList}
+                    selectedList={selectedShowcaseTreatmentList}
+                    selectCount={selectedShowcaseTreatmentCount}
+                    toggle={toggle}
+                    label="Showcase Treatment"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={frameList}
+                    selectedList={selectedhFrameList}
+                    selectCount={selectedFrameCount}
+                    toggle={toggle}
+                    label="Frame"
+                  ></FilterDropdownBox>
+
+                  <AdvancedCheckBox
+                    title="Promo"
+                    value="promoCheckBox"
+                    checkedState={promoChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Pre Release"
+                    value="preReleaseCheckBox"
+                    checkedState={preReleaseChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Promo Pack"
+                    value="promoPackCheckBox"
+                    checkedState={promoPackChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Alternate Art"
+                    value="alternateArtCheckBox"
+                    checkedState={alternateArtChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Japanese Alternate Art"
+                    value="alternateArtJapaneseCheckBox"
+                    checkedState={alternateArtJapaneseChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Art Series"
+                    value="artSeriesCheckBox"
+                    checkedState={artSeriesChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Golden Art Series"
+                    value="goldenStampedSeriesCheckBox"
+                    checkedState={goldenStampedChecked}
+                  ></AdvancedCheckBox>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/*Container 3 - Sort, Reset Filters, and Search Buttons*/}
           <div className=" flex flex-col gap-2 sm:flex-row sm:justify-end">
@@ -244,13 +277,22 @@ export default function AdvancedSearch({}: Props) {
                 onClick={() => {
                   setShoeSoryBy(!showSortBy);
                 }}
-                className="w-full min-w-36"
+                className="w-full min-w-40 bg-inherit outline outline-1 outline-muted"
               >
                 Sort:{' '}
                 {selectedSortBy.charAt(0).toUpperCase() +
                   selectedSortBy.slice(1)}
+                <ChevronDown
+                  className={`ml-auto h-4 w-4 transform transition-all ${
+                    showSortBy ? 'rotate-180' : ''
+                  }`}
+                />
               </Button>
-              <div className="no-scrollbar absolute z-10 mt-1.5 max-h-52 w-full min-w-36 overflow-y-auto rounded bg-zinc-900 shadow-2xl sm:w-max">
+              <div
+                className={`no-scrollbar 	 absolute z-10 mt-1.5 max-h-52 w-full min-w-36 overflow-y-auto rounded bg-[hsl(var(--background))] shadow-2xl ${
+                  showSortBy ? 'outline' : ''
+                } outline-1 outline-muted sm:w-max`}
+              >
                 {showSortBy &&
                   sortByList.map((state) => (
                     <div key={state.abbreviation}>
@@ -289,22 +331,10 @@ export default function AdvancedSearch({}: Props) {
               onClick={() => {
                 resetFilters();
               }}
-              className="min-w-36"
+              className="min-w-40 bg-transparent outline outline-1 outline-muted hover:bg-rose-700"
             >
               Reset Filters
             </Button>
-            {/* <Button
-              onClick={() => {
-                if (searchRef.current) {
-                  updateAdvnacedSearchTextBoxValue(searchRef.current.value);
-                }
-
-                fetchAdvancedSearchResults();
-              }}
-              className="min-w-36"
-            >
-              Search
-            </Button> */}
           </div>
 
           {/*Container 4 */}

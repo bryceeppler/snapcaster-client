@@ -190,7 +190,7 @@ const foilList: Filter[] = [
     abbreviation: 'invisible ink'
   },
   {
-    name: 'rainbow',
+    name: 'Rainbow',
     abbreviation: 'rainbow'
   },
   {
@@ -601,7 +601,6 @@ export const advancedUseStore = create<State>((set, get) => ({
           item.price = (
             item.price * useStore.getState().promoMap[item.website]['discount']
           ).toFixed(2);
-          console.log(item.website);
         }
       }
 

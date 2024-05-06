@@ -69,9 +69,12 @@ export interface Website {
   promoCode: string;
   discount: number;
 }
+
 const websites: Website[] = [];
+const websiteList: Filter[] = [];
 const setList: Filter[] = [];
 const promoMap: PromoMap = {};
+
 export type FilterTag = {
   name: string;
   displayName: string;
