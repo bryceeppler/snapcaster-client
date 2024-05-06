@@ -2,12 +2,13 @@ type Props = {};
 
 export default function HomeUpdates({}: Props) {
   return (
-    <div className="mt-16 space-y-16">
+    <div className=" mt-16">
+      <p className=" mb-4 text-left text-3xl font-bold">Snapcaster News</p>
       <div className=" md:flex ">
         <div className="outlined-container mb-4 mr-1  w-full rounded-md bg-transparent sm:w-full md:mb-0 lg:w-1/3 ">
           <div className="">
             <p className="mb-4 mt-2 pl-2 text-left font-serif text-xl font-bold">
-              Snapcaster Updates
+              Updates
             </p>
           </div>
           <div className="text-left">
