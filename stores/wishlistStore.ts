@@ -13,6 +13,7 @@ type PriceEntry = {
   condition: string;
   timestamp: string;
   foil: boolean;
+  s3_url: string;
 };
 export type WishlistCard = {
   wishlist_item_id: number;
@@ -23,6 +24,7 @@ export type WishlistCard = {
   minimum_condition: string;
   cheapest_price_doc: PriceEntry;
   email_notifications: boolean;
+  prices: PriceEntry[];
 };
 type WishlistView = {
   wishlist_id: number;

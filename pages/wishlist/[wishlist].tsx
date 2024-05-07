@@ -428,6 +428,34 @@ function getColumns(
       enableSorting: true
     },
     {
+      // select dropdown to browse all available conditions
+      header: 'Variant',
+      accessorKey: 'variant',
+      cell: ({ row }) => {
+        return (
+          <Select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Variant" />
+            </SelectTrigger>
+            <SelectContent>
+              {row.original.prices.map((wishlistItem, index) => (
+                <SelectItem
+                  value={
+                    wishlistItem.website +
+                    wishlistItem.condition +
+                    wishlistItem.price
+                  }
+                >
+                  {wishlistItem.condition} - ${wishlistItem.price} -{' '}
+                  {wishlistItem.website}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      }
+    },
+    {
       id: 'actions',
       cell: ({ row }) => {
         const wishlistCard = row.original;
@@ -542,6 +570,7 @@ function getColumns(
                 >
                   Open link in new tab
                 </DropdownMenuItem>
+                <DropdownMenuItem>Search</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DialogTrigger asChild>
                   <DropdownMenuItem>Edit</DropdownMenuItem>

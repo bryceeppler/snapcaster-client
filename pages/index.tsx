@@ -1,16 +1,16 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Homebanner from '@/components/Homebanner';
-import SingleSearchbox from '@/components/SingleSearchbox';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SingleSearchInfo from '@/components/SingleSearchInfo';
-import SearchFilters from '@/components/SingleSearchFilters';
 import { useStore } from '@/stores/store';
+import useGlobalStore from '@/stores/globalStore';
 import SingleCatalog from '@/components/SingleCatalog';
 import MainLayout from '@/components/MainLayout';
 import SingleSearchFilter from '@/components/single-search-filters';
+import PopularSearchCarousel from '@/components/popular-search-carousel';
+import { useEffect } from 'react';
 import AutoFillSearchBox from '@/components/AutoFillSearchBox';
-import HomeUpdates from '@/components/HomeUpdates';
 type Props = {};
 
 const Home: NextPage<Props> = () => {
@@ -22,6 +22,12 @@ const Home: NextPage<Props> = () => {
     setSingleSearchInput,
     fetchSingleSearchResults
   } = useStore();
+
+  const { fetchPopularCards } = useGlobalStore();
+
+  useEffect(() => {
+    fetchPopularCards();
+  }, []);
 
   return (
     <>
@@ -42,10 +48,14 @@ const Home: NextPage<Props> = () => {
               searchInput={singleSearchInput}
             />
           </div>
+          {Object.keys(singleSearchResults).length === 0 &&
+            !singleSearchStarted && (
+              <div>
+                <div className="p-4" />
+                <PopularSearchCarousel />
+              </div>
+            )}
 
-          {!singleSearchStarted && !singleSearchResultsLoading && (
-            <HomeUpdates></HomeUpdates>
-          )}
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
               <LoadingSpinner />
