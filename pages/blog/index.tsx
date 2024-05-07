@@ -8,12 +8,22 @@ type Props = {};
 const Updates: NextPage<Props> = () => {
   const blogs = [
     {
+      title: 'April Development Blog',
+      date: 'April 1, 2024',
+      link: '/blog/april-dev-update',
+      description:
+        'UX changes, back-end refactoring, bug fixes, card purchasing guides, and more.',
+      image: '/blog-images/thumbnail-april.png',
+      imageAlt: 'Wishlist feature'
+    },
+    {
       title: 'March Development Blog',
       date: 'March 1, 2024',
       link: '/blog/march-dev-update',
       description:
-        "This month has been a significant one for Snapcaster! I've optimized the backend infrastructure, which has greatly improved both reliability and performance for searches. With these enhancements out of the way, we can now focus on developing new features.",
-      image: '/1-wishlist.png',
+        'New premium features, websites, community Discord, and search optimizations.',
+      // "This month has been a significant one for Snapcaster! I've optimized the backend infrastructure, which has greatly improved both reliability and performance for searches. With these enhancements out of the way, we can now focus on developing new features.",
+      image: '/blog-images/thumbnail-march.png',
       imageAlt: 'Wishlist feature'
     }
   ];

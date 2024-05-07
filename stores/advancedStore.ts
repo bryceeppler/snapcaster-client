@@ -243,6 +243,18 @@ const showcaseTreatmentList: Filter[] = [
   {
     name: 'Scrolls',
     abbreviation: 'Scrolls'
+  },
+  {
+    name: 'Anime',
+    abbreviation: 'Anime'
+  },
+  {
+    name: 'Manga',
+    abbreviation: 'Manga'
+  },
+  {
+    name: 'The Moonlit Lands',
+    abbreviation: 'The Moonlit Lands'
   }
 ];
 

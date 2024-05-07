@@ -25,31 +25,29 @@ const Updates: NextPage<Props> = () => {
             out of the way, we can now focus on developing new features.
             Additionally, we've introduced the Snapcaster Pro membership,
             providing an avenue for users to support the development and
-            maintenance of Snapcaster.
+            maintenance of Snapcaster. Moving forward, new features will
+            primarily be exclusive to Pro members. We've already begun
+            implementing some of these features, and users can anticipate seeing
+            them evolve over time. Note that we intend on keeping the core
+            search and multi search functionality free.
           </p>
-
           <div className="p-4"></div>
           <p>
+            {/* discord launch , join to give us feedback, report bugs and keep up with updates~! */}
             We have also launched our Discord server, where you can join to give
             us feedback, report bugs, and keep up with updates. We're excited to
             have you join our community and look forward to hearing your
             thoughts and suggestions.
           </p>
           <div className="p-4"></div>
-          <p>
-            Moving forward, new features will primarily be exclusive to Pro
-            members. We've already begun implementing some of these features,
-            and users can anticipate seeing them evolve over time. Note that we
-            intend on keeping the core search and multisearch functionality
-            free.
-          </p>
-          <div className="p-4"></div>
-
+          {/* <Button
+            className='w-full mx-auto bg-indigo-500 text-white'
+          >Join the Snapcaster Discord</Button> */}
           <div className="p-4"></div>
           <h2 className="text-xl font-bold">New Features</h2>
           <div className="p-4"></div>
 
-          <h3 className="text-lg font-bold">Wishlists</h3>
+          <h3 className="text-lg font-bold">Wish Lists</h3>
           <div className="p-2"></div>
 
           <ul className="list-outside list-disc space-y-2 px-6">
@@ -99,11 +97,11 @@ const Updates: NextPage<Props> = () => {
           />
           <div className="p-4"></div>
 
-          <h3 className="text-lg font-bold">100 Card Multisearch</h3>
+          <h3 className="text-lg font-bold">100 Card Multi Search</h3>
           <div className="p-2"></div>
           <p>
             Pro users can now search for up to 100 cards simultaneously using
-            the multisearch tool.
+            the multi search tool.
           </p>
           <div className="p-4"></div>
 

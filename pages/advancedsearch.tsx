@@ -9,6 +9,9 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import AdvancedCatalog from '@/components/AdvancedCatalog';
 import AdvancedSearchCombo from '@/components/AdvancedSearchCombo';
 import AdvancedCheckBox from '@/components/AdvancedCheckBox';
+import SingleSearchInfo from '@/components/SingleSearchInfo';
+import SingleCatalog from '@/components/SingleCatalog';
+import SingleSearchFilter from '@/components/single-search-filters';
 
 import useAuthStore from '@/stores/authStore';
 import { advancedUseStore, useOutsideClick } from '@/stores/advancedStore';
@@ -161,7 +164,7 @@ export default function AdvancedSearch({}: Props) {
           {/*Container 2.5 - Filter Dropdown Options */}
           {showFilters == true && (
             <div className="mb-4">
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 <AdvancedSearchCombo
                   option={websiteList}
                   selectedList={selectedWebsiteList}
@@ -235,18 +238,18 @@ export default function AdvancedSearch({}: Props) {
 
           {/*Container 3 - Sort, Reset Filters, and Search Buttons*/}
           <div className=" flex flex-col gap-2 sm:flex-row sm:justify-end">
-            <div ref={sortRadioRef} className="relative">
+            <div ref={sortRadioRef} className="relative min-w-36">
               <Button
                 onClick={() => {
                   setShoeSoryBy(!showSortBy);
                 }}
-                className="w-full min-w-32"
+                className="w-full min-w-36"
               >
                 Sort:{' '}
                 {selectedSortBy.charAt(0).toUpperCase() +
                   selectedSortBy.slice(1)}
               </Button>
-              <div className="no-scrollbar absolute z-10 max-h-52 w-full overflow-y-auto rounded bg-zinc-900 shadow-2xl sm:w-max">
+              <div className="no-scrollbar absolute z-10 mt-1.5 max-h-52 w-full min-w-36 overflow-y-auto rounded bg-zinc-900 shadow-2xl sm:w-max">
                 {showSortBy &&
                   sortByList.map((state) => (
                     <div key={state.abbreviation}>
@@ -263,15 +266,15 @@ export default function AdvancedSearch({}: Props) {
                             name="sortRadio"
                             onChange={(e) => {}}
                             className={
-                              ' aspect-square h-2 w-2 cursor-pointer appearance-none rounded-full ' +
+                              ' aspect-square h-2 w-2 cursor-pointer appearance-none  rounded-full ' +
                               (selectedSortBy.includes(state.abbreviation)
-                                ? ' bg-pink-600'
-                                : 'bg-zinc-600')
+                                ? ' bg-pink-600 outline-none'
+                                : 'bg-zinc-600 outline outline-1 outline-black')
                             }
                           />
                           <label
                             htmlFor={`input-${state.abbreviation}`}
-                            className="w-full cursor-pointer px-1 text-sm"
+                            className="w-full cursor-pointer px-1 text-sm font-medium"
                           >
                             {state.name}
                           </label>
@@ -285,7 +288,7 @@ export default function AdvancedSearch({}: Props) {
               onClick={() => {
                 resetFilters();
               }}
-              className="min-w-32"
+              className="min-w-36"
             >
               Reset Filters
             </Button>
@@ -297,7 +300,7 @@ export default function AdvancedSearch({}: Props) {
 
                 fetchAdvancedSearchResults();
               }}
-              className="min-w-32"
+              className="min-w-36"
             >
               Search
             </Button>
@@ -310,6 +313,7 @@ export default function AdvancedSearch({}: Props) {
                 <LoadingSpinner />
               </div>
             )}
+
             {Object.keys(advancedSearchResults).length > 0 && (
               <div>
                 <AdvancedCatalog></AdvancedCatalog>

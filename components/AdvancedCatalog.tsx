@@ -2,7 +2,7 @@ import React from 'react';
 import AdvancedCatalogRow from './AdvancedCatalogRow';
 import { advancedUseStore } from '@/stores/advancedStore';
 import { Button } from './ui/button';
-
+import BackToTopButton from './back-to-top-btn';
 type Props = {};
 
 export default function AdvancedCatalog({}: Props) {
@@ -22,16 +22,7 @@ export default function AdvancedCatalog({}: Props) {
           <AdvancedCatalogRow cardData={cardData}></AdvancedCatalogRow>
         </div>
       ))}
-      {advancedSearchResults.length > 10 && (
-        <Button
-          onClick={() => {
-            window.scrollTo(0, 0);
-          }}
-          className="mt-4 w-full"
-        >
-          Back to Top
-        </Button>
-      )}
+      <BackToTopButton />
     </div>
   );
 }

@@ -11,12 +11,10 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
-import Image from 'next/image';
 import { Button } from './ui/button';
 import useAuthStore from '@/stores/authStore';
 import { AlignJustify } from 'lucide-react';
 import { useState } from 'react';
-import favicon from 'public/favicon.ico';
 const components: { title: string; href: string; description: string }[] = [
   {
     title: 'Blog',
@@ -60,9 +58,9 @@ export default function NavbarNew() {
         <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
           <div className="flex flex-shrink-0 items-center">
             <Link href="/" as="/">
-              <Image
+              <img
                 className="block h-8 w-auto lg:hidden"
-                src={favicon}
+                src="/favicon.ico"
                 alt="Snapcaster"
               />
             </Link>
@@ -148,6 +146,12 @@ export default function NavbarNew() {
               Discord
             </Button>
           </Link>
+          {/* About */}
+          <Link className="" href="/about">
+            <Button variant="ghost" className="block w-full text-left text-sm">
+              About
+            </Button>
+          </Link>
           {!isAuthenticated && (
             <Link href="/signin">
               <Button
@@ -177,7 +181,7 @@ export default function NavbarNew() {
           <NavigationMenuList>
             <NavigationMenuItem>
               <Link legacyBehavior href="/" passHref>
-                <Image
+                <img
                   className="mx-1"
                   src="/favicon.ico"
                   alt="Snapcaster"
@@ -203,7 +207,7 @@ export default function NavbarNew() {
                         className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                         href="/"
                       >
-                        <Image
+                        <img
                           src="/favicon.ico"
                           width={35}
                           height={35}

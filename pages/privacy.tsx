@@ -571,7 +571,7 @@ export default About;
 const AboutHead = () => {
   return (
     <Head>
-      <title>About</title>
+      <title>Privacy</title>
       <meta
         name="description"
         content="Search Magic the Gathering cards across Canada"

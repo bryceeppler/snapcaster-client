@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
+
 export interface SingleSearchResult {
   name: string;
   link: string;
@@ -779,7 +780,7 @@ export const useStore = create<State>((set, get) => ({
     const response = await axiosInstance.post(
       `${process.env.NEXT_PUBLIC_SEARCH_URL}/single`,
       {
-        cardName: searchInput
+        cardName: searchInput.trim()
       }
     );
 
