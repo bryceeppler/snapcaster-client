@@ -1,7 +1,6 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Homebanner from '@/components/Homebanner';
-import SingleSearchbox from '@/components/SingleSearchbox';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SingleSearchInfo from '@/components/SingleSearchInfo';
 import { useStore } from '@/stores/store';
@@ -10,21 +9,26 @@ import SingleCatalog from '@/components/SingleCatalog';
 import MainLayout from '@/components/MainLayout';
 import SingleSearchFilter from '@/components/single-search-filters';
 import PopularSearchCarousel from '@/components/popular-search-carousel';
-import { Button } from '@/components/ui/button';
 import { useEffect } from 'react';
+import AutoFillSearchBox from '@/components/AutoFillSearchBox';
 type Props = {};
 
 const Home: NextPage<Props> = () => {
   const {
     singleSearchResults,
     singleSearchResultsLoading,
-    singleSearchStarted
+    singleSearchStarted,
+    singleSearchInput,
+    setSingleSearchInput,
+    fetchSingleSearchResults,
+    initWebsiteInformation
   } = useStore();
 
   const { fetchPopularCards } = useGlobalStore();
 
   useEffect(() => {
     fetchPopularCards();
+    initWebsiteInformation();
   }, []);
 
   return (
@@ -35,11 +39,17 @@ const Home: NextPage<Props> = () => {
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
               <div>
-                <div className="p-4" />
+                <div />
                 <Homebanner />
               </div>
             )}
-          <SingleSearchbox />
+          <div className="mt-6">
+            <AutoFillSearchBox
+              searchFunction={fetchSingleSearchResults}
+              setSearchInput={setSingleSearchInput}
+              searchInput={singleSearchInput}
+            />
+          </div>
           {Object.keys(singleSearchResults).length === 0 &&
             !singleSearchStarted && (
               <div>
@@ -48,9 +58,6 @@ const Home: NextPage<Props> = () => {
               </div>
             )}
 
-          {!singleSearchStarted && !singleSearchResultsLoading && (
-            <div className="mt-16 space-y-16"></div>
-          )}
           {singleSearchResultsLoading && (
             <div className="flex items-center justify-center pt-5">
               <LoadingSpinner />

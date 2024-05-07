@@ -31,7 +31,7 @@ export default function SingleCatalogCard({ cardData }: Props) {
   }
 
   return (
-    <Card className="flex flex-col">
+    <Card>
       <CardHeader className="items-center justify-center">
         <div className="w-full max-w-[300px]">
           <CardImage imageUrl={cardData.s3_image_url} alt={cardData.name} />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { useStore } from '@/stores/store';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -7,15 +7,16 @@ import MultiSearchbox from '@/components/MultiSearchbox';
 import StoreSelector from '@/components/StoreSelector';
 import MainLayout from '@/components/MainLayout';
 import useAuthStore from '@/stores/authStore';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import LoginRequired from '@/components/login-required';
 import PageTitle from '@/components/ui/page-title';
 type Props = {};
 
 export default function Multisearch({}: Props) {
-  const { multiSearchResultsLoading: loading, multiSearchMode: mode } =
-    useStore();
+  const {
+    multiSearchResultsLoading: loading,
+    multiSearchMode: mode,
+    initWebsiteInformation
+  } = useStore();
 
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
 
@@ -27,6 +28,10 @@ export default function Multisearch({}: Props) {
       />
     );
   }
+
+  useEffect(() => {
+    initWebsiteInformation();
+  }, []);
 
   return (
     <>

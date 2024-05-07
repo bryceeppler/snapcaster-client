@@ -3,31 +3,6 @@ import { useRef, useEffect } from 'react';
 import { useStore } from '@/stores/store';
 import axiosInstance from '@/utils/axiosWrapper';
 
-// The huge Filter lists are temporary. I'll have the scraper store it in the mongo database so I dont have to manually update it here
-
-export interface Filter {
-  name: string;
-  abbreviation: string;
-}
-
-export interface AdvancedSearchResult {
-  name: string;
-  link: string;
-  image: string;
-  set: string;
-  condition: string;
-  foil: string;
-  price: number;
-  website: string;
-  preRelease: boolean;
-  promoPack: boolean;
-  showcase: string;
-  frame: string;
-  alternateArt: boolean;
-  artSeries: boolean;
-  goldenStampedSeries: boolean;
-}
-
 export const useOutsideClick = (callback: () => void) => {
   const sortRadioRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -47,6 +22,34 @@ export const useOutsideClick = (callback: () => void) => {
   return sortRadioRef;
 };
 
+export interface Filter {
+  name: string;
+  abbreviation: string;
+}
+
+export interface AdvancedSearchResult {
+  name: string;
+  link: string;
+  image: string;
+  set: string;
+  condition: string;
+  foil: string;
+  priceBeforeDiscount: number;
+  price: number;
+  website: string;
+  preRelease: boolean;
+  promo: boolean;
+  promoPack: boolean;
+  showcase: string;
+  frame: string;
+  alternateArt: boolean;
+  alternateArtJapanese: boolean;
+  artSeries: boolean;
+  goldenStampedSeries: boolean;
+}
+
+// const setList: Filter[] = [];
+
 const shopifyOnlySites = useStore.getState().websites.filter(function (item) {
   return item.shopify == true;
 });
@@ -54,6 +57,11 @@ const shopifyOnlySites = useStore.getState().websites.filter(function (item) {
 const websiteList: Filter[] = shopifyOnlySites.map((item) => ({
   name: item.name,
   abbreviation: item.code
+}));
+
+const setList: Filter[] = useStore.getState().setList.map((item) => ({
+  name: item.name,
+  abbreviation: item.abbreviation
 }));
 
 const conditionList: Filter[] = [
@@ -85,11 +93,11 @@ const frameList: Filter[] = [
   },
   {
     name: 'Extended Art',
-    abbreviation: 'extended-art'
+    abbreviation: 'extended art'
   },
   {
     name: 'Full Art',
-    abbreviation: 'full-art'
+    abbreviation: 'full art'
   },
   {
     name: 'Retro',
@@ -123,7 +131,7 @@ const sortByList: Filter[] = [
 const foilList: Filter[] = [
   {
     name: 'All Foils',
-    abbreviation: 'all-foils'
+    abbreviation: 'all foils'
   },
   {
     name: 'Regular Foil',
@@ -143,7 +151,7 @@ const foilList: Filter[] = [
   },
   {
     name: 'Neon Ink',
-    abbreviation: 'neon-ink'
+    abbreviation: 'neon ink'
   },
   {
     name: 'Gilded',
@@ -171,7 +179,7 @@ const foilList: Filter[] = [
   },
   {
     name: 'Oil Slick',
-    abbreviation: 'oil-slick'
+    abbreviation: 'oil slick'
   },
   {
     name: 'Halo',
@@ -179,92 +187,72 @@ const foilList: Filter[] = [
   },
   {
     name: 'Invisible Ink',
-    abbreviation: 'invisible-ink'
+    abbreviation: 'invisible ink'
   },
   {
-    name: 'rainbow',
+    name: 'Rainbow',
     abbreviation: 'rainbow'
+  },
+  {
+    name: 'Raised',
+    abbreviation: 'raised'
   }
 ];
 
 const showcaseTreatmentList: Filter[] = [
   {
+    name: 'All Showcases',
+    abbreviation: 'all showcases'
+  },
+  {
     name: 'Regular Showcase',
-    abbreviation: 'Showcase'
+    abbreviation: 'showcase'
   },
+
   {
-    name: 'Ninja',
-    abbreviation: 'Ninja'
+    name: 'Concept Praetors',
+    abbreviation: 'concept praetors'
   },
+
   {
-    name: 'Samurai',
-    abbreviation: 'Samurai'
+    name: 'Poster',
+    abbreviation: 'poster'
   },
-  {
-    name: 'Golden Age',
-    abbreviation: 'Golden Age'
-  },
-  {
-    name: 'Art Deco',
-    abbreviation: 'Art Deco'
-  },
-  {
-    name: 'Skyscraper',
-    abbreviation: 'Skyscraper'
-  },
-  {
-    name: 'Ring Frame',
-    abbreviation: 'Ring Frame'
-  },
-  {
-    name: 'Fang Frame',
-    abbreviation: 'Fang Frame'
-  },
-  {
-    name: 'Eternal Night',
-    abbreviation: 'Eternal Night'
-  },
-  {
-    name: 'Sketch',
-    abbreviation: 'Sketch'
-  },
+
   {
     name: 'Dungeon Module',
-    abbreviation: 'Dungeon Module'
+    abbreviation: 'dungeon module'
   },
-  {
-    name: 'Ichor',
-    abbreviation: 'Ichor'
-  },
+
   {
     name: 'Phyrexian',
-    abbreviation: 'Phyrexian'
+    abbreviation: 'phyrexian'
   },
   {
     name: 'Scrolls',
-    abbreviation: 'Scrolls'
+    abbreviation: 'scrolls'
   },
   {
     name: 'Anime',
-    abbreviation: 'Anime'
+    abbreviation: 'anime'
   },
   {
     name: 'Manga',
-    abbreviation: 'Manga'
+    abbreviation: 'manga'
   },
   {
     name: 'The Moonlit Lands',
-    abbreviation: 'The Moonlit Lands'
+    abbreviation: 'the moonlit lands'
   }
 ];
-
-const setList: Filter[] = [];
 
 type State = {
   advancedSearchResults: AdvancedSearchResult[];
 
   sortByList: Filter[];
   selectedSortBy: string;
+  advancedSearchInput: string;
+
   advnacedSearchTextBoxValue: string;
 
   conditionList: Filter[];
@@ -292,8 +280,10 @@ type State = {
   selectedSetList: string[];
 
   preReleaseChecked: boolean;
+  promoPackChecked: boolean;
   promoChecked: boolean;
   alternateArtChecked: boolean;
+  alternateArtJapaneseChecked: boolean;
   retroChecked: boolean;
   artSeriesChecked: boolean;
   goldenStampedChecked: boolean;
@@ -302,20 +292,22 @@ type State = {
 
   advancedSearchLoading: boolean;
 
+  setAdvancedSearchInput: (advancedSearchInput: string) => void;
   updateAdvnacedSearchTextBoxValue: (textField: string) => void;
   toggleRegularCheckboxes: (checkBoxTitle: string) => void;
   toggle: (fieldName: string, category: string) => void;
 
   updateSortByFilter: (sortValue: string) => void;
   resetFilters: () => void;
-  fetchAdvancedSearchResults: () => Promise<void>;
-  initSetInformation: () => Promise<void>;
+  fetchAdvancedSearchResults: (searchText: string) => Promise<void>;
+  // initSetInformation: () => Promise<void>;
 };
 
 export const advancedUseStore = create<State>((set, get) => ({
   advancedSearchLoading: false,
   advancedSearchResults: [],
 
+  advancedSearchInput: '',
   advnacedSearchTextBoxValue: '',
 
   websiteList: websiteList,
@@ -343,8 +335,10 @@ export const advancedUseStore = create<State>((set, get) => ({
   selectedFrameCount: 0,
 
   preReleaseChecked: false,
+  promoPackChecked: false,
   promoChecked: false,
   alternateArtChecked: false,
+  alternateArtJapaneseChecked: false,
   retroChecked: false,
   artSeriesChecked: false,
   goldenStampedChecked: false,
@@ -378,11 +372,19 @@ export const advancedUseStore = create<State>((set, get) => ({
       case 'alternateArtCheckBox':
         set({ alternateArtChecked: !get().alternateArtChecked });
         break;
+      case 'alternateArtJapaneseCheckBox':
+        set({
+          alternateArtJapaneseChecked: !get().alternateArtJapaneseChecked
+        });
+        break;
       case 'promoCheckBox':
         set({ promoChecked: !get().promoChecked });
         break;
       case 'preReleaseCheckBox':
         set({ preReleaseChecked: !get().preReleaseChecked });
+        break;
+      case 'promoPackCheckBox':
+        set({ promoPackChecked: !get().promoPackChecked });
         break;
     }
   },
@@ -567,44 +569,46 @@ export const advancedUseStore = create<State>((set, get) => ({
       });
     }
   },
-  fetchAdvancedSearchResults: async () => {
+  setAdvancedSearchInput: (advancedSearchInput: string) =>
+    set({ advancedSearchInput }),
+  fetchAdvancedSearchResults: async (searchText: string) => {
     try {
       set({ advancedSearchResults: [] });
       set({ advancedSearchLoading: true });
       const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_SEARCH_URL}/advanced`,
         {
-          cardName: get().advnacedSearchTextBoxValue.trim(),
+          // cardName: get().advnacedSearchTextBoxValue.trim(),
+          cardName: searchText.trim(),
           website: get().selectedWebsiteList,
           condition: get().selectedConditionsList,
           foil: get().selectedFoilList,
           showcaseTreatment: get().selectedShowcaseTreatmentList,
           frame: get().selectedhFrameList,
           preRelease: get().preReleaseChecked,
+          promoPack: get().promoPackChecked,
           promo: get().promoChecked,
           alternateArt: get().alternateArtChecked,
+          alternateArtJapanese: get().alternateArtJapaneseChecked,
           artSeries: get().artSeriesChecked,
           goldenStampedSeries: get().goldenStampedChecked,
           set: get().selectedSetList
         }
       );
+      for (const item of response.data) {
+        item.priceBeforeDiscount = item.price;
+        if (item.website in useStore.getState().promoMap) {
+          item.price = (
+            item.price * useStore.getState().promoMap[item.website]['discount']
+          ).toFixed(2);
+        }
+      }
+
       set({ advancedSearchResults: response.data });
       get().updateSortByFilter(get().selectedSortBy);
       set({ advancedSearchLoading: false });
     } catch {
       set({ advancedSearchLoading: false });
-    }
-  },
-  initSetInformation: async () => {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_SEARCH_URL}/sets`,
-        {}
-      );
-      let data = response.data;
-      set({ setList: data.setList });
-    } catch {
-      console.log('getSetInformation ERROR');
     }
   }
 }));

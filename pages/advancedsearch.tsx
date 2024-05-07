@@ -1,28 +1,25 @@
 import React, { useEffect } from 'react';
-import { useRef } from 'react';
 import axiosInstance from '@/utils/axiosWrapper';
-
 import Head from 'next/head';
 import MainLayout from '@/components/MainLayout';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 import AdvancedCatalog from '@/components/AdvancedCatalog';
-import AdvancedSearchCombo from '@/components/AdvancedSearchCombo';
 import AdvancedCheckBox from '@/components/AdvancedCheckBox';
-import SingleSearchInfo from '@/components/SingleSearchInfo';
-import SingleCatalog from '@/components/SingleCatalog';
-import SingleSearchFilter from '@/components/single-search-filters';
+import AutoFillSearchBox from '@/components/AutoFillSearchBox';
 
 import useAuthStore from '@/stores/authStore';
 import { advancedUseStore, useOutsideClick } from '@/stores/advancedStore';
 
-import { CaretSortIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { ChevronDown } from 'lucide-react';
 
 import LoginRequired from '@/components/login-required';
 import SubscriptionRequired from '@/components/subscription-required';
 import PageTitle from '@/components/ui/page-title';
+
+import { FilterDropdownBox } from '@/components/FilterDropdownBox';
+import { useStore } from '@/stores/store';
 type Props = {};
 
 export default function AdvancedSearch({}: Props) {
@@ -30,11 +27,9 @@ export default function AdvancedSearch({}: Props) {
     advancedSearchLoading,
     advancedSearchResults,
 
-    websiteList,
     selectedWebsiteCount,
     selectedWebsiteList,
 
-    setList,
     selectedSetCount,
     selectedSetList,
 
@@ -55,33 +50,38 @@ export default function AdvancedSearch({}: Props) {
     selectedFrameCount,
 
     preReleaseChecked,
+    promoPackChecked,
     promoChecked,
     alternateArtChecked,
+    alternateArtJapaneseChecked,
     artSeriesChecked,
     goldenStampedChecked,
 
     sortByList,
     selectedSortBy,
 
+    advancedSearchInput,
     updateSortByFilter,
-    updateAdvnacedSearchTextBoxValue,
+    setAdvancedSearchInput,
     resetFilters,
     toggle,
-    fetchAdvancedSearchResults,
-    initSetInformation
+    fetchAdvancedSearchResults
   } = advancedUseStore();
 
-  useEffect(() => {
-    initSetInformation();
-  }, []);
+  const { initWebsiteInformation, initSetInformation, websites } = useStore();
 
   const [showFilters, setShowFilters] = React.useState(false);
-  const searchRef = useRef<HTMLInputElement>(null);
+
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
   const [showSortBy, setShoeSoryBy] = React.useState(false);
   const sortRadioRef = useOutsideClick(() => {
     setShoeSoryBy(false);
   });
+
+  useEffect(() => {
+    initWebsiteInformation();
+    initSetInformation();
+  }, []);
 
   const createCheckoutSession = async () => {
     try {
@@ -122,11 +122,11 @@ export default function AdvancedSearch({}: Props) {
       {/* Base Page layout */}
       <MainLayout>
         {/* Parent Container */}
-        <div className="container flex w-full flex-col justify-center text-center">
+        <div className="container flex w-full flex-col justify-center text-center ">
           {/*Container 1 - Page Title*/}
           <div className="pb-2 text-center">
             <PageTitle title="Advanced Search" />
-            <p className="text-xs text-pink-600">
+            <p className="pb-2 text-xs text-pink-600">
               Notice: We appreciate your patience as we continue to add missing
               websites from Single Search and Multi Search and fine tune our
               API.
@@ -135,106 +135,115 @@ export default function AdvancedSearch({}: Props) {
 
           {/*Container 2 - Search Bar & Show Filters Button*/}
           <div className="flex items-center gap-2">
-            <Input
-              ref={searchRef}
-              type="text"
-              placeholder="Card Base Name"
-              defaultValue={''}
-              onKeyDown={(e) => {
-                if (e.key == 'Enter') {
-                  if (searchRef.current) {
-                    updateAdvnacedSearchTextBoxValue(searchRef.current.value);
-                  }
-                  fetchAdvancedSearchResults();
-                }
-              }}
-            ></Input>
-
+            <AutoFillSearchBox
+              searchFunction={fetchAdvancedSearchResults}
+              setSearchInput={setAdvancedSearchInput}
+              searchInput={advancedSearchInput}
+            ></AutoFillSearchBox>
             <Button
-              className="flex justify-between rounded lg:w-48"
+              className="flex justify-between rounded bg-transparent outline outline-1 outline-muted lg:w-48"
               onClick={() => {
                 setShowFilters(!showFilters);
               }}
             >
               <p>Show Filters</p>
-              <CaretSortIcon className=" h-6 w-6" />
+              <ChevronDown
+                className={`h-4 w-4 transform transition-all ${
+                  showFilters ? 'rotate-180' : ''
+                }`}
+              />
             </Button>
           </div>
           <div className="p-2"></div>
           {/*Container 2.5 - Filter Dropdown Options */}
-          {showFilters == true && (
-            <div className="mb-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                <AdvancedSearchCombo
-                  option={websiteList}
-                  selectedList={selectedWebsiteList}
-                  selectCount={selectedWebsiteCount}
-                  toggle={toggle}
-                  label="Websites"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
-                  option={setList}
-                  selectedList={selectedSetList}
-                  selectCount={selectedSetCount}
-                  toggle={toggle}
-                  label="Set"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
-                  option={conditionList}
-                  selectedList={selectedConditionsList}
-                  selectCount={selectedConditionsCount}
-                  toggle={toggle}
-                  label="Condition"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
-                  option={foilList}
-                  selectedList={selectedFoilList}
-                  selectCount={selectedFoilCount}
-                  toggle={toggle}
-                  label="Foil"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
-                  option={showcaseTreatmentList}
-                  selectedList={selectedShowcaseTreatmentList}
-                  selectCount={selectedShowcaseTreatmentCount}
-                  toggle={toggle}
-                  label="Showcase Treatment"
-                ></AdvancedSearchCombo>
-                <AdvancedSearchCombo
-                  option={frameList}
-                  selectedList={selectedhFrameList}
-                  selectCount={selectedFrameCount}
-                  toggle={toggle}
-                  label="Frame"
-                ></AdvancedSearchCombo>
-                <AdvancedCheckBox
-                  title="Pre Release"
-                  value="preReleaseCheckBox"
-                  checkedState={preReleaseChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Promo"
-                  value="promoCheckBox"
-                  checkedState={promoChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Alternate Art"
-                  value="alternateArtCheckBox"
-                  checkedState={alternateArtChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Art Series"
-                  value="artSeriesCheckBox"
-                  checkedState={artSeriesChecked}
-                ></AdvancedCheckBox>
-                <AdvancedCheckBox
-                  title="Golden Stamped"
-                  value="goldenStampedSeriesCheckBox"
-                  checkedState={goldenStampedChecked}
-                ></AdvancedCheckBox>
+          <div>
+            {showFilters == true && (
+              <div className="mb-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                  <FilterDropdownBox
+                    option={websites.map((obj) => {
+                      return { name: obj.name, abbreviation: obj.code };
+                    })}
+                    selectedList={selectedWebsiteList}
+                    selectCount={selectedWebsiteCount}
+                    toggle={toggle}
+                    label="Websites"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={useStore.getState().setList}
+                    selectedList={selectedSetList}
+                    selectCount={selectedSetCount}
+                    toggle={toggle}
+                    label="Set"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={conditionList}
+                    selectedList={selectedConditionsList}
+                    selectCount={selectedConditionsCount}
+                    toggle={toggle}
+                    label="Condition"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={foilList}
+                    selectedList={selectedFoilList}
+                    selectCount={selectedFoilCount}
+                    toggle={toggle}
+                    label="Foil"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={showcaseTreatmentList}
+                    selectedList={selectedShowcaseTreatmentList}
+                    selectCount={selectedShowcaseTreatmentCount}
+                    toggle={toggle}
+                    label="Showcase Treatment"
+                  ></FilterDropdownBox>
+                  <FilterDropdownBox
+                    option={frameList}
+                    selectedList={selectedhFrameList}
+                    selectCount={selectedFrameCount}
+                    toggle={toggle}
+                    label="Frame"
+                  ></FilterDropdownBox>
+
+                  <AdvancedCheckBox
+                    title="Promo"
+                    value="promoCheckBox"
+                    checkedState={promoChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Pre Release"
+                    value="preReleaseCheckBox"
+                    checkedState={preReleaseChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Promo Pack"
+                    value="promoPackCheckBox"
+                    checkedState={promoPackChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Alternate Art"
+                    value="alternateArtCheckBox"
+                    checkedState={alternateArtChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Japanese Alternate Art"
+                    value="alternateArtJapaneseCheckBox"
+                    checkedState={alternateArtJapaneseChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Art Series"
+                    value="artSeriesCheckBox"
+                    checkedState={artSeriesChecked}
+                  ></AdvancedCheckBox>
+                  <AdvancedCheckBox
+                    title="Golden Art Series"
+                    value="goldenStampedSeriesCheckBox"
+                    checkedState={goldenStampedChecked}
+                  ></AdvancedCheckBox>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/*Container 3 - Sort, Reset Filters, and Search Buttons*/}
           <div className=" flex flex-col gap-2 sm:flex-row sm:justify-end">
@@ -243,13 +252,22 @@ export default function AdvancedSearch({}: Props) {
                 onClick={() => {
                   setShoeSoryBy(!showSortBy);
                 }}
-                className="w-full min-w-36"
+                className="w-full min-w-40 bg-inherit outline outline-1 outline-muted"
               >
                 Sort:{' '}
                 {selectedSortBy.charAt(0).toUpperCase() +
                   selectedSortBy.slice(1)}
+                <ChevronDown
+                  className={`ml-auto h-4 w-4 transform transition-all ${
+                    showSortBy ? 'rotate-180' : ''
+                  }`}
+                />
               </Button>
-              <div className="no-scrollbar absolute z-10 mt-1.5 max-h-52 w-full min-w-36 overflow-y-auto rounded bg-zinc-900 shadow-2xl sm:w-max">
+              <div
+                className={`no-scrollbar 	 absolute z-10 mt-1.5 max-h-52 w-full min-w-36 overflow-y-auto rounded bg-[hsl(var(--background))] shadow-2xl ${
+                  showSortBy ? 'outline' : ''
+                } outline-1 outline-muted sm:w-max`}
+              >
                 {showSortBy &&
                   sortByList.map((state) => (
                     <div key={state.abbreviation}>
@@ -288,21 +306,9 @@ export default function AdvancedSearch({}: Props) {
               onClick={() => {
                 resetFilters();
               }}
-              className="min-w-36"
+              className="min-w-40 bg-transparent outline outline-1 outline-muted hover:bg-rose-700"
             >
               Reset Filters
-            </Button>
-            <Button
-              onClick={() => {
-                if (searchRef.current) {
-                  updateAdvnacedSearchTextBoxValue(searchRef.current.value);
-                }
-
-                fetchAdvancedSearchResults();
-              }}
-              className="min-w-36"
-            >
-              Search
             </Button>
           </div>
 
@@ -316,7 +322,7 @@ export default function AdvancedSearch({}: Props) {
 
             {Object.keys(advancedSearchResults).length > 0 && (
               <div>
-                <AdvancedCatalog></AdvancedCatalog>
+                <AdvancedCatalog />
               </div>
             )}
           </div>

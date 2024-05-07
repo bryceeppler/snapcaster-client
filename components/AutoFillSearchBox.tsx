@@ -1,22 +1,18 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import useWishlistStore from '@/stores/wishlistStore';
-import { useDebounceCallback } from 'usehooks-ts';
+// import { useStore } from '@/stores/store';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
-import { Button } from './ui/button';
-import { toast } from 'sonner';
+import { useOutsideClick } from '@/stores/store';
 type Props = {
-  wishlistId: number;
-  className?: string;
+  searchFunction(searchText: string): void;
+  setSearchInput(searchText: string): void;
+  searchInput: string;
 };
-type AutocompleteResult = {
+interface AutocompleteResult {
   name: string;
   oracle_id: string;
-};
-
-export default function WishlistSearchbox({ wishlistId, className }: Props) {
-  const { addCardInput, setAddCardInput, addCardToWishlist } =
-    useWishlistStore();
+}
+export default function SingleSearchbox(props: Props) {
   const autocompleteEndpoint =
     process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
   const [autocompleteResults, setAutocompleteResults] = useState<
@@ -25,38 +21,26 @@ export default function WishlistSearchbox({ wishlistId, className }: Props) {
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [selectedAutocompleteIndex, setSelectedAutocompleteIndex] =
     useState(-1);
-  const [selectedItem, setSelectedItem] = useState<AutocompleteResult | null>(
-    null
-  );
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const fetchAutocompleteResults = useCallback(
-    (value: string) => {
-      fetch(autocompleteEndpoint + value)
-        .then((response) => response.json())
-        .then((data) => {
-          setAutocompleteResults(data.data);
-          setShowAutocomplete(true);
-          setSelectedAutocompleteIndex(-1);
-        })
-        .catch((error) => {
-          console.error('Error fetching autocomplete results: ', error);
-        });
-    },
-    [autocompleteEndpoint]
-  );
-
-  const debouncedFetchResults = useDebounceCallback(
-    fetchAutocompleteResults,
-    500
-  );
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setAddCardInput(value);
-    setSelectedItem(null);
+    props.setSearchInput(value);
 
-    if (value.trim().length > 2) {
-      debouncedFetchResults(value);
+    if (value.trim().length > 0) {
+      // add artificial delay, only send on odd-numbered keystrokes
+      if (value.length > 2 && value.length % 2 != 0) {
+        fetch(autocompleteEndpoint + value)
+          .then((response) => response.json())
+          .then((data) => {
+            setAutocompleteResults(data.data);
+            setShowAutocomplete(true);
+            setSelectedAutocompleteIndex(-1);
+          })
+          .catch((error) => {
+            console.error('Error fetching autocomplete results: ', error);
+          });
+      }
     } else {
       setAutocompleteResults([]);
       setShowAutocomplete(false);
@@ -64,10 +48,8 @@ export default function WishlistSearchbox({ wishlistId, className }: Props) {
     }
   };
 
-  const handleAutocompleteItemClick = (item: AutocompleteResult) => {
-    setAddCardInput(item.name);
-    // addCardToWishlist(wishlistId, item.oracle_id);
-    setSelectedItem(item);
+  const handleAutocompleteItemClick = (item: string) => {
+    props.setSearchInput(item);
     setAutocompleteResults([]);
     setShowAutocomplete(false);
     setSelectedAutocompleteIndex(-1);
@@ -98,8 +80,8 @@ export default function WishlistSearchbox({ wishlistId, className }: Props) {
             selectedAutocompleteIndex < totalResults
           ) {
             const item = autocompleteResults[selectedAutocompleteIndex];
-            item && handleAutocompleteItemClick(item);
-            item && addCardToWishlist(wishlistId, item.oracle_id);
+            item && handleAutocompleteItemClick(item.name);
+            item && props.searchFunction(item.name);
           }
           break;
 
@@ -109,8 +91,8 @@ export default function WishlistSearchbox({ wishlistId, className }: Props) {
             selectedAutocompleteIndex < totalResults
           ) {
             const item = autocompleteResults[selectedAutocompleteIndex];
-            item && handleAutocompleteItemClick(item);
-            item && addCardToWishlist(wishlistId, item.oracle_id);
+            item && handleAutocompleteItemClick(item.name);
+            item && props.searchFunction(item.name);
           }
           break;
 
@@ -140,48 +122,44 @@ export default function WishlistSearchbox({ wishlistId, className }: Props) {
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setShowAutocomplete(false);
-    if (selectedItem) {
-      addCardToWishlist(wishlistId, selectedItem.oracle_id);
-      setSelectedItem(null); // Reset the selected item
-    } else {
-      // Optionally, display a message to the user indicating a selection must be made
-      toast.error('Please select a card from the autocomplete list.');
+    if (props.searchInput.trim().length > 0) {
+      props.searchFunction(props.searchInput);
     }
   };
 
+  const ref = useOutsideClick(() => {
+    setShowAutocomplete(false);
+  });
+
   return (
-    <div className={` w-full ${className}`}>
+    <div className="w-full" ref={ref}>
       <div className="relative">
-        {' '}
-        <form onSubmit={handleFormSubmit} className="relative flex gap-4">
-          {' '}
+        <form onSubmit={handleFormSubmit}>
           <Input
             type="text"
-            placeholder="Search cards to add to your wishlist..."
-            value={addCardInput}
+            placeholder="Search"
+            value={props.searchInput}
             onChange={handleInputChange}
             spellCheck="false"
             ref={searchRef}
             onKeyDown={(e) => handleAutocompleteKeyDown(e)}
-            className="flex-1"
           />
-          <Button
+          <button
             type="submit"
-            className={`cursor-pointer bg-pink-500 hover:bg-pink-600 disabled:cursor-not-allowed disabled:bg-zinc-500`}
-            disabled={!selectedItem}
+            className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-pink-500"
           >
-            <Search size={16} />
-          </Button>
+            <Search size={15} />
+          </button>
           {showAutocomplete && (
-            <div className="absolute top-full z-50 mt-1 max-h-60 w-full max-w-md overflow-y-auto rounded-md border border-zinc-500 bg-zinc-950 text-left shadow-md">
+            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-950 py-1 shadow-md">
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
-                    key={result.oracle_id}
+                    key={index}
                     className={`mx-1 cursor-pointer rounded px-4 py-2 hover:bg-neutral-900 ${
                       selectedAutocompleteIndex === index ? 'bg-zinc-800' : ''
                     } `}
-                    onClick={() => handleAutocompleteItemClick(result)}
+                    onClick={() => handleAutocompleteItemClick(result.name)}
                   >
                     {result.name}
                   </div>

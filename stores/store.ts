@@ -1,6 +1,38 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
+import { useEffect, useRef } from 'react';
+
+export const useOutsideClick = (callback: () => void) => {
+  const sortRadioRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sortRadioRef.current &&
+        !sortRadioRef.current.contains(event.target as Node)
+      ) {
+        callback();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [callback]);
+  return sortRadioRef;
+};
+
+export interface PromoInformation {
+  promoCode: string;
+  discount: number;
+}
+export interface PromoMap {
+  [key: string]: PromoInformation;
+}
+export interface Filter {
+  name: string;
+  abbreviation: string;
+}
 
 export interface SingleSearchResult {
   name: string;
@@ -10,6 +42,7 @@ export interface SingleSearchResult {
   condition: string;
   foil: boolean;
   price: number;
+  priceBeforeDiscount: number;
   website: string;
   s3_image_url?: string;
 }
@@ -26,450 +59,21 @@ export type MultiSearchCardState = {
   selected: boolean;
 };
 
-// type MultiSearchResult =
 export interface Website {
   name: string;
   code: string;
-  image: string;
+  url: string;
   shopify: boolean;
+  backend: string;
+  image: string;
+  promoCode: string;
+  discount: number;
 }
-const websites: Website[] = [
-  {
-    name: 'Abyss Game Store',
-    code: 'abyss',
-    image:
-      'https://bryces-images.s3.us-west-2.amazonaws.com/Abyss_White_Bold_230x%402x.avif',
-    shopify: true
-  },
-  {
-    name: 'Aether Vault Games',
-    code: 'aethervault',
-    image:
-      'https://bryces-images.s3.us-west-2.amazonaws.com/AetherVaultGames.png',
-    shopify: false
-  },
-  {
-    name: 'Atlas Collectables',
-    code: 'atlas',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/atlas.png',
-    shopify: false
-  },
-  {
-    name: 'Border City Games',
-    code: 'bordercity',
-    image:
-      'https://i.ibb.co/cvNCbXx/Border-City-Games-Large-85873391-3559-47f7-939a-420461a0033f-201x-removebg-preview.png',
-    shopify: true
-  },
-  {
-    name: 'Chimera Gaming',
-    code: 'chimera',
-    image:
-      'https://cdn.shopify.com/s/files/1/0131/2463/2640/files/logo_large.png?v=1672686974',
-    shopify: true
-  },
-  {
-    name: 'The Connection Games',
-    code: 'connectiongames',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/connection.png',
-    shopify: false
-  },
-  {
-    name: 'Dragon Cards & Games',
-    code: 'dragoncards',
-    image:
-      'https://bryces-images.s3.us-west-2.amazonaws.com/dragon_cards_and_games_white.png',
-    shopify: true
-  },
-  {
-    name: 'Enter the Battlefield',
-    code: 'enterthebattlefield',
-    image:
-      'https://cdn.shopify.com/s/files/1/0496/0098/7297/files/Logo_1_Newmarket_large.jpg?v=1658954718',
-    shopify: true
-  },
-  {
-    name: 'Everything Games',
-    code: 'everythinggames',
-    image:
-      'https://cdn.shopify.com/s/files/1/0618/8905/2856/files/Header_76747500-dd40-4d94-8016-a1d21282e094_large.png?v=1650298823',
-    shopify: true
-  },
-  {
-    name: 'Exor Games',
-    code: 'exorgames',
-    image:
-      'https://cdn.shopify.com/s/files/1/0467/3083/8169/files/Untitled-2-01.png?v=1613706669',
-    shopify: true
-  },
-  {
-    name: 'Face to Face Games',
-    code: 'facetoface',
-    image: 'https://i.ibb.co/W2bPWdK/logo-colored-1.png',
-    shopify: false
-  },
-  {
-    name: 'Fantasy Forged Games',
-    code: 'fantasyforged',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/ff.png',
-    shopify: true
-  },
-  {
-    name: 'FirstPlayer',
-    code: 'firstplayer',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/firstplayer.png',
-    shopify: false
-  },
-  {
-    name: '401 Games',
-    code: 'four01',
-    image: 'https://i.ibb.co/h9x3Ksb/401games.png',
-    shopify: true
-  },
-  {
-    name: 'Fusion Gaming',
-    code: 'fusion',
-    image: 'https://i.ibb.co/GkKmry9/fusiongaminglogo.png',
-    shopify: false
-  },
-  {
-    name: 'Game Breakers',
-    code: 'gamebreakers',
-    image:
-      'https://gamebreakers.ca/cdn/shop/files/GameBreakersLogo_REV_2.png?v=1655901364',
-    shopify: true
-  },
-  {
-    name: 'GameKnight',
-    code: 'gameknight',
-    image:
-      'https://cdn.shopify.com/s/files/1/0367/8204/7276/files/GK-Logo-Full-Text-Below-1-768x603.png?v=1618430878',
-    shopify: true
-  },
-  {
-    name: 'Gamezilla',
-    code: 'gamezilla',
-    image:
-      'https://cdn.shopify.com/s/files/1/0570/6308/0145/files/Screen_Shot_2018-09-07_at_1.02.57_PM_copy_141x.png?v=1626814255',
-    shopify: true
-  },
-  {
-    name: 'Gauntlet Games',
-    code: 'gauntlet',
-    image:
-      'http://cc-client-assets.s3.amazonaws.com/store/gauntletgamesvictoria/7c8176e703db451bad3277bb6d4b8631/medium/Transparent_logo.png',
-    shopify: false
-  },
-  {
-    name: 'Hairy Tarantula',
-    code: 'hairyt',
-    image:
-      'https://cdn.shopify.com/s/files/1/0266/9513/9533/files/hariyt-horizontal-logo.png?v=1615403256',
-    shopify: true
-  },
-  {
-    name: 'House of Cards',
-    code: 'houseofcards',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/houseofcards.webp',
-    shopify: true
-  },
-  {
-    name: 'Jeux 3 Dragons',
-    code: 'jeux3dragons',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/jeux3dragons.png',
-    shopify: false
-  },
-  {
-    name: 'Manaforce',
-    code: 'manaforce',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/manaforce.png',
-    shopify: false
-  },
-  {
-    name: 'Magic Stronghold',
-    code: 'magicstronghold',
-    image:
-      'https://magicstronghold-images.s3.amazonaws.com/customizations/logo.png',
-    shopify: false
-  },
-  {
-    name: 'The Mythic Store',
-    code: 'mythicstore',
-    image: 'https://themythicstore.com/cdn/shop/files/prise3.png?v=1677464824',
-    shopify: true
-  },
-  {
-    name: 'Obsidian Games',
-    code: 'obsidian',
-    image:
-      'https://obsidiangames.ca/cdn/shop/files/Logo_White_Bkd.png?v=1704045920',
-    shopify: true
-  },
-  {
-    name: 'Orchard City Games',
-    code: 'orchardcity',
-    image:
-      'https://d1rw89lz12ur5s.cloudfront.net/store/orchardcitygames/eb6cb32f84b34b5cbb1c025fc41c9821/large/logo_v1.png',
-    shopify: false
-  },
-  {
-    name: 'Sequence Gaming Brockville',
-    code: 'sequencegaming',
-    image:
-      'https://bryces-images.s3.us-west-2.amazonaws.com/sequence-no-bg-inverted.png',
-    shopify: false
-  },
-  {
-    name: 'The Comic Hunter',
-    code: 'thecomichunter',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/ComicHunter.png',
-    shopify: false
-  },
-  {
-    name: 'Topdeck Hero',
-    code: 'topdeckhero',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/topdeckhero.png',
-    shopify: false
-  },
-  {
-    name: 'Vortex Games',
-    code: 'vortexgames',
-    image:
-      'https://vortexgames.ca/cdn/shop/files/favico_x60_2x_c557b87f-6e22-4c6d-a5ad-dc202785f3e1_100x.png?v=1652245334',
-    shopify: true
-  },
-  {
-    name: "Wizard's Tower (kanatacg)",
-    code: 'kanatacg',
-    image: 'https://i.ibb.co/hm3qKWc/wizardstower-removebg-preview.png',
-    shopify: false
-  },
-  {
-    name: 'Crypt',
-    code: 'crypt',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/crypte.avif',
-    shopify: true
-  },
-  {
-    name: 'Silver Goblin',
-    code: 'silvergoblin',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/silvergoblin.avif',
-    shopify: true
-  },
-  {
-    name: 'Black Knight',
-    code: 'blackknight',
-    image:
-      'https://bryces-images.s3.us-west-2.amazonaws.com/blackknightgames.webp',
-    shopify: true
-  },
-  {
-    name: 'East Ridge Games',
-    code: 'eastridge',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/eastridge.avif',
-    shopify: true
-  },
-  {
-    name: 'HFX Games',
-    code: 'hfx',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/hfxgames.avif',
-    shopify: true
-  },
-  {
-    name: 'Kessel Run',
-    code: 'kesselrun',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/kesselrun.avif',
-    shopify: true
-  },
-  {
-    name: 'Nerdz Cafe',
-    code: 'nerdzcafe',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/nerdzcafe.webp',
-    shopify: true
-  },
-  {
-    name: 'OMG Games',
-    code: 'omg',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/omggames.webp',
-    shopify: true
-  },
-  {
-    name: 'Out of The Box',
-    code: 'outofthebox',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/outofthebox.avif',
-    shopify: true
-  },
-  {
-    name: "Pandora's Boox",
-    code: 'pandorasboox',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/pandorasboox.avif',
-    shopify: true
-  },
-  {
-    name: 'Red Dragon',
-    code: 'reddragon',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/reddragon.webp',
-    shopify: true
-  },
-  {
-    name: 'Sky Fox',
-    code: 'skyfox',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/skyfox.avif',
-    shopify: true
-  },
-  {
-    name: 'Taps Games',
-    code: 'taps',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/tapsgames.avif',
-    shopify: true
-  },
-  {
-    name: 'Time Vault',
-    code: 'timevault',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/timevault.avif',
-    shopify: true
-  },
-  {
-    name: 'Up North Games',
-    code: 'upnorth',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/upnorth.avif',
-    shopify: true
-  },
-  {
-    name: 'Waypoint Games',
-    code: 'waypoint',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/waypoint.webp',
-    shopify: true
-  },
-  {
-    name: 'Level Up Games',
-    code: 'levelup',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/levelup.webp',
-    shopify: true
-  },
-  {
-    name: 'Kingdom of the Titans',
-    code: 'kingdomtitans',
-    image:
-      'https://bryces-images.s3.us-west-2.amazonaws.com/kingdomtitans.webp',
-    shopify: true
-  },
-  {
-    name: 'Fan of the Sport',
-    code: 'fanofthesport',
-    image:
-      'https://bryces-images.s3.us-west-2.amazonaws.com/fanofthesport.avif',
-    shopify: true
-  },
-  {
-    name: 'Dark Fox TCG',
-    code: 'darkfoxtcg',
-    image: 'https://bryces-images.s3.us-west-2.amazonaws.com/darkfoxtcg.webp',
-    shopify: true
-  },
-  {
-    name: 'Boutique Awesome',
-    code: 'boutiqueawesome',
-    image: '',
-    shopify: true
-  },
-  {
-    name: 'Gaming Kingdom',
-    code: 'gamingkingdom',
-    image: '',
-    shopify: true
-  },
-  {
-    name: 'Mecha Games',
-    code: 'mechagames',
-    image: '',
-    shopify: true
-  },
-  {
-    name: 'Multizone',
-    code: 'multizone',
-    image: '',
-    shopify: true
-  },
-  {
-    name: 'Trinity Hobby',
-    code: 'trinityhobby',
-    image: '',
-    shopify: true
-  },
-  {
-    name: 'Fetch Shock Games',
-    code: 'fetchshock',
-    image: '',
-    shopify: true
-  },
-  {
-    name: 'Dragon Fyre Games',
-    code: 'dragonfyre',
-    image: '',
-    shopify: false
-  },
-  {
-    name: 'Carta Magica Montreal',
-    code: 'cartamagicamontreal',
-    image: '',
-    shopify: false
-  },
-  {
-    name: 'Carta Magica Ottawa',
-    code: 'cartamagicaottawa',
-    image: '',
-    shopify: false
-  },
-  {
-    name: 'Gods Arena',
-    code: 'godsarena',
-    image: '',
-    shopify: false
-  },
-  {
-    name: 'Free Game',
-    code: 'freegame',
-    image: '',
-    shopify: false
-  },
-  {
-    name: 'J&J Cards',
-    code: 'jjcards',
-    image: '',
-    shopify: false
-  },
-  {
-    name: 'MTG North',
-    code: 'mtgnorth',
-    image: '',
-    shopify: false
-  },
-  {
-    name: "Luke's Cards",
-    code: 'lukescards',
-    image: '',
-    shopify: true
-  },
-  {
-    name: 'Dark Crystal Cards',
-    code: 'darkcrystal',
-    image: '',
-    shopify: true
-  },
-  {
-    name: "Bootown's Games",
-    code: 'bootown',
-    image: '',
-    shopify: true
-  },
-  {
-    name: 'Prisma Games',
-    code: 'prismatcg',
-    image: '',
-    shopify: false
-  }
-];
+
+const websites: Website[] = [];
+const websiteList: Filter[] = [];
+const setList: Filter[] = [];
+const promoMap: PromoMap = {};
 
 export type FilterTag = {
   name: string;
@@ -500,6 +104,11 @@ export type CarouselItemType = {
   image_url: string;
 };
 type State = {
+  sponsor: string;
+  websites: Website[];
+  promoMap: PromoMap;
+  setList: Filter[];
+
   singleSearchStarted: boolean;
   sortMultiSearchVariants: (
     card: MultiSearchCardState,
@@ -510,7 +119,7 @@ type State = {
   missingMultiSearchResults: string[];
   resetMultiSearch: () => void;
   selectAllMultiSearchResults: () => void;
-  websites: Website[];
+
   singleSearchInput: string;
   setSingleSearchInput: (singleSearchInput: string) => void;
   singleSearchQuery: string;
@@ -563,9 +172,13 @@ type State = {
   ) => void;
 
   singleSearchPriceList?: CardPrices;
+
+  initWebsiteInformation: () => Promise<void>;
+  initSetInformation: () => Promise<void>;
 };
 
 export const useStore = create<State>((set, get) => ({
+  sponsor: 'reddragon',
   toggleSingleSearchOrderBy: () => {
     const order = get().singleSearchOrder;
     if (order === 'asc') {
@@ -658,6 +271,8 @@ export const useStore = create<State>((set, get) => ({
   },
 
   websites: websites,
+  promoMap: promoMap,
+  setList: setList,
   singleSearchInput: '',
   setSingleSearchInput: (singleSearchInput: string) =>
     set({ singleSearchInput }),
@@ -783,7 +398,14 @@ export const useStore = create<State>((set, get) => ({
         cardName: searchInput.trim()
       }
     );
-
+    for (const item of response.data) {
+      item.priceBeforeDiscount = item.price;
+      if (item.website in get().promoMap) {
+        item.price = (
+          item.price * get().promoMap[item.website]['discount']
+        ).toFixed(2);
+      }
+    }
     const results = response.data;
     // sort results by ascending price
     // results = [SingleSearchResult, SingleSearchResult, ...]
@@ -889,7 +511,7 @@ export const useStore = create<State>((set, get) => ({
     get().filterSingleSearchResults();
   },
 
-  multiSearchSelectedWebsites: websites.map((website: Website) => website.name),
+  multiSearchSelectedWebsites: [],
   toggleMultiSearchSelectedWebsites: (website: string) => {
     if (get().multiSearchSelectedWebsites.includes(website)) {
       set({
@@ -909,11 +531,11 @@ export const useStore = create<State>((set, get) => ({
     }
   },
   toggleMultiSearchSelectAllStores: () => {
-    if (get().multiSearchSelectedWebsites.length === websites.length) {
+    if (get().multiSearchSelectedWebsites.length === get().websites.length) {
       set({ multiSearchSelectedWebsites: [] });
     } else {
       set({
-        multiSearchSelectedWebsites: websites.map(
+        multiSearchSelectedWebsites: get().websites.map(
           (website: Website) => website.name
         )
       });
@@ -953,5 +575,50 @@ export const useStore = create<State>((set, get) => ({
       )
     });
     get().calculateSetMultiSearchSelectedCost();
+  },
+  initWebsiteInformation: async () => {
+    try {
+      if (get().websites.length > 0) {
+        return;
+      }
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
+      );
+      let data = response.data;
+      set({ websites: data.websiteList });
+
+      let tempMap: PromoMap = {};
+      for (const website of data.websiteList) {
+        if (website['promoCode'] !== null) {
+          tempMap[website['code']] = {
+            promoCode: website['promoCode'],
+            discount: website['discount']
+          };
+        }
+      }
+      set({ promoMap: tempMap });
+
+      set({
+        multiSearchSelectedWebsites: get().websites.map(
+          (website: Website) => website.name
+        )
+      });
+    } catch {
+      console.log('getWebsiteInformation or promoMap ERROR');
+    }
+  },
+  initSetInformation: async () => {
+    try {
+      if (get().setList.length > 0) {
+        return;
+      }
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_SEARCH_URL}/sets`
+      );
+      let data = response.data;
+      set({ setList: data.setList });
+    } catch {
+      console.log('getSetInformation ERROR');
+    }
   }
 }));

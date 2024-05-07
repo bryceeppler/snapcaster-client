@@ -229,11 +229,13 @@ const WishlistId: NextPage<Props> = () => {
                 <div className="flex-1" />
                 <div className="flex flex-row gap-4">
                   <Link href={`/wishlist/${wishlistView.wishlist_id}`}>
-                    <Button>Cancel</Button>
+                    <Button className="min-w-20">Exit</Button>
                   </Link>
 
-                  <Button onClick={submitBulkEdit}>Save</Button>
-                  <Button>Save & Continue Editing</Button>
+                  <Button className="min-w-20" onClick={submitBulkEdit}>
+                    Save
+                  </Button>
+                  {/* <Button>Save & Continue Editing</Button> */}
                 </div>
               </div>
             </div>
