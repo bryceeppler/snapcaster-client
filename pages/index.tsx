@@ -31,7 +31,14 @@ const Home: NextPage<Props> = () => {
               </div>
             )}
           <SingleSearchbox />
-          <PopularSearchCarousel />
+          {Object.keys(singleSearchResults).length === 0 &&
+            !singleSearchStarted && (
+              <div>
+                <div className="p-4" />
+                <PopularSearchCarousel />
+              </div>
+            )}
+
           {!singleSearchStarted && !singleSearchResultsLoading && (
             <div className="mt-16 space-y-16"></div>
           )}
