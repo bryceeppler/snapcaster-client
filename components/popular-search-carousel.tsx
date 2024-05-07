@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { CarouselItemType } from '@/stores/store';
+import useGlobalStore from '@/stores/globalStore';
 
 import {
   Carousel,
@@ -9,11 +9,12 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
+import LoadingSpinner from './LoadingSpinner';
 
 type Props = {};
 
 const PopularSearchCarousel = () => {
-  const carouselItems = [
+  const dummyPopularCards = [
     {
       name: 'Dockside Extortionist',
       image_url:
@@ -56,31 +57,37 @@ const PopularSearchCarousel = () => {
     }
   ];
 
+  const { popularCards, popularCardsLoading } = useGlobalStore();
+
   return (
     <div className="px-12 py-6">
       <h2 className="text-2xl font-bold">Trending Now</h2>
       <div className="p-4"></div>
-      <Carousel className="mx-auto">
-        <CarouselContent>
-          {carouselItems.map((item, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-              <div className="p-1">
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center p-0 sm:p-6">
-                    <img
-                      className="mx-auto h-auto max-h-[300px] w-auto max-w-full rounded-lg object-cover"
-                      src={item.image_url}
-                      alt={item.name}
-                    />
-                  </CardContent>
-                </Card>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+      {popularCardsLoading ? (
+        <LoadingSpinner classNameProps="w-full mt-7 mx-auto" />
+      ) : (
+        <Carousel className="mx-auto">
+          <CarouselContent>
+            {popularCards.map((item, index) => (
+              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                <div className="p-1">
+                  <Card>
+                    <CardContent className="flex flex-col items-center justify-center p-0 sm:p-6">
+                      <img
+                        className="mx-auto h-auto max-h-[300px] w-auto max-w-full rounded-lg object-cover"
+                        src={item.image_url}
+                        alt={item.name}
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      )}
     </div>
   );
 };

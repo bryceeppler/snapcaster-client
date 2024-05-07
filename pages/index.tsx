@@ -5,10 +5,13 @@ import SingleSearchbox from '@/components/SingleSearchbox';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SingleSearchInfo from '@/components/SingleSearchInfo';
 import { useStore } from '@/stores/store';
+import useGlobalStore from '@/stores/globalStore';
 import SingleCatalog from '@/components/SingleCatalog';
 import MainLayout from '@/components/MainLayout';
 import SingleSearchFilter from '@/components/single-search-filters';
 import PopularSearchCarousel from '@/components/popular-search-carousel';
+import { Button } from '@/components/ui/button';
+import { useEffect } from 'react';
 type Props = {};
 
 const Home: NextPage<Props> = () => {
@@ -17,6 +20,12 @@ const Home: NextPage<Props> = () => {
     singleSearchResultsLoading,
     singleSearchStarted
   } = useStore();
+
+  const { fetchPopularCards } = useGlobalStore();
+
+  useEffect(() => {
+    fetchPopularCards();
+  }, []);
 
   return (
     <>

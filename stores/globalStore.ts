@@ -8,17 +8,23 @@ export type PopularCard = {
 
 type GlobalState = {
   popularCards: PopularCard[];
+  popularCardsLoading: boolean;
   fetchPopularCards: () => void;
 };
 
 const useGlobalStore = create<GlobalState>((set, get) => ({
   popularCards: [],
+  popularCardsLoading: false,
   fetchPopularCards: async () => {
     try {
+      set({ popularCardsLoading: true });
+      console.log('fetching popular cards');
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_ANALYTICS_URL}/search/popular`
       );
       set({ popularCards: response.data });
+      console.log('fetched popular cards');
+      set({ popularCardsLoading: false });
     } catch (error) {
       console.error(error);
     }
