@@ -1,5 +1,5 @@
 import React from 'react';
-import MainLayout from '@/components/MainLayout';
+import MainLayout from '@/components/main-page-layout';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import PageTitle from './ui/page-title';

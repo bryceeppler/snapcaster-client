@@ -1,8 +1,8 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import MainLayout from '@/components/MainLayout';
-import ArticleHeader from '@/components/guide-components/ArticleHeader';
-import Article from '@/components/guide-components/Article';
+import MainLayout from '@/components/main-page-layout';
+import ArticleHeader from '@/components/guide-components/article-header';
+import Article from '@/components/guide-components/article';
 import { foilContent } from '@/articles/buyers-guide-mtg';
 type Props = {};
 

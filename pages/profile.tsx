@@ -1,15 +1,15 @@
-import MainLayout from '@/components/MainLayout';
+import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/utils/axiosWrapper';
 import useAuthStore from '@/stores/authStore';
 import Signin from './signin';
-import LoadingPage from '@/components/LoadingPage';
+import LoadingPage from '@/components/loading-page';
 import Link from 'next/link';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import SubscriptionCards from '@/components/SubscriptionCards';
+import SubscriptionCards from '@/components/subscription-options';
 import { toast } from 'sonner';
 
 const Profile: NextPage = () => {

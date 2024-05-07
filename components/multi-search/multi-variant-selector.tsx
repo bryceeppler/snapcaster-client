@@ -1,8 +1,7 @@
 import { MultiSearchCardState } from '@/stores/store';
 import React from 'react';
 import { useStore } from '@/stores/store';
-import CloseButton from './CloseButton';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 
 type Props = {
   card: MultiSearchCardState;
@@ -63,7 +62,7 @@ export default function CardVariantSelector({ card }: Props) {
               </div>
               {/* Close button */}
               <div>
-                <CloseButton onClick={() => setModalOpen(false)} />
+                <Button onClick={() => setModalOpen(false)}>X</Button>
               </div>
             </div>
 

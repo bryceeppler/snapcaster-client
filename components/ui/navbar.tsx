@@ -11,7 +11,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
-import { Button } from './ui/button';
+import { Button } from './button';
 import useAuthStore from '@/stores/authStore';
 import { AlignJustify } from 'lucide-react';
 import { useState } from 'react';
@@ -35,7 +35,7 @@ const components: { title: string; href: string; description: string }[] = [
   }
 ];
 
-export default function NavbarNew() {
+export default function Navbar() {
   const { isAuthenticated } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (

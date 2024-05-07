@@ -23,7 +23,8 @@ export default function SingleSearchinfo({}: Props) {
         ) : (
           <div className="text-sm ">
             <>
-              {singleSearchResults.length} results for &quot;{singleSearchQuery}
+              {singleSearchResults.length} results for fart &quot;
+              {singleSearchQuery}
               &quot;
             </>
           </div>

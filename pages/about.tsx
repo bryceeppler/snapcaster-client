@@ -1,4 +1,4 @@
-import MainLayout from '@/components/MainLayout';
+import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
 import { useStore } from '@/stores/store';
 import Head from 'next/head';

@@ -5,10 +5,10 @@ type Props = {
 };
 
 import { useStore } from '@/stores/store';
-import { trackOutboundLink } from '../utils/analytics';
-import { Button } from './ui/button';
+import { trackOutboundLink } from '../../utils/analytics';
+import { Button } from '../ui/button';
 import Link from 'next/link';
-import CardImage from './card-image';
+import CardImage from '../ui/card-image';
 
 export default function SingleCatalogRow({ cardData }: Props) {
   const { websites } = useStore();

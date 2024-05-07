@@ -1,4 +1,4 @@
-import MainLayout from '@/components/MainLayout';
+import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -8,7 +8,7 @@ import 'dayjs/locale/en';
 import axios from 'axios';
 import { Check, Edit, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import LoadingPage from '@/components/LoadingPage';
+import LoadingPage from '@/components/loading-page';
 import Signin from '@/pages/signin';
 import useWishlistStore from '@/stores/wishlistStore';
 import { useEffect } from 'react';

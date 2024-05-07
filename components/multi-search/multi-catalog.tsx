@@ -1,8 +1,8 @@
 import React from 'react';
 import { useStore } from '@/stores/store';
 type Props = {};
-import MultiCatalogRow from './MultiCatalogRow';
-import MultiSearchResultsInfo from './MultiSearchResultsInfo';
+import MultiCatalogRow from './multi-catalog-row';
+import MultiSearchResultsInfo from './multi-results-info';
 
 export default function MultiCatalog({}: Props) {
   const { filteredMultiSearchResults } = useStore();

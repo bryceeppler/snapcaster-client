@@ -9,7 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from './loading-spinner';
 
 type Props = {};
 

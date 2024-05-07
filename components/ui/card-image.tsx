@@ -7,10 +7,7 @@ type Props = {
 
 const CardImage: React.FC<Props> = ({ imageUrl, alt }) => {
   const aspectRatioPadding = (418 / 300) * 100;
-  const sizes = `(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw`;
-  // For the standard HTML <img>, we apply objectFit: 'cover' through CSS as well.
-  // Since there's no fill attribute, you might need to adjust the CSS to ensure
-  // the image covers the desired area, depending on your layout.
+
   return (
     <div
       className="relative w-full"

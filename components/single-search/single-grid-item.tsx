@@ -5,8 +5,8 @@ type Props = {
 };
 
 import { useStore } from '@/stores/store';
-import { trackOutboundLink } from '../utils/analytics';
-import { Button } from './ui/button';
+import { trackOutboundLink } from '../../utils/analytics';
+import { Button } from '../ui/button';
 import Link from 'next/link';
 import {
   Card,
@@ -14,7 +14,7 @@ import {
   CardFooter,
   CardHeader
 } from '@/components/ui/card';
-import CardImage from './card-image';
+import CardImage from '../ui/card-image';
 
 export default function SingleCatalogCard({ cardData }: Props) {
   const { websites } = useStore();

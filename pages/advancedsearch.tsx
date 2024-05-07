@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import axiosInstance from '@/utils/axiosWrapper';
 import Head from 'next/head';
-import MainLayout from '@/components/MainLayout';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import MainLayout from '@/components/main-page-layout';
+import LoadingSpinner from '@/components/loading-spinner';
 
-import AdvancedCatalog from '@/components/AdvancedCatalog';
-import AdvancedCheckBox from '@/components/AdvancedCheckBox';
-import AutoFillSearchBox from '@/components/AutoFillSearchBox';
+import AdvancedCatalog from '@/components/advanced-search/advanced-catalog';
+import AdvancedCheckBox from '@/components/advanced-search/advanced-checkbox';
+import AutoFillSearchBox from '@/components/autofill-searchbox';
 
 import useAuthStore from '@/stores/authStore';
 import { advancedUseStore, useOutsideClick } from '@/stores/advancedStore';
@@ -18,7 +18,7 @@ import LoginRequired from '@/components/login-required';
 import SubscriptionRequired from '@/components/subscription-required';
 import PageTitle from '@/components/ui/page-title';
 
-import { FilterDropdownBox } from '@/components/FilterDropdownBox';
+import { FilterDropdownBox } from '@/components/advanced-search/advanced-filter-dropdown';
 import { useStore } from '@/stores/store';
 type Props = {};
 

@@ -1,10 +1,10 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import MainLayout from '@/components/MainLayout';
+import MainLayout from '@/components/main-page-layout';
 import exp from 'constants';
 
-import ArticleHeader from '@/components/guide-components/ArticleHeader';
-import Article from '@/components/guide-components/Article';
+import ArticleHeader from '@/components/guide-components/article-header';
+import Article from '@/components/guide-components/article';
 import { prereleasePromoContent } from '@/articles/buyers-guide-mtg';
 type Props = {};
 

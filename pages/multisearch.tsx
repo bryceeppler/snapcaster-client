@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { useStore } from '@/stores/store';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import MultiCatalog from '@/components/MultiCatalog';
-import MultiSearchbox from '@/components/MultiSearchbox';
-import StoreSelector from '@/components/StoreSelector';
-import MainLayout from '@/components/MainLayout';
+import LoadingSpinner from '@/components/loading-spinner';
+import MultiCatalog from '@/components/multi-search/multi-catalog';
+import MultiSearchbox from '@/components/multi-search/multi-searchbox';
+import StoreSelector from '@/components/multi-search/multi-store-selector';
+import MainLayout from '@/components/main-page-layout';
 import useAuthStore from '@/stores/authStore';
 import LoginRequired from '@/components/login-required';
 import PageTitle from '@/components/ui/page-title';
@@ -20,6 +20,10 @@ export default function Multisearch({}: Props) {
 
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
 
+  useEffect(() => {
+    initWebsiteInformation();
+  }, []);
+
   if (!isAuthenticated) {
     return (
       <LoginRequired
@@ -28,10 +32,6 @@ export default function Multisearch({}: Props) {
       />
     );
   }
-
-  useEffect(() => {
-    initWebsiteInformation();
-  }, []);
 
   return (
     <>

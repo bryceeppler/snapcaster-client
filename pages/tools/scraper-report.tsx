@@ -10,12 +10,12 @@ import {
   Legend
 } from 'chart.js';
 import PageTitle from '@/components/ui/page-title';
-import MainLayout from '@/components/MainLayout';
-import ScraperMonitor from '@/components/scraper-monitor';
-import DataQuality from '@/components/data-quality';
-import ScraperStatus from '@/components/scraper-status';
-import DocumentCount from '@/components/document-count';
-import QueueStats from '@/components/queue-stats';
+import MainLayout from '@/components/main-page-layout';
+import ScraperMonitor from '@/components/scraper-report/scraper-monitor';
+import DataQuality from '@/components/scraper-report/data-quality';
+import ScraperStatus from '@/components/scraper-report/scraper-status';
+import DocumentCount from '@/components/scraper-report/document-count';
+import QueueStats from '@/components/scraper-report/queue-stats';
 
 ChartJS.register(
   CategoryScale,

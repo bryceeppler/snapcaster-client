@@ -1,8 +1,8 @@
 import React from 'react';
 import { MultiSearchCardState, SingleSearchResult } from '@/stores/store';
 import { useStore } from '@/stores/store';
-import CardVariantSelector from './CardVariantSelector';
-import { Button } from './ui/button';
+import CardVariantSelector from './multi-variant-selector';
+import { Button } from '../ui/button';
 
 type Props = {
   cardData: MultiSearchCardState;

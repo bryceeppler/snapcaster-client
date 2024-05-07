@@ -1,16 +1,16 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import Homebanner from '@/components/Homebanner';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import SingleSearchInfo from '@/components/SingleSearchInfo';
+import Homebanner from '@/components/homebanner';
+import LoadingSpinner from '@/components/loading-spinner';
+import SingleSearchInfo from '@/components/single-search/single-results-info';
 import { useStore } from '@/stores/store';
 import useGlobalStore from '@/stores/globalStore';
-import SingleCatalog from '@/components/SingleCatalog';
-import MainLayout from '@/components/MainLayout';
-import SingleSearchFilter from '@/components/single-search-filters';
+import SingleCatalog from '@/components/single-search/single-results';
+import MainLayout from '@/components/main-page-layout';
+import SingleSearchFilter from '@/components/single-search/single-filters';
 import PopularSearchCarousel from '@/components/popular-search-carousel';
 import { useEffect } from 'react';
-import AutoFillSearchBox from '@/components/AutoFillSearchBox';
+import AutoFillSearchBox from '@/components/autofill-searchbox';
 type Props = {};
 
 const Home: NextPage<Props> = () => {

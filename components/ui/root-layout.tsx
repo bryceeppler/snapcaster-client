@@ -1,7 +1,6 @@
 import React from 'react';
-import Navbar from './Navbar';
-import NavbarNew from './NavbarNew';
-import Footer from './Footer';
+import Navbar from '@/components/ui/navbar';
+import Footer from '@/components/ui/footer';
 import { useState, useEffect } from 'react';
 import useAuthStore from '@/stores/authStore';
 
@@ -31,7 +30,7 @@ export default function Layout({ children }: React.PropsWithChildren<Props>) {
 
   return (
     <div className="min-h-screen bg-background">
-      <NavbarNew />
+      <Navbar />
       {children}
       <Footer />
     </div>
