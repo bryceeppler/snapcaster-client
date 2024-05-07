@@ -20,13 +20,15 @@ const Home: NextPage<Props> = () => {
     singleSearchStarted,
     singleSearchInput,
     setSingleSearchInput,
-    fetchSingleSearchResults
+    fetchSingleSearchResults,
+    initWebsiteInformation
   } = useStore();
 
   const { fetchPopularCards } = useGlobalStore();
 
   useEffect(() => {
     fetchPopularCards();
+    initWebsiteInformation();
   }, []);
 
   return (

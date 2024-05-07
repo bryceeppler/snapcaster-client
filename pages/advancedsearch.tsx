@@ -1,7 +1,5 @@
-import React, { useEffect, useLayoutEffect } from 'react';
-import { useRef } from 'react';
+import React, { useEffect } from 'react';
 import axiosInstance from '@/utils/axiosWrapper';
-import { Filter, Website } from '@/stores/store';
 import Head from 'next/head';
 import MainLayout from '@/components/MainLayout';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -22,7 +20,6 @@ import PageTitle from '@/components/ui/page-title';
 
 import { FilterDropdownBox } from '@/components/FilterDropdownBox';
 import { useStore } from '@/stores/store';
-import { Checkbox } from '@/components/ui/checkbox';
 type Props = {};
 
 export default function AdvancedSearch({}: Props) {
@@ -30,11 +27,9 @@ export default function AdvancedSearch({}: Props) {
     advancedSearchLoading,
     advancedSearchResults,
 
-    websiteList,
     selectedWebsiteCount,
     selectedWebsiteList,
 
-    setList,
     selectedSetCount,
     selectedSetList,
 
@@ -73,6 +68,8 @@ export default function AdvancedSearch({}: Props) {
     fetchAdvancedSearchResults
   } = advancedUseStore();
 
+  const { initWebsiteInformation, initSetInformation, websites } = useStore();
+
   const [showFilters, setShowFilters] = React.useState(false);
 
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
@@ -81,33 +78,9 @@ export default function AdvancedSearch({}: Props) {
     setShoeSoryBy(false);
   });
 
-  //Temporarily instantiating a website list for advanced search here that only displays shopify stores for now.
-  const [websites, setWebsites] = React.useState([]);
-  async function initWebsites() {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
-      );
-      let data = response.data.websiteList;
-
-      let list = data.filter((obj: Website) => obj.backend === 'shopify');
-      for (let i = 0; i < list.length; i++) {
-        list[i].abbreviation = list[i].code;
-        delete list[i].promoCode;
-        delete list[i].backend;
-        delete list[i].discount;
-        delete list[i].image;
-        delete list[i].url;
-        delete list[i].shopify;
-        delete list[i].code;
-      }
-      setWebsites(list);
-    } catch {
-      console.log('getWebsiteInformation or promoMap ERROR');
-    }
-  }
   useEffect(() => {
-    initWebsites();
+    initWebsiteInformation();
+    initSetInformation();
   }, []);
 
   const createCheckoutSession = async () => {
@@ -188,7 +161,9 @@ export default function AdvancedSearch({}: Props) {
               <div className="mb-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                   <FilterDropdownBox
-                    option={websites}
+                    option={websites.map((obj) => {
+                      return { name: obj.name, abbreviation: obj.code };
+                    })}
                     selectedList={selectedWebsiteList}
                     selectCount={selectedWebsiteCount}
                     toggle={toggle}

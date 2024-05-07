@@ -578,6 +578,9 @@ export const useStore = create<State>((set, get) => ({
   },
   initWebsiteInformation: async () => {
     try {
+      if (get().websites.length > 0) {
+        return;
+      }
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
       );
@@ -606,6 +609,9 @@ export const useStore = create<State>((set, get) => ({
   },
   initSetInformation: async () => {
     try {
+      if (get().setList.length > 0) {
+        return;
+      }
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_SEARCH_URL}/sets`
       );

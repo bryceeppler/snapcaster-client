@@ -1,7 +1,6 @@
 import React from 'react';
 import { useStore } from '@/stores/store';
 import SingleCatalogRow from './SingleCatalogRow';
-import SingleCatalogRowSponsor from './SingleCatalogRowSponsor';
 import SingleCatalogCard from './SingleCatalogCard';
 import SingleResultsTable from './single-results-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -28,7 +27,7 @@ export default function SingleCatalog({}: Props) {
         </TabsList>
         <TabsContent value="list">
           {filteredSingleSearchResults.map((cardData, index) => (
-            <SingleCatalogRowSponsor cardData={cardData} key={index} />
+            <SingleCatalogRow cardData={cardData} key={index} />
           ))}
         </TabsContent>
         <TabsContent value="catalog">
