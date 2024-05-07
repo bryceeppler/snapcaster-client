@@ -6,8 +6,8 @@ type Props = {
 };
 
 import { useStore } from '@/stores/store';
-import { trackOutboundLink } from '../utils/analytics';
-import { Button } from './ui/button';
+import { trackOutboundLink } from '../../utils/analytics';
+import { Button } from '../ui/button';
 import Link from 'next/link';
 
 export default function SingleCatalogRow({ cardData }: Props) {

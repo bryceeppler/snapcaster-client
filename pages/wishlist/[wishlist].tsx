@@ -1,4 +1,4 @@
-import MainLayout from '@/components/MainLayout';
+import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -18,7 +18,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
-import LoadingPage from '@/components/LoadingPage';
+import LoadingPage from '@/components/loading-page';
 import Signin from '@/pages/signin';
 import useWishlistStore from '@/stores/wishlistStore';
 import { useEffect } from 'react';
@@ -54,11 +54,11 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useState } from 'react';
-import WishlistSearchbox from '@/components/WishlistSearchbox';
+import WishlistSearchbox from '@/components/wishlist-searchbox';
 import { WishlistCard } from '@/stores/wishlistStore';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import LoadingSpinner from '@/components/loading-spinner';
 
 export type Card = {
   name: string;

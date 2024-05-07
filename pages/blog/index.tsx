@@ -1,8 +1,8 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import BlogFeed from '@/components/BlogFeed';
+import BlogFeed from '@/components/blog-feed';
 
-import MainLayout from '@/components/MainLayout';
+import MainLayout from '@/components/main-page-layout';
 type Props = {};
 
 const Updates: NextPage<Props> = () => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '@/stores/store';
-import { Textarea } from './ui/textarea';
-import { Button } from './ui/button';
+import { Textarea } from '../ui/textarea';
+import { Button } from '../ui/button';
 type Props = {
   hasActiveSubscription: boolean;
 };

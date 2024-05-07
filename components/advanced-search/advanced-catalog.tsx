@@ -1,8 +1,7 @@
 import React from 'react';
-import AdvancedCatalogRow from './AdvancedCatalogRow';
+import AdvancedCatalogRow from './advanced-catalog-row';
 import { advancedUseStore } from '@/stores/advancedStore';
-import { Button } from './ui/button';
-import BackToTopButton from './back-to-top-btn';
+import BackToTopButton from '../ui/back-to-top-btn';
 type Props = {};
 
 export default function AdvancedCatalog({}: Props) {

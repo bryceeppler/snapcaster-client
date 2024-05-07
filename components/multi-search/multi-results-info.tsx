@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '@/stores/store';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 type Props = {};
 
 export default function MultiSearchResultsInfo({}: Props) {

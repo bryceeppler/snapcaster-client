@@ -1,7 +1,7 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import MainLayout from '@/components/MainLayout';
-import BlogFeed from '@/components/BlogFeed';
+import MainLayout from '@/components/main-page-layout';
+import BlogFeed from '@/components/blog-feed';
 type Props = {};
 
 const BuyersGuide: NextPage<Props> = () => {

@@ -4,9 +4,7 @@ import { IDataQualityData } from '@/pages/tools/scraper-report';
 type Props = {
   reports: IDataQualityData[];
 };
-const getColorFromPercentage = (value: number) => {
-  // 0-70: red, 70-90: yellow, 90-100: green
-};
+
 const DataQuality = ({ reports }: Props) => {
   return (
     <div className="w-full rounded bg-zinc-800  p-5 md:p-8">

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useStore } from '@/stores/store';
-import SingleCatalogRow from './SingleCatalogRow';
-import SingleCatalogCard from './SingleCatalogCard';
-import SingleResultsTable from './single-results-table';
+import SingleCatalogRow from './single-list-item';
+import SingleCatalogCard from './single-grid-item';
+import SingleResultsTable from './single-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import BackToTopButton from './back-to-top-btn';
+import BackToTopButton from '../ui/back-to-top-btn';
 type Props = {};
 
 export default function SingleCatalog({}: Props) {

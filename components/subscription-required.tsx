@@ -1,6 +1,6 @@
 import React from 'react';
-import MainLayout from '@/components/MainLayout';
-import SubscriptionCards from '@/components/SubscriptionCards';
+import MainLayout from '@/components/main-page-layout';
+import SubscriptionCards from '@/components/subscription-options';
 import PageTitle from './ui/page-title';
 
 type Props = {

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import React from 'react';
 import { AppProps } from 'next/app';
-import Layout from '@/components/Layout';
+import Layout from '@/components/ui/root-layout';
 import { initGA, logPageView } from '../utils/analytics';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/theme-provider';

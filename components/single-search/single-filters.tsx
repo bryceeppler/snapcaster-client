@@ -7,11 +7,11 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { ChevronDown } from 'lucide-react';
-import { Switch } from './ui/switch';
-import { Label } from './ui/label';
-import { Checkbox } from './ui/checkbox';
+import { Switch } from '../ui/switch';
+import { Label } from '../ui/label';
+import { Checkbox } from '../ui/checkbox';
 import { useStore } from '@/stores/store';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 type Props = {};
 
 const SingleSearchFilter = (props: Props) => {

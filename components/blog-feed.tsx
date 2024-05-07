@@ -1,21 +1,5 @@
-// title: "March Development Blog",
-// date: "March 1, 2022",
-// link: "/blog/march-dev-update",
-// description: "This month has been a significant one for Snapcaster! I've optimized the backend infrastructure, which has greatly improved both reliability and performance for searches. With these enhancements, developing new features has become much more straightforward. Additionally, we've introduced the Snapcaster Pro membership, providing an avenue for users to support the development and maintenance of Snapcaster. Moving forward, new features will primarily be exclusive to Pro members. We've already begun implementing some of these features, and users can anticipate seeing them evolve over time.",
-// image: "/1-wishlist.png",
-// imageAlt: "Wishlist feature",
-// imageWidth: 500,
-// imageHeight: 300,
-// features: [
-//   "Wishlists",
-//   "Advanced Search"
-// ],
-// featureDescriptions: [
-//   "Users can now create lists of cards for easy price checking. A price notification feature is in the works, which will allow users to be notified when a card matching their criteria becomes available.",
-//   "An advanced search feature now supports the majority of stores on Snapcaster."
-
 import Link from 'next/link';
-// ]
+
 export default function BlogFeed(props: {
   pagetitle: string;
   pageDescription: string;

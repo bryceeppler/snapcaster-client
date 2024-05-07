@@ -1,4 +1,4 @@
-import MainLayout from '@/components/MainLayout';
+import MainLayout from '@/components/main-page-layout';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -33,7 +33,7 @@ import dayjs from 'dayjs';
 import axiosInstance from '@/utils/axiosWrapper';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/en';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import LoadingSpinner from '@/components/loading-spinner';
 import LoginRequired from '@/components/login-required';
 import SubscriptionRequired from '@/components/subscription-required';
 import PageTitle from '@/components/ui/page-title';

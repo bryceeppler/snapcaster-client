@@ -1,6 +1,6 @@
-import MainLayout from '@/components/MainLayout';
+import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from './loading-spinner';
 
 type Props = {};
 
