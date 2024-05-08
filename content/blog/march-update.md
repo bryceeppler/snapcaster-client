@@ -23,7 +23,7 @@ Moving forward, new features will primarily be exclusive to Pro members. We've a
 - Users can now create lists of cards for easy price checking.
 - A price notification feature is in the works, which will allow users to be notified when a card matching their criteria becomes available.
 
-![Wishlist feature](/blog-images/thumbnail-march.png)
+![Wishlist feature](/blog-images/march-wishlist.png)
 
 ### Advanced Search
 
@@ -31,7 +31,7 @@ Moving forward, new features will primarily be exclusive to Pro members. We've a
 - Efforts are ongoing to expand this feature to include as many websites on Snapcaster as possible.
 - This tool enables users to filter by specific criteria, helping to exclude unwanted cards or discover deals on specific printings or art styles.
 
-![Advanced search feature](/blog-images/advanced.png)
+![Advanced search feature](/blog-images/march-advanced.png)
 
 ### 100 Card Multisearch
 

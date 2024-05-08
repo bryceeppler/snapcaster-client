@@ -20,7 +20,7 @@ We’ve also been hard at work setting up systems that will help us standardize 
 
 - Users can now switch between list, catalog/grid, and table views when performing single searches.
 
-![Wishlist feature](/blog-images/thumbnail-april.png)
+![Wishlist feature](/blog-images/april-single-search.png)
 
 ### Wish Lists
 
