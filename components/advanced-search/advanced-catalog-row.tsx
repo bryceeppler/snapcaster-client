@@ -77,11 +77,13 @@ export default function SingleCatalogRow({ cardData }: Props) {
 
             <div className=" flex  flex-wrap font-serif text-xs font-semibold">
               {cardData.website in promoMap && (
-                <div className="mb-1 mr-1 max-w-fit rounded-sm bg-gradient-to-tl from-rose-600 to-rose-800 px-1 text-center align-middle text-xs ">
-                  {`-${(
-                    (1 - promoMap[cardData.website]['discount']) *
-                    100
-                  ).toFixed(0)}% ${promoMap[cardData.website]['promoCode']}`}
+                <div className="mb-1 mr-1 max-w-fit rounded-sm bg-gradient-to-tl from-rose-600 to-rose-800 px-1 text-center align-middle lowercase">
+                  <p>
+                    {`-${(
+                      (1 - promoMap[cardData.website]['discount']) *
+                      100
+                    ).toFixed(0)}% ${promoMap[cardData.website]['promoCode']}`}
+                  </p>
                 </div>
               )}
               {cardData.promo == true && (

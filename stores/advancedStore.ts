@@ -48,8 +48,6 @@ export interface AdvancedSearchResult {
   goldenStampedSeries: boolean;
 }
 
-// const setList: Filter[] = [];
-
 const shopifyOnlySites = useStore.getState().websites.filter(function (item) {
   return item.shopify == true;
 });
@@ -413,6 +411,8 @@ export const advancedUseStore = create<State>((set, get) => ({
       artSeriesChecked: false,
       goldenStampedChecked: false,
       numberChecked: false,
+      promoPackChecked: false,
+      alternateArtJapaneseChecked: false,
       cardNumber: 0
     });
   },
