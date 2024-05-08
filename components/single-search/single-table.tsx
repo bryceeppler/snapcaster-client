@@ -49,7 +49,7 @@ const SingleResultsTable = (props: Props) => {
             <TableCell className="capitalize">{cardData.set}</TableCell>
             <TableCell>{findWebsiteNameByCode(cardData.website)}</TableCell>
             <TableCell>{cardData.condition}</TableCell>
-            <TableCell>{cardData.price}</TableCell>
+            <TableCell>{cardData.priceBeforeDiscount}</TableCell>
             <TableCell>
               <Link
                 href={cardData.link}
@@ -58,7 +58,9 @@ const SingleResultsTable = (props: Props) => {
                 className="w-full"
               >
                 <Button
-                  onClick={() => handleBuyClick(cardData.link, cardData.price)}
+                  onClick={() =>
+                    handleBuyClick(cardData.link, cardData.priceBeforeDiscount)
+                  }
                   className="w-full"
                 >
                   Buy
