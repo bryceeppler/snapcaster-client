@@ -1,11 +1,13 @@
 ---
 title: 'April Development Blog'
-date: '2024-04-30'
+date: '2024-04-1'
 author: 'Snapcaster Team'
 tags:
   - Development Update
   - Magic the Gathering
   - Features
+preview: "We've been working hard to add single search views, finish up wishlists and refine our advanced search feature. With the addition of Obsidian Games (Vernon) this month, we have now reached 70 active stores!"
+image: 'blog-images/april-thumbnail.png'
 ---
 
 We hope with the launch of the new premium features last month that our community has been able to further save on their MTG single purchases. Alongside these new features came a new set of system design considerations, performance improvements, UX changes, and various bug fixes.

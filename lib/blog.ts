@@ -8,7 +8,10 @@ const blogDirectory = path.join(process.cwd(), 'content/blog');
 interface BlogPostFrontmatter {
   title: string;
   date: string;
+  author: string;
   tags: string[];
+  preview: string;
+  image: string;
 }
 
 interface BlogPost {

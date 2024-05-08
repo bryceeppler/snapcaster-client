@@ -2,6 +2,7 @@
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import { getAllBlogPosts } from '@/lib/blog';
+import MainLayout from '@/components/main-page-layout';
 
 type BlogPostPreview = {
   slug: string;
@@ -9,6 +10,8 @@ type BlogPostPreview = {
     title: string;
     date: string;
     tags: string[];
+    preview: string;
+    image: string;
   };
 };
 
@@ -18,24 +21,36 @@ type BlogIndexProps = {
 
 const BlogIndex: React.FC<BlogIndexProps> = ({ posts }) => {
   return (
-    <div className="container">
-      <h1 className="text-3xl font-bold">Blog</h1>
-      {posts.map((post) => (
-        <div key={post.slug} className="mb-4">
-          <h2 className="text-2xl font-semibold">
-            <Link href={`/blog/${post.slug}`}>{post.data.title}</Link>
-          </h2>
-          <p className="text-gray-500">{post.data.date}</p>
-          <ul className="flex space-x-2">
-            {post.data.tags.map((tag, index) => (
-              <li key={index} className="rounded bg-blue-100 px-2 py-1">
-                {tag}
-              </li>
-            ))}
-          </ul>
+    <MainLayout>
+      <div className="container flex flex-col items-center">
+        <h1 className="mb-6 text-4xl font-bold">Blog</h1>
+        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+          {posts.map((post) => (
+            <Link
+              href={`/blog/${post.slug}`}
+              key={post.slug}
+              className="outlined-container mb-4 w-full max-w-2xl space-y-2 bg-primary p-6 text-primary-foreground transition-colors hover:bg-primary/60"
+            >
+              <h2 className="text-2xl font-semibold">{post.data.title}</h2>
+              <p className="text-secondary">{post.data.date}</p>
+              <ul className="flex flex-wrap gap-2">
+                {post.data.tags.map((tag, index) => (
+                  <li key={index} className="rounded bg-pink-500 px-2 py-1">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+              <img
+                src={post.data.image}
+                alt={post.data.title}
+                className="outlined-container h-60 w-full object-cover"
+              />
+              <p className="line-clamp-5">{post.data.preview}</p>
+            </Link>
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+    </MainLayout>
   );
 };
 

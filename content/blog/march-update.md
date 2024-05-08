@@ -1,11 +1,13 @@
 ---
 title: 'March Development Update'
-date: '2024-03-31'
+date: '2024-03-03'
 author: 'Snapcaster Team'
 tags:
   - Development Update
   - Magic the Gathering
   - Features
+preview: "This month has been a significant one for Snapcaster! I've optimized the backend infrastructure, which has greatly improved both reliability and performance for searches. With these enhancements out of the way, we can now focus on developing new features. Additionally, we've introduced the Snapcaster Pro membership, providing an avenue for users to support the development and maintenance of Snapcaster."
+image: 'blog-images/march-thumbnail.png'
 ---
 
 This month has been a significant one for Snapcaster! I've optimized the backend infrastructure, which has greatly improved both reliability and performance for searches. With these enhancements out of the way, we can now focus on developing new features. Additionally, we've introduced the Snapcaster Pro membership, providing an avenue for users to support the development and maintenance of Snapcaster.
