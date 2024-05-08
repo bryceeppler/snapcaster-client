@@ -28,28 +28,6 @@ type Props = {
   selectCount: number;
   toggle(field: string, category: string): void;
 };
-const frameworks = [
-  {
-    value: 'next.js',
-    label: 'Next.js'
-  },
-  {
-    value: 'sveltekit',
-    label: 'SvelteKit'
-  },
-  {
-    value: 'nuxt.js',
-    label: 'Nuxt.js'
-  },
-  {
-    value: 'remix',
-    label: 'Remix'
-  },
-  {
-    value: 'astro',
-    label: 'Astro'
-  }
-];
 
 export function FilterDropdownBox(props: Props) {
   const [open, setOpen] = React.useState(false);
@@ -95,7 +73,10 @@ export function FilterDropdownBox(props: Props) {
         </PopoverTrigger>
         <PopoverContent className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width]">
           <Command>
-            <CommandInput placeholder={`Search ${props.label}...`} />
+            <CommandInput
+              tabIndex={-1}
+              placeholder={`Search ${props.label}...`}
+            />
             <ScrollArea className=" h-80">
               <CommandEmpty>No {props.label} found.</CommandEmpty>
               <CommandGroup>
@@ -111,7 +92,6 @@ export function FilterDropdownBox(props: Props) {
                           // [state.abbreviation]: e.target.checked
                         });
                         props.toggle(state.abbreviation, props.label);
-                        // setOpen(false);
                       }}
                     >
                       <div className="flex">
