@@ -61,7 +61,9 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 className="w-full"
               >
                 <Button
-                  onClick={() => handleBuyClick(cardData.link, cardData.price)}
+                  onClick={() =>
+                    handleBuyClick(cardData.link, cardData.priceBeforeDiscount)
+                  }
                   className="w-full"
                 >
                   Buy

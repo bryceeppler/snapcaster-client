@@ -45,7 +45,7 @@ export default function SingleCatalogCard({ cardData }: Props) {
           {findWebsiteNameByCode(cardData.website)}
         </p>
         <p className="text-sm">{cardData.condition}</p>
-        <p className="text-sm font-bold">${cardData.price}</p>
+        <p className="text-sm font-bold">${cardData.priceBeforeDiscount}</p>
       </CardContent>
       <div className="flex-grow"></div>
       <CardFooter>
@@ -56,7 +56,9 @@ export default function SingleCatalogCard({ cardData }: Props) {
           className="w-full"
         >
           <Button
-            onClick={() => handleBuyClick(cardData.link, cardData.price)}
+            onClick={() =>
+              handleBuyClick(cardData.link, cardData.priceBeforeDiscount)
+            }
             className="w-full"
           >
             Buy
