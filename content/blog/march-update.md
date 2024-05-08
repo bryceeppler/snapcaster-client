@@ -1,5 +1,5 @@
 ---
-title: 'March Development Update'
+title: 'March Development Blog'
 date: '2024-03-03'
 author: 'Snapcaster Team'
 tags:
