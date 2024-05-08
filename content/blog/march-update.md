@@ -1,15 +1,12 @@
 ---
-title: '#1 March Development Blog'
+title: 'March Development Update'
 date: '2024-03-31'
 author: 'Snapcaster Team'
 tags:
-  - Snapcaster
   - Development Update
   - Magic the Gathering
   - Features
 ---
-
-# #1 March Development Blog
 
 This month has been a significant one for Snapcaster! I've optimized the backend infrastructure, which has greatly improved both reliability and performance for searches. With these enhancements out of the way, we can now focus on developing new features. Additionally, we've introduced the Snapcaster Pro membership, providing an avenue for users to support the development and maintenance of Snapcaster.
 
@@ -65,15 +62,3 @@ We've revisited our to-do list this month and added a substantial number of the 
 - North of Exile Games
 
 This development journey continues to be an exciting one, and your support, especially through the Pro membership, is invaluable to us. Stay tuned for more updates and enhancements as we continue to work on Snapcaster and introduce some cool features. Thank you for being a part of our community!
-
----
-
-### Updates Head Metadata
-
-**Title:** March Development Update  
-**Description:** Search Magic the Gathering cards across Canada
-
-**OG Title:** Snapcaster - Search Magic the Gathering cards across Canada  
-**OG Description:** Find Magic the Gathering singles and sealed product using Snapcaster. Search your favourite Canadian stores.  
-**OG URL:** [snapcaster.ca](https://snapcaster.ca)  
-**OG Type:** Website

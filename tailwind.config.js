@@ -20,6 +20,35 @@ module.exports = {
         center: true,
         padding: '2rem'
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            color: 'inherit', // Set text color to inherit
+            strong: {
+              color: 'inherit', // Ensure bold elements inherit parent color
+              fontWeight: 'bold' // Keep bold weight for emphasis
+            },
+            a: {
+              color: '#ec4899', // pink-500
+              '&:hover': {
+                color: '#fbcfe8' // pink-200
+              }
+            },
+            h1: {
+              color: 'inherit'
+            },
+            h2: {
+              color: 'inherit'
+            },
+            h3: {
+              color: 'inherit'
+            },
+            blockquote: {
+              borderLeftColor: '#fce7f3' // Adjust blockquote border
+            }
+          }
+        }
+      },
 
       colors: {
         border: 'hsl(var(--border))',
@@ -88,5 +117,9 @@ module.exports = {
       }
     }
   },
-  plugins: [require('tailwindcss-animate'), require('@tailwindcss/line-clamp')]
+  plugins: [
+    require('tailwindcss-animate'),
+    require('@tailwindcss/line-clamp'),
+    require('@tailwindcss/typography')
+  ]
 };
