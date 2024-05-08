@@ -11,9 +11,16 @@ import SingleSearchFilter from '@/components/single-search/single-filters';
 import PopularSearchCarousel from '@/components/popular-search-carousel';
 import { useEffect } from 'react';
 import AutoFillSearchBox from '@/components/autofill-searchbox';
-type Props = {};
+import { GetStaticProps } from 'next';
+import { getAllBlogPosts } from '@/lib/blog';
+import BlogFeed from '@/components/blog-feed';
+import type { BlogPostPreview } from '@/pages/blog';
 
-const Home: NextPage<Props> = () => {
+type Props = {
+  posts: BlogPostPreview[];
+};
+
+const Home: NextPage<Props> = ({ posts }: Props) => {
   const {
     singleSearchResults,
     singleSearchResultsLoading,
@@ -55,6 +62,16 @@ const Home: NextPage<Props> = () => {
               <div>
                 <div className="p-4" />
                 <PopularSearchCarousel />
+              </div>
+            )}
+          {Object.keys(singleSearchResults).length === 0 &&
+            !singleSearchStarted && (
+              <div>
+                <div className="p-4" />
+                <div className="text-2xl font-bold">Recent Posts </div>
+                <div className="p-4" />
+
+                <BlogFeed posts={posts} />
               </div>
             )}
 
@@ -107,4 +124,13 @@ const HomeHead = () => {
       <link rel="icon" href="/favicon.ico" />
     </Head>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const posts = getAllBlogPosts();
+  return {
+    props: {
+      posts
+    }
+  };
 };

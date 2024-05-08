@@ -1,74 +1,35 @@
 import Link from 'next/link';
+import type { BlogPostPreview } from '@/pages/blog';
+type Props = {
+  posts: BlogPostPreview[];
+};
 
-export default function BlogFeed(props: {
-  pagetitle: string;
-  pageDescription: string;
-  blogs: {
-    title: string;
-    date: string;
-    link: string;
-    description: string;
-    image?: string;
-    imageAlt: string;
-  }[];
-}) {
+export default function BlogFeed({ posts }: Props) {
   return (
-    <section className="flex w-full justify-center py-6 md:py-12">
-      <div className="container grid items-start gap-6">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-bold tracking-tighter">
-            {props.pagetitle}
-          </h2>
-          <p className="text-zinc-500 dark:text-zinc-400">
-            {props.pageDescription}
-          </p>
-        </div>
-        <div className="flex flex-col gap-4">
-          {props.blogs.map((blog, index) => (
-            <Link
-              href={blog.link}
-              key={index}
-              className="outlined-container flex w-full flex-col overflow-hidden p-4 text-left hover:cursor-pointer hover:border-zinc-500 hover:bg-zinc-900 md:gap-2 md:p-8"
-            >
-              {blog.image && (
-                <>
-                  <div className="relative h-64 w-full overflow-hidden rounded-lg">
-                    {/* Image fills the wrapper */}
-                    <img
-                      src={blog.image}
-                      alt={blog.imageAlt}
-                      style={{
-                        objectFit: 'cover',
-                        flexShrink: '0',
-                        // minWidth: '100%',
-                        minHeight: '100%'
-                      }}
-                    />
-                  </div>
-                  <div className="p-2"></div>
-                </>
-              )}
-              {/* TITLE + DATE */}
-              <div className="flex items-start justify-between">
-                <div className="space-y-1">
-                  <h3 className="overflow-hidden overflow-ellipsis font-semibold tracking-tight">
-                    {blog.title}
-                  </h3>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {blog.date}
-                  </p>
-                </div>
-              </div>
-              {/* DESCRIPTION */}
-              <div className="text-sm text-white">
-                <div className="line-clamp-2">
-                  <p className="">{blog.description}</p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
+    <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      {posts.map((post) => (
+        <Link
+          href={`/blog/${post.slug}`}
+          key={post.slug}
+          className="outlined-container mb-4 w-full max-w-2xl space-y-2 bg-primary p-6 text-primary-foreground transition-colors hover:bg-primary/60"
+        >
+          <h2 className="text-2xl font-semibold">{post.data.title}</h2>
+          <p className="text-secondary">{post.data.date}</p>
+          <ul className="flex flex-wrap gap-2">
+            {post.data.tags.map((tag, index) => (
+              <li key={index} className="rounded bg-pink-500 px-2 py-1">
+                {tag}
+              </li>
+            ))}
+          </ul>
+          <img
+            src={post.data.image}
+            alt={post.data.title}
+            className="outlined-container h-60 w-full object-cover"
+          />
+          <p className="line-clamp-5 text-left">{post.data.preview}</p>
+        </Link>
+      ))}
+    </div>
   );
 }
