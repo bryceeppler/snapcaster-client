@@ -1,12 +1,12 @@
 ---
-title: 'Magic: The Gathering Border and Frame Types Guide'
+title: 'MTG Border and Frame Types Guide'
 date: '2024-05-01'
 author: 'Snapcaster Team'
 tags:
   - MTG Card Guide
   - Border Frames
   - Art Series
-preview: 'Learn about the various border and frame types in Magic: The Gathering, from Full Art to Art Series.'
+preview: 'Learn about the various border and frame types in MTG.'
 image: '/buyers-guide-images/plains-full-art.jpg'
 ---
 

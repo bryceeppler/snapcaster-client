@@ -1,12 +1,12 @@
 ---
-title: 'Magic: The Gathering Pre-release and Promo Cards Guide'
+title: 'MTG Pre-release and Promo Cards Guide'
 date: '2024-05-01'
 author: 'Snapcaster Team'
 tags:
   - Prerelease
   - Promo Cards
   - MTG Card Guide
-preview: 'A comprehensive guide to Pre-release and Promo cards, explaining how to obtain them and highlighting their unique features.'
+preview: 'A comprehensive guide to Pre-release and Promo cards.'
 image: '/buyers-guide-images/vannifar-prerelease.jpg'
 ---
 

@@ -23,8 +23,8 @@ const components: { title: string; href: string; description: string }[] = [
       'Stay up to date with the latest Snapcaster news, updates, and features.'
   },
   {
-    title: 'Card Guide',
-    href: '/card-guide',
+    title: 'Guides',
+    href: '/guides',
     description: 'A shopping guide for all the different types of Magic cards.'
   },
   {

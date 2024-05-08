@@ -1,5 +1,5 @@
 ---
-title: 'Magic: The Gathering Foil Types Guide'
+title: 'MTG Foil Types Guide'
 date: '2024-05-01'
 author: 'Snapcaster Team'
 tags:

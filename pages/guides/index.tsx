@@ -33,6 +33,8 @@ const GuideIndex: React.FC<GuideIndexProps> = ({ posts }) => {
             >
               <h2 className="text-2xl font-semibold">{post.data.title}</h2>
               <p className="text-secondary">{post.data.date}</p>
+              <p className="line-clamp-5">{post.data.preview}</p>
+
               <ul className="flex flex-wrap gap-2">
                 {post.data.tags.map((tag, index) => (
                   <li key={index} className="rounded bg-pink-500 px-2 py-1">
@@ -45,7 +47,6 @@ const GuideIndex: React.FC<GuideIndexProps> = ({ posts }) => {
                 alt={post.data.title}
                 className="outlined-container mx-auto max-h-64 w-fit"
               />
-              <p className="line-clamp-5">{post.data.preview}</p>
             </Link>
           ))}
         </div>

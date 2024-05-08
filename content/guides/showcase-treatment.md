@@ -1,5 +1,5 @@
 ---
-title: 'Magic: The Gathering Showcase Frame Guide'
+title: 'MTG Showcase Frame Guide'
 date: '2024-05-01'
 author: 'Snapcaster Team'
 tags:

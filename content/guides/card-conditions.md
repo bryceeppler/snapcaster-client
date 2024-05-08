@@ -1,11 +1,11 @@
 ---
-title: 'Magic: The Gathering Card Conditions Guide'
+title: 'MTG Card Conditions Guide'
 date: '2024-05-01'
 author: 'Snapcaster Team'
 tags:
   - Card Condition
   - MTG Card Guide
-preview: 'A comprehensive guide to card conditions from Near Mint to Damaged, including images and descriptions.'
+preview: 'A comprehensive guide to card conditions from Near Mint to Damaged.'
 image: '/buyers-guide-images/thawing-near-mint.jpg'
 ---
 
