@@ -11,7 +11,7 @@ image: '/buyers-guide-images/flaxen-storybook.jpg'
 
 ## Storybook Frame
 
-![Flaxen Intruder (ELB) - Showcase Storybook Frame](/buyers-guide-images/flaxen-storybook.jpg)max-w-[200px] mx-auto rounded-lg
+![Flaxen Intruder (ELB) - Showcase Storybook Frame](/buyers-guide-images/flaxen-storybook.jpg)
 
 The Storybook frame is heavily inspired by fairy tales and folklore. The key features include an old-fashioned storybook aesthetic with a vine-like frame surrounding the card art. These cards often include flavor text that reads like a storybook excerpt.
 
