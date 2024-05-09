@@ -72,7 +72,6 @@ export interface Website {
 
 const websites: Website[] = [];
 const websiteList: Filter[] = [];
-const setList: Filter[] = [];
 const promoMap: PromoMap = {};
 
 export type FilterTag = {
@@ -107,7 +106,6 @@ type State = {
   sponsor: string;
   websites: Website[];
   promoMap: PromoMap;
-  setList: Filter[];
 
   singleSearchStarted: boolean;
   sortMultiSearchVariants: (
@@ -174,7 +172,6 @@ type State = {
   singleSearchPriceList?: CardPrices;
 
   initWebsiteInformation: () => Promise<void>;
-  initSetInformation: () => Promise<void>;
 };
 
 export const useStore = create<State>((set, get) => ({
@@ -272,7 +269,6 @@ export const useStore = create<State>((set, get) => ({
 
   websites: websites,
   promoMap: promoMap,
-  setList: setList,
   singleSearchInput: '',
   setSingleSearchInput: (singleSearchInput: string) =>
     set({ singleSearchInput }),
@@ -605,20 +601,6 @@ export const useStore = create<State>((set, get) => ({
       });
     } catch {
       console.log('getWebsiteInformation or promoMap ERROR');
-    }
-  },
-  initSetInformation: async () => {
-    try {
-      if (get().setList.length > 0) {
-        return;
-      }
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_SEARCH_URL}/sets`
-      );
-      let data = response.data;
-      set({ setList: data.setList });
-    } catch {
-      console.log('getSetInformation ERROR');
     }
   }
 }));

@@ -57,11 +57,6 @@ const websiteList: Filter[] = shopifyOnlySites.map((item) => ({
   abbreviation: item.code
 }));
 
-const setList: Filter[] = useStore.getState().setList.map((item) => ({
-  name: item.name,
-  abbreviation: item.abbreviation
-}));
-
 const conditionList: Filter[] = [
   {
     name: 'Near Mint',
@@ -246,6 +241,7 @@ const showcaseTreatmentList: Filter[] = [
 
 type State = {
   advancedSearchResults: AdvancedSearchResult[];
+  setList: Filter[];
 
   sortByList: Filter[];
   selectedSortBy: string;
@@ -273,7 +269,6 @@ type State = {
   selectedShowcaseTreatmentCount: number;
   selectedShowcaseTreatmentList: string[];
 
-  setList: Filter[];
   selectedSetCount: number;
   selectedSetList: string[];
 
@@ -298,7 +293,7 @@ type State = {
   updateSortByFilter: (sortValue: string) => void;
   resetFilters: () => void;
   fetchAdvancedSearchResults: (searchText: string) => Promise<void>;
-  // initSetInformation: () => Promise<void>;
+  initSetInformation: () => Promise<void>;
 };
 
 export const advancedUseStore = create<State>((set, get) => ({
@@ -312,7 +307,7 @@ export const advancedUseStore = create<State>((set, get) => ({
   selectedWebsiteList: [],
   selectedWebsiteCount: 0,
 
-  setList: setList,
+  setList: [],
   selectedSetList: [],
   selectedSetCount: 0,
 
@@ -609,6 +604,30 @@ export const advancedUseStore = create<State>((set, get) => ({
       set({ advancedSearchLoading: false });
     } catch {
       set({ advancedSearchLoading: false });
+    }
+  },
+  initSetInformation: async () => {
+    console.log('getSetInformation');
+    try {
+      if (get().setList.length > 0) {
+        return;
+      }
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_SEARCH_URL}/sets`
+      );
+      let data = response.data;
+      let result = [];
+      for (const item of data.setList) {
+        result.push({
+          name: item.name,
+          abbreviation: item.abbreviation
+        });
+      }
+      set({ setList: result });
+      console.log(get().setList);
+    } catch (error) {
+      console.log('getSetInformation ERROR');
+      console.log(error);
     }
   }
 }));

@@ -62,15 +62,17 @@ export default function AdvancedSearch({}: Props) {
     sortByList,
     selectedSortBy,
 
+    setList,
     advancedSearchInput,
     updateSortByFilter,
     setAdvancedSearchInput,
     resetFilters,
     toggle,
+    initSetInformation,
     fetchAdvancedSearchResults
   } = advancedUseStore();
 
-  const { initWebsiteInformation, initSetInformation, websites } = useStore();
+  const { initWebsiteInformation, websites } = useStore();
 
   const [showFilters, setShowFilters] = React.useState(false);
 
@@ -173,7 +175,7 @@ export default function AdvancedSearch({}: Props) {
                     label="Websites"
                   ></FilterDropdownBox>
                   <FilterDropdownBox
-                    option={useStore.getState().setList}
+                    option={setList}
                     selectedList={selectedSetList}
                     selectCount={selectedSetCount}
                     toggle={toggle}
