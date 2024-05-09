@@ -22,9 +22,9 @@ const MultiTcgSearchbox = (props: Props) => {
     process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
 
   return (
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-col gap-2 sm:flex-row">
       <Select value={tcg} onValueChange={(value: Tcgs) => setTcg(value)}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-full sm:w-[180px]">
           <SelectValue placeholder="MTG" />
         </SelectTrigger>
         <SelectContent>
