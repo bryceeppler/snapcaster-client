@@ -1,32 +1,33 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
-
-export type PopularCard = {
-  name: string;
-  image_url: string;
-};
+import type { Website } from '@/types/index';
 
 type GlobalState = {
-  popularCards: PopularCard[];
-  popularCardsLoading: boolean;
-  fetchPopularCards: () => void;
+  websites: Website[];
+  getWebsiteName: (websiteCode: string) => string;
+  fetchWebsites: () => Promise<void>;
 };
 
 const useGlobalStore = create<GlobalState>((set, get) => ({
-  popularCards: [],
-  popularCardsLoading: false,
-  fetchPopularCards: async () => {
+  websites: [],
+  getWebsiteName: (websiteCode: string) => {
+    const website = get().websites.find((w) => w.code === websiteCode);
+    return website ? website.name : '';
+  },
+  fetchWebsites: async () => {
     try {
-      set({ popularCardsLoading: true });
-      console.log('fetching popular cards');
+      if (get().websites.length > 0) {
+        return;
+      }
       const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_ANALYTICS_URL}/search/popular`
+        `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
       );
-      set({ popularCards: response.data });
-      console.log('fetched popular cards');
-      set({ popularCardsLoading: false });
-    } catch (error) {
-      console.error(error);
+      response.data.websiteList.sort((a: Website, b: Website) =>
+        a.name.localeCompare(b.name)
+      );
+      set({ websites: response.data.websiteList });
+    } catch {
+      console.log('getWebsiteInformation or promoMap ERROR');
     }
   }
 }));

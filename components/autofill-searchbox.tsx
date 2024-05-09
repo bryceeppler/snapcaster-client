@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-// import { useStore } from '@/stores/store';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
-import { useOutsideClick } from '@/stores/store';
+import { useDebounceCallback } from 'usehooks-ts';
+
 type Props = {
   searchFunction(searchText: string): void;
   setSearchInput(searchText: string): void;
@@ -21,25 +21,34 @@ export default function SingleSearchbox(props: Props) {
   const [selectedAutocompleteIndex, setSelectedAutocompleteIndex] =
     useState(-1);
   const searchRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<HTMLDivElement>(null);
+  const fetchAutocompleteResults = useCallback(
+    (value: string) => {
+      fetch(props.autocompleteEndpoint + value)
+        .then((response) => response.json())
+        .then((data) => {
+          setAutocompleteResults(data.data);
+          setShowAutocomplete(true);
+          setSelectedAutocompleteIndex(-1);
+        })
+        .catch((error) => {
+          console.error('Error fetching autocomplete results: ', error);
+        });
+    },
+    [props.autocompleteEndpoint]
+  );
+
+  const debouncedFetchResults = useDebounceCallback(
+    fetchAutocompleteResults,
+    500
+  );
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     props.setSearchInput(value);
 
-    if (value.trim().length > 0) {
-      // add artificial delay, only send on odd-numbered keystrokes
-      if (value.length > 2 && value.length % 2 != 0) {
-        fetch(props.autocompleteEndpoint + value)
-          .then((response) => response.json())
-          .then((data) => {
-            setAutocompleteResults(data.data);
-            setShowAutocomplete(true);
-            setSelectedAutocompleteIndex(-1);
-          })
-          .catch((error) => {
-            console.error('Error fetching autocomplete results: ', error);
-          });
-      }
+    if (value.trim().length > 2) {
+      debouncedFetchResults(value);
     } else {
       setAutocompleteResults([]);
       setShowAutocomplete(false);
@@ -126,12 +135,24 @@ export default function SingleSearchbox(props: Props) {
     }
   };
 
-  const ref = useOutsideClick(() => {
-    setShowAutocomplete(false);
-  });
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      autocompleteRef.current &&
+      !autocompleteRef.current.contains(event.target as Node)
+    ) {
+      setShowAutocomplete(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="w-full" ref={ref}>
+    <div className="w-full">
       <div className="relative">
         <form onSubmit={handleFormSubmit}>
           <Input
@@ -150,7 +171,10 @@ export default function SingleSearchbox(props: Props) {
             <Search size={15} />
           </button>
           {showAutocomplete && (
-            <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-950 py-1 shadow-md">
+            <div
+              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-950 py-1 shadow-md"
+              ref={autocompleteRef}
+            >
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div

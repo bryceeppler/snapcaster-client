@@ -4,8 +4,9 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { Inter } from 'next/font/google';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-
+const inter = Inter({ subsets: ['latin'] });
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive>
@@ -45,7 +46,8 @@ const CommandInput = React.forwardRef<
       ref={ref}
       className={cn(
         'flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
-        className
+        className,
+        inter.className
       )}
       {...props}
     />
@@ -62,7 +64,8 @@ const CommandList = React.forwardRef<
     ref={ref}
     className={cn(
       'max-h-[300px] overflow-y-auto  overflow-x-hidden',
-      className
+      className,
+      inter.className
     )}
     {...props}
   />

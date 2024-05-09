@@ -42,9 +42,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
           </div>
           <div className="col-span-4 mt-2 hidden sm:grid">
             <div className="flex flex-col items-end">
-              <div className="text-lg font-bold">
-                ${cardData.priceBeforeDiscount}
-              </div>
+              <div className="text-lg font-bold">${cardData.price}</div>
               <div className="flex flex-row space-x-2">
                 {cardData.foil && (
                   <div className="text-sm font-extrabold text-pink-500">
@@ -61,9 +59,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 className="w-full"
               >
                 <Button
-                  onClick={() =>
-                    handleBuyClick(cardData.link, cardData.priceBeforeDiscount)
-                  }
+                  onClick={() => handleBuyClick(cardData.link, cardData.price)}
                   className="w-full"
                 >
                   Buy

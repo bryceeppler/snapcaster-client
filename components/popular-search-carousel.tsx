@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import useGlobalStore from '@/stores/globalStore';
+import usePopularCardsStore from '@/stores/popularCardsStore';
 
 import {
   Carousel,
@@ -57,7 +57,7 @@ const PopularSearchCarousel = () => {
     }
   ];
 
-  const { popularCards, popularCardsLoading } = useGlobalStore();
+  const { popularCards, popularCardsLoading } = usePopularCardsStore();
 
   return (
     <div className="px-12 py-6">

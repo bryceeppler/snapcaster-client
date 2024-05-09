@@ -10,43 +10,46 @@ import { ChevronDown } from 'lucide-react';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
-import { useStore } from '@/stores/store';
 import { Button } from '../ui/button';
+import useSingleStore from '@/stores/singleSearchStore';
 type Props = {};
 
+const conditionLabels = ['NM', 'LP', 'PL', 'MP', 'HP', 'DMG', 'SCAN'];
+
 const SingleSearchFilter = (props: Props) => {
+  const [showFilters, setShowFilters] = React.useState(false);
+
   const {
-    showSingleSearchFilters,
-    toggleShowSingleSearchFilters,
-    toggleSingleSearchCondition,
-    singleSearchConditions,
-    resetSingleSearchFilters,
-    singleSearchFoil,
-    toggleSingleSearchOrderBy,
-    toggleSingleSearchFoil,
-    setSingleSearchOrderBy,
-    setSingleSearchOrder,
-    singleSearchOrderBy,
-    singleSearchOrder
-  } = useStore();
-  const conditionCheckboxes = [
-    { label: 'NM', value: false },
-    { label: 'LP', value: false },
-    { label: 'PL', value: false },
-    { label: 'MP', value: false },
-    { label: 'HP', value: false },
-    { label: 'DMG', value: false },
-    { label: 'SCAN', value: false }
-  ];
+    sortOrder,
+    sortField,
+    conditions,
+    foil,
+    toggleFoil,
+    toggleSortOrder,
+    setSortField,
+    setConditions,
+    clearFilters
+  } = useSingleStore();
+
+  // Handle toggling checkbox selection for conditions
+  const handleConditionToggle = (condition: string) => {
+    let newConditions = [...conditions];
+    if (newConditions.includes(condition)) {
+      newConditions = newConditions.filter((item) => item !== condition);
+    } else {
+      newConditions.push(condition);
+    }
+    setConditions(newConditions);
+  };
   return (
     <div>
-      {showSingleSearchFilters && (
+      {showFilters && (
         <div className="outlined-container flex flex-col items-center gap-3 p-3">
           <div className="flex flex-row gap-3">
             <Select
-              value={singleSearchOrderBy}
+              value={sortField}
               onValueChange={(value) => {
-                setSingleSearchOrderBy(value);
+                setSortField(value);
               }}
             >
               <SelectTrigger className="w-[120px] sm:w-[180px]">
@@ -61,14 +64,14 @@ const SingleSearchFilter = (props: Props) => {
             </Select>
 
             <Button
-              onClick={toggleSingleSearchOrderBy}
+              onClick={toggleSortOrder}
               className="flex items-center justify-center p-2"
               aria-label="Toggle sort order"
               variant="outline"
             >
               <ChevronDown
                 className={`transition-transform duration-200 ${
-                  singleSearchOrder === 'desc' ? 'rotate-180' : 'rotate-0'
+                  sortOrder === 'desc' ? 'rotate-180' : 'rotate-0'
                 }`}
                 aria-hidden="true"
               />
@@ -78,36 +81,27 @@ const SingleSearchFilter = (props: Props) => {
           <div className="flex items-center space-x-2">
             <Switch
               id="foil-only"
-              checked={singleSearchFoil}
-              onCheckedChange={toggleSingleSearchFoil}
+              checked={foil}
+              onCheckedChange={toggleFoil}
             />
             <Label htmlFor="foil-only">Foil only</Label>
           </div>
-          {/* Condition selector */}
+          {/* Condition selector checkboxes */}
           <div className="grid max-w-md grid-cols-2 gap-x-10 gap-y-2">
-            {conditionCheckboxes.map((condition) => {
-              return (
-                <div
-                  className="flex items-center space-x-2"
-                  key={condition.label}
-                >
-                  <Checkbox
-                    id={condition.label}
-                    checked={
-                      singleSearchConditions[condition.label.toLowerCase()]
-                    }
-                    onCheckedChange={() =>
-                      toggleSingleSearchCondition(condition.label.toLowerCase())
-                    }
-                  />
-                  <Label htmlFor={condition.label}>{condition.label}</Label>
-                </div>
-              );
-            })}
+            {conditionLabels.map((condition) => (
+              <div key={condition} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`condition-${condition}`}
+                  checked={conditions.includes(condition)}
+                  onCheckedChange={() => handleConditionToggle(condition)}
+                />
+                <Label htmlFor={`condition-${condition}`}>{condition}</Label>
+              </div>
+            ))}
           </div>
           <Button
             onClick={() => {
-              resetSingleSearchFilters();
+              clearFilters();
             }}
           >
             Clear filters
@@ -117,11 +111,11 @@ const SingleSearchFilter = (props: Props) => {
       <Button
         variant="ghost"
         onClick={() => {
-          toggleShowSingleSearchFilters();
+          setShowFilters(!showFilters);
         }}
         className="my-2"
       >
-        {showSingleSearchFilters ? 'Hide Filters' : 'Show Filters'}
+        {showFilters ? 'Hide Filters' : 'Show Filters'}
       </Button>
     </div>
   );
