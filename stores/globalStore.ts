@@ -4,11 +4,16 @@ import type { Website } from '@/types/index';
 
 type GlobalState = {
   websites: Website[];
+  getWebsiteName: (websiteCode: string) => string;
   fetchWebsites: () => Promise<void>;
 };
 
 const useGlobalStore = create<GlobalState>((set, get) => ({
   websites: [],
+  getWebsiteName: (websiteCode: string) => {
+    const website = get().websites.find((w) => w.code === websiteCode);
+    return website ? website.name : '';
+  },
   fetchWebsites: async () => {
     try {
       if (get().websites.length > 0) {

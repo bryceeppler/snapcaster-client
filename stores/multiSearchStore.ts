@@ -1,7 +1,7 @@
 import { WebsiteMapping } from '@/types/website';
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
-import type { Tcgs } from '@/types';
+import type { Tcgs, MultiSearchProduct, Product } from '@/types';
 
 type MultiSearchState = {
   mode: 'search' | 'results';
@@ -9,6 +9,9 @@ type MultiSearchState = {
   tcg: Tcgs;
   searchInput: string;
   searchQuery: string;
+  loading: boolean;
+  results: MultiSearchProduct[];
+  selectedVariants: Product[];
 
   handleSubmit: () => void;
   setSearchInput: (value: string) => void;
@@ -22,9 +25,27 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   tcg: 'mtg',
   searchInput: '',
   searchQuery: '',
+  loading: false,
+  results: [],
+  selectedVariants: [],
 
-  handleSubmit: () => {
+  handleSubmit: async () => {
+    set({ loading: true });
     set({ searchQuery: get().searchInput });
+    try {
+      const cards = get().searchInput.split('\n').join(',');
+      const url = `${
+        process.env.NEXT_PUBLIC_CATALOG_URL
+      }/api/v1/search_multiple?tcg=${get().tcg}&websites=${get()
+        .selectedWebsites.map((v) => v.code)
+        .join(',')}&names=${cards}`;
+      const response = await axiosInstance.get(url);
+
+      set({ mode: 'results' });
+      set({ results: response.data.data });
+    } catch (error) {
+      console.error(error);
+    }
   },
   setSearchInput: (value: string) => {
     set({ searchInput: value });
