@@ -10,30 +10,23 @@ import MainLayout from '@/components/main-page-layout';
 import SingleSearchFilter from '@/components/single-search/single-filters';
 import PopularSearchCarousel from '@/components/popular-search-carousel';
 import { useEffect } from 'react';
-import AutoFillSearchBox from '@/components/autofill-searchbox';
 import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
 import BlogFeed from '@/components/blog-feed';
 import type { BlogPostPreview } from '@/pages/blog';
+import MultiTcgSearchbox from '@/components/single-search/multitcg-searchbox';
+import useSingleStore from '@/stores/singleSearchStore';
 
 type Props = {
   posts: BlogPostPreview[];
 };
 
 const Home: NextPage<Props> = ({ posts }: Props) => {
-  const {
-    singleSearchResults,
-    singleSearchResultsLoading,
-    singleSearchStarted,
-    singleSearchInput,
-    setSingleSearchInput,
-    fetchSingleSearchResults,
-    initWebsiteInformation
-  } = useStore();
+  const { initWebsiteInformation } = useStore();
+
+  const { results, searchStarted, loading } = useSingleStore();
 
   const { fetchPopularCards } = useGlobalStore();
-  const autocompleteEndpoint =
-    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
 
   useEffect(() => {
     fetchPopularCards();
@@ -44,59 +37,34 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
     <>
       <HomeHead />
       <MainLayout>
-        <div className="container flex w-full flex-col justify-center text-center">
-          {Object.keys(singleSearchResults).length === 0 &&
-            !singleSearchStarted && (
-              <div>
-                <div />
-                <Homebanner />
-              </div>
-            )}
-          <div className="mt-6">
-            <AutoFillSearchBox
-              searchFunction={fetchSingleSearchResults}
-              setSearchInput={setSingleSearchInput}
-              searchInput={singleSearchInput}
-              autocompleteEndpoint={autocompleteEndpoint}
-            />
-          </div>
-          {Object.keys(singleSearchResults).length === 0 &&
-            !singleSearchStarted && (
-              <div>
-                <div className="p-4" />
-                <PopularSearchCarousel />
-              </div>
-            )}
-          {Object.keys(singleSearchResults).length === 0 &&
-            !singleSearchStarted && (
-              <div>
-                <div className="p-4" />
-                <div className="text-2xl font-bold">Recent Posts </div>
-                <div className="p-4" />
+        <div className="container flex w-full flex-col justify-center gap-8 text-center">
+          {!searchStarted && <Homebanner />}
+          <MultiTcgSearchbox />
+          {!searchStarted && <PopularSearchCarousel />}
+          {!searchStarted && (
+            <div className="flex flex-col gap-4">
+              <h3 className="text-2xl font-bold">Recent Posts</h3>
+              <BlogFeed posts={posts} />
+            </div>
+          )}
 
-                <BlogFeed posts={posts} />
-              </div>
-            )}
-
-          {singleSearchResultsLoading && (
+          {loading && (
             <div className="flex items-center justify-center pt-5">
               <LoadingSpinner />
             </div>
           )}
-          {Object.keys(singleSearchResults).length > 0 && (
+          {Object.keys(results).length > 0 && (
             <>
               <SingleSearchInfo />
               <SingleSearchFilter />
               <SingleCatalog />
             </>
           )}
-          {singleSearchStarted &&
-            !singleSearchResultsLoading &&
-            Object.keys(singleSearchResults).length === 0 && (
-              <div className="flex items-center justify-center pt-5">
-                <p className="text-zinc-500">No results found</p>
-              </div>
-            )}
+          {searchStarted && !loading && Object.keys(results).length === 0 && (
+            <div className="flex items-center justify-center pt-5">
+              <p className="text-zinc-500">No results found</p>
+            </div>
+          )}
         </div>
       </MainLayout>
     </>
