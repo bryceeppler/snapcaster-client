@@ -83,7 +83,6 @@ export type CarouselItemType = {
   image_url: string;
 };
 type State = {
-  sponsor: string;
   websites: Website[];
   promoMap: PromoMap;
 
@@ -121,8 +120,6 @@ type State = {
 };
 
 export const useStore = create<State>((set, get) => ({
-  sponsor: 'reddragon',
-
   getWebsiteNameByCode: (code: string) => {
     return get().websites.find((w) => w.code === code)?.name || '';
   },

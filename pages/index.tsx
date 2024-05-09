@@ -4,7 +4,7 @@ import Homebanner from '@/components/homebanner';
 import LoadingSpinner from '@/components/loading-spinner';
 import SingleSearchInfo from '@/components/single-search/single-results-info';
 import { useStore } from '@/stores/store';
-import useGlobalStore from '@/stores/globalStore';
+import usePopularCardsStore from '@/stores/popularCardsStore';
 import SingleCatalog from '@/components/single-search/single-results';
 import MainLayout from '@/components/main-page-layout';
 import SingleSearchFilter from '@/components/single-search/single-filters';
@@ -25,8 +25,7 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
   const { initWebsiteInformation } = useStore();
 
   const { results, searchStarted, loading } = useSingleStore();
-
-  const { fetchPopularCards } = useGlobalStore();
+  const { fetchPopularCards } = usePopularCardsStore();
 
   useEffect(() => {
     fetchPopularCards();

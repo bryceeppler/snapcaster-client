@@ -11,7 +11,7 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 
 export default function SingleCatalogRow({ cardData }: Props) {
-  const { websites, sponsor, promoMap } = useStore();
+  const { websites, promoMap } = useStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

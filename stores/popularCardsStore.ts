@@ -6,13 +6,13 @@ export type PopularCard = {
   image_url: string;
 };
 
-type GlobalState = {
+type PopularCardsState = {
   popularCards: PopularCard[];
   popularCardsLoading: boolean;
   fetchPopularCards: () => void;
 };
 
-const useGlobalStore = create<GlobalState>((set, get) => ({
+const usePopularCardsStore = create<PopularCardsState>((set, get) => ({
   popularCards: [],
   popularCardsLoading: false,
   fetchPopularCards: async () => {
@@ -31,4 +31,4 @@ const useGlobalStore = create<GlobalState>((set, get) => ({
   }
 }));
 
-export default useGlobalStore;
+export default usePopularCardsStore;
