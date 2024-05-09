@@ -9,7 +9,7 @@ import AdvancedCheckBox from '@/components/advanced-search/advanced-checkbox';
 import AutoFillSearchBox from '@/components/autofill-searchbox';
 
 import useAuthStore from '@/stores/authStore';
-import { advancedUseStore, useOutsideClick } from '@/stores/advancedStore';
+import { advancedUseStore } from '@/stores/advancedStore';
 
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
@@ -78,9 +78,21 @@ export default function AdvancedSearch({}: Props) {
 
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
   const [showSortBy, setShoeSoryBy] = React.useState(false);
-  const sortRadioRef = useOutsideClick(() => {
-    setShoeSoryBy(false);
-  });
+
+  const sortRef = React.useRef<HTMLDivElement>(null);
+
+  const handleClickOutsideSort = (event: MouseEvent) => {
+    if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+      setShoeSoryBy(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutsideSort);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideSort);
+    };
+  }, []);
 
   useEffect(() => {
     initWebsiteInformation();
@@ -252,7 +264,7 @@ export default function AdvancedSearch({}: Props) {
 
           {/*Container 3 - Sort, Reset Filters, and Search Buttons*/}
           <div className=" flex flex-col gap-2 sm:flex-row sm:justify-end">
-            <div ref={sortRadioRef} className="relative min-w-36">
+            <div ref={sortRef} className="relative min-w-36">
               <Button
                 onClick={() => {
                   setShoeSoryBy(!showSortBy);

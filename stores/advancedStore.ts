@@ -1,26 +1,6 @@
 import { create } from 'zustand';
-import { useRef, useEffect } from 'react';
 import { useStore } from '@/stores/store';
 import axiosInstance from '@/utils/axiosWrapper';
-
-export const useOutsideClick = (callback: () => void) => {
-  const sortRadioRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        sortRadioRef.current &&
-        !sortRadioRef.current.contains(event.target as Node)
-      ) {
-        callback();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [callback]);
-  return sortRadioRef;
-};
 
 export interface Filter {
   name: string;
@@ -607,7 +587,6 @@ export const advancedUseStore = create<State>((set, get) => ({
     }
   },
   initSetInformation: async () => {
-    console.log('getSetInformation');
     try {
       if (get().setList.length > 0) {
         return;
@@ -624,7 +603,6 @@ export const advancedUseStore = create<State>((set, get) => ({
         });
       }
       set({ setList: result });
-      console.log(get().setList);
     } catch (error) {
       console.log('getSetInformation ERROR');
       console.log(error);
