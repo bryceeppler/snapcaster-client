@@ -28,7 +28,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
     <div className="outlined-container mx-auto my-2 flex max-w-3xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4">
       <div className="flex w-full gap-4">
         <div className="w-20">
-          <CardImage imageUrl={cardData.s3_image_url} alt={cardData.name} />
+          <CardImage imageUrl={cardData.image} alt={cardData.name} />
         </div>
         <div className="grid w-full grid-cols-9">
           <div className="col-span-9 mt-2 sm:col-span-5">
