@@ -14,6 +14,7 @@ type MultiSearchState = {
   selectedVariants: {
     [key: string]: Product;
   };
+  setMode: (mode: 'search' | 'results') => void;
   selectVariant: (key: string, product: Product) => void;
   handleSubmit: () => void;
   setSearchInput: (value: string) => void;
@@ -41,17 +42,24 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
       };
     });
   },
+  setMode: (mode: 'search' | 'results') => {
+    set({ mode });
+  },
   handleSubmit: async () => {
     set({ loading: true });
     set({ searchQuery: get().searchInput });
 
     try {
       // Split by newlines to handle multiple lines and encode each name
-      const encodedNames = get()
+      // Split by newlines and collect all card names
+      const cardNames = get()
         .searchInput.split('\n')
-        .map(encodeURIComponent)
-        .join(',');
+        .map((name) => name.trim());
 
+      // JSON encode the array and then URL encode it
+      const encodedNames = encodeURIComponent(JSON.stringify(cardNames));
+
+      // Construct the URL
       const url = `${
         process.env.NEXT_PUBLIC_CATALOG_URL
       }/api/v1/search_multiple?tcg=${get().tcg}&websites=${get()
@@ -62,8 +70,10 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
 
       set({ mode: 'results' });
       set({ results: response.data.data });
+      set({ loading: false });
     } catch (error) {
       console.error(error);
+      set({ loading: false });
     }
   },
   setSearchInput: (value: string) => {

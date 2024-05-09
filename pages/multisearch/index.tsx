@@ -101,7 +101,7 @@ export default function Multisearch({}: Props) {
 }
 
 const SummaryView = () => {
-  const { selectedVariants, results } = useMultiSearchStore();
+  const { selectedVariants, results, setMode } = useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
 
   // Group the selected variants by website and calculate the total price, excluding any variants with invalid prices
@@ -132,9 +132,8 @@ const SummaryView = () => {
   }, 0);
 
   return (
-    <div className="outlined-container flex flex-col gap-4 p-4">
-      <p>Summary</p>
-      <div className="flex flex-col gap-2">
+    <div className="outlined-container flex h-fit w-full flex-col gap-4 p-4 text-left md:max-w-md">
+      <div className="flex flex-col gap-4">
         <p>
           Found {results.filter((result) => result.results.length > 0).length}/
           {results.length} cards
@@ -143,9 +142,9 @@ const SummaryView = () => {
 
         {/* List of selected stores and their total prices, skipping entries with no valid prices */}
         <ScrollArea className="min-h-[100px] w-full rounded-md border p-4">
-          <span className="text-xs">Selected Websites</span>
+          <span className="text-sm">Selected Websites</span>
           <Table>
-            <TableBody className="text-xs">
+            <TableBody className="text-left text-xs">
               {Object.values(websiteSummary).map((website, index) => (
                 <TableRow key={index}>
                   <TableCell>{website.name}</TableCell>
@@ -160,6 +159,13 @@ const SummaryView = () => {
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
+      <Button
+        onClick={() => {
+          setMode('search');
+        }}
+      >
+        Reset
+      </Button>
     </div>
   );
 };
@@ -172,7 +178,7 @@ const ResultsView = ({
   getWebsiteName: (code: string) => string;
 }) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       {results.map((result) => (
         <MultiSearchProduct key={result.name} product={result} />
       ))}
@@ -216,7 +222,13 @@ const MultiSearchProduct = ({ product }: { product: any }) => {
           </div>
           {/* dropdown to browse variants */}
 
-          <Button>Buy</Button>
+          <Button
+            onClick={() => {
+              window.open(selectedVariant.link, '_blank');
+            }}
+          >
+            Buy
+          </Button>
           <ScrollArea className="h-[300px] w-full rounded-md border p-4">
             <Table>
               <TableCaption>Variants for {product.name}</TableCaption>
