@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ScrollBar } from '@/components/ui/scroll-area';
+import { Loader2 } from 'lucide-react';
 
 import MainLayout from '@/components/main-page-layout';
 import useAuthStore from '@/stores/authStore';
@@ -32,6 +33,7 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Scroll } from 'lucide-react';
+import BackToTopButton from '@/components/ui/back-to-top-btn';
 
 type Props = {};
 
@@ -86,13 +88,81 @@ export default function Multisearch({}: Props) {
         {mode === 'results' && (
           <div className="container w-full flex-1 flex-col items-center justify-center text-center">
             <PageTitle title="Multi Search" />
-            <ResultsView results={results} getWebsiteName={getWebsiteName} />
+            <div className="flex flex-col gap-4 md:flex-row">
+              <ResultsView results={results} getWebsiteName={getWebsiteName} />
+              <SummaryView />
+            </div>
           </div>
         )}
+        <BackToTopButton />
       </MainLayout>
     </>
   );
 }
+
+const SummaryView = () => {
+  const { selectedVariants, results } = useMultiSearchStore();
+  const { getWebsiteName } = useGlobalStore();
+
+  // Group the selected variants by website and calculate the total price, excluding any variants with invalid prices
+  const websiteSummary = Object.values(selectedVariants).reduce(
+    (acc, variant: any) => {
+      const { website, price } = variant;
+
+      // Check if price is a valid number
+      if (typeof price === 'number' && !isNaN(price)) {
+        if (!acc[website]) {
+          acc[website] = {
+            name: getWebsiteName(website),
+            totalPrice: 0
+          };
+        }
+        acc[website].totalPrice += price;
+      }
+      return acc;
+    },
+    {} as Record<string, { name: string; totalPrice: number }>
+  );
+
+  // Calculate the overall total, skipping invalid prices
+  const overallTotal = Object.values(selectedVariants).reduce((acc, item) => {
+    return typeof item.price === 'number' && !isNaN(item.price)
+      ? acc + item.price
+      : acc;
+  }, 0);
+
+  return (
+    <div className="outlined-container flex flex-col gap-4 p-4">
+      <p>Summary</p>
+      <div className="flex flex-col gap-2">
+        <p>
+          Found {results.filter((result) => result.results.length > 0).length}/
+          {results.length} cards
+        </p>
+        <p>Total: ${overallTotal.toFixed(2)}</p>
+
+        {/* List of selected stores and their total prices, skipping entries with no valid prices */}
+        <ScrollArea className="min-h-[100px] w-full rounded-md border p-4">
+          <span className="text-xs">Selected Websites</span>
+          <Table>
+            <TableBody className="text-xs">
+              {Object.values(websiteSummary).map((website, index) => (
+                <TableRow key={index}>
+                  <TableCell>{website.name}</TableCell>
+                  <TableCell className="text-right">
+                    ${website.totalPrice.toFixed(2)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="vertical" />
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
+    </div>
+  );
+};
 
 const ResultsView = ({
   results,
@@ -103,11 +173,6 @@ const ResultsView = ({
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      {/* <p>Found 24/25 cards</p> */}
-      <p>
-        Found {results.filter((result) => result.results.length > 0).length}/
-        {results.length} cards
-      </p>
       {results.map((result) => (
         <MultiSearchProduct key={result.name} product={result} />
       ))}
@@ -121,6 +186,13 @@ const MultiSearchProduct = ({ product }: { product: any }) => {
   );
 
   const { getWebsiteName } = useGlobalStore();
+  const { selectVariant } = useMultiSearchStore();
+
+  useEffect(() => {
+    if (selectedVariant) {
+      selectVariant(product.name, selectedVariant);
+    }
+  }, [selectedVariant]);
 
   return (
     <>
@@ -163,7 +235,9 @@ const MultiSearchProduct = ({ product }: { product: any }) => {
                   product.results.map((variant: any) => (
                     <TableRow
                       key={variant._id}
-                      onClick={() => setSelectedVariant(variant)}
+                      onClick={() => {
+                        setSelectedVariant(variant);
+                      }}
                       className="cursor-pointer text-left"
                     >
                       <TableCell className="w-[100px]">
@@ -214,6 +288,7 @@ const SearchView = ({
   selectedWebsites: any[];
   onWebsiteSelect: (value: any) => void;
 }) => {
+  const { loading } = useMultiSearchStore();
   return (
     <div className="outlined-container flex w-full flex-col gap-4 p-6">
       <div className="flex flex-col gap-4 sm:flex-row">
@@ -251,8 +326,18 @@ const SearchView = ({
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
       />
-      <Button onClick={handleSubmit} disabled={searchInput.length === 0}>
-        Submit
+      <Button
+        onClick={handleSubmit}
+        disabled={searchInput.length === 0 || loading}
+      >
+        {loading ? (
+          <>
+            <Loader2 className="animate-spin" size={16} />
+            <span className="ml-2">Loading</span>
+          </>
+        ) : (
+          'Submit'
+        )}
       </Button>
     </div>
   );

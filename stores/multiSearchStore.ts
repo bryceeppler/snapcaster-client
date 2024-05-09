@@ -11,8 +11,10 @@ type MultiSearchState = {
   searchQuery: string;
   loading: boolean;
   results: MultiSearchProduct[];
-  selectedVariants: Product[];
-
+  selectedVariants: {
+    [key: string]: Product;
+  };
+  selectVariant: (key: string, product: Product) => void;
   handleSubmit: () => void;
   setSearchInput: (value: string) => void;
   setTcg: (value: Tcgs) => void;
@@ -27,18 +29,35 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   searchQuery: '',
   loading: false,
   results: [],
-  selectedVariants: [],
-
+  selectedVariants: {},
+  selectVariant: (key: string, product: Product) => {
+    set((state) => {
+      return {
+        ...state,
+        selectedVariants: {
+          ...state.selectedVariants,
+          [key]: product
+        }
+      };
+    });
+  },
   handleSubmit: async () => {
     set({ loading: true });
     set({ searchQuery: get().searchInput });
+
     try {
-      const cards = get().searchInput.split('\n').join(',');
+      // Split by newlines to handle multiple lines and encode each name
+      const encodedNames = get()
+        .searchInput.split('\n')
+        .map(encodeURIComponent)
+        .join(',');
+
       const url = `${
         process.env.NEXT_PUBLIC_CATALOG_URL
       }/api/v1/search_multiple?tcg=${get().tcg}&websites=${get()
         .selectedWebsites.map((v) => v.code)
-        .join(',')}&names=${cards}`;
+        .join(',')}&names=${encodedNames}`;
+
       const response = await axiosInstance.get(url);
 
       set({ mode: 'results' });
