@@ -19,7 +19,7 @@ import {
 import PageTitle from '@/components/ui/page-title';
 import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
-import { WebsiteCombobox } from '@/components/multi-search-2/multi-website-combobox';
+import { WebsiteCombobox } from '@/components/multi-search/multi-website-combobox';
 import { Tcgs } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -32,7 +32,6 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Scroll } from 'lucide-react';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 
 type Props = {};
@@ -43,7 +42,6 @@ export default function Multisearch({}: Props) {
     selectedWebsites,
     tcg,
     searchInput,
-    searchQuery,
     results,
     handleSubmit,
     setSearchInput,
