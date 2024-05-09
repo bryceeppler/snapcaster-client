@@ -23,6 +23,8 @@ import { useStore } from '@/stores/store';
 type Props = {};
 
 export default function AdvancedSearch({}: Props) {
+  const autocompleteEndpoint =
+    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
   const {
     advancedSearchLoading,
     advancedSearchResults,
@@ -139,6 +141,7 @@ export default function AdvancedSearch({}: Props) {
               searchFunction={fetchAdvancedSearchResults}
               setSearchInput={setAdvancedSearchInput}
               searchInput={advancedSearchInput}
+              autocompleteEndpoint={autocompleteEndpoint}
             ></AutoFillSearchBox>
             <Button
               className="flex justify-between rounded bg-transparent outline outline-1 outline-muted lg:w-48"
