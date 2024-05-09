@@ -107,7 +107,6 @@ type State = {
   websites: Website[];
   promoMap: PromoMap;
 
-  singleSearchStarted: boolean;
   sortMultiSearchVariants: (
     card: MultiSearchCardState,
     orderBy: string
@@ -118,10 +117,6 @@ type State = {
   resetMultiSearch: () => void;
   selectAllMultiSearchResults: () => void;
 
-  singleSearchInput: string;
-  setSingleSearchInput: (singleSearchInput: string) => void;
-  singleSearchQuery: string;
-  setSingleSearchQuery: (singleSearchQuery: string) => void;
   getWebsiteNameByCode: (code: string) => string;
   multiSearchInput: string;
   multiSearchQuery: string;
@@ -129,36 +124,9 @@ type State = {
   toggleMultiSearchSelectedWebsites: (website: string) => void;
   setMultiSearchInput: (multiSearchInput: string) => void;
   setMultiSearchQuery: (multiSearchQuery: string) => void;
-  singleSearchOrderBy: string;
-  setSingleSearchOrderBy: (singleSearchOrderBy: string) => void;
-  toggleSingleSearchOrderBy: () => void;
-  singleSearchOrder: string;
-  setSingleSearchOrder: (singleSearchOrder: string) => void;
   toggleSelectMultiSearchCard: (cardName: string) => void;
-  singleSearchResults: SingleSearchResult[];
-  setSingleSearchResults: (singleSearchResults: SingleSearchResult[]) => void;
-
-  showSingleSearchFilters: boolean;
-  toggleShowSingleSearchFilters: () => void;
-  filteredSingleSearchResults: SingleSearchResult[];
-  setFilteredSingleSearchResults: (
-    filteredSingleSearchResults: SingleSearchResult[]
-  ) => void;
-  resetSingleSearchFilters: () => void;
-  toggleSingleSearchCondition: (condition: string) => void;
   fetchMultiSearchResults: (multiSearchInput: string) => Promise<void>;
-  toggleSingleSearchFoil: () => void;
 
-  singleSearchConditions: {
-    [key: string]: boolean;
-  };
-
-  singleSearchFoil: boolean;
-
-  singleSearchResultsLoading: boolean;
-  setSingleSearchResultsLoading: (singleSearchResultsLoading: boolean) => void;
-  fetchSingleSearchResults: (searchInput: string) => Promise<void>;
-  filterSingleSearchResults: () => void;
   multiSearchMode: string;
   toggleMultiSearchSelectAllStores: () => void;
   multiSearchResultsLoading: boolean;
@@ -169,23 +137,12 @@ type State = {
     variant: SingleSearchResult
   ) => void;
 
-  singleSearchPriceList?: CardPrices;
-
   initWebsiteInformation: () => Promise<void>;
 };
 
 export const useStore = create<State>((set, get) => ({
   sponsor: 'reddragon',
-  toggleSingleSearchOrderBy: () => {
-    const order = get().singleSearchOrder;
-    if (order === 'asc') {
-      get().setSingleSearchOrder('desc');
-      return;
-    }
-    get().setSingleSearchOrder('asc');
-  },
-  singleSearchStarted: false,
-  singleSearchPriceList: undefined,
+
   getWebsiteNameByCode: (code: string) => {
     return get().websites.find((w) => w.code === code)?.name || '';
   },
@@ -269,51 +226,12 @@ export const useStore = create<State>((set, get) => ({
 
   websites: websites,
   promoMap: promoMap,
-  singleSearchInput: '',
-  setSingleSearchInput: (singleSearchInput: string) =>
-    set({ singleSearchInput }),
-  showSingleSearchFilters: false,
   multiSearchInput: '',
   multiSearchQuery: '',
   setMultiSearchInput: (multiSearchInput: string) => set({ multiSearchInput }),
   setMultiSearchQuery: (multiSearchQuery: string) => set({ multiSearchQuery }),
-  toggleShowSingleSearchFilters: () =>
-    set({ showSingleSearchFilters: !get().showSingleSearchFilters }),
-  singleSearchQuery: '',
-
-  singleSearchConditions: {
-    nm: true,
-    lp: true,
-    pl: true,
-    mp: true,
-    hp: true,
-    dmg: true,
-    scan: true,
-    scn: true
-  },
-
-  singleSearchFoil: false,
-  toggleSingleSearchFoil: () => {
-    set({ singleSearchFoil: !get().singleSearchFoil });
-    // call filter function
-    get().filterSingleSearchResults();
-  },
-
-  setSingleSearchQuery: (singleSearchQuery: string) =>
-    set({ singleSearchQuery }),
-  singleSearchResults: [],
-  filteredSingleSearchResults: [],
-  setFilteredSingleSearchResults: (
-    filteredSingleSearchResults: SingleSearchResult[]
-  ) => set({ filteredSingleSearchResults }),
-  setSingleSearchResults: (singleSearchResults: SingleSearchResult[]) =>
-    set({ singleSearchResults }),
-  singleSearchResultsLoading: false,
 
   multiSearchResultsLoading: false,
-  setSingleSearchResultsLoading: (singleSearchResultsLoading: boolean) =>
-    set({ singleSearchResultsLoading }),
-
   fetchMultiSearchResults: async (multiSearchInput: string) => {
     set({ multiSearchResultsLoading: true });
     const selectedWebsites = get().multiSearchSelectedWebsites;
@@ -385,127 +303,7 @@ export const useStore = create<State>((set, get) => ({
   multiSearchResults: [],
   filteredMultiSearchResults: [],
 
-  fetchSingleSearchResults: async (searchInput: string) => {
-    set({ singleSearchStarted: true });
-    set({ singleSearchResultsLoading: true });
-    const response = await axiosInstance.post(
-      `${process.env.NEXT_PUBLIC_SEARCH_URL}/single`,
-      {
-        cardName: searchInput.trim()
-      }
-    );
-    for (const item of response.data) {
-      item.priceBeforeDiscount = item.price;
-      if (item.website in get().promoMap) {
-        item.price = (
-          item.price * get().promoMap[item.website]['discount']
-        ).toFixed(2);
-      }
-    }
-    const results = response.data;
-    // sort results by ascending price
-    // results = [SingleSearchResult, SingleSearchResult, ...]
-    // SingleSearchResult = { name: string, link: string, image: string, set: string, condition: string, foil: boolean, price: number, website: string }
-    results.sort((a: SingleSearchResult, b: SingleSearchResult) => {
-      return a.price - b.price;
-    });
-
-    set({ filteredSingleSearchResults: results });
-    set({ singleSearchResults: results });
-    set({ singleSearchResultsLoading: false });
-    set({ singleSearchQuery: searchInput });
-  },
-
   multiSearchMode: 'search',
-  filterSingleSearchResults: () => {
-    const conditions = get().singleSearchConditions;
-    const foil = get().singleSearchFoil;
-    const results = get().singleSearchResults;
-    const orderBy = get().singleSearchOrderBy;
-    const order = get().singleSearchOrder;
-    const filteredResults = results.filter((result: SingleSearchResult) => {
-      return (
-        conditions[result.condition.toLowerCase()] &&
-        (foil ? result.foil : true)
-      );
-    });
-    // sort by orderBy in order
-    filteredResults.sort((a: SingleSearchResult, b: SingleSearchResult) => {
-      if (orderBy === 'price') {
-        if (order === 'asc') {
-          return a.price - b.price;
-        } else {
-          return b.price - a.price;
-        }
-      } else if (orderBy === 'name') {
-        if (order === 'asc') {
-          return a.name.localeCompare(b.name);
-        } else {
-          return b.name.localeCompare(a.name);
-        }
-      } else if (orderBy === 'set') {
-        if (order === 'asc') {
-          return a.set.localeCompare(b.set);
-        } else {
-          return b.set.localeCompare(a.set);
-        }
-      } else if (orderBy === 'website') {
-        if (order === 'asc') {
-          return a.website.localeCompare(b.website);
-        } else {
-          return b.website.localeCompare(a.website);
-        }
-      } else {
-        return 0;
-      }
-    });
-
-    set({ filteredSingleSearchResults: filteredResults });
-  },
-
-  toggleSingleSearchCondition: (condition: string) => {
-    // toggle the condition in singleSearchConditions
-    set({
-      singleSearchConditions: {
-        ...get().singleSearchConditions,
-        [condition]: !get().singleSearchConditions[condition]
-      }
-    });
-
-    // call filterSingleSearchResults
-    get().filterSingleSearchResults();
-  },
-
-  resetSingleSearchFilters: () => {
-    // set all conditions to true
-    set({
-      singleSearchConditions: {
-        nm: true,
-        lp: true,
-        pl: true,
-        mp: true,
-        hp: true,
-        dmg: true,
-        scan: true,
-        scn: true
-      }
-    });
-    set({ singleSearchFoil: false });
-    set({ singleSearchOrderBy: 'price' });
-    set({ singleSearchOrder: 'asc' });
-    get().filterSingleSearchResults();
-  },
-
-  singleSearchOrder: 'asc',
-  singleSearchOrderBy: 'price',
-  setSingleSearchOrder: (singleSearchOrder: string) => {
-    set({ singleSearchOrder });
-    get().filterSingleSearchResults();
-  },
-  setSingleSearchOrderBy: (singleSearchOrderBy: string) => {
-    set({ singleSearchOrderBy });
-    get().filterSingleSearchResults();
-  },
 
   multiSearchSelectedWebsites: [],
   toggleMultiSearchSelectedWebsites: (website: string) => {
