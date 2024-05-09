@@ -54,34 +54,6 @@ const websites: Website[] = [];
 const websiteList: Filter[] = [];
 const promoMap: PromoMap = {};
 
-export type FilterTag = {
-  name: string;
-  displayName: string;
-  selected: boolean;
-};
-
-export type PriceListEntry = {
-  price: number;
-  website: string;
-  foil: boolean;
-  condition: string;
-};
-
-export type CardPrices = {
-  image: string;
-  max: number;
-  min: number;
-  avg: number;
-  foil_max?: number;
-  foil_min?: number;
-  foil_avg?: number;
-  priceList: PriceListEntry[];
-  date: string;
-};
-export type CarouselItemType = {
-  name: string;
-  image_url: string;
-};
 type State = {
   websites: Website[];
   promoMap: PromoMap;

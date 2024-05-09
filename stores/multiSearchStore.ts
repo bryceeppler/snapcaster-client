@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Tcgs } from '@/types/index';
+
 const initialConditionLabels = ['NM', 'LP', 'PL', 'MP', 'HP', 'DMG', 'SCAN'];
 
 type SingleSearchState = {
