@@ -22,25 +22,33 @@ export default function SingleSearchbox(props: Props) {
     useState(-1);
   const searchRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<HTMLDivElement>(null);
+  const fetchAutocompleteResults = useCallback(
+    (value: string) => {
+      fetch(props.autocompleteEndpoint + value)
+        .then((response) => response.json())
+        .then((data) => {
+          setAutocompleteResults(data.data);
+          setShowAutocomplete(true);
+          setSelectedAutocompleteIndex(-1);
+        })
+        .catch((error) => {
+          console.error('Error fetching autocomplete results: ', error);
+        });
+    },
+    [props.autocompleteEndpoint]
+  );
+
+  const debouncedFetchResults = useDebounceCallback(
+    fetchAutocompleteResults,
+    500
+  );
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     props.setSearchInput(value);
 
-    if (value.trim().length > 0) {
-      // add artificial delay, only send on odd-numbered keystrokes
-      if (value.length > 2 && value.length % 2 != 0) {
-        fetch(props.autocompleteEndpoint + value)
-          .then((response) => response.json())
-          .then((data) => {
-            setAutocompleteResults(data.data);
-            setShowAutocomplete(true);
-            setSelectedAutocompleteIndex(-1);
-          })
-          .catch((error) => {
-            console.error('Error fetching autocomplete results: ', error);
-          });
-      }
+    if (value.trim().length > 2) {
+      debouncedFetchResults(value);
     } else {
       setAutocompleteResults([]);
       setShowAutocomplete(false);
