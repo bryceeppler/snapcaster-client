@@ -1,130 +1,59 @@
+import { WebsiteMapping } from '@/types/website';
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
-import type { Tcgs } from '@/types/index';
+import type { Tcgs } from '@/types';
 
-const initialConditionLabels = ['NM', 'LP', 'PL', 'MP', 'HP', 'DMG', 'SCAN'];
-
-type SingleSearchState = {
+type MultiSearchState = {
+  mode: 'search' | 'results';
+  selectedWebsites: WebsiteMapping[];
+  tcg: Tcgs;
   searchInput: string;
   searchQuery: string;
-  results: any[];
-  filteredResults: any[];
-  loading: boolean;
-  tcg: Tcgs;
-  searchStarted: boolean;
-  conditions: string[];
-  sortField: string;
-  sortOrder: 'asc' | 'desc';
-  foil: boolean;
 
-  setSearchInput: (input: string) => void;
-  setTcg: (tcg: Tcgs) => void;
-  setConditions: (conditions: string[]) => void;
-  setSortField: (field: string) => void;
-  toggleSortOrder: () => void;
-  toggleFoil: () => void;
-  clearFilters: () => void;
-  fetchCards: () => Promise<void>;
+  handleSubmit: () => void;
+  setSearchInput: (value: string) => void;
+  setTcg: (value: Tcgs) => void;
+  onWebsiteSelect: (value: WebsiteMapping) => void;
 };
 
-/**
- * Zustand store for the single search page, including input, results, filtering, and sorting state
- */
-const useSingleStore = create<SingleSearchState>((set, get) => ({
+const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
+  mode: 'search',
+  selectedWebsites: [],
+  tcg: 'mtg',
   searchInput: '',
   searchQuery: '',
-  results: [],
-  filteredResults: [],
-  loading: false,
-  searchStarted: false,
-  tcg: 'mtg',
-  conditions: initialConditionLabels,
-  sortField: 'price',
-  sortOrder: 'asc',
-  foil: false,
 
-  setSearchInput: (input: string) => {
-    set({ searchInput: input });
+  handleSubmit: () => {
+    set({ searchQuery: get().searchInput });
   },
-  setTcg: (tcg: Tcgs) => {
-    set({ tcg });
+  setSearchInput: (value: string) => {
+    set({ searchInput: value });
   },
-  setConditions: (conditions: string[]) => {
-    set({ conditions });
-    applyFilters();
+  setTcg: (value: Tcgs) => {
+    set({ tcg: value });
   },
-  setSortField: (field: string) => {
-    set({ sortField: field });
-    applyFilters();
-  },
-  toggleSortOrder: () => {
-    set({ sortOrder: get().sortOrder === 'asc' ? 'desc' : 'asc' });
-    applyFilters();
-  },
-  toggleFoil: () => {
-    set({ foil: !get().foil });
-    applyFilters();
-  },
-  clearFilters: () => {
-    set({
-      conditions: initialConditionLabels,
-      sortField: 'price',
-      sortOrder: 'asc',
-      foil: false,
-      filteredResults: get().results
-    });
-  },
-  fetchCards: async () => {
-    try {
-      set({ loading: true, searchStarted: true });
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search/?tcg=${
-          get().tcg
-        }&name=${get().searchInput}`
+  onWebsiteSelect: (value: WebsiteMapping) => {
+    set((state) => {
+      // Find the index of the website by its code
+      const index = state.selectedWebsites.findIndex(
+        (v) => v.code === value.code
       );
-      set({ searchQuery: get().searchInput });
-      set({ results: response.data.data, filteredResults: response.data.data });
-      set({ loading: false });
-    } catch (error) {
-      console.error(error);
-    }
+
+      // If the website is found, remove it from the list
+      if (index > -1) {
+        return {
+          ...state,
+          selectedWebsites: state.selectedWebsites.filter((_, i) => i !== index)
+        };
+      }
+
+      // Otherwise, add it to the list
+      return {
+        ...state,
+        selectedWebsites: [...state.selectedWebsites, value]
+      };
+    });
   }
 }));
 
-function applyFilters() {
-  const { results, conditions, sortField, sortOrder, foil } =
-    useSingleStore.getState();
-
-  // Apply filtering based on conditions and foil status
-  let filtered = results.filter((result) => {
-    const matchesConditions =
-      conditions.length === 0 || conditions.includes(result.condition);
-
-    // Normalize the `foil` value to treat all truthy values as `true`
-    const resultFoil = Boolean(result.foil);
-    const matchesFoil = foil ? resultFoil === true : true;
-
-    return matchesConditions && matchesFoil;
-  });
-
-  // Sort based on the selected field and order
-  filtered.sort((a, b) => {
-    let comparison = 0;
-
-    // Check if both items have the sort field
-    if (a[sortField] === undefined || b[sortField] === undefined) {
-      // Items without the sorting field will be placed at the end
-      return a[sortField] === undefined ? 1 : -1;
-    }
-
-    if (a[sortField] < b[sortField]) comparison = -1;
-    if (a[sortField] > b[sortField]) comparison = 1;
-
-    return sortOrder === 'asc' ? comparison : -comparison;
-  });
-
-  // Update the filtered results
-  useSingleStore.setState({ filteredResults: filtered });
-}
-
-export default useSingleStore;
+export default useMultiSearchStore;

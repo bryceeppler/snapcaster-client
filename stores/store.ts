@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
+import type { Website } from '@/types/index';
 
 export interface PromoInformation {
   promoCode: string;
@@ -38,17 +39,6 @@ export type MultiSearchCardState = {
   selectedVariant: SingleSearchResult;
   selected: boolean;
 };
-
-export interface Website {
-  name: string;
-  code: string;
-  url: string;
-  shopify: boolean;
-  backend: string;
-  image: string;
-  promoCode: string;
-  discount: number;
-}
 
 const websites: Website[] = [];
 const websiteList: Filter[] = [];

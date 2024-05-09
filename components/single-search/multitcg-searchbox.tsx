@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select';
 import useSingleStore from '@/stores/singleSearchStore';
 
-import type { Tcgs } from '@/stores/singleSearchStore';
+import type { Tcgs } from '@/types/index';
 
 type Props = {};
 
