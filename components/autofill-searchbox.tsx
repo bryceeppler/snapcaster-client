@@ -7,14 +7,13 @@ type Props = {
   searchFunction(searchText: string): void;
   setSearchInput(searchText: string): void;
   searchInput: string;
+  autocompleteEndpoint: string;
 };
 interface AutocompleteResult {
   name: string;
   oracle_id: string;
 }
 export default function SingleSearchbox(props: Props) {
-  const autocompleteEndpoint =
-    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
   const [autocompleteResults, setAutocompleteResults] = useState<
     AutocompleteResult[]
   >([]);
@@ -30,7 +29,7 @@ export default function SingleSearchbox(props: Props) {
     if (value.trim().length > 0) {
       // add artificial delay, only send on odd-numbered keystrokes
       if (value.length > 2 && value.length % 2 != 0) {
-        fetch(autocompleteEndpoint + value)
+        fetch(props.autocompleteEndpoint + value)
           .then((response) => response.json())
           .then((data) => {
             setAutocompleteResults(data.data);

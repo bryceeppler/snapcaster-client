@@ -32,6 +32,8 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
   } = useStore();
 
   const { fetchPopularCards } = useGlobalStore();
+  const autocompleteEndpoint =
+    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
 
   useEffect(() => {
     fetchPopularCards();
@@ -55,6 +57,7 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
               searchFunction={fetchSingleSearchResults}
               setSearchInput={setSingleSearchInput}
               searchInput={singleSearchInput}
+              autocompleteEndpoint={autocompleteEndpoint}
             />
           </div>
           {Object.keys(singleSearchResults).length === 0 &&
