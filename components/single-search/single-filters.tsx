@@ -108,14 +108,19 @@ const SingleSearchFilter = (props: Props) => {
           </Button>
         </div>
       )}
+
       <Button
-        variant="ghost"
+        className="mx-auto my-2 flex justify-between rounded bg-transparent outline outline-1 outline-muted lg:w-48"
         onClick={() => {
           setShowFilters(!showFilters);
         }}
-        className="my-2"
       >
-        {showFilters ? 'Hide Filters' : 'Show Filters'}
+        {showFilters ? 'Hide filters' : 'Show filters'}
+        <ChevronDown
+          className={`h-4 w-4 transform transition-all ${
+            showFilters ? 'rotate-180' : ''
+          }`}
+        />
       </Button>
     </div>
   );
