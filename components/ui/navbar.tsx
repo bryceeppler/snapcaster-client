@@ -111,7 +111,7 @@ export default function Navbar() {
             </Button>
           </Link>
           {/* Wishlists */}
-          <Link href="/wishlist" as="/wishlist">
+          {/* <Link href="/wishlist" as="/wishlist">
             <Button
               variant="ghost"
               className="block w-full text-left text-sm"
@@ -121,7 +121,7 @@ export default function Navbar() {
             >
               Wishlists
             </Button>
-          </Link>
+          </Link> */}
           {/* Blog */}
           <Link href="/blog" as="/blog">
             <Button
@@ -147,11 +147,11 @@ export default function Navbar() {
             </Button>
           </Link>
           {/* About */}
-          <Link className="" href="/about">
+          {/* <Link className="" href="/about">
             <Button variant="ghost" className="block w-full text-left text-sm">
               About
             </Button>
-          </Link>
+          </Link> */}
           {!isAuthenticated && (
             <Link href="/signin">
               <Button
@@ -229,10 +229,10 @@ export default function Navbar() {
                   <ListItem href="/advancedsearch" title="Advanced Search">
                     Search and filter cards by art type, set, and more.
                   </ListItem>
-                  <ListItem href="/wishlist" title="Wishlists">
+                  {/* <ListItem href="/wishlist" title="Wishlists">
                     Easily check prices for all cards in your wishlist and
                     receive email notifications when a good deal is found.
-                  </ListItem>
+                  </ListItem> */}
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -252,13 +252,13 @@ export default function Navbar() {
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
-            <NavigationMenuItem>
+            {/* <NavigationMenuItem>
               <Link legacyBehavior href="/about" passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   About
                 </NavigationMenuLink>
               </Link>
-            </NavigationMenuItem>
+            </NavigationMenuItem> */}
           </NavigationMenuList>
         </NavigationMenu>
         {!isAuthenticated && (
