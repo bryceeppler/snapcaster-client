@@ -53,11 +53,11 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
             </div>
           )}
           {Object.keys(results).length > 0 && (
-            <>
+            <div>
               <SingleSearchInfo />
               <SingleSearchFilter />
               <SingleCatalog />
-            </>
+            </div>
           )}
           {searchStarted && !loading && Object.keys(results).length === 0 && (
             <div className="flex items-center justify-center pt-5">
