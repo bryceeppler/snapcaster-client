@@ -3,12 +3,12 @@ title: 'How Does Pokémon Card Collecting Work?'
 date: '2024-05-11'
 author: 'Snapcaster Team'
 tags:
-  - Pokemon
+  - Pokémon
 preview: 'A basic Pokémon TCG guide for complete beginners.'
 image: '/buyers-guide-images/pokemon-collector-basics/pokemon-collector-banner.png'
 ---
 
-Dating back to 1996, the Pokemon TCG has printed over 200,000 unique cards which can make it daunting to start a new collection as a new player. Understanding the core basics of Pokémon TCG is essential whether you play the game, collect cards, or purchase cards as a gift. We hope this article can help you understand what things to look out for when buying Pokémon TCG cards online and can act as a guide as we deploy our Pokémon search services on Snapcaster soon.
+Dating back to 1996, the Pokémon TCG has printed over 200,000 unique cards which can make it daunting to start a new collection as a new player. Understanding the core basics of Pokémon TCG is essential whether you play the game, collect cards, or purchase cards as a gift. We hope this article can help you understand what things to look out for when buying Pokémon TCG cards online and can act as a guide as we deploy our Pokémon search services on Snapcaster soon.
 
 ## Starting Your Collection
 
