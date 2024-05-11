@@ -1,5 +1,5 @@
 ---
-title: 'How Does MTG Card Collecting Work'
+title: 'How Does MTG Card Collecting Work?'
 date: '2024-05-11'
 author: 'Snapcaster Team'
 tags:
