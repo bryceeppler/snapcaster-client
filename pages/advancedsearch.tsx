@@ -156,6 +156,7 @@ export default function AdvancedSearch({}: Props) {
               setSearchInput={setAdvancedSearchInput}
               searchInput={advancedSearchInput}
               autocompleteEndpoint={autocompleteEndpoint}
+              tcg={'mtg'}
             ></AutoFillSearchBox>
             <Button
               className="flex justify-between rounded bg-transparent outline outline-1 outline-muted lg:w-48"
