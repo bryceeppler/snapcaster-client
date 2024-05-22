@@ -54,7 +54,8 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
       // Split by newlines and collect all card names
       const cardNames = get()
         .searchInput.split('\n')
-        .map((name) => name.trim());
+        .map((name) => name.trim())
+        .filter((name) => name.length > 0);
 
       // JSON encode the array and then URL encode it
       const encodedNames = encodeURIComponent(JSON.stringify(cardNames));
