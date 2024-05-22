@@ -59,7 +59,9 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 className="w-full"
               >
                 <Button
-                  onClick={() => handleBuyClick(cardData.link, cardData.price)}
+                  onClick={() => {
+                    handleBuyClick(cardData.link, cardData.price);
+                  }}
                   className="w-full"
                 >
                   Buy
@@ -79,14 +81,22 @@ export default function SingleCatalogRow({ cardData }: Props) {
             <div className="text-lg font-bold">${cardData.price}</div>
           </div>
         </div>
-        <Button
-          onClick={() => {
-            handleBuyClick(cardData.link, cardData.price);
-          }}
+        <Link
+          href={cardData.link}
+          target="_blank"
+          rel="noreferrer"
           className="w-full"
         >
-          Buy
-        </Button>
+          <Button
+            onClick={() => {
+              handleBuyClick(cardData.link, cardData.price);
+              console.log(cardData.link);
+            }}
+            className="w-full"
+          >
+            Buy
+          </Button>
+        </Link>
       </div>
     </div>
   );
