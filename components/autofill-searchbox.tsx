@@ -6,12 +6,12 @@ import { useDebounceCallback } from 'usehooks-ts';
 type Props = {
   searchFunction(searchText: string): void;
   setSearchInput(searchText: string): void;
+  tcg: string;
   searchInput: string;
   autocompleteEndpoint: string;
 };
 interface AutocompleteResult {
   name: string;
-  oracle_id: string;
 }
 export default function SingleSearchbox(props: Props) {
   const [autocompleteResults, setAutocompleteResults] = useState<
@@ -24,7 +24,10 @@ export default function SingleSearchbox(props: Props) {
   const autocompleteRef = useRef<HTMLDivElement>(null);
   const fetchAutocompleteResults = useCallback(
     (value: string) => {
-      fetch(props.autocompleteEndpoint + value)
+      const url = `${props.autocompleteEndpoint}?tcg=${
+        props.tcg
+      }&query=${encodeURIComponent(value)}`;
+      fetch(url)
         .then((response) => response.json())
         .then((data) => {
           setAutocompleteResults(data.data);
@@ -35,7 +38,7 @@ export default function SingleSearchbox(props: Props) {
           console.error('Error fetching autocomplete results: ', error);
         });
     },
-    [props.autocompleteEndpoint]
+    [props.autocompleteEndpoint, props.tcg]
   );
 
   const debouncedFetchResults = useDebounceCallback(

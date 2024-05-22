@@ -19,7 +19,7 @@ const MultiTcgSearchbox = (props: Props) => {
   const { fetchCards, searchInput, setSearchInput, tcg, setTcg } =
     useSingleStore();
   const autocompleteEndpoint =
-    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
+    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards';
 
   return (
     <div className="flex flex-col gap-2 sm:flex-row">
@@ -42,6 +42,7 @@ const MultiTcgSearchbox = (props: Props) => {
         setSearchInput={setSearchInput}
         searchInput={searchInput}
         autocompleteEndpoint={autocompleteEndpoint}
+        tcg={tcg}
       />
     </div>
   );
