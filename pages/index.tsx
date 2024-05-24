@@ -39,13 +39,13 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
         <div className="container flex w-full flex-col justify-center gap-8 text-center">
           {!searchStarted && <Homebanner />}
           <MultiTcgSearchbox />
-          {!searchStarted && <PopularSearchCarousel />}
-          {!searchStarted && (
+          {/* {!searchStarted && <PopularSearchCarousel />} */}
+          {/* {!searchStarted && (
             <div className="flex flex-col gap-4">
               <h3 className="text-2xl font-bold">Recent Posts</h3>
               <BlogFeed posts={posts} />
             </div>
-          )}
+          )} */}
 
           {loading && (
             <div className="flex items-center justify-center pt-5">
