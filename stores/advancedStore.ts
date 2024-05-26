@@ -17,15 +17,15 @@ export interface AdvancedSearchResult {
   priceBeforeDiscount: number;
   price: number;
   website: string;
-  preRelease: boolean;
+  promo_prerelease: boolean;
   promo: boolean;
-  promoPack: boolean;
+  promo_pack: boolean;
   showcase: string;
   frame: string;
-  alternateArt: boolean;
-  alternateArtJapanese: boolean;
-  artSeries: boolean;
-  goldenStampedSeries: boolean;
+  alternate_art: boolean;
+  alternate_art_japanese: boolean;
+  art_series: boolean;
+  golden_stamped_art_series: boolean;
 }
 
 const shopifyOnlySites = useStore.getState().websites.filter(function (item) {
@@ -560,16 +560,17 @@ export const advancedUseStore = create<State>((set, get) => ({
           foil: get().selectedFoilList,
           showcaseTreatment: get().selectedShowcaseTreatmentList,
           frame: get().selectedhFrameList,
-          preRelease: get().preReleaseChecked,
-          promoPack: get().promoPackChecked,
+          promo_prerelease: get().preReleaseChecked,
+          promo_pack: get().promoPackChecked,
           promo: get().promoChecked,
-          alternateArt: get().alternateArtChecked,
-          alternateArtJapanese: get().alternateArtJapaneseChecked,
-          artSeries: get().artSeriesChecked,
-          goldenStampedSeries: get().goldenStampedChecked,
+          alternate_art: get().alternateArtChecked,
+          alternate_art_japanese: get().alternateArtJapaneseChecked,
+          art_series: get().artSeriesChecked,
+          golden_stamped_art_series: get().goldenStampedChecked,
           set: get().selectedSetList
         }
       );
+
       for (const item of response.data) {
         item.priceBeforeDiscount = item.price;
         if (item.website in useStore.getState().promoMap) {
@@ -580,6 +581,8 @@ export const advancedUseStore = create<State>((set, get) => ({
       }
 
       set({ advancedSearchResults: response.data });
+      console.log(get().advancedSearchResults);
+
       get().updateSortByFilter(get().selectedSortBy);
       set({ advancedSearchLoading: false });
     } catch {

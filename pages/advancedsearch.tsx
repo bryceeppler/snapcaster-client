@@ -20,11 +20,12 @@ import PageTitle from '@/components/ui/page-title';
 
 import { FilterDropdownBox } from '@/components/advanced-search/advanced-filter-dropdown';
 import { useStore } from '@/stores/store';
+import SingleSearchbox from '@/components/autofill-searchbox';
 type Props = {};
 
 export default function AdvancedSearch({}: Props) {
   const autocompleteEndpoint =
-    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
+    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards';
   const {
     advancedSearchLoading,
     advancedSearchResults,
@@ -151,13 +152,13 @@ export default function AdvancedSearch({}: Props) {
 
           {/*Container 2 - Search Bar & Show Filters Button*/}
           <div className="flex items-center gap-2">
-            <AutoFillSearchBox
+            <SingleSearchbox
               searchFunction={fetchAdvancedSearchResults}
               setSearchInput={setAdvancedSearchInput}
               searchInput={advancedSearchInput}
               autocompleteEndpoint={autocompleteEndpoint}
               tcg={'mtg'}
-            ></AutoFillSearchBox>
+            ></SingleSearchbox>
             <Button
               className="flex justify-between rounded bg-transparent outline outline-1 outline-muted lg:w-48"
               onClick={() => {
