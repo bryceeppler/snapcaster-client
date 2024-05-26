@@ -29,9 +29,9 @@ export default function Layout({ children }: React.PropsWithChildren<Props>) {
   }, [hasInitializedStore]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
-      {children}
+      <div className="flex-grow">{children}</div>
       <Footer />
     </div>
   );

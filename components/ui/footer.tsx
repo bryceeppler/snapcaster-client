@@ -14,13 +14,27 @@ export default function Footer({}: Props) {
       "
     >
       <div className="flex flex-col items-center gap-5 md:flex-row">
-        <Link href="/privacy" className="text-pink-500 hover:text-pink-700">
+        <Link href="/privacy" className="">
           Privacy Policy
         </Link>
 
-        <div className="aspect-square h-1 w-1 rounded-full bg-pink-500"></div>
-        <Link href="/terms" className="text-pink-500 hover:text-pink-700">
+        <div className="aspect-square h-1 w-1 rounded-full bg-main"></div>
+        <Link href="/terms" className="">
           Terms and Conditions
+        </Link>
+        <div className="aspect-square h-1 w-1 rounded-full bg-main"></div>
+
+        <Link
+          className="flex flex-row items-center gap-2"
+          href="https://obsidiangames.ca"
+          target="_blank"
+        >
+          <p>Powered by</p>
+          <img
+            src="https://cdn.snapcaster.ca/obsidian_games_logo.webp"
+            alt="Snapcaster Logo"
+            className="h-6 w-auto"
+          />
         </Link>
       </div>
     </div>

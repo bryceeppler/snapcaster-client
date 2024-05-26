@@ -60,7 +60,7 @@ export default function Navbar() {
             <Link href="/" as="/">
               <img
                 className="block h-8 w-auto lg:hidden"
-                src="/favicon.ico"
+                src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
                 alt="Snapcaster"
               />
             </Link>
@@ -182,11 +182,9 @@ export default function Navbar() {
             <NavigationMenuItem>
               <Link legacyBehavior href="/" passHref>
                 <img
-                  className="mx-1"
-                  src="/favicon.ico"
+                  className="mx-1 h-auto w-5"
+                  src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
                   alt="Snapcaster"
-                  width={35}
-                  height={35}
                 />
               </Link>
             </NavigationMenuItem>

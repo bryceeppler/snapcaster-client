@@ -8,11 +8,9 @@ import usePopularCardsStore from '@/stores/popularCardsStore';
 import SingleCatalog from '@/components/single-search/single-results';
 import MainLayout from '@/components/main-page-layout';
 import SingleSearchFilter from '@/components/single-search/single-filters';
-import PopularSearchCarousel from '@/components/popular-search-carousel';
 import { useEffect } from 'react';
 import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
-import BlogFeed from '@/components/blog-feed';
 import type { BlogPostPreview } from '@/pages/blog';
 import MultiTcgSearchbox from '@/components/single-search/multitcg-searchbox';
 import useSingleStore from '@/stores/singleSearchStore';
@@ -39,13 +37,6 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
         <div className="container flex w-full flex-col justify-center gap-8 text-center">
           {!searchStarted && <Homebanner />}
           <MultiTcgSearchbox />
-          {/* {!searchStarted && <PopularSearchCarousel />} */}
-          {/* {!searchStarted && (
-            <div className="flex flex-col gap-4">
-              <h3 className="text-2xl font-bold">Recent Posts</h3>
-              <BlogFeed posts={posts} />
-            </div>
-          )} */}
 
           {loading && (
             <div className="flex items-center justify-center pt-5">
