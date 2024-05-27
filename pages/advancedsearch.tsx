@@ -32,6 +32,7 @@ export default function AdvancedSearch({}: Props) {
 
     selectedWebsiteCount,
     selectedWebsiteList,
+    websitesAdvanced,
 
     selectedSetCount,
     selectedSetList,
@@ -70,6 +71,7 @@ export default function AdvancedSearch({}: Props) {
     resetFilters,
     toggle,
     initSetInformation,
+    initWebsiteInformationAdvanced,
     fetchAdvancedSearchResults
   } = advancedUseStore();
 
@@ -96,7 +98,7 @@ export default function AdvancedSearch({}: Props) {
   }, []);
 
   useEffect(() => {
-    initWebsiteInformation();
+    initWebsiteInformationAdvanced();
     initSetInformation();
   }, []);
 
@@ -180,7 +182,7 @@ export default function AdvancedSearch({}: Props) {
               <div className="mb-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                   <FilterDropdownBox
-                    option={websites.map((obj) => {
+                    option={websitesAdvanced.map((obj) => {
                       return { name: obj.name, abbreviation: obj.code };
                     })}
                     selectedList={selectedWebsiteList}

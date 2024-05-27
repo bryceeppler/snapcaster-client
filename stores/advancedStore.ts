@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { useStore } from '@/stores/store';
 import axiosInstance from '@/utils/axiosWrapper';
+import type { Website } from '@/types/index';
 
 export interface Filter {
   name: string;
@@ -32,10 +33,7 @@ const shopifyOnlySites = useStore.getState().websites.filter(function (item) {
   return item.shopify == true;
 });
 
-const websiteList: Filter[] = shopifyOnlySites.map((item) => ({
-  name: item.name,
-  abbreviation: item.code
-}));
+const websitesAdvanced: Website[] = [];
 
 const conditionList: Filter[] = [
   {
@@ -237,7 +235,7 @@ type State = {
   selectedFrameCount: number;
   selectedhFrameList: string[];
 
-  websiteList: Filter[];
+  websitesAdvanced: Website[];
   selectedWebsiteCount: number;
   selectedWebsiteList: string[];
 
@@ -274,6 +272,7 @@ type State = {
   resetFilters: () => void;
   fetchAdvancedSearchResults: (searchText: string) => Promise<void>;
   initSetInformation: () => Promise<void>;
+  initWebsiteInformationAdvanced: () => Promise<void>;
 };
 
 export const advancedUseStore = create<State>((set, get) => ({
@@ -283,7 +282,7 @@ export const advancedUseStore = create<State>((set, get) => ({
   advancedSearchInput: '',
   advnacedSearchTextBoxValue: '',
 
-  websiteList: websiteList,
+  websitesAdvanced: websitesAdvanced,
   selectedWebsiteList: [],
   selectedWebsiteCount: 0,
 
@@ -609,6 +608,22 @@ export const advancedUseStore = create<State>((set, get) => ({
     } catch (error) {
       console.log('getSetInformation ERROR');
       console.log(error);
+    }
+  },
+  initWebsiteInformationAdvanced: async () => {
+    try {
+      if (get().websitesAdvanced.length > 0) {
+        return;
+      }
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
+      );
+      let data = response.data.websiteList.filter(
+        (website: Website) => website.backend == 'shopify'
+      );
+      set({ websitesAdvanced: data });
+    } catch {
+      console.log('initWebsiteInformationAdvanced Error ');
     }
   }
 }));

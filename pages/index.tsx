@@ -28,7 +28,6 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
   const { fetchPopularCards } = usePopularCardsStore();
 
   useEffect(() => {
-    fetchPopularCards();
     initWebsiteInformation();
   }, []);
 
