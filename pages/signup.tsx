@@ -134,7 +134,7 @@ const Signup: NextPage<Props> = () => {
                   <a
                     href="/terms"
                     target="_blank"
-                    className="text-pink-500 hover:text-pink-700"
+                    className="text-primary hover:opacity-70"
                   >
                     Terms of Use
                   </a>

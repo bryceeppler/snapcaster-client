@@ -17,6 +17,11 @@ import { AlignJustify } from 'lucide-react';
 import { useState } from 'react';
 const components: { title: string; href: string; description: string }[] = [
   {
+    title: 'Supporters',
+    href: '/supporters',
+    description: 'A list of all the people who have supported Snapcaster.'
+  },
+  {
     title: 'Blog',
     href: '/blog',
     description:
@@ -99,7 +104,7 @@ export default function Navbar() {
             </Button>
           </Link>
           {/* Advanced Search */}
-          <Link href="/advancedsearch" as="/advancedsearch">
+          <Link href="/supporters" as="/supporters">
             <Button
               variant="ghost"
               className="block w-full text-left text-sm"
@@ -107,7 +112,7 @@ export default function Navbar() {
                 setMobileMenuOpen(false);
               }}
             >
-              Advanced Search
+              Supporters
             </Button>
           </Link>
           {/* Wishlists */}
@@ -140,18 +145,6 @@ export default function Navbar() {
               Card Guide
             </Button>
           </Link>
-          {/* Discord */}
-          <Link className="" href="https://discord.gg/EnKKHxSq75">
-            <Button variant="ghost" className="block w-full text-left text-sm">
-              Discord
-            </Button>
-          </Link>
-          {/* About */}
-          {/* <Link className="" href="/about">
-            <Button variant="ghost" className="block w-full text-left text-sm">
-              About
-            </Button>
-          </Link> */}
           {!isAuthenticated && (
             <Link href="/signin">
               <Button
@@ -202,7 +195,7 @@ export default function Navbar() {
                   <li className="row-span-3">
                     <NavigationMenuLink asChild>
                       <a
-                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-background p-6 no-underline outline-none focus:shadow-md"
                         href="/"
                       >
                         <img
@@ -216,7 +209,7 @@ export default function Navbar() {
                         </div>
                         <p className="text-sm leading-tight text-muted-foreground">
                           Support Snapcaster by purchasing a Pro subscription
-                          and gain access to premium and experimental features.
+                          and gain access to exclusive features and discounts.
                         </p>
                       </a>
                     </NavigationMenuLink>

@@ -42,7 +42,7 @@ export function WebsiteCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between overflow-hidden"
+          className="w-[200px] justify-between overflow-hidden hover:bg-background"
         >
           <span className="truncate">
             {selectedWebsites.length > 0
@@ -70,7 +70,7 @@ export function WebsiteCombobox({
                   >
                     <Check
                       className={cn(
-                        'mr-2 h-4 w-4',
+                        'mr-2 h-4 w-4 text-primary',
                         isWebsiteSelected(website) ? 'opacity-100' : 'opacity-0'
                       )}
                     />

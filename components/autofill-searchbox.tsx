@@ -169,21 +169,23 @@ export default function SingleSearchbox(props: Props) {
           />
           <button
             type="submit"
-            className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-pink-500"
+            className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-primary"
           >
             <Search size={15} />
           </button>
           {showAutocomplete && (
             <div
-              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-950 py-1 shadow-md"
+              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-border  bg-popover py-1 shadow-md"
               ref={autocompleteRef}
             >
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
                     key={index}
-                    className={`mx-1 cursor-pointer rounded px-4 py-2 hover:bg-neutral-900 ${
-                      selectedAutocompleteIndex === index ? 'bg-zinc-800' : ''
+                    className={`mx-1 cursor-pointer rounded px-4 py-2  ${
+                      selectedAutocompleteIndex === index
+                        ? 'bg-primary'
+                        : 'hover:bg-muted'
                     } `}
                     onClick={() => handleAutocompleteItemClick(result.name)}
                   >

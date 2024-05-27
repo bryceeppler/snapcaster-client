@@ -35,6 +35,7 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
       <HomeHead />
       <MainLayout>
         <div className="container flex w-full flex-col justify-center gap-8 text-center">
+          <div className="h-40 w-full rounded border border-zinc-600 bg-zinc-700"></div>
           {!searchStarted && <Homebanner />}
           <MultiTcgSearchbox />
 

@@ -12,51 +12,150 @@ const Supporters: NextPage<Props> = () => {
     <>
       <SupportersHead />
       <MainLayout>
-        <div className="w-full max-w-2xl flex-1 flex-col justify-center text-center">
-          <div>
-            <h2 className="mb-4 text-4xl font-bold tracking-tighter">
-              Our Supporters
-            </h2>
-            <p className="text-left">
-              At Snapcaster, we are incredibly grateful for the support of the
-              amazing businesses and sponsors that help us bring our vision to
-              life. Their contributions play a vital role in enhancing our
-              platform and ensuring that we continue to provide the best service
-              to our users.
-            </p>
+        <section className="w-full">
+          <div className="container px-4 md:px-6">
+            <div className="space-y-8">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  Our Supporters
+                </h2>
+                <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  We're grateful for the support of these amazing companies.
+                </p>
+              </div>
+              <div className="space-y-12 text-center">
+                <div>
+                  <h3 className="mb-6 text-2xl font-bold">Tier 1 Sponsor</h3>
+                  <div className="grid grid-cols-1 gap-6">
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Obsidian Games Vernon"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="200"
+                        src="https://cdn.snapcaster.ca/obsidian_games_logo.webp"
+                        width="400"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="mb-6 text-2xl font-bold">Tier 2 Sponsors</h3>
+                  <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="100"
+                        src="/placeholder.svg"
+                        width="200"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="100"
+                        src="/placeholder.svg"
+                        width="200"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="100"
+                        src="/placeholder.svg"
+                        width="200"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="100"
+                        src="/placeholder.svg"
+                        width="200"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="100"
+                        src="/placeholder.svg"
+                        width="200"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="mb-6 text-2xl font-bold">Tier 3 Sponsors</h3>
+                  <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="70"
+                        src="/placeholder.svg"
+                        width="140"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="70"
+                        src="/placeholder.svg"
+                        width="140"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="70"
+                        src="/placeholder.svg"
+                        width="140"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="70"
+                        src="/placeholder.svg"
+                        width="140"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        alt="Sponsor Logo"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="70"
+                        src="/placeholder.svg"
+                        width="140"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-left">
+                    {' '}
+                    If you're a Local Game Store (LGS) owner and wish to feature
+                    your website on Snapcaster, we invite you to join our
+                    official Discord server and send us a direct message. We are
+                    also now offering exclusive advertising opportunities for
+                    your webstore on Snapcaster. This is an excellent chance to
+                    promote your store's special offers, discount codes, and
+                    events such as pre-release tournaments. Don't miss out on
+                    this opportunity to connect with our passionate audience and
+                    enhance your store's visibility.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-
-          {/* Sponsor Logos */}
-          {/* Tier 1 */}
-          <div>
-            <Link href="https://obsidiangames.ca">
-              <img
-                src="https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_games_logo.webp"
-                alt="Tier 1 Sponsors"
-                className="mx-auto w-1/2"
-              />
-            </Link>
-          </div>
-          {/* Tier 2 */}
-          <div></div>
-          {/* Tier 3 */}
-          <div></div>
-          <div className="my-4 text-left">
-            <h3 className="mb-4 text-center text-2xl font-medium tracking-tighter">
-              Collaborate with Snapcaster (Local Game Store Owners)
-            </h3>
-            <p>
-              If you're a Local Game Store (LGS) owner and wish to feature your
-              website on Snapcaster, we invite you to join our official Discord
-              server and send us a direct message. We are also now offering
-              exclusive advertising opportunities for your webstore on
-              Snapcaster. This is an excellent chance to promote your store's
-              special offers, discount codes, and events such as pre-release
-              tournaments. Don't miss out on this opportunity to connect with
-              our passionate audience and enhance your store's visibility.
-            </p>
-          </div>
-        </div>
+        </section>
       </MainLayout>
     </>
   );

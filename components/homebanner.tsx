@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import React from 'react';
 import { TypeAnimation } from 'react-type-animation';
-
+import Link from 'next/link';
 type Props = {};
 
 export default function Homebanner({}: Props) {
@@ -13,20 +12,13 @@ export default function Homebanner({}: Props) {
         alt="Snapcaster"
       />
 
-      {/* <h1 className="mt-2 text-4xl font-extrabold">Snapcaster</h1> */}
-      {/* <p className="text-md">Search for trading cards across Canada</p> */}
-      {/* <div className="p-2" /> */}
-
-      <div className="p-2"></div>
+      <h1 className="mt-2 text-4xl font-extrabold">Snapcaster</h1>
       <TypeAnimation
         preRenderFirstString={true}
         sequence={[
-          2000,
-          // Same substring at the start will only be typed out once, initially
-          'Snapcaster',
-          1400, // wait 1s before replacing "Mice" with "Hamsters"
+          1400,
           'Search for Magic: the Gathering',
-          1400, // wait 1s before replacing "Mice" with "Hamsters"
+          1400,
           'Search for Pokemon',
           1400,
           'Search for Yu-gi-oh',
@@ -35,9 +27,9 @@ export default function Homebanner({}: Props) {
           1400
         ]}
         wrapper="span"
-        className="text-left font-extrabold"
+        className="text-left font-bold"
         speed={50}
-        style={{ fontSize: '2em', display: 'inline-block' }}
+        style={{ fontSize: '1em', display: 'inline-block' }}
         repeat={Infinity}
       />
       <div className="p-2"></div>
@@ -47,12 +39,14 @@ export default function Homebanner({}: Props) {
         href="https://obsidiangames.ca"
         target="_blank"
       >
-        <p className="text-grey-400">Powered by</p>
         <img
           className="h-5 w-auto"
-          src="https://cdn.snapcaster.ca/obsidian_games_logo.webp"
+          src="/obsidian_icon.png"
           alt="Obsidian Games"
         />
+        <p className="text-zinc-400 hover:text-primary">
+          Powered by Obsidian Games
+        </p>
       </Link>
     </div>
   );
