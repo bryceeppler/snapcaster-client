@@ -14,6 +14,7 @@ import { getAllBlogPosts } from '@/lib/blog';
 import type { BlogPostPreview } from '@/pages/blog';
 import MultiTcgSearchbox from '@/components/single-search/multitcg-searchbox';
 import useSingleStore from '@/stores/singleSearchStore';
+import PoweredBy from '@/components/powered-by';
 
 type Props = {
   posts: BlogPostPreview[];
@@ -35,8 +36,12 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
       <HomeHead />
       <MainLayout>
         <div className="container flex w-full flex-col justify-center gap-8 text-center">
-          <div className="h-40 w-full rounded border border-zinc-600 bg-zinc-700"></div>
+          <div className="flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700">
+            Tier 1 Ad
+          </div>
+
           {!searchStarted && <Homebanner />}
+          <PoweredBy size="small" />
           <MultiTcgSearchbox />
 
           {loading && (

@@ -33,6 +33,7 @@ import {
   TableRow
 } from '@/components/ui/table';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
+import PoweredBy from '@/components/powered-by';
 
 type Props = {};
 
@@ -295,10 +296,10 @@ const SearchView = ({
   const { loading } = useMultiSearchStore();
   return (
     <div className="outlined-container flex w-full flex-col gap-4 p-6">
-      <div className="flex flex-col gap-4 sm:flex-row">
+      <div className="flex flex-col gap-4 md:flex-row">
         {/* TCG Select */}
         <Select value={tcg} onValueChange={(value: Tcgs) => setTcg(value)}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="MTG" />
           </SelectTrigger>
           <SelectContent>
@@ -321,6 +322,8 @@ const SearchView = ({
           selectedWebsites={selectedWebsites}
           onWebsiteSelect={onWebsiteSelect}
         />
+        <div className=" flex-grow "></div>
+        <PoweredBy size="small" />
       </div>
 
       {/* Textarea */}

@@ -6,7 +6,7 @@ type Props = {
 
 const PageTitle = ({ title }: Props) => {
   return (
-    <h1 className="py-2 text-center text-4xl font-bold tracking-tighter md:py-8">
+    <h1 className="py-2 text-center text-4xl font-bold tracking-tighter md:pt-8">
       {title}
     </h1>
   );

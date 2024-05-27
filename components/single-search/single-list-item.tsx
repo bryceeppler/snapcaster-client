@@ -2,6 +2,7 @@ import React from 'react';
 import { SingleSearchResult } from '@/stores/store';
 type Props = {
   cardData: SingleSearchResult;
+  promoted?: boolean;
 };
 
 import { useStore } from '@/stores/store';
@@ -10,7 +11,7 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import CardImage from '../ui/card-image';
 
-export default function SingleCatalogRow({ cardData }: Props) {
+export default function SingleCatalogRow({ cardData, promoted }: Props) {
   const { websites } = useStore();
 
   const findWebsiteNameByCode = (code: string): string => {
@@ -25,7 +26,9 @@ export default function SingleCatalogRow({ cardData }: Props) {
   }
 
   return (
-    <div className="outlined-container mx-auto my-2 flex max-w-3xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4">
+    <div
+      className={`outlined-container mx-auto my-2 flex max-w-3xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4`}
+    >
       <div className="flex w-full gap-4">
         <div className="w-20">
           <CardImage imageUrl={cardData.image} alt={cardData.name} />
@@ -35,7 +38,14 @@ export default function SingleCatalogRow({ cardData }: Props) {
             <div className="flex flex-col text-left">
               <div className="text-sm capitalize">{cardData.set}</div>
               <div className="text-md font-bold">{cardData.name}</div>
-              <div className="text-sm">
+              <div className="flex flex-row gap-2 text-sm">
+                {cardData.website === 'obsidian' && (
+                  <img
+                    src="/obsidian_icon.png"
+                    alt="Obsidian"
+                    className="my-auto h-4 w-4"
+                  />
+                )}
                 {findWebsiteNameByCode(cardData.website)}
               </div>
             </div>

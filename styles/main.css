@@ -49,10 +49,10 @@
     --secondary-foreground: #18181b; /* zinc 900 */
     /* --muted: #282a27; */
     --muted: #09090b; /* zinc 950 (tab background) */
-    --muted-foreground: #fafafa;
+    --muted-foreground: #a1a1aa; /* zinc 200 */
     /* --accent: #27272a; */
-    --accent: #ff5b6d; /* use for some hover states*/
-    --accent-foreground: #fafafa;
+    --accent: #3f3f46; /* zinc-700 use for some hover states*/
+    --accent-foreground: #fafafa; /**/
     --destructive: #7f1d1d;
     --destructive-foreground: #fafafa;
     /* --border: #27272a; */

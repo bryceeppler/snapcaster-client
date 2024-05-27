@@ -5,10 +5,36 @@ import SingleCatalogCard from './single-grid-item';
 import SingleResultsTable from './single-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import BackToTopButton from '../ui/back-to-top-btn';
+import type { SingleSearchResult } from '@/stores/store';
 type Props = {};
+
+interface Ad {
+  type: 'ad';
+  content: string;
+}
+
+type ResultItem = SingleSearchResult | Ad;
+
+const insertAdvertisements = (
+  results: SingleSearchResult[],
+  adInterval: number
+): ResultItem[] => {
+  let resultsWithAds: ResultItem[] = [];
+  for (let i = 0; i < results.length; i++) {
+    if (i > 0 && i % adInterval === 0) {
+      resultsWithAds.push({ type: 'ad', content: 'Tier 2 Ad' });
+    }
+    resultsWithAds.push(results[i]);
+  }
+  return resultsWithAds;
+};
 
 export default function SingleCatalog({}: Props) {
   const { filteredResults } = useSingleStore();
+
+  // Insert advertisements every 10 results
+  const resultsWithAds = insertAdvertisements(filteredResults, 5);
+
   if (filteredResults.length === 0) {
     return (
       <div className="flex items-center justify-center pt-5">
@@ -26,20 +52,52 @@ export default function SingleCatalog({}: Props) {
           <TabsTrigger value="table">Table</TabsTrigger>
         </TabsList>
         <TabsContent value="list">
-          {filteredResults.map((cardData, index) => (
-            <SingleCatalogRow cardData={cardData} key={index} />
-          ))}
+          <div className="mx-auto flex h-40 w-full max-w-3xl items-center justify-center rounded border border-zinc-600 bg-zinc-700">
+            Tier 1 Ad
+          </div>
+          {resultsWithAds.map((item, index) =>
+            'type' in item && item.type === 'ad' ? (
+              <div
+                key={index}
+                className="mx-auto my-4 flex h-40 w-full max-w-3xl items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+              >
+                {item.content}
+              </div>
+            ) : (
+              <SingleCatalogRow
+                cardData={item as SingleSearchResult}
+                key={index}
+              />
+            )
+          )}
         </TabsContent>
         <TabsContent value="catalog">
-          {' '}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {filteredResults.map((cardData, index) => (
-              <SingleCatalogCard cardData={cardData} key={index} />
-            ))}
+            {resultsWithAds.map((item, index) =>
+              'type' in item && item.type === 'ad' ? (
+                <div
+                  key={index}
+                  className="col-span-full my-4 flex h-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+                >
+                  {item.content}
+                </div>
+              ) : (
+                <SingleCatalogCard
+                  cardData={item as SingleSearchResult}
+                  key={index}
+                />
+              )
+            )}
           </div>
         </TabsContent>
         <TabsContent value="table">
-          <SingleResultsTable cardData={filteredResults} />
+          <SingleResultsTable
+            cardData={
+              resultsWithAds.filter(
+                (item) => !('type' in item)
+              ) as SingleSearchResult[]
+            }
+          />
         </TabsContent>
       </Tabs>
       <BackToTopButton />

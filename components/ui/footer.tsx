@@ -4,6 +4,7 @@ import {
   LinkedInLogoIcon
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
+import PoweredBy from '../powered-by';
 
 export default function Footer() {
   return (
@@ -47,14 +48,7 @@ export default function Footer() {
         </div>
         <div className="flex items-start justify-end">
           <div className="flex items-center gap-2">
-            <img
-              src="/obsidian_icon.png"
-              alt="Obsidian Games Logo"
-              className="h-8 w-auto"
-            />
-            <span className="text-md text-zinc-300">
-              Powered by Obsidian Games
-            </span>
+            <PoweredBy size="medium" />
           </div>
         </div>
       </div>

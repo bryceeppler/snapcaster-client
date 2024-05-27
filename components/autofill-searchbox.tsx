@@ -185,7 +185,7 @@ export default function SingleSearchbox(props: Props) {
                     className={`mx-1 cursor-pointer rounded px-4 py-2  ${
                       selectedAutocompleteIndex === index
                         ? 'bg-primary'
-                        : 'hover:bg-muted'
+                        : 'hover:bg-accent'
                     } `}
                     onClick={() => handleAutocompleteItemClick(result.name)}
                   >
