@@ -175,7 +175,7 @@ export default function SingleSearchbox(props: Props) {
           </button>
           {showAutocomplete && (
             <div
-              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-950 py-1 shadow-md"
+              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-border  bg-popover py-1 shadow-md"
               ref={autocompleteRef}
             >
               {autocompleteResults &&
