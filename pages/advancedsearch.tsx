@@ -142,7 +142,7 @@ export default function AdvancedSearch({}: Props) {
           {/*Container 1 - Page Title*/}
           <div className="pb-2 text-center">
             <PageTitle title="Advanced Search" />
-            <p className="pb-2 text-xs text-pink-600">
+            <p className="pb-2 text-xs text-primary">
               Notice: We appreciate your patience as we continue to add missing
               websites from Single Search and Multi Search and fine tune our
               API.
@@ -304,7 +304,7 @@ export default function AdvancedSearch({}: Props) {
                             className={
                               ' aspect-square h-2 w-2 cursor-pointer appearance-none  rounded-full ' +
                               (selectedSortBy.includes(state.abbreviation)
-                                ? ' bg-pink-600 outline-none'
+                                ? ' bg-primary outline-none'
                                 : 'bg-zinc-600 outline outline-1 outline-black')
                             }
                           />

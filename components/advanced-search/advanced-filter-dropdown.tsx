@@ -50,7 +50,7 @@ export function FilterDropdownBox(props: Props) {
         <label className="text-midTone  mb-2 truncate pb-1 text-sm">
           <div className="flex">
             <p className="font-medium">{props.label}</p>
-            <p className="pl-1 text-green-600">
+            <p className="pl-1 text-primary">
               {props.selectCount > 0 ? `+${props.selectCount}` : ''}
             </p>
           </div>
@@ -99,7 +99,7 @@ export function FilterDropdownBox(props: Props) {
                           className={cn(
                             'mr-1 min-w-5 max-w-5',
                             props.selectedList.includes(state.abbreviation)
-                              ? 'text-green-600 opacity-100'
+                              ? 'text-primary opacity-100'
                               : 'opacity-0'
                           )}
                         />

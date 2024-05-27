@@ -16,6 +16,11 @@ import useAuthStore from '@/stores/authStore';
 import { AlignJustify } from 'lucide-react';
 import { useState } from 'react';
 const components: { title: string; href: string; description: string }[] = [
+  // {
+  //   title: 'Supporters',
+  //   href: '/supporters',
+  //   description: 'A list of all the people who have supported Snapcaster.'
+  // },
   {
     title: 'Blog',
     href: '/blog',
@@ -60,7 +65,7 @@ export default function Navbar() {
             <Link href="/" as="/">
               <img
                 className="block h-8 w-auto lg:hidden"
-                src="/favicon.ico"
+                src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
                 alt="Snapcaster"
               />
             </Link>
@@ -98,8 +103,7 @@ export default function Navbar() {
               Multi Search
             </Button>
           </Link>
-          {/* Advanced Search */}
-          <Link href="/advancedsearch" as="/advancedsearch">
+          {/* <Link href="/supporters" as="/supporters">
             <Button
               variant="ghost"
               className="block w-full text-left text-sm"
@@ -107,19 +111,7 @@ export default function Navbar() {
                 setMobileMenuOpen(false);
               }}
             >
-              Advanced Search
-            </Button>
-          </Link>
-          {/* Wishlists */}
-          {/* <Link href="/wishlist" as="/wishlist">
-            <Button
-              variant="ghost"
-              className="block w-full text-left text-sm"
-              onClick={() => {
-                setMobileMenuOpen(false);
-              }}
-            >
-              Wishlists
+              Supporters
             </Button>
           </Link> */}
           {/* Blog */}
@@ -140,18 +132,6 @@ export default function Navbar() {
               Card Guide
             </Button>
           </Link>
-          {/* Discord */}
-          <Link className="" href="https://discord.gg/EnKKHxSq75">
-            <Button variant="ghost" className="block w-full text-left text-sm">
-              Discord
-            </Button>
-          </Link>
-          {/* About */}
-          {/* <Link className="" href="/about">
-            <Button variant="ghost" className="block w-full text-left text-sm">
-              About
-            </Button>
-          </Link> */}
           {!isAuthenticated && (
             <Link href="/signin">
               <Button
@@ -182,11 +162,9 @@ export default function Navbar() {
             <NavigationMenuItem>
               <Link legacyBehavior href="/" passHref>
                 <img
-                  className="mx-1"
-                  src="/favicon.ico"
+                  className="mx-1 h-auto w-5"
+                  src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
                   alt="Snapcaster"
-                  width={35}
-                  height={35}
                 />
               </Link>
             </NavigationMenuItem>
@@ -204,7 +182,7 @@ export default function Navbar() {
                   <li className="row-span-3">
                     <NavigationMenuLink asChild>
                       <a
-                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-background p-6 no-underline outline-none focus:shadow-md"
                         href="/"
                       >
                         <img
@@ -218,7 +196,7 @@ export default function Navbar() {
                         </div>
                         <p className="text-sm leading-tight text-muted-foreground">
                           Support Snapcaster by purchasing a Pro subscription
-                          and gain access to premium and experimental features.
+                          and gain access to exclusive features and discounts.
                         </p>
                       </a>
                     </NavigationMenuLink>
@@ -229,10 +207,6 @@ export default function Navbar() {
                   <ListItem href="/advancedsearch" title="Advanced Search">
                     Search and filter cards by art type, set, and more.
                   </ListItem>
-                  {/* <ListItem href="/wishlist" title="Wishlists">
-                    Easily check prices for all cards in your wishlist and
-                    receive email notifications when a good deal is found.
-                  </ListItem> */}
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>

@@ -26,7 +26,7 @@ export default function AdvancedCheckBox(props: Props) {
           onChange={(e) => {}}
           className={
             'm-auto mx-1 aspect-square h-[10px] w-[10px] cursor-pointer appearance-none rounded-full ' +
-            (props.checkedState == true ? ' bg-pink-600' : 'bg-zinc-600')
+            (props.checkedState == true ? ' bg-primary' : 'bg-zinc-600')
           }
         />
         <p className=" w-full cursor-pointer pl-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">

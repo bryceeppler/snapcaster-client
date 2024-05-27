@@ -28,7 +28,7 @@ const About: NextPage<Props> = () => {
                 <a
                   href="https://www.snapcaster.ca/"
                   target="_blank"
-                  className="text-pink-500 hover:text-pink-700"
+                  className="text-primary hover:text-primary-muted"
                 >
                   https://www.snapcaster.ca/
                 </a>{' '}
@@ -79,83 +79,83 @@ const About: NextPage<Props> = () => {
 
               <h2 className="text-lg font-bold">TABLE OF CONTENTS</h2>
               <ul>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#services">1. OUR SERVICES</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#ip">2. INTELLECTUAL PROPERTY RIGHTS</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#userreps">3. USER REPRESENTATIONS</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#userreg">4. USER REGISTRATION</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#purchases">5. PURCHASES AND PAYMENT</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#subscriptions">6. SUBSCRIPTIONS</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#prohibited">7. PROHIBITED ACTIVITIES</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#ugc">8. USER GENERATED CONTRIBUTIONS</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#license">9. CONTRIBUTION LICENSE</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#thirdparty">10. THIRD-PARTY WEBSITES AND CONTENT</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#advertisers">11. ADVERTISERS</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#sitemanage">12. SERVICES MANAGEMENT</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#ppyes">13. PRIVACY POLICY</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#terms">14. TERM AND TERMINATION</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#modifications">
                     15. MODIFICATIONS AND INTERRUPTIONS
                   </a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#law">16. GOVERNING LAW</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#disputes">17. DISPUTE RESOLUTION</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#corrections">18. CORRECTIONS</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#disclaimer">19. DISCLAIMER</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#liability">20. LIMITATIONS OF LIABILITY</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#indemnification">21. INDEMNIFICATION</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#userdata">22. USER DATA</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#electronic">
                     23. ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES
                   </a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#misc">24. MISCELLANEOUS</a>
                 </div>
-                <div className="text-pink-500 hover:text-pink-700">
+                <div className="text-primary hover:text-primary-muted">
                   <a href="#contact">25. CONTACT US</a>
                 </div>
               </ul>
@@ -206,7 +206,7 @@ const About: NextPage<Props> = () => {
               <p>
                 Subject to your compliance with these Legal Terms, including the{' '}
                 <a
-                  className="text-pink-500 hover:text-pink-700"
+                  className="text-primary hover:text-primary-muted"
                   href="#prohibited"
                 >
                   "PROHIBITED ACTIVITIES"
@@ -258,7 +258,7 @@ const About: NextPage<Props> = () => {
               <p>
                 Please review this section and the{' '}
                 <a
-                  className="text-pink-500 hover:text-pink-700"
+                  className="text-primary hover:text-primary-muted"
                   href="#prohibited"
                 >
                   "PROHIBITED ACTIVITIES"
@@ -285,7 +285,7 @@ const About: NextPage<Props> = () => {
                   <li>
                     confirm that you have read and agree with our{' '}
                     <a
-                      className="text-pink-500 hover:text-pink-700"
+                      className="text-primary hover:text-primary-muted"
                       href="#prohibited"
                     >
                       "PROHIBITED ACTIVITIES"
@@ -795,7 +795,7 @@ const About: NextPage<Props> = () => {
                 We care about data privacy and security. Please review our
                 Privacy Policy:{' '}
                 <a
-                  className="text-pink-500 hover:text-pink-700"
+                  className="text-primary hover:text-primary-muted"
                   href="/privacy"
                   target="_blank"
                 >
@@ -1157,7 +1157,7 @@ const About: NextPage<Props> = () => {
               <p>
                 These terms of use were created using Termly's{' '}
                 <a
-                  className="text-pink-500 hover:text-pink-700"
+                  className="text-primary hover:text-primary-muted"
                   href="https://termly.io/products/terms-and-conditions-generator/"
                   target="_blank"
                 >
