@@ -49,7 +49,7 @@ const GuideIndex: React.FC<GuideIndexProps> = ({ posts }) => {
               <img
                 src={post.data.image}
                 alt={post.data.title}
-                className="outlined-container mx-auto max-h-64 w-fit"
+                className="outlined-container mx-auto max-h-64 w-auto"
               />
             </Link>
           ))}

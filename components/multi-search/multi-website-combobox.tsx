@@ -54,7 +54,7 @@ export function WebsiteCombobox({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search website..." />
+          <CommandInput tabIndex={-1} placeholder="Search website..." />
           <CommandEmpty>No website found.</CommandEmpty>
           <CommandGroup>
             <CommandList>

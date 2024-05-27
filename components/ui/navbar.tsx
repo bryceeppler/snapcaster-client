@@ -127,7 +127,7 @@ export default function Navbar() {
             </Button>
           </Link>
           {/* Card Guide */}
-          <Link className="" href="/card-guide" as="/card-guide">
+          <Link className="" href="/guides" as="/guides">
             <Button variant="ghost" className="block w-full text-left text-sm">
               Card Guide
             </Button>
