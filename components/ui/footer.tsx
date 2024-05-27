@@ -1,8 +1,4 @@
-import {
-  DiscordLogoIcon,
-  GitHubLogoIcon,
-  LinkedInLogoIcon
-} from '@radix-ui/react-icons';
+import { DiscordLogoIcon, GitHubLogoIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import PoweredBy from '../powered-by';
 import useGlobalStore from '@/stores/globalStore';
@@ -36,12 +32,6 @@ export default function Footer() {
           <div className="flex gap-4">
             <Link aria-label="Discord" href="https://discord.gg/EnKKHxSq75">
               <DiscordLogoIcon className="h-6 w-6" />
-            </Link>
-            <Link
-              aria-label="LinkedIn"
-              href="https://www.linkedin.com/in/bryceeppler/"
-            >
-              <LinkedInLogoIcon className="h-6 w-6" />
             </Link>
             <Link aria-label="GitHub" href="https://github.com/bryceeppler">
               <GitHubLogoIcon className="h-6 w-6" />
