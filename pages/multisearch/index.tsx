@@ -299,6 +299,7 @@ const SearchView = ({
   onWebsiteSelect: (value: any) => void;
 }) => {
   const { loading } = useMultiSearchStore();
+  const { adsEnabled } = useGlobalStore();
   return (
     <div className="outlined-container flex w-full flex-col gap-4 p-6">
       <div className="flex flex-col gap-4 md:flex-row">
@@ -328,7 +329,7 @@ const SearchView = ({
           onWebsiteSelect={onWebsiteSelect}
         />
         <div className=" flex-grow "></div>
-        <PoweredBy size="small" />
+        {adsEnabled && <PoweredBy size="small" />}
       </div>
 
       {/* Textarea */}
