@@ -27,7 +27,7 @@ export default function SingleCatalogRow({ cardData, promoted }: Props) {
 
   return (
     <div
-      className={`outlined-container mx-auto my-2 flex max-w-3xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4`}
+      className={`outlined-container mx-auto my-2 flex max-w-5xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4`}
     >
       <div className="flex w-full gap-4">
         <div className="w-20">

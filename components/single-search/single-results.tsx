@@ -33,7 +33,7 @@ export default function SingleCatalog({}: Props) {
   const { filteredResults } = useSingleStore();
 
   // Insert advertisements every 10 results
-  const resultsWithAds = insertAdvertisements(filteredResults, 5);
+  const resultsWithAds = insertAdvertisements(filteredResults, 9);
 
   if (filteredResults.length === 0) {
     return (
@@ -52,14 +52,11 @@ export default function SingleCatalog({}: Props) {
           <TabsTrigger value="table">Table</TabsTrigger>
         </TabsList>
         <TabsContent value="list">
-          <div className="mx-auto flex h-40 w-full max-w-3xl items-center justify-center rounded border border-zinc-600 bg-zinc-700">
-            Tier 1 Ad
-          </div>
           {resultsWithAds.map((item, index) =>
             'type' in item && item.type === 'ad' ? (
               <div
                 key={index}
-                className="mx-auto my-4 flex h-40 w-full max-w-3xl items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+                className="mx-auto my-4 flex h-40 w-full max-w-5xl items-center justify-center rounded border border-zinc-600 bg-zinc-700"
               >
                 {item.content}
               </div>
@@ -72,12 +69,12 @@ export default function SingleCatalog({}: Props) {
           )}
         </TabsContent>
         <TabsContent value="catalog">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {resultsWithAds.map((item, index) =>
               'type' in item && item.type === 'ad' ? (
                 <div
                   key={index}
-                  className="col-span-full my-4 flex h-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+                  className="col-span-1 flex h-full items-center justify-center rounded border border-zinc-600 bg-zinc-700 p-4"
                 >
                   {item.content}
                 </div>
