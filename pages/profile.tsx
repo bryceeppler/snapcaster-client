@@ -88,7 +88,7 @@ const Profile: NextPage = () => {
     <>
       <ProfileHead />
       <MainLayout>
-        <div className="container max-w-3xl flex-1 flex-col justify-center text-center">
+        <div className="mx-auto flex w-full max-w-xl flex-col justify-center gap-8 text-center">
           <section className="w-full py-6 md:py-12">
             <div className="grid w-full gap-6">
               <>

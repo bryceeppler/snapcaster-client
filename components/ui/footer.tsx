@@ -5,8 +5,10 @@ import {
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import PoweredBy from '../powered-by';
+import useGlobalStore from '@/stores/globalStore';
 
 export default function Footer() {
+  const { adsEnabled } = useGlobalStore();
   return (
     <footer className="bg-popover py-12">
       <div className="container grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
@@ -15,7 +17,7 @@ export default function Footer() {
           <nav className="grid gap-2">
             <Link href="#">Home</Link>
             <Link href="/multisearch">Multisearch</Link>
-            <Link href="/supporters">Supporters</Link>
+            {adsEnabled && <Link href="/supporters">Supporters</Link>}
             <Link href="/blog">Blog</Link>
           </nav>
         </div>
@@ -46,11 +48,13 @@ export default function Footer() {
             </Link>
           </div>
         </div>
-        <div className="flex items-start justify-end">
-          <div className="flex items-center gap-2">
-            <PoweredBy size="medium" />
+        {adsEnabled && (
+          <div className="flex items-start justify-end">
+            <div className="flex items-center gap-2">
+              <PoweredBy size="medium" />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </footer>
   );

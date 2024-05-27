@@ -55,7 +55,7 @@ export default function SingleCatalogRow({ cardData, promoted }: Props) {
               <div className="text-lg font-bold">${cardData.price}</div>
               <div className="flex flex-row space-x-2">
                 {cardData.foil && (
-                  <div className="text-sm font-extrabold text-pink-500">
+                  <div className="text-sm font-extrabold text-primary">
                     Foil
                   </div>
                 )}
@@ -83,7 +83,7 @@ export default function SingleCatalogRow({ cardData, promoted }: Props) {
         <div className="ml-1 flex flex-row justify-start">
           <div className="flex flex-row gap-3">
             {cardData.foil && (
-              <div className="text-lg font-extrabold text-pink-500">Foil</div>
+              <div className="text-lg font-extrabold text-primary">Foil</div>
             )}
             <div className="text-lg font-bold">{cardData.condition}</div>{' '}
             <div className="text-lg font-bold">${cardData.price}</div>

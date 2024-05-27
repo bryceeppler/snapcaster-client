@@ -16,11 +16,11 @@ import useAuthStore from '@/stores/authStore';
 import { AlignJustify } from 'lucide-react';
 import { useState } from 'react';
 const components: { title: string; href: string; description: string }[] = [
-  {
-    title: 'Supporters',
-    href: '/supporters',
-    description: 'A list of all the people who have supported Snapcaster.'
-  },
+  // {
+  //   title: 'Supporters',
+  //   href: '/supporters',
+  //   description: 'A list of all the people who have supported Snapcaster.'
+  // },
   {
     title: 'Blog',
     href: '/blog',
@@ -103,8 +103,7 @@ export default function Navbar() {
               Multi Search
             </Button>
           </Link>
-          {/* Advanced Search */}
-          <Link href="/supporters" as="/supporters">
+          {/* <Link href="/supporters" as="/supporters">
             <Button
               variant="ghost"
               className="block w-full text-left text-sm"
@@ -113,18 +112,6 @@ export default function Navbar() {
               }}
             >
               Supporters
-            </Button>
-          </Link>
-          {/* Wishlists */}
-          {/* <Link href="/wishlist" as="/wishlist">
-            <Button
-              variant="ghost"
-              className="block w-full text-left text-sm"
-              onClick={() => {
-                setMobileMenuOpen(false);
-              }}
-            >
-              Wishlists
             </Button>
           </Link> */}
           {/* Blog */}
@@ -220,10 +207,6 @@ export default function Navbar() {
                   <ListItem href="/advancedsearch" title="Advanced Search">
                     Search and filter cards by art type, set, and more.
                   </ListItem>
-                  {/* <ListItem href="/wishlist" title="Wishlists">
-                    Easily check prices for all cards in your wishlist and
-                    receive email notifications when a good deal is found.
-                  </ListItem> */}
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>

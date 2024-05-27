@@ -6,6 +6,7 @@ import SingleResultsTable from './single-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import BackToTopButton from '../ui/back-to-top-btn';
 import type { SingleSearchResult } from '@/stores/store';
+import useGlobalStore from '@/stores/globalStore';
 type Props = {};
 
 interface Ad {
@@ -31,7 +32,7 @@ const insertAdvertisements = (
 
 export default function SingleCatalog({}: Props) {
   const { filteredResults } = useSingleStore();
-
+  const { adsEnabled } = useGlobalStore();
   // Insert advertisements every 10 results
   const resultsWithAds = insertAdvertisements(filteredResults, 9);
 
@@ -52,39 +53,49 @@ export default function SingleCatalog({}: Props) {
           <TabsTrigger value="table">Table</TabsTrigger>
         </TabsList>
         <TabsContent value="list">
-          {resultsWithAds.map((item, index) =>
-            'type' in item && item.type === 'ad' ? (
-              <div
-                key={index}
-                className="mx-auto my-4 flex h-40 w-full max-w-5xl items-center justify-center rounded border border-zinc-600 bg-zinc-700"
-              >
-                {item.content}
-              </div>
-            ) : (
-              <SingleCatalogRow
-                cardData={item as SingleSearchResult}
-                key={index}
-              />
-            )
-          )}
-        </TabsContent>
-        <TabsContent value="catalog">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {resultsWithAds.map((item, index) =>
+          {adsEnabled &&
+            resultsWithAds.map((item, index) =>
               'type' in item && item.type === 'ad' ? (
                 <div
                   key={index}
-                  className="col-span-1 flex h-full items-center justify-center rounded border border-zinc-600 bg-zinc-700 p-4"
+                  className="mx-auto my-4 flex h-40 w-full max-w-5xl items-center justify-center rounded border border-zinc-600 bg-zinc-700"
                 >
                   {item.content}
                 </div>
               ) : (
-                <SingleCatalogCard
+                <SingleCatalogRow
                   cardData={item as SingleSearchResult}
                   key={index}
                 />
               )
             )}
+          {!adsEnabled &&
+            filteredResults.map((item, index) => (
+              <SingleCatalogRow cardData={item} key={index} />
+            ))}
+        </TabsContent>
+        <TabsContent value="catalog">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {adsEnabled &&
+              resultsWithAds.map((item, index) =>
+                'type' in item && item.type === 'ad' ? (
+                  <div
+                    key={index}
+                    className="col-span-1 flex h-full items-center justify-center rounded border border-zinc-600 bg-zinc-700 p-4"
+                  >
+                    {item.content}
+                  </div>
+                ) : (
+                  <SingleCatalogCard
+                    cardData={item as SingleSearchResult}
+                    key={index}
+                  />
+                )
+              )}
+            {!adsEnabled &&
+              filteredResults.map((item, index) => (
+                <SingleCatalogCard cardData={item} key={index} />
+              ))}
           </div>
         </TabsContent>
         <TabsContent value="table">

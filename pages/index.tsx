@@ -14,14 +14,15 @@ import { getAllBlogPosts } from '@/lib/blog';
 import MultiTcgSearchbox from '@/components/single-search/multitcg-searchbox';
 import useSingleStore from '@/stores/singleSearchStore';
 import PoweredBy from '@/components/powered-by';
+import useGlobalStore from '@/stores/globalStore';
 
 type Props = {};
 
 const Home: NextPage<Props> = ({}: Props) => {
   const { initWebsiteInformation } = useStore();
-
   const { results, searchStarted, loading } = useSingleStore();
   const { fetchPopularCards } = usePopularCardsStore();
+  const { adsEnabled } = useGlobalStore();
 
   useEffect(() => {
     fetchPopularCards();
@@ -34,7 +35,7 @@ const Home: NextPage<Props> = ({}: Props) => {
       <MainLayout>
         <div className="flex w-full flex-col justify-center gap-8 text-center">
           {!searchStarted && <Homebanner />}
-          <PoweredBy size="small" />
+          {adsEnabled && <PoweredBy size="small" />}
           <MultiTcgSearchbox />
 
           {loading && (
