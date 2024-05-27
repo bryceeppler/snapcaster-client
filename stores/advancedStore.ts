@@ -29,10 +29,6 @@ export interface AdvancedSearchResult {
   golden_stamped_art_series: boolean;
 }
 
-const shopifyOnlySites = useStore.getState().websites.filter(function (item) {
-  return item.shopify == true;
-});
-
 const websitesAdvanced: Website[] = [];
 
 const conditionList: Filter[] = [
@@ -272,7 +268,6 @@ type State = {
   resetFilters: () => void;
   fetchAdvancedSearchResults: (searchText: string) => Promise<void>;
   initSetInformation: () => Promise<void>;
-  initWebsiteInformationAdvanced: () => Promise<void>;
 };
 
 export const advancedUseStore = create<State>((set, get) => ({
@@ -608,22 +603,6 @@ export const advancedUseStore = create<State>((set, get) => ({
     } catch (error) {
       console.log('getSetInformation ERROR');
       console.log(error);
-    }
-  },
-  initWebsiteInformationAdvanced: async () => {
-    try {
-      if (get().websitesAdvanced.length > 0) {
-        return;
-      }
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
-      );
-      let data = response.data.websiteList.filter(
-        (website: Website) => website.backend == 'shopify'
-      );
-      set({ websitesAdvanced: data });
-    } catch {
-      console.log('initWebsiteInformationAdvanced Error ');
     }
   }
 }));

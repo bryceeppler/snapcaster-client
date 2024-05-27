@@ -32,7 +32,6 @@ export default function AdvancedSearch({}: Props) {
 
     selectedWebsiteCount,
     selectedWebsiteList,
-    websitesAdvanced,
 
     selectedSetCount,
     selectedSetList,
@@ -71,11 +70,10 @@ export default function AdvancedSearch({}: Props) {
     resetFilters,
     toggle,
     initSetInformation,
-    initWebsiteInformationAdvanced,
     fetchAdvancedSearchResults
   } = advancedUseStore();
 
-  const { initWebsiteInformation, websites } = useStore();
+  const { initWebsiteInformation, websitesAdvanced } = useStore();
 
   const [showFilters, setShowFilters] = React.useState(false);
 
@@ -98,7 +96,8 @@ export default function AdvancedSearch({}: Props) {
   }, []);
 
   useEffect(() => {
-    initWebsiteInformationAdvanced();
+    initWebsiteInformation();
+    // initWebsiteInformationAdvanced();
     initSetInformation();
   }, []);
 
