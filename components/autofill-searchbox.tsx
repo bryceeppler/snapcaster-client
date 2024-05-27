@@ -156,7 +156,7 @@ export default function SingleSearchbox(props: Props) {
 
   return (
     <div className="w-full">
-      <div className="relative">
+      <div className="relative z-[5]">
         <form onSubmit={handleFormSubmit}>
           <Input
             type="text"

@@ -159,7 +159,7 @@ export default function AdvancedSearch({}: Props) {
               tcg={'mtg'}
             ></AutoFillSearchBox>
             <Button
-              className="flex justify-between rounded bg-transparent outline outline-1 outline-muted lg:w-48"
+              className="flex justify-between rounded border border-input bg-transparent lg:w-48"
               onClick={() => {
                 setShowFilters(!showFilters);
               }}
@@ -213,7 +213,7 @@ export default function AdvancedSearch({}: Props) {
                     selectedList={selectedShowcaseTreatmentList}
                     selectCount={selectedShowcaseTreatmentCount}
                     toggle={toggle}
-                    label="Showcase Treatment"
+                    label="Showcase"
                   ></FilterDropdownBox>
                   <FilterDropdownBox
                     option={frameList}
@@ -270,7 +270,7 @@ export default function AdvancedSearch({}: Props) {
                 onClick={() => {
                   setShoeSoryBy(!showSortBy);
                 }}
-                className="w-full min-w-40 bg-inherit outline outline-1 outline-muted"
+                className="w-full min-w-40 border border-input bg-inherit"
               >
                 Sort:{' '}
                 {selectedSortBy.charAt(0).toUpperCase() +
@@ -282,7 +282,7 @@ export default function AdvancedSearch({}: Props) {
                 />
               </Button>
               <div
-                className={`no-scrollbar 	 absolute z-10 mt-1.5 max-h-52 w-full min-w-36 overflow-y-auto rounded bg-[hsl(var(--background))] shadow-2xl ${
+                className={`no-scrollbar absolute z-10 mt-1.5 max-h-52 w-full min-w-40 overflow-y-auto rounded bg-popover  shadow-2xl ${
                   showSortBy ? 'outline' : ''
                 } outline-1 outline-muted sm:w-max`}
               >
@@ -324,7 +324,7 @@ export default function AdvancedSearch({}: Props) {
               onClick={() => {
                 resetFilters();
               }}
-              className="min-w-40 bg-transparent outline outline-1 outline-muted hover:bg-rose-700"
+              className="min-w-40 border border-input bg-transparent hover:bg-rose-700"
             >
               Reset Filters
             </Button>
