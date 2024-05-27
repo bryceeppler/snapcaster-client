@@ -335,6 +335,7 @@ const SearchView = ({
       {/* Textarea */}
       <Textarea
         rows={8}
+        className="text-[16px]"
         placeholder="Enter card names (one per line)"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
