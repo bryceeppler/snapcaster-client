@@ -3,6 +3,7 @@ import { type NextPage } from 'next';
 import { useStore } from '@/stores/store';
 import Head from 'next/head';
 import Link from 'next/link';
+import PageTitle from '@/components/ui/page-title';
 type Props = {};
 
 const Supporters: NextPage<Props> = () => {
@@ -15,14 +16,10 @@ const Supporters: NextPage<Props> = () => {
         <section className="w-full">
           <div className="container px-4 md:px-6">
             <div className="space-y-8">
-              <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Our Supporters
-                </h2>
-                <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  We're grateful for the support of these amazing companies.
-                </p>
-              </div>
+              <PageTitle
+                title="Our Supporters"
+                subtitle="We're grateful for the support of these amazing companies."
+              />
               <div className="space-y-12 text-center">
                 <div>
                   <h3 className="mb-6 text-2xl font-bold">Tier 1 Sponsor</h3>

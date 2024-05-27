@@ -11,7 +11,9 @@ export default function Homebanner({}: Props) {
         alt="Snapcaster"
       />
 
-      <h1 className="mt-2 text-4xl font-extrabold">Snapcaster</h1>
+      <h1 className="mt-2 text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+        Snapcaster
+      </h1>
       <TypeAnimation
         preRenderFirstString={true}
         sequence={[

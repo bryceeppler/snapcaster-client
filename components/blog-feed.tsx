@@ -6,7 +6,7 @@ type Props = {
 
 export default function BlogFeed({ posts }: Props) {
   return (
-    <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (
         <Link
           href={`/blog/${post.slug}`}
@@ -28,11 +28,6 @@ export default function BlogFeed({ posts }: Props) {
             ))}
           </ul>
           <div className="flex flex-grow"></div>
-          {/* <img
-            src={post.data.image}
-            alt={post.data.title}
-            className="outlined-container h-60 w-full object-cover"
-          /> */}
           <p className="line-clamp-4 text-left text-sm">{post.data.preview}</p>
         </Link>
       ))}

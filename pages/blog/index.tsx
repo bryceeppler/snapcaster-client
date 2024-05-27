@@ -3,7 +3,7 @@ import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
 import MainLayout from '@/components/main-page-layout';
 import BlogFeed from '@/components/blog-feed';
-
+import PageTitle from '@/components/ui/page-title';
 export type BlogPostPreview = {
   slug: string;
   data: {
@@ -22,8 +22,11 @@ type BlogIndexProps = {
 const BlogIndex: React.FC<BlogIndexProps> = ({ posts }) => {
   return (
     <MainLayout>
-      <div className="container flex flex-col items-center">
-        <h1 className="mb-6 text-4xl font-bold">Blog</h1>
+      <div className="flex w-full flex-col justify-center gap-8 text-center">
+        <PageTitle
+          title="Blog"
+          subtitle="Stay up to date with recent changes and annoucements."
+        />
         <BlogFeed posts={posts} />
       </div>
     </MainLayout>

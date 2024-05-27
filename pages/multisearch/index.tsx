@@ -69,30 +69,35 @@ export default function Multisearch({}: Props) {
     <>
       <MultisearchHead />
       <MainLayout>
-        {mode === 'search' && (
-          <div className="container w-full flex-1 flex-col items-center justify-center text-center">
-            <PageTitle title="Multi Search" />
-            <SearchView
-              tcg={tcg}
-              setTcg={setTcg}
-              searchInput={searchInput}
-              setSearchInput={setSearchInput}
-              handleSubmit={handleSubmit}
-              websites={websites}
-              selectedWebsites={selectedWebsites}
-              onWebsiteSelect={onWebsiteSelect}
-            />
-          </div>
-        )}
-        {mode === 'results' && (
-          <div className="container w-full flex-1 flex-col items-center justify-center text-center">
-            <PageTitle title="Multi Search" />
-            <div className="flex flex-col gap-4 md:flex-row">
-              <ResultsView results={results} />
-              <SummaryView />
-            </div>
-          </div>
-        )}
+        <div className="flex w-full flex-col justify-center gap-8 text-center">
+          <PageTitle
+            title="Multi Search"
+            subtitle="Search for up to 100 cards across select stores."
+          />
+
+          {mode === 'search' && (
+            <>
+              <SearchView
+                tcg={tcg}
+                setTcg={setTcg}
+                searchInput={searchInput}
+                setSearchInput={setSearchInput}
+                handleSubmit={handleSubmit}
+                websites={websites}
+                selectedWebsites={selectedWebsites}
+                onWebsiteSelect={onWebsiteSelect}
+              />
+            </>
+          )}
+          {mode === 'results' && (
+            <>
+              <div className="flex flex-col gap-4 md:flex-row">
+                <ResultsView results={results} />
+                <SummaryView />
+              </div>
+            </>
+          )}
+        </div>
         <BackToTopButton />
       </MainLayout>
     </>

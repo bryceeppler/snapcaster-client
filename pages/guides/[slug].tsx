@@ -22,7 +22,10 @@ const GuidePostPage: React.FC<GuidePostPageProps> = ({ post }) => {
         <p className="">{post.date}</p>
         <ul className="mb-10 mt-6 flex flex-wrap gap-2">
           {post.tags.map((tag, index) => (
-            <li key={index} className="rounded bg-pink-500 px-2 py-1 text-sm">
+            <li
+              key={index}
+              className=" rounded border px-2 py-1 text-xs text-primary"
+            >
               {tag}
             </li>
           ))}
