@@ -24,24 +24,28 @@ const GuideIndex: React.FC<GuideIndexProps> = ({ posts }) => {
     <MainLayout>
       <div className="container flex flex-col items-center">
         <h1 className="mb-6 text-4xl font-bold">Guides</h1>
-        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <Link
               href={`/guides/${post.slug}`}
               key={post.slug}
-              className="outlined-container mb-4 w-full max-w-2xl space-y-2 bg-primary p-6 text-primary-foreground transition-colors hover:bg-primary/60"
+              className="outlined-container mb-4 flex w-full max-w-2xl flex-col space-y-2 bg-background p-6 text-popover-foreground transition-colors hover:bg-popover"
             >
-              <h2 className="text-2xl font-semibold">{post.data.title}</h2>
-              <p className="text-secondary">{post.data.date}</p>
-              <p className="line-clamp-5">{post.data.preview}</p>
-
+              <h2 className="line-clamp-1 text-2xl font-semibold">
+                {post.data.title}
+              </h2>
+              <p className="text-sm text-muted-foreground">{post.data.date}</p>
               <ul className="flex flex-wrap gap-2">
                 {post.data.tags.map((tag, index) => (
-                  <li key={index} className="rounded bg-pink-500 px-2 py-1">
+                  <li
+                    key={index}
+                    className=" rounded border px-2 py-1 text-xs text-primary"
+                  >
                     {tag}
                   </li>
                 ))}
               </ul>
+              <div className="flex flex-grow"></div>
               <img
                 src={post.data.image}
                 alt={post.data.title}

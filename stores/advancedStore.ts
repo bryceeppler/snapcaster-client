@@ -449,7 +449,7 @@ export const advancedUseStore = create<State>((set, get) => ({
           selectedFoilCount: get().selectedFoilCount + 1
         });
       }
-    } else if (category == 'Showcase Treatment') {
+    } else if (category == 'Showcase') {
       if (get().selectedShowcaseTreatmentList.includes(fieldName)) {
         set({
           selectedShowcaseTreatmentList:

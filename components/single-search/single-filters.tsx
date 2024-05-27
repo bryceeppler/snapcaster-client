@@ -110,10 +110,11 @@ const SingleSearchFilter = (props: Props) => {
       )}
 
       <Button
-        className="mx-auto my-2 flex justify-between rounded bg-transparent outline outline-1 outline-muted lg:w-48"
+        className="mx-auto my-2 flex justify-between rounded bg-transparent lg:w-48"
         onClick={() => {
           setShowFilters(!showFilters);
         }}
+        variant="outline"
       >
         {showFilters ? 'Hide filters' : 'Show filters'}
         <ChevronDown

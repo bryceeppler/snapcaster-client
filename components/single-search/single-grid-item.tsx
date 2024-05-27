@@ -41,9 +41,16 @@ export default function SingleCatalogCard({ cardData }: Props) {
         <p className="text-xs capitalize opacity-70">{cardData.set}</p>
         <p className="text-sm font-bold">{cardData.name}</p>
         <div className="p-1"></div>
-        <p className="text-xs opacity-70">
-          {findWebsiteNameByCode(cardData.website)}
-        </p>
+
+        <div className="flex flex-row gap-2">
+          {cardData.website === 'obsidian' && (
+            <img src="/obsidian_icon.png" alt="Website" className="h-4 w-4" />
+          )}
+          <p className="text-xs opacity-70">
+            {findWebsiteNameByCode(cardData.website)}
+          </p>
+        </div>
+
         <p className="text-sm">{cardData.condition}</p>
         <p className="text-sm font-bold">${cardData.price}</p>
       </CardContent>
