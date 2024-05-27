@@ -29,9 +29,9 @@ module.exports = {
               fontWeight: 'bold' // Keep bold weight for emphasis
             },
             a: {
-              color: '#ff5b6d', // coral
+              color: '#f95b60', // coral
               '&:hover': {
-                color: '#FC939F' // pink-200
+                color: '#f04248' // primary-muted
               }
             },
             h1: {

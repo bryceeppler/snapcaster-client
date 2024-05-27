@@ -87,64 +87,64 @@ export default function SingleCatalogRow({ cardData }: Props) {
                 </div>
               )}
               {cardData.promo == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>Promo</p>
                 </div>
               )}
               {cardData.preRelease == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>Pre Release</p>
                 </div>
               )}
               {cardData.promoPack == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>Promo Pack</p>
                 </div>
               )}
               {cardData.foil == 'foil' && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>{cardData.foil}</p>
                 </div>
               )}
               {cardData.foil != null && cardData.foil != 'foil' && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>{cardData.foil + ' foil'}</p>
                 </div>
               )}
               {cardData.showcase != null && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>showcase</p>
                 </div>
               )}
               {cardData.showcase != null && cardData.showcase != 'showcase' && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>{cardData.showcase}</p>
                 </div>
               )}
 
               {cardData.frame != null && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>{cardData.frame}</p>
                 </div>
               )}
 
               {cardData.alternateArt == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>Alternate Art</p>
                 </div>
               )}
               {cardData.alternateArtJapanese == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>Japanese</p>
                 </div>
               )}
               {cardData.artSeries == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>Art Series</p>
                 </div>
               )}
               {cardData.goldenStampedSeries == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
                   <p>Golden Stamped</p>
                 </div>
               )}
@@ -156,7 +156,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
             <div className="flex flex-col items-end">
               {cardData.website in promoMap ? (
                 <div className="flex text-lg font-bold ">
-                  <p className="pr-1 text-green-600">${cardData.price}</p>
+                  <p className="pr-1 text-primary">${cardData.price}</p>
                   <p className="text-red-600 line-through decoration-2">
                     ${cardData.priceBeforeDiscount}
                   </p>
@@ -167,7 +167,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
 
               <div className="flex flex-row space-x-2">
                 {cardData.foil && (
-                  <div className="text-sm font-extrabold text-pink-500">
+                  <div className="text-sm font-extrabold text-primary">
                     Foil
                   </div>
                 )}
