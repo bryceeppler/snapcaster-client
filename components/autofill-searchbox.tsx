@@ -156,7 +156,7 @@ export default function SingleSearchbox(props: Props) {
 
   return (
     <div className="w-full">
-      <div className="relative">
+      <div className="relative z-[5]">
         <form onSubmit={handleFormSubmit}>
           <Input
             type="text"
@@ -175,7 +175,7 @@ export default function SingleSearchbox(props: Props) {
           </button>
           {showAutocomplete && (
             <div
-              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-950 py-1 shadow-md"
+              className="absolute mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-950 py-1 shadow-md"
               ref={autocompleteRef}
             >
               {autocompleteResults &&
