@@ -66,7 +66,7 @@ const Signin: NextPage<Props> = () => {
     <>
       <SigninHead />
       <MainLayout>
-        <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
+        <div className="mx-auto flex w-full max-w-lg flex-col justify-center gap-8 text-center">
           <section className="w-full py-6 md:py-12">
             <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
               <div className="space-y-2">

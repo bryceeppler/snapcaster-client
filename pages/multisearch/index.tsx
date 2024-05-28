@@ -33,6 +33,7 @@ import {
   TableRow
 } from '@/components/ui/table';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
+import PoweredBy from '@/components/powered-by';
 
 type Props = {};
 
@@ -68,30 +69,35 @@ export default function Multisearch({}: Props) {
     <>
       <MultisearchHead />
       <MainLayout>
-        {mode === 'search' && (
-          <div className="container w-full flex-1 flex-col items-center justify-center text-center">
-            <PageTitle title="Multi Search" />
-            <SearchView
-              tcg={tcg}
-              setTcg={setTcg}
-              searchInput={searchInput}
-              setSearchInput={setSearchInput}
-              handleSubmit={handleSubmit}
-              websites={websites}
-              selectedWebsites={selectedWebsites}
-              onWebsiteSelect={onWebsiteSelect}
-            />
-          </div>
-        )}
-        {mode === 'results' && (
-          <div className="container w-full flex-1 flex-col items-center justify-center text-center">
-            <PageTitle title="Multi Search" />
-            <div className="flex flex-col gap-4 md:flex-row">
-              <ResultsView results={results} getWebsiteName={getWebsiteName} />
-              <SummaryView />
-            </div>
-          </div>
-        )}
+        <div className="flex w-full flex-col justify-center gap-8 text-center">
+          <PageTitle
+            title="Multi Search"
+            subtitle="Search for up to 100 cards across select stores."
+          />
+
+          {mode === 'search' && (
+            <>
+              <SearchView
+                tcg={tcg}
+                setTcg={setTcg}
+                searchInput={searchInput}
+                setSearchInput={setSearchInput}
+                handleSubmit={handleSubmit}
+                websites={websites}
+                selectedWebsites={selectedWebsites}
+                onWebsiteSelect={onWebsiteSelect}
+              />
+            </>
+          )}
+          {mode === 'results' && (
+            <>
+              <div className="flex flex-col gap-4 md:flex-row">
+                <ResultsView results={results} />
+                <SummaryView />
+              </div>
+            </>
+          )}
+        </div>
         <BackToTopButton />
       </MainLayout>
     </>
@@ -139,7 +145,7 @@ const SummaryView = () => {
         <p>Total: ${overallTotal.toFixed(2)}</p>
 
         {/* List of selected stores and their total prices, skipping entries with no valid prices */}
-        <ScrollArea className="min-h-[100px] w-full rounded-md border p-4">
+        <ScrollArea className="min-h-[100px] w-full rounded-md border bg-popover p-4">
           <span className="text-sm">Selected Websites</span>
           <Table>
             <TableBody className="text-left text-xs">
@@ -168,13 +174,7 @@ const SummaryView = () => {
   );
 };
 
-const ResultsView = ({
-  results,
-  getWebsiteName
-}: {
-  results: any[];
-  getWebsiteName: (code: string) => string;
-}) => {
+const ResultsView = ({ results }: { results: any[] }) => {
   return (
     <div className="flex w-full flex-col gap-2">
       {results.map((result) => (
@@ -227,7 +227,7 @@ const MultiSearchProduct = ({ product }: { product: any }) => {
           >
             Buy
           </Button>
-          <ScrollArea className="h-[300px] w-full rounded-md border p-4">
+          <ScrollArea className="h-[300px] w-full rounded-md border bg-popover p-4">
             <Table>
               <TableCaption>Variants for {product.name}</TableCaption>
               <TableHeader>
@@ -248,7 +248,7 @@ const MultiSearchProduct = ({ product }: { product: any }) => {
                       onClick={() => {
                         setSelectedVariant(variant);
                       }}
-                      className="cursor-pointer text-left"
+                      className="cursor-pointer text-left hover:bg-background"
                     >
                       <TableCell className="w-[100px]">
                         {variant.name}
@@ -299,12 +299,13 @@ const SearchView = ({
   onWebsiteSelect: (value: any) => void;
 }) => {
   const { loading } = useMultiSearchStore();
+  const { adsEnabled } = useGlobalStore();
   return (
     <div className="outlined-container flex w-full flex-col gap-4 p-6">
-      <div className="flex flex-col gap-4 sm:flex-row">
+      <div className="flex flex-col gap-4 md:flex-row">
         {/* TCG Select */}
         <Select value={tcg} onValueChange={(value: Tcgs) => setTcg(value)}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="MTG" />
           </SelectTrigger>
           <SelectContent>
@@ -327,11 +328,14 @@ const SearchView = ({
           selectedWebsites={selectedWebsites}
           onWebsiteSelect={onWebsiteSelect}
         />
+        <div className=" flex-grow "></div>
+        {adsEnabled && <PoweredBy size="small" />}
       </div>
 
       {/* Textarea */}
       <Textarea
         rows={8}
+        className="text-[16px]"
         placeholder="Enter card names (one per line)"
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}

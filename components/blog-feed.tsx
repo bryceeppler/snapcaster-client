@@ -6,28 +6,29 @@ type Props = {
 
 export default function BlogFeed({ posts }: Props) {
   return (
-    <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+    <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (
         <Link
           href={`/blog/${post.slug}`}
           key={post.slug}
-          className="outlined-container mb-4 w-full max-w-2xl space-y-2 bg-primary p-6 text-primary-foreground transition-colors hover:bg-primary/60"
+          className="outlined-container mb-4 flex w-full max-w-2xl flex-col space-y-2 bg-background p-6 text-popover-foreground transition-colors hover:bg-popover"
         >
-          <h2 className="text-2xl font-semibold">{post.data.title}</h2>
-          <p className="text-secondary">{post.data.date}</p>
+          <h2 className="line-clamp-1 text-2xl font-semibold">
+            {post.data.title}
+          </h2>
+          <p className="text-sm text-muted-foreground">{post.data.date}</p>
           <ul className="flex flex-wrap gap-2">
             {post.data.tags.map((tag, index) => (
-              <li key={index} className="rounded bg-pink-500 px-2 py-1">
+              <li
+                key={index}
+                className=" rounded border px-2 py-1 text-xs text-primary"
+              >
                 {tag}
               </li>
             ))}
           </ul>
-          <img
-            src={post.data.image}
-            alt={post.data.title}
-            className="outlined-container h-60 w-full object-cover"
-          />
-          <p className="line-clamp-5 text-left">{post.data.preview}</p>
+          <div className="flex flex-grow"></div>
+          <p className="line-clamp-4 text-left text-sm">{post.data.preview}</p>
         </Link>
       ))}
     </div>

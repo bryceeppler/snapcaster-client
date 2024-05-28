@@ -56,7 +56,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
   return (
     <>
       <div
-        className={` outlined-container mx-auto my-2 flex gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:w-[100%] sm:p-4 md:w-[60%] `}
+        className={` outlined-container mx-auto my-2 flex gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:w-[100%] sm:p-4 md:w-[90%] `}
       >
         <div>
           <img
@@ -77,64 +77,64 @@ export default function SingleCatalogRow({ cardData }: Props) {
 
             <div className=" flex  flex-wrap font-serif text-xs font-semibold">
               {cardData.promo == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Promo</p>
                 </div>
               )}
               {cardData.promo_prerelease == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Pre Release</p>
                 </div>
               )}
               {cardData.promo_pack == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Promo Pack</p>
                 </div>
               )}
               {cardData.foil == 'foil' && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>{cardData.foil}</p>
                 </div>
               )}
               {cardData.foil != '' && cardData.foil != 'foil' && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>{cardData.foil + ' foil'}</p>
                 </div>
               )}
               {cardData.showcase != '' && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>showcase</p>
                 </div>
               )}
               {cardData.showcase != '' && cardData.showcase != 'showcase' && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>{cardData.showcase}</p>
                 </div>
               )}
 
               {cardData.frame != '' && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>{cardData.frame}</p>
                 </div>
               )}
 
               {cardData.alternate_art == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Alternate Art</p>
                 </div>
               )}
               {cardData.alternate_art_japanese == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Japanese</p>
                 </div>
               )}
               {cardData.art_series == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Art Series</p>
                 </div>
               )}
               {cardData.golden_stamped_art_series == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-pink-600 px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Golden Stamped</p>
                 </div>
               )}
@@ -148,7 +148,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
 
               <div className="flex flex-row space-x-2">
                 {cardData.foil && (
-                  <div className="text-sm font-extrabold text-pink-500">
+                  <div className="text-sm font-extrabold text-primary">
                     Foil
                   </div>
                 )}

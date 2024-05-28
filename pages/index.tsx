@@ -8,24 +8,21 @@ import usePopularCardsStore from '@/stores/popularCardsStore';
 import SingleCatalog from '@/components/single-search/single-results';
 import MainLayout from '@/components/main-page-layout';
 import SingleSearchFilter from '@/components/single-search/single-filters';
-import PopularSearchCarousel from '@/components/popular-search-carousel';
 import { useEffect } from 'react';
 import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
-import BlogFeed from '@/components/blog-feed';
-import type { BlogPostPreview } from '@/pages/blog';
 import MultiTcgSearchbox from '@/components/single-search/multitcg-searchbox';
 import useSingleStore from '@/stores/singleSearchStore';
+import PoweredBy from '@/components/powered-by';
+import useGlobalStore from '@/stores/globalStore';
 
-type Props = {
-  posts: BlogPostPreview[];
-};
+type Props = {};
 
-const Home: NextPage<Props> = ({ posts }: Props) => {
+const Home: NextPage<Props> = ({}: Props) => {
   const { initWebsiteInformation } = useStore();
-
   const { results, searchStarted, loading } = useSingleStore();
   const { fetchPopularCards } = usePopularCardsStore();
+  const { adsEnabled } = useGlobalStore();
 
   useEffect(() => {
     initWebsiteInformation();
@@ -35,16 +32,10 @@ const Home: NextPage<Props> = ({ posts }: Props) => {
     <>
       <HomeHead />
       <MainLayout>
-        <div className="container flex w-full flex-col justify-center gap-8 text-center">
+        <div className="flex w-full flex-col justify-center gap-8 text-center">
           {!searchStarted && <Homebanner />}
+          {adsEnabled && <PoweredBy size="small" />}
           <MultiTcgSearchbox />
-          {/* {!searchStarted && <PopularSearchCarousel />} */}
-          {/* {!searchStarted && (
-            <div className="flex flex-col gap-4">
-              <h3 className="text-2xl font-bold">Recent Posts</h3>
-              <BlogFeed posts={posts} />
-            </div>
-          )} */}
 
           {loading && (
             <div className="flex items-center justify-center pt-5">
