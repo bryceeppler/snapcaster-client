@@ -16,6 +16,9 @@ module.exports = {
       xl: '1440px'
     },
     extend: {
+      aspectRatio: {
+        card: '5 / 7'
+      },
       container: {
         center: true,
         padding: '2rem'
