@@ -20,11 +20,12 @@ import PageTitle from '@/components/ui/page-title';
 
 import { FilterDropdownBox } from '@/components/advanced-search/advanced-filter-dropdown';
 import { useStore } from '@/stores/store';
+import SingleSearchbox from '@/components/autofill-searchbox';
 type Props = {};
 
 export default function AdvancedSearch({}: Props) {
   const autocompleteEndpoint =
-    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
+    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards';
   const {
     advancedSearchLoading,
     advancedSearchResults,
@@ -72,7 +73,7 @@ export default function AdvancedSearch({}: Props) {
     fetchAdvancedSearchResults
   } = advancedUseStore();
 
-  const { initWebsiteInformation, websites } = useStore();
+  const { initWebsiteInformation, websitesAdvanced } = useStore();
 
   const [showFilters, setShowFilters] = React.useState(false);
 
@@ -96,6 +97,7 @@ export default function AdvancedSearch({}: Props) {
 
   useEffect(() => {
     initWebsiteInformation();
+    // initWebsiteInformationAdvanced();
     initSetInformation();
   }, []);
 
@@ -151,13 +153,13 @@ export default function AdvancedSearch({}: Props) {
 
           {/*Container 2 - Search Bar & Show Filters Button*/}
           <div className="flex items-center gap-2">
-            <AutoFillSearchBox
+            <SingleSearchbox
               searchFunction={fetchAdvancedSearchResults}
               setSearchInput={setAdvancedSearchInput}
               searchInput={advancedSearchInput}
               autocompleteEndpoint={autocompleteEndpoint}
               tcg={'mtg'}
-            ></AutoFillSearchBox>
+            ></SingleSearchbox>
             <Button
               className="flex justify-between rounded border border-input bg-transparent lg:w-48"
               onClick={() => {
@@ -179,7 +181,7 @@ export default function AdvancedSearch({}: Props) {
               <div className="mb-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                   <FilterDropdownBox
-                    option={websites.map((obj) => {
+                    option={websitesAdvanced.map((obj) => {
                       return { name: obj.name, abbreviation: obj.code };
                     })}
                     selectedList={selectedWebsiteList}

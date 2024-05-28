@@ -25,7 +25,6 @@ const Home: NextPage<Props> = ({}: Props) => {
   const { adsEnabled } = useGlobalStore();
 
   useEffect(() => {
-    fetchPopularCards();
     initWebsiteInformation();
   }, []);
 

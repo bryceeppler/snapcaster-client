@@ -46,7 +46,7 @@ export default function Navbar() {
   return (
     <>
       {/* MOBILE NAV */}
-      <div className="relative flex h-16 items-center justify-between bg-muted md:hidden">
+      <div className="relative flex h-16 items-center justify-between bg-popover md:hidden">
         <div className="absolute inset-y-0 left-0 flex items-center">
           <Button
             variant="ghost"

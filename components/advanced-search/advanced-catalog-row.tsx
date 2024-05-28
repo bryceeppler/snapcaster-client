@@ -56,7 +56,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
   return (
     <>
       <div
-        className={` outlined-container mx-auto my-2 flex gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:w-[100%] sm:p-4 md:w-[60%] `}
+        className={` outlined-container mx-auto my-2 flex gap-x-4 p-2 shadow-sm transition-all sm:my-3 sm:w-[100%] sm:p-4 md:w-[90%] `}
       >
         <div>
           <img
@@ -76,75 +76,65 @@ export default function SingleCatalogRow({ cardData }: Props) {
             </div>
 
             <div className=" flex  flex-wrap font-serif text-xs font-semibold">
-              {cardData.website in promoMap && (
-                <div className="mb-1 mr-1 max-w-fit rounded-sm bg-gradient-to-tl from-rose-600 to-rose-800 px-1 text-center align-middle lowercase">
-                  <p>
-                    {`-${(
-                      (1 - promoMap[cardData.website]['discount']) *
-                      100
-                    ).toFixed(0)}% ${promoMap[cardData.website]['promoCode']}`}
-                  </p>
-                </div>
-              )}
               {cardData.promo == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Promo</p>
                 </div>
               )}
-              {cardData.preRelease == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.promo_prerelease == true && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Pre Release</p>
                 </div>
               )}
-              {cardData.promoPack == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.promo_pack == true && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Promo Pack</p>
                 </div>
               )}
               {cardData.foil == 'foil' && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>{cardData.foil}</p>
                 </div>
               )}
-              {cardData.foil != null && cardData.foil != 'foil' && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.foil != '' && cardData.foil != 'foil' && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>{cardData.foil + ' foil'}</p>
                 </div>
               )}
-              {cardData.showcase != null && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.showcase != '' && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>showcase</p>
                 </div>
               )}
-              {cardData.showcase != null && cardData.showcase != 'showcase' && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.showcase != '' && cardData.showcase != 'showcase' && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>{cardData.showcase}</p>
                 </div>
               )}
 
-              {cardData.frame != null && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.frame != '' && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>{cardData.frame}</p>
                 </div>
               )}
 
-              {cardData.alternateArt == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.alternate_art == true && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Alternate Art</p>
                 </div>
               )}
-              {cardData.alternateArtJapanese == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.alternate_art_japanese == true && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Japanese</p>
                 </div>
               )}
-              {cardData.artSeries == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.art_series == true && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Art Series</p>
                 </div>
               )}
-              {cardData.goldenStampedSeries == true && (
-                <div className="mb-1 mr-1 w-max rounded bg-primary px-1 capitalize">
+              {cardData.golden_stamped_art_series == true && (
+                <div className="mb-1 mr-1 rounded border px-2 py-1 text-xs capitalize text-primary">
                   <p>Golden Stamped</p>
                 </div>
               )}
@@ -154,16 +144,7 @@ export default function SingleCatalogRow({ cardData }: Props) {
         <div className=" ml-auto mt-2">
           <div className="flex">
             <div className="flex flex-col items-end">
-              {cardData.website in promoMap ? (
-                <div className="flex text-lg font-bold ">
-                  <p className="pr-1 text-primary">${cardData.price}</p>
-                  <p className="text-red-600 line-through decoration-2">
-                    ${cardData.priceBeforeDiscount}
-                  </p>
-                </div>
-              ) : (
-                <div className="text-lg font-bold ">${cardData.price}</div>
-              )}
+              <div className="text-lg font-bold ">${cardData.price}</div>
 
               <div className="flex flex-row space-x-2">
                 {cardData.foil && (
