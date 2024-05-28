@@ -15,6 +15,7 @@ type SingleSearchState = {
   sortField: string;
   sortOrder: 'asc' | 'desc';
   foil: boolean;
+  resultsTcg: string;
 
   setSearchInput: (input: string) => void;
   setTcg: (tcg: Tcgs) => void;
@@ -41,6 +42,7 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
   sortField: 'price',
   sortOrder: 'asc',
   foil: false,
+  resultsTcg: '',
 
   setSearchInput: (input: string) => {
     set({ searchInput: input });
@@ -76,6 +78,7 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
   fetchCards: async () => {
     try {
       set({ loading: true, searchStarted: true });
+      set({ resultsTcg: get().tcg });
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search/?tcg=${
           get().tcg

@@ -17,3 +17,23 @@ export const trackOutboundLink = (url: string, price: number) => {
     value: price
   });
 };
+
+export const handleBuyClick = (
+  link: string,
+  price: number,
+  cardName: string,
+  tcg: string
+) => {
+  const domain = link.split('/')[2];
+  const priceInCents = price * 100;
+
+  // Push event to dataLayer
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'buy_button_click',
+    link_url: domain,
+    card_name: cardName,
+    card_price: priceInCents,
+    tcg: tcg
+  });
+};
