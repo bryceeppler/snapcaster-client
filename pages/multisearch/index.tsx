@@ -300,6 +300,14 @@ const SearchView = ({
 }) => {
   const { loading } = useMultiSearchStore();
   const { adsEnabled } = useGlobalStore();
+
+  const websiteList = websites.map((website) => ({
+    name: website.name,
+    code: website.code
+  }));
+
+  adsEnabled &&
+    websiteList.unshift({ name: 'Obsidian Games', code: 'obsidian' });
   return (
     <div className="outlined-container flex w-full flex-col gap-4 p-6">
       <div className="flex flex-col gap-4 md:flex-row">
@@ -321,10 +329,7 @@ const SearchView = ({
 
         {/* Store Combobox */}
         <WebsiteCombobox
-          websites={websites.map((website) => ({
-            name: website.name,
-            code: website.code
-          }))}
+          websites={websiteList}
           selectedWebsites={selectedWebsites}
           onWebsiteSelect={onWebsiteSelect}
         />

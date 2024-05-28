@@ -36,6 +36,13 @@ export default function SingleCatalog({}: Props) {
   // Insert advertisements every 10 results
   const resultsWithAds = insertAdvertisements(filteredResults, 9);
 
+  if (adsEnabled) {
+    // change first three SingleSearchResult objects to have website name of obsidian
+    (resultsWithAds[0] as SingleSearchResult).website = 'obsidian';
+    (resultsWithAds[1] as SingleSearchResult).website = 'obsidian';
+    (resultsWithAds[2] as SingleSearchResult).website = 'obsidian';
+  }
+
   if (filteredResults.length === 0) {
     return (
       <div className="flex items-center justify-center pt-5">

@@ -11,7 +11,7 @@ type GlobalState = {
 
 const useGlobalStore = create<GlobalState>((set, get) => ({
   websites: [],
-  adsEnabled: false,
+  adsEnabled: true,
   getWebsiteName: (websiteCode: string) => {
     const website = get().websites.find((w) => w.code === websiteCode);
     return website ? website.name : '';

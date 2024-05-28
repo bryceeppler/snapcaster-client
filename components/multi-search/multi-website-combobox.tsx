@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Check, ChevronsUpDown } from 'lucide-react';
+import useGlobalStore from '@/stores/globalStore';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -31,6 +32,8 @@ export function WebsiteCombobox({
   onWebsiteSelect
 }: Props) {
   const [open, setOpen] = React.useState(false);
+
+  const { adsEnabled } = useGlobalStore();
 
   const isWebsiteSelected = (website: WebsiteMapping) =>
     selectedWebsites.some((selected) => selected.code === website.code);
@@ -71,12 +74,19 @@ export function WebsiteCombobox({
                     >
                       <Check
                         className={cn(
-                          'mr-2 h-4 w-4',
+                          'mr-2 h-4 w-4 text-primary',
                           isWebsiteSelected(website)
                             ? 'opacity-100'
                             : 'opacity-0'
                         )}
                       />
+                      {website.code === 'obsidian' && adsEnabled && (
+                        <img
+                          src="/obsidian_icon.png"
+                          className="mr-2 h-4 w-4"
+                          alt="Obsidian"
+                        />
+                      )}
                       {website.name}
                     </CommandItem>
                   ))}
