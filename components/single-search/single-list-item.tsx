@@ -3,27 +3,22 @@ import { SingleSearchResult } from '@/stores/store';
 type Props = {
   cardData: SingleSearchResult;
   promoted?: boolean;
+  tcg: string;
 };
 
 import { useStore } from '@/stores/store';
-import { trackOutboundLink } from '../../utils/analytics';
+import { handleBuyClick } from '../../utils/analytics';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import CardImage from '../ui/card-image';
 
-export default function SingleCatalogRow({ cardData, promoted }: Props) {
+export default function SingleCatalogRow({ cardData, promoted, tcg }: Props) {
   const { websites } = useStore();
 
   const findWebsiteNameByCode = (code: string): string => {
     const website = websites.find((website) => website.code === code);
     return website ? website.name : 'Website not found';
   };
-
-  function handleBuyClick(link: string, price: number) {
-    const domain = link.split('/')[2];
-    const priceInCents = price * 100;
-    trackOutboundLink(domain, priceInCents);
-  }
 
   return (
     <div
@@ -69,7 +64,14 @@ export default function SingleCatalogRow({ cardData, promoted }: Props) {
                 className="w-full"
               >
                 <Button
-                  onClick={() => handleBuyClick(cardData.link, cardData.price)}
+                  onClick={() =>
+                    handleBuyClick(
+                      cardData.link,
+                      cardData.price,
+                      cardData.name,
+                      tcg
+                    )
+                  }
                   className="w-full"
                 >
                   Buy
@@ -96,7 +98,9 @@ export default function SingleCatalogRow({ cardData, promoted }: Props) {
           className="w-full"
         >
           <Button
-            onClick={() => handleBuyClick(cardData.link, cardData.price)}
+            onClick={() =>
+              handleBuyClick(cardData.link, cardData.price, cardData.name, tcg)
+            }
             className="w-full"
           >
             Buy

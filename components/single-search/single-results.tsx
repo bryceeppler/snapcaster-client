@@ -31,7 +31,7 @@ const insertAdvertisements = (
 };
 
 export default function SingleCatalog({}: Props) {
-  const { filteredResults } = useSingleStore();
+  const { filteredResults, resultsTcg } = useSingleStore();
   const { adsEnabled } = useGlobalStore();
   // Insert advertisements every 10 results
   const resultsWithAds = insertAdvertisements(filteredResults, 9);
@@ -64,6 +64,7 @@ export default function SingleCatalog({}: Props) {
                 </div>
               ) : (
                 <SingleCatalogRow
+                  tcg={resultsTcg}
                   cardData={item as SingleSearchResult}
                   key={index}
                 />
@@ -71,7 +72,7 @@ export default function SingleCatalog({}: Props) {
             )}
           {!adsEnabled &&
             filteredResults.map((item, index) => (
-              <SingleCatalogRow cardData={item} key={index} />
+              <SingleCatalogRow tcg={resultsTcg} cardData={item} key={index} />
             ))}
         </TabsContent>
         <TabsContent value="catalog">
