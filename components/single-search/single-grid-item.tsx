@@ -31,45 +31,46 @@ export default function SingleCatalogCard({ cardData }: Props) {
   }
 
   return (
-    <Card>
-      <CardHeader className="items-center justify-center">
+    <Card className="flex h-full flex-col">
+      <CardHeader className="flex items-center justify-center">
         <div className="w-full max-w-[300px]">
           <CardImage imageUrl={cardData.image} alt={cardData.name} />
         </div>
       </CardHeader>
-      <CardContent className="text-left">
-        <p className="text-xs capitalize opacity-70">{cardData.set}</p>
-        <p className="text-sm font-bold">{cardData.name}</p>
-        <div className="p-1"></div>
+      <div className="flex flex-grow flex-col justify-end">
+        <CardContent className="text-left">
+          <p className="text-xs capitalize opacity-70">{cardData.set}</p>
+          <p className="text-sm font-bold">{cardData.name}</p>
+          <div className="p-1"></div>
 
-        <div className="flex flex-row gap-2">
-          {cardData.website === 'obsidian' && (
-            <img src="/obsidian_icon.png" alt="Website" className="h-4 w-4" />
-          )}
-          <p className="text-xs opacity-70">
-            {findWebsiteNameByCode(cardData.website)}
-          </p>
-        </div>
+          <div className="flex flex-row gap-2">
+            {cardData.website === 'obsidian' && (
+              <img src="/obsidian_icon.png" alt="Website" className="h-4 w-4" />
+            )}
+            <p className="text-xs opacity-70">
+              {findWebsiteNameByCode(cardData.website)}
+            </p>
+          </div>
 
-        <p className="text-sm">{cardData.condition}</p>
-        <p className="text-sm font-bold">${cardData.price}</p>
-      </CardContent>
-      <div className="flex-grow"></div>
-      <CardFooter>
-        <Link
-          href={cardData.link}
-          target="_blank"
-          rel="noreferrer"
-          className="w-full"
-        >
-          <Button
-            onClick={() => handleBuyClick(cardData.link, cardData.price)}
+          <p className="text-sm">{cardData.condition}</p>
+          <p className="text-sm font-bold">${cardData.price}</p>
+        </CardContent>
+        <CardFooter>
+          <Link
+            href={cardData.link}
+            target="_blank"
+            rel="noreferrer"
             className="w-full"
           >
-            Buy
-          </Button>
-        </Link>
-      </CardFooter>
+            <Button
+              onClick={() => handleBuyClick(cardData.link, cardData.price)}
+              className="w-full"
+            >
+              Buy
+            </Button>
+          </Link>
+        </CardFooter>
+      </div>
     </Card>
   );
 }
