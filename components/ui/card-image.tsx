@@ -18,7 +18,7 @@ const CardImage: React.FC<Props> = ({ imageUrl, alt }) => {
           src={imageUrl}
           alt={alt || 'Card Image'}
           onError={handleError}
-          className="aspect-card h-full w-full rounded-lg object-scale-down"
+          className="aspect-card h-full w-full rounded-lg"
         />
       ) : (
         <div className="flex aspect-card h-full w-full items-center justify-center rounded-lg bg-gradient-to-b from-zinc-800 to-zinc-900">
