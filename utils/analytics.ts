@@ -27,6 +27,7 @@ export const handleBuyClick = (
   const domain = link.split('/')[2];
   const priceInCents = price * 100;
 
+  console.log('Buy button clicked event');
   // Push event to dataLayer
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
