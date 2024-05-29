@@ -1,18 +1,20 @@
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Component() {
   const [adVisible, setAdVisible] = useState(false);
   return (
     <section className="flex h-screen w-full flex-col items-center space-y-8 px-4 text-center">
-      <div
+      <Link
         data-position-id="1"
         data-ad-type="banner"
         data-ad-id="top-banner"
         className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+        href="https://bryceeppler.com/"
       >
         Tier 1 Ad
-      </div>
+      </Link>
       <div className="flex items-center justify-center space-x-4">
         <Button
           onClick={() => {
