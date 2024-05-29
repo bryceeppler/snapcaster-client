@@ -11,6 +11,18 @@ type CatalogRowProps = {
 };
 export default function Component() {
   const [adVisible, setAdVisible] = useState(false);
+
+  const cardData = {
+    name: 'test',
+    price: 10,
+    condition: 'NM',
+    foil: false,
+    link: 'https://www.testwebsite.com/dockside-extortionist-360-borderless-double-masters-2022/',
+    website: 'testwebsite'
+  } as SingleSearchResult;
+
+  console.log(cardData);
+
   return (
     <section className="mx-auto flex h-screen w-full max-w-5xl flex-col items-center space-y-8 text-center">
       <p>This is for testing analytics on prod</p>
@@ -82,19 +94,7 @@ export default function Component() {
       </Link>
       {/* Buy button tester */}
       <h1 className="text-3xl font-bold">Buy Button Tester</h1>
-      <SingleCatalogRow
-        cardData={
-          {
-            name: 'test',
-            price: 10,
-            condition: 'NM',
-            foil: false,
-            link: 'https://example.com',
-            website: 'testwebsite'
-          } as SingleSearchResult
-        }
-        tcg="mtg"
-      />
+      <SingleCatalogRow cardData={cardData} tcg="mtg" />
     </section>
   );
 }
