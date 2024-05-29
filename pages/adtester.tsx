@@ -9,11 +9,11 @@ export default function Component() {
         data-position-id="1"
         data-ad-type="banner"
         data-ad-id="top-banner"
-        className="flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+        className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
       >
         Tier 1 Ad
       </div>
-      <div className="ad flex items-center justify-center space-x-4">
+      <div className="flex items-center justify-center space-x-4">
         <Button
           onClick={() => {
             setAdVisible(!adVisible);
@@ -28,7 +28,7 @@ export default function Component() {
             data-position-id="2"
             data-ad-type="vertical-banner"
             data-ad-id="left-banner"
-            className="flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+            className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
           >
             Ad No 2
           </div>
