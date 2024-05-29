@@ -2,10 +2,19 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useState } from 'react';
 import { handleAdClick } from '@/utils/analytics';
+import SingleCatalogRow from '@/components/single-search/single-list-item';
+import { SingleSearchResult } from '@/stores/store';
+type CatalogRowProps = {
+  cardData: SingleSearchResult;
+  promoted?: boolean;
+  tcg: string;
+};
 export default function Component() {
   const [adVisible, setAdVisible] = useState(false);
   return (
-    <section className="mx-auto flex h-screen w-full max-w-5xl flex-col items-center space-y-8 px-2 text-center">
+    <section className="mx-auto flex h-screen w-full max-w-5xl flex-col items-center space-y-8 text-center">
+      <p>This is for testing analytics on prod</p>
+      <h1 className="text-3xl font-bold">Ad Tester</h1>
       <Link
         data-position-id="top-banner"
         data-ad-type="horizontal-banner"
@@ -68,6 +77,21 @@ export default function Component() {
       >
         Ad No 3
       </Link>
+      {/* Buy button tester */}
+      <h1 className="text-3xl font-bold">Buy Button Tester</h1>
+      <SingleCatalogRow
+        cardData={
+          {
+            name: 'test',
+            price: 10,
+            condition: 'NM',
+            foil: false,
+            link: 'https://example.com',
+            website: 'testwebsite'
+          } as SingleSearchResult
+        }
+        tcg="mtg"
+      />
     </section>
   );
 }
