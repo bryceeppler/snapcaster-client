@@ -52,3 +52,17 @@ export const handleAdClick = (
     url: url
   });
 };
+
+export const handleQuerySingleCard = (
+  searchTerm: string,
+  tradingCardGame: string,
+  searchTool: string
+) => {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'search',
+    search_term: searchTerm,
+    tcg: tradingCardGame,
+    search_tool: searchTool
+  });
+};

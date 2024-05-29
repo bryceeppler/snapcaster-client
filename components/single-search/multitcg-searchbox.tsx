@@ -38,6 +38,7 @@ const MultiTcgSearchbox = (props: Props) => {
         </SelectContent>
       </Select>
       <SingleSearchbox
+        searchType={'single'}
         searchFunction={fetchCards}
         setSearchInput={setSearchInput}
         searchInput={searchInput}
