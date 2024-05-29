@@ -8,7 +8,7 @@ export default function MainLayout({
   const { adsEnabled } = useGlobalStore();
   return (
     <main className="container w-full max-w-5xl flex-1 flex-col items-center justify-center px-2 py-8">
-      {adsEnabled && (
+      {true && (
         <>
           {/* top banner : position 1 */}
           <div
@@ -16,20 +16,18 @@ export default function MainLayout({
             data-ad-type="banner"
             data-ad-id="top-banner"
             className="flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
-          >
-            Tier 1 Ad
-          </div>
+          ></div>
           {/* left ad : position 2 */}
-          <div
+          {/* <div
             data-position-id="2"
             data-ad-type="banner"
             data-ad-id="left-banner"
             className="fixed left-10 top-1/4 hidden h-1/2 w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex"
           >
             Tier 1 Ad
-          </div>
+          </div> */}
           {/* right ad : position 3 */}
-          <div
+          {/* <div
             data-position-id="3"
             data-ad-type="banner"
             data-ad-id="right-banner"
@@ -43,7 +41,7 @@ export default function MainLayout({
                 <div key={i} className="h-2 w-2 rounded-full bg-zinc-600"></div>
               ))}
             </div>
-          </div>
+          </div> */}
         </>
       )}
       <div className="mt-8">{children}</div>
