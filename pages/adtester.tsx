@@ -21,6 +21,7 @@ export default function Component() {
         data-ad-id="1"
         className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
         href="https://bryceeppler.com/"
+        target="_blank"
         onClick={() =>
           handleAdClick(
             'top-banner',
@@ -43,6 +44,7 @@ export default function Component() {
       </div>
       {adVisible && (
         <Link
+          target="_blank"
           data-position-id="left-banner"
           data-ad-type="vertical-banner"
           data-ad-id="2"
@@ -64,6 +66,7 @@ export default function Component() {
         data-position-id="bottom-banner"
         data-ad-type="horizontal-banner"
         data-ad-id="3"
+        target="_blank"
         href="https://linkedin.com"
         className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
         onClick={() =>
