@@ -1,11 +1,14 @@
+import ReactGA from 'react-ga4';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
 import { useDebounceCallback } from 'usehooks-ts';
+import { handleQuerySingleCard } from '@/utils/analytics';
 
 type Props = {
   searchFunction(searchText: string): void;
   setSearchInput(searchText: string): void;
+  searchType: string;
   tcg: string;
   searchInput: string;
   autocompleteEndpoint: string;
@@ -170,6 +173,13 @@ export default function SingleSearchbox(props: Props) {
           <button
             type="submit"
             className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-primary"
+            onClick={() => {
+              handleQuerySingleCard(
+                props.searchInput,
+                props.tcg,
+                props.searchType
+              );
+            }}
           >
             <Search size={15} />
           </button>
