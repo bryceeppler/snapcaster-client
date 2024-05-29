@@ -23,16 +23,14 @@ export default function Component() {
         </Button>
       </div>
       {adVisible && (
-        <>
-          <div
-            data-position-id="2"
-            data-ad-type="vertical-banner"
-            data-ad-id="left-banner"
-            className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
-          >
-            Ad No 2
-          </div>
-        </>
+        <div
+          data-position-id="2"
+          data-ad-type="vertical-banner"
+          data-ad-id="left-banner"
+          className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+        >
+          Ad No 2
+        </div>
       )}
     </section>
   );
