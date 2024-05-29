@@ -30,7 +30,7 @@ export const handleBuyClick = (
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: 'buy_button_click',
-    host_name: domain,
+    website: domain,
     card_name: cardName,
     card_price: priceInCents,
     tcg: tcg
