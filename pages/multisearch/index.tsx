@@ -294,7 +294,7 @@ const SearchView = ({
   setTcg: (value: Tcgs) => void;
   searchInput: string;
   setSearchInput: (value: string) => void;
-  handleSubmit: () => void;
+  handleSubmit: (tcg: string) => void;
   websites: any[];
   selectedWebsites: any[];
   onWebsiteSelect: (value: any) => void;
@@ -343,15 +343,7 @@ const SearchView = ({
       />
       <Button
         onClick={() => {
-          handleSubmit;
-          const cardNames = searchInput
-            .split('\n')
-            .map((name) => name.trim())
-            .filter((name) => name.length > 0);
-          console.log(cardNames);
-          cardNames.forEach((card) => {
-            handleQuerySingleCard(card, tcg, 'multi');
-          });
+          handleSubmit(tcg);
         }}
         disabled={searchInput.length === 0 || loading}
       >

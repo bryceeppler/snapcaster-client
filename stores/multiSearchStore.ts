@@ -2,6 +2,7 @@ import { WebsiteMapping } from '@/types/website';
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Tcgs, MultiSearchProduct, Product } from '@/types';
+import { handleQuerySingleCard } from '@/utils/analytics';
 
 type MultiSearchState = {
   mode: 'search' | 'results';
@@ -16,7 +17,7 @@ type MultiSearchState = {
   };
   setMode: (mode: 'search' | 'results') => void;
   selectVariant: (key: string, product: Product) => void;
-  handleSubmit: () => void;
+  handleSubmit: (tcg: string) => void;
   setSearchInput: (value: string) => void;
   setTcg: (value: Tcgs) => void;
   onWebsiteSelect: (value: WebsiteMapping) => void;
@@ -45,7 +46,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   setMode: (mode: 'search' | 'results') => {
     set({ mode });
   },
-  handleSubmit: async () => {
+  handleSubmit: async (tcg) => {
     set({ loading: true });
     set({ searchQuery: get().searchInput });
 
@@ -56,7 +57,9 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
         .searchInput.split('\n')
         .map((name) => name.trim())
         .filter((name) => name.length > 0);
-
+      cardNames.forEach((card) => {
+        handleQuerySingleCard(card, tcg, 'multi');
+      });
       // JSON encode the array and then URL encode it
       const encodedNames = encodeURIComponent(JSON.stringify(cardNames));
 
