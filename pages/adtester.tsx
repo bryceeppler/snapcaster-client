@@ -13,7 +13,7 @@ export default function Component() {
       >
         Tier 1 Ad
       </div>
-      <div className="flex items-center justify-center space-x-4">
+      <div className="ad flex items-center justify-center space-x-4">
         <Button
           onClick={() => {
             setAdVisible(!adVisible);
@@ -28,7 +28,7 @@ export default function Component() {
             data-position-id="2"
             data-ad-type="banner"
             data-ad-id="left-banner"
-            className="fixed left-10 top-1/4 h-1/2 w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex"
+            className="ad fixed left-10 top-1/4 h-1/2 w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex"
           >
             Tier 2 Ad
           </div>
