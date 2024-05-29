@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useState } from 'react';
-
+import { handleAdClick } from '@/utils/analytics';
 export default function Component() {
   const [adVisible, setAdVisible] = useState(false);
   return (
@@ -12,6 +12,14 @@ export default function Component() {
         data-ad-id="1"
         className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
         href="https://bryceeppler.com/"
+        onClick={() =>
+          handleAdClick(
+            'top-banner',
+            'horizontal-banner',
+            '1',
+            'https://bryceeppler.com/'
+          )
+        }
       >
         Tier 1 Ad
       </Link>
@@ -31,6 +39,14 @@ export default function Component() {
           data-ad-id="2"
           className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
           href="https://github.com"
+          onClick={() =>
+            handleAdClick(
+              'left-banner',
+              'vertical-banner',
+              '2',
+              'https://github.com'
+            )
+          }
         >
           Ad No 2
         </Link>
@@ -41,6 +57,14 @@ export default function Component() {
         data-ad-id="3"
         href="https://linkedin.com"
         className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+        onClick={() =>
+          handleAdClick(
+            'bottom-banner',
+            'horizontal-banner',
+            '3',
+            'https://linkedin.com'
+          )
+        }
       >
         Ad No 3
       </Link>

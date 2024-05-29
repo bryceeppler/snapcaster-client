@@ -36,3 +36,19 @@ export const handleBuyClick = (
     tcg: tcg
   });
 };
+
+export const handleAdClick = (
+  positionId: string,
+  adType: string,
+  adId: string,
+  url: string
+) => {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'ad_click',
+    position_id: positionId,
+    ad_type: adType,
+    ad_id: adId,
+    url: url
+  });
+};
