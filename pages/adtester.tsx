@@ -32,6 +32,14 @@ export default function Component() {
           Ad No 2
         </div>
       )}
+      <div
+        data-position-id="3"
+        data-ad-type="horizontal-banner"
+        data-ad-id="bottom-banner"
+        className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+      >
+        Ad No 3
+      </div>
     </section>
   );
 }
