@@ -5,7 +5,7 @@ import { handleAdClick } from '@/utils/analytics';
 export default function Component() {
   const [adVisible, setAdVisible] = useState(false);
   return (
-    <section className="flex h-screen w-full flex-col items-center space-y-8 px-4 text-center">
+    <section className="mx-auto flex h-screen w-full max-w-5xl flex-col items-center space-y-8 px-2 text-center">
       <Link
         data-position-id="top-banner"
         data-ad-type="horizontal-banner"
