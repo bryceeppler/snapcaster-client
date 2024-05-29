@@ -7,9 +7,9 @@ export default function Component() {
   return (
     <section className="flex h-screen w-full flex-col items-center space-y-8 px-4 text-center">
       <Link
-        data-position-id="1"
-        data-ad-type="banner"
-        data-ad-id="top-banner"
+        data-position-id="top-banner"
+        data-ad-type="horizontal-banner"
+        data-ad-id="1"
         className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
         href="https://bryceeppler.com/"
       >
@@ -25,23 +25,25 @@ export default function Component() {
         </Button>
       </div>
       {adVisible && (
-        <div
-          data-position-id="2"
+        <Link
+          data-position-id="left-banner"
           data-ad-type="vertical-banner"
-          data-ad-id="left-banner"
+          data-ad-id="2"
           className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+          href="https://github.com"
         >
           Ad No 2
-        </div>
+        </Link>
       )}
-      <div
-        data-position-id="3"
+      <Link
+        data-position-id="bottom-banner"
         data-ad-type="horizontal-banner"
-        data-ad-id="bottom-banner"
+        data-ad-id="3"
+        href="https://linkedin.com"
         className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
       >
         Ad No 3
-      </div>
+      </Link>
     </section>
   );
 }
