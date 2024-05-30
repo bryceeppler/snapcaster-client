@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import Link from 'next/link';
 import { handleAdClick } from '@/utils/analytics';
+import { Button } from './ui/button';
 import {
   Carousel,
   CarouselContent,
@@ -10,6 +11,8 @@ import {
   CarouselPrevious
 } from '@/components/ui/carousel';
 import { trackAdVisible } from '@/utils/analytics';
+import CarouselAd from './carousel-ad';
+import { useInView } from 'react-intersection-observer';
 
 type Props = {};
 
@@ -18,49 +21,39 @@ export default function MainLayout({
 }: React.PropsWithChildren<Props>) {
   const { adsEnabled, ads } = useGlobalStore();
   const [currentAdIndex, setCurrentAdIndex] = React.useState(0);
-  const observerRefs = useRef<Record<string, IntersectionObserver>>({});
-
-  const setupObserver = (element: HTMLElement, adId: string) => {
-    if (!element || observerRefs.current[adId]) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.intersectionRatio > 0.5) {
-            trackAdVisible(adId);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: [0.5] }
-    );
-
-    observer.observe(element);
-    observerRefs.current[adId] = observer;
-  };
-
-  useEffect(() => {
-    if (adsEnabled) {
-      const adElements = document.querySelectorAll('.ad');
-      adElements.forEach((el) => {
-        const adId = el.getAttribute('data-ad-id');
-        const positionId = el.getAttribute('data-position-id');
-        if (adId && positionId) {
-          setupObserver(el as HTMLElement, adId);
+  const {
+    ref: bannerRef,
+    inView: bannerInView,
+    entry: bannerEntry
+  } = useInView({
+    threshold: 0.5,
+    triggerOnce: false, // Track visibility only once per ad
+    onChange: (inView, entry) => {
+      if (inView) {
+        const adId = entry.target.getAttribute('data-ad-id');
+        if (adId) {
+          trackAdVisible(adId);
         }
-      });
+      }
     }
+  });
 
-    return () => {
-      Object.values(observerRefs.current).forEach((observer) =>
-        observer.disconnect()
-      );
-    };
-  }, [adsEnabled, currentAdIndex, ads]);
-
-  if (!ads.position || Object.keys(ads.position).length === 0) {
-    return null; // or a loading spinner
-  }
+  const {
+    ref: leftBannerRef,
+    inView: leftBannerInView,
+    entry: leftBannerEntry
+  } = useInView({
+    threshold: 0.5,
+    triggerOnce: false,
+    onChange: (inView, entry) => {
+      if (inView) {
+        const adId = entry.target.getAttribute('data-ad-id');
+        if (adId) {
+          trackAdVisible(adId);
+        }
+      }
+    }
+  });
 
   const topBannerAd = ads.position['1'].ads[0];
   const leftBannerAd = ads.position['2']?.ads[0]; // Assuming there's only one ad in position 2
@@ -73,6 +66,7 @@ export default function MainLayout({
           {/* Header : position 1 */}
           <Link
             href={topBannerAd.url}
+            ref={bannerRef}
             target="_blank"
             data-position-id="1"
             data-ad-id={topBannerAd.id.toString()}
@@ -94,6 +88,7 @@ export default function MainLayout({
           {leftBannerAd && (
             <Link
               href={leftBannerAd.url}
+              ref={leftBannerRef}
               target="_blank"
               data-position-id="2"
               data-ad-id={leftBannerAd.id.toString()}
@@ -110,7 +105,7 @@ export default function MainLayout({
           {/* right ad : position 3 */}
           {carouselAds.length > 0 && (
             <Carousel
-              className={`ad fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
+              className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
             >
               <CarouselContent>
                 {carouselAds.map((ad, index) => (
@@ -121,8 +116,9 @@ export default function MainLayout({
                     onClick={() =>
                       handleAdClick(carouselAds[currentAdIndex].id.toString())
                     }
+                    className="ad"
                   >
-                    <img src={ad.mobile_image} alt="ad" />
+                    <CarouselAd ad={ad} />
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -132,6 +128,7 @@ export default function MainLayout({
           )}
         </>
       )}
+
       <div className="mt-8">{children}</div>
     </main>
   );
