@@ -16,12 +16,9 @@ import {
 } from '@/components/ui/carousel';
 
 export default function Component() {
-  const [currentAdIndex, setCurrentAdIndex] = useState(0);
   const { ads } = useGlobalStore();
-  const adsEnabled = true;
-  if (!ads.position || Object.keys(ads.position).length === 0) {
-    return null; // or a loading spinner
-  }
+  const [currentAdIndex, setCurrentAdIndex] = useState(0);
+
   const observerRefs = useRef<Record<string, IntersectionObserver>>({});
 
   const setupObserver = (element: HTMLElement, adId: string) => {
@@ -44,12 +41,13 @@ export default function Component() {
   };
 
   useEffect(() => {
-    if (adsEnabled) {
+    if (true) {
       const adElements = document.querySelectorAll('.ad');
       adElements.forEach((el) => {
+        console.log('Found ad element: ');
         const adId = el.getAttribute('data-ad-id');
-        const positionId = el.getAttribute('data-position-id');
-        if (adId && positionId) {
+        console.log('adId: ', adId);
+        if (adId) {
           setupObserver(el as HTMLElement, adId);
         }
       });
@@ -60,7 +58,7 @@ export default function Component() {
         observer.disconnect()
       );
     };
-  }, [adsEnabled, currentAdIndex, ads]);
+  }, [currentAdIndex, ads]);
 
   if (!ads.position || Object.keys(ads.position).length === 0) {
     return null; // or a loading spinner
@@ -68,14 +66,6 @@ export default function Component() {
   const topBannerAd = ads.position['1'].ads[0];
   const leftBannerAd = ads.position['2']?.ads[0]; // Assuming there's only one ad in position 2
   const carouselAds = ads.position['3']?.ads || [];
-  const cardData = {
-    name: 'test',
-    price: 10,
-    condition: 'NM',
-    foil: false,
-    link: 'https://www.testwebsite.com/dockside-extortionist-360-borderless-double-masters-2022/',
-    website: 'testwebsite'
-  } as SingleSearchResult;
 
   return (
     <section className="mx-auto flex h-screen w-full max-w-5xl flex-col items-center space-y-8 text-center">
@@ -124,7 +114,7 @@ export default function Component() {
       {/* right ad : position 3 */}
       {carouselAds.length > 0 && (
         <Carousel
-          className={`ad fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
+          className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
         >
           <CarouselContent>
             {carouselAds.map((ad, index) => (
@@ -135,6 +125,7 @@ export default function Component() {
                 onClick={() =>
                   handleAdClick(carouselAds[currentAdIndex].id.toString())
                 }
+                className="ad"
               >
                 <img src={ad.mobile_image} alt="ad" />
               </CarouselItem>
