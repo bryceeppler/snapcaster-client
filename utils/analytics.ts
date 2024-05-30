@@ -41,7 +41,7 @@ export const handleAdClick = (
   positionId: string,
   adType: string,
   adId: string,
-  url: string
+  href: string
 ) => {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
@@ -49,6 +49,6 @@ export const handleAdClick = (
     position_id: positionId,
     ad_type: adType,
     ad_id: adId,
-    url: url
+    url: href
   });
 };
