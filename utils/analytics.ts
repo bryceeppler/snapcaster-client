@@ -60,6 +60,7 @@ export const handleQuerySingleCard = (
 };
 
 export const trackAdVisible = (adId: string) => {
+  console.log('Pushing ad visible event');
   window.dataLayer.push({
     event: 'ad_visible',
     ad_id: adId
