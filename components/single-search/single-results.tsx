@@ -127,10 +127,14 @@ export default function SingleCatalog({}: Props) {
               'adType' in item ? (
                 <div
                   key={index}
-                  className="mx-auto my-4 flex h-40 w-full max-w-5xl items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+                  className="mx-auto my-4 flex h-40 w-full max-w-5xl rounded border border-zinc-600 bg-zinc-700"
                 >
                   <a href={item.url} target="_blank" rel="noopener noreferrer">
-                    <img src={item.images.desktop} alt={`ad-${item.adId}`} />
+                    <img
+                      src={item.images.desktop}
+                      alt={`ad-${item.adId}`}
+                      className="rounded-lg"
+                    />
                   </a>
                 </div>
               ) : (
@@ -164,7 +168,7 @@ export default function SingleCatalog({}: Props) {
                         <img
                           src={item.images.desktop}
                           alt={`ad-${item.adId}`}
-                          className="object-fill"
+                          className="h-full w-full object-cover"
                         />
                       </a>
                     </div>

@@ -45,7 +45,7 @@ export default function AdCarousel() {
       data-position-id={ads[currentAdIndex].positionId}
       data-ad-type={ads[currentAdIndex].adType}
       data-ad-id={ads[currentAdIndex].adId}
-      className={`ad fixed ${
+      className={`ad fixed max-h-[480px] ${
         side === 'left' ? 'left-10' : 'right-10'
       } top-1/4 hidden h-1/2 w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
       onClick={() =>
