@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import Link from 'next/link';
 import { handleAdClick } from '@/utils/analytics';
@@ -9,6 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
+import { trackAdVisible } from '@/utils/analytics';
 
 type Props = {};
 
@@ -17,6 +18,49 @@ export default function MainLayout({
 }: React.PropsWithChildren<Props>) {
   const { adsEnabled, ads } = useGlobalStore();
   const [currentAdIndex, setCurrentAdIndex] = React.useState(0);
+  const observerRefs = useRef<Record<string, IntersectionObserver>>({});
+
+  const setupObserver = (
+    element: HTMLElement,
+    adId: string,
+    positionId: string
+  ) => {
+    if (!element || observerRefs.current[adId]) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.intersectionRatio > 0.5) {
+            trackAdVisible(adId, positionId);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: [0.5] }
+    );
+
+    observer.observe(element);
+    observerRefs.current[adId] = observer;
+  };
+
+  useEffect(() => {
+    if (adsEnabled) {
+      const adElements = document.querySelectorAll('.ad');
+      adElements.forEach((el) => {
+        const adId = el.getAttribute('data-ad-id');
+        const positionId = el.getAttribute('data-position-id');
+        if (adId && positionId) {
+          setupObserver(el as HTMLElement, adId, positionId);
+        }
+      });
+    }
+
+    return () => {
+      Object.values(observerRefs.current).forEach((observer) =>
+        observer.disconnect()
+      );
+    };
+  }, [adsEnabled, currentAdIndex, ads]);
 
   if (!ads.position || Object.keys(ads.position).length === 0) {
     return null; // or a loading spinner
@@ -25,16 +69,6 @@ export default function MainLayout({
   const topBannerAd = ads.position['1'].ads[0];
   const leftBannerAd = ads.position['2']?.ads[0]; // Assuming there's only one ad in position 2
   const carouselAds = ads.position['3']?.ads || [];
-
-  const nextAd = () => {
-    setCurrentAdIndex((prevIndex) => (prevIndex + 1) % carouselAds.length);
-  };
-
-  const previousAd = () => {
-    setCurrentAdIndex(
-      (prevIndex) => (prevIndex - 1 + carouselAds.length) % carouselAds.length
-    );
-  };
 
   return (
     <main className="container w-full max-w-5xl flex-1 flex-col items-center justify-center px-2 py-8">

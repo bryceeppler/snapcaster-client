@@ -58,3 +58,11 @@ export const handleQuerySingleCard = (
     search_tool: searchTool
   });
 };
+
+export const trackAdVisible = (adId: string, positionId: string) => {
+  window.dataLayer.push({
+    event: 'ad_visible',
+    adId: adId,
+    positionId: positionId
+  });
+};
