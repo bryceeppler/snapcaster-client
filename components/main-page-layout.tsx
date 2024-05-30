@@ -30,6 +30,18 @@ const ads = [
       mobile:
         'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_382x160.png'
     }
+  },
+  {
+    positionId: 'side-banner',
+    adType: 'vertical-banner',
+    adId: '3',
+    url: 'https://example.com/',
+    images: {
+      desktop:
+        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_mtg_vertical_lg.png',
+      mobile:
+        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/ad_placeholder.png'
+    }
   }
 ];
 
@@ -69,8 +81,9 @@ export default function MainLayout({
             url={`https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_vertical_pokemon.png`}
           >
             <img
-              src={`https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_vertical_pokemon.png`}
+              src={`https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_mtg_vertical.png`}
               alt="ad"
+              className="h-full"
             />
           </VerticalBannerAd>
           {/* right ad : position 3 */}

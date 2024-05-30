@@ -74,6 +74,18 @@ const verticalAds = [
       mobile:
         'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/vertical_ad_2.png'
     }
+  },
+  {
+    positionId: 'side-banner',
+    adType: 'vertical-banner',
+    adId: '5',
+    url: 'https://yetanotherexample.com/',
+    images: {
+      desktop:
+        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_mtg_vertical_lg.png',
+      mobile:
+        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/vertical_ad_3.png'
+    }
   }
 ] as Ad[];
 
