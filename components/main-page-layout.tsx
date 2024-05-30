@@ -2,7 +2,6 @@ import React from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import BannerAd from './ad';
 import VerticalBannerAd from './vertical-ad';
-import { Carousel } from './ui/carousel';
 import AdCarousel from './ad-carousel';
 type Props = {};
 

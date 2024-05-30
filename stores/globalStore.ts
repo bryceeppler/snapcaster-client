@@ -1,17 +1,24 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Website } from '@/types/index';
+import type { AdsResponse } from '@/types/ads';
 
 type GlobalState = {
   websites: Website[];
   adsEnabled: boolean;
+  ads: AdsResponse;
   getWebsiteName: (websiteCode: string) => string;
   fetchWebsites: () => Promise<void>;
+  setAds: (ads: AdsResponse) => void;
 };
 
 const useGlobalStore = create<GlobalState>((set, get) => ({
   websites: [],
   adsEnabled: true,
+  ads: { position: {} },
+  setAds: (ads) => {
+    set({ ads });
+  },
   getWebsiteName: (websiteCode: string) => {
     const website = get().websites.find((w) => w.code === websiteCode);
     return website ? website.name : '';
