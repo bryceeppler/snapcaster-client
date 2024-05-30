@@ -83,7 +83,7 @@ export default function Component() {
       <h1 className="text-3xl font-bold">Ad Tester</h1>
       <Button
         onClick={() => {
-          trackAdVisible('1');
+          trackAdVisible('3182');
         }}
       >
         trigger ad impression
