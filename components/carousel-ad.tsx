@@ -1,7 +1,7 @@
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import type { Ad } from '@/types/ads';
-import { handleAdClick, trackAdVisible } from '@/utils/analytics';
+import { trackAdClick, trackAdVisible } from '@/utils/analytics';
 import Link from 'next/link';
 
 type AdProps = {
@@ -29,7 +29,7 @@ const CarouselAd: React.FC<AdProps> = ({ ad }) => {
       ref={ref}
       data-position-id="3"
       data-ad-id={ad.id.toString()}
-      onClick={() => handleAdClick(ad.id.toString())}
+      onClick={() => trackAdClick(ad.id.toString())}
       className="ad"
     >
       <img src={ad.mobile_image} alt="ad" />

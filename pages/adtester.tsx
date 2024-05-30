@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import useGlobalStore from '@/stores/globalStore';
-import { handleAdClick, trackAdVisible } from '@/utils/analytics';
+import { trackAdClick, trackAdVisible } from '@/utils/analytics';
 import {
   Carousel,
   CarouselContent,
@@ -120,7 +120,7 @@ export default function Component() {
                 data-position-id="3"
                 data-ad-id={carouselAds[currentAdIndex].id.toString()}
                 onClick={() =>
-                  handleAdClick(carouselAds[currentAdIndex].id.toString())
+                  trackAdClick(carouselAds[currentAdIndex].id.toString())
                 }
                 className="ad"
               >

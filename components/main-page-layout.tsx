@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import Link from 'next/link';
-import { handleAdClick } from '@/utils/analytics';
+import { trackAdClick } from '@/utils/analytics';
 import { Button } from './ui/button';
 import {
   Carousel,
@@ -54,6 +54,9 @@ export default function MainLayout({
       }
     }
   });
+  if (!ads.position || Object.keys(ads.position).length === 0) {
+    return null; // or a loading spinner
+  }
 
   const topBannerAd = ads.position['1'].ads[0];
   const leftBannerAd = ads.position['2']?.ads[0]; // Assuming there's only one ad in position 2
@@ -69,6 +72,7 @@ export default function MainLayout({
             ref={bannerRef}
             target="_blank"
             data-position-id="1"
+            onClick={() => trackAdClick(topBannerAd.id.toString())}
             data-ad-id={topBannerAd.id.toString()}
             className="ad flex items-center justify-center rounded border border-zinc-600 bg-black"
           >
@@ -87,6 +91,7 @@ export default function MainLayout({
           {/* Left ad : position 2 */}
           {leftBannerAd && (
             <Link
+              onClick={() => trackAdClick(leftBannerAd.id.toString())}
               href={leftBannerAd.url}
               ref={leftBannerRef}
               target="_blank"
@@ -102,22 +107,14 @@ export default function MainLayout({
             </Link>
           )}
 
-          {/* right ad : position 3 */}
+          {/* Right ad : position 3 */}
           {carouselAds.length > 0 && (
             <Carousel
               className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
             >
               <CarouselContent>
                 {carouselAds.map((ad, index) => (
-                  <CarouselItem
-                    key={index}
-                    data-position-id="3"
-                    data-ad-id={carouselAds[currentAdIndex].id.toString()}
-                    onClick={() =>
-                      handleAdClick(carouselAds[currentAdIndex].id.toString())
-                    }
-                    className="ad"
-                  >
+                  <CarouselItem key={index}>
                     <CarouselAd ad={ad} />
                   </CarouselItem>
                 ))}
