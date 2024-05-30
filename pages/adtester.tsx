@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { SingleSearchResult } from '@/stores/store';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { trackAdVisible } from '@/utils/analytics';
+import { useEffect, useRef } from 'react';
+
 import useGlobalStore from '@/stores/globalStore';
 import { handleAdClick } from '@/utils/analytics';
 import {
@@ -14,6 +18,50 @@ import {
 export default function Component() {
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
   const { ads } = useGlobalStore();
+  const adsEnabled = true;
+  if (!ads.position || Object.keys(ads.position).length === 0) {
+    return null; // or a loading spinner
+  }
+  const observerRefs = useRef<Record<string, IntersectionObserver>>({});
+
+  const setupObserver = (element: HTMLElement, adId: string) => {
+    if (!element || observerRefs.current[adId]) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.intersectionRatio > 0.5) {
+            trackAdVisible(adId);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: [0.5] }
+    );
+
+    observer.observe(element);
+    observerRefs.current[adId] = observer;
+  };
+
+  useEffect(() => {
+    if (adsEnabled) {
+      const adElements = document.querySelectorAll('.ad');
+      adElements.forEach((el) => {
+        const adId = el.getAttribute('data-ad-id');
+        const positionId = el.getAttribute('data-position-id');
+        if (adId && positionId) {
+          setupObserver(el as HTMLElement, adId);
+        }
+      });
+    }
+
+    return () => {
+      Object.values(observerRefs.current).forEach((observer) =>
+        observer.disconnect()
+      );
+    };
+  }, [adsEnabled, currentAdIndex, ads]);
+
   if (!ads.position || Object.keys(ads.position).length === 0) {
     return null; // or a loading spinner
   }
@@ -33,7 +81,13 @@ export default function Component() {
     <section className="mx-auto flex h-screen w-full max-w-5xl flex-col items-center space-y-8 text-center">
       <p>This is for testing analytics on prod</p>
       <h1 className="text-3xl font-bold">Ad Tester</h1>
-
+      <Button
+        onClick={() => {
+          trackAdVisible('1');
+        }}
+      >
+        trigger ad impression
+      </Button>
       {/* Header : position 1 */}
       <Link
         href={topBannerAd.url}
