@@ -49,11 +49,10 @@ export default function Multisearch({}: Props) {
     onWebsiteSelect,
     setTcg
   } = useMultiSearchStore();
-  const { fetchWebsites, fetchAds, websites } = useGlobalStore();
+  const { fetchWebsites, websites } = useGlobalStore();
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    fetchAds();
     fetchWebsites();
   }, []);
 
