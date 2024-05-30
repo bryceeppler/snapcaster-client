@@ -6,27 +6,23 @@ import { initGA, logPageView } from '../utils/analytics';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from '@/lib/utils';
-import App from 'next/app';
 import 'styles/main.css';
 import 'styles/chrome-bug.css';
 import { useWindowSize } from 'usehooks-ts';
 import { Inter } from 'next/font/google';
 import useGlobalStore from '@/stores/globalStore';
-import { AdsResponse } from '@/types/ads';
 
 const inter = Inter({ subsets: ['latin'] });
 
-interface MyAppProps extends AppProps {
-  ads: AdsResponse;
-}
+interface MyAppProps extends AppProps {}
 
-function MyApp({ Component, pageProps, ads }: MyAppProps) {
+function MyApp({ Component, pageProps }: MyAppProps) {
   const { width = 0, height = 0 } = useWindowSize();
-  const setAds = useGlobalStore((state) => state.setAds);
 
+  const globalStore = useGlobalStore();
   useEffect(() => {
-    setAds(ads);
-  }, [ads, setAds]);
+    globalStore.fetchAds();
+  }, []);
 
   useEffect(() => {
     document.body.classList?.remove('loading');
@@ -57,20 +53,5 @@ function MyApp({ Component, pageProps, ads }: MyAppProps) {
     </main>
   );
 }
-
-MyApp.getInitialProps = async (appContext: AppContext) => {
-  const appProps = await App.getInitialProps(appContext);
-
-  // Fetch ads data
-  let ads: AdsResponse = { position: {} };
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/ads`);
-    ads = await res.json();
-  } catch (error) {
-    console.error('Error fetching ads:', error);
-  }
-
-  return { ...appProps, ads };
-};
 
 export default MyApp;

@@ -7,6 +7,7 @@ type GlobalState = {
   websites: Website[];
   adsEnabled: boolean;
   ads: AdsResponse;
+  fetchAds: () => Promise<void>;
   getWebsiteName: (websiteCode: string) => string;
   fetchWebsites: () => Promise<void>;
   setAds: (ads: AdsResponse) => void;
@@ -16,6 +17,16 @@ const useGlobalStore = create<GlobalState>((set, get) => ({
   websites: [],
   adsEnabled: true,
   ads: { position: {} },
+  fetchAds: async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/ads`
+      );
+      set({ ads: response.data });
+    } catch {
+      console.log('fetchAds ERROR');
+    }
+  },
   setAds: (ads) => {
     set({ ads });
   },

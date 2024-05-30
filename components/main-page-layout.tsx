@@ -47,8 +47,9 @@ const ads = [
 export default function MainLayout({
   children
 }: React.PropsWithChildren<Props>) {
-  const { adsEnabled } = useGlobalStore();
+  const { adsEnabled, ads: adsNew } = useGlobalStore();
   const [currentAdIndex, setCurrentAdIndex] = React.useState(0);
+  console.log(adsNew);
   return (
     <main className="container w-full max-w-5xl flex-1 flex-col items-center justify-center px-2 py-8">
       {adsEnabled && (
