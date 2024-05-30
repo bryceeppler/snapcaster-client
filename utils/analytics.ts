@@ -59,10 +59,9 @@ export const handleQuerySingleCard = (
   });
 };
 
-export const trackAdVisible = (adId: string, positionId: string) => {
+export const trackAdVisible = (adId: string) => {
   window.dataLayer.push({
     event: 'ad_visible',
-    adId: adId,
-    positionId: positionId
+    ad_id: adId
   });
 };

@@ -20,18 +20,14 @@ export default function MainLayout({
   const [currentAdIndex, setCurrentAdIndex] = React.useState(0);
   const observerRefs = useRef<Record<string, IntersectionObserver>>({});
 
-  const setupObserver = (
-    element: HTMLElement,
-    adId: string,
-    positionId: string
-  ) => {
+  const setupObserver = (element: HTMLElement, adId: string) => {
     if (!element || observerRefs.current[adId]) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.intersectionRatio > 0.5) {
-            trackAdVisible(adId, positionId);
+            trackAdVisible(adId);
             observer.unobserve(entry.target);
           }
         });
@@ -50,7 +46,7 @@ export default function MainLayout({
         const adId = el.getAttribute('data-ad-id');
         const positionId = el.getAttribute('data-position-id');
         if (adId && positionId) {
-          setupObserver(el as HTMLElement, adId, positionId);
+          setupObserver(el as HTMLElement, adId);
         }
       });
     }
