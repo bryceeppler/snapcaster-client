@@ -38,7 +38,6 @@ export const handleBuyClick = (
 };
 
 export const trackAdClick = (adId: string) => {
-  console.log('Pushing ad click event: ', adId);
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: 'ad_click',
@@ -61,7 +60,6 @@ export const handleQuerySingleCard = (
 };
 
 export const trackAdVisible = (adId: string) => {
-  console.log('Pushing ad visible event: ', adId);
   window.dataLayer.push({
     event: 'ad_visible',
     ad_id: adId
