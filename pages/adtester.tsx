@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import SingleCatalogRow from '@/components/single-search/single-list-item';
 import { SingleSearchResult } from '@/stores/store';
-import HorizontalBannerAd from '@/components/horizontal-ad';
+import BannerAd from '@/components/ad';
 import { useEffect } from 'react';
 
 type CatalogRowProps = {
@@ -58,7 +58,7 @@ export default function Component() {
       <p>This is for testing analytics on prod</p>
       <h1 className="text-3xl font-bold">Ad Tester</h1>
 
-      <HorizontalBannerAd
+      <BannerAd
         positionId="top-banner"
         adType="horizontal-banner"
         adId={ads[currentAdIndex].adId}
@@ -74,7 +74,7 @@ export default function Component() {
           src={ads[currentAdIndex].images.mobile}
           alt="ad"
         />
-      </HorizontalBannerAd>
+      </BannerAd>
 
       {/* Buy button tester */}
       <h1 className="text-3xl font-bold">Buy Button Tester</h1>
