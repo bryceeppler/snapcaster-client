@@ -79,12 +79,7 @@ export default function Component() {
                 data-position-id="3"
                 data-ad-id={carouselAds[currentAdIndex].id.toString()}
                 onClick={() =>
-                  handleAdClick(
-                    carouselAds[currentAdIndex].position,
-                    'carousel',
-                    carouselAds[currentAdIndex].id.toString(),
-                    carouselAds[currentAdIndex].url
-                  )
+                  handleAdClick(carouselAds[currentAdIndex].id.toString())
                 }
               >
                 <img src={ad.mobile_image} alt="ad" />

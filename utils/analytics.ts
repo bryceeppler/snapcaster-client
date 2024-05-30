@@ -37,18 +37,11 @@ export const handleBuyClick = (
   });
 };
 
-export const handleAdClick = (
-  positionId: string,
-  adType: string,
-  adId: string,
-  href: string
-) => {
+export const handleAdClick = (adId: string) => {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: 'ad_click',
-    position_id: positionId,
-    ad_id: adId,
-    url: href
+    ad_id: adId
   });
 };
 
