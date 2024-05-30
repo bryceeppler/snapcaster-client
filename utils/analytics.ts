@@ -47,7 +47,6 @@ export const handleAdClick = (
   window.dataLayer.push({
     event: 'ad_click',
     position_id: positionId,
-    ad_type: adType,
     ad_id: adId,
     url: href
   });

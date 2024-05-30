@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useSingleStore from '@/stores/singleSearchStore';
 import SingleCatalogRow from './single-list-item';
 import SingleCatalogCard from './single-grid-item';
@@ -7,23 +7,30 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import BackToTopButton from '../ui/back-to-top-btn';
 import type { SingleSearchResult } from '@/stores/store';
 import useGlobalStore from '@/stores/globalStore';
-type Props = {};
+import { Ad } from '@/types/ads';
 
-interface Ad {
-  type: 'ad';
-  content: string;
-}
+type Props = {};
 
 type ResultItem = SingleSearchResult | Ad;
 
+// Helper function to get a random ad from a list of ads
+const getRandomAd = (ads: Ad[]): Ad => {
+  const randomIndex = Math.floor(Math.random() * ads.length);
+  return ads[randomIndex];
+};
+
 const insertAdvertisements = (
   results: SingleSearchResult[],
-  adInterval: number
+  adInterval: number,
+  ads: Ad[]
 ): ResultItem[] => {
   let resultsWithAds: ResultItem[] = [];
   for (let i = 0; i < results.length; i++) {
     if (i > 0 && i % adInterval === 0) {
-      resultsWithAds.push({ type: 'ad', content: 'Tier 2 Ad' });
+      const randomAd = getRandomAd(ads);
+      if (randomAd) {
+        resultsWithAds.push(randomAd);
+      }
     }
     resultsWithAds.push(results[i]);
   }
@@ -32,9 +39,20 @@ const insertAdvertisements = (
 
 export default function SingleCatalog({}: Props) {
   const { filteredResults, resultsTcg } = useSingleStore();
-  const { adsEnabled } = useGlobalStore();
-  // Insert advertisements every 10 results
-  const resultsWithAds = insertAdvertisements(filteredResults, 9);
+  const { adsEnabled, ads } = useGlobalStore();
+  const [selectedTab, setSelectedTab] = useState('list');
+
+  const adsFromPosition4 = ads.position['4']?.ads || [];
+
+  if (adsFromPosition4.length === 0) {
+    console.log('No ads found for position 4');
+  }
+
+  const resultsWithAds = insertAdvertisements(
+    filteredResults,
+    9,
+    adsFromPosition4
+  );
 
   if (filteredResults.length === 0) {
     return (
@@ -46,7 +64,11 @@ export default function SingleCatalog({}: Props) {
 
   return (
     <div>
-      <Tabs defaultValue="list" className="w-full">
+      <Tabs
+        defaultValue="list"
+        className="w-full"
+        onValueChange={setSelectedTab}
+      >
         <TabsList>
           <TabsTrigger value="list">List</TabsTrigger>
           <TabsTrigger value="catalog">Catalog</TabsTrigger>
@@ -55,12 +77,18 @@ export default function SingleCatalog({}: Props) {
         <TabsContent value="list">
           {adsEnabled &&
             resultsWithAds.map((item, index) =>
-              'type' in item && item.type === 'ad' ? (
+              item && 'position' in item ? (
                 <div
                   key={index}
-                  className="mx-auto my-4 flex h-40 w-full max-w-5xl items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+                  className="mx-auto my-4 flex h-40 w-full max-w-5xl rounded border border-zinc-600 bg-zinc-700"
                 >
-                  {item.content}
+                  <a href={item.url} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={item.desktop_image}
+                      alt={`ad-${item.id}`}
+                      className="rounded-lg"
+                    />
+                  </a>
                 </div>
               ) : (
                 <SingleCatalogRow
@@ -79,12 +107,22 @@ export default function SingleCatalog({}: Props) {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {adsEnabled &&
               resultsWithAds.map((item, index) =>
-                'type' in item && item.type === 'ad' ? (
+                item && 'position' in item ? (
                   <div
                     key={index}
-                    className="col-span-1 flex h-full items-center justify-center rounded border border-zinc-600 bg-zinc-700 p-4"
+                    className="col-span-1 flex h-full overflow-clip rounded-lg border border-zinc-600 bg-zinc-700"
                   >
-                    {item.content}
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={item.mobile_image}
+                        alt={`ad-${item.id}`}
+                        className="h-full w-full object-cover"
+                      />
+                    </a>
                   </div>
                 ) : (
                   <SingleCatalogCard
@@ -103,7 +141,7 @@ export default function SingleCatalog({}: Props) {
           <SingleResultsTable
             cardData={
               resultsWithAds.filter(
-                (item) => !('type' in item)
+                (item) => item && !('position' in item)
               ) as SingleSearchResult[]
             }
           />
