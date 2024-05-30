@@ -15,7 +15,7 @@ type GlobalState = {
 
 const useGlobalStore = create<GlobalState>((set, get) => ({
   websites: [],
-  adsEnabled: true,
+  adsEnabled: false,
   ads: { position: {} },
   fetchAds: async () => {
     try {
