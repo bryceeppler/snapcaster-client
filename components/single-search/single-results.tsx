@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useSingleStore from '@/stores/singleSearchStore';
 import SingleCatalogRow from './single-list-item';
 import SingleCatalogCard from './single-grid-item';
@@ -7,87 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import BackToTopButton from '../ui/back-to-top-btn';
 import type { SingleSearchResult } from '@/stores/store';
 import useGlobalStore from '@/stores/globalStore';
+import { Ad } from '@/types/ads';
 
 type Props = {};
 
-interface Ad {
-  positionId: string;
-  adType: string;
-  adId: string;
-  url: string;
-  images: {
-    desktop: string;
-    mobile: string;
-  };
-}
-
 type ResultItem = SingleSearchResult | Ad;
-
-const horizontalAds = [
-  {
-    positionId: 'top-banner',
-    adType: 'horizontal-banner',
-    adId: '1',
-    url: 'https://obsidiangames.ca/',
-    images: {
-      desktop:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_1008x160.png',
-      mobile:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_1008x160.png'
-    }
-  },
-  {
-    positionId: 'left-banner',
-    adType: 'horizontal-banner',
-    adId: '2',
-    url: 'https://company2.com/',
-    images: {
-      desktop:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_1008x160.png',
-      mobile:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_382x160.png'
-    }
-  }
-] as Ad[];
-
-const verticalAds = [
-  {
-    positionId: 'side-banner',
-    adType: 'vertical-banner',
-    adId: '3',
-    url: 'https://example.com/',
-    images: {
-      desktop:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_pokemon_vertical_lg.png',
-      mobile:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/ad_placeholder_vertical.png'
-    }
-  },
-  {
-    positionId: 'side-banner',
-    adType: 'vertical-banner',
-    adId: '4',
-    url: 'https://anotherexample.com/',
-    images: {
-      desktop:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/ad_placeholder_vertical_lg.png',
-      mobile:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/vertical_ad_2.png'
-    }
-  },
-  {
-    positionId: 'side-banner',
-    adType: 'vertical-banner',
-    adId: '5',
-    url: 'https://yetanotherexample.com/',
-    images: {
-      desktop:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_mtg_vertical_lg.png',
-      mobile:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/vertical_ad_3.png'
-    }
-  }
-] as Ad[];
 
 // Helper function to get a random ad from a list of ads
 const getRandomAd = (ads: Ad[]): Ad => {
@@ -98,13 +22,15 @@ const getRandomAd = (ads: Ad[]): Ad => {
 const insertAdvertisements = (
   results: SingleSearchResult[],
   adInterval: number,
-  adType: 'horizontal' | 'vertical'
+  ads: Ad[]
 ): ResultItem[] => {
-  const ads = adType === 'horizontal' ? horizontalAds : verticalAds;
   let resultsWithAds: ResultItem[] = [];
   for (let i = 0; i < results.length; i++) {
     if (i > 0 && i % adInterval === 0) {
-      resultsWithAds.push(getRandomAd(ads));
+      const randomAd = getRandomAd(ads);
+      if (randomAd) {
+        resultsWithAds.push(randomAd);
+      }
     }
     resultsWithAds.push(results[i]);
   }
@@ -113,9 +39,20 @@ const insertAdvertisements = (
 
 export default function SingleCatalog({}: Props) {
   const { filteredResults, resultsTcg } = useSingleStore();
-  const { adsEnabled } = useGlobalStore();
-  // Insert advertisements every 10 results
-  const resultsWithAds = insertAdvertisements(filteredResults, 9, 'horizontal');
+  const { adsEnabled, ads } = useGlobalStore();
+  const [selectedTab, setSelectedTab] = useState('list');
+
+  const adsFromPosition4 = ads.position['4']?.ads || [];
+
+  if (adsFromPosition4.length === 0) {
+    console.log('No ads found for position 4');
+  }
+
+  const resultsWithAds = insertAdvertisements(
+    filteredResults,
+    9,
+    adsFromPosition4
+  );
 
   if (filteredResults.length === 0) {
     return (
@@ -127,7 +64,11 @@ export default function SingleCatalog({}: Props) {
 
   return (
     <div>
-      <Tabs defaultValue="list" className="w-full">
+      <Tabs
+        defaultValue="list"
+        className="w-full"
+        onValueChange={setSelectedTab}
+      >
         <TabsList>
           <TabsTrigger value="list">List</TabsTrigger>
           <TabsTrigger value="catalog">Catalog</TabsTrigger>
@@ -136,15 +77,15 @@ export default function SingleCatalog({}: Props) {
         <TabsContent value="list">
           {adsEnabled &&
             resultsWithAds.map((item, index) =>
-              'adType' in item ? (
+              item && 'position' in item ? (
                 <div
                   key={index}
                   className="mx-auto my-4 flex h-40 w-full max-w-5xl rounded border border-zinc-600 bg-zinc-700"
                 >
                   <a href={item.url} target="_blank" rel="noopener noreferrer">
                     <img
-                      src={item.images.desktop}
-                      alt={`ad-${item.adId}`}
+                      src={item.desktop_image}
+                      alt={`ad-${item.id}`}
                       className="rounded-lg"
                     />
                   </a>
@@ -165,31 +106,30 @@ export default function SingleCatalog({}: Props) {
         <TabsContent value="catalog">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {adsEnabled &&
-              insertAdvertisements(filteredResults, 9, 'vertical').map(
-                (item, index) =>
-                  'adType' in item ? (
-                    <div
-                      key={index}
-                      className="col-span-1 flex h-full overflow-clip rounded-lg border border-zinc-600 bg-zinc-700"
+              resultsWithAds.map((item, index) =>
+                item && 'position' in item ? (
+                  <div
+                    key={index}
+                    className="col-span-1 flex h-full overflow-clip rounded-lg border border-zinc-600 bg-zinc-700"
+                  >
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={item.images.desktop}
-                          alt={`ad-${item.adId}`}
-                          className="h-full w-full object-cover"
-                        />
-                      </a>
-                    </div>
-                  ) : (
-                    <SingleCatalogCard
-                      cardData={item as SingleSearchResult}
-                      key={index}
-                    />
-                  )
+                      <img
+                        src={item.mobile_image}
+                        alt={`ad-${item.id}`}
+                        className="h-full w-full object-cover"
+                      />
+                    </a>
+                  </div>
+                ) : (
+                  <SingleCatalogCard
+                    cardData={item as SingleSearchResult}
+                    key={index}
+                  />
+                )
               )}
             {!adsEnabled &&
               filteredResults.map((item, index) => (
@@ -201,7 +141,7 @@ export default function SingleCatalog({}: Props) {
           <SingleResultsTable
             cardData={
               resultsWithAds.filter(
-                (item) => !('adType' in item)
+                (item) => item && !('position' in item)
               ) as SingleSearchResult[]
             }
           />
