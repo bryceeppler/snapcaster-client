@@ -8,6 +8,7 @@ import BackToTopButton from '../ui/back-to-top-btn';
 import type { SingleSearchResult } from '@/stores/store';
 import useGlobalStore from '@/stores/globalStore';
 import { Ad } from '@/types/ads';
+import AdComponent from '../ad';
 
 type Props = {};
 
@@ -78,18 +79,7 @@ export default function SingleCatalog({}: Props) {
           {adsEnabled &&
             resultsWithAds.map((item, index) =>
               item && 'position' in item ? (
-                <div
-                  key={index}
-                  className="mx-auto my-4 flex h-40 w-full max-w-5xl rounded border border-zinc-600 bg-zinc-700"
-                >
-                  <a href={item.url} target="_blank" rel="noopener noreferrer">
-                    <img
-                      src={item.desktop_image}
-                      alt={`ad-${item.id}`}
-                      className="rounded-lg"
-                    />
-                  </a>
-                </div>
+                <AdComponent ad={item} key={index} />
               ) : (
                 <SingleCatalogRow
                   tcg={resultsTcg}
@@ -108,22 +98,7 @@ export default function SingleCatalog({}: Props) {
             {adsEnabled &&
               resultsWithAds.map((item, index) =>
                 item && 'position' in item ? (
-                  <div
-                    key={index}
-                    className="col-span-1 flex h-full overflow-clip rounded-lg border border-zinc-600 bg-zinc-700"
-                  >
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        src={item.mobile_image}
-                        alt={`ad-${item.id}`}
-                        className="h-full w-full object-cover"
-                      />
-                    </a>
-                  </div>
+                  <AdComponent ad={item} key={index} />
                 ) : (
                   <SingleCatalogCard
                     cardData={item as SingleSearchResult}
