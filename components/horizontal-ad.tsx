@@ -23,7 +23,7 @@ export default function HorizontalBannerAd({
       data-position-id={positionId}
       data-ad-type={adType}
       data-ad-id={adId}
-      className="ad flex h-40 w-full items-center justify-center rounded border border-zinc-600 bg-zinc-700"
+      className="ad flex w-full items-center justify-center rounded border border-zinc-600 bg-black"
       href={href}
       target={target}
       onClick={() => handleAdClick(positionId, adType, adId, href)}
