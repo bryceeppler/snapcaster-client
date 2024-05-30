@@ -29,7 +29,7 @@ const AdComponent: React.FC<AdComponentProps> = ({ ad }) => {
     <div
       ref={ref}
       data-ad-id={ad.id}
-      className="mx-auto my-4 flex h-40 w-full max-w-5xl rounded border border-zinc-600 bg-zinc-700"
+      className="mx-auto my-4 flex w-full max-w-5xl rounded border border-zinc-600 bg-zinc-700"
     >
       <a
         href={ad.url}
@@ -40,7 +40,12 @@ const AdComponent: React.FC<AdComponentProps> = ({ ad }) => {
         <img
           src={ad.desktop_image}
           alt={`ad-${ad.id}`}
-          className="rounded-lg"
+          className="hidden rounded-lg sm:block"
+        />
+        <img
+          src={ad.mobile_image}
+          alt={`ad-${ad.id}`}
+          className="w-fill block rounded-lg sm:hidden"
         />
       </a>
     </div>

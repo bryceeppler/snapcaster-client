@@ -184,44 +184,46 @@ const UserSettings = ({
             )}
           </div>
           {/* list their premium features */}
-          <div className="flex flex-col gap-2 p-2">
-            <div className="flex flex-row items-center gap-2">
-              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-              <p className="text-sm font-semibold text-zinc-400">
-                Search over 65 Canadian stores
-              </p>
+          {hasActiveSubscription && (
+            <div className="flex flex-col gap-2 p-2">
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Search over 65 Canadian stores
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Search up to 100 cards at a time
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Advanced filtering for card searches and multi-search
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Exclusive discount codes for Snapcaster partners
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  Participate in Snapcaster giveaways
+                </p>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+                <p className="text-sm font-semibold text-zinc-400">
+                  See less ads
+                </p>
+              </div>
             </div>
-            <div className="flex flex-row items-center gap-2">
-              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-              <p className="text-sm font-semibold text-zinc-400">
-                Search up to 100 cards at a time
-              </p>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-              <p className="text-sm font-semibold text-zinc-400">
-                Advanced filtering for card searches and multi-search
-              </p>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-              <p className="text-sm font-semibold text-zinc-400">
-                Exclusive discount codes for Snapcaster partners
-              </p>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-              <p className="text-sm font-semibold text-zinc-400">
-                Participate in Snapcaster giveaways
-              </p>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-              <p className="text-sm font-semibold text-zinc-400">
-                See less ads
-              </p>
-            </div>
-          </div>
+          )}
         </div>
       </div>
       <div className="p-2" />

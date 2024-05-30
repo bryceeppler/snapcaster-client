@@ -42,12 +42,7 @@ const SubscriptionCards = ({ createCheckoutSession }: Props) => {
                   Advanced filtering for card searches and multi-search
                 </p>
               </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Exclusive discount codes for Snapcaster partners
-                </p>
-              </div>
+
               <div className="flex flex-row items-center gap-2">
                 <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
                 <p className="text-sm font-semibold text-zinc-400">
