@@ -77,7 +77,6 @@ export default function Component() {
               <CarouselItem
                 key={index}
                 data-position-id="3"
-                data-ad-type="carousel"
                 data-ad-id={carouselAds[currentAdIndex].id.toString()}
                 onClick={() =>
                   handleAdClick(
