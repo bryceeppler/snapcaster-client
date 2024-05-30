@@ -16,11 +16,11 @@ import useAuthStore from '@/stores/authStore';
 import { AlignJustify } from 'lucide-react';
 import { useState } from 'react';
 const components: { title: string; href: string; description: string }[] = [
-  // {
-  //   title: 'Supporters',
-  //   href: '/supporters',
-  //   description: 'A list of all the people who have supported Snapcaster.'
-  // },
+  {
+    title: 'Supporters',
+    href: '/supporters',
+    description: 'A list of our partnered stores who support Snapcaster.'
+  },
   {
     title: 'Blog',
     href: '/blog',
