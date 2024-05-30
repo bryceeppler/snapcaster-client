@@ -19,6 +19,9 @@ const useGlobalStore = create<GlobalState>((set, get) => ({
   ads: { position: {} },
   fetchAds: async () => {
     try {
+      if (Object.keys(get().ads.position).length > 0) {
+        return;
+      }
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/ads`
       );

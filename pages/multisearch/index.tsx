@@ -34,7 +34,6 @@ import {
 } from '@/components/ui/table';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
-import { handleQuerySingleCard } from '@/utils/analytics';
 
 type Props = {};
 
@@ -50,10 +49,11 @@ export default function Multisearch({}: Props) {
     onWebsiteSelect,
     setTcg
   } = useMultiSearchStore();
-  const { fetchWebsites, websites, getWebsiteName } = useGlobalStore();
+  const { fetchWebsites, fetchAds, websites } = useGlobalStore();
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
+    fetchAds();
     fetchWebsites();
   }, []);
 

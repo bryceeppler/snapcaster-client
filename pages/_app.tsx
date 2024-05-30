@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import React from 'react';
-import { AppContext, AppProps } from 'next/app';
+import { AppProps } from 'next/app';
 import Layout from '@/components/ui/root-layout';
 import { initGA, logPageView } from '../utils/analytics';
 import { Toaster } from '@/components/ui/sonner';

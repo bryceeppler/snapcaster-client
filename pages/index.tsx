@@ -1,10 +1,10 @@
+// pages/index.tsx
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Homebanner from '@/components/homebanner';
 import LoadingSpinner from '@/components/loading-spinner';
 import SingleSearchInfo from '@/components/single-search/single-results-info';
 import { useStore } from '@/stores/store';
-import usePopularCardsStore from '@/stores/popularCardsStore';
 import SingleCatalog from '@/components/single-search/single-results';
 import MainLayout from '@/components/main-page-layout';
 import SingleSearchFilter from '@/components/single-search/single-filters';
@@ -14,15 +14,12 @@ import { getAllBlogPosts } from '@/lib/blog';
 import MultiTcgSearchbox from '@/components/single-search/multitcg-searchbox';
 import useSingleStore from '@/stores/singleSearchStore';
 import PoweredBy from '@/components/powered-by';
-import useGlobalStore from '@/stores/globalStore';
 
 type Props = {};
 
 const Home: NextPage<Props> = ({}: Props) => {
   const { initWebsiteInformation } = useStore();
   const { results, searchStarted, loading } = useSingleStore();
-  const { fetchPopularCards } = usePopularCardsStore();
-  const { adsEnabled } = useGlobalStore();
 
   useEffect(() => {
     initWebsiteInformation();
@@ -34,7 +31,7 @@ const Home: NextPage<Props> = ({}: Props) => {
       <MainLayout>
         <div className="flex w-full flex-col justify-center gap-8 text-center">
           {!searchStarted && <Homebanner />}
-          {adsEnabled && <PoweredBy size="small" />}
+          <PoweredBy size="small" />
           <MultiTcgSearchbox searchType={'single'} />
 
           {loading && (

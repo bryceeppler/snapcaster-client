@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+// components/MainLayout.tsx
+import React from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import Link from 'next/link';
-import { trackAdClick } from '@/utils/analytics';
-import { Button } from './ui/button';
+import { trackAdClick, trackAdVisible } from '@/utils/analytics';
 import {
   Carousel,
   CarouselContent,
@@ -10,7 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
-import { trackAdVisible } from '@/utils/analytics';
+
 import CarouselAd from './carousel-ad';
 import { useInView } from 'react-intersection-observer';
 
@@ -19,7 +19,7 @@ type Props = {};
 export default function MainLayout({
   children
 }: React.PropsWithChildren<Props>) {
-  const { adsEnabled, ads } = useGlobalStore();
+  const { ads } = useGlobalStore();
   const [currentAdIndex, setCurrentAdIndex] = React.useState(0);
   const {
     ref: bannerRef,
@@ -27,7 +27,7 @@ export default function MainLayout({
     entry: bannerEntry
   } = useInView({
     threshold: 0.5,
-    triggerOnce: false, // Track visibility only once per ad
+    triggerOnce: false,
     onChange: (inView, entry) => {
       if (inView) {
         const adId = entry.target.getAttribute('data-ad-id');
@@ -64,9 +64,9 @@ export default function MainLayout({
 
   return (
     <main className="container w-full max-w-5xl flex-1 flex-col items-center justify-center px-2 py-8">
-      {adsEnabled && (
-        <>
-          {/* Header : position 1 */}
+      <>
+        {/* Header : position 1 */}
+        {topBannerAd && (
           <Link
             href={topBannerAd.url}
             ref={bannerRef}
@@ -87,44 +87,40 @@ export default function MainLayout({
               alt="ad"
             />
           </Link>
+        )}
 
-          {/* Left ad : position 2 */}
-          {leftBannerAd && (
-            <Link
-              onClick={() => trackAdClick(leftBannerAd.id.toString())}
-              href={leftBannerAd.url}
-              ref={leftBannerRef}
-              target="_blank"
-              data-position-id="2"
-              data-ad-id={leftBannerAd.id.toString()}
-              className="ad fixed left-10 top-1/4 hidden w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col"
-            >
-              <img
-                src={leftBannerAd.mobile_image}
-                alt="ad"
-                className="h-full"
-              />
-            </Link>
-          )}
+        {/* Left ad : position 2 */}
+        {leftBannerAd && (
+          <Link
+            onClick={() => trackAdClick(leftBannerAd.id.toString())}
+            href={leftBannerAd.url}
+            ref={leftBannerRef}
+            target="_blank"
+            data-position-id="2"
+            data-ad-id={leftBannerAd.id.toString()}
+            className="ad fixed left-10 top-1/4 hidden w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col"
+          >
+            <img src={leftBannerAd.mobile_image} alt="ad" className="h-full" />
+          </Link>
+        )}
 
-          {/* Right ad : position 3 */}
-          {carouselAds.length > 0 && (
-            <Carousel
-              className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
-            >
-              <CarouselContent>
-                {carouselAds.map((ad, index) => (
-                  <CarouselItem key={index}>
-                    <CarouselAd ad={ad} />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="" />
-              <CarouselNext className="" />
-            </Carousel>
-          )}
-        </>
-      )}
+        {/* Right ad : position 3 */}
+        {carouselAds.length > 0 && (
+          <Carousel
+            className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
+          >
+            <CarouselContent>
+              {carouselAds.map((ad, index) => (
+                <CarouselItem key={index}>
+                  <CarouselAd ad={ad} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="" />
+            <CarouselNext className="" />
+          </Carousel>
+        )}
+      </>
 
       <div className="mt-8">{children}</div>
     </main>
