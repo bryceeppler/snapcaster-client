@@ -9,6 +9,7 @@ export type Ad = {
   desktop_image: string;
   created_at: string;
   position: string;
+  url: string;
 };
 
 export type PositionAds = {

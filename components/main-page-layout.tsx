@@ -1,93 +1,109 @@
 import React from 'react';
 import useGlobalStore from '@/stores/globalStore';
-import BannerAd from './ad';
-import VerticalBannerAd from './vertical-ad';
-import AdCarousel from './ad-carousel';
-type Props = {};
+import Link from 'next/link';
+import { handleAdClick } from '@/utils/analytics';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from '@/components/ui/carousel';
 
-const ads = [
-  {
-    positionId: 'top-banner',
-    adType: 'horizontal-banner',
-    adId: '1',
-    url: 'https://obsidiangames.ca/',
-    images: {
-      desktop:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_1008x160.png',
-      mobile:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_1008x160.png'
-    }
-  },
-  {
-    positionId: 'left-banner',
-    adType: 'vertical-banner',
-    adId: '2',
-    url: 'https://company2.com/',
-    images: {
-      desktop:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_1008x160.png',
-      mobile:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_382x160.png'
-    }
-  },
-  {
-    positionId: 'side-banner',
-    adType: 'vertical-banner',
-    adId: '3',
-    url: 'https://example.com/',
-    images: {
-      desktop:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_mtg_vertical_lg.png',
-      mobile:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/ad_placeholder_vertical.png'
-    }
-  }
-];
+type Props = {};
 
 export default function MainLayout({
   children
 }: React.PropsWithChildren<Props>) {
-  const { adsEnabled, ads: adsNew } = useGlobalStore();
+  const { adsEnabled, ads } = useGlobalStore();
   const [currentAdIndex, setCurrentAdIndex] = React.useState(0);
-  console.log(adsNew);
+
+  if (!ads.position || Object.keys(ads.position).length === 0) {
+    return null; // or a loading spinner
+  }
+
+  const topBannerAd = ads.position['1'].ads[0];
+  const leftBannerAd = ads.position['2']?.ads[0]; // Assuming there's only one ad in position 2
+  const carouselAds = ads.position['3']?.ads || [];
+
+  const nextAd = () => {
+    setCurrentAdIndex((prevIndex) => (prevIndex + 1) % carouselAds.length);
+  };
+
+  const previousAd = () => {
+    setCurrentAdIndex(
+      (prevIndex) => (prevIndex - 1 + carouselAds.length) % carouselAds.length
+    );
+  };
+
   return (
     <main className="container w-full max-w-5xl flex-1 flex-col items-center justify-center px-2 py-8">
       {adsEnabled && (
         <>
-          {/* top banner : position 1 */}
-          <BannerAd
-            positionId="top-banner"
-            adType="horizontal-banner"
-            adId={ads[currentAdIndex].adId}
-            url={ads[currentAdIndex].url}
+          {/* Header : position 1 */}
+          <Link
+            href={topBannerAd.url}
+            target="_blank"
+            data-position-id="1"
+            data-ad-id={topBannerAd.id.toString()}
+            className="ad flex items-center justify-center rounded border border-zinc-600 bg-black"
           >
             <img
               className="hidden h-fit w-full md:flex"
-              src={ads[currentAdIndex].images.desktop}
+              src={topBannerAd.desktop_image}
               alt="ad"
             />
             <img
               className="flex h-full w-full object-cover md:hidden"
-              src={ads[currentAdIndex].images.mobile}
+              src={topBannerAd.mobile_image}
               alt="ad"
             />
-          </BannerAd>
-          {/* left ad : position 2 */}
-          <VerticalBannerAd
-            positionId="left-banner"
-            adType="vertical-banner"
-            side="left"
-            adId="2"
-            url={`https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_vertical_pokemon.png`}
-          >
-            <img
-              src={`https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/obsidian_mtg_vertical.png`}
-              alt="ad"
-              className="h-full"
-            />
-          </VerticalBannerAd>
+          </Link>
+
+          {/* Left ad : position 2 */}
+          {leftBannerAd && (
+            <Link
+              href={leftBannerAd.url}
+              target="_blank"
+              data-position-id="2"
+              data-ad-id={leftBannerAd.id.toString()}
+              className="ad fixed left-10 top-1/4 hidden w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col"
+            >
+              <img
+                src={leftBannerAd.mobile_image}
+                alt="ad"
+                className="h-full"
+              />
+            </Link>
+          )}
+
           {/* right ad : position 3 */}
-          <AdCarousel />
+          {carouselAds.length > 0 && (
+            <Carousel
+              data-position-id="3"
+              data-ad-type="carousel"
+              data-ad-id={carouselAds[currentAdIndex].id.toString()}
+              className={`ad fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
+              onClick={() =>
+                handleAdClick(
+                  carouselAds[currentAdIndex].position,
+                  'carousel',
+                  carouselAds[currentAdIndex].id.toString(),
+                  carouselAds[currentAdIndex].url
+                )
+              }
+            >
+              <CarouselContent>
+                {carouselAds.map((ad, index) => (
+                  <CarouselItem key={index}>
+                    <img src={ad.mobile_image} alt="ad" />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="" />
+              <CarouselNext className="" />
+            </Carousel>
+          )}
         </>
       )}
       <div className="mt-8">{children}</div>

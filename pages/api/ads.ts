@@ -13,6 +13,7 @@ interface Ad {
   desktop_image: string;
   created_at: string; // Or Date if you parse it
   position: string;
+  url: string;
 }
 
 interface FormattedResult {
