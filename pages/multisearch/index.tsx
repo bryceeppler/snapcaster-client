@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/table';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
+import { handleQuerySingleCard } from '@/utils/analytics';
 
 type Props = {};
 
@@ -293,7 +294,7 @@ const SearchView = ({
   setTcg: (value: Tcgs) => void;
   searchInput: string;
   setSearchInput: (value: string) => void;
-  handleSubmit: () => void;
+  handleSubmit: (tcg: string) => void;
   websites: any[];
   selectedWebsites: any[];
   onWebsiteSelect: (value: any) => void;
@@ -341,7 +342,9 @@ const SearchView = ({
         onChange={(e) => setSearchInput(e.target.value)}
       />
       <Button
-        onClick={handleSubmit}
+        onClick={() => {
+          handleSubmit(tcg);
+        }}
         disabled={searchInput.length === 0 || loading}
       >
         {loading ? (

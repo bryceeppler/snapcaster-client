@@ -35,7 +35,7 @@ const Home: NextPage<Props> = ({}: Props) => {
         <div className="flex w-full flex-col justify-center gap-8 text-center">
           {!searchStarted && <Homebanner />}
           {adsEnabled && <PoweredBy size="small" />}
-          <MultiTcgSearchbox />
+          <MultiTcgSearchbox searchType={'single'} />
 
           {loading && (
             <div className="flex items-center justify-center pt-5">

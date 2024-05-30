@@ -13,7 +13,9 @@ import useSingleStore from '@/stores/singleSearchStore';
 
 import type { Tcgs } from '@/types/index';
 
-type Props = {};
+type Props = {
+  searchType: string;
+};
 
 const MultiTcgSearchbox = (props: Props) => {
   const { fetchCards, searchInput, setSearchInput, tcg, setTcg } =
@@ -38,6 +40,7 @@ const MultiTcgSearchbox = (props: Props) => {
         </SelectContent>
       </Select>
       <SingleSearchbox
+        searchType={props.searchType}
         searchFunction={fetchCards}
         setSearchInput={setSearchInput}
         searchInput={searchInput}

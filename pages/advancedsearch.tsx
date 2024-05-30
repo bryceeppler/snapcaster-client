@@ -154,6 +154,7 @@ export default function AdvancedSearch({}: Props) {
           {/*Container 2 - Search Bar & Show Filters Button*/}
           <div className="flex items-center gap-2">
             <SingleSearchbox
+              searchType={'advanced'}
               searchFunction={fetchAdvancedSearchResults}
               setSearchInput={setAdvancedSearchInput}
               searchInput={advancedSearchInput}
