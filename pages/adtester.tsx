@@ -1,12 +1,7 @@
 import { useState } from 'react';
-import { SingleSearchResult } from '@/stores/store';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { trackAdVisible } from '@/utils/analytics';
-import { useEffect, useRef } from 'react';
-
 import useGlobalStore from '@/stores/globalStore';
-import { handleAdClick } from '@/utils/analytics';
+import { handleAdClick, trackAdVisible } from '@/utils/analytics';
 import {
   Carousel,
   CarouselContent,
@@ -14,63 +9,62 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
+import { Button } from '@/components/ui/button';
+import type { Ad } from '@/types/ads';
+import { useInView } from 'react-intersection-observer';
+import CarouselAd from '@/components/carousel-ad';
 
 export default function Component() {
   const { ads } = useGlobalStore();
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
 
-  const observerRefs = useRef<Record<string, IntersectionObserver>>({});
-
-  const setupObserver = (element: HTMLElement, adId: string) => {
-    if (!element || observerRefs.current[adId]) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.intersectionRatio > 0.5) {
-            trackAdVisible(adId);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: [0.5] }
-    );
-
-    observer.observe(element);
-    observerRefs.current[adId] = observer;
-  };
-
-  useEffect(() => {
-    if (true) {
-      const adElements = document.querySelectorAll('.ad');
-      adElements.forEach((el) => {
-        console.log('Found ad element: ');
-        const adId = el.getAttribute('data-ad-id');
-        console.log('adId: ', adId);
+  const {
+    ref: bannerRef,
+    inView: bannerInView,
+    entry: bannerEntry
+  } = useInView({
+    threshold: 0.5,
+    triggerOnce: false, // Track visibility only once per ad
+    onChange: (inView, entry) => {
+      if (inView) {
+        const adId = entry.target.getAttribute('data-ad-id');
         if (adId) {
-          setupObserver(el as HTMLElement, adId);
+          trackAdVisible(adId);
         }
-      });
+      }
     }
+  });
 
-    return () => {
-      Object.values(observerRefs.current).forEach((observer) =>
-        observer.disconnect()
-      );
-    };
-  }, [currentAdIndex, ads]);
+  const {
+    ref: leftBannerRef,
+    inView: leftBannerInView,
+    entry: leftBannerEntry
+  } = useInView({
+    threshold: 0.5,
+    triggerOnce: false,
+    onChange: (inView, entry) => {
+      if (inView) {
+        const adId = entry.target.getAttribute('data-ad-id');
+        if (adId) {
+          trackAdVisible(adId);
+        }
+      }
+    }
+  });
 
   if (!ads.position || Object.keys(ads.position).length === 0) {
     return null; // or a loading spinner
   }
+
   const topBannerAd = ads.position['1'].ads[0];
   const leftBannerAd = ads.position['2']?.ads[0]; // Assuming there's only one ad in position 2
   const carouselAds = ads.position['3']?.ads || [];
 
   return (
-    <section className="mx-auto flex h-screen w-full max-w-5xl flex-col items-center space-y-8 text-center">
+    <section className="mx-auto flex w-full max-w-5xl flex-col items-center space-y-8 text-center">
       <p>This is for testing analytics on prod</p>
       <h1 className="text-3xl font-bold">Ad Tester</h1>
+
       <Button
         onClick={() => {
           trackAdVisible('3182');
@@ -78,9 +72,11 @@ export default function Component() {
       >
         trigger ad impression
       </Button>
+
       {/* Header : position 1 */}
       <Link
         href={topBannerAd.url}
+        ref={bannerRef}
         target="_blank"
         data-position-id="1"
         data-ad-id={topBannerAd.id.toString()}
@@ -102,6 +98,7 @@ export default function Component() {
       {leftBannerAd && (
         <Link
           href={leftBannerAd.url}
+          ref={leftBannerRef}
           target="_blank"
           data-position-id="2"
           data-ad-id={leftBannerAd.id.toString()}
@@ -111,7 +108,7 @@ export default function Component() {
         </Link>
       )}
 
-      {/* right ad : position 3 */}
+      {/* Right ad : position 3 */}
       {carouselAds.length > 0 && (
         <Carousel
           className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
@@ -127,7 +124,7 @@ export default function Component() {
                 }
                 className="ad"
               >
-                <img src={ad.mobile_image} alt="ad" />
+                <CarouselAd ad={ad} />
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -135,6 +132,8 @@ export default function Component() {
           <CarouselNext className="" />
         </Carousel>
       )}
+      <div className="flex h-96 w-full bg-zinc-300"></div>
+      <div className="flex h-96 w-full bg-slate-200"></div>
     </section>
   );
 }
