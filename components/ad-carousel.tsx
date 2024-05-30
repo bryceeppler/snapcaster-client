@@ -29,9 +29,9 @@ const ads = [
     url: 'https://company2.com/',
     images: {
       desktop:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/ad_placeholder.png',
+        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/ad_placeholder_vertical.png',
       mobile:
-        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/ad_placeholder.png'
+        'https://s3.ca-central-1.amazonaws.com/cdn.snapcaster.ca/ad_placeholder_vertical.png'
     }
   }
 ];
