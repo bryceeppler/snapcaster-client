@@ -70,22 +70,24 @@ export default function Component() {
       {/* right ad : position 3 */}
       {carouselAds.length > 0 && (
         <Carousel
-          data-position-id="3"
-          data-ad-type="carousel"
-          data-ad-id={carouselAds[currentAdIndex].id.toString()}
           className={`ad fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
-          onClick={() =>
-            handleAdClick(
-              carouselAds[currentAdIndex].position,
-              'carousel',
-              carouselAds[currentAdIndex].id.toString(),
-              carouselAds[currentAdIndex].url
-            )
-          }
         >
           <CarouselContent>
             {carouselAds.map((ad, index) => (
-              <CarouselItem key={index}>
+              <CarouselItem
+                key={index}
+                data-position-id="3"
+                data-ad-type="carousel"
+                data-ad-id={carouselAds[currentAdIndex].id.toString()}
+                onClick={() =>
+                  handleAdClick(
+                    carouselAds[currentAdIndex].position,
+                    'carousel',
+                    carouselAds[currentAdIndex].id.toString(),
+                    carouselAds[currentAdIndex].url
+                  )
+                }
+              >
                 <img src={ad.mobile_image} alt="ad" />
               </CarouselItem>
             ))}
