@@ -25,13 +25,15 @@ const Supporters: NextPage<Props> = () => {
                   <h3 className="mb-6 text-2xl font-bold">Tier 1 Sponsor</h3>
                   <div className="grid grid-cols-1 gap-6">
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Obsidian Games Vernon"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="200"
-                        src="https://cdn.snapcaster.ca/obsidian_games_logo.webp"
-                        width="400"
-                      />
+                      <Link href="https://obsidiangames.ca">
+                        <img
+                          alt="Obsidian Games Vernon"
+                          className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                          height="200"
+                          src="https://cdn.snapcaster.ca/obsidian_supporter.png"
+                          width="400"
+                        />
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -39,99 +41,69 @@ const Supporters: NextPage<Props> = () => {
                   <h3 className="mb-6 text-2xl font-bold">Tier 2 Sponsors</h3>
                   <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="100"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-48 rounded border bg-popover"
+                      ></Link>
                     </div>
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="100"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                    </div>
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-48 rounded border bg-popover"
+                      ></Link>
+                    </div>{' '}
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="100"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                    </div>
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-48 rounded border bg-popover"
+                      ></Link>
+                    </div>{' '}
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="100"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                    </div>
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-48 rounded border bg-popover"
+                      ></Link>
+                    </div>{' '}
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="100"
-                        src="/placeholder.svg"
-                        width="200"
-                      />
-                    </div>
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-48 rounded border bg-popover"
+                      ></Link>
+                    </div>{' '}
                   </div>
                 </div>
                 <div>
                   <h3 className="mb-6 text-2xl font-bold">Tier 3 Sponsors</h3>
                   <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="70"
-                        src="/placeholder.svg"
-                        width="140"
-                      />
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-32 rounded border bg-popover"
+                      ></Link>
                     </div>
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="70"
-                        src="/placeholder.svg"
-                        width="140"
-                      />
-                    </div>
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-32 rounded border bg-popover"
+                      ></Link>
+                    </div>{' '}
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="70"
-                        src="/placeholder.svg"
-                        width="140"
-                      />
-                    </div>
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-32 rounded border bg-popover"
+                      ></Link>
+                    </div>{' '}
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="70"
-                        src="/placeholder.svg"
-                        width="140"
-                      />
-                    </div>
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-32 rounded border bg-popover"
+                      ></Link>
+                    </div>{' '}
                     <div className="flex items-center justify-center">
-                      <img
-                        alt="Sponsor Logo"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="70"
-                        src="/placeholder.svg"
-                        width="140"
-                      />
+                      <Link
+                        href="/contact"
+                        className=" aspect-video w-32 rounded border bg-popover"
+                      ></Link>
                     </div>
                   </div>
                 </div>
@@ -140,13 +112,14 @@ const Supporters: NextPage<Props> = () => {
                     {' '}
                     If you're a Local Game Store (LGS) owner and wish to feature
                     your website on Snapcaster, we invite you to join our
-                    official Discord server and send us a direct message. We are
-                    also now offering exclusive advertising opportunities for
-                    your webstore on Snapcaster. This is an excellent chance to
-                    promote your store's special offers, discount codes, and
-                    events such as pre-release tournaments. Don't miss out on
-                    this opportunity to connect with our passionate audience and
-                    enhance your store's visibility.
+                    official Discord server and send us a direct message or send
+                    us an email at epplerdev@gmail.com. We are also now offering
+                    exclusive advertising opportunities for your webstore on
+                    Snapcaster. This is an excellent chance to promote your
+                    store's special offers, discount codes, and events such as
+                    pre-release tournaments. Don't miss out on this opportunity
+                    to connect with our passionate audience and enhance your
+                    store's visibility.
                   </p>
                 </div>
               </div>
