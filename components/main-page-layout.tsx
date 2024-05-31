@@ -14,6 +14,7 @@ import {
 
 import CarouselAd from './carousel-ad';
 import { useInView } from 'react-intersection-observer';
+import useAuthStore from '@/stores/authStore';
 
 type Props = {};
 
@@ -21,6 +22,7 @@ export default function MainLayout({
   children
 }: React.PropsWithChildren<Props>) {
   const { ads } = useGlobalStore();
+  const { hasActiveSubscription } = useAuthStore();
   const [currentAdIndex, setCurrentAdIndex] = React.useState(0);
   const plugin = React.useRef(
     Autoplay({
@@ -112,7 +114,7 @@ export default function MainLayout({
         )}
 
         {/* Right ad : position 3 */}
-        {carouselAds.length > 0 && (
+        {!hasActiveSubscription && carouselAds.length > 0 && (
           <Carousel
             className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
             plugins={[plugin.current]}
