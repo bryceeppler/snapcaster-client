@@ -46,15 +46,18 @@ export default function SingleCatalog({}: Props) {
 
   const { hasActiveSubscription } = useAuthStore();
   const adsFromPosition4 = ads.position['4']?.ads || [];
-
-  if (adsFromPosition4.length === 0) {
-    console.log('No ads found for position 4');
-  }
+  const adsFromPosition5 = ads.position['5']?.ads || [];
 
   const resultsWithAds = insertAdvertisements(
     filteredResults,
     9,
     adsFromPosition4
+  );
+
+  const resultsWithVerticalAds = insertAdvertisements(
+    filteredResults,
+    9,
+    adsFromPosition5
   );
 
   if (filteredResults.length === 0) {
@@ -98,7 +101,7 @@ export default function SingleCatalog({}: Props) {
         <TabsContent value="catalog">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {!hasActiveSubscription &&
-              resultsWithAds.map((item, index) =>
+              resultsWithVerticalAds.map((item, index) =>
                 item && 'position' in item ? (
                   <AdComponent ad={item} key={index} />
                 ) : (
