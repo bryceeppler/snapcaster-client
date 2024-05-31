@@ -22,7 +22,7 @@ export default function Footer() {
           <nav className="grid gap-2">
             {/* <Link href="/contact">Contact</Link> */}
             <Link href="/guides">Guides</Link>
-            {/* <Link href="/faq">FAQ</Link> */}
+            <Link href="/faq">FAQ</Link>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
           </nav>
