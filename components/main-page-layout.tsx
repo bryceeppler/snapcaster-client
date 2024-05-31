@@ -1,7 +1,8 @@
 // components/MainLayout.tsx
-import React from 'react';
+import React, { useRef } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import Link from 'next/link';
+import Autoplay from 'embla-carousel-autoplay';
 import { trackAdClick, trackAdVisible } from '@/utils/analytics';
 import {
   Carousel,
@@ -21,6 +22,12 @@ export default function MainLayout({
 }: React.PropsWithChildren<Props>) {
   const { ads } = useGlobalStore();
   const [currentAdIndex, setCurrentAdIndex] = React.useState(0);
+  const plugin = React.useRef(
+    Autoplay({
+      delay: 5000,
+      stopOnInteraction: true
+    }) as any
+  );
   const {
     ref: bannerRef,
     inView: bannerInView,
@@ -108,6 +115,7 @@ export default function MainLayout({
         {carouselAds.length > 0 && (
           <Carousel
             className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
+            plugins={[plugin.current]}
           >
             <CarouselContent>
               {carouselAds.map((ad, index) => (
