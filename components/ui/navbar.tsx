@@ -114,6 +114,17 @@ export default function Navbar() {
               MTG Advanced Search
             </Button>
           </Link>
+          <Link href="/supporters" as="/supporters">
+            <Button
+              variant="ghost"
+              className="block w-full text-left text-sm"
+              onClick={() => {
+                setMobileMenuOpen(false);
+              }}
+            >
+              Supporters
+            </Button>
+          </Link>
           {/* <Link href="/supporters" as="/supporters">
             <Button
               variant="ghost"
