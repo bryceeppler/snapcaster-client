@@ -9,6 +9,7 @@ import type { SingleSearchResult } from '@/stores/store';
 import useGlobalStore from '@/stores/globalStore';
 import { Ad } from '@/types/ads';
 import AdComponent from '../ad';
+import useAuthStore from '@/stores/authStore';
 
 type Props = {};
 
@@ -43,6 +44,7 @@ export default function SingleCatalog({}: Props) {
   const { adsEnabled, ads } = useGlobalStore();
   const [selectedTab, setSelectedTab] = useState('list');
 
+  const { hasActiveSubscription } = useAuthStore();
   const adsFromPosition4 = ads.position['4']?.ads || [];
 
   if (adsFromPosition4.length === 0) {
@@ -76,7 +78,7 @@ export default function SingleCatalog({}: Props) {
           <TabsTrigger value="table">Table</TabsTrigger>
         </TabsList>
         <TabsContent value="list">
-          {adsEnabled &&
+          {!hasActiveSubscription &&
             resultsWithAds.map((item, index) =>
               item && 'position' in item ? (
                 <AdComponent ad={item} key={index} />
@@ -88,14 +90,14 @@ export default function SingleCatalog({}: Props) {
                 />
               )
             )}
-          {!adsEnabled &&
+          {hasActiveSubscription &&
             filteredResults.map((item, index) => (
               <SingleCatalogRow tcg={resultsTcg} cardData={item} key={index} />
             ))}
         </TabsContent>
         <TabsContent value="catalog">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {adsEnabled &&
+            {!hasActiveSubscription &&
               resultsWithAds.map((item, index) =>
                 item && 'position' in item ? (
                   <AdComponent ad={item} key={index} />
@@ -106,7 +108,7 @@ export default function SingleCatalog({}: Props) {
                   />
                 )
               )}
-            {!adsEnabled &&
+            {hasActiveSubscription &&
               filteredResults.map((item, index) => (
                 <SingleCatalogCard cardData={item} key={index} />
               ))}
