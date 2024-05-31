@@ -299,7 +299,18 @@ const SearchView = ({
   onWebsiteSelect: (value: any) => void;
 }) => {
   const { loading } = useMultiSearchStore();
+  const { hasActiveSubscription } = useAuthStore();
   const { adsEnabled } = useGlobalStore();
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (!hasActiveSubscription) {
+      const lines = value.split('\n');
+      if (lines.length > 3) {
+        return;
+      }
+    }
+    setSearchInput(value);
+  };
   return (
     <div className="outlined-container flex w-full flex-col gap-4 p-6">
       <div className="flex flex-col gap-4 md:flex-row">
@@ -334,25 +345,39 @@ const SearchView = ({
 
       {/* Textarea */}
       <Textarea
-        rows={8}
+        rows={hasActiveSubscription ? 10 : 3}
         className="text-[16px]"
-        placeholder="Enter card names (one per line)"
+        placeholder={`Enter card names (one per line). Max ${
+          hasActiveSubscription ? 100 : 3
+        } cards.${
+          !hasActiveSubscription
+            ? ' \nUpgrade to Pro to search up to 100 cards.'
+            : ''
+        }`}
+        // max 3 lines unless hasActiveSubscription is true
         value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
+        onChange={handleInputChange}
       />
       <Button
         onClick={() => {
           handleSubmit(tcg);
         }}
-        disabled={searchInput.length === 0 || loading}
+        disabled={
+          searchInput.length === 0 ||
+          loading ||
+          (!hasActiveSubscription && searchInput.split('\n').length > 3) ||
+          searchInput.split('\n').length > 100
+        }
       >
         {loading ? (
           <>
             <Loader2 className="animate-spin" size={16} />
             <span className="ml-2">Loading</span>
           </>
+        ) : searchInput.split('\n').length > 100 ? (
+          'Too many cards'
         ) : (
-          'Submit'
+          'Search'
         )}
       </Button>
     </div>
