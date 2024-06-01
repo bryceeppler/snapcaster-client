@@ -2,10 +2,10 @@ import React from 'react';
 import { SingleSearchResult } from '@/stores/store';
 type Props = {
   cardData: SingleSearchResult;
+  tcg: string;
 };
 
 import { useStore } from '@/stores/store';
-import { trackOutboundLink } from '../../utils/analytics';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import {
@@ -15,20 +15,15 @@ import {
   CardHeader
 } from '@/components/ui/card';
 import CardImage from '../ui/card-image';
+import { handleBuyClick } from '../../utils/analytics';
 
-export default function SingleCatalogCard({ cardData }: Props) {
+export default function SingleCatalogCard({ cardData, tcg }: Props) {
   const { websites } = useStore();
 
   const findWebsiteNameByCode = (code: string): string => {
     const website = websites.find((website) => website.code === code);
     return website ? website.name : 'Website not found';
   };
-
-  function handleBuyClick(link: string, price: number) {
-    const domain = link.split('/')[2];
-    const priceInCents = price * 100;
-    trackOutboundLink(domain, priceInCents);
-  }
 
   return (
     <Card className="flex h-full flex-col">
@@ -63,7 +58,14 @@ export default function SingleCatalogCard({ cardData }: Props) {
             className="w-full"
           >
             <Button
-              onClick={() => handleBuyClick(cardData.link, cardData.price)}
+              onClick={() =>
+                handleBuyClick(
+                  cardData.link,
+                  cardData.price,
+                  cardData.name,
+                  tcg
+                )
+              }
               className="w-full"
             >
               Buy

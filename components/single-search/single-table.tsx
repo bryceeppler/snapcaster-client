@@ -8,19 +8,14 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { handleBuyClick } from '../../utils/analytics';
 import Link from 'next/link';
 import { SingleSearchResult } from '@/stores/store';
 type Props = {
   cardData: SingleSearchResult[];
+  tcg: string;
 };
-import { trackOutboundLink } from '@/utils/analytics';
 const SingleResultsTable = (props: Props) => {
-  function handleBuyClick(link: string, price: number) {
-    const domain = link.split('/')[2];
-    const priceInCents = price * 100;
-    trackOutboundLink(domain, priceInCents);
-  }
-
   const { websites } = useStore();
 
   const findWebsiteNameByCode = (code: string): string => {
@@ -58,7 +53,14 @@ const SingleResultsTable = (props: Props) => {
                 className="w-full"
               >
                 <Button
-                  onClick={() => handleBuyClick(cardData.link, cardData.price)}
+                  onClick={() =>
+                    handleBuyClick(
+                      cardData.link,
+                      cardData.price,
+                      cardData.name,
+                      props.tcg
+                    )
+                  }
                   className="w-full"
                 >
                   Buy

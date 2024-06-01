@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { AdvancedSearchResult } from '@/stores/advancedStore';
-
+import { handleBuyClick } from '../../utils/analytics';
 type Props = {
   cardData: AdvancedSearchResult;
+  tcg: string;
 };
 
 import { useStore } from '@/stores/store';
-import { trackOutboundLink } from '../../utils/analytics';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 
-export default function SingleCatalogRow({ cardData }: Props) {
+export default function SingleCatalogRow({ cardData, tcg }: Props) {
   const { websites, promoMap } = useStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,12 +46,6 @@ export default function SingleCatalogRow({ cardData }: Props) {
     const website = websites.find((website) => website.code === code);
     return website ? website.name : 'Website not found';
   };
-
-  function handleBuyClick(link: string, price: number) {
-    const domain = link.split('/')[2];
-    const priceInCents = price * 100;
-    trackOutboundLink(domain, priceInCents);
-  }
 
   return (
     <>
@@ -158,7 +152,12 @@ export default function SingleCatalogRow({ cardData }: Props) {
               <Button
                 asChild
                 onClick={() => {
-                  handleBuyClick(cardData.link, cardData.price);
+                  handleBuyClick(
+                    cardData.link,
+                    cardData.price,
+                    cardData.name,
+                    tcg
+                  );
                 }}
               >
                 <Link href={cardData.link} target="_blank" rel="noreferrer">
