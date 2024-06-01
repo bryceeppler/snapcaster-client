@@ -15,6 +15,8 @@ type MultiSearchState = {
   selectedVariants: {
     [key: string]: Product;
   };
+  resultsTcg: Tcgs;
+  setResultsTcg: (value: Tcgs) => void;
   setMode: (mode: 'search' | 'results') => void;
   selectVariant: (key: string, product: Product) => void;
   handleSubmit: (tcg: string) => void;
@@ -24,6 +26,8 @@ type MultiSearchState = {
 };
 
 const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
+  resultsTcg: 'mtg',
+
   mode: 'search',
   selectedWebsites: [],
   tcg: 'mtg',
@@ -32,6 +36,9 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   loading: false,
   results: [],
   selectedVariants: {},
+  setResultsTcg: (value: Tcgs) => {
+    set({ resultsTcg: value });
+  },
   selectVariant: (key: string, product: Product) => {
     set((state) => {
       return {
@@ -49,6 +56,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   handleSubmit: async (tcg) => {
     set({ loading: true });
     set({ searchQuery: get().searchInput });
+    set({ resultsTcg: get().tcg });
 
     try {
       // Split by newlines to handle multiple lines and encode each name

@@ -3,7 +3,8 @@ import Head from 'next/head';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ScrollBar } from '@/components/ui/scroll-area';
 import { Loader2 } from 'lucide-react';
-
+import Link from 'next/link';
+import { handleBuyClick } from '@/utils/analytics';
 import MainLayout from '@/components/main-page-layout';
 import useAuthStore from '@/stores/authStore';
 import LoginRequired from '@/components/login-required';
@@ -44,6 +45,8 @@ export default function Multisearch({}: Props) {
     tcg,
     searchInput,
     results,
+    resultsTcg,
+    setResultsTcg,
     handleSubmit,
     setSearchInput,
     onWebsiteSelect,
@@ -175,16 +178,27 @@ const SummaryView = () => {
 };
 
 const ResultsView = ({ results }: { results: any[] }) => {
+  const { resultsTcg } = useMultiSearchStore();
   return (
     <div className="flex w-full flex-col gap-2">
       {results.map((result) => (
-        <MultiSearchProduct key={result.name} product={result} />
+        <MultiSearchProduct
+          key={result.name}
+          tcg={resultsTcg}
+          product={result}
+        />
       ))}
     </div>
   );
 };
 
-const MultiSearchProduct = ({ product }: { product: any }) => {
+const MultiSearchProduct = ({
+  product,
+  tcg
+}: {
+  product: any;
+  tcg: string;
+}) => {
   const [selectedVariant, setSelectedVariant] = React.useState(
     product.results[0] || {}
   );
@@ -220,13 +234,21 @@ const MultiSearchProduct = ({ product }: { product: any }) => {
           </div>
           {/* dropdown to browse variants */}
 
-          <Button
-            onClick={() => {
-              window.open(selectedVariant.link, '_blank');
-            }}
-          >
-            Buy
-          </Button>
+          <Link href={selectedVariant.link} target="_blank" className="">
+            <Button
+              className="w-full"
+              onClick={() => {
+                handleBuyClick(
+                  selectedVariant.link,
+                  selectedVariant.price,
+                  selectedVariant.name,
+                  tcg
+                );
+              }}
+            >
+              Buy
+            </Button>
+          </Link>
           <ScrollArea className="h-[300px] w-full rounded-md border bg-popover p-4">
             <Table>
               <TableCaption>Variants for {product.name}</TableCaption>

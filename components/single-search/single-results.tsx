@@ -107,18 +107,24 @@ export default function SingleCatalog({}: Props) {
                 ) : (
                   <SingleCatalogCard
                     cardData={item as SingleSearchResult}
+                    tcg={resultsTcg}
                     key={index}
                   />
                 )
               )}
             {hasActiveSubscription &&
               filteredResults.map((item, index) => (
-                <SingleCatalogCard cardData={item} key={index} />
+                <SingleCatalogCard
+                  tcg={resultsTcg}
+                  cardData={item}
+                  key={index}
+                />
               ))}
           </div>
         </TabsContent>
         <TabsContent value="table">
           <SingleResultsTable
+            tcg={resultsTcg}
             cardData={
               resultsWithAds.filter(
                 (item) => item && !('position' in item)
