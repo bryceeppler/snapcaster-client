@@ -70,6 +70,7 @@ export default function MainLayout({
   const topBannerAd = ads.position['1'].ads[0];
   const leftBannerAd = ads.position['2']?.ads[0]; // Assuming there's only one ad in position 2
   const carouselAds = ads.position['3']?.ads || [];
+  const shuffledAds = carouselAds.sort(() => Math.random() - 0.5);
 
   return (
     <main className="container w-full max-w-5xl flex-1 flex-col items-center justify-center px-2 py-8">
@@ -114,13 +115,13 @@ export default function MainLayout({
         )}
 
         {/* Right ad : position 3 */}
-        {!hasActiveSubscription && carouselAds.length > 0 && (
+        {!hasActiveSubscription && shuffledAds.length > 0 && (
           <Carousel
             className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
             plugins={[plugin.current]}
           >
             <CarouselContent>
-              {carouselAds.map((ad, index) => (
+              {shuffledAds.map((ad, index) => (
                 <CarouselItem key={index}>
                   <CarouselAd ad={ad} />
                 </CarouselItem>
