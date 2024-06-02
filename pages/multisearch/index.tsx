@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { handleBuyClick } from '@/utils/analytics';
 import MainLayout from '@/components/main-page-layout';
 import useAuthStore from '@/stores/authStore';
+import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
 import LoginRequired from '@/components/login-required';
 import {
   Select,
@@ -23,7 +25,6 @@ import useMultiSearchStore from '@/stores/multiSearchStore';
 import { WebsiteCombobox } from '@/components/multi-search/multi-website-combobox';
 import { Tcgs } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -33,6 +34,23 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader
+} from '@/components/ui/card';
+import { CardDescription, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal } from 'lucide-react';
+
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
 
@@ -96,7 +114,6 @@ export default function Multisearch({}: Props) {
             <>
               <div className="flex flex-col gap-4 md:flex-row">
                 <ResultsView results={results} />
-                <SummaryView />
               </div>
             </>
           )}
@@ -107,197 +124,284 @@ export default function Multisearch({}: Props) {
   );
 }
 
-const SummaryView = () => {
-  const { selectedVariants, results, setMode } = useMultiSearchStore();
-  const { getWebsiteName } = useGlobalStore();
-
-  // Group the selected variants by website and calculate the total price, excluding any variants with invalid prices
-  const websiteSummary = Object.values(selectedVariants).reduce(
-    (acc, variant: any) => {
-      const { website, price } = variant;
-
-      // Check if price is a valid number
-      if (typeof price === 'number' && !isNaN(price)) {
-        if (!acc[website]) {
-          acc[website] = {
-            name: getWebsiteName(website),
-            totalPrice: 0
-          };
-        }
-        acc[website].totalPrice += price;
-      }
-      return acc;
-    },
-    {} as Record<string, { name: string; totalPrice: number }>
-  );
-
-  // Calculate the overall total, skipping invalid prices
-  const overallTotal = Object.values(selectedVariants).reduce((acc, item) => {
-    return typeof item.price === 'number' && !isNaN(item.price)
-      ? acc + item.price
-      : acc;
-  }, 0);
-
-  return (
-    <div className="outlined-container flex h-fit w-full flex-col gap-4 p-4 text-left md:max-w-md">
-      <div className="flex flex-col gap-4">
-        <p>
-          Found {results.filter((result) => result.results.length > 0).length}/
-          {results.length} cards
-        </p>
-        <p>Total: ${overallTotal.toFixed(2)}</p>
-
-        {/* List of selected stores and their total prices, skipping entries with no valid prices */}
-        <ScrollArea className="min-h-[100px] w-full rounded-md border bg-popover p-4">
-          <span className="text-sm">Selected Websites</span>
-          <Table>
-            <TableBody className="text-left text-xs">
-              {Object.values(websiteSummary).map((website, index) => (
-                <TableRow key={index}>
-                  <TableCell>{website.name}</TableCell>
-                  <TableCell className="text-right">
-                    ${website.totalPrice.toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <ScrollBar orientation="vertical" />
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      </div>
-      <Button
-        onClick={() => {
-          setMode('search');
-        }}
-      >
-        Reset
-      </Button>
-    </div>
-  );
-};
-
 const ResultsView = ({ results }: { results: any[] }) => {
-  const { resultsTcg } = useMultiSearchStore();
   return (
-    <div className="flex w-full flex-col gap-2">
-      {results.map((result) => (
-        <MultiSearchProduct
-          key={result.name}
-          tcg={resultsTcg}
-          product={result}
-        />
-      ))}
+    <div className="flex w-full flex-row gap-4">
+      <div className=" w-1/5">
+        <ResultSelector />
+      </div>
+      <ResultsTable results={results} />
+      <div className=" w-1/5">
+        <Cart />
+      </div>
     </div>
   );
 };
 
-const MultiSearchProduct = ({
-  product,
-  tcg
-}: {
-  product: any;
-  tcg: string;
-}) => {
-  const [selectedVariant, setSelectedVariant] = React.useState(
-    product.results[0] || {}
-  );
+const Cart = () => {
+  return <div className="h-24 w-full bg-slate-500"></div>;
+};
 
-  const { getWebsiteName } = useGlobalStore();
-  const { selectVariant } = useMultiSearchStore();
+const ResultSelector = () => {
+  return <div className="h-24 w-full bg-slate-500"></div>;
+};
 
-  useEffect(() => {
-    if (selectedVariant) {
-      selectVariant(product.name, selectedVariant);
-    }
-  }, [selectedVariant]);
-
+const ResultsTable = ({ results }: { results: any[] }) => {
   return (
-    <>
-      {product.results.length > 0 ? (
-        <div className="outlined-container flex flex-col gap-4 p-4">
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <img
-              src={selectedVariant.image}
-              alt={selectedVariant.name}
-              className="mx-auto max-w-48 rounded object-cover sm:mx-0 sm:w-24 sm:max-w-24"
-            />
-            <div className="flex flex-col text-left">
-              <p>{selectedVariant.name}</p>
-
-              <div>${selectedVariant.price}</div>
-              <div className="capitalize">{selectedVariant.set}</div>
-              <div>{getWebsiteName(selectedVariant.website)}</div>
-              <div>{selectedVariant.condition}</div>
-              <div>{selectedVariant.foil && 'Foil'}</div>
-            </div>
-          </div>
-          {/* dropdown to browse variants */}
-
-          <Link href={selectedVariant.link} target="_blank" className="">
-            <Button
-              className="w-full"
-              onClick={() => {
-                handleBuyClick(
-                  selectedVariant.link,
-                  selectedVariant.price,
-                  selectedVariant.name,
-                  tcg
-                );
-              }}
-            >
-              Buy
-            </Button>
-          </Link>
-          <ScrollArea className="h-[300px] w-full rounded-md border bg-popover p-4">
-            <Table>
-              <TableCaption>Variants for {product.name}</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">Name</TableHead>
-                  <TableHead>Set</TableHead>
-                  <TableHead>Condition</TableHead>
-                  <TableHead>Website</TableHead>
-                  <TableHead className="text-right">Price</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {
-                  // map over variants
-                  product.results.map((variant: any) => (
-                    <TableRow
-                      key={variant._id}
-                      onClick={() => {
-                        setSelectedVariant(variant);
-                      }}
-                      className="cursor-pointer text-left hover:bg-background"
-                    >
-                      <TableCell className="w-[100px]">
-                        {variant.name}
-                      </TableCell>
-                      <TableCell className="capitalize">
-                        {variant.set}
-                      </TableCell>
-                      <TableCell>{variant.condition}</TableCell>
-                      <TableCell>{getWebsiteName(variant.website)}</TableCell>
-                      <TableCell className="text-right">
-                        ${variant.price}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                }
-              </TableBody>
-            </Table>
-            <ScrollBar orientation="vertical" />
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+    <Card>
+      <CardHeader>
+        <CardTitle>Products</CardTitle>
+        <CardDescription>
+          Manage your products and view their sales performance.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="hidden w-[100px] sm:table-cell">
+                <span className="sr-only">Image</span>
+              </TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="hidden md:table-cell">Price</TableHead>
+              <TableHead className="hidden md:table-cell">
+                Total Sales
+              </TableHead>
+              <TableHead className="hidden md:table-cell">Created at</TableHead>
+              <TableHead>
+                <span className="sr-only">Actions</span>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell className="hidden sm:table-cell">
+                <Image
+                  alt="Product image"
+                  className="aspect-square rounded-md object-cover"
+                  height="64"
+                  src="/placeholder.svg"
+                  width="64"
+                />
+              </TableCell>
+              <TableCell className="font-medium">
+                Laser Lemonade Machine
+              </TableCell>
+              <TableCell>
+                <Badge variant="outline">Draft</Badge>
+              </TableCell>
+              <TableCell className="hidden md:table-cell">$499.99</TableCell>
+              <TableCell className="hidden md:table-cell">25</TableCell>
+              <TableCell className="hidden md:table-cell">
+                2023-07-12 10:42 AM
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <MoreHorizontal className="h-4 w-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="hidden sm:table-cell">
+                <Image
+                  alt="Product image"
+                  className="aspect-square rounded-md object-cover"
+                  height="64"
+                  src="/placeholder.svg"
+                  width="64"
+                />
+              </TableCell>
+              <TableCell className="font-medium">
+                Hypernova Headphones
+              </TableCell>
+              <TableCell>
+                <Badge variant="outline">Active</Badge>
+              </TableCell>
+              <TableCell className="hidden md:table-cell">$129.99</TableCell>
+              <TableCell className="hidden md:table-cell">100</TableCell>
+              <TableCell className="hidden md:table-cell">
+                2023-10-18 03:21 PM
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <MoreHorizontal className="h-4 w-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="hidden sm:table-cell">
+                <Image
+                  alt="Product image"
+                  className="aspect-square rounded-md object-cover"
+                  height="64"
+                  src="/placeholder.svg"
+                  width="64"
+                />
+              </TableCell>
+              <TableCell className="font-medium">AeroGlow Desk Lamp</TableCell>
+              <TableCell>
+                <Badge variant="outline">Active</Badge>
+              </TableCell>
+              <TableCell className="hidden md:table-cell">$39.99</TableCell>
+              <TableCell className="hidden md:table-cell">50</TableCell>
+              <TableCell className="hidden md:table-cell">
+                2023-11-29 08:15 AM
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <MoreHorizontal className="h-4 w-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="hidden sm:table-cell">
+                <Image
+                  alt="Product image"
+                  className="aspect-square rounded-md object-cover"
+                  height="64"
+                  src="/placeholder.svg"
+                  width="64"
+                />
+              </TableCell>
+              <TableCell className="font-medium">
+                TechTonic Energy Drink
+              </TableCell>
+              <TableCell>
+                <Badge variant="secondary">Draft</Badge>
+              </TableCell>
+              <TableCell className="hidden md:table-cell">$2.99</TableCell>
+              <TableCell className="hidden md:table-cell">0</TableCell>
+              <TableCell className="hidden md:table-cell">
+                2023-12-25 11:59 PM
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <MoreHorizontal className="h-4 w-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="hidden sm:table-cell">
+                <Image
+                  alt="Product image"
+                  className="aspect-square rounded-md object-cover"
+                  height="64"
+                  src="/placeholder.svg"
+                  width="64"
+                />
+              </TableCell>
+              <TableCell className="font-medium">
+                Gamer Gear Pro Controller
+              </TableCell>
+              <TableCell>
+                <Badge variant="outline">Active</Badge>
+              </TableCell>
+              <TableCell className="hidden md:table-cell">$59.99</TableCell>
+              <TableCell className="hidden md:table-cell">75</TableCell>
+              <TableCell className="hidden md:table-cell">
+                2024-01-01 12:00 AM
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <MoreHorizontal className="h-4 w-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="hidden sm:table-cell">
+                <Image
+                  alt="Product image"
+                  className="aspect-square rounded-md object-cover"
+                  height="64"
+                  src="/placeholder.svg"
+                  width="64"
+                />
+              </TableCell>
+              <TableCell className="font-medium">Luminous VR Headset</TableCell>
+              <TableCell>
+                <Badge variant="outline">Active</Badge>
+              </TableCell>
+              <TableCell className="hidden md:table-cell">$199.99</TableCell>
+              <TableCell className="hidden md:table-cell">30</TableCell>
+              <TableCell className="hidden md:table-cell">
+                2024-02-14 02:14 PM
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <MoreHorizontal className="h-4 w-4" />
+                      <span className="sr-only">Toggle menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </CardContent>
+      <CardFooter>
+        <div className="text-xs text-muted-foreground">
+          Showing <strong>1-10</strong> of <strong>32</strong> products
         </div>
-      ) : (
-        <div className="outlined-container flex flex-col gap-4 p-4">
-          <p>No results found for {product.name}</p>
-        </div>
-      )}
-    </>
+      </CardFooter>
+    </Card>
   );
 };
 
