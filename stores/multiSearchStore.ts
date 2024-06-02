@@ -16,7 +16,13 @@ type MultiSearchState = {
     [key: string]: Product;
   };
   resultsTcg: Tcgs;
+  selectedResult?: MultiSearchProduct;
+  cart: Product[];
+  removeFromCart: (product: Product) => void;
+  isInCart: (product: Product) => boolean;
+  addToCart: (product: Product) => void;
   setResultsTcg: (value: Tcgs) => void;
+  setSelectedResult: (value: MultiSearchProduct) => void;
   setMode: (mode: 'search' | 'results') => void;
   selectVariant: (key: string, product: Product) => void;
   handleSubmit: (tcg: string) => void;
@@ -26,8 +32,9 @@ type MultiSearchState = {
 };
 
 const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
+  cart: [],
   resultsTcg: 'mtg',
-
+  selectedResult: undefined,
   mode: 'search',
   selectedWebsites: [],
   tcg: 'mtg',
@@ -36,6 +43,28 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   loading: false,
   results: [],
   selectedVariants: {},
+  removeFromCart: (product) => {
+    set((state) => {
+      return {
+        ...state,
+        cart: state.cart.filter((p) => p._id !== product._id)
+      };
+    });
+  },
+  isInCart: (product) => {
+    return get().cart.some((p) => p._id === product._id);
+  },
+  addToCart: (product) => {
+    set((state) => {
+      return {
+        ...state,
+        cart: [...state.cart, product]
+      };
+    });
+  },
+  setSelectedResult: (value: MultiSearchProduct) => {
+    set({ selectedResult: value });
+  },
   setResultsTcg: (value: Tcgs) => {
     set({ resultsTcg: value });
   },
@@ -82,6 +111,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
 
       set({ mode: 'results' });
       set({ results: response.data.data });
+      set({ selectedResult: response.data.data[0] });
       set({ loading: false });
     } catch (error) {
       console.error(error);
