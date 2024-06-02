@@ -16,10 +16,15 @@ import CarouselAd from './carousel-ad';
 import { useInView } from 'react-intersection-observer';
 import useAuthStore from '@/stores/authStore';
 
-type Props = {};
+type Props = {
+  showSideBanners?: boolean;
+  width?: 'md' | 'xl';
+};
 
 export default function MainLayout({
-  children
+  children,
+  showSideBanners = true,
+  width = 'md'
 }: React.PropsWithChildren<Props>) {
   const { ads } = useGlobalStore();
   const { hasActiveSubscription } = useAuthStore();
@@ -73,7 +78,11 @@ export default function MainLayout({
   const shuffledAds = carouselAds.sort(() => Math.random() - 0.5);
 
   return (
-    <main className="container w-full max-w-6xl flex-1 flex-col items-center justify-center px-2 py-8">
+    <main
+      className={`container w-full ${
+        width === 'md' ? 'max-w-6xl' : ''
+      } flex-1 flex-col items-center justify-center px-2 py-8`}
+    >
       <>
         {/* Header : position 1 */}
         {topBannerAd && (
@@ -84,7 +93,7 @@ export default function MainLayout({
             data-position-id="1"
             onClick={() => trackAdClick(topBannerAd.id.toString())}
             data-ad-id={topBannerAd.id.toString()}
-            className="ad flex items-center justify-center rounded border border-zinc-600 bg-black"
+            className="ad mx-auto flex max-w-6xl items-center justify-center rounded border border-zinc-600 bg-black"
           >
             <img
               className="hidden h-fit w-full md:flex"
@@ -100,7 +109,7 @@ export default function MainLayout({
         )}
 
         {/* Left ad : position 2 */}
-        {leftBannerAd && (
+        {showSideBanners && leftBannerAd && (
           <Link
             onClick={() => trackAdClick(leftBannerAd.id.toString())}
             href={leftBannerAd.url}
@@ -115,22 +124,24 @@ export default function MainLayout({
         )}
 
         {/* Right ad : position 3 */}
-        {!hasActiveSubscription && shuffledAds.length > 0 && (
-          <Carousel
-            className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xxl:flex xxl:flex-col`}
-            plugins={[plugin.current]}
-          >
-            <CarouselContent>
-              {shuffledAds.map((ad, index) => (
-                <CarouselItem key={index}>
-                  <CarouselAd ad={ad} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="" />
-            <CarouselNext className="" />
-          </Carousel>
-        )}
+        {showSideBanners &&
+          !hasActiveSubscription &&
+          shuffledAds.length > 0 && (
+            <Carousel
+              className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xxl:flex xxl:flex-col`}
+              plugins={[plugin.current]}
+            >
+              <CarouselContent>
+                {shuffledAds.map((ad, index) => (
+                  <CarouselItem key={index}>
+                    <CarouselAd ad={ad} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="" />
+              <CarouselNext className="" />
+            </Carousel>
+          )}
       </>
 
       <div className="mt-8">{children}</div>

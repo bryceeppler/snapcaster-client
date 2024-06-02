@@ -42,6 +42,7 @@ import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
 import { Separator } from '@/components/ui/separator';
 import { ResetIcon } from '@radix-ui/react-icons';
+import MainLayout from '@/components/main-page-layout';
 
 type Props = {};
 
@@ -77,7 +78,7 @@ export default function Multisearch({}: Props) {
 
   return (
     <>
-      <main className="container mt-8 w-full flex-1 flex-col items-center justify-center px-2 py-8">
+      <MainLayout showSideBanners={false} width={'xl'}>
         <MultisearchHead />
         <div className="flex w-full flex-col justify-center gap-8 text-center">
           <PageTitle
@@ -108,7 +109,7 @@ export default function Multisearch({}: Props) {
           )}
         </div>
         <BackToTopButton />
-      </main>
+      </MainLayout>
     </>
   );
 }
