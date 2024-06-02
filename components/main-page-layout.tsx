@@ -73,7 +73,7 @@ export default function MainLayout({
   const shuffledAds = carouselAds.sort(() => Math.random() - 0.5);
 
   return (
-    <main className="container w-full max-w-5xl flex-1 flex-col items-center justify-center px-2 py-8">
+    <main className="container w-full max-w-6xl flex-1 flex-col items-center justify-center px-2 py-8">
       <>
         {/* Header : position 1 */}
         {topBannerAd && (
@@ -108,7 +108,7 @@ export default function MainLayout({
             target="_blank"
             data-position-id="2"
             data-ad-id={leftBannerAd.id.toString()}
-            className="ad fixed left-10 top-1/4 hidden w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col"
+            className="ad fixed left-10 top-1/4 hidden w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xxl:flex xxl:flex-col"
           >
             <img src={leftBannerAd.mobile_image} alt="ad" className="h-full" />
           </Link>
@@ -117,7 +117,7 @@ export default function MainLayout({
         {/* Right ad : position 3 */}
         {!hasActiveSubscription && shuffledAds.length > 0 && (
           <Carousel
-            className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
+            className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xxl:flex xxl:flex-col`}
             plugins={[plugin.current]}
           >
             <CarouselContent>
