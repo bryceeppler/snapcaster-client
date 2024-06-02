@@ -41,6 +41,7 @@ import { Button } from '@/components/ui/button';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
 import { Separator } from '@/components/ui/separator';
+import { ResetIcon } from '@radix-ui/react-icons';
 
 type Props = {};
 
@@ -112,25 +113,94 @@ export default function Multisearch({}: Props) {
   );
 }
 
-const ResultsView = ({ results }: { results: any[] }) => {
+const ResultsView = ({ results }: { results: MultiSearchProduct[] }) => {
+  const { getWebsiteName } = useGlobalStore();
+  const { cart, resetSearch } = useMultiSearchStore();
+
   return (
-    <div className="grid w-full grid-cols-12 gap-4">
-      <div className="col-span-2">
-        <ResultSelector />
-      </div>
-      <div className="col-span-7 flex flex-col gap-4">
-        <div className="flex w-full gap-4 rounded border border-border bg-popover p-4">
-          <Button size="sm">Reset</Button>
-          <Button size="sm">Save Search</Button>
-          <Button size="sm">Export Cart</Button>
+    <div>
+      <div className="w-full grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0 ">
+        <div className="lg:hidden">
+          <Toolbar />
         </div>
-        <div className="">
-          <ResultsTable results={results} />
+        <div className="col-span-2">
+          <ResultSelector />
+        </div>
+        <div className="col-span-7 flex flex-col gap-4">
+          <div className="hidden lg:block">
+            <Toolbar />
+          </div>
+          <div className="">
+            <ResultsTable results={results} />
+          </div>
+        </div>
+        <div className="col-span-3">
+          <Cart />
         </div>
       </div>
-      <div className="col-span-3">
-        <Cart />
-      </div>
+    </div>
+  );
+};
+
+const Toolbar = () => {
+  const { resetSearch, cart } = useMultiSearchStore();
+  const { getWebsiteName } = useGlobalStore();
+  const exportCart = () => {
+    // Group products by website
+    const groupedByWebsite = cart.reduce((acc, product) => {
+      const websiteName = getWebsiteName(product.website);
+      if (!acc[websiteName]) {
+        acc[websiteName] = [];
+      }
+      acc[websiteName].push(product);
+      return acc;
+    }, {} as { [website: string]: Product[] });
+
+    // Create the text format for the cart
+    const cartData = Object.entries(groupedByWebsite)
+      .map(([website, products]) => {
+        const productsText = products
+          .map(
+            (product) =>
+              `  Name: ${product.name}\n  Price: $${product.price.toFixed(
+                2
+              )}\n  Set: ${product.set}\n  Condition: ${
+                product.condition
+              }\n  Link: ${product.link}\n`
+          )
+          .join('\n');
+        return `Website: ${website}\n\n${productsText}`;
+      })
+      .join('\n\n');
+
+    const text = `Cart Summary\n\n${cartData}`;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cart.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  return (
+    <div className="flex w-full gap-4 rounded border border-border bg-popover p-4">
+      <Button
+        size="sm"
+        onClick={() => {
+          resetSearch();
+        }}
+      >
+        Reset
+      </Button>
+      <Button
+        size="sm"
+        onClick={() => {
+          exportCart();
+        }}
+        className="hidden lg:block"
+      >
+        Export Cart
+      </Button>
     </div>
   );
 };
@@ -138,44 +208,36 @@ const ResultsView = ({ results }: { results: any[] }) => {
 const Cart = () => {
   const { cart, removeFromCart } = useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
-  const getCartStoreSummary = (cart: any[]) => {
-    const storeSummary: any = {};
-    cart.forEach((product) => {
-      if (storeSummary[product.website]) {
-        storeSummary[product.website].count += 1;
-        storeSummary[product.website].subtotal += product.price;
-      } else {
-        storeSummary[product.website] = {
-          count: 1,
-          subtotal: product.price
-        };
-      }
-    });
 
-    return Object.keys(storeSummary).map((store, i) => (
-      <div key={i} className="flex w-full justify-between">
-        <span>{getWebsiteName(store)}</span>
-        <div className="flex flex-row items-center gap-4">
-          <div>({storeSummary[store].count})</div>
-          <div>${storeSummary[store].subtotal.toFixed(2)}</div>
-        </div>
-      </div>
-    ));
-  };
+  // Group products by website
+  const storeSummary = cart.reduce((acc, product) => {
+    const websiteName = getWebsiteName(product.website);
+    if (!acc[websiteName]) {
+      acc[websiteName] = {
+        count: 0,
+        subtotal: 0
+      };
+    }
+    acc[websiteName].count += 1;
+    acc[websiteName].subtotal += product.price;
+    return acc;
+  }, {} as { [website: string]: { count: number; subtotal: number } });
 
   return (
-    <Card>
+    <Card className="bg-popover">
       <CardHeader>
         <CardTitle>Cart</CardTitle>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-96 w-full">
+        <ScrollArea className="h-48 w-full lg:h-96">
+          {cart.length === 0 && (
+            <div className="flex w-full justify-center">
+              <CardDescription>Your cart is empty</CardDescription>
+            </div>
+          )}
           {cart.map((product, i) => (
             <div key={i}>
-              <div
-                key={i}
-                className="flex w-full items-center justify-between rounded px-4 py-1 text-sm hover:bg-accent"
-              >
+              <div className="flex w-full items-center justify-between rounded px-4 py-1 text-sm hover:bg-accent">
                 <span>{product.name}</span>
                 <div className="flex flex-row items-center gap-4">
                   <div>${product.price}</div>
@@ -195,15 +257,38 @@ const Cart = () => {
         </ScrollArea>
 
         {/* Store summary */}
-        {/* go over the cart and display this, only one row for each store*/}
-        {/* Store name: number of cards: subtotal */}
-        {getCartStoreSummary(cart)}
+        <div className="grid grid-cols-12 gap-x-2 text-left">
+          {Object.entries(storeSummary).map(([store, summary], i) => (
+            <React.Fragment key={i}>
+              <span
+                className="col-span-6"
+                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+              >
+                {store}
+              </span>
+              <span
+                className="col-span-3 text-right"
+                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+              >
+                ({summary.count})
+              </span>
+              <span
+                className="col-span-3"
+                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+              >
+                ${summary.subtotal.toFixed(2)}
+              </span>
+            </React.Fragment>
+          ))}
+        </div>
+        <Separator />
       </CardContent>
       <CardFooter>
-        {/* total */}
         <div className="flex w-full justify-between">
-          <span>Total</span>
-          <span>${cart.reduce((acc, product) => acc + product.price, 0)}</span>
+          <span className="font-bold">Total</span>
+          <span>
+            ${cart.reduce((acc, product) => acc + product.price, 0).toFixed(2)}
+          </span>
         </div>
       </CardFooter>
     </Card>
@@ -263,7 +348,7 @@ const ResultSelector = () => {
   };
   return (
     <div className="flex flex-col gap-2 text-xs">
-      <div className="rounded border border-border bg-popover p-2">
+      <div className="hidden rounded border border-border bg-popover p-2 lg:block">
         <div className="p-2 text-sm font-semibold">Top Stores</div>
         {getTopWebsites(results).map((websiteInfo, i) => (
           <div key={i}>
@@ -277,19 +362,22 @@ const ResultSelector = () => {
           </div>
         ))}
       </div>
-      {results.map((result, i) => (
-        <div key={i}>
-          <div
-            className="flex w-full justify-between rounded px-4 py-2 text-left hover:bg-accent"
-            onMouseDown={() => {
-              setSelectedResult(result);
-            }}
-          >
-            <span>{result.name}</span>
+      <ScrollArea className=" h-40 w-full rounded border border-border bg-popover px-4 py-2 lg:h-96">
+        {results.map((result, i) => (
+          <div key={i}>
+            <div
+              className="flex w-full justify-between rounded px-4 py-2 text-left hover:bg-accent"
+              onMouseDown={() => {
+                setSelectedResult(result);
+              }}
+            >
+              <span>{result.name}</span>
+            </div>
+            {i < results.length - 1 && <Separator />}
           </div>
-          {i < results.length - 1 && <Separator />}
-        </div>
-      ))}
+        ))}
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
     </div>
   );
 };
@@ -299,7 +387,7 @@ const ResultsTable = ({ results }: { results: any[] }) => {
     useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
   return (
-    <ScrollArea className="max-h-[700px] min-h-[100px] w-full rounded-md border bg-popover p-4">
+    <ScrollArea className="h-[500px] w-full rounded-md border bg-popover p-4 lg:h-[600px]">
       <Table>
         <TableHeader>
           <TableRow>
@@ -322,7 +410,7 @@ const ResultsTable = ({ results }: { results: any[] }) => {
               <TableCell className="hidden sm:table-cell">
                 <img
                   alt="Product image"
-                  className="aspect-square rounded-md object-cover"
+                  className="aspect rounded-md object-cover"
                   height="64"
                   src={result.image}
                   width="64"
@@ -381,7 +469,7 @@ const SearchView = ({
   selectedWebsites: any[];
   onWebsiteSelect: (value: any) => void;
 }) => {
-  const { loading } = useMultiSearchStore();
+  const { loading, resetSelectedWebsites } = useMultiSearchStore();
   const { hasActiveSubscription } = useAuthStore();
   const { adsEnabled } = useGlobalStore();
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -396,7 +484,7 @@ const SearchView = ({
   };
   return (
     <div className="outlined-container flex w-full flex-col gap-4 p-6">
-      <div className="flex flex-col gap-4 md:flex-row">
+      <div className="flex flex-col items-center gap-4 md:flex-row">
         {/* TCG Select */}
         <Select value={tcg} onValueChange={(value: Tcgs) => setTcg(value)}>
           <SelectTrigger className="w-[200px]">
@@ -422,6 +510,14 @@ const SearchView = ({
           selectedWebsites={selectedWebsites}
           onWebsiteSelect={onWebsiteSelect}
         />
+        {selectedWebsites.length > 0 && (
+          <ResetIcon
+            className="cursor-pointer"
+            onClick={() => {
+              resetSelectedWebsites();
+            }}
+          />
+        )}
         <div className=" flex-grow "></div>
         {adsEnabled && <PoweredBy size="small" />}
       </div>

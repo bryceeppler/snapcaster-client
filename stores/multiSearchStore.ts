@@ -18,6 +18,7 @@ type MultiSearchState = {
   resultsTcg: Tcgs;
   selectedResult?: MultiSearchProduct;
   cart: Product[];
+  resetSearch: () => void;
   removeFromCart: (product: Product) => void;
   isInCart: (product: Product) => boolean;
   addToCart: (product: Product) => void;
@@ -29,6 +30,7 @@ type MultiSearchState = {
   setSearchInput: (value: string) => void;
   setTcg: (value: Tcgs) => void;
   onWebsiteSelect: (value: WebsiteMapping) => void;
+  resetSelectedWebsites: () => void;
 };
 
 const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
@@ -43,6 +45,21 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   loading: false,
   results: [],
   selectedVariants: {},
+  resetSelectedWebsites: () => {
+    set({ selectedWebsites: [] });
+  },
+  resetSearch: () => {
+    set({
+      mode: 'search',
+      tcg: 'mtg',
+      searchQuery: '',
+      loading: false,
+      results: [],
+      selectedVariants: {},
+      resultsTcg: 'mtg',
+      selectedResult: undefined
+    });
+  },
   removeFromCart: (product) => {
     set((state) => {
       return {
