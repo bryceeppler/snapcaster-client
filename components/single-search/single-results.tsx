@@ -40,7 +40,7 @@ const insertAdvertisements = (
 };
 
 export default function SingleCatalog({}: Props) {
-  const { filteredResults, resultsTcg } = useSingleStore();
+  const { filteredResults, resultsTcg, promotedCards } = useSingleStore();
   const { adsEnabled, ads } = useGlobalStore();
   const [selectedTab, setSelectedTab] = useState('list');
 
@@ -81,6 +81,14 @@ export default function SingleCatalog({}: Props) {
           <TabsTrigger value="table">Table</TabsTrigger>
         </TabsList>
         <TabsContent value="list">
+          {promotedCards.map((item, index) => (
+            <SingleCatalogRow
+              tcg={resultsTcg}
+              cardData={item}
+              key={index}
+              promo={true}
+            />
+          ))}
           {!hasActiveSubscription &&
             resultsWithAds.map((item, index) =>
               item && 'position' in item ? (
@@ -100,6 +108,14 @@ export default function SingleCatalog({}: Props) {
         </TabsContent>
         <TabsContent value="catalog">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {promotedCards.map((item, index) => (
+              <SingleCatalogCard
+                tcg={resultsTcg}
+                cardData={item}
+                key={index}
+                promo={true}
+              />
+            ))}
             {!hasActiveSubscription &&
               resultsWithVerticalAds.map((item, index) =>
                 item && 'position' in item ? (

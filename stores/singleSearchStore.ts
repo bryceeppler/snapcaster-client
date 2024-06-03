@@ -16,7 +16,7 @@ type SingleSearchState = {
   sortOrder: 'asc' | 'desc';
   foil: boolean;
   resultsTcg: string;
-
+  promotedCards: any[];
   setSearchInput: (input: string) => void;
   setTcg: (tcg: Tcgs) => void;
   setConditions: (conditions: string[]) => void;
@@ -43,7 +43,7 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
   sortOrder: 'asc',
   foil: false,
   resultsTcg: '',
-
+  promotedCards: [],
   setSearchInput: (input: string) => {
     set({ searchInput: input });
   },
@@ -85,7 +85,11 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
         }&name=${get().searchInput}`
       );
       set({ searchQuery: get().searchInput });
-      set({ results: response.data.data, filteredResults: response.data.data });
+      set({
+        results: response.data.data,
+        filteredResults: response.data.data,
+        promotedCards: response.data.promotedCards
+      });
       set({ loading: false });
     } catch (error) {
       console.error(error);

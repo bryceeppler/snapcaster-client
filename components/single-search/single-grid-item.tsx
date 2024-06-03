@@ -3,6 +3,7 @@ import { SingleSearchResult } from '@/stores/store';
 type Props = {
   cardData: SingleSearchResult;
   tcg: string;
+  promo?: boolean;
 };
 
 import { useStore } from '@/stores/store';
@@ -17,7 +18,7 @@ import {
 import CardImage from '../ui/card-image';
 import { handleBuyClick } from '../../utils/analytics';
 
-export default function SingleCatalogCard({ cardData, tcg }: Props) {
+export default function SingleCatalogCard({ cardData, tcg, promo }: Props) {
   const { websites } = useStore();
 
   const findWebsiteNameByCode = (code: string): string => {
@@ -26,7 +27,7 @@ export default function SingleCatalogCard({ cardData, tcg }: Props) {
   };
 
   return (
-    <Card className="flex h-full flex-col">
+    <Card className={`${promo && 'border-primary'} flex h-full flex-col`}>
       <CardHeader className="flex items-center justify-center">
         <div className="w-full max-w-[300px]">
           <CardImage imageUrl={cardData.image} alt={cardData.name} />
@@ -49,6 +50,7 @@ export default function SingleCatalogCard({ cardData, tcg }: Props) {
 
           <p className="text-sm">{cardData.condition}</p>
           <p className="text-sm font-bold">${cardData.price}</p>
+          {promo && <p className="text-sm opacity-50">Promoted result</p>}
         </CardContent>
         <CardFooter>
           <Link

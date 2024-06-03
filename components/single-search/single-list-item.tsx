@@ -4,6 +4,7 @@ type Props = {
   cardData: SingleSearchResult;
   promoted?: boolean;
   tcg: string;
+  promo?: boolean;
 };
 
 import { useStore } from '@/stores/store';
@@ -12,7 +13,7 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import CardImage from '../ui/card-image';
 
-export default function SingleCatalogRow({ cardData, promoted, tcg }: Props) {
+export default function SingleCatalogRow({ cardData, promo, tcg }: Props) {
   const { websites } = useStore();
 
   const findWebsiteNameByCode = (code: string): string => {
@@ -22,7 +23,9 @@ export default function SingleCatalogRow({ cardData, promoted, tcg }: Props) {
 
   return (
     <div
-      className={`outlined-container mx-auto my-2 flex max-w-5xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4`}
+      className={`${
+        promo && 'border-primary border-opacity-50'
+      } outlined-container mx-auto my-2 flex max-w-5xl flex-col gap-4 p-3 shadow-sm transition-all sm:my-3 sm:p-4`}
     >
       <div className="flex w-full gap-4">
         <div className="w-20">
@@ -43,6 +46,9 @@ export default function SingleCatalogRow({ cardData, promoted, tcg }: Props) {
                 )}
                 {findWebsiteNameByCode(cardData.website)}
               </div>
+              {promo && (
+                <div className="text-sm opacity-50">Promoted result</div>
+              )}
             </div>
           </div>
           <div className="col-span-4 mt-2 hidden sm:grid">
