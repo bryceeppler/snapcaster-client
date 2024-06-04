@@ -329,23 +329,40 @@ const ResultSelector = () => {
     const websiteCount: { [website: string]: number } = {};
     const websiteTotalCost: { [website: string]: number } = {};
     Object.entries(websiteProductSet).forEach(([website, productSet]) => {
-      websiteCount[website] = Math.min(productSet.size, totalRequested);
-      websiteTotalCost[website] = Object.values(
-        websiteProductPrices[website]
-      ).reduce((acc, price) => acc + price, 0);
+      websiteCount[website] = productSet.size;
+      websiteTotalCost[website] = Array.from(productSet).reduce(
+        (acc, productName) => acc + websiteProductPrices[website][productName],
+        0
+      );
     });
 
-    // Convert the websiteCount object to an array of [website, count] pairs, sort it by highest count, and cheapest price
-    const sortedWebsites = Object.entries(websiteCount)
-      .sort((a, b) => b[1] - a[1])
+    // Convert the websiteCount object to an array of [website, count, totalCost] pairs
+    // Sort it by highest count first, then by cheapest total price
+    let sortedWebsites = Object.entries(websiteCount)
       .map(([website, count]) => ({
         website,
-        count,
+        count: Math.min(count, totalRequested),
         totalCost: websiteTotalCost[website]
-      }));
+      }))
+      .sort((a, b) => {
+        if (b.count !== a.count) {
+          return b.count - a.count;
+        }
+        return a.totalCost - b.totalCost;
+      });
+
+    // Ensure "obsidian" appears at the top
+    const obsidianIndex = sortedWebsites.findIndex(
+      (site) => site.website === 'obsidian'
+    );
+    if (obsidianIndex !== -1) {
+      const [obsidian] = sortedWebsites.splice(obsidianIndex, 1);
+      sortedWebsites = [obsidian, ...sortedWebsites];
+    }
 
     return sortedWebsites;
   };
+
   return (
     <div className="flex flex-col gap-2 text-xs">
       <ScrollArea className="hidden h-60 rounded border border-border bg-popover p-2 lg:block">
