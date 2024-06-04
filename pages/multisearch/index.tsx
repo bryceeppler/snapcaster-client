@@ -335,10 +335,9 @@ const ResultSelector = () => {
       ).reduce((acc, price) => acc + price, 0);
     });
 
-    // Convert the websiteCount object to an array of [website, count] pairs, sort it, and get the top 3
+    // Convert the websiteCount object to an array of [website, count] pairs, sort it by highest count, and cheapest price
     const sortedWebsites = Object.entries(websiteCount)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
       .map(([website, count]) => ({
         website,
         count,
@@ -349,7 +348,7 @@ const ResultSelector = () => {
   };
   return (
     <div className="flex flex-col gap-2 text-xs">
-      <div className="hidden rounded border border-border bg-popover p-2 lg:block">
+      <ScrollArea className="hidden h-60 rounded border border-border bg-popover p-2 lg:block">
         <div className="p-2 text-sm font-semibold">Top Stores</div>
         {getTopWebsites(results).map((websiteInfo, i) => (
           <div key={i}>
@@ -362,7 +361,8 @@ const ResultSelector = () => {
             </div>
           </div>
         ))}
-      </div>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
       <ScrollArea className=" h-40 w-full rounded border border-border bg-popover px-4 py-2 lg:h-96">
         {results.map((result, i) => (
           <div key={i}>
