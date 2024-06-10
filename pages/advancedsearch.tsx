@@ -20,11 +20,12 @@ import PageTitle from '@/components/ui/page-title';
 
 import { FilterDropdownBox } from '@/components/advanced-search/advanced-filter-dropdown';
 import { useStore } from '@/stores/store';
+import SingleSearchbox from '@/components/autofill-searchbox';
 type Props = {};
 
 export default function AdvancedSearch({}: Props) {
   const autocompleteEndpoint =
-    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards?query=';
+    process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL + '/cards';
   const {
     advancedSearchLoading,
     advancedSearchResults,
@@ -72,7 +73,7 @@ export default function AdvancedSearch({}: Props) {
     fetchAdvancedSearchResults
   } = advancedUseStore();
 
-  const { initWebsiteInformation, websites } = useStore();
+  const { initWebsiteInformation, websitesAdvanced } = useStore();
 
   const [showFilters, setShowFilters] = React.useState(false);
 
@@ -96,6 +97,7 @@ export default function AdvancedSearch({}: Props) {
 
   useEffect(() => {
     initWebsiteInformation();
+    // initWebsiteInformationAdvanced();
     initSetInformation();
   }, []);
 
@@ -142,7 +144,7 @@ export default function AdvancedSearch({}: Props) {
           {/*Container 1 - Page Title*/}
           <div className="pb-2 text-center">
             <PageTitle title="Advanced Search" />
-            <p className="pb-2 text-xs text-pink-600">
+            <p className="pb-2 text-xs text-primary">
               Notice: We appreciate your patience as we continue to add missing
               websites from Single Search and Multi Search and fine tune our
               API.
@@ -151,14 +153,16 @@ export default function AdvancedSearch({}: Props) {
 
           {/*Container 2 - Search Bar & Show Filters Button*/}
           <div className="flex items-center gap-2">
-            <AutoFillSearchBox
+            <SingleSearchbox
+              searchType={'advanced'}
               searchFunction={fetchAdvancedSearchResults}
               setSearchInput={setAdvancedSearchInput}
               searchInput={advancedSearchInput}
               autocompleteEndpoint={autocompleteEndpoint}
-            ></AutoFillSearchBox>
+              tcg={'mtg'}
+            ></SingleSearchbox>
             <Button
-              className="flex justify-between rounded bg-transparent outline outline-1 outline-muted lg:w-48"
+              className="flex justify-between rounded border border-input bg-transparent lg:w-48"
               onClick={() => {
                 setShowFilters(!showFilters);
               }}
@@ -178,7 +182,7 @@ export default function AdvancedSearch({}: Props) {
               <div className="mb-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                   <FilterDropdownBox
-                    option={websites.map((obj) => {
+                    option={websitesAdvanced.map((obj) => {
                       return { name: obj.name, abbreviation: obj.code };
                     })}
                     selectedList={selectedWebsiteList}
@@ -212,7 +216,7 @@ export default function AdvancedSearch({}: Props) {
                     selectedList={selectedShowcaseTreatmentList}
                     selectCount={selectedShowcaseTreatmentCount}
                     toggle={toggle}
-                    label="Showcase Treatment"
+                    label="Showcase"
                   ></FilterDropdownBox>
                   <FilterDropdownBox
                     option={frameList}
@@ -269,7 +273,7 @@ export default function AdvancedSearch({}: Props) {
                 onClick={() => {
                   setShoeSoryBy(!showSortBy);
                 }}
-                className="w-full min-w-40 bg-inherit outline outline-1 outline-muted"
+                className="w-full min-w-40 border border-input bg-inherit"
               >
                 Sort:{' '}
                 {selectedSortBy.charAt(0).toUpperCase() +
@@ -281,7 +285,7 @@ export default function AdvancedSearch({}: Props) {
                 />
               </Button>
               <div
-                className={`no-scrollbar 	 absolute z-10 mt-1.5 max-h-52 w-full min-w-36 overflow-y-auto rounded bg-[hsl(var(--background))] shadow-2xl ${
+                className={`no-scrollbar absolute z-10 mt-1.5 max-h-52 w-full min-w-40 overflow-y-auto rounded bg-popover  shadow-2xl ${
                   showSortBy ? 'outline' : ''
                 } outline-1 outline-muted sm:w-max`}
               >
@@ -303,7 +307,7 @@ export default function AdvancedSearch({}: Props) {
                             className={
                               ' aspect-square h-2 w-2 cursor-pointer appearance-none  rounded-full ' +
                               (selectedSortBy.includes(state.abbreviation)
-                                ? ' bg-pink-600 outline-none'
+                                ? ' bg-primary outline-none'
                                 : 'bg-zinc-600 outline outline-1 outline-black')
                             }
                           />
@@ -323,7 +327,7 @@ export default function AdvancedSearch({}: Props) {
               onClick={() => {
                 resetFilters();
               }}
-              className="min-w-40 bg-transparent outline outline-1 outline-muted hover:bg-rose-700"
+              className="min-w-40 border border-input bg-transparent hover:bg-rose-700"
             >
               Reset Filters
             </Button>

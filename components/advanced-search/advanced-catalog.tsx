@@ -18,7 +18,10 @@ export default function AdvancedCatalog({}: Props) {
     <div>
       {advancedSearchResults.map((cardData, index) => (
         <div key={index}>
-          <AdvancedCatalogRow cardData={cardData}></AdvancedCatalogRow>
+          <AdvancedCatalogRow
+            tcg="mtg"
+            cardData={cardData}
+          ></AdvancedCatalogRow>
         </div>
       ))}
       <BackToTopButton />

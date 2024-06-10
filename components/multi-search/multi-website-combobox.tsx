@@ -42,7 +42,7 @@ export function WebsiteCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between overflow-hidden"
+          className="w-[200px] justify-between overflow-hidden hover:bg-background"
         >
           <span className="truncate">
             {selectedWebsites.length > 0
@@ -54,32 +54,36 @@ export function WebsiteCombobox({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search website..." />
-          <ScrollArea className="h-80">
-            <CommandEmpty>No website found.</CommandEmpty>
-            <CommandGroup>
-              {websites.map((website) => (
-                <CommandList key={website.code}>
-                  <CommandItem
-                    key={website.code}
-                    value={website.name}
-                    onSelect={(currentValue) => {
-                      onWebsiteSelect(website);
-                      console.log('Selecting website', currentValue);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        'mr-2 h-4 w-4',
-                        isWebsiteSelected(website) ? 'opacity-100' : 'opacity-0'
-                      )}
-                    />
-                    {website.name}
-                  </CommandItem>
-                </CommandList>
-              ))}
-            </CommandGroup>
-          </ScrollArea>
+          <CommandInput tabIndex={-1} placeholder="Search website..." />
+          <CommandEmpty>No website found.</CommandEmpty>
+          <CommandGroup>
+            <CommandList>
+              <ScrollArea className=" h-72  rounded-md ">
+                <div className="pr-2">
+                  {websites.map((website) => (
+                    <CommandItem
+                      key={website.code}
+                      value={website.name}
+                      onSelect={(currentValue) => {
+                        onWebsiteSelect(website);
+                        console.log('Selecting website', currentValue);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          'mr-2 h-4 w-4',
+                          isWebsiteSelected(website)
+                            ? 'opacity-100'
+                            : 'opacity-0'
+                        )}
+                      />
+                      {website.name}
+                    </CommandItem>
+                  ))}
+                </div>
+              </ScrollArea>
+            </CommandList>
+          </CommandGroup>
         </Command>
       </PopoverContent>
     </Popover>

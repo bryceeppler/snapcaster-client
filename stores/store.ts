@@ -40,11 +40,13 @@ export type MultiSearchCardState = {
 };
 
 const websites: Website[] = [];
+const websitesAdvanced: Website[] = [];
 const websiteList: Filter[] = [];
 const promoMap: PromoMap = {};
 
 type State = {
   websites: Website[];
+  websitesAdvanced: Website[];
   promoMap: PromoMap;
   getWebsiteNameByCode: (code: string) => string;
 
@@ -57,6 +59,7 @@ export const useStore = create<State>((set, get) => ({
   },
 
   websites: websites,
+  websitesAdvanced: websitesAdvanced,
   promoMap: promoMap,
 
   initWebsiteInformation: async () => {
@@ -69,7 +72,14 @@ export const useStore = create<State>((set, get) => ({
       );
       let data = response.data;
       set({ websites: data.websiteList });
-
+      // let data = response.data.websiteList.filter(
+      //   (website: Website) => website.backend == 'shopify'
+      // );
+      set({
+        websitesAdvanced: data.websiteList.filter(
+          (website: Website) => website.backend == 'shopify'
+        )
+      });
       let tempMap: PromoMap = {};
       for (const website of data.websiteList) {
         if (website['promoCode'] !== null) {

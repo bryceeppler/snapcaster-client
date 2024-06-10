@@ -9,14 +9,12 @@ type AuthState = {
   hasActiveSubscription: boolean;
   email: string;
   emailVerified: boolean;
-  betaFeaturesEnabled: boolean;
   fullName: string;
   initializeState: () => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
   clearTokens: () => void;
   refreshAccessToken: () => Promise<void>;
   fetchUser: () => Promise<void>;
-  toggleBetaFeatures: () => Promise<void>;
 };
 
 const useAuthStore = create<AuthState>((set, get) => ({
@@ -27,7 +25,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
   emailVerified: false,
   email: '',
   fullName: '',
-  betaFeaturesEnabled: false,
 
   initializeState: () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -72,37 +69,16 @@ const useAuthStore = create<AuthState>((set, get) => ({
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_USER_URL}/profile`
       );
-      const {
-        subscription,
-        full_name,
-        email,
-        email_verified,
-        beta_features_enabled
-      } = response.data;
+      const { subscription, full_name, email, email_verified } = response.data;
       set({ hasActiveSubscription: subscription === 'active' });
       set({
         email,
         fullName: full_name,
-        emailVerified: email_verified,
-        betaFeaturesEnabled: beta_features_enabled
+        emailVerified: email_verified
       });
     } catch (error) {
       console.error('Error fetching subscription status:', error);
       set({ hasActiveSubscription: false });
-    }
-  },
-  toggleBetaFeatures: async () => {
-    try {
-      const response = await axiosInstance.put(
-        `${process.env.NEXT_PUBLIC_USER_URL}/update-user`,
-        {
-          betaFeaturesEnabled: !get().betaFeaturesEnabled
-        }
-      );
-      // set optimistic update
-      set({ betaFeaturesEnabled: !get().betaFeaturesEnabled });
-    } catch (error) {
-      console.error('Error toggling beta features:', error);
     }
   }
 }));

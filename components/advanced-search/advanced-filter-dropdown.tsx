@@ -50,7 +50,7 @@ export function FilterDropdownBox(props: Props) {
         <label className="text-midTone  mb-2 truncate pb-1 text-sm">
           <div className="flex">
             <p className="font-medium">{props.label}</p>
-            <p className="pl-1 text-green-600">
+            <p className="pl-1 text-primary">
               {props.selectCount > 0 ? `+${props.selectCount}` : ''}
             </p>
           </div>
@@ -73,43 +73,43 @@ export function FilterDropdownBox(props: Props) {
         </PopoverTrigger>
         <PopoverContent className="max-h-[--radix-popover-content-available-height] w-[--radix-popover-trigger-width]">
           <Command>
-            <CommandInput
-              tabIndex={-1}
-              placeholder={`Search ${props.label}...`}
-            />
-            <ScrollArea className=" h-80">
-              <CommandEmpty>No {props.label} found.</CommandEmpty>
-              <CommandGroup>
-                {props.option.map((state) => (
-                  <CommandList key={state.name}>
-                    <CommandItem
-                      className=" font-serif font-medium hover:cursor-pointer"
-                      key={state.name}
-                      value={state.name}
-                      onSelect={(currentValue) => {
-                        setSelectedFields({
-                          ...selectedFields
-                          // [state.abbreviation]: e.target.checked
-                        });
-                        props.toggle(state.abbreviation, props.label);
-                      }}
-                    >
-                      <div className="flex">
-                        <Check
-                          className={cn(
-                            'mr-1 min-w-5 max-w-5',
-                            props.selectedList.includes(state.abbreviation)
-                              ? 'text-green-600 opacity-100'
-                              : 'opacity-0'
-                          )}
-                        />
-                        <p className="capitalize">{state.name}</p>
-                      </div>
-                    </CommandItem>
-                  </CommandList>
-                ))}
-              </CommandGroup>
-            </ScrollArea>
+            <CommandInput tabIndex={-1} placeholder={`${props.label}...`} />
+
+            <CommandEmpty>No {props.label} found.</CommandEmpty>
+            <CommandGroup>
+              <CommandList>
+                <ScrollArea className=" h-72  rounded-md ">
+                  <div className="pr-2">
+                    {props.option.map((state) => (
+                      <CommandItem
+                        className=" font-serif font-medium hover:cursor-pointer"
+                        key={state.name}
+                        value={state.name}
+                        onSelect={(currentValue) => {
+                          setSelectedFields({
+                            ...selectedFields
+                            // [state.abbreviation]: e.target.checked
+                          });
+                          props.toggle(state.abbreviation, props.label);
+                        }}
+                      >
+                        <div className="flex">
+                          <Check
+                            className={cn(
+                              'mr-1 min-w-5 max-w-5',
+                              props.selectedList.includes(state.abbreviation)
+                                ? 'text-primary opacity-100'
+                                : 'opacity-0'
+                            )}
+                          />
+                          <p className="capitalize">{state.name}</p>
+                        </div>
+                      </CommandItem>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </CommandList>
+            </CommandGroup>
           </Command>
         </PopoverContent>
       </Popover>

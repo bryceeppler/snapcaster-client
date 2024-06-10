@@ -15,7 +15,8 @@ type SingleSearchState = {
   sortField: string;
   sortOrder: 'asc' | 'desc';
   foil: boolean;
-
+  resultsTcg: string;
+  promotedCards: any[];
   setSearchInput: (input: string) => void;
   setTcg: (tcg: Tcgs) => void;
   setConditions: (conditions: string[]) => void;
@@ -41,7 +42,8 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
   sortField: 'price',
   sortOrder: 'asc',
   foil: false,
-
+  resultsTcg: '',
+  promotedCards: [],
   setSearchInput: (input: string) => {
     set({ searchInput: input });
   },
@@ -76,13 +78,18 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
   fetchCards: async () => {
     try {
       set({ loading: true, searchStarted: true });
+      set({ resultsTcg: get().tcg });
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search/?tcg=${
           get().tcg
         }&name=${get().searchInput}`
       );
       set({ searchQuery: get().searchInput });
-      set({ results: response.data.data, filteredResults: response.data.data });
+      set({
+        results: response.data.data,
+        filteredResults: response.data.data,
+        promotedCards: response.data.promotedCards
+      });
       set({ loading: false });
     } catch (error) {
       console.error(error);

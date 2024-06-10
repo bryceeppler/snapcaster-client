@@ -25,7 +25,7 @@ const About: NextPage<Props> = () => {
                 information in accordance with this Privacy Policy. This Privacy
                 Policy has been created with the help of the{' '}
                 <a
-                  className="text-pink-500 hover:text-pink-700"
+                  className="text-primary hover:text-primary-muted"
                   href="https://www.freeprivacypolicy.com/free-privacy-policy-generator/"
                   target="_blank"
                 >
@@ -122,7 +122,7 @@ const About: NextPage<Props> = () => {
                     <strong>Website</strong> refers to Snapcaster, accessible
                     from{' '}
                     <a
-                      className="text-pink-500 hover:text-pink-700"
+                      className="text-primary hover:text-primary-muted"
                       href="https://www.snapcaster.ca"
                       rel="external nofollow noopener"
                       target="_blank"
@@ -222,7 +222,7 @@ const About: NextPage<Props> = () => {
                 deleted as soon as You close Your web browser. Learn more about
                 cookies on the{' '}
                 <a
-                  className="text-pink-500 hover:text-pink-700"
+                  className="text-primary hover:text-primary-muted"
                   href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking"
                   target="_blank"
                 >

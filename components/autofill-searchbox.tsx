@@ -1,17 +1,20 @@
+import ReactGA from 'react-ga4';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
 import { useDebounceCallback } from 'usehooks-ts';
+import { handleQuerySingleCard } from '@/utils/analytics';
 
 type Props = {
   searchFunction(searchText: string): void;
   setSearchInput(searchText: string): void;
+  searchType: string;
+  tcg: string;
   searchInput: string;
   autocompleteEndpoint: string;
 };
 interface AutocompleteResult {
   name: string;
-  oracle_id: string;
 }
 export default function SingleSearchbox(props: Props) {
   const [autocompleteResults, setAutocompleteResults] = useState<
@@ -24,7 +27,10 @@ export default function SingleSearchbox(props: Props) {
   const autocompleteRef = useRef<HTMLDivElement>(null);
   const fetchAutocompleteResults = useCallback(
     (value: string) => {
-      fetch(props.autocompleteEndpoint + value)
+      const url = `${props.autocompleteEndpoint}?tcg=${
+        props.tcg
+      }&query=${encodeURIComponent(value)}`;
+      fetch(url)
         .then((response) => response.json())
         .then((data) => {
           setAutocompleteResults(data.data);
@@ -35,7 +41,7 @@ export default function SingleSearchbox(props: Props) {
           console.error('Error fetching autocomplete results: ', error);
         });
     },
-    [props.autocompleteEndpoint]
+    [props.autocompleteEndpoint, props.tcg]
   );
 
   const debouncedFetchResults = useDebounceCallback(
@@ -153,7 +159,7 @@ export default function SingleSearchbox(props: Props) {
 
   return (
     <div className="w-full">
-      <div className="relative">
+      <div className="relative z-[5]">
         <form onSubmit={handleFormSubmit}>
           <Input
             type="text"
@@ -166,21 +172,30 @@ export default function SingleSearchbox(props: Props) {
           />
           <button
             type="submit"
-            className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-pink-500"
+            className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-primary"
+            onClick={() => {
+              handleQuerySingleCard(
+                props.searchInput,
+                props.tcg,
+                props.searchType
+              );
+            }}
           >
             <Search size={15} />
           </button>
           {showAutocomplete && (
             <div
-              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-zinc-500  bg-zinc-950 py-1 shadow-md"
+              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-border  bg-popover py-1 shadow-md"
               ref={autocompleteRef}
             >
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
                     key={index}
-                    className={`mx-1 cursor-pointer rounded px-4 py-2 hover:bg-neutral-900 ${
-                      selectedAutocompleteIndex === index ? 'bg-zinc-800' : ''
+                    className={`mx-1 cursor-pointer rounded px-4 py-2  ${
+                      selectedAutocompleteIndex === index
+                        ? 'bg-primary'
+                        : 'hover:bg-accent'
                     } `}
                     onClick={() => handleAutocompleteItemClick(result.name)}
                   >
