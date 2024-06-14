@@ -23,6 +23,8 @@ Moving forward, new features will primarily be exclusive to Pro members. We've a
 - Users can now create lists of cards for easy price checking.
 - A price notification feature is in the works, which will allow users to be notified when a card matching their criteria becomes available.
 
+Wishlist items currently use the single search API endpoint which means that this service is ideal for people who want to build a deck using the cheapest card printing for their deck. We hope to allow users to apply advanced search filters in wishlists in the future but we're experimenting with the filter options alot right now and don't want to affect old wishlists.
+
 ![Wishlist feature](/blog-images/march-wishlist.png)
 
 ### Advanced Search
@@ -30,6 +32,12 @@ Moving forward, new features will primarily be exclusive to Pro members. We've a
 - An advanced search feature now supports the majority of stores on Snapcaster.
 - Efforts are ongoing to expand this feature to include as many websites on Snapcaster as possible.
 - This tool enables users to filter by specific criteria, helping to exclude unwanted cards or discover deals on specific printings or art styles.
+
+Some of the filters we're experimenting with include: Website, Set, Condition, Foil, Showcase Treatment, Art Frame Type, Collector Number, Pre-release, Promo, Alternate Art, Retor, Art Series, Golden Stamped Signature, and Other. We'll probably add, remove, and adjust these as we continue to develop as we find the best way to structure the filter options to accommodate as many websites as possible.
+
+The term showcase has become extremely vague over the past 5 years since it's debut and makes scraping cards alot more difficult. For example, many showcase cards are technically borderless cards but aren't categorized as such on the LGS listing so we're going to experiment with an option to toggle between search results containing non showcase, showcase, or both in your queries and adjust from there.
+
+Advanced search supports about 2/3 of the websites used in single search and multisearch. Local Game Stores that use Crystal Commerce to power their back end use really messy naming conventions that we'll have to take into account.
 
 ![Advanced search feature](/blog-images/march-advanced.png)
 

@@ -72,12 +72,11 @@ export const useStore = create<State>((set, get) => ({
       );
       let data = response.data;
       set({ websites: data.websiteList });
-      // let data = response.data.websiteList.filter(
-      //   (website: Website) => website.backend == 'shopify'
-      // );
+
       set({
         websitesAdvanced: data.websiteList.filter(
-          (website: Website) => website.backend == 'shopify'
+          (website: Website) =>
+            website.backend == 'shopify' || website.backend == 'crystalcommerce'
         )
       });
       let tempMap: PromoMap = {};
