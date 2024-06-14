@@ -146,6 +146,9 @@ dependencies:
   react-type-animation:
     specifier: ^3.2.0
     version: 3.2.0(prop-types@15.6.0)(react-dom@18.2.0)(react@18.2.0)
+  react-virtuoso:
+    specifier: ^4.7.11
+    version: 4.7.11(react-dom@18.2.0)(react@18.2.0)
   remark:
     specifier: ^15.0.1
     version: 15.0.1
@@ -214,6 +217,13 @@ packages:
 
   /@babel/runtime@7.23.9:
     resolution: {integrity: sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: false
+
+  /@babel/runtime@7.24.7:
+    resolution: {integrity: sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
@@ -457,7 +467,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-visually-hidden': 1.0.3(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.0.28
       react: 18.2.0
@@ -505,7 +515,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.0.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.0.28)(react@18.2.0)
@@ -550,7 +560,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-primitive': 1.0.3(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.0.28
       react: 18.2.0
@@ -570,7 +580,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-context': 1.0.1(@types/react@18.0.28)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.0.28)(react@18.2.0)
@@ -684,7 +694,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-context': 1.0.1(@types/react@18.0.28)(react@18.2.0)
       '@radix-ui/react-menu': 2.0.6(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
@@ -856,7 +866,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.0.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.0.28)(react@18.2.0)
@@ -1121,7 +1131,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/react-context': 1.0.1(@types/react@18.0.28)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.0.28
@@ -1287,7 +1297,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/number': 1.0.1
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-collection': 1.0.3(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
@@ -1385,7 +1395,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-collection': 1.0.3(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.0.28)(react@18.2.0)
@@ -1416,7 +1426,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-context': 1.0.1(@types/react@18.0.28)(react@18.2.0)
       '@radix-ui/react-direction': 1.0.1(@types/react@18.0.28)(react@18.2.0)
@@ -1442,7 +1452,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-primitive': 1.0.3(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.0.28)(react@18.2.0)
@@ -1464,7 +1474,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-context': 1.0.1(@types/react@18.0.28)(react@18.2.0)
       '@radix-ui/react-direction': 1.0.1(@types/react@18.0.28)(react@18.2.0)
@@ -1490,7 +1500,7 @@ packages:
       '@types/react-dom':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.7
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.0.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.0.28)(react@18.2.0)
@@ -3488,6 +3498,17 @@ packages:
       react-dom: '>= 15.0.0'
     dependencies:
       prop-types: 15.6.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /react-virtuoso@4.7.11(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Kdn9qEtQI2ulEuBMzW2BTkDsfijB05QUd6lpZ1K36oyA3k65Cz4lG4EKrh2pCfUafX4C2uMSZOwzMOhbrMOTFA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16 || >=17 || >= 18'
+      react-dom: '>=16 || >=17 || >= 18'
+    dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
