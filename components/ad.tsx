@@ -2,6 +2,7 @@ import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import { trackAdClick, trackAdVisible } from '@/utils/analytics';
 import { Ad } from '@/types/ads';
+import Link from 'next/link';
 
 type AdComponentProps = {
   ad: Ad;
@@ -26,29 +27,26 @@ const AdComponent: React.FC<AdComponentProps> = ({ ad }) => {
   };
 
   return (
-    <div
+    <Link
+      href={ad.url}
       ref={ref}
-      data-ad-id={ad.id}
-      className="mx-auto my-4 flex w-full max-w-5xl rounded border border-zinc-600 bg-zinc-700"
+      target="_blank"
+      data-position-id="4" // 4 is horizontal feed ad
+      data-ad-id={ad.id.toString()}
+      onClick={() => handleAdClick(ad.id.toString())}
+      className="ad mx-auto flex max-w-5xl items-center justify-center rounded border border-zinc-600 bg-black"
     >
-      <a
-        href={ad.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => handleAdClick(ad.id.toString())}
-      >
-        <img
-          src={ad.desktop_image}
-          alt={`ad-${ad.id}`}
-          className="hidden rounded-lg sm:block"
-        />
-        <img
-          src={ad.mobile_image}
-          alt={`ad-${ad.id}`}
-          className="w-fill block rounded-lg sm:hidden"
-        />
-      </a>
-    </div>
+      <img
+        src={ad.desktop_image}
+        alt={`ad-${ad.id}`}
+        className="hidden w-fit sm:flex"
+      />
+      <img
+        src={ad.mobile_image}
+        alt={`ad-${ad.id}`}
+        className="w-fill flex sm:hidden"
+      />
+    </Link>
   );
 };
 
