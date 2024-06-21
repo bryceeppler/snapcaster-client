@@ -1,4 +1,3 @@
-import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
@@ -58,92 +57,88 @@ const Signup: NextPage<Props> = () => {
   return (
     <>
       <SignupHead />
-      <MainLayout>
-        <div className="mx-auto flex w-full max-w-lg flex-col justify-center gap-8 text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter">Signup</h2>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Create your Snapcaster account.
-                </p>
-              </div>
-              <form
-                className="grid gap-4 md:gap-4"
-                onSubmit={handleSubmit(onSubmit)}
-              >
-                <Input
-                  {...register('email', {
-                    required: 'Email is required',
-                    pattern: /^\S+@\S+\.\S+$/
-                  })}
-                  type="text"
-                  className={``}
-                  placeholder="Email"
-                />
-                {errors.email && (
-                  <p className="text-red-500">{errors.email.message}</p>
-                )}
-                {errors.email?.type === 'pattern' && (
-                  <p className="text-red-500">Invalid email</p>
-                )}
-
-                <Input
-                  type="password"
-                  {...register('password', {
-                    required: 'Password is required'
-                  })}
-                  className={``}
-                  placeholder="Password"
-                />
-                {errors.password && (
-                  <p className="text-red-500">{errors.password.message}</p>
-                )}
-                <Input
-                  type="password"
-                  {...register('confirmPassword', {
-                    validate: (value) =>
-                      value === password || 'The passwords do not match'
-                  })}
-                  className={``}
-                  placeholder="Confirm Password"
-                />
-                {errors.confirmPassword && (
-                  <p className="text-red-500">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-                <Input
-                  type="text"
-                  {...register('fullName', {
-                    required: 'A name is required'
-                  })}
-                  className={``}
-                  placeholder="Full Name"
-                />
-                {errors.fullName && (
-                  <p className="text-red-500">{errors.fullName.message}</p>
-                )}
-                <Button type="submit">Sign Up</Button>
-                <Button className="">
-                  <a href="/signin">Already have an account? Sign in!</a>
-                </Button>
-                <p className="text-xs">
-                  By Creating an account, you affirm that you have read,
-                  understood, and consent to the{' '}
-                  <a
-                    href="/terms"
-                    target="_blank"
-                    className="text-primary hover:opacity-70"
-                  >
-                    Terms of Use
-                  </a>
-                </p>
-              </form>
+      <div className="mx-auto flex w-full max-w-lg flex-col justify-center gap-8 text-center">
+        <section className="w-full py-6 md:py-12">
+          <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter">Signup</h2>
+              <p className="text-gray-500 dark:text-gray-400">
+                Create your Snapcaster account.
+              </p>
             </div>
-          </section>
-        </div>
-      </MainLayout>
+            <form
+              className="grid gap-4 md:gap-4"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <Input
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: /^\S+@\S+\.\S+$/
+                })}
+                type="text"
+                className={``}
+                placeholder="Email"
+              />
+              {errors.email && (
+                <p className="text-red-500">{errors.email.message}</p>
+              )}
+              {errors.email?.type === 'pattern' && (
+                <p className="text-red-500">Invalid email</p>
+              )}
+
+              <Input
+                type="password"
+                {...register('password', {
+                  required: 'Password is required'
+                })}
+                className={``}
+                placeholder="Password"
+              />
+              {errors.password && (
+                <p className="text-red-500">{errors.password.message}</p>
+              )}
+              <Input
+                type="password"
+                {...register('confirmPassword', {
+                  validate: (value) =>
+                    value === password || 'The passwords do not match'
+                })}
+                className={``}
+                placeholder="Confirm Password"
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-500">{errors.confirmPassword.message}</p>
+              )}
+              <Input
+                type="text"
+                {...register('fullName', {
+                  required: 'A name is required'
+                })}
+                className={``}
+                placeholder="Full Name"
+              />
+              {errors.fullName && (
+                <p className="text-red-500">{errors.fullName.message}</p>
+              )}
+              <Button type="submit">Sign Up</Button>
+              <Button className="">
+                <a href="/signin">Already have an account? Sign in!</a>
+              </Button>
+              <p className="text-xs">
+                By Creating an account, you affirm that you have read,
+                understood, and consent to the{' '}
+                <a
+                  href="/terms"
+                  target="_blank"
+                  className="text-primary hover:opacity-70"
+                >
+                  Terms of Use
+                </a>
+              </p>
+            </form>
+          </div>
+        </section>
+      </div>
     </>
   );
 };

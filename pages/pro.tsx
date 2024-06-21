@@ -1,4 +1,3 @@
-import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
@@ -65,54 +64,52 @@ const Pro: NextPage<Props> = () => {
   return (
     <>
       <ProHead />
-      <MainLayout>
-        <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter">Sign In</h2>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Log in to your Snapcaster account.
-                </p>
-              </div>
-              <form
-                className="grid gap-4 md:gap-4"
-                onSubmit={handleSubmit(onSubmit)}
-              >
-                <Input
-                  {...register('email', {
-                    required: 'Email is required',
-                    pattern: /^\S+@\S+\.\S+$/
-                  })}
-                  type="text"
-                  className=""
-                  placeholder="Email"
-                />
-                {errors.email && (
-                  <p className="text-red-500">{errors.email.message}</p>
-                )}
-                {errors.email?.type === 'pattern' && (
-                  <p className="text-red-500">Invalid email</p>
-                )}
-                <Input
-                  {...register('password', {
-                    required: 'Password is required'
-                  })}
-                  type="password"
-                  className=""
-                  placeholder="Password"
-                />
-                {errors.password && (
-                  <p className="text-red-500">{errors.password.message}</p>
-                )}
-                <Button type="submit">Sign In</Button>
-              </form>
-              <a href="/forgot-password">Forgot your password?</a>
-              <a href="/signup">Don't have an account? Sign up!</a>
+      <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
+        <section className="w-full py-6 md:py-12">
+          <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter">Sign In</h2>
+              <p className="text-gray-500 dark:text-gray-400">
+                Log in to your Snapcaster account.
+              </p>
             </div>
-          </section>
-        </div>
-      </MainLayout>
+            <form
+              className="grid gap-4 md:gap-4"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <Input
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: /^\S+@\S+\.\S+$/
+                })}
+                type="text"
+                className=""
+                placeholder="Email"
+              />
+              {errors.email && (
+                <p className="text-red-500">{errors.email.message}</p>
+              )}
+              {errors.email?.type === 'pattern' && (
+                <p className="text-red-500">Invalid email</p>
+              )}
+              <Input
+                {...register('password', {
+                  required: 'Password is required'
+                })}
+                type="password"
+                className=""
+                placeholder="Password"
+              />
+              {errors.password && (
+                <p className="text-red-500">{errors.password.message}</p>
+              )}
+              <Button type="submit">Sign In</Button>
+            </form>
+            <a href="/forgot-password">Forgot your password?</a>
+            <a href="/signup">Don't have an account? Sign up!</a>
+          </div>
+        </section>
+      </div>
     </>
   );
 };

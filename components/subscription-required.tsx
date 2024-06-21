@@ -1,5 +1,4 @@
 import React from 'react';
-import MainLayout from '@/components/main-page-layout';
 import SubscriptionCards from '@/components/subscription-options';
 import PageTitle from './ui/page-title';
 
@@ -15,16 +14,14 @@ const SubscriptionRequired = ({
   createCheckoutSession
 }: Props) => {
   return (
-    <MainLayout>
-      <div className="container">
-        <PageTitle title={title} />
-        <div className="outlined-container mx-auto grid max-w-md gap-4 p-8 md:gap-4">
-          <p className="text-left">{message}</p>
-        </div>
-        <div className="p-3" />
-        <SubscriptionCards createCheckoutSession={createCheckoutSession} />
+    <div className="container">
+      <PageTitle title={title} />
+      <div className="outlined-container mx-auto grid max-w-md gap-4 p-8 md:gap-4">
+        <p className="text-left">{message}</p>
       </div>
-    </MainLayout>
+      <div className="p-3" />
+      <SubscriptionCards createCheckoutSession={createCheckoutSession} />
+    </div>
   );
 };
 

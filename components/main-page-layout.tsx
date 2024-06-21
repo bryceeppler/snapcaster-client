@@ -1,5 +1,6 @@
 // components/MainLayout.tsx
 import React, { useRef } from 'react';
+import { useAdContext } from '@/pages/_app';
 import useGlobalStore from '@/stores/globalStore';
 import Link from 'next/link';
 import Autoplay from 'embla-carousel-autoplay';
@@ -17,18 +18,16 @@ import { useInView } from 'react-intersection-observer';
 import useAuthStore from '@/stores/authStore';
 
 type Props = {
-  showSideBanners?: boolean;
   width?: 'md' | 'xl';
 };
 
 export default function MainLayout({
   children,
-  showSideBanners = true,
   width = 'md'
 }: React.PropsWithChildren<Props>) {
   const { ads } = useGlobalStore();
+  const { showAds } = useAdContext();
   const { hasActiveSubscription } = useAuthStore();
-  const [currentAdIndex, setCurrentAdIndex] = React.useState(0);
   const plugin = React.useRef(
     Autoplay({
       delay: 5000,
@@ -109,7 +108,7 @@ export default function MainLayout({
         )}
 
         {/* Left ad : position 2 */}
-        {showSideBanners && leftBannerAd && (
+        {leftBannerAd && (
           <Link
             onClick={() => trackAdClick(leftBannerAd.id.toString())}
             href={leftBannerAd.url}
@@ -124,24 +123,22 @@ export default function MainLayout({
         )}
 
         {/* Right ad : position 3 */}
-        {showSideBanners &&
-          !hasActiveSubscription &&
-          carouselAds.length > 0 && (
-            <Carousel
-              className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xxl:flex xxl:flex-col`}
-              plugins={[plugin.current]}
-            >
-              <CarouselContent>
-                {carouselAds.map((ad, index) => (
-                  <CarouselItem key={index}>
-                    <CarouselAd ad={ad} />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="" />
-              <CarouselNext className="" />
-            </Carousel>
-          )}
+        {showAds && !hasActiveSubscription && carouselAds.length > 0 && (
+          <Carousel
+            className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xxl:flex xxl:flex-col`}
+            plugins={[plugin.current]}
+          >
+            <CarouselContent>
+              {carouselAds.map((ad, index) => (
+                <CarouselItem key={index}>
+                  <CarouselAd ad={ad} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="" />
+            <CarouselNext className="" />
+          </Carousel>
+        )}
       </>
 
       <div className="mt-8">{children}</div>

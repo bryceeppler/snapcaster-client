@@ -1,6 +1,14 @@
-import { useEffect } from 'react';
+// _app.tsx
+import {
+  useEffect,
+  useState,
+  createContext,
+  useContext,
+  ReactNode
+} from 'react';
 import React from 'react';
 import { AppProps } from 'next/app';
+import MainLayout from '@/components/main-page-layout';
 import Layout from '@/components/ui/root-layout';
 import { initGA, logPageView } from '../utils/analytics';
 import { Toaster } from '@/components/ui/sonner';
@@ -11,15 +19,53 @@ import 'styles/chrome-bug.css';
 import { useWindowSize } from 'usehooks-ts';
 import { Inter } from 'next/font/google';
 import useGlobalStore from '@/stores/globalStore';
+import useAuthStore from '@/stores/authStore';
 
 const inter = Inter({ subsets: ['latin'] });
 
 interface MyAppProps extends AppProps {}
 
-function MyApp({ Component, pageProps }: MyAppProps) {
-  const { width = 0, height = 0 } = useWindowSize();
+type AdContextType = {
+  showAds: boolean;
+  setShowAds: (value: boolean) => void;
+};
 
+const AdContext = createContext<AdContextType | undefined>(undefined);
+
+export const useAdContext = () => {
+  const context = useContext(AdContext);
+  if (!context) {
+    throw new Error('useAdContext must be used within an AdProvider');
+  }
+  return context;
+};
+
+interface AdProviderProps {
+  children: ReactNode;
+}
+
+const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
+  const [showAds, setShowAds] = useState(true);
+  const { ads } = useGlobalStore();
+  const { hasActiveSubscription } = useAuthStore();
+
+  useEffect(() => {
+    if (hasActiveSubscription) {
+      setShowAds(false);
+    }
+  }, [hasActiveSubscription]);
+
+  return (
+    <AdContext.Provider value={{ showAds, setShowAds }}>
+      {children}
+    </AdContext.Provider>
+  );
+};
+
+function MyApp({ Component, pageProps }: MyAppProps) {
+  const { width = 0 } = useWindowSize();
   const globalStore = useGlobalStore();
+
   useEffect(() => {
     globalStore.fetchAds();
   }, []);
@@ -46,8 +92,14 @@ function MyApp({ Component, pageProps }: MyAppProps) {
         disableTransitionOnChange
       >
         <Layout>
-          <Toaster position={width > 640 ? 'bottom-center' : 'bottom-right'} />
-          <Component {...pageProps} />
+          <AdProvider>
+            <MainLayout>
+              <Toaster
+                position={width > 640 ? 'bottom-center' : 'bottom-right'}
+              />
+              <Component {...pageProps} />
+            </MainLayout>
+          </AdProvider>
         </Layout>
       </ThemeProvider>
     </main>

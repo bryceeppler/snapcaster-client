@@ -1,10 +1,7 @@
-import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
-import useAuthStore from '@/stores/authStore';
 import { toast } from 'sonner';
-import Router from 'next/router';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 
@@ -49,46 +46,44 @@ const ForgotPassword: NextPage<Props> = () => {
   return (
     <>
       <ForgotPasswordHead />
-      <MainLayout>
-        <div className="mx-auto flex w-full max-w-lg flex-col justify-center gap-8 text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter">
-                  Forgot Password
-                </h2>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Enter your email to receive a password reset link.
-                </p>
-              </div>
-              <form
-                className="grid gap-4 md:gap-4"
-                onSubmit={handleSubmit(onSubmit)}
-              >
-                <input
-                  {...register('email', {
-                    required: 'Email is required',
-                    pattern: /^\S+@\S+\.\S+$/
-                  })}
-                  type="text"
-                  className="input-dark block w-full px-4 py-2"
-                  placeholder="Email"
-                />
-                {errors.email && (
-                  <p className="text-red-500">{errors.email.message}</p>
-                )}
-                {errors.email?.type === 'pattern' && (
-                  <p className="text-red-500">Invalid email</p>
-                )}
-                <Button type="submit" className="w-full">
-                  Send reset link
-                </Button>
-              </form>
-              <a href="/signin">Know your password? Sign in.</a>
+      <div className="mx-auto flex w-full max-w-lg flex-col justify-center gap-8 text-center">
+        <section className="w-full py-6 md:py-12">
+          <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter">
+                Forgot Password
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400">
+                Enter your email to receive a password reset link.
+              </p>
             </div>
-          </section>
-        </div>
-      </MainLayout>
+            <form
+              className="grid gap-4 md:gap-4"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <input
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: /^\S+@\S+\.\S+$/
+                })}
+                type="text"
+                className="input-dark block w-full px-4 py-2"
+                placeholder="Email"
+              />
+              {errors.email && (
+                <p className="text-red-500">{errors.email.message}</p>
+              )}
+              {errors.email?.type === 'pattern' && (
+                <p className="text-red-500">Invalid email</p>
+              )}
+              <Button type="submit" className="w-full">
+                Send reset link
+              </Button>
+            </form>
+            <a href="/signin">Know your password? Sign in.</a>
+          </div>
+        </section>
+      </div>
     </>
   );
 };

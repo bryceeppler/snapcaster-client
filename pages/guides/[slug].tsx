@@ -3,7 +3,6 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { getAllGuidePosts, getGuidePostBySlug } from '@/lib/guides';
 import { remark } from 'remark';
 import html from 'remark-html';
-import MainLayout from '@/components/main-page-layout';
 
 type GuidePostPageProps = {
   post: {
@@ -16,26 +15,24 @@ type GuidePostPageProps = {
 
 const GuidePostPage: React.FC<GuidePostPageProps> = ({ post }) => {
   return (
-    <MainLayout>
-      <div className="container flex flex-col items-center ">
-        <h1 className="text-4xl font-bold">{post.title}</h1>
-        <p className="">{post.date}</p>
-        <ul className="mb-10 mt-6 flex flex-wrap gap-2">
-          {post.tags.map((tag, index) => (
-            <li
-              key={index}
-              className=" rounded border px-2 py-1 text-xs text-primary"
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
-        <div
-          className="prose lg:prose-xl"
-          dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-        />
-      </div>
-    </MainLayout>
+    <div className="container flex flex-col items-center ">
+      <h1 className="text-4xl font-bold">{post.title}</h1>
+      <p className="">{post.date}</p>
+      <ul className="mb-10 mt-6 flex flex-wrap gap-2">
+        {post.tags.map((tag, index) => (
+          <li
+            key={index}
+            className=" rounded border px-2 py-1 text-xs text-primary"
+          >
+            {tag}
+          </li>
+        ))}
+      </ul>
+      <div
+        className="prose lg:prose-xl"
+        dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+      />
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import axios from 'axios';
@@ -57,55 +56,51 @@ const ResetPassword: NextPage<Props> = () => {
   return (
     <>
       <ResetPasswordHead />
-      <MainLayout>
-        <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter">
-                  Reset Password
-                </h2>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Reset your password.
-                </p>
-              </div>
-              <form
-                className="grid gap-4 md:gap-4"
-                onSubmit={handleSubmit(onSubmit)}
-              >
-                <input
-                  type="password"
-                  {...register('password', {
-                    required: 'Password is required'
-                  })}
-                  className={`input-dark block w-full px-4 py-2`}
-                  placeholder="Password"
-                />
-                {errors.password && (
-                  <p className="text-red-500">{errors.password.message}</p>
-                )}
-                <input
-                  type="password"
-                  {...register('confirmPassword', {
-                    validate: (value) =>
-                      value === password || 'The passwords do not match'
-                  })}
-                  className={`input-dark block w-full px-4 py-2`}
-                  placeholder="Confirm Password"
-                />
-                {errors.confirmPassword && (
-                  <p className="text-red-500">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-                <Button type="submit" className="w-full">
-                  Reset Password
-                </Button>
-              </form>
+      <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
+        <section className="w-full py-6 md:py-12">
+          <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter">
+                Reset Password
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400">
+                Reset your password.
+              </p>
             </div>
-          </section>
-        </div>
-      </MainLayout>
+            <form
+              className="grid gap-4 md:gap-4"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <input
+                type="password"
+                {...register('password', {
+                  required: 'Password is required'
+                })}
+                className={`input-dark block w-full px-4 py-2`}
+                placeholder="Password"
+              />
+              {errors.password && (
+                <p className="text-red-500">{errors.password.message}</p>
+              )}
+              <input
+                type="password"
+                {...register('confirmPassword', {
+                  validate: (value) =>
+                    value === password || 'The passwords do not match'
+                })}
+                className={`input-dark block w-full px-4 py-2`}
+                placeholder="Confirm Password"
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-500">{errors.confirmPassword.message}</p>
+              )}
+              <Button type="submit" className="w-full">
+                Reset Password
+              </Button>
+            </form>
+          </div>
+        </section>
+      </div>
     </>
   );
 };

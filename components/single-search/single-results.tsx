@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// single-search-results.tsx
+import React, { useState, useMemo } from 'react';
 import useSingleStore from '@/stores/singleSearchStore';
 import SingleCatalogRow from './single-list-item';
 import SingleCatalogCard from './single-grid-item';
@@ -48,17 +49,13 @@ export default function SingleCatalog({}: Props) {
   const adsFromPosition4 = ads.position['4']?.ads || [];
   const adsFromPosition5 = ads.position['5']?.ads || [];
 
-  const resultsWithAds = insertAdvertisements(
-    filteredResults,
-    9,
-    adsFromPosition4
-  );
+  const resultsWithAds = useMemo(() => {
+    return insertAdvertisements(filteredResults, 9, adsFromPosition4);
+  }, [filteredResults, adsFromPosition4]);
 
-  const resultsWithVerticalAds = insertAdvertisements(
-    filteredResults,
-    9,
-    adsFromPosition5
-  );
+  const resultsWithVerticalAds = useMemo(() => {
+    return insertAdvertisements(filteredResults, 9, adsFromPosition5);
+  }, [filteredResults, adsFromPosition5]);
 
   if (filteredResults.length === 0) {
     return (
