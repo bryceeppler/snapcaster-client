@@ -1,3 +1,4 @@
+// ad.tsx
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import { trackAdClick, trackAdVisible } from '@/utils/analytics';
@@ -9,15 +10,13 @@ type AdComponentProps = {
 };
 
 const AdComponent: React.FC<AdComponentProps> = ({ ad }) => {
-  const { ref, inView } = useInView({
+  const { ref, entry } = useInView({
     threshold: 0.5,
-    triggerOnce: true,
+    triggerOnce: false, // Allow multiple triggers
     onChange: (inView, entry) => {
-      if (inView) {
-        const adId = entry.target.getAttribute('data-ad-id');
-        if (adId) {
-          trackAdVisible(adId);
-        }
+      const adId = entry.target.getAttribute('data-ad-id');
+      if (adId && inView && entry.intersectionRatio >= 0.5) {
+        trackAdVisible(adId);
       }
     }
   });
@@ -50,4 +49,4 @@ const AdComponent: React.FC<AdComponentProps> = ({ ad }) => {
   );
 };
 
-export default AdComponent;
+export default React.memo(AdComponent);

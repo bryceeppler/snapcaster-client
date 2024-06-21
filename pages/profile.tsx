@@ -1,4 +1,3 @@
-import MainLayout from '@/components/main-page-layout';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
@@ -87,30 +86,28 @@ const Profile: NextPage = () => {
   return (
     <>
       <ProfileHead />
-      <MainLayout>
-        <div className="mx-auto flex w-full max-w-xl flex-col justify-center gap-8 text-center">
-          <section className="w-full py-6 md:py-12">
-            <div className="grid w-full gap-6">
-              <>
-                {!hasActiveSubscription && (
-                  <SubscriptionCards
-                    createCheckoutSession={createCheckoutSession}
-                  />
-                )}
-
-                <UserSettings
-                  email={email}
-                  fullName={fullName}
-                  hasActiveSubscription={hasActiveSubscription}
-                  emailVerified={emailVerified}
-                  createPortalSession={createPortalSession}
-                  handleLogout={handleLogout}
+      <div className="mx-auto flex w-full max-w-xl flex-col justify-center gap-8 text-center">
+        <section className="w-full py-6 md:py-12">
+          <div className="grid w-full gap-6">
+            <>
+              {!hasActiveSubscription && (
+                <SubscriptionCards
+                  createCheckoutSession={createCheckoutSession}
                 />
-              </>
-            </div>
-          </section>
-        </div>
-      </MainLayout>
+              )}
+
+              <UserSettings
+                email={email}
+                fullName={fullName}
+                hasActiveSubscription={hasActiveSubscription}
+                emailVerified={emailVerified}
+                createPortalSession={createPortalSession}
+                handleLogout={handleLogout}
+              />
+            </>
+          </div>
+        </section>
+      </div>
     </>
   );
 };

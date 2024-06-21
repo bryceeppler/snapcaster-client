@@ -6,7 +6,6 @@ import LoadingSpinner from '@/components/loading-spinner';
 import SingleSearchInfo from '@/components/single-search/single-results-info';
 import { useStore } from '@/stores/store';
 import SingleCatalog from '@/components/single-search/single-results';
-import MainLayout from '@/components/main-page-layout';
 import SingleSearchFilter from '@/components/single-search/single-filters';
 import { useEffect } from 'react';
 import { GetStaticProps } from 'next';
@@ -28,31 +27,29 @@ const Home: NextPage<Props> = ({}: Props) => {
   return (
     <>
       <HomeHead />
-      <MainLayout>
-        <div className="flex w-full flex-col justify-center gap-8 text-center">
-          {!searchStarted && <Homebanner />}
-          <PoweredBy size="small" />
-          <MultiTcgSearchbox searchType={'single'} />
+      <div className="flex w-full flex-col justify-center gap-8 text-center">
+        {!searchStarted && <Homebanner />}
+        <PoweredBy size="small" />
+        <MultiTcgSearchbox searchType={'single'} />
 
-          {loading && (
-            <div className="flex items-center justify-center pt-5">
-              <LoadingSpinner />
-            </div>
-          )}
-          {Object.keys(results).length > 0 && (
-            <div>
-              <SingleSearchInfo />
-              <SingleSearchFilter />
-              <SingleCatalog />
-            </div>
-          )}
-          {searchStarted && !loading && Object.keys(results).length === 0 && (
-            <div className="flex items-center justify-center pt-5">
-              <p className="text-zinc-500">No results found</p>
-            </div>
-          )}
-        </div>
-      </MainLayout>
+        {loading && (
+          <div className="flex items-center justify-center pt-5">
+            <LoadingSpinner />
+          </div>
+        )}
+        {Object.keys(results).length > 0 && (
+          <div>
+            <SingleSearchInfo />
+            <SingleSearchFilter />
+            <SingleCatalog />
+          </div>
+        )}
+        {searchStarted && !loading && Object.keys(results).length === 0 && (
+          <div className="flex items-center justify-center pt-5">
+            <p className="text-zinc-500">No results found</p>
+          </div>
+        )}
+      </div>
     </>
   );
 };

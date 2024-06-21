@@ -42,7 +42,6 @@ import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
 import { Separator } from '@/components/ui/separator';
 import { ResetIcon } from '@radix-ui/react-icons';
-import MainLayout from '@/components/main-page-layout';
 
 type Props = {};
 
@@ -78,38 +77,36 @@ export default function Multisearch({}: Props) {
 
   return (
     <>
-      <MainLayout showSideBanners={false} width={'xl'}>
-        <MultisearchHead />
-        <div className="flex w-full flex-col justify-center gap-8 text-center">
-          <PageTitle
-            title="Multi Search"
-            subtitle="Search for up to 100 cards across select stores."
-          />
+      <MultisearchHead />
+      <div className="flex w-full flex-col justify-center gap-8 text-center">
+        <PageTitle
+          title="Multi Search"
+          subtitle="Search for up to 100 cards across select stores."
+        />
 
-          {mode === 'search' && (
-            <>
-              <SearchView
-                tcg={tcg}
-                setTcg={setTcg}
-                searchInput={searchInput}
-                setSearchInput={setSearchInput}
-                handleSubmit={handleSubmit}
-                websites={websites}
-                selectedWebsites={selectedWebsites}
-                onWebsiteSelect={onWebsiteSelect}
-              />
-            </>
-          )}
-          {mode === 'results' && (
-            <>
-              <div className="flex flex-col gap-4 md:flex-row">
-                <ResultsView results={results} />
-              </div>
-            </>
-          )}
-        </div>
-        <BackToTopButton />
-      </MainLayout>
+        {mode === 'search' && (
+          <>
+            <SearchView
+              tcg={tcg}
+              setTcg={setTcg}
+              searchInput={searchInput}
+              setSearchInput={setSearchInput}
+              handleSubmit={handleSubmit}
+              websites={websites}
+              selectedWebsites={selectedWebsites}
+              onWebsiteSelect={onWebsiteSelect}
+            />
+          </>
+        )}
+        {mode === 'results' && (
+          <>
+            <div className="flex flex-col gap-4 md:flex-row">
+              <ResultsView results={results} />
+            </div>
+          </>
+        )}
+      </div>
+      <BackToTopButton />
     </>
   );
 }
