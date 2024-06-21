@@ -73,7 +73,7 @@ export default function AdvancedSearch({}: Props) {
     fetchAdvancedSearchResults
   } = advancedUseStore();
 
-  const { initWebsiteInformation, websitesAdvanced } = useStore();
+  const { initWebsiteInformation, websites } = useStore();
 
   const [showFilters, setShowFilters] = React.useState(false);
 
@@ -182,7 +182,7 @@ export default function AdvancedSearch({}: Props) {
               <div className="mb-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                   <FilterDropdownBox
-                    option={websitesAdvanced.map((obj) => {
+                    option={websites.map((obj) => {
                       return { name: obj.name, abbreviation: obj.code };
                     })}
                     selectedList={selectedWebsiteList}
