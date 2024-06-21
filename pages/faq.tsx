@@ -24,7 +24,7 @@ export default function Component() {
                 <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
                   What is Snapcaster?
                 </AccordionTrigger>
-                <AccordionContent className="bg-muted px-4 py-3 text-gray-500">
+                <AccordionContent className="bg-muted px-4 py-3 text-zinc-200">
                   Snapcaster is Canada's premier search engine for collectible
                   TCG cards, including Pokémon, Magic: The Gathering, Yu-Gi-Oh
                   and more. Our platform allows you to search across more than
@@ -36,7 +36,7 @@ export default function Component() {
                 <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
                   How does Snapcaster work?
                 </AccordionTrigger>
-                <AccordionContent className="bg-muted px-4 py-3 text-gray-500">
+                <AccordionContent className="bg-muted px-4 py-3 text-zinc-200">
                   Snapcaster works by aggregating listings from various Canadian
                   online retailers into one easy-to-use platform. When you
                   search for a card, Snapcaster scans its extensive database and
@@ -50,7 +50,7 @@ export default function Component() {
                 <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
                   Can you add a store to Snapcaster?
                 </AccordionTrigger>
-                <AccordionContent className="bg-muted px-4 py-3 text-gray-500">
+                <AccordionContent className="bg-muted px-4 py-3 text-zinc-200">
                   Absolutely! If you have a Canadian online store that you would
                   like to see on Snapcaster, we'd love to hear from you. Join
                   our Discord community to stay updated, make suggestions, or
@@ -58,11 +58,21 @@ export default function Component() {
                   platform.
                 </AccordionContent>
               </AccordionItem>
+              <AccordionItem value="advertising">
+                <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
+                  How can I advertise my business on Snapcaster?
+                </AccordionTrigger>
+                <AccordionContent className="bg-muted px-4 py-3 text-zinc-200">
+                  If you're interested in our advertising program feel free to
+                  reach out to @bryce on our Discord server or via email at
+                  epplerdev@gmail.com for more information.
+                </AccordionContent>
+              </AccordionItem>
               <AccordionItem value="contact">
                 <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
                   I still have questions, who can I contact?
                 </AccordionTrigger>
-                <AccordionContent className="bg-muted px-4 py-3 text-gray-500">
+                <AccordionContent className="bg-muted px-4 py-3 text-zinc-200">
                   If you have any further questions, feel free to reach out to
                   us. You can contact us in our Discord community.
                 </AccordionContent>
