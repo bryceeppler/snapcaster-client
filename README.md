@@ -3,3 +3,4 @@
 - Zustand for state managment
 - Tailwindd
 - NextJS
+- test
