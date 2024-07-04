@@ -82,7 +82,7 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search/?tcg=${
           get().tcg
-        }&name=${encodeURIComponent(get().searchInput)}`
+        }&name=${encodeURIComponent(get().searchInput.trim())}`
       );
       set({ searchQuery: get().searchInput });
       set({

@@ -163,6 +163,10 @@ const foilList: Filter[] = [
   {
     name: 'Raised',
     abbreviation: 'raised'
+  },
+  {
+    name: 'Ripple',
+    abbreviation: 'ripple'
   }
 ];
 
