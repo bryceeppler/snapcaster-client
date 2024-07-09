@@ -59,14 +59,14 @@ const Profile: NextPage = () => {
 
   const createDiscordAuth = async () => {
     try {
+      // Navigate to the backend endpoint directly
       const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_USER_URL}/auth/discord`
+        `${process.env.NEXT_PUBLIC_USER_URL}/auth/discord/`
       );
-      if (response.status !== 200) throw new Error('Failed to create session');
-      const data = await response.data;
-      console.log('Discord session created:', data);
-      // Redirect to Discord auth
-      window.location.href = data.url;
+      // Redirect to Discord auth URL
+      const { url } = response.data;
+      window.location.href = url;
+      // window.location.href = response.request.responseURL;
     } catch (error) {
       console.error('Error creating discord session:', error);
     }
