@@ -54,7 +54,8 @@ const Signin: NextPage<Props> = () => {
         const { accessToken, refreshToken } = response.data;
         setTokens(accessToken, refreshToken);
         toast.success('Login successful!');
-        router.back();
+        // direct to home page after login
+        // router.push('/');
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
