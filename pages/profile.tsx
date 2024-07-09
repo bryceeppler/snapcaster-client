@@ -6,8 +6,22 @@ import useAuthStore from '@/stores/authStore';
 import Signin from './signin';
 import LoadingPage from '@/components/loading-page';
 import { Button } from '@/components/ui/button';
-import SubscriptionCards from '@/components/subscription-options';
+// import SubscriptionCards from '@/components/subscription-options';
+import axios from 'axios';
 import { toast } from 'sonner';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useForm } from 'react-hook-form';
+import { DiscordLogoIcon } from '@radix-ui/react-icons';
+import { CheckCircle2 } from 'lucide-react';
 
 const Profile: NextPage = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -50,7 +64,6 @@ const Profile: NextPage = () => {
       if (response.status !== 200) throw new Error('Failed to create session');
       const data = await response.data;
       console.log('Portal session created:', data);
-      // Redirect to Stripe portal
       window.location.href = data.url;
     } catch (error) {
       console.error('Error creating portal session:', error);
@@ -59,14 +72,11 @@ const Profile: NextPage = () => {
 
   const createDiscordAuth = async () => {
     try {
-      // Navigate to the backend endpoint directly
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_USER_URL}/auth/discord/`
       );
-      // Redirect to Discord auth URL
       const { url } = response.data;
       window.location.href = url;
-      // window.location.href = response.request.responseURL;
     } catch (error) {
       console.error('Error creating discord session:', error);
     }
@@ -102,30 +112,25 @@ const Profile: NextPage = () => {
   return (
     <>
       <ProfileHead />
-      <div className="mx-auto flex w-full max-w-xl flex-col justify-center gap-8 text-center">
-        <section className="w-full py-6 md:py-12">
-          <div className="grid w-full gap-6">
-            <>
-              {!hasActiveSubscription && (
-                <SubscriptionCards
-                  createCheckoutSession={createCheckoutSession}
-                />
-              )}
+      <section className="flex w-full justify-center py-6 md:py-12">
+        <div className="flex w-full flex-col justify-center gap-6">
+          {/* {!hasActiveSubscription && (
+            <SubscriptionCards createCheckoutSession={createCheckoutSession} />
+          )} */}
 
-              <UserSettings
-                email={email}
-                fullName={fullName}
-                discordUsername={discordUsername}
-                hasActiveSubscription={hasActiveSubscription}
-                emailVerified={emailVerified}
-                createPortalSession={createPortalSession}
-                handleLogout={handleLogout}
-                createDiscordAuth={createDiscordAuth}
-              />
-            </>
-          </div>
-        </section>
-      </div>
+          <UserSettings
+            email={email}
+            fullName={fullName}
+            discordUsername={discordUsername}
+            hasActiveSubscription={hasActiveSubscription}
+            emailVerified={emailVerified}
+            createPortalSession={createPortalSession}
+            createCheckoutSession={createCheckoutSession}
+            handleLogout={handleLogout}
+            createDiscordAuth={createDiscordAuth}
+          />
+        </div>
+      </section>
     </>
   );
 };
@@ -160,6 +165,7 @@ const UserSettings = ({
   fullName,
   hasActiveSubscription,
   discordUsername,
+  createCheckoutSession,
   createPortalSession,
   createDiscordAuth,
   handleLogout
@@ -169,100 +175,139 @@ const UserSettings = ({
   hasActiveSubscription: boolean;
   emailVerified: boolean;
   discordUsername: string;
+  createCheckoutSession: () => void;
   createPortalSession: () => void;
   createDiscordAuth: () => void;
   handleLogout: () => void;
 }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      fullName: ''
+    }
+  });
+
+  type Submission = {
+    fullName: string;
+  };
+
+  const onSubmit = async (data: Submission) => {
+    const { fullName } = data;
+    const endpoint = process.env.NEXT_PUBLIC_USER_URL + '/update';
+
+    try {
+      const response = await axios.post(endpoint, { fullName });
+
+      if (!response.status) {
+        toast.error('Invalid response from server.');
+        throw new Error('Something went wrong with the update process');
+      } else {
+        toast.success('Username changed successfully!');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        toast.error('Invalid input');
+      } else {
+        toast.error('An error occurred during login');
+        console.error(error);
+      }
+    }
+  };
   return (
-    <div className="outlined-container container flex flex-col overflow-hidden  p-4 text-left">
-      <h3 className="text-lg font-bold">Settings</h3>
-      <div className="p-2" />
-      {/* user info container */}
-      <div className="flex flex-col gap-2 p-3">
-        <div className="outlined-container flex flex-row justify-between p-2">
-          <p className="hidden text-sm text-zinc-500 md:flex">
-            Discord username
-          </p>
-          <p className="text-sm text-zinc-400">{discordUsername}</p>
-        </div>
-        <div className="outlined-container flex flex-row justify-between p-2">
-          <p className="hidden text-sm text-zinc-500 md:flex">Full name</p>
-          <p className="text-sm text-zinc-400">{fullName}</p>
-        </div>
-        <div className="outlined-container flex flex-row justify-between p-2">
-          <p className="hidden text-sm text-zinc-500 md:flex">Email</p>
-          <p className="max-w-full truncate text-sm text-zinc-400">{email}</p>
-        </div>
-      </div>
-      <div className="p-2" />
-      {/* subscription container */}
-      <div className="flex flex-col gap-2 p-3 ">
-        <div className="outlined-container flex flex-col gap-2 p-2">
-          <div className="flex flex-row justify-between">
-            <p className="text-sm text-zinc-500">Subscription</p>
-            {hasActiveSubscription ? (
-              <p className="text-sm text-zinc-400">
-                Snapcaster <span className="font-bold text-primary">Pro</span>
-              </p>
-            ) : (
-              <p className="text-sm text-zinc-400">Inactive</p>
+    <Card className="lg mx-auto w-full max-w-lg">
+      <CardHeader>
+        <CardTitle className="text-2xl">Settings</CardTitle>
+        <CardDescription>Adjust your account settings.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4 md:gap-4">
+        <form className="grid gap-4 md:gap-4" onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid gap-2">
+            <Label htmlFor="email">Name</Label>
+            <Input
+              {...register('fullName', {
+                required: 'Name is required'
+              })}
+              type="text"
+              disabled={true}
+              placeholder={fullName}
+            />
+            {errors.fullName && (
+              <p className="text-red-500">{errors.fullName.message}</p>
+            )}
+            {errors.fullName?.type === 'pattern' && (
+              <p className="text-red-500">Invalid name</p>
             )}
           </div>
-          {/* list their premium features */}
-          {hasActiveSubscription && (
-            <div className="flex flex-col gap-2 p-2">
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Search over 65 Canadian stores
-                </p>
+        </form>
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input type="text" disabled={true} value={email} />
+        </div>
+
+        {/* discord */}
+        <Card>
+          <CardHeader>
+            <DiscordLogoIcon className="h-6 w-6 text-primary" />
+            <CardTitle className="text-md">Discord</CardTitle>
+            <CardDescription>
+              Connect your Discord account to gain access to exlcusive channels
+              for Pro members!
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {' '}
+            {discordUsername ? (
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-row items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                  <p className="text-sm">Connected as {discordUsername}</p>
+                </div>
+                <Button variant="outline" disabled>
+                  Disconnect
+                </Button>
               </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Search up to 100 cards at a time
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Advanced filtering for card searches and multi-search
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Exclusive discount codes for Snapcaster partners
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Participate in Snapcaster giveaways
-                </p>
-              </div>
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  See less ads
-                </p>
-              </div>
+            ) : (
+              <Button onClick={createDiscordAuth}>Connect</Button>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-md">Snapcaster Pro</CardTitle>
+            <CardDescription>
+              Subscribe to Snapcaster Pro for access to premium features and
+              giveaways.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-row justify-between">
+              <p className="text-sm">Snapcaster Pro</p>
+              {hasActiveSubscription ? (
+                <p className="text-sm">Active</p>
+              ) : (
+                <p className="text-sm text-zinc-400">Inactive</p>
+              )}
             </div>
-          )}
-        </div>
-      </div>
-      <div className="p-2" />
-      {hasActiveSubscription && (
-        <div className="flex w-full flex-col p-3">
-          <Button onClick={createPortalSession}>Manage subscription</Button>
-        </div>
-      )}
-      <div className="">
-        <Button onClick={createDiscordAuth}>Link Discord</Button>
-      </div>
-      <div className="flex w-full flex-col p-3">
+          </CardContent>
+          <CardFooter>
+            {' '}
+            {hasActiveSubscription ? (
+              <Button className="w-full" onClick={createPortalSession}>
+                Manage subscription
+              </Button>
+            ) : (
+              <Button onClick={createCheckoutSession}>Subscribe</Button>
+            )}
+          </CardFooter>
+        </Card>
+      </CardContent>
+      <CardFooter className="justify-end">
+        {' '}
         <Button onClick={handleLogout}>Logout</Button>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };
