@@ -4,10 +4,19 @@ import axios from 'axios';
 import useAuthStore from '@/stores/authStore';
 import { toast } from 'sonner';
 import Router from 'next/router';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import Profile from './profile';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent
+} from '@/components/ui/card';
 
 type Props = {};
 
@@ -64,52 +73,70 @@ const Signin: NextPage<Props> = () => {
   return (
     <>
       <SigninHead />
-      <div className="mx-auto flex w-full max-w-lg flex-col justify-center gap-8 text-center">
-        <section className="w-full py-6 md:py-12">
-          <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter">Sign In</h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Log in to your Snapcaster account.
-              </p>
-            </div>
+      <section className="flex w-full justify-center py-6 md:py-12">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl">Sign In</CardTitle>
+            <CardDescription>
+              Log in to your Snapcaster account.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <form
               className="grid gap-4 md:gap-4"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <Input
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: /^\S+@\S+\.\S+$/
-                })}
-                type="text"
-                className=""
-                placeholder="Email"
-              />
-              {errors.email && (
-                <p className="text-red-500">{errors.email.message}</p>
-              )}
-              {errors.email?.type === 'pattern' && (
-                <p className="text-red-500">Invalid email</p>
-              )}
-              <Input
-                {...register('password', {
-                  required: 'Password is required'
-                })}
-                type="password"
-                className=""
-                placeholder="Password"
-              />
-              {errors.password && (
-                <p className="text-red-500">{errors.password.message}</p>
-              )}
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: /^\S+@\S+\.\S+$/
+                  })}
+                  type="text"
+                  className=""
+                  placeholder="m@example.com"
+                />
+                {errors.email && (
+                  <p className="text-red-500">{errors.email.message}</p>
+                )}
+                {errors.email?.type === 'pattern' && (
+                  <p className="text-red-500">Invalid email</p>
+                )}
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="password">Password</Label>
+                  <Link
+                    href="/forgot-password"
+                    className="ml-auto inline-block text-sm underline"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+                <Input
+                  {...register('password', {
+                    required: 'Password is required'
+                  })}
+                  type="password"
+                  className=""
+                  placeholder=""
+                />
+                {errors.password && (
+                  <p className="text-red-500">{errors.password.message}</p>
+                )}
+              </div>
               <Button type="submit">Sign In</Button>
             </form>
-            <a href="/forgot-password">Forgot your password?</a>
-            <a href="/signup">Don't have an account? Sign up!</a>
-          </div>
-        </section>
-      </div>
+            <div className="mt-4 text-center text-sm">
+              Don't have an account?{' '}
+              <Link href="/signup" className="underline">
+                Sign up.
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
     </>
   );
 };
@@ -119,7 +146,7 @@ export default Signin;
 const SigninHead = () => {
   return (
     <Head>
-      <title>Signin</title>
+      <title>Sign In</title>
       <meta
         name="description"
         content="Search Magic the Gathering cards across Canada"

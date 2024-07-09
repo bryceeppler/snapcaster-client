@@ -117,7 +117,7 @@ const Signup: NextPage<Props> = () => {
                   })}
                   type="text"
                   className={``}
-                  placeholder="m@gmail.com"
+                  placeholder="m@example.com"
                 />
                 {errors.email && (
                   <p className="text-red-500">{errors.email.message}</p>
@@ -139,7 +139,7 @@ const Signup: NextPage<Props> = () => {
                 {errors.password && (
                   <p className="text-red-500">{errors.password.message}</p>
                 )}{' '}
-              </div>{' '}
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <Input
@@ -158,13 +158,13 @@ const Signup: NextPage<Props> = () => {
                 )}
               </div>
               <Button type="submit">Sign Up</Button>
-              <div className="mt-4 text-center text-sm">
-                Already have an account?{' '}
-                <Link href="/signin" className="underline">
-                  Sign in
-                </Link>
-              </div>
             </form>
+            <div className="mt-4 text-center text-sm">
+              Already have an account?{' '}
+              <Link href="/signin" className="underline">
+                Sign in.
+              </Link>
+            </div>
           </CardContent>
           <CardFooter>
             <p className="text-xs">
@@ -191,7 +191,7 @@ export default Signup;
 const SignupHead = () => {
   return (
     <Head>
-      <title>Signup</title>
+      <title>Sign Up</title>
       <meta
         name="description"
         content="Search Magic the Gathering cards across Canada"

@@ -3,7 +3,18 @@ import Head from 'next/head';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter
+} from '@/components/ui/card';
 
 type Props = {};
 
@@ -46,29 +57,27 @@ const ForgotPassword: NextPage<Props> = () => {
   return (
     <>
       <ForgotPasswordHead />
-      <div className="mx-auto flex w-full max-w-lg flex-col justify-center gap-8 text-center">
-        <section className="w-full py-6 md:py-12">
-          <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter">
-                Forgot Password
-              </h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Enter your email to receive a password reset link.
-              </p>
-            </div>
+      <section className="flex w-full justify-center py-6 md:py-12">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl">Forgot Password</CardTitle>
+            <CardDescription>
+              Enter your email to receive a password reset link.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <form
               className="grid gap-4 md:gap-4"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <input
+              <Label htmlFor="email">Email</Label>
+              <Input
                 {...register('email', {
                   required: 'Email is required',
                   pattern: /^\S+@\S+\.\S+$/
                 })}
                 type="text"
-                className="input-dark block w-full px-4 py-2"
-                placeholder="Email"
+                placeholder="m@example.com"
               />
               {errors.email && (
                 <p className="text-red-500">{errors.email.message}</p>
@@ -80,10 +89,15 @@ const ForgotPassword: NextPage<Props> = () => {
                 Send reset link
               </Button>
             </form>
-            <a href="/signin">Know your password? Sign in.</a>
-          </div>
-        </section>
-      </div>
+            <div className="mt-4 text-center text-sm">
+              Know your password?{' '}
+              <Link href="/signin" className="underline">
+                Sign in.
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
     </>
   );
 };

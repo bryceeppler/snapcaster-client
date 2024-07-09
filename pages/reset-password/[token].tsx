@@ -5,12 +5,21 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent
+} from '@/components/ui/card';
 
 type Props = {};
 
 const ResetPassword: NextPage<Props> = () => {
   const router = useRouter();
-  const { token } = router.query; // Access the token from the URL
+  const { token } = router.query;
   const {
     register,
     handleSubmit,
@@ -56,51 +65,55 @@ const ResetPassword: NextPage<Props> = () => {
   return (
     <>
       <ResetPasswordHead />
-      <div className="w-full max-w-md flex-1 flex-col justify-center text-center">
-        <section className="w-full py-6 md:py-12">
-          <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter">
-                Reset Password
-              </h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Reset your password.
-              </p>
-            </div>
+      <section className="flex w-full justify-center py-6 md:py-12">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl">Reset Password</CardTitle>
+            <CardDescription>
+              Reset the password for your Snapcaster account.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <form
               className="grid gap-4 md:gap-4"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <input
-                type="password"
-                {...register('password', {
-                  required: 'Password is required'
-                })}
-                className={`input-dark block w-full px-4 py-2`}
-                placeholder="Password"
-              />
-              {errors.password && (
-                <p className="text-red-500">{errors.password.message}</p>
-              )}
-              <input
-                type="password"
-                {...register('confirmPassword', {
-                  validate: (value) =>
-                    value === password || 'The passwords do not match'
-                })}
-                className={`input-dark block w-full px-4 py-2`}
-                placeholder="Confirm Password"
-              />
-              {errors.confirmPassword && (
-                <p className="text-red-500">{errors.confirmPassword.message}</p>
-              )}
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  type="password"
+                  {...register('password', {
+                    required: 'Password is required'
+                  })}
+                  placeholder="Password"
+                />
+                {errors.password && (
+                  <p className="text-red-500">{errors.password.message}</p>
+                )}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  type="password"
+                  {...register('confirmPassword', {
+                    validate: (value) =>
+                      value === password || 'The passwords do not match'
+                  })}
+                  placeholder="Confirm Password"
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
               <Button type="submit" className="w-full">
                 Reset Password
               </Button>
             </form>
-          </div>
-        </section>
-      </div>
+          </CardContent>
+        </Card>
+      </section>
     </>
   );
 };
