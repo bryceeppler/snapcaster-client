@@ -3,6 +3,7 @@ import { useStore } from '@/stores/store';
 import Head from 'next/head';
 import Link from 'next/link';
 import PageTitle from '@/components/ui/page-title';
+import { trackAdClick } from '@/utils/analytics';
 type Props = {};
 
 const Supporters: NextPage<Props> = () => {
@@ -23,7 +24,13 @@ const Supporters: NextPage<Props> = () => {
                 <h3 className="mb-6 text-2xl font-bold">Tier 1 Sponsor</h3>
                 <div className="grid grid-cols-1 gap-6">
                   <div className="flex items-center justify-center">
-                    <Link href="https://obsidiangames.ca">
+                    <Link
+                      href="https://obsidiangames.ca"
+                      target="_blank"
+                      data-position-id="6" // hardcoded for t1 supporter logo
+                      data-ad-id="13" // hardcoded for the obsidian support logo ad
+                      onClick={() => trackAdClick('13')}
+                    >
                       <img
                         alt="Obsidian Games Vernon"
                         className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"

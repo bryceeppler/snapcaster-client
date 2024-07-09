@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { trackAdClick } from '@/utils/analytics';
 
 type Props = {
   size?: 'small' | 'medium' | 'large';
@@ -19,6 +20,9 @@ const PoweredBy = (props: Props) => {
       }`}
       href="https://obsidiangames.ca"
       target="_blank"
+      data-position-id="7" // hardcoded for the powered by logo position
+      data-ad-id="14" // hardcoded for the obsidian powered by logo
+      onClick={() => trackAdClick('14')}
     >
       <img
         className={`${
