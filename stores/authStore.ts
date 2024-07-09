@@ -10,6 +10,7 @@ type AuthState = {
   email: string;
   emailVerified: boolean;
   fullName: string;
+  discordUsername: string;
   initializeState: () => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
   clearTokens: () => void;
@@ -24,6 +25,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
   hasActiveSubscription: false,
   emailVerified: false,
   email: '',
+  discordUsername: '',
   fullName: '',
 
   initializeState: () => {
@@ -69,12 +71,19 @@ const useAuthStore = create<AuthState>((set, get) => ({
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_USER_URL}/profile`
       );
-      const { subscription, full_name, email, email_verified } = response.data;
+      const {
+        subscription,
+        full_name,
+        email,
+        email_verified,
+        discord_username
+      } = response.data;
       set({ hasActiveSubscription: subscription === 'active' });
       set({
         email,
         fullName: full_name,
-        emailVerified: email_verified
+        emailVerified: email_verified,
+        discordUsername: discord_username
       });
     } catch (error) {
       console.error('Error fetching subscription status:', error);

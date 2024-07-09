@@ -17,6 +17,7 @@ const Profile: NextPage = () => {
     email,
     fullName,
     emailVerified,
+    discordUsername,
     clearTokens
   } = useAuthStore();
 
@@ -53,6 +54,21 @@ const Profile: NextPage = () => {
       window.location.href = data.url;
     } catch (error) {
       console.error('Error creating portal session:', error);
+    }
+  };
+
+  const createDiscordAuth = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_USER_URL}/auth/discord`
+      );
+      if (response.status !== 200) throw new Error('Failed to create session');
+      const data = await response.data;
+      console.log('Discord session created:', data);
+      // Redirect to Discord auth
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Error creating discord session:', error);
     }
   };
 
@@ -99,10 +115,12 @@ const Profile: NextPage = () => {
               <UserSettings
                 email={email}
                 fullName={fullName}
+                discordUsername={discordUsername}
                 hasActiveSubscription={hasActiveSubscription}
                 emailVerified={emailVerified}
                 createPortalSession={createPortalSession}
                 handleLogout={handleLogout}
+                createDiscordAuth={createDiscordAuth}
               />
             </>
           </div>
@@ -141,14 +159,18 @@ const UserSettings = ({
   email,
   fullName,
   hasActiveSubscription,
+  discordUsername,
   createPortalSession,
+  createDiscordAuth,
   handleLogout
 }: {
   email: string;
   fullName: string;
   hasActiveSubscription: boolean;
   emailVerified: boolean;
+  discordUsername: string;
   createPortalSession: () => void;
+  createDiscordAuth: () => void;
   handleLogout: () => void;
 }) => {
   return (
@@ -158,12 +180,18 @@ const UserSettings = ({
       {/* user info container */}
       <div className="flex flex-col gap-2 p-3">
         <div className="outlined-container flex flex-row justify-between p-2">
-          <p className="hidden text-sm text-zinc-500 md:flex">Email</p>
-          <p className="max-w-full truncate text-sm text-zinc-400">{email}</p>
+          <p className="hidden text-sm text-zinc-500 md:flex">
+            Discord username
+          </p>
+          <p className="text-sm text-zinc-400">{discordUsername}</p>
         </div>
         <div className="outlined-container flex flex-row justify-between p-2">
           <p className="hidden text-sm text-zinc-500 md:flex">Full name</p>
           <p className="text-sm text-zinc-400">{fullName}</p>
+        </div>
+        <div className="outlined-container flex flex-row justify-between p-2">
+          <p className="hidden text-sm text-zinc-500 md:flex">Email</p>
+          <p className="max-w-full truncate text-sm text-zinc-400">{email}</p>
         </div>
       </div>
       <div className="p-2" />
@@ -229,6 +257,9 @@ const UserSettings = ({
           <Button onClick={createPortalSession}>Manage subscription</Button>
         </div>
       )}
+      <div className="">
+        <Button onClick={createDiscordAuth}>Link Discord</Button>
+      </div>
       <div className="flex w-full flex-col p-3">
         <Button onClick={handleLogout}>Logout</Button>
       </div>
