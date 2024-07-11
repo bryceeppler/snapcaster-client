@@ -12,6 +12,7 @@ type AuthState = {
   fullName: string;
   discordUsername: string;
   initializeState: () => void;
+  setDiscordUsername: (discordUsername: string) => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
   clearTokens: () => void;
   refreshAccessToken: () => Promise<void>;
@@ -35,6 +36,9 @@ const useAuthStore = create<AuthState>((set, get) => ({
       set({ accessToken, refreshToken, isAuthenticated: true });
       get().fetchUser();
     }
+  },
+  setDiscordUsername: (discordUsername: string) => {
+    set({ discordUsername });
   },
   setTokens: (accessToken: string, refreshToken: string) => {
     localStorage.setItem('accessToken', accessToken);

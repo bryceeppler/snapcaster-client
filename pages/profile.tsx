@@ -32,6 +32,7 @@ const Profile: NextPage = () => {
     fullName,
     emailVerified,
     discordUsername,
+    setDiscordUsername,
     clearTokens
   } = useAuthStore();
 
@@ -82,6 +83,19 @@ const Profile: NextPage = () => {
     }
   };
 
+  const disconnectDiscordAuth = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_USER_URL}/auth/discord/disconnect`
+      );
+      if (response.status !== 200) throw new Error('Failed to disconnect');
+      toast.success('Discord account disconnected');
+      setDiscordUsername('');
+    } catch (error) {
+      console.error('Error disconnecting discord account:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (!isAuthenticated) {
@@ -125,6 +139,7 @@ const Profile: NextPage = () => {
             hasActiveSubscription={hasActiveSubscription}
             emailVerified={emailVerified}
             createPortalSession={createPortalSession}
+            disconnectDiscordAuth={disconnectDiscordAuth}
             createCheckoutSession={createCheckoutSession}
             handleLogout={handleLogout}
             createDiscordAuth={createDiscordAuth}
@@ -168,6 +183,7 @@ const UserSettings = ({
   createCheckoutSession,
   createPortalSession,
   createDiscordAuth,
+  disconnectDiscordAuth,
   handleLogout
 }: {
   email: string;
@@ -178,6 +194,7 @@ const UserSettings = ({
   createCheckoutSession: () => void;
   createPortalSession: () => void;
   createDiscordAuth: () => void;
+  disconnectDiscordAuth: () => void;
   handleLogout: () => void;
 }) => {
   const {
@@ -265,7 +282,7 @@ const UserSettings = ({
                   <CheckCircle2 className="h-5 w-5 text-primary" />
                   <p className="text-sm">Connected as {discordUsername}</p>
                 </div>
-                <Button variant="outline" disabled>
+                <Button variant="outline" onClick={disconnectDiscordAuth}>
                   Disconnect
                 </Button>
               </div>
