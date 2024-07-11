@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/card';
 
 type SignupFormData = {
-  discordUsername: string;
   email: string;
   password: string;
   fullName: string;
@@ -41,15 +40,14 @@ const Signup: NextPage<Props> = () => {
   const { isAuthenticated } = useAuthStore();
 
   const onSubmit = async (data: SignupFormData) => {
-    const { email, password, fullName, discordUsername } = data;
+    const { email, password, fullName } = data;
     const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/register`;
 
     try {
       const response = await axios.post(endpoint, {
         email,
         password,
-        fullName,
-        discordUsername
+        fullName
       });
       if (response.status !== 200) {
         throw new Error('Something went wrong with the registration process');
@@ -94,20 +92,6 @@ const Signup: NextPage<Props> = () => {
                   <p className="text-red-500">{errors.fullName.message}</p>
                 )}
               </div>{' '}
-              <div className="grid gap-2">
-                <Label htmlFor="discordUsername">Discord Username</Label>
-                <Input
-                  type="text"
-                  {...register('discordUsername', {})}
-                  className={``}
-                  placeholder="gamestop#4040"
-                />
-                {errors.discordUsername && (
-                  <p className="text-red-500">
-                    {errors.discordUsername.message}
-                  </p>
-                )}
-              </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
