@@ -5,9 +5,19 @@ import Router from 'next/router';
 import { toast } from 'sonner';
 import useAuthStore from '@/stores/authStore';
 import Profile from './profile';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter
+} from '@/components/ui/card';
 
 type SignupFormData = {
   email: string;
@@ -57,88 +67,105 @@ const Signup: NextPage<Props> = () => {
   return (
     <>
       <SignupHead />
-      <div className="mx-auto flex w-full max-w-lg flex-col justify-center gap-8 text-center">
-        <section className="w-full py-6 md:py-12">
-          <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter">Signup</h2>
-              <p className="text-gray-500 dark:text-gray-400">
-                Create your Snapcaster account.
-              </p>
-            </div>
+      <section className="flex w-full justify-center py-6 md:py-12">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl">Sign Up</CardTitle>
+            <CardDescription>Create your Snapcaster account.</CardDescription>
+          </CardHeader>
+          <CardContent>
             <form
               className="grid gap-4 md:gap-4"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <Input
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: /^\S+@\S+\.\S+$/
-                })}
-                type="text"
-                className={``}
-                placeholder="Email"
-              />
-              {errors.email && (
-                <p className="text-red-500">{errors.email.message}</p>
-              )}
-              {errors.email?.type === 'pattern' && (
-                <p className="text-red-500">Invalid email</p>
-              )}
-
-              <Input
-                type="password"
-                {...register('password', {
-                  required: 'Password is required'
-                })}
-                className={``}
-                placeholder="Password"
-              />
-              {errors.password && (
-                <p className="text-red-500">{errors.password.message}</p>
-              )}
-              <Input
-                type="password"
-                {...register('confirmPassword', {
-                  validate: (value) =>
-                    value === password || 'The passwords do not match'
-                })}
-                className={``}
-                placeholder="Confirm Password"
-              />
-              {errors.confirmPassword && (
-                <p className="text-red-500">{errors.confirmPassword.message}</p>
-              )}
-              <Input
-                type="text"
-                {...register('fullName', {
-                  required: 'A name is required'
-                })}
-                className={``}
-                placeholder="Full Name"
-              />
-              {errors.fullName && (
-                <p className="text-red-500">{errors.fullName.message}</p>
-              )}
+              <div className="grid gap-2">
+                <Label htmlFor="fullName">Name</Label>
+                <Input
+                  type="text"
+                  {...register('fullName', {
+                    required: 'A name is required'
+                  })}
+                  className={``}
+                  placeholder="Al Dente"
+                />
+                {errors.fullName && (
+                  <p className="text-red-500">{errors.fullName.message}</p>
+                )}
+              </div>{' '}
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: /^\S+@\S+\.\S+$/
+                  })}
+                  type="text"
+                  className={``}
+                  placeholder="m@example.com"
+                />
+                {errors.email && (
+                  <p className="text-red-500">{errors.email.message}</p>
+                )}
+                {errors.email?.type === 'pattern' && (
+                  <p className="text-red-500">Invalid email</p>
+                )}{' '}
+              </div>{' '}
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  type="password"
+                  {...register('password', {
+                    required: 'Password is required'
+                  })}
+                  className={``}
+                  placeholder=""
+                />
+                {errors.password && (
+                  <p className="text-red-500">{errors.password.message}</p>
+                )}{' '}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  type="password"
+                  {...register('confirmPassword', {
+                    validate: (value) =>
+                      value === password || 'The passwords do not match'
+                  })}
+                  className={``}
+                  placeholder=""
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
               <Button type="submit">Sign Up</Button>
-              <Button className="">
-                <a href="/signin">Already have an account? Sign in!</a>
-              </Button>
-              <p className="text-xs">
-                By Creating an account, you affirm that you have read,
-                understood, and consent to the{' '}
-                <a
-                  href="/terms"
-                  target="_blank"
-                  className="text-primary hover:opacity-70"
-                >
-                  Terms of Use
-                </a>
-              </p>
             </form>
-          </div>
-        </section>
-      </div>
+            <div className="mt-4 text-center text-sm">
+              Already have an account?{' '}
+              <Link href="/signin" className="underline">
+                Sign in.
+              </Link>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <p className="text-xs">
+              By creating an account, you confirm that you have read,
+              understood, and consent to the{' '}
+              <a
+                href="/terms"
+                target="_blank"
+                className="text-primary hover:opacity-70"
+              >
+                Terms of Use
+              </a>
+              .
+            </p>
+          </CardFooter>
+        </Card>
+      </section>
     </>
   );
 };
@@ -148,7 +175,7 @@ export default Signup;
 const SignupHead = () => {
   return (
     <Head>
-      <title>Signup</title>
+      <title>Sign Up</title>
       <meta
         name="description"
         content="Search Magic the Gathering cards across Canada"
