@@ -16,8 +16,8 @@ import CardImage from '../ui/card-image';
 export default function SingleCatalogRow({ cardData, promo, tcg }: Props) {
   const { websites } = useStore();
 
-  const findWebsiteNameByCode = (code: string): string => {
-    const website = websites.find((website) => website.code === code);
+  const findWebsiteNameByCode = (slug: string): string => {
+    const website = websites.find((website) => website.slug === slug);
     console.log(websites);
 
     return website ? website.name : 'Website not found';

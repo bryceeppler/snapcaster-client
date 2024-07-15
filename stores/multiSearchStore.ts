@@ -121,7 +121,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
       const url = `${
         process.env.NEXT_PUBLIC_CATALOG_URL
       }/api/v1/search_multiple?tcg=${get().tcg}&websites=${get()
-        .selectedWebsites.map((v) => v.code)
+        .selectedWebsites.map((v) => v.slug)
         .join(',')}&names=${encodedNames}`;
 
       const response = await axiosInstance.get(url);
@@ -145,7 +145,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
     set((state) => {
       // Find the index of the website by its code
       const index = state.selectedWebsites.findIndex(
-        (v) => v.code === value.code
+        (v) => v.slug === value.slug
       );
 
       // If the website is found, remove it from the list

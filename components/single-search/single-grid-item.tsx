@@ -21,8 +21,8 @@ import { handleBuyClick } from '../../utils/analytics';
 export default function SingleCatalogCard({ cardData, tcg, promo }: Props) {
   const { websites } = useStore();
 
-  const findWebsiteNameByCode = (code: string): string => {
-    const website = websites.find((website) => website.code === code);
+  const findWebsiteNameByCode = (slug: string): string => {
+    const website = websites.find((website) => website.slug === slug);
     return website ? website.name : 'Website not found';
   };
 
