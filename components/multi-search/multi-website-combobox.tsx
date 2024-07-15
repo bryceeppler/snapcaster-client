@@ -33,7 +33,7 @@ export function WebsiteCombobox({
   const [open, setOpen] = React.useState(false);
 
   const isWebsiteSelected = (website: WebsiteMapping) =>
-    selectedWebsites.some((selected) => selected.code === website.code);
+    selectedWebsites.some((selected) => selected.slug === website.slug);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -62,7 +62,7 @@ export function WebsiteCombobox({
                 <div className="pr-2">
                   {websites.map((website) => (
                     <CommandItem
-                      key={website.code}
+                      key={website.slug}
                       value={website.name}
                       onSelect={(currentValue) => {
                         onWebsiteSelect(website);

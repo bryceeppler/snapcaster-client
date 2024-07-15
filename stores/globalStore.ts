@@ -34,7 +34,7 @@ const useGlobalStore = create<GlobalState>((set, get) => ({
     set({ ads });
   },
   getWebsiteName: (websiteCode: string) => {
-    const website = get().websites.find((w) => w.code === websiteCode);
+    const website = get().websites.find((w) => w.slug === websiteCode);
     return website ? website.name : '';
   },
   fetchWebsites: async () => {

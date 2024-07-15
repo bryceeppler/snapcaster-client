@@ -179,7 +179,7 @@ export default function AdvancedSearch({}: Props) {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 <FilterDropdownBox
                   option={websites.map((obj) => {
-                    return { name: obj.name, abbreviation: obj.code };
+                    return { name: obj.name, abbreviation: obj.slug };
                   })}
                   selectedList={selectedWebsiteList}
                   selectCount={selectedWebsiteCount}

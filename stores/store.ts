@@ -46,14 +46,14 @@ const promoMap: PromoMap = {};
 type State = {
   websites: Website[];
   promoMap: PromoMap;
-  getWebsiteNameByCode: (code: string) => string;
+  getWebsiteNameByCode: (slug: string) => string;
 
   initWebsiteInformation: () => Promise<void>;
 };
 
 export const useStore = create<State>((set, get) => ({
-  getWebsiteNameByCode: (code: string) => {
-    return get().websites.find((w) => w.code === code)?.name || '';
+  getWebsiteNameByCode: (slug: string) => {
+    return get().websites.find((w) => w.slug === slug)?.name || '';
   },
 
   websites: websites,

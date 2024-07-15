@@ -1,15 +1,12 @@
 export type Website = {
   name: string;
-  code: string;
+  slug: string;
   url: string;
-  shopify: boolean;
-  backend: string;
-  image: string;
-  promoCode: string;
-  discount: number;
+  backend: string[];
+  tcgs: string[];
 };
 
 export type WebsiteMapping = {
   name: string;
-  code: string;
+  slug: string;
 };

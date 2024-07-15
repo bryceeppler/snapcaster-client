@@ -520,7 +520,7 @@ const SearchView = ({
         <WebsiteCombobox
           websites={websites.map((website) => ({
             name: website.name,
-            code: website.code
+            slug: website.slug
           }))}
           selectedWebsites={selectedWebsites}
           onWebsiteSelect={onWebsiteSelect}
