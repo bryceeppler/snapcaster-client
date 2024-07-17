@@ -5,7 +5,7 @@ import Homebanner from '@/components/homebanner';
 import LoadingSpinner from '@/components/loading-spinner';
 import SingleSearchInfo from '@/components/single-search/single-results-info';
 import { useStore } from '@/stores/store';
-import SingleCatalog from '@/components/single-search/single-results';
+import SingleCatalog from '@/components/single-search/new-single-results';
 import SingleSearchFilter from '@/components/single-search/single-filters';
 import { useEffect } from 'react';
 import { GetStaticProps } from 'next';
@@ -38,11 +38,12 @@ const Home: NextPage<Props> = ({}: Props) => {
           </div>
         )}
         {Object.keys(results).length > 0 && (
-          <div>
-            <SingleSearchInfo />
-            <SingleSearchFilter />
-            <SingleCatalog />
-          </div>
+          <SingleCatalog />
+          // <div>
+          //   <SingleSearchInfo />
+          //   <SingleSearchFilter />
+          //   <SingleCatalog />
+          // </div>
         )}
         {searchStarted && !loading && Object.keys(results).length === 0 && (
           <div className="flex items-center justify-center pt-5">

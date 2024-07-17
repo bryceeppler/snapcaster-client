@@ -207,6 +207,23 @@ const Cart = () => {
   const { cart, removeFromCart } = useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
 
+  // const checkoutAll = () => {
+  //   const productUrls = cart.map(product => product.url);
+  //   chrome.runtime.sendMessage(
+  //     {
+  //       action: 'addToCart',
+  //       productUrls: productUrls
+  //     },
+  //     (response) => {
+  //       if (response.status === 'success') {
+  //         console.log('Products added to cart successfully');
+  //       } else {
+  //         console.log('Failed to add products to cart');
+  //       }
+  //     }
+  //   );
+  // };
+
   // Group products by website
   const storeSummary = cart.reduce((acc, product) => {
     const websiteName = getWebsiteName(product.website);
@@ -281,13 +298,16 @@ const Cart = () => {
         </div>
         <Separator />
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2">
         <div className="flex w-full justify-between">
           <span className="font-bold">Total</span>
           <span>
             ${cart.reduce((acc, product) => acc + product.price, 0).toFixed(2)}
           </span>
         </div>
+        <Button onClick={() => console.log('Checkout')} className="mt-2">
+          Checkout All
+        </Button>
       </CardFooter>
     </Card>
   );
@@ -326,6 +346,9 @@ const ResultSelector = () => {
     const websiteCount: { [website: string]: number } = {};
     const websiteTotalCost: { [website: string]: number } = {};
     Object.entries(websiteProductSet).forEach(([website, productSet]) => {
+      if (website !== 'obsidian') {
+        return;
+      }
       websiteCount[website] = productSet.size;
       websiteTotalCost[website] = Array.from(productSet).reduce(
         (acc, productName) => acc + websiteProductPrices[website][productName],
@@ -361,39 +384,61 @@ const ResultSelector = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 text-xs">
-      <ScrollArea className="hidden h-60 rounded border border-border bg-popover p-2 lg:block">
-        <div className="p-2 text-sm font-semibold">Top Stores</div>
-        {getTopWebsites(results).map((websiteInfo, i) => (
-          <div key={i}>
-            <div className="flex w-full flex-col justify-between rounded px-4 py-2 text-left text-xs">
-              <span className="font-semibold">{`${getWebsiteName(
-                websiteInfo.website
-              )}`}</span>
-              <span>{`${websiteInfo.count}/${totalRequested} results`}</span>
-              <span>{`$${websiteInfo.totalCost.toFixed(2)}`}</span>
+    <Card className="flex flex-col gap-2 bg-popover pb-2 text-xs">
+      <CardHeader className="text-left">
+        <CardTitle className="text-base">Recommended Stores</CardTitle>
+      </CardHeader>
+      <div className="mx-2 flex flex-col overflow-clip rounded bg-muted">
+        {getTopWebsites(results).map((websiteInfo, i) => {
+          return (
+            <div
+              className="px-6 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
+              key={i}
+              onMouseDown={() => {
+                // console.log('Add all products from', websiteInfo.website);
+                // add all products from this website to the cart
+                // open modal to confirm adding all products to card
+              }}
+            >
+              <div className="text-xs font-semibold">
+                {' '}
+                {getWebsiteName(websiteInfo.website)}
+              </div>
+              <div className=" text-foreground">
+                ${websiteInfo.totalCost.toFixed(2)}
+              </div>
+              <div className=" mt-1 text-xs text-muted-foreground">
+                ({websiteInfo.count}/{totalRequested} results)
+              </div>
             </div>
-          </div>
-        ))}
-        <ScrollBar orientation="vertical" />
-      </ScrollArea>
-      <ScrollArea className=" h-40 w-full rounded border border-border bg-popover px-4 py-2 lg:h-96">
+          );
+        })}
+      </div>
+      <CardHeader className="text-left">
+        <CardTitle className="text-base">Results</CardTitle>
+      </CardHeader>
+      <ScrollArea className="mx-2 max-h-40 rounded bg-muted lg:max-h-96">
         {results.map((result, i) => (
           <div key={i}>
             <div
-              className="flex w-full justify-between rounded px-4 py-2 text-left hover:bg-accent"
+              className="px-6 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
               onMouseDown={() => {
                 setSelectedResult(result);
               }}
             >
-              <span>{result.name}</span>
+              <div>{result.name}</div>
+              <div className="text-muted-foreground">
+                {result.results.length > 1
+                  ? `${result.results.length} results`
+                  : `${result.results.length} result`}
+              </div>
             </div>
             {i < results.length - 1 && <Separator />}
           </div>
         ))}
         <ScrollBar orientation="vertical" />
       </ScrollArea>
-    </div>
+    </Card>
   );
 };
 
