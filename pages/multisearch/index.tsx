@@ -1,7 +1,18 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Loader2, Minus, Plus, Scroll } from 'lucide-react';
+import { Loader2, Minus, Plus, Scroll, Trash2 } from 'lucide-react';
 import useAuthStore from '@/stores/authStore';
 import { Badge } from '@/components/ui/badge';
 import LoginRequired from '@/components/login-required';
@@ -42,6 +53,7 @@ import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
 import { Separator } from '@/components/ui/separator';
 import { ResetIcon } from '@radix-ui/react-icons';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 type Props = {};
 
@@ -121,10 +133,8 @@ const ResultsView = ({ results }: { results: MultiSearchProduct[] }) => {
         <div className="lg:hidden">
           <Toolbar />
         </div>
-        <div className="col-span-2">
-          <ResultSelector />
-        </div>
-        <div className="col-span-7 flex flex-col gap-4">
+
+        <div className="col-span-8 flex flex-col gap-4">
           <div className="hidden lg:block">
             <Toolbar />
           </div>
@@ -132,7 +142,9 @@ const ResultsView = ({ results }: { results: MultiSearchProduct[] }) => {
             <ResultsTable results={results} />
           </div>
         </div>
-        <div className="col-span-3">
+        <div className="col-span-4 flex flex-col gap-4">
+          <ResultSelector />
+
           <Cart />
         </div>
       </div>
@@ -240,17 +252,51 @@ const Cart = () => {
 
   return (
     <Card className="bg-popover">
-      <CardHeader>
-        <CardTitle>Cart</CardTitle>
+      <CardHeader className="text-left">
+        <CardTitle className="text-lg">Cart</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-48 w-full lg:h-96">
-          {cart.length === 0 && (
-            <div className="flex w-full justify-center">
-              <CardDescription>Your cart is empty</CardDescription>
-            </div>
-          )}
-          {cart.map((product, i) => (
+      <CardContent className="flex flex-col gap-4">
+        {cart.length === 0 && (
+          <div className="mb-6 flex w-full justify-center">
+            <CardDescription>Your cart is empty</CardDescription>
+          </div>
+        )}
+        {/* map cart into a table */}
+        <ScrollArea className="border-1 h-[300px] rounded border border-accent bg-muted">
+          <Table className="">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead className="text-right">Price</TableHead>
+                {/* blank header to hold a spot for the remove from cart btn */}
+                <TableHead className=""></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {cart.map((product, i) => (
+                <TableRow key={i}>
+                  <TableCell className="text-left text-xs">
+                    {product.name}
+                  </TableCell>
+                  <TableCell className="text-right">${product.price}</TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      onClick={() => {
+                        removeFromCart(product);
+                      }}
+                      variant="ghost"
+                      size="icon"
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="vertical" />
+        </ScrollArea>
+        {/* {cart.map((product, i) => (
             <div key={i}>
               <div className="flex w-full items-center justify-between rounded px-4 py-1 text-sm hover:bg-accent">
                 <span>{product.name}</span>
@@ -268,34 +314,28 @@ const Cart = () => {
               </div>
               <Separator />
             </div>
-          ))}
+          ))} */}
+        <ScrollArea className="border-1 h-[300px] rounded border border-accent bg-muted">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-left">Vendor</TableHead>
+                <TableHead className="max-w-[40px] text-right">Qty</TableHead>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Object.entries(storeSummary).map(([store, summary], i) => (
+                <TableRow key={i} className="text-xs">
+                  <TableCell className="text-left">{store}</TableCell>
+                  <TableCell className="text-right">{summary.count}</TableCell>
+                  <TableCell>${summary.subtotal.toFixed(2)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="vertical" />
         </ScrollArea>
-
-        {/* Store summary */}
-        <div className="grid grid-cols-12 gap-x-2 text-left">
-          {Object.entries(storeSummary).map(([store, summary], i) => (
-            <React.Fragment key={i}>
-              <span
-                className="col-span-6"
-                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-              >
-                {store}
-              </span>
-              <span
-                className="col-span-3 text-right"
-                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-              >
-                ({summary.count})
-              </span>
-              <span
-                className="col-span-3"
-                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-              >
-                ${summary.subtotal.toFixed(2)}
-              </span>
-            </React.Fragment>
-          ))}
-        </div>
         <Separator />
       </CardContent>
       <CardFooter className="flex flex-col gap-2">
@@ -305,16 +345,17 @@ const Cart = () => {
             ${cart.reduce((acc, product) => acc + product.price, 0).toFixed(2)}
           </span>
         </div>
-        <Button onClick={() => console.log('Checkout')} className="mt-2">
+        {/* <Button onClick={() => console.log('Checkout')} className="mt-2">
           Checkout All
-        </Button>
+        </Button> */}
       </CardFooter>
     </Card>
   );
 };
 
 const ResultSelector = () => {
-  const { results, setSelectedResult } = useMultiSearchStore();
+  const { results, setSelectedResult, addToCart, isInCart } =
+    useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
   const totalRequested = results.length;
 
@@ -384,61 +425,100 @@ const ResultSelector = () => {
   };
 
   return (
-    <Card className="flex flex-col gap-2 bg-popover pb-2 text-xs">
-      <CardHeader className="text-left">
-        <CardTitle className="text-base">Recommended Stores</CardTitle>
-      </CardHeader>
-      <div className="mx-2 flex flex-col overflow-clip rounded bg-muted">
-        {getTopWebsites(results).map((websiteInfo, i) => {
-          return (
-            <div
-              className="px-6 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
-              key={i}
-              onMouseDown={() => {
-                // console.log('Add all products from', websiteInfo.website);
-                // add all products from this website to the cart
-                // open modal to confirm adding all products to card
+    <Dialog>
+      <Card className="flex flex-col gap-2 bg-popover pb-2 text-xs">
+        <CardHeader className="text-left">
+          <CardTitle className="text-lg">Recommended Stores</CardTitle>
+        </CardHeader>
+        <div className="flex flex-col gap-2 overflow-clip rounded px-6">
+          {getTopWebsites(results).map((websiteInfo, i) => {
+            return (
+              <DialogTrigger asChild>
+                <div
+                  className="border-1 rounded-md border border-accent px-4 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
+                  key={i}
+                >
+                  <div className="text-xs font-semibold">
+                    {' '}
+                    {getWebsiteName(websiteInfo.website)}
+                  </div>
+                  <div className=" text-foreground">
+                    ${websiteInfo.totalCost.toFixed(2)}
+                  </div>
+                  <div className=" mt-1 text-xs text-muted-foreground">
+                    {websiteInfo.count}/{totalRequested} results in stock
+                  </div>
+                </div>
+              </DialogTrigger>
+            );
+          })}
+        </div>
+        <CardHeader className="pb-0 text-left">
+          <CardTitle className="text-lg">Results</CardTitle>
+        </CardHeader>
+        <ScrollArea className="mb-6 px-6">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="">Name</TableHead>
+                <TableHead className="text-right">Results</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {results.map((result) => (
+                <TableRow
+                  key={result.name}
+                  className="cursor-pointer text-xs hover:bg-accent"
+                  onMouseDown={() => {
+                    setSelectedResult(result);
+                  }}
+                >
+                  <TableCell className="text-left">{result.name}</TableCell>
+                  <TableCell className="text-right">
+                    {result.results.length}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          <ScrollBar orientation="vertical" />
+        </ScrollArea>
+      </Card>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add to cart</DialogTitle>
+          <DialogDescription>
+            Clicking below will add all results from Obsidian Games to your
+            cart.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              onClick={() => {
+                // for each result, add the cheapest product from obsidian games
+                results.forEach((result) => {
+                  const obsidianProducts = result.results.filter(
+                    (product) => product.website === 'obsidian'
+                  );
+                  if (obsidianProducts.length > 0) {
+                    const cheapestProduct = obsidianProducts.reduce(
+                      (acc, cur) => (acc.price < cur.price ? acc : cur)
+                    );
+                    if (cheapestProduct && !isInCart(cheapestProduct)) {
+                      addToCart(cheapestProduct);
+                    }
+                  }
+                });
               }}
             >
-              <div className="text-xs font-semibold">
-                {' '}
-                {getWebsiteName(websiteInfo.website)}
-              </div>
-              <div className=" text-foreground">
-                ${websiteInfo.totalCost.toFixed(2)}
-              </div>
-              <div className=" mt-1 text-xs text-muted-foreground">
-                ({websiteInfo.count}/{totalRequested} results)
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      <CardHeader className="text-left">
-        <CardTitle className="text-base">Results</CardTitle>
-      </CardHeader>
-      <ScrollArea className="mx-2 max-h-40 rounded bg-muted lg:max-h-96">
-        {results.map((result, i) => (
-          <div key={i}>
-            <div
-              className="px-6 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
-              onMouseDown={() => {
-                setSelectedResult(result);
-              }}
-            >
-              <div>{result.name}</div>
-              <div className="text-muted-foreground">
-                {result.results.length > 1
-                  ? `${result.results.length} results`
-                  : `${result.results.length} result`}
-              </div>
-            </div>
-            {i < results.length - 1 && <Separator />}
-          </div>
-        ))}
-        <ScrollBar orientation="vertical" />
-      </ScrollArea>
-    </Card>
+              Add to cart
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
