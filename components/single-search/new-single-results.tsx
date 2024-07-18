@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import { Input } from '@/components/ui/input';
 import {
   Accordion,
   AccordionItem,
@@ -17,87 +16,82 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import useSingleStore from '@/stores/singleSearchStore';
+import { Ad } from '@/types/ads';
+import { useStore, type SingleSearchResult } from '@/stores/store';
+import useGlobalStore from '@/stores/globalStore';
+import useAuthStore from '@/stores/authStore';
+import CardImage from '../ui/card-image';
+import { Badge } from '../ui/badge';
+import { handleBuyClick } from '../../utils/analytics';
+type ResultItem = SingleSearchResult | Ad;
+
+const getRandomAd = (ads: Ad[]): Ad => {
+  const randomIndex = Math.floor(Math.random() * ads.length);
+  return ads[randomIndex];
+};
+
+const insertAdvertisements = (
+  results: SingleSearchResult[],
+  adInterval: number,
+  ads: Ad[]
+): ResultItem[] => {
+  let resultsWithAds: ResultItem[] = [];
+  for (let i = 0; i < results.length; i++) {
+    if (i > 0 && i % adInterval === 0) {
+      const randomAd = getRandomAd(ads);
+      if (randomAd) {
+        resultsWithAds.push(randomAd);
+      }
+    }
+    resultsWithAds.push(results[i]);
+  }
+  return resultsWithAds;
+};
 
 export default function SingleCatalog() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const { filteredResults, resultsTcg, promotedCards } = useSingleStore();
+  const { adsEnabled, ads } = useGlobalStore();
+  const [selectedTab, setSelectedTab] = useState('list');
+  const { websites } = useStore();
+  const { hasActiveSubscription } = useAuthStore();
+  const adsFromPosition4 = ads.position['4']?.ads || [];
+  const adsFromPosition5 = ads.position['5']?.ads || [];
+
+  const findWebsiteNameByCode = (slug: string): string => {
+    const website = websites.find((website) => website.slug === slug);
+    return website ? website.name : 'Website not found';
+  };
+
+  const resultsWithAds = useMemo(() => {
+    return insertAdvertisements(filteredResults, 9, adsFromPosition4);
+  }, [filteredResults, adsFromPosition4]);
+
+  const resultsWithVerticalAds = useMemo(() => {
+    return insertAdvertisements(filteredResults, 9, adsFromPosition5);
+  }, [filteredResults, adsFromPosition5]);
+
+  const combinedProducts = [
+    ...promotedCards.map((card) => ({ ...card, promoted: true })),
+    ...resultsWithAds.map((card) => ({ ...card, promoted: false }))
+  ];
+
   const [filters, setFilters] = useState({
-    category: [],
+    condition: [],
     priceRange: [0, 100],
     rating: 0
   });
   const [sortBy, setSortBy] = useState('relevance');
-  const products = [
-    {
-      id: 1,
-      name: 'Wireless Headphones',
-      description: 'High-quality wireless headphones with noise cancellation',
-      price: 79.99,
-      rating: 4.5,
-      category: 'Electronics',
-      image: '/placeholder.svg',
-      promoted: true
-    },
-    {
-      id: 2,
-      name: 'Cotton T-Shirt',
-      description: 'Soft and comfortable cotton t-shirt in various colors',
-      price: 19.99,
-      rating: 4.2,
-      category: 'Clothing',
-      image: '/placeholder.svg'
-    },
-    {
-      id: 3,
-      name: 'Hiking Backpack',
-      description: 'Durable and spacious backpack for outdoor adventures',
-      price: 59.99,
-      rating: 4.7,
-      category: 'Outdoor',
-      image: '/placeholder.svg'
-    },
-    {
-      id: 4,
-      name: 'Mechanical Keyboard',
-      description: 'Tactile and responsive mechanical keyboard for gaming',
-      price: 89.99,
-      rating: 4.8,
-      category: 'Electronics',
-      image: '/placeholder.svg',
-      promoted: true
-    },
-    {
-      id: 5,
-      name: 'Denim Jeans',
-      description: 'Classic and versatile denim jeans in various fits',
-      price: 39.99,
-      rating: 4.3,
-      category: 'Clothing',
-      image: '/placeholder.svg'
-    },
-    {
-      id: 6,
-      name: 'Camping Tent',
-      description: 'Lightweight and weatherproof tent for outdoor camping',
-      price: 99.99,
-      rating: 4.6,
-      category: 'Outdoor',
-      image: '/placeholder.svg'
-    }
-  ];
   const filteredProducts = useMemo(() => {
-    return products
+    return combinedProducts
       .filter((product) => {
-        const categoryMatch =
-          filters.category.length === 0 ||
-          filters.category.includes(product.category);
+        const conditionMatch =
+          filters.condition.length === 0 ||
+          filters.condition.includes(product.condition);
         const priceMatch =
           product.price >= filters.priceRange[0] &&
           product.price <= filters.priceRange[1];
-        const ratingMatch = product.rating >= filters.rating;
-        const searchMatch = product.name
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-        return categoryMatch && priceMatch && ratingMatch && searchMatch;
+        return conditionMatch && priceMatch;
       })
       .sort((a, b) => {
         if (a.promoted && !b.promoted) return -1;
@@ -107,16 +101,12 @@ export default function SingleCatalog() {
             return a.price - b.price;
           case 'price-desc':
             return b.price - a.price;
-          case 'rating':
-            return b.rating - a.rating;
           default:
             return 0;
         }
       });
-  }, [searchTerm, filters, sortBy, products]);
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  }, [filters, sortBy]);
+
   const handleFilterChange = (type, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -127,65 +117,57 @@ export default function SingleCatalog() {
     setSortBy(value);
   };
   return (
-    <div className="grid gap-6 p-4 md:grid-cols-[240px_1fr] md:p-6">
+    <div className="grid gap-6 md:grid-cols-[240px_1fr]">
       <div className="flex flex-col gap-6">
         <div className="grid gap-4">
-          <Input
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="w-full"
-          />
           <Accordion type="single" collapsible>
-            <AccordionItem value="category">
+            <AccordionItem value="condition">
               <AccordionTrigger className="text-base">
-                Category
+                Condition
               </AccordionTrigger>
               <AccordionContent>
                 <div className="grid gap-2">
                   <Label className="flex items-center gap-2 font-normal">
                     <Checkbox
-                      checked={filters.category.includes('Electronics')}
+                      checked={filters.condition.includes('NM')}
                       onCheckedChange={() =>
                         handleFilterChange(
-                          'category',
-                          filters.category.includes('Electronics')
-                            ? filters.category.filter(
-                                (c) => c !== 'Electronics'
-                              )
-                            : [...filters.category, 'Electronics']
+                          'condition',
+                          filters.condition.includes('NM')
+                            ? filters.condition.filter((c) => c !== 'NM')
+                            : [...filters.condition, 'NM']
                         )
                       }
                     />
-                    Electronics
+                    NM
                   </Label>
                   <Label className="flex items-center gap-2 font-normal">
                     <Checkbox
-                      checked={filters.category.includes('Clothing')}
+                      checked={filters.condition.includes('LP')}
                       onCheckedChange={() =>
                         handleFilterChange(
-                          'category',
-                          filters.category.includes('Clothing')
-                            ? filters.category.filter((c) => c !== 'Clothing')
-                            : [...filters.category, 'Clothing']
+                          'condition',
+                          filters.condition.includes('LP')
+                            ? filters.condition.filter((c) => c !== 'LP')
+                            : [...filters.condition, 'LP']
                         )
                       }
                     />
-                    Clothing
+                    LP
                   </Label>
                   <Label className="flex items-center gap-2 font-normal">
                     <Checkbox
-                      checked={filters.category.includes('Outdoor')}
+                      checked={filters.condition.includes('MP')}
                       onCheckedChange={() =>
                         handleFilterChange(
-                          'category',
-                          filters.category.includes('Outdoor')
-                            ? filters.category.filter((c) => c !== 'Outdoor')
-                            : [...filters.category, 'Outdoor']
+                          'condition',
+                          filters.condition.includes('MP')
+                            ? filters.condition.filter((c) => c !== 'MP')
+                            : [...filters.condition, 'MP']
                         )
                       }
                     />
-                    Outdoor
+                    MP
                   </Label>
                 </div>
               </AccordionContent>
@@ -275,52 +257,72 @@ export default function SingleCatalog() {
         </div>
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className={`group relative ${
-                product.promoted ? 'bg-primary/10 rounded-lg p-4' : ''
-              }`}
-            >
-              <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
-                <span className="sr-only">View</span>
-              </Link>
-              <img
-                src="/placeholder.svg"
-                alt={product.name}
-                width={300}
-                height={300}
-                className={`aspect-square w-full rounded-lg object-cover transition-opacity group-hover:opacity-50 ${
-                  product.promoted ? 'aspect-[4/3]' : ''
+            <div key={product.id} className="flex flex-col">
+              <div
+                key={product.id}
+                className={`group relative flex h-full flex-col rounded-t-lg border border-accent bg-popover ${
+                  product.promoted ? 'bg-primary/10 p-6' : 'p-6'
                 }`}
-              />
-              {product.promoted && (
-                <div className="absolute left-2 top-2 rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
-                  Promoted
-                </div>
-              )}
-              <div className="flex-1 py-4">
-                <h3 className="font-semibold tracking-tight">{product.name}</h3>
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="flex items-center gap-0.5">
-                    {[...Array(Math.floor(product.rating))].map((_, i) => (
-                      <StarIcon key={i} className="h-4 w-4 fill-primary" />
-                    ))}
-                    {product.rating % 1 !== 0 && (
-                      <StarIcon className="h-4 w-4 fill-primary" />
-                    )}
-                    {[...Array(5 - Math.ceil(product.rating))].map((_, i) => (
-                      <StarIcon
-                        key={i}
-                        className="h-4 w-4 fill-muted stroke-muted-foreground"
-                      />
-                    ))}
+              >
+                <CardImage imageUrl={product.image} alt={product.name} />
+                {product.promoted && (
+                  <div className="absolute left-3 top-3 rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
+                    Promoted
                   </div>
-                  <span className="text-muted-foreground">
-                    ({product.rating})
-                  </span>
+                )}
+                <div className="flex flex-grow flex-col gap-1 pt-2 text-left">
+                  <div className="text-xs font-bold uppercase text-muted-foreground">
+                    {product.set}
+                  </div>
+                  <h3 className="text-sm font-bold tracking-tight">
+                    {product.name}
+                  </h3>
+                  <div className="flex flex-row gap-2">
+                    {product.website === 'obsidian' && (
+                      <img
+                        src="/obsidian_icon.png"
+                        alt="Website"
+                        className="h-4 w-4"
+                      />
+                    )}
+                    <div className="text-xs">
+                      {findWebsiteNameByCode(product.website)}
+                    </div>
+                  </div>
+                  <div className="mt-2 flex flex-row justify-between">
+                    <Badge
+                      className={`w-fit border-2 border-black text-white ${
+                        product.foil
+                          ? 'bg-foil bg-cover bg-center'
+                          : 'bg-accent'
+                      }`}
+                    >
+                      {product.condition}
+                    </Badge>
+                    <h4 className="">${product.price.toFixed(2)}</h4>
+                  </div>
                 </div>
-                <h4 className="font-semibold">${product.price.toFixed(2)}</h4>
               </div>
+              <Link
+                href={product.link}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full"
+              >
+                <Button
+                  className="w-full rounded-b-lg rounded-t-none"
+                  onClick={() =>
+                    handleBuyClick(
+                      product.link,
+                      product.price,
+                      product.name,
+                      resultsTcg
+                    )
+                  }
+                >
+                  Buy
+                </Button>
+              </Link>
             </div>
           ))}
         </div>
