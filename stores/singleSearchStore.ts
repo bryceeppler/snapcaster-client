@@ -99,7 +99,7 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
       set({ loading: false });
     } catch (error) {
       console.error(error);
-      toast.error('Unable to fetch cards: ' + error?.message);
+      toast.error('Unable to fetch cards: ' + error);
     }
   }
 }));
