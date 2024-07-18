@@ -487,7 +487,7 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
           <CardImage
             imageUrl={product.image}
             alt={product.name}
-            href={product.link}
+            // href={product.link}
           />
           {product.promoted && (
             <Badge className="absolute -left-2 -top-2 bg-gradient-to-tr from-primary to-red-700 shadow">
