@@ -30,12 +30,12 @@ const Home: NextPage<Props> = ({}: Props) => {
         <PoweredBy size="small" />
         <MultiTcgSearchbox searchType={'single'} />
 
-        {loading && (
+        {/* {loading && (
           <div className="flex items-center justify-center pt-5">
             <LoadingSpinner />
           </div>
-        )}
-        {Object.keys(results).length > 0 && <SingleCatalog />}
+        )} */}
+        {Object.keys(results).length > 0 && <SingleCatalog loading={loading} />}
         {searchStarted && !loading && Object.keys(results).length === 0 && (
           <div className="flex items-center justify-center pt-5">
             <p className="text-zinc-500">No results found</p>

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Tcgs } from '@/types/index';
+import { toast } from 'sonner';
 const initialConditionLabels = ['NM', 'LP', 'PL', 'MP', 'HP', 'DMG', 'SCAN'];
 
 type SingleSearchState = {
@@ -84,6 +85,11 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
           get().tcg
         }&name=${encodeURIComponent(get().searchInput.trim())}`
       );
+      // if response is not 200, throw error
+      if (response.status !== 200) {
+        // throw error message with status  and statusText
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
       set({ searchQuery: get().searchInput });
       set({
         results: response.data.data,
@@ -93,6 +99,7 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
       set({ loading: false });
     } catch (error) {
       console.error(error);
+      toast.error('Unable to fetch cards: ' + error?.message);
     }
   }
 }));

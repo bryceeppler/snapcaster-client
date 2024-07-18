@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/accordion';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import AdComponent from '../ad';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -51,7 +52,7 @@ const insertAdvertisements = (
   return resultsWithAds;
 };
 
-export default function SingleCatalog() {
+export default function SingleCatalog({ loading }: { loading: boolean }) {
   const { filteredResults, resultsTcg, promotedCards } = useSingleStore();
   const { adsEnabled, ads } = useGlobalStore();
   const [selectedTab, setSelectedTab] = useState('list');
@@ -82,11 +83,13 @@ export default function SingleCatalog() {
     condition: [],
     priceRange: [0, 10000],
     vendor: [],
-    set: []
+    set: [],
+    foil: []
   });
   const [sortBy, setSortBy] = useState('relevance');
   const filteredProducts = useMemo(() => {
     return combinedProducts
+
       .filter((product) => {
         const conditionMatch =
           filters.condition.length === 0 ||
@@ -102,7 +105,12 @@ export default function SingleCatalog() {
         const setMatch =
           filters.set.length === 0 || filters.set.includes(product.set);
 
-        return conditionMatch && priceMatch && vendorMatch && setMatch;
+        const foilMatch =
+          filters.foil.length === 0 || filters.foil.includes(product.foil);
+
+        return (
+          conditionMatch && priceMatch && vendorMatch && setMatch && foilMatch
+        );
       })
       .sort((a, b) => {
         if (a.promoted && !b.promoted) return -1;
@@ -124,7 +132,7 @@ export default function SingleCatalog() {
             return 0;
         }
       });
-  }, [filters, sortBy]);
+  }, [filters, sortBy, combinedProducts]);
 
   const handleFilterChange = (type, value) => {
     setFilters((prevFilters) => {
@@ -144,6 +152,10 @@ export default function SingleCatalog() {
   const handleSortChange = (value) => {
     setSortBy(value);
   };
+
+  // if (loading) {
+  //   return <Skeleton />;
+  // }
   return (
     <div className="grid gap-6 md:grid-cols-[240px_1fr]">
       <div className="flex flex-col gap-6">
@@ -270,6 +282,40 @@ export default function SingleCatalog() {
                       }
                     />
                   </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="foil">
+              <AccordionTrigger className="text-base">Foil</AccordionTrigger>
+              <AccordionContent>
+                <div className="grid gap-2">
+                  {[
+                    ...new Set(
+                      combinedProducts
+                        .map((product) => product.foil)
+                        .filter((foil) => foil && foil.trim() !== '')
+                    )
+                  ]
+                    .sort()
+                    .map((foil) => (
+                      <Label
+                        key={foil}
+                        className="flex items-center gap-2 overflow-clip text-left text-xs font-normal capitalize"
+                      >
+                        <Checkbox
+                          checked={filters.foil.includes(foil)}
+                          onCheckedChange={() =>
+                            handleFilterChange(
+                              'foil',
+                              filters.foil.includes(foil)
+                                ? filters.foil.filter((s) => s !== foil)
+                                : [...filters.foil, foil]
+                            )
+                          }
+                        />
+                        <div className="line-clamp-1">{foil}</div>
+                      </Label>
+                    ))}
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -405,11 +451,28 @@ export default function SingleCatalog() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {filteredProducts.map((product) => (
-            <CatalogItem product={product} />
-          ))}
-        </div>
+        {loading && <ResultsSkeleton />}
+
+        {!loading && (
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {!hasActiveSubscription &&
+              filteredProducts.map((item, index) =>
+                item && 'position' in item ? (
+                  <AdComponent ad={item} key={index} />
+                ) : (
+                  <CatalogItem product={item} key={index} />
+                )
+              )}
+            {hasActiveSubscription &&
+              filteredResults.map((item, index) => (
+                <CatalogItem product={item} key={index} />
+              ))}
+            {/* {filteredProducts &&
+            filteredProducts.map((product) => (
+              <CatalogItem product={product} />
+            ))} */}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -482,6 +545,26 @@ function CatalogItem({ product }) {
           Buy
         </Button>
       </Link>
+    </div>
+  );
+}
+
+function ResultsSkeleton() {
+  return (
+    <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="h-96 w-full animate-pulse rounded-lg bg-accent"></div>
+      <div className="h-96 w-full animate-pulse rounded-lg bg-accent"></div>
+      <div className="h-96 w-full animate-pulse rounded-lg bg-accent"></div>
+      <div className="h-96 w-full animate-pulse rounded-lg bg-accent"></div>
+    </div>
+  );
+}
+
+function Skeleton() {
+  return (
+    <div className="grid h-[28rem] flex-grow gap-6 md:grid-cols-[240px_1fr]">
+      <div className="flex animate-pulse flex-col gap-6 rounded-lg bg-accent"></div>
+      <div className="grid animate-pulse gap-6 rounded-lg bg-accent "></div>
     </div>
   );
 }
