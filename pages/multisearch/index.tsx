@@ -10,6 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import React, { useEffect } from 'react';
+import ThreeCards from 'public/3cards.svg';
 import Head from 'next/head';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Loader2, Minus, Plus, Scroll, Trash2 } from 'lucide-react';
@@ -91,10 +92,10 @@ export default function Multisearch({}: Props) {
     <>
       <MultisearchHead />
       <div className="flex w-full flex-col justify-center gap-8 text-center">
-        <PageTitle
+        {/* <PageTitle
           title="Multi Search"
           subtitle="Search for up to 100 cards across select stores."
-        />
+        /> */}
 
         {mode === 'search' && (
           <>
@@ -275,11 +276,13 @@ const Cart = () => {
             <TableBody>
               {cart.map((product, i) => (
                 <TableRow key={i}>
-                  <TableCell className="text-left text-xs">
+                  <TableCell className="py-2 text-left text-xs">
                     {product.name}
                   </TableCell>
-                  <TableCell className="text-right">${product.price}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="py-2 text-right">
+                    ${product.price}
+                  </TableCell>
+                  <TableCell className="py-2 text-right">
                     <Button
                       onClick={() => {
                         removeFromCart(product);
@@ -287,7 +290,7 @@ const Cart = () => {
                       variant="ghost"
                       size="icon"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={15} />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -315,7 +318,7 @@ const Cart = () => {
               <Separator />
             </div>
           ))} */}
-        <ScrollArea className="border-1 h-[300px] rounded border border-accent bg-muted">
+        <ScrollArea className="border-1 max-h-[300px] rounded border border-accent bg-muted">
           <Table>
             <TableHeader>
               <TableRow>
@@ -453,10 +456,10 @@ const ResultSelector = () => {
             );
           })}
         </div>
-        <CardHeader className="pb-0 text-left">
+        <CardHeader className="text-left">
           <CardTitle className="text-lg">Results</CardTitle>
         </CardHeader>
-        <ScrollArea className="mb-6 px-6">
+        <ScrollArea className="border-1 mx-6 mb-6 max-h-60 rounded border border-accent bg-muted">
           <Table>
             <TableHeader>
               <TableRow>
@@ -473,8 +476,10 @@ const ResultSelector = () => {
                     setSelectedResult(result);
                   }}
                 >
-                  <TableCell className="text-left">{result.name}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="py-2 text-left">
+                    {result.name}
+                  </TableCell>
+                  <TableCell className="py-2 text-right">
                     {result.results.length}
                   </TableCell>
                 </TableRow>
@@ -623,7 +628,7 @@ const SearchView = ({
     setSearchInput(value);
   };
   return (
-    <div className="outlined-container flex w-full flex-col gap-4 p-6">
+    <div className="border-1 flex w-full flex-col gap-4 rounded-md border border-accent bg-muted p-6">
       <div className="flex flex-col items-center gap-4 md:flex-row">
         {/* TCG Select */}
         <Select value={tcg} onValueChange={(value: Tcgs) => setTcg(value)}>
@@ -642,7 +647,7 @@ const SearchView = ({
         </Select>
 
         {/* Store Combobox */}
-        <WebsiteCombobox
+        {/* <WebsiteCombobox
           websites={websites.map((website) => ({
             name: website.name,
             slug: website.slug
@@ -657,14 +662,19 @@ const SearchView = ({
               resetSelectedWebsites();
             }}
           />
-        )}
+        )} */}
         <div className=" flex-grow "></div>
         {adsEnabled && <PoweredBy size="small" />}
       </div>
 
       {/* Textarea */}
+      <img src="/3cards.svg" alt="3 cards" className="mx-auto mt-4 w-20" />
+      <div className="mx-auto max-w-xs text-center text-sm text-muted-foreground">
+        Search up to 100 cards at once. Paste your decklist in below!
+      </div>
       <Textarea
-        rows={hasActiveSubscription ? 10 : 3}
+        // rows={hasActiveSubscription ? 10 : 3}
+        rows={10}
         className="text-[16px]"
         placeholder={`Enter card names (one per line). Max ${
           hasActiveSubscription ? 100 : 3
@@ -676,7 +686,7 @@ const SearchView = ({
         // max 3 lines unless hasActiveSubscription is true
         value={searchInput}
         onChange={handleInputChange}
-      />
+      ></Textarea>
       <Button
         onClick={() => {
           handleSubmit(tcg);
