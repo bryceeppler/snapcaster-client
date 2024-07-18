@@ -1,5 +1,14 @@
 # Changelog
 
+## 2024-07-18
+
+### Changed
+
+- Major redesign for the single search filters and interface.
+- UI changes for multi search
+- Multi search "Recommended Stores" component finished, it now opens a modal when clicked to add all the results from that store.
+- LoginRequired component updated to include signin form.
+
 ## 2024-07-15
 
 ### Changed
