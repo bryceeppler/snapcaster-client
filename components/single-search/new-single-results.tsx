@@ -65,9 +65,9 @@ export default function SingleCatalog() {
     return website ? website.name : 'Website not found';
   };
 
-  const resultsWithAds = useMemo(() => {
-    return insertAdvertisements(filteredResults, 9, adsFromPosition4);
-  }, [filteredResults, adsFromPosition4]);
+  // const resultsWithAds = useMemo(() => {
+  //   return insertAdvertisements(filteredResults, 9, adsFromPosition4);
+  // }, [filteredResults, adsFromPosition4]);
 
   const resultsWithVerticalAds = useMemo(() => {
     return insertAdvertisements(filteredResults, 9, adsFromPosition5);
@@ -75,7 +75,7 @@ export default function SingleCatalog() {
 
   const combinedProducts = [
     ...promotedCards.map((card) => ({ ...card, promoted: true })),
-    ...resultsWithAds.map((card) => ({ ...card, promoted: false }))
+    ...resultsWithVerticalAds.map((card) => ({ ...card, promoted: false }))
   ];
 
   const [filters, setFilters] = useState({
@@ -407,76 +407,81 @@ export default function SingleCatalog() {
         </div>
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="flex flex-col">
-              <div
-                key={product.id}
-                className={`group relative flex h-full flex-col rounded-t-lg border border-accent bg-popover ${
-                  product.promoted ? 'bg-primary/10 p-6' : 'p-6'
-                }`}
-              >
-                <CardImage imageUrl={product.image} alt={product.name} />
-                {product.promoted && (
-                  <div className="absolute left-3 top-3 rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
-                    Promoted
-                  </div>
-                )}
-                <div className="flex flex-grow flex-col gap-1 pt-2 text-left">
-                  <div className="text-xs font-bold uppercase text-muted-foreground">
-                    {product.set}
-                  </div>
-                  <h3 className="text-sm font-bold tracking-tight">
-                    {product.name}
-                  </h3>
-                  <div className="flex flex-row gap-2">
-                    {product.website === 'obsidian' && (
-                      <img
-                        src="/obsidian_icon.png"
-                        alt="Website"
-                        className="h-4 w-4"
-                      />
-                    )}
-                    <div className="text-xs">
-                      {findWebsiteNameByCode(product.website)}
-                    </div>
-                  </div>
-                  <div className="mt-2 flex flex-row justify-between">
-                    <Badge
-                      className={`w-fit border-2 border-black text-white ${
-                        product.foil
-                          ? 'bg-foil bg-cover bg-center'
-                          : 'bg-accent'
-                      }`}
-                    >
-                      {product.condition}
-                    </Badge>
-                    <h4 className="">${product.price.toFixed(2)}</h4>
-                  </div>
-                </div>
-              </div>
-              <Link
-                href={product.link}
-                target="_blank"
-                rel="noreferrer"
-                className="w-full"
-              >
-                <Button
-                  className="w-full rounded-b-lg rounded-t-none"
-                  onClick={() =>
-                    handleBuyClick(
-                      product.link,
-                      product.price,
-                      product.name,
-                      resultsTcg
-                    )
-                  }
-                >
-                  Buy
-                </Button>
-              </Link>
-            </div>
+            <CatalogItem product={product} />
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+function CatalogItem({ product }) {
+  const { resultsTcg } = useSingleStore();
+  const { websites } = useStore();
+  const findWebsiteNameByCode = (slug) => {
+    const website = websites.find((website) => website.slug === slug);
+    return website ? website.name : 'Website not found';
+  };
+
+  return (
+    <div key={product.id} className="flex flex-col">
+      <div
+        key={product.id}
+        className={`group relative flex h-full flex-col rounded-t-lg border border-accent bg-popover ${
+          product.promoted ? 'bg-primary/10 p-6' : 'p-6'
+        }`}
+      >
+        <CardImage imageUrl={product.image} alt={product.name} />
+        {product.promoted && (
+          <div className="absolute left-3 top-3 rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
+            Promoted
+          </div>
+        )}
+        <div className="flex flex-grow flex-col gap-1 pt-2 text-left">
+          <div className="text-xs font-bold uppercase text-muted-foreground">
+            {product.set}
+          </div>
+          <h3 className="text-sm font-bold tracking-tight">{product.name}</h3>
+          <div className="flex flex-row gap-2">
+            {product.website === 'obsidian' && (
+              <img src="/obsidian_icon.png" alt="Website" className="h-4 w-4" />
+            )}
+            <div className="text-xs">
+              {findWebsiteNameByCode(product.website)}
+            </div>
+          </div>
+          <div className="mt-2 flex flex-row justify-between">
+            <Badge
+              className={`w-fit border-2 border-black text-white ${
+                product.foil ? 'bg-foil bg-cover bg-center' : 'bg-accent'
+              }`}
+            >
+              {product.condition}
+            </Badge>
+            <h4 className="">${product.price.toFixed(2)}</h4>
+          </div>
+        </div>
+      </div>
+      <Link
+        href={product.link}
+        target="_blank"
+        rel="noreferrer"
+        className="w-full"
+      >
+        <Button
+          className="w-full rounded-b-lg rounded-t-none"
+          onClick={() =>
+            handleBuyClick(
+              product.link,
+              product.price,
+              product.name,
+              resultsTcg
+            )
+          }
+        >
+          Buy
+        </Button>
+      </Link>
     </div>
   );
 }
