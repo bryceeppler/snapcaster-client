@@ -1,26 +1,22 @@
 import React from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import PageTitle from './ui/page-title';
+import SignInCard from './signin';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { Card, CardContent, CardHeader } from './ui/card';
 type Props = {
-  title: string;
   message: string;
 };
 
-const LoginRequired = ({ title, message }: Props) => {
+const LoginRequired = ({ message }: Props) => {
   return (
-    <div className="container">
-      <PageTitle title={title} />
-      <div className="outlined-container mx-auto grid max-w-md gap-4 p-8 md:gap-4">
-        <p className="text-left">{message}</p>
-        <Link href="/signin">
-          <Button className="w-full">Login</Button>
-        </Link>
-        <Link href="/signup">
-          <Button className="w-full">Sign up</Button>
-        </Link>
-      </div>
-    </div>
+    <Card className={`mx-auto w-full max-w-sm`}>
+      <CardHeader className="flex flex-row items-center gap-2">
+        <ExclamationTriangleIcon className="h-5 w-5 text-primary" />
+        <p className="text-left text-sm text-muted-foreground">{message}</p>
+      </CardHeader>
+      <CardContent>
+        <SignInCard noborder={true} />
+      </CardContent>
+    </Card>
   );
 };
 

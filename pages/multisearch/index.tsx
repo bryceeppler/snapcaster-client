@@ -7,10 +7,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import React, { useEffect } from 'react';
-import ThreeCards from 'public/3cards.svg';
 import Head from 'next/head';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Loader2, Minus, Plus, Scroll, Trash2 } from 'lucide-react';
@@ -26,16 +23,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import PageTitle from '@/components/ui/page-title';
 import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
-import { WebsiteCombobox } from '@/components/multi-search/multi-website-combobox';
 import { MultiSearchProduct, Product, Tcgs } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -53,7 +47,6 @@ import { Button } from '@/components/ui/button';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
 import { Separator } from '@/components/ui/separator';
-import { ResetIcon } from '@radix-ui/react-icons';
 import { DialogClose } from '@radix-ui/react-dialog';
 
 type Props = {};
@@ -65,8 +58,6 @@ export default function Multisearch({}: Props) {
     tcg,
     searchInput,
     results,
-    resultsTcg,
-    setResultsTcg,
     handleSubmit,
     setSearchInput,
     onWebsiteSelect,
@@ -81,10 +72,7 @@ export default function Multisearch({}: Props) {
 
   if (!isAuthenticated) {
     return (
-      <LoginRequired
-        title="Multi-search"
-        message="You must be logged in to use this feature."
-      />
+      <LoginRequired message="You must be logged in to use this feature." />
     );
   }
 
@@ -92,11 +80,6 @@ export default function Multisearch({}: Props) {
     <>
       <MultisearchHead />
       <div className="flex w-full flex-col justify-center gap-8 text-center">
-        {/* <PageTitle
-          title="Multi Search"
-          subtitle="Search for up to 100 cards across select stores."
-        /> */}
-
         {mode === 'search' && (
           <>
             <SearchView
@@ -125,9 +108,6 @@ export default function Multisearch({}: Props) {
 }
 
 const ResultsView = ({ results }: { results: MultiSearchProduct[] }) => {
-  const { getWebsiteName } = useGlobalStore();
-  const { cart, resetSearch } = useMultiSearchStore();
-
   return (
     <div>
       <div className="w-full grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0 ">
@@ -220,23 +200,6 @@ const Cart = () => {
   const { cart, removeFromCart } = useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
 
-  // const checkoutAll = () => {
-  //   const productUrls = cart.map(product => product.url);
-  //   chrome.runtime.sendMessage(
-  //     {
-  //       action: 'addToCart',
-  //       productUrls: productUrls
-  //     },
-  //     (response) => {
-  //       if (response.status === 'success') {
-  //         console.log('Products added to cart successfully');
-  //       } else {
-  //         console.log('Failed to add products to cart');
-  //       }
-  //     }
-  //   );
-  // };
-
   // Group products by website
   const storeSummary = cart.reduce((acc, product) => {
     const websiteName = getWebsiteName(product.website);
@@ -262,14 +225,12 @@ const Cart = () => {
             <CardDescription>Your cart is empty</CardDescription>
           </div>
         )}
-        {/* map cart into a table */}
         <ScrollArea className="border-1 h-[300px] rounded border border-accent bg-muted">
           <Table className="">
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead className="text-right">Price</TableHead>
-                {/* blank header to hold a spot for the remove from cart btn */}
                 <TableHead className=""></TableHead>
               </TableRow>
             </TableHeader>
@@ -299,25 +260,6 @@ const Cart = () => {
           </Table>
           <ScrollBar orientation="vertical" />
         </ScrollArea>
-        {/* {cart.map((product, i) => (
-            <div key={i}>
-              <div className="flex w-full items-center justify-between rounded px-4 py-1 text-sm hover:bg-accent">
-                <span>{product.name}</span>
-                <div className="flex flex-row items-center gap-4">
-                  <div>${product.price}</div>
-                  <Button
-                    className="aspect-square h-6 w-6 p-0"
-                    onClick={() => {
-                      removeFromCart(product);
-                    }}
-                  >
-                    <Minus size={12} />
-                  </Button>
-                </div>
-              </div>
-              <Separator />
-            </div>
-          ))} */}
         <ScrollArea className="border-1 max-h-[300px] rounded border border-accent bg-muted">
           <Table>
             <TableHeader>
@@ -348,9 +290,6 @@ const Cart = () => {
             ${cart.reduce((acc, product) => acc + product.price, 0).toFixed(2)}
           </span>
         </div>
-        {/* <Button onClick={() => console.log('Checkout')} className="mt-2">
-          Checkout All
-        </Button> */}
       </CardFooter>
     </Card>
   );
@@ -400,8 +339,6 @@ const ResultSelector = () => {
       );
     });
 
-    // Convert the websiteCount object to an array of [website, count, totalCost] pairs
-    // Sort it by highest count first, then by cheapest total price
     let sortedWebsites = Object.entries(websiteCount)
       .map(([website, count]) => ({
         website,
@@ -502,7 +439,6 @@ const ResultSelector = () => {
           <DialogClose asChild>
             <Button
               onClick={() => {
-                // for each result, add the cheapest product from obsidian games
                 results.forEach((result) => {
                   const obsidianProducts = result.results.filter(
                     (product) => product.website === 'obsidian'
@@ -673,7 +609,6 @@ const SearchView = ({
         Search up to 100 cards at once. Paste your decklist in below!
       </div>
       <Textarea
-        // rows={hasActiveSubscription ? 10 : 3}
         rows={10}
         className="text-[16px]"
         placeholder={`Enter card names (one per line). Max ${
@@ -683,7 +618,6 @@ const SearchView = ({
             ? ' \nUpgrade to Pro to search up to 100 cards.'
             : ''
         }`}
-        // max 3 lines unless hasActiveSubscription is true
         value={searchInput}
         onChange={handleInputChange}
       ></Textarea>
