@@ -91,3 +91,13 @@
     @apply px-4;
   }
 }
+
+.foil-gradient {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 150, 1) 0%,
+    rgba(0, 204, 255, 1) 50%,
+    rgba(9, 9, 121, 1) 100%
+  );
+  color: white;
+}

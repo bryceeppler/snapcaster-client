@@ -115,10 +115,7 @@ export default function AdvancedSearch({}: Props) {
 
   if (!isAuthenticated) {
     return (
-      <LoginRequired
-        title="Advanced Search"
-        message="You must be logged in to use this feature."
-      />
+      <LoginRequired message="You must be logged in to use this feature." />
     );
   }
 

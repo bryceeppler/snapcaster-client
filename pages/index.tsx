@@ -2,11 +2,8 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Homebanner from '@/components/homebanner';
-import LoadingSpinner from '@/components/loading-spinner';
-import SingleSearchInfo from '@/components/single-search/single-results-info';
 import { useStore } from '@/stores/store';
 import SingleCatalog from '@/components/single-search/single-results';
-import SingleSearchFilter from '@/components/single-search/single-filters';
 import { useEffect } from 'react';
 import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
@@ -31,19 +28,7 @@ const Home: NextPage<Props> = ({}: Props) => {
         {!searchStarted && <Homebanner />}
         <PoweredBy size="small" />
         <MultiTcgSearchbox searchType={'single'} />
-
-        {loading && (
-          <div className="flex items-center justify-center pt-5">
-            <LoadingSpinner />
-          </div>
-        )}
-        {Object.keys(results).length > 0 && (
-          <div>
-            <SingleSearchInfo />
-            <SingleSearchFilter />
-            <SingleCatalog />
-          </div>
-        )}
+        {Object.keys(results).length > 0 && <SingleCatalog loading={loading} />}
         {searchStarted && !loading && Object.keys(results).length === 0 && (
           <div className="flex items-center justify-center pt-5">
             <p className="text-zinc-500">No results found</p>

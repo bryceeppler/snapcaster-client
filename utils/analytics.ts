@@ -26,6 +26,11 @@ export const handleBuyClick = (
 ) => {
   const domain = link.split('/')[2];
   const priceInCents = price * 100;
+  // console.log('buy button clicked');
+  // console.log('link', link);
+  // console.log('price', price);
+  // console.log('cardName', cardName);
+  // console.log('tcg', tcg);
 
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({

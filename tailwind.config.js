@@ -17,6 +17,9 @@ module.exports = {
       xxl: '1545px'
     },
     extend: {
+      backgroundImage: {
+        foil: "url('/bg-holo.webp')"
+      },
       aspectRatio: {
         card: '5 / 7'
       },

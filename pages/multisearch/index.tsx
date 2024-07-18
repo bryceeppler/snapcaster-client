@@ -1,7 +1,16 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Loader2, Minus, Plus, Scroll } from 'lucide-react';
+import { Loader2, Minus, Plus, Scroll, Trash2 } from 'lucide-react';
 import useAuthStore from '@/stores/authStore';
 import { Badge } from '@/components/ui/badge';
 import LoginRequired from '@/components/login-required';
@@ -14,16 +23,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import PageTitle from '@/components/ui/page-title';
 import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
-import { WebsiteCombobox } from '@/components/multi-search/multi-website-combobox';
 import { MultiSearchProduct, Product, Tcgs } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -41,7 +47,7 @@ import { Button } from '@/components/ui/button';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
 import { Separator } from '@/components/ui/separator';
-import { ResetIcon } from '@radix-ui/react-icons';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 type Props = {};
 
@@ -52,8 +58,6 @@ export default function Multisearch({}: Props) {
     tcg,
     searchInput,
     results,
-    resultsTcg,
-    setResultsTcg,
     handleSubmit,
     setSearchInput,
     onWebsiteSelect,
@@ -68,10 +72,7 @@ export default function Multisearch({}: Props) {
 
   if (!isAuthenticated) {
     return (
-      <LoginRequired
-        title="Multi-search"
-        message="You must be logged in to use this feature."
-      />
+      <LoginRequired message="You must be logged in to use this feature." />
     );
   }
 
@@ -79,11 +80,6 @@ export default function Multisearch({}: Props) {
     <>
       <MultisearchHead />
       <div className="flex w-full flex-col justify-center gap-8 text-center">
-        <PageTitle
-          title="Multi Search"
-          subtitle="Search for up to 100 cards across select stores."
-        />
-
         {mode === 'search' && (
           <>
             <SearchView
@@ -112,19 +108,14 @@ export default function Multisearch({}: Props) {
 }
 
 const ResultsView = ({ results }: { results: MultiSearchProduct[] }) => {
-  const { getWebsiteName } = useGlobalStore();
-  const { cart, resetSearch } = useMultiSearchStore();
-
   return (
     <div>
       <div className="w-full grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0 ">
         <div className="lg:hidden">
           <Toolbar />
         </div>
-        <div className="col-span-2">
-          <ResultSelector />
-        </div>
-        <div className="col-span-7 flex flex-col gap-4">
+
+        <div className="col-span-8 flex flex-col gap-4">
           <div className="hidden lg:block">
             <Toolbar />
           </div>
@@ -132,7 +123,9 @@ const ResultsView = ({ results }: { results: MultiSearchProduct[] }) => {
             <ResultsTable results={results} />
           </div>
         </div>
-        <div className="col-span-3">
+        <div className="col-span-4 flex flex-col gap-4">
+          <ResultSelector />
+
           <Cart />
         </div>
       </div>
@@ -223,65 +216,74 @@ const Cart = () => {
 
   return (
     <Card className="bg-popover">
-      <CardHeader>
-        <CardTitle>Cart</CardTitle>
+      <CardHeader className="text-left">
+        <CardTitle className="text-lg">Cart</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-48 w-full lg:h-96">
-          {cart.length === 0 && (
-            <div className="flex w-full justify-center">
-              <CardDescription>Your cart is empty</CardDescription>
-            </div>
-          )}
-          {cart.map((product, i) => (
-            <div key={i}>
-              <div className="flex w-full items-center justify-between rounded px-4 py-1 text-sm hover:bg-accent">
-                <span>{product.name}</span>
-                <div className="flex flex-row items-center gap-4">
-                  <div>${product.price}</div>
-                  <Button
-                    className="aspect-square h-6 w-6 p-0"
-                    onClick={() => {
-                      removeFromCart(product);
-                    }}
-                  >
-                    <Minus size={12} />
-                  </Button>
-                </div>
-              </div>
-              <Separator />
-            </div>
-          ))}
+      <CardContent className="flex flex-col gap-4">
+        {cart.length === 0 && (
+          <div className="mb-6 flex w-full justify-center">
+            <CardDescription>Your cart is empty</CardDescription>
+          </div>
+        )}
+        <ScrollArea className="border-1 h-[300px] rounded border border-accent bg-muted">
+          <Table className="">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead className="text-right">Price</TableHead>
+                <TableHead className=""></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {cart.map((product, i) => (
+                <TableRow key={i}>
+                  <TableCell className="py-2 text-left text-xs">
+                    {product.name}
+                  </TableCell>
+                  <TableCell className="py-2 text-right">
+                    ${product.price}
+                  </TableCell>
+                  <TableCell className="py-2 text-right">
+                    <Button
+                      onClick={() => {
+                        removeFromCart(product);
+                      }}
+                      variant="ghost"
+                      size="icon"
+                    >
+                      <Trash2 size={15} />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="vertical" />
         </ScrollArea>
-
-        {/* Store summary */}
-        <div className="grid grid-cols-12 gap-x-2 text-left">
-          {Object.entries(storeSummary).map(([store, summary], i) => (
-            <React.Fragment key={i}>
-              <span
-                className="col-span-6"
-                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-              >
-                {store}
-              </span>
-              <span
-                className="col-span-3 text-right"
-                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-              >
-                ({summary.count})
-              </span>
-              <span
-                className="col-span-3"
-                style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-              >
-                ${summary.subtotal.toFixed(2)}
-              </span>
-            </React.Fragment>
-          ))}
-        </div>
+        <ScrollArea className="border-1 max-h-[300px] rounded border border-accent bg-muted">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-left">Vendor</TableHead>
+                <TableHead className="max-w-[40px] text-right">Qty</TableHead>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Object.entries(storeSummary).map(([store, summary], i) => (
+                <TableRow key={i} className="text-xs">
+                  <TableCell className="text-left">{store}</TableCell>
+                  <TableCell className="text-right">{summary.count}</TableCell>
+                  <TableCell>${summary.subtotal.toFixed(2)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="vertical" />
+        </ScrollArea>
         <Separator />
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2">
         <div className="flex w-full justify-between">
           <span className="font-bold">Total</span>
           <span>
@@ -294,7 +296,8 @@ const Cart = () => {
 };
 
 const ResultSelector = () => {
-  const { results, setSelectedResult } = useMultiSearchStore();
+  const { results, setSelectedResult, addToCart, isInCart } =
+    useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
   const totalRequested = results.length;
 
@@ -326,6 +329,9 @@ const ResultSelector = () => {
     const websiteCount: { [website: string]: number } = {};
     const websiteTotalCost: { [website: string]: number } = {};
     Object.entries(websiteProductSet).forEach(([website, productSet]) => {
+      if (website !== 'obsidian') {
+        return;
+      }
       websiteCount[website] = productSet.size;
       websiteTotalCost[website] = Array.from(productSet).reduce(
         (acc, productName) => acc + websiteProductPrices[website][productName],
@@ -333,8 +339,6 @@ const ResultSelector = () => {
       );
     });
 
-    // Convert the websiteCount object to an array of [website, count, totalCost] pairs
-    // Sort it by highest count first, then by cheapest total price
     let sortedWebsites = Object.entries(websiteCount)
       .map(([website, count]) => ({
         website,
@@ -361,39 +365,101 @@ const ResultSelector = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 text-xs">
-      <ScrollArea className="hidden h-60 rounded border border-border bg-popover p-2 lg:block">
-        <div className="p-2 text-sm font-semibold">Top Stores</div>
-        {getTopWebsites(results).map((websiteInfo, i) => (
-          <div key={i}>
-            <div className="flex w-full flex-col justify-between rounded px-4 py-2 text-left text-xs">
-              <span className="font-semibold">{`${getWebsiteName(
-                websiteInfo.website
-              )}`}</span>
-              <span>{`${websiteInfo.count}/${totalRequested} results`}</span>
-              <span>{`$${websiteInfo.totalCost.toFixed(2)}`}</span>
-            </div>
-          </div>
-        ))}
-        <ScrollBar orientation="vertical" />
-      </ScrollArea>
-      <ScrollArea className=" h-40 w-full rounded border border-border bg-popover px-4 py-2 lg:h-96">
-        {results.map((result, i) => (
-          <div key={i}>
-            <div
-              className="flex w-full justify-between rounded px-4 py-2 text-left hover:bg-accent"
-              onMouseDown={() => {
-                setSelectedResult(result);
+    <Dialog>
+      <Card className="flex flex-col gap-2 bg-popover pb-2 text-xs">
+        <CardHeader className="text-left">
+          <CardTitle className="text-lg">Recommended Stores</CardTitle>
+        </CardHeader>
+        <div className="flex flex-col gap-2 overflow-clip rounded px-6">
+          {getTopWebsites(results).map((websiteInfo, i) => {
+            return (
+              <DialogTrigger asChild>
+                <div
+                  className="border-1 rounded-md border border-accent px-4 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
+                  key={i}
+                >
+                  <div className="text-xs font-semibold">
+                    {' '}
+                    {getWebsiteName(websiteInfo.website)}
+                  </div>
+                  <div className=" text-foreground">
+                    ${websiteInfo.totalCost.toFixed(2)}
+                  </div>
+                  <div className=" mt-1 text-xs text-muted-foreground">
+                    {websiteInfo.count}/{totalRequested} results in stock
+                  </div>
+                </div>
+              </DialogTrigger>
+            );
+          })}
+        </div>
+        <CardHeader className="text-left">
+          <CardTitle className="text-lg">Results</CardTitle>
+        </CardHeader>
+        <ScrollArea className="border-1 mx-6 mb-6 max-h-60 rounded border border-accent bg-muted">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="">Name</TableHead>
+                <TableHead className="text-right">Results</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {results.map((result) => (
+                <TableRow
+                  key={result.name}
+                  className="cursor-pointer text-xs hover:bg-accent"
+                  onMouseDown={() => {
+                    setSelectedResult(result);
+                  }}
+                >
+                  <TableCell className="py-2 text-left">
+                    {result.name}
+                  </TableCell>
+                  <TableCell className="py-2 text-right">
+                    {result.results.length}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          <ScrollBar orientation="vertical" />
+        </ScrollArea>
+      </Card>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add to cart</DialogTitle>
+          <DialogDescription>
+            Clicking below will add all results from Obsidian Games to your
+            cart.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              onClick={() => {
+                results.forEach((result) => {
+                  const obsidianProducts = result.results.filter(
+                    (product) => product.website === 'obsidian'
+                  );
+                  if (obsidianProducts.length > 0) {
+                    const cheapestProduct = obsidianProducts.reduce(
+                      (acc, cur) => (acc.price < cur.price ? acc : cur)
+                    );
+                    if (cheapestProduct && !isInCart(cheapestProduct)) {
+                      addToCart(cheapestProduct);
+                    }
+                  }
+                });
               }}
             >
-              <span>{result.name}</span>
-            </div>
-            {i < results.length - 1 && <Separator />}
-          </div>
-        ))}
-        <ScrollBar orientation="vertical" />
-      </ScrollArea>
-    </div>
+              Add to cart
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
@@ -498,7 +564,7 @@ const SearchView = ({
     setSearchInput(value);
   };
   return (
-    <div className="outlined-container flex w-full flex-col gap-4 p-6">
+    <div className="border-1 flex w-full flex-col gap-4 rounded-md border border-accent bg-muted p-6">
       <div className="flex flex-col items-center gap-4 md:flex-row">
         {/* TCG Select */}
         <Select value={tcg} onValueChange={(value: Tcgs) => setTcg(value)}>
@@ -517,7 +583,7 @@ const SearchView = ({
         </Select>
 
         {/* Store Combobox */}
-        <WebsiteCombobox
+        {/* <WebsiteCombobox
           websites={websites.map((website) => ({
             name: website.name,
             slug: website.slug
@@ -532,14 +598,18 @@ const SearchView = ({
               resetSelectedWebsites();
             }}
           />
-        )}
+        )} */}
         <div className=" flex-grow "></div>
         {adsEnabled && <PoweredBy size="small" />}
       </div>
 
       {/* Textarea */}
+      <img src="/3cards.svg" alt="3 cards" className="mx-auto mt-4 w-20" />
+      <div className="mx-auto max-w-xs text-center text-sm text-muted-foreground">
+        Search up to 100 cards at once. Paste your decklist in below!
+      </div>
       <Textarea
-        rows={hasActiveSubscription ? 10 : 3}
+        rows={10}
         className="text-[16px]"
         placeholder={`Enter card names (one per line). Max ${
           hasActiveSubscription ? 100 : 3
@@ -548,10 +618,9 @@ const SearchView = ({
             ? ' \nUpgrade to Pro to search up to 100 cards.'
             : ''
         }`}
-        // max 3 lines unless hasActiveSubscription is true
         value={searchInput}
         onChange={handleInputChange}
-      />
+      ></Textarea>
       <Button
         onClick={() => {
           handleSubmit(tcg);
