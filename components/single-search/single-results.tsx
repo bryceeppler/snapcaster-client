@@ -27,6 +27,7 @@ import { Badge } from '../ui/badge';
 import { handleBuyClick } from '../../utils/analytics';
 import { Input } from '../ui/input';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
+import BackToTopButton from '../ui/back-to-top-btn';
 type ResultItem = SingleSearchResult | Ad;
 
 const getRandomAd = (ads: Ad[]): Ad => {
@@ -458,6 +459,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
           </div>
         )}
       </div>
+      <BackToTopButton />
     </div>
   );
 }
