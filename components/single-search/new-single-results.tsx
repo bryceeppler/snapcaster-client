@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, SetStateAction } from 'react';
 import {
   Accordion,
   AccordionItem,
@@ -53,43 +53,23 @@ const insertAdvertisements = (
 };
 
 export default function SingleCatalog({ loading }: { loading: boolean }) {
-  const { filteredResults, resultsTcg, promotedCards } = useSingleStore();
-  const { adsEnabled, ads } = useGlobalStore();
-  const [selectedTab, setSelectedTab] = useState('list');
+  const { filteredResults, promotedCards } = useSingleStore();
+  const { ads } = useGlobalStore();
   const { websites } = useStore();
   const { hasActiveSubscription } = useAuthStore();
-  const adsFromPosition4 = ads.position['4']?.ads || [];
+  // const adsFromPosition4 = ads.position['4']?.ads || [];
   const adsFromPosition5 = ads.position['5']?.ads || [];
 
-  const findWebsiteNameByCode = (slug: string): string => {
-    const website = websites.find((website) => website.slug === slug);
-    return website ? website.name : 'Website not found';
-  };
-
-  // const resultsWithAds = useMemo(() => {
-  //   return insertAdvertisements(filteredResults, 9, adsFromPosition4);
-  // }, [filteredResults, adsFromPosition4]);
-
-  const resultsWithVerticalAds = useMemo(() => {
-    return insertAdvertisements(filteredResults, 9, adsFromPosition5);
-  }, [filteredResults, adsFromPosition5]);
-
-  const combinedProducts = [
-    ...promotedCards.map((card) => ({ ...card, promoted: true })),
-    ...resultsWithVerticalAds.map((card) => ({ ...card, promoted: false }))
-  ];
-
   const [filters, setFilters] = useState({
-    condition: [],
-    priceRange: [0, 10000],
-    vendor: [],
-    set: [],
-    foil: []
+    condition: [] as string[],
+    priceRange: [0, 10000] as [number, number],
+    vendor: [] as string[],
+    set: [] as string[],
+    foil: [] as string[]
   });
   const [sortBy, setSortBy] = useState('relevance');
   const filteredProducts = useMemo(() => {
-    return combinedProducts
-
+    const tempFiltered = filteredResults
       .filter((product) => {
         const conditionMatch =
           filters.condition.length === 0 ||
@@ -132,9 +112,13 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
             return 0;
         }
       });
-  }, [filters, sortBy, combinedProducts]);
+    const withAds = insertAdvertisements(tempFiltered, 9, adsFromPosition5);
+    const combined = [...promotedCards, ...withAds];
 
-  const handleFilterChange = (type, value) => {
+    return combined;
+  }, [filters, sortBy, filteredResults]);
+
+  const handleFilterChange = (type: string, value: any[]) => {
     setFilters((prevFilters) => {
       let newValue = value;
       if (type === 'priceRange') {
@@ -149,7 +133,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
       };
     });
   };
-  const handleSortChange = (value) => {
+  const handleSortChange = (value: SetStateAction<string>) => {
     setSortBy(value);
   };
 
@@ -289,13 +273,13 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
               <AccordionTrigger className="text-base">Foil</AccordionTrigger>
               <AccordionContent>
                 <div className="grid gap-2">
-                  {[
-                    ...new Set(
-                      combinedProducts
+                  {Array.from(
+                    new Set(
+                      filteredResults
                         .map((product) => product.foil)
                         .filter((foil) => foil && foil.trim() !== '')
                     )
-                  ]
+                  )
                     .sort()
                     .map((foil) => (
                       <Label
@@ -357,13 +341,13 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
               <AccordionContent>
                 <ScrollArea className="h-[200px] overflow-y-auto">
                   <div className="grid gap-2">
-                    {[
-                      ...new Set(
-                        combinedProducts
+                    {Array.from(
+                      new Set(
+                        filteredResults
                           .map((product) => product.set)
                           .filter((set) => set && set.trim() !== '')
                       )
-                    ]
+                    )
                       .sort()
                       .map((set) => (
                         <Label
@@ -404,7 +388,8 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                     condition: [],
                     priceRange: [0, 10000],
                     vendor: [],
-                    set: []
+                    set: [],
+                    foil: []
                   })
                 }
               >
@@ -464,13 +449,12 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                 )
               )}
             {hasActiveSubscription &&
-              filteredResults.map((item, index) => (
-                <CatalogItem product={item} key={index} />
-              ))}
-            {/* {filteredProducts &&
-            filteredProducts.map((product) => (
-              <CatalogItem product={product} />
-            ))} */}
+              filteredProducts.map((item, index) => {
+                if ('position' in item) {
+                  return;
+                }
+                return <CatalogItem product={item} key={index} />;
+              })}
           </div>
         )}
       </div>
@@ -478,18 +462,21 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
   );
 }
 
-function CatalogItem({ product }) {
+interface SingleCatalogCard extends SingleSearchResult {
+  promoted: boolean;
+}
+
+function CatalogItem({ product }: { product: SingleCatalogCard }) {
   const { resultsTcg } = useSingleStore();
   const { websites } = useStore();
-  const findWebsiteNameByCode = (slug) => {
+  const findWebsiteNameByCode = (slug: string) => {
     const website = websites.find((website) => website.slug === slug);
     return website ? website.name : 'Website not found';
   };
 
   return (
-    <div key={product.id} className="flex flex-col">
+    <div className="flex flex-col">
       <div
-        key={product.id}
         className={`group relative flex h-full flex-col rounded-t-lg border border-accent bg-popover ${
           product.promoted ? 'bg-primary/10 p-6' : 'p-6'
         }`}
@@ -560,16 +547,7 @@ function ResultsSkeleton() {
   );
 }
 
-function Skeleton() {
-  return (
-    <div className="grid h-[28rem] flex-grow gap-6 md:grid-cols-[240px_1fr]">
-      <div className="flex animate-pulse flex-col gap-6 rounded-lg bg-accent"></div>
-      <div className="grid animate-pulse gap-6 rounded-lg bg-accent "></div>
-    </div>
-  );
-}
-
-function ArrowUpDownIcon(props) {
+function ArrowUpDownIcon(props: any) {
   return (
     <svg
       {...props}
@@ -587,45 +565,6 @@ function ArrowUpDownIcon(props) {
       <path d="M17 20V4" />
       <path d="m3 8 4-4 4 4" />
       <path d="M7 4v16" />
-    </svg>
-  );
-}
-
-function StarIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  );
-}
-
-function XIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
     </svg>
   );
 }
