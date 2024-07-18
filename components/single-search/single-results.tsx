@@ -112,7 +112,11 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
         }
       });
     const withAds = insertAdvertisements(tempFiltered, 9, adsFromPosition5);
-    const combined = [...promotedCards, ...withAds];
+    // add "promoted"=true to promoted cards, and "promoted"=false to the rest
+    const combined = [
+      promotedCards.map((card) => ({ ...card, promoted: true })),
+      withAds
+    ].flat();
 
     return combined;
   }, [filters, sortBy, filteredResults]);
@@ -473,16 +477,16 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
   return (
     <div className="flex flex-col">
       <div
-        className={`group relative flex h-full flex-col rounded-t-lg border border-accent bg-popover ${
+        className={`group flex h-full flex-col rounded-t-lg border border-accent bg-popover ${
           product.promoted ? 'bg-primary/10 p-6' : 'p-6'
         }`}
       >
-        <CardImage imageUrl={product.image} alt={product.name} />
-        {product.promoted && (
-          <div className="absolute left-3 top-3 rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
-            Promoted
-          </div>
-        )}
+        <div className="relative mx-auto max-w-[150px] md:max-w-[250px]">
+          <CardImage imageUrl={product.image} alt={product.name} />
+          {product.promoted && (
+            <Badge className="absolute -left-1 top-0">Promoted</Badge>
+          )}
+        </div>
         <div className="flex flex-grow flex-col gap-1 pt-2 text-left">
           <div className="text-xs font-bold uppercase text-muted-foreground">
             {product.set}
@@ -496,16 +500,16 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
               {findWebsiteNameByCode(product.website)}
             </div>
           </div>
-          <div className="mt-2 flex flex-row justify-between">
-            <Badge
-              className={`w-fit border-2 border-black text-white ${
-                product.foil ? 'bg-foil bg-cover bg-center' : 'bg-accent'
-              }`}
-            >
-              {product.condition}
-            </Badge>
-            <h4 className="">${product.price.toFixed(2)}</h4>
-          </div>
+        </div>
+        <div className="mt-2 flex flex-row justify-between">
+          <Badge
+            className={`w-fit border-2 border-black text-white ${
+              product.foil ? 'bg-foil bg-cover bg-center' : 'bg-accent'
+            }`}
+          >
+            {product.condition}
+          </Badge>
+          <h4 className="">${product.price.toFixed(2)}</h4>
         </div>
       </div>
       <Link
