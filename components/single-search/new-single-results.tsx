@@ -24,6 +24,8 @@ import useAuthStore from '@/stores/authStore';
 import CardImage from '../ui/card-image';
 import { Badge } from '../ui/badge';
 import { handleBuyClick } from '../../utils/analytics';
+import { Input } from '../ui/input';
+import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 type ResultItem = SingleSearchResult | Ad;
 
 const getRandomAd = (ads: Ad[]): Ad => {
@@ -78,8 +80,9 @@ export default function SingleCatalog() {
 
   const [filters, setFilters] = useState({
     condition: [],
-    priceRange: [0, 100],
-    rating: 0
+    priceRange: [0, 10000],
+    vendor: [],
+    set: []
   });
   const [sortBy, setSortBy] = useState('relevance');
   const filteredProducts = useMemo(() => {
@@ -91,7 +94,15 @@ export default function SingleCatalog() {
         const priceMatch =
           product.price >= filters.priceRange[0] &&
           product.price <= filters.priceRange[1];
-        return conditionMatch && priceMatch;
+
+        const vendorMatch =
+          filters.vendor.length === 0 ||
+          filters.vendor.includes(product.website);
+
+        const setMatch =
+          filters.set.length === 0 || filters.set.includes(product.set);
+
+        return conditionMatch && priceMatch && vendorMatch && setMatch;
       })
       .sort((a, b) => {
         if (a.promoted && !b.promoted) return -1;
@@ -101,6 +112,14 @@ export default function SingleCatalog() {
             return a.price - b.price;
           case 'price-desc':
             return b.price - a.price;
+          case 'vendor-asc':
+            return a.website.localeCompare(b.website);
+          case 'vendor-desc':
+            return b.website.localeCompare(a.website);
+          case 'set-asc':
+            return a.set.localeCompare(b.set);
+          case 'set-desc':
+            return b.set.localeCompare(a.set);
           default:
             return 0;
         }
@@ -108,10 +127,19 @@ export default function SingleCatalog() {
   }, [filters, sortBy]);
 
   const handleFilterChange = (type, value) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [type]: value
-    }));
+    setFilters((prevFilters) => {
+      let newValue = value;
+      if (type === 'priceRange') {
+        newValue = [
+          value[0] === '' ? 0 : value[0],
+          value[1] === '' ? 10000 : value[1]
+        ];
+      }
+      return {
+        ...prevFilters,
+        [type]: newValue
+      };
+    });
   };
   const handleSortChange = (value) => {
     setSortBy(value);
@@ -169,59 +197,175 @@ export default function SingleCatalog() {
                     />
                     MP
                   </Label>
+                  <Label className="flex items-center gap-2 font-normal">
+                    <Checkbox
+                      checked={filters.condition.includes('HP')}
+                      onCheckedChange={() =>
+                        handleFilterChange(
+                          'condition',
+                          filters.condition.includes('HP')
+                            ? filters.condition.filter((c) => c !== 'HP')
+                            : [...filters.condition, 'HP']
+                        )
+                      }
+                    />
+                    HP
+                  </Label>
+                  <Label className="flex items-center gap-2 font-normal">
+                    <Checkbox
+                      checked={filters.condition.includes('DMG')}
+                      onCheckedChange={() =>
+                        handleFilterChange(
+                          'condition',
+                          filters.condition.includes('DMG')
+                            ? filters.condition.filter((c) => c !== 'DMG')
+                            : [...filters.condition, 'DMG']
+                        )
+                      }
+                    />
+                    DMG
+                  </Label>
                 </div>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="price">
               <AccordionTrigger className="text-base">Price</AccordionTrigger>
               <AccordionContent>
-                <div />
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="rating">
-              <AccordionTrigger className="text-base">Rating</AccordionTrigger>
-              <AccordionContent>
+                {/* from x to y inputs */}
                 <div className="grid gap-2">
-                  <Label className="flex items-center gap-2 font-normal">
-                    <Checkbox
-                      checked={filters.rating >= 4}
-                      onCheckedChange={() =>
-                        handleFilterChange(
-                          'rating',
-                          filters.rating >= 4 ? 0 : 4
-                        )
+                  <div className="flex items-center gap-2 p-2">
+                    <Input
+                      type="number"
+                      value={filters.priceRange[0]}
+                      onChange={(e) =>
+                        handleFilterChange('priceRange', [
+                          e.target.value === '' ? '' : parseInt(e.target.value),
+                          filters.priceRange[1]
+                        ])
+                      }
+                      onBlur={(e) =>
+                        handleFilterChange('priceRange', [
+                          e.target.value === '' ? 0 : parseInt(e.target.value),
+                          filters.priceRange[1]
+                        ])
                       }
                     />
-                    4 stars and above
-                  </Label>
-                  <Label className="flex items-center gap-2 font-normal">
-                    <Checkbox
-                      checked={filters.rating >= 3}
-                      onCheckedChange={() =>
-                        handleFilterChange(
-                          'rating',
-                          filters.rating >= 3 ? 0 : 3
-                        )
+                    <span>to</span>
+                    <Input
+                      type="number"
+                      value={filters.priceRange[1]}
+                      onChange={(e) =>
+                        handleFilterChange('priceRange', [
+                          filters.priceRange[0],
+                          e.target.value === '' ? '' : parseInt(e.target.value)
+                        ])
+                      }
+                      onBlur={(e) =>
+                        handleFilterChange('priceRange', [
+                          filters.priceRange[0],
+                          e.target.value === ''
+                            ? 10000
+                            : parseInt(e.target.value)
+                        ])
                       }
                     />
-                    3 stars and above
-                  </Label>
-                  <Label className="flex items-center gap-2 font-normal">
-                    <Checkbox
-                      checked={filters.rating >= 2}
-                      onCheckedChange={() =>
-                        handleFilterChange(
-                          'rating',
-                          filters.rating >= 2 ? 0 : 2
-                        )
-                      }
-                    />
-                    2 stars and above
-                  </Label>
+                  </div>
                 </div>
               </AccordionContent>
             </AccordionItem>
+            <AccordionItem value="vendor">
+              <AccordionTrigger className="text-base">Vendor</AccordionTrigger>
+              <AccordionContent>
+                <ScrollArea className="h-[200px] overflow-y-auto">
+                  <div className="grid gap-2">
+                    {websites
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((website) => (
+                        <Label
+                          key={website.slug}
+                          className="flex items-center gap-2 font-normal"
+                        >
+                          <Checkbox
+                            checked={filters.vendor.includes(website.slug)}
+                            onCheckedChange={() =>
+                              handleFilterChange(
+                                'vendor',
+                                filters.vendor.includes(website.slug)
+                                  ? filters.vendor.filter(
+                                      (v) => v !== website.slug
+                                    )
+                                  : [...filters.vendor, website.slug]
+                              )
+                            }
+                          />
+                          {website.name}
+                        </Label>
+                      ))}
+                  </div>
+                  <ScrollBar orientation="vertical" />{' '}
+                </ScrollArea>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="set">
+              <AccordionTrigger className="text-base">Set</AccordionTrigger>
+              <AccordionContent>
+                <ScrollArea className="h-[200px] overflow-y-auto">
+                  <div className="grid gap-2">
+                    {[
+                      ...new Set(
+                        combinedProducts
+                          .map((product) => product.set)
+                          .filter((set) => set && set.trim() !== '')
+                      )
+                    ]
+                      .sort()
+                      .map((set) => (
+                        <Label
+                          key={set}
+                          className="flex items-center gap-2 overflow-clip text-left text-xs font-normal capitalize"
+                        >
+                          <Checkbox
+                            checked={filters.set.includes(set)}
+                            onCheckedChange={() =>
+                              handleFilterChange(
+                                'set',
+                                filters.set.includes(set)
+                                  ? filters.set.filter((s) => s !== set)
+                                  : [...filters.set, set]
+                              )
+                            }
+                          />
+                          <div className="line-clamp-1">{set}</div>
+                        </Label>
+                      ))}
+                  </div>
+                  <ScrollBar orientation="vertical" />{' '}
+                </ScrollArea>
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
+
+          {
+            // if filters are not default, show clear filters button
+            filters.condition.length > 0 ||
+            filters.vendor.length > 0 ||
+            filters.set.length > 0 ||
+            filters.priceRange[0] !== 0 ||
+            filters.priceRange[1] !== 10000 ? (
+              <Button
+                onClick={() =>
+                  setFilters({
+                    condition: [],
+                    priceRange: [0, 10000],
+                    vendor: [],
+                    set: []
+                  })
+                }
+              >
+                Clear Filters
+              </Button>
+            ) : null
+          }
         </div>
       </div>
       <div className="grid gap-6">
@@ -239,17 +383,23 @@ export default function SingleCatalog() {
                 value={sortBy}
                 onValueChange={handleSortChange}
               >
-                <DropdownMenuRadioItem value="relevance">
-                  Relevance
-                </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="price-asc">
                   Price: Low to High
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="price-desc">
                   Price: High to Low
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="rating">
-                  Rating
+                <DropdownMenuRadioItem value="set-asc">
+                  Set A-Z
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="set-desc">
+                  Set Z-A
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="vendor-asc">
+                  Vendor A-Z
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="vendor-desc">
+                  Vendor Z-A
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
