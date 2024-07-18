@@ -482,9 +482,15 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
         }`}
       >
         <div className="relative mx-auto max-w-[150px] md:max-w-[250px]">
-          <CardImage imageUrl={product.image} alt={product.name} />
+          <CardImage
+            imageUrl={product.image}
+            alt={product.name}
+            href={product.link}
+          />
           {product.promoted && (
-            <Badge className="absolute -left-1 top-0">Promoted</Badge>
+            <Badge className="absolute -left-2 -top-2 bg-gradient-to-tr from-primary to-red-700 shadow">
+              Promoted
+            </Badge>
           )}
         </div>
         <div className="flex flex-grow flex-col gap-1 pt-2 text-left">
@@ -501,15 +507,36 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
             </div>
           </div>
         </div>
-        <div className="mt-2 flex flex-row justify-between">
-          <Badge
-            className={`w-fit border-2 border-black text-white ${
-              product.foil ? 'bg-foil bg-cover bg-center' : 'bg-accent'
-            }`}
-          >
-            {product.condition}
-          </Badge>
-          <h4 className="">${product.price.toFixed(2)}</h4>
+        {product.website === 'obsidian' && (
+          <div className="mt-3 flex w-full">
+            <div className="text-left text-[0.7rem] tracking-tighter text-muted-foreground">
+              With code{' '}
+              <span className="text-xs font-bold">OBSIDIAN+SNAPCASTER5</span>
+            </div>
+          </div>
+        )}
+        <div className="mt-3">
+          {product.website === 'obsidian' && (
+            <h4 className="text-right text-xs text-muted-foreground line-through">
+              ${product.price.toFixed(2)}
+            </h4>
+          )}
+          <div className="   flex flex-row justify-between">
+            <div className="flex flex-col justify-end">
+              <Badge
+                className={` border-2 border-accent-foreground text-white ${
+                  product.foil ? 'bg-foil bg-cover bg-center' : 'bg-accent'
+                }`}
+              >
+                {product.condition}
+              </Badge>
+            </div>
+            {product.website === 'obsidian' ? (
+              <h4 className="">${(product.price * 0.95).toFixed(2)}</h4>
+            ) : (
+              <h4 className="">${product.price.toFixed(2)}</h4>
+            )}
+          </div>
         </div>
       </div>
       <Link
