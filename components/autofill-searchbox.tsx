@@ -72,7 +72,7 @@ export default function SingleSearchbox(props: Props) {
   const handleAutocompleteKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       const key = event.key;
-      const totalResults = autocompleteResults.length;
+      const totalResults = autocompleteResults?.length || 0;
       switch (key) {
         case 'ArrowDown':
           event.preventDefault();

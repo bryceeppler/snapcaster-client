@@ -20,6 +20,8 @@ export default function Homebanner({}: Props) {
           1400,
           'Search for Magic: the Gathering',
           1400,
+          'Search for One Piece',
+          1400,
           'Search for Pokemon',
           1400,
           'Search for Yu-gi-oh',
