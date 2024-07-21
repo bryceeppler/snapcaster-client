@@ -1,4 +1,4 @@
-export type Tcgs = 'yugioh' | 'pokemon' | 'lorcana' | 'mtg';
+export type Tcgs = 'yugioh' | 'pokemon' | 'lorcana' | 'mtg' | 'onepiece';
 
 export type Product = {
   _id: string;

@@ -575,6 +575,7 @@ const SearchView = ({
             <SelectGroup>
               <SelectLabel>Select TCG</SelectLabel>
               <SelectItem value="mtg">MTG</SelectItem>
+              <SelectItem value="onepiece">One Piece</SelectItem>
               <SelectItem value="pokemon">Pokemon</SelectItem>
               <SelectItem value="lorcana">Lorcana</SelectItem>
               <SelectItem value="yugioh">Yu-gi-oh</SelectItem>
