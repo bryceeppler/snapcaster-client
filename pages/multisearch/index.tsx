@@ -96,7 +96,7 @@ export default function Multisearch({}: Props) {
         )}
         {mode === 'results' && (
           <>
-            <div className="flex flex-col gap-4 md:flex-row">
+            <div className="flex w-full flex-col gap-4 md:flex-row">
               <ResultsView results={results} />
             </div>
           </>
@@ -109,25 +109,23 @@ export default function Multisearch({}: Props) {
 
 const ResultsView = ({ results }: { results: MultiSearchProduct[] }) => {
   return (
-    <div>
-      <div className="w-full grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0 ">
-        <div className="lg:hidden">
+    <div className="w-full  grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0">
+      <div className="lg:hidden">
+        <Toolbar />
+      </div>
+
+      <div className="col-span-8 flex w-full flex-col gap-4">
+        <div className="hidden lg:block">
           <Toolbar />
         </div>
-
-        <div className="col-span-8 flex flex-col gap-4">
-          <div className="hidden lg:block">
-            <Toolbar />
-          </div>
-          <div className="">
-            <ResultsTable results={results} />
-          </div>
+        <div className="results w-full">
+          <ResultsTable results={results} />
         </div>
-        <div className="col-span-4 flex flex-col gap-4">
-          <ResultSelector />
+      </div>
+      <div className="col-span-4 flex flex-col gap-4">
+        <ResultSelector />
 
-          <Cart />
-        </div>
+        <Cart />
       </div>
     </div>
   );
