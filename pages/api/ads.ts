@@ -53,6 +53,10 @@ export default async function handler(
         }
         formattedResult.position[ad.ad_slot_id].ads.push(ad);
       });
+      // for ad slot 3, shuffle the ads
+      if (formattedResult.position[3]) {
+        formattedResult.position[3].ads.sort(() => Math.random() - 0.5);
+      }
 
       res.status(200).json(formattedResult); // Return the formatted result
     } catch (error) {
