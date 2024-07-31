@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Loader2, Minus, Plus, Scroll, Trash2 } from 'lucide-react';
@@ -298,7 +298,8 @@ const ResultSelector = () => {
     useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
   const totalRequested = results.length;
-
+  const reccomendedWebsites = ['obsidian', 'levelup', 'chimera', 'exorgames'];
+  const [selectedTopStore, setSelectedTopStore] = useState("")
   const getTopWebsites = (results: MultiSearchProduct[]) => {
     const websiteProductSet: { [website: string]: Set<string> } = {};
     const websiteProductPrices: {
@@ -327,7 +328,7 @@ const ResultSelector = () => {
     const websiteCount: { [website: string]: number } = {};
     const websiteTotalCost: { [website: string]: number } = {};
     Object.entries(websiteProductSet).forEach(([website, productSet]) => {
-      if (website !== 'obsidian') {
+      if (!reccomendedWebsites.includes(website)) {
         return;
       }
       websiteCount[website] = productSet.size;
@@ -371,7 +372,7 @@ const ResultSelector = () => {
         <div className="flex flex-col gap-2 overflow-clip rounded px-6">
           {getTopWebsites(results).map((websiteInfo, i) => {
             return (
-              <DialogTrigger asChild>
+              <DialogTrigger asChild onClick={()=>{{setSelectedTopStore(websiteInfo.website)}}}>
                 <div
                   className="border-1 rounded-md border border-accent px-4 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
                   key={i}
@@ -411,7 +412,7 @@ const ResultSelector = () => {
                     setSelectedResult(result);
                   }}
                 >
-                  <TableCell className="py-2 text-left">
+                  <TableCell className="py-2 text-left capitalize">
                     {result.name}
                   </TableCell>
                   <TableCell className="py-2 text-right">
@@ -429,8 +430,7 @@ const ResultSelector = () => {
         <DialogHeader>
           <DialogTitle>Add to cart</DialogTitle>
           <DialogDescription>
-            Clicking below will add all results from Obsidian Games to your
-            cart.
+            {`Clicking below will add all results from to your cart.`}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -439,7 +439,7 @@ const ResultSelector = () => {
               onClick={() => {
                 results.forEach((result) => {
                   const obsidianProducts = result.results.filter(
-                    (product) => product.website === 'obsidian'
+                    (product) => product.website === selectedTopStore
                   );
                   if (obsidianProducts.length > 0) {
                     const cheapestProduct = obsidianProducts.reduce(
