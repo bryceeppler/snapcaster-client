@@ -47,22 +47,55 @@ const Supporters: NextPage<Props> = () => {
                 <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                   <div className="flex items-center justify-center">
                     <Link
-                      href="/contact"
-                      className=" aspect-video w-48 rounded border bg-popover"
-                    ></Link>
+                      href="https://levelupgames.ca"
+                      target="_blank"
+                      data-position-id="8" // hardcoded for t2 supporter logo
+                      data-ad-id="42" // hardcoded for the levelup support logo ad
+                      onClick={() => trackAdClick('42')}
+                    >
+                      <img
+                        alt="Level Up Games"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="200"
+                        src="/levelup_icon.png"
+                        width="400"
+                      />
+                    </Link>
                   </div>
                   <div className="flex items-center justify-center">
                     <Link
-                      href="/contact"
-                      className=" aspect-video w-48 rounded border bg-popover"
-                    ></Link>
-                  </div>{' '}
+                      href="https://chimeragamingonline.com"
+                      target="_blank"
+                      data-position-id="8" // hardcoded for t2 supporter logo
+                      data-ad-id="43" // hardcoded for the chimera support logo ad
+                      onClick={() => trackAdClick('43')}
+                    >
+                      <img
+                        alt="Chimera Gaming"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="200"
+                        src="/chimera_sponsor.png"
+                        width="400"
+                      />
+                    </Link>
+                  </div>
                   <div className="flex items-center justify-center">
                     <Link
-                      href="/contact"
-                      className=" aspect-video w-48 rounded border bg-popover"
-                    ></Link>
-                  </div>{' '}
+                      href="https://exorgames.com"
+                      target="_blank"
+                      data-position-id="8" // hardcoded for t2 supporter logo
+                      data-ad-id="44" // hardcoded for the exor support logo ad
+                      onClick={() => trackAdClick('44')}
+                    >
+                      <img
+                        alt="Exor Games"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="200"
+                        src="/exorgames_icon.png"
+                        width="400"
+                      />
+                    </Link>
+                  </div>
                   <div className="flex items-center justify-center">
                     <Link
                       href="/contact"

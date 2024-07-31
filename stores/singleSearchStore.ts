@@ -22,6 +22,7 @@ type SingleSearchState = {
   setTcg: (tcg: Tcgs) => void;
   setConditions: (conditions: string[]) => void;
   setSortField: (field: string) => void;
+  setDiscounts: () => void;
   toggleSortOrder: () => void;
   toggleFoil: () => void;
   clearFilters: () => void;
@@ -59,6 +60,32 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
     set({ sortField: field });
     applyFilters();
   },
+
+  setDiscounts: () => {
+    const resultsAfterDiscount = get().results;
+    resultsAfterDiscount.map((item) => {
+      item.priceBeforeDiscount = item.price;
+      if (item.website == 'obsidian' || item.website == 'levelup') {
+        item.price = (item.price * 0.95).toFixed(2);
+      }
+    });
+
+    const promotedAfterDiscount = get().promotedCards;
+    promotedAfterDiscount.map((item) => {
+      item.priceBeforeDiscount = item.price;
+      if (item.website == 'obsidian' || item.website == 'levelup') {
+        item.price = (item.price * 0.95).toFixed(2);
+      }
+    });
+
+    set({
+      results: resultsAfterDiscount,
+      filteredResults: resultsAfterDiscount,
+      promotedCards: promotedAfterDiscount
+    });
+    applyFilters();
+  },
+
   toggleSortOrder: () => {
     set({ sortOrder: get().sortOrder === 'asc' ? 'desc' : 'asc' });
     applyFilters();
@@ -96,6 +123,7 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
         filteredResults: response.data.data,
         promotedCards: response.data.promotedCards
       });
+      get().setDiscounts();
       set({ loading: false });
     } catch (error) {
       console.error(error);

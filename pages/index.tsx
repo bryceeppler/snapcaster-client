@@ -31,7 +31,7 @@ const Home: NextPage<Props> = ({}: Props) => {
         {Object.keys(results).length > 0 && <SingleCatalog loading={loading} />}
         {searchStarted && !loading && Object.keys(results).length === 0 && (
           <div className="flex items-center justify-center pt-5">
-            <p className="text-zinc-500">No results found</p>
+            <p className="text-zinc-500">No results found. Try typing the proper card name using the autofill.</p>
           </div>
         )}
       </div>
