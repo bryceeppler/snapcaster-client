@@ -520,7 +520,7 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
         <div className="mt-3">
           {product.website === 'obsidian' && (
             <h4 className="text-right text-xs text-muted-foreground line-through">
-              ${product.price.toFixed(2)}
+              ${Number(product.priceBeforeDiscount)?.toFixed(2)}
             </h4>
           )}
           <div className="   flex flex-row justify-between">
@@ -533,11 +533,7 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
                 {product.condition}
               </Badge>
             </div>
-            {product.website === 'obsidian' ? (
-              <h4 className="">${(product.price * 0.95).toFixed(2)}</h4>
-            ) : (
-              <h4 className="">${product.price.toFixed(2)}</h4>
-            )}
+            <h4 className="">${Number(product.price).toFixed(2)}</h4>
           </div>
         </div>
       </div>
