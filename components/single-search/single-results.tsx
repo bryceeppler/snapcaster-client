@@ -504,21 +504,40 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
             {product.website === 'obsidian' && (
               <img src="/obsidian_icon.png" alt="Website" className="h-4 w-4" />
             )}
+            {product.website === 'levelup' && (
+              <img src="/levelup_icon.png" alt="Website" className="h-4 w-4" />
+            )}
+            {product.website === 'chimera' && (
+              <img src="/chimera_icon.png" alt="Website" className="h-4 w-4" />
+            )}
+            {product.website === 'exorgames' && (
+              <img
+                src="/exorgames_icon.png"
+                alt="Website"
+                className="h-4 w-4"
+              />
+            )}
             <div className="text-xs">
               {findWebsiteNameByCode(product.website)}
             </div>
           </div>
         </div>
-        {product.website === 'obsidian' && (
+        {(product.website === 'obsidian' || product.website === 'levelup') && (
           <div className="mt-3 flex w-full">
             <div className="text-left text-[0.7rem] tracking-tighter text-muted-foreground">
-              With code{' '}
-              <span className="text-xs font-bold">OBSIDIAN+SNAPCASTER5</span>
+              With code <br />
+              {product.website === 'obsidian' && (
+                <span className="text-xs font-bold">OBSIDIAN+SNAPCASTER5</span>
+              )}
+              {product.website === 'levelup' && (
+                <span className="text-xs font-bold">SNAPCASTER</span>
+              )}
             </div>
           </div>
         )}
         <div className="mt-3">
-          {product.website === 'obsidian' && (
+          {(product.website === 'obsidian' ||
+            product.website === 'levelup') && (
             <h4 className="text-right text-xs text-muted-foreground line-through">
               ${Number(product.priceBeforeDiscount)?.toFixed(2)}
             </h4>
