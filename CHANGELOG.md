@@ -1,5 +1,13 @@
 # Changelog
 
+## 2024-07-31
+
+### Changed
+
+- Hard coded exor games, level up games, and chimera games as options in the recommended stores options in /pages/multisearch/index.tsx
+- you can add and remove websites in the reccomendedWebsites list which contains a list of reccomended stores by slug
+- this pull from the postgres tables in the future
+
 ## 2024-07-18
 
 ### Changed
