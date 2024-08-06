@@ -156,6 +156,7 @@ export default function SingleCatalogRow({ cardData, tcg }: Props) {
                     cardData.link,
                     cardData.price,
                     cardData.name,
+                    false,
                     tcg
                   );
                 }}
