@@ -472,7 +472,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
 }
 
 interface SingleCatalogCard extends SingleSearchResult {
-  promoted: boolean;
+  promoted?: boolean;
 }
 
 function CatalogItem({ product }: { product: SingleCatalogCard }) {
@@ -576,7 +576,7 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
               product.link,
               product.price,
               product.name,
-              product.promoted,
+              product.promoted ?? false,
               resultsTcg
             )
           }
