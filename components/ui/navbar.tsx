@@ -21,17 +21,17 @@ const components: { title: string; href: string; description: string }[] = [
     href: '/supporters',
     description: 'A list of our partnered stores who support Snapcaster.'
   },
-  {
-    title: 'Blog',
-    href: '/blog',
-    description:
-      'Stay up to date with the latest Snapcaster news, updates, and features.'
-  },
-  {
-    title: 'Guides',
-    href: '/guides',
-    description: 'A shopping guide for all the different types of Magic cards.'
-  },
+  // {
+  //   title: 'Blog',
+  //   href: '/blog',
+  //   description:
+  //     'Stay up to date with the latest Snapcaster news, updates, and features.'
+  // },
+  // {
+  //   title: 'Guides',
+  //   href: '/guides',
+  //   description: 'A shopping guide for all the different types of Magic cards.'
+  // },
   {
     title: 'Discord',
     href: 'https://discord.gg/EnKKHxSq75',
@@ -137,7 +137,7 @@ export default function Navbar() {
             </Button>
           </Link> */}
           {/* Blog */}
-          <Link href="/blog" as="/blog">
+          {/* <Link href="/blog" as="/blog">
             <Button
               variant="ghost"
               className="block w-full text-left text-sm"
@@ -147,13 +147,13 @@ export default function Navbar() {
             >
               Blog
             </Button>
-          </Link>
+          </Link> */}
           {/* Card Guide */}
-          <Link className="" href="/guides" as="/guides">
+          {/* <Link className="" href="/guides" as="/guides">
             <Button variant="ghost" className="block w-full text-left text-sm">
               Card Guide
             </Button>
-          </Link>
+          </Link> */}
           {!isAuthenticated && (
             <Link href="/signin">
               <Button
@@ -198,14 +198,14 @@ export default function Navbar() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Snapcaster Pro</NavigationMenuTrigger>
+              <NavigationMenuTrigger>Features</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                   <li className="row-span-3">
                     <NavigationMenuLink asChild>
                       <a
                         className="flex h-full w-full select-none flex-col justify-end rounded-md bg-background p-6 no-underline outline-none focus:shadow-md"
-                        href="/"
+                        href="/profile"
                       >
                         <img
                           src="/favicon.ico"

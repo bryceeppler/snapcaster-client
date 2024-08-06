@@ -14,14 +14,14 @@ export default function Footer() {
             <Link href="#">Home</Link>
             <Link href="/multisearch">Multisearch</Link>
             {adsEnabled && <Link href="/supporters">Supporters</Link>}
-            <Link href="/blog">Blog</Link>
+            {/* <Link href="/blog">Blog</Link> */}
           </nav>
         </div>
         <div className="grid gap-4">
           <h3 className="text-lg font-semibold">Resources</h3>
           <nav className="grid gap-2">
             {/* <Link href="/contact">Contact</Link> */}
-            <Link href="/guides">Guides</Link>
+            {/* <Link href="/guides">Guides</Link> */}
             <Link href="/faq">FAQ</Link>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
