@@ -569,6 +569,7 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
               product.link,
               product.price,
               product.name,
+              product.promoted,
               resultsTcg
             )
           }

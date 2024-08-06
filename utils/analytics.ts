@@ -22,6 +22,7 @@ export const handleBuyClick = (
   link: string,
   price: number,
   cardName: string,
+  promoted: boolean,
   tcg: string
 ) => {
   const domain = link.split('/')[2];
@@ -40,6 +41,27 @@ export const handleBuyClick = (
     card_price: priceInCents,
     tcg: tcg
   });
+
+  if (promoted) {
+    let adId;
+    switch (domain) {
+      case 'chimeragamingonline.com':
+        adId = '47';
+        break;
+      case 'exorgames.com':
+        adId = '45';
+        break;
+      case 'levelupgames.ca':
+        adId = '46';
+        break;
+      case 'obsidiangames.ca':
+        adId = '48';
+        break;
+      default:
+        adId = 'unknown';
+    }
+    trackAdClick(adId);
+  }
 };
 
 export const trackAdClick = (adId: string) => {
