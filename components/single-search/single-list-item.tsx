@@ -77,6 +77,7 @@ export default function SingleCatalogRow({ cardData, promo, tcg }: Props) {
                       cardData.link,
                       cardData.price,
                       cardData.name,
+                      false,
                       tcg
                     )
                   }
@@ -107,7 +108,13 @@ export default function SingleCatalogRow({ cardData, promo, tcg }: Props) {
         >
           <Button
             onClick={() =>
-              handleBuyClick(cardData.link, cardData.price, cardData.name, tcg)
+              handleBuyClick(
+                cardData.link,
+                cardData.price,
+                cardData.name,
+                false,
+                tcg
+              )
             }
             className="w-full"
           >

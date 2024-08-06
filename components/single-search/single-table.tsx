@@ -58,6 +58,7 @@ const SingleResultsTable = (props: Props) => {
                       cardData.link,
                       cardData.price,
                       cardData.name,
+                      false,
                       props.tcg
                     )
                   }

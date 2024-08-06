@@ -65,6 +65,7 @@ export default function SingleCatalogCard({ cardData, tcg, promo }: Props) {
                   cardData.link,
                   cardData.price,
                   cardData.name,
+                  false,
                   tcg
                 )
               }
