@@ -30,7 +30,7 @@ export default function MainLayout({
   const { hasActiveSubscription } = useAuthStore();
   const plugin = React.useRef(
     Autoplay({
-      delay: 9000,
+      delay: 20000,
       stopOnInteraction: true
     }) as any
   );
