@@ -41,6 +41,11 @@ const insertAdvertisements = (
   ads: Ad[]
 ): ResultItem[] => {
   let resultsWithAds: ResultItem[] = [];
+  // push the first ad at the beginning
+  const randomAd = getRandomAd(ads);
+  if (randomAd) {
+    resultsWithAds.push(randomAd);
+  }
   for (let i = 0; i < results.length; i++) {
     if (i > 0 && i % adInterval === 0) {
       const randomAd = getRandomAd(ads);
@@ -112,14 +117,16 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
             return 0;
         }
       });
-    const withAds = insertAdvertisements(tempFiltered, 9, adsFromPosition5);
+
     // add "promoted"=true to promoted cards, and "promoted"=false to the rest
     const combined = [
       promotedCards.map((card) => ({ ...card, promoted: true })),
-      withAds
+      tempFiltered.map((card) => ({ ...card, promoted: false }))
     ].flat();
 
-    return combined;
+    const withAds = insertAdvertisements(combined, 6, adsFromPosition5);
+
+    return withAds;
   }, [filters, sortBy, filteredResults]);
 
   const handleFilterChange = (type: string, value: any[]) => {
