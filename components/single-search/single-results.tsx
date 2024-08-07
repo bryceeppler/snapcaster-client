@@ -28,6 +28,8 @@ import { handleBuyClick } from '../../utils/analytics';
 import { Input } from '../ui/input';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import BackToTopButton from '../ui/back-to-top-btn';
+import { MessageSquareWarning } from 'lucide-react';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 type ResultItem = SingleSearchResult | Ad;
 
 const getRandomAd = (ads: Ad[]): Ad => {
@@ -152,6 +154,15 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
     <div className="grid gap-6 md:grid-cols-[240px_1fr]">
       <div className="flex flex-col gap-6">
         <div className="grid gap-4">
+          {!hasActiveSubscription && (
+            <div className="flex flex-row items-center gap-2 rounded-lg bg-popover p-3">
+              <ExclamationTriangleIcon className="aspect-square h-4 min-w-4 text-yellow-500" />
+              <p className="text-left text-xs">
+                Snapcaster Pro filters will be available until the end of August
+                for all users.
+              </p>
+            </div>
+          )}
           <Accordion type="single" collapsible>
             <AccordionItem value="condition">
               <AccordionTrigger className="text-base">
