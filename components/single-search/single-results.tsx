@@ -540,22 +540,21 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
             </div>
           </div>
         </div>
-        {(product.website === 'obsidian' || product.website === 'levelup') && (
+        {product.website === 'obsidian' && (
           <div className="mt-3 flex w-full">
             <div className="text-left text-[0.7rem] tracking-tighter text-muted-foreground">
               With code <br />
               {product.website === 'obsidian' && (
                 <span className="text-xs font-bold">OBSIDIAN+SNAPCASTER5</span>
               )}
-              {product.website === 'levelup' && (
+              {/* {product.website === 'levelup' && (
                 <span className="text-xs font-bold">SNAPCASTER</span>
-              )}
+              )} */}
             </div>
           </div>
         )}
         <div className="mt-3">
-          {(product.website === 'obsidian' ||
-            product.website === 'levelup') && (
+          {product.website === 'obsidian' && (
             <h4 className="text-right text-xs text-muted-foreground line-through">
               ${Number(product.priceBeforeDiscount)?.toFixed(2)}
             </h4>

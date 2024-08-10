@@ -65,7 +65,8 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
     const resultsAfterDiscount = get().results;
     resultsAfterDiscount.map((item) => {
       item.priceBeforeDiscount = item.price;
-      if (item.website == 'obsidian' || item.website == 'levelup') {
+      // if (item.website == 'obsidian' || item.website == 'levelup') {
+      if (item.website == 'obsidian') {
         item.price = (item.price * 0.95).toFixed(2);
       }
     });
@@ -73,7 +74,8 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
     const promotedAfterDiscount = get().promotedCards;
     promotedAfterDiscount.map((item) => {
       item.priceBeforeDiscount = item.price;
-      if (item.website == 'obsidian' || item.website == 'levelup') {
+      if (item.website == 'obsidian') {
+        // if (item.website == 'obsidian' || item.website == 'levelup') {
         item.price = (item.price * 0.95).toFixed(2);
       }
     });
