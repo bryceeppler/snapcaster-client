@@ -35,8 +35,8 @@ export default async function handler(
 
   if (req.method === 'GET') {
     try {
-      if (process.env.NODE_ENV == 'development' && !process.env.DATABASE_URL) {
-        const data = await import('../../development/ads.json'); // Adjust the path as necessary
+      if (process.env.NODE_ENV == 'development') {
+        const data = await import('@/development/ads.json'); // Adjust the path as necessary
         res.status(200).json(data.default);
       } else {
         const result = await pool.query(

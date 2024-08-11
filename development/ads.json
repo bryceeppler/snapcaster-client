@@ -1,0 +1,358 @@
+{
+    "position": {
+        "1": {
+            "ads": [
+                {
+                    "id": 2,
+                    "campaign_id": 2,
+                    "name": "header",
+                    "store_id": 2,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 1,
+                    "mobile_image": "https://cdn.snapcaster.ca/feed-banner-mobile.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/obsidian_1008x160.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-05-30T00:00:00.000Z",
+                    "status": "ACTIVE",
+                    "position": "1"
+                }
+            ]
+        },
+        "2": {
+            "ads": [
+                {
+                    "id": 19,
+                    "campaign_id": 2,
+                    "name": "left banner (bloomburrow)",
+                    "store_id": 2,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 2,
+                    "mobile_image": "https://cdn.snapcaster.ca/bloomburrow.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/bloomburrow_lg.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-07-26T15:03:36.114Z",
+                    "status": "ACTIVE",
+                    "position": "2"
+                }
+            ]
+        },
+        "3": {
+            "ads": [
+                {
+                    "id": 5,
+                    "campaign_id": 2,
+                    "name": "carousel 2",
+                    "store_id": 2,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 3,
+                    "mobile_image": "https://cdn.snapcaster.ca/obsidian_mtg_vertical.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/obsidian_mtg_vertical_lg.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-05-30T00:00:00.000Z",
+                    "status": "ACTIVE",
+                    "position": "3"
+                },
+                {
+                    "id": 4,
+                    "campaign_id": 2,
+                    "name": "carousel 1",
+                    "store_id": 2,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 3,
+                    "mobile_image": "https://cdn.snapcaster.ca/obsidian_pokemon_vertical.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/obsidian_pokemon_vertical_lg.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-05-30T00:00:00.000Z",
+                    "status": "ACTIVE",
+                    "position": "3"
+                },
+                {
+                    "id": 34,
+                    "campaign_id": 5,
+                    "name": "chimera carousel art",
+                    "store_id": 4,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 3,
+                    "mobile_image": "https://cdn.snapcaster.ca/chimera-sm-banner-2.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/chimera-sm-banner-2.png",
+                    "url": "https://chimeragamingonline.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "3"
+                },
+                {
+                    "id": 36,
+                    "campaign_id": 5,
+                    "name": "chimera carousel",
+                    "store_id": 4,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 3,
+                    "mobile_image": "https://cdn.snapcaster.ca/chimera-sm-banner-1.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/chimera-sm-banner-1.png",
+                    "url": "https://chimeragamingonline.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "3"
+                },
+                {
+                    "id": 38,
+                    "campaign_id": 6,
+                    "name": "exor carousel art",
+                    "store_id": 5,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 3,
+                    "mobile_image": "https://cdn.snapcaster.ca/exor-sm-banner-1.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/exor-sm-banner-1.png",
+                    "url": "https://exorgames.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "3"
+                },
+                {
+                    "id": 32,
+                    "campaign_id": 4,
+                    "name": "levelup carousel",
+                    "store_id": 3,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 3,
+                    "mobile_image": "https://cdn.snapcaster.ca/levelup-sm-banner-2.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/levelup-sm-banner-2.png",
+                    "url": "https://levelupgames.ca",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "3"
+                },
+                {
+                    "id": 40,
+                    "campaign_id": 6,
+                    "name": "exor carousel",
+                    "store_id": 5,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 3,
+                    "mobile_image": "https://cdn.snapcaster.ca/exor-sm-banner-2.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/exor-sm-banner-2.png",
+                    "url": "https://exorgames.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "3"
+                },
+                {
+                    "id": 30,
+                    "campaign_id": 4,
+                    "name": "levelup carousel art",
+                    "store_id": 3,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 3,
+                    "mobile_image": "https://cdn.snapcaster.ca/levelup-sm-banner-1.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/levelup-sm-banner-1.png",
+                    "url": "https://levelupgames.ca",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "3"
+                }
+            ]
+        },
+        "4": {
+            "ads": [
+                {
+                    "id": 7,
+                    "campaign_id": 2,
+                    "name": "feed obsidian horizontal",
+                    "store_id": 2,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 4,
+                    "mobile_image": "https://cdn.snapcaster.ca/feed-banner-mobile.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/obsidian_1008x160.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-05-30T00:00:00.000Z",
+                    "status": "ACTIVE",
+                    "position": "4"
+                }
+            ]
+        },
+        "5": {
+            "ads": [
+                {
+                    "id": 10,
+                    "campaign_id": 2,
+                    "name": "feed obsidian vert pokemon",
+                    "store_id": 2,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 5,
+                    "mobile_image": "https://cdn.snapcaster.ca/obsidian_pokemon_vertical_lg.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/obsidian_pokemon_vertical_lg.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-05-30T00:00:00.000Z",
+                    "status": "ACTIVE",
+                    "position": "5"
+                },
+                {
+                    "id": 31,
+                    "campaign_id": 4,
+                    "name": "levelup feed art",
+                    "store_id": 3,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 5,
+                    "mobile_image": "https://cdn.snapcaster.ca/levelup-lg-banner-1.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/levelup-lg-banner-1.png",
+                    "url": "https://levelupgames.ca",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "5"
+                },
+                {
+                    "id": 33,
+                    "campaign_id": 4,
+                    "name": "levelup feed",
+                    "store_id": 3,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 5,
+                    "mobile_image": "https://cdn.snapcaster.ca/levelup-lg-banner-2.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/levelup-lg-banner-2.png",
+                    "url": "https://levelupgames.ca",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "5"
+                },
+                {
+                    "id": 35,
+                    "campaign_id": 5,
+                    "name": "chimera feed art",
+                    "store_id": 4,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 5,
+                    "mobile_image": "https://cdn.snapcaster.ca/chimera-lg-banner-2.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/chimera-lg-banner-2.png",
+                    "url": "https://chimeragamingonline.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "5"
+                },
+                {
+                    "id": 37,
+                    "campaign_id": 5,
+                    "name": "chimera feed",
+                    "store_id": 4,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 5,
+                    "mobile_image": "https://cdn.snapcaster.ca/chimera-lg-banner-1.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/chimera-lg-banner-1.png",
+                    "url": "https://chimeragamingonline.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "5"
+                },
+                {
+                    "id": 39,
+                    "campaign_id": 6,
+                    "name": "exor feed art",
+                    "store_id": 5,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 5,
+                    "mobile_image": "https://cdn.snapcaster.ca/exor-lg-banner-1.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/exor-lg-banner-1.png",
+                    "url": "https://exorgames.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "5"
+                },
+                {
+                    "id": 41,
+                    "campaign_id": 6,
+                    "name": "exor feed",
+                    "store_id": 5,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 5,
+                    "mobile_image": "https://cdn.snapcaster.ca/exor-lg-banner-2.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/exor-lg-banner-2.png",
+                    "url": "https://exorgames.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "5"
+                }
+            ]
+        },
+        "6": {
+            "ads": [
+                {
+                    "id": 13,
+                    "campaign_id": 2,
+                    "name": "t1 supporter logo",
+                    "store_id": 2,
+                    "dimensions": "400x200",
+                    "ad_slot_id": 6,
+                    "mobile_image": "https://cdn.snapcaster.ca/obsidian_supporter.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/obsidian_supporter.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-07-09T20:52:18.490Z",
+                    "status": "ACTIVE",
+                    "position": "6"
+                }
+            ]
+        },
+        "7": {
+            "ads": [
+                {
+                    "id": 14,
+                    "campaign_id": 2,
+                    "name": "powered by",
+                    "store_id": 2,
+                    "dimensions": "400x200",
+                    "ad_slot_id": 7,
+                    "mobile_image": "/obsidian_icon.png",
+                    "desktop_image": "/obsidian_icon.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-07-09T20:56:05.072Z",
+                    "status": "ACTIVE",
+                    "position": "7"
+                }
+            ]
+        },
+        "8": {
+            "ads": [
+                {
+                    "id": 42,
+                    "campaign_id": 4,
+                    "name": "levelup supporter",
+                    "store_id": 3,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 8,
+                    "mobile_image": "https://cdn.snapcaster.ca/levelup-lg-banner-2.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/levelup-lg-banner-2.png",
+                    "url": "https://levelupgames.ca",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "8"
+                },
+                {
+                    "id": 43,
+                    "campaign_id": 5,
+                    "name": "chimera supporter",
+                    "store_id": 4,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 8,
+                    "mobile_image": "https://cdn.snapcaster.ca/chimera-lg-banner-1.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/chimera-lg-banner-1.png",
+                    "url": "https://chimeragamingonline.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "8"
+                },
+                {
+                    "id": 44,
+                    "campaign_id": 6,
+                    "name": "exor supporter",
+                    "store_id": 5,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 8,
+                    "mobile_image": "https://cdn.snapcaster.ca/exor-lg-banner-2.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/exor-lg-banner-2.png",
+                    "url": "https://exorgames.com",
+                    "created_at": "2024-07-31T21:14:29.313Z",
+                    "status": "ACTIVE",
+                    "position": "8"
+                }
+            ]
+        }
+    }
+}
