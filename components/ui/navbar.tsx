@@ -103,7 +103,7 @@ export default function Navbar() {
               Multi Search
             </Button>
           </Link>
-          <Link href="/advancedsearch" as="/advancedsearch">
+          {/* <Link href="/advancedsearch" as="/advancedsearch">
             <Button
               variant="ghost"
               className="block w-full text-left text-sm"
@@ -113,7 +113,7 @@ export default function Navbar() {
             >
               MTG Advanced Search
             </Button>
-          </Link>
+          </Link> */}
           <Link href="/supporters" as="/supporters">
             <Button
               variant="ghost"
@@ -226,9 +226,9 @@ export default function Navbar() {
                   <ListItem href="/multisearch" title="Multi Search">
                     Search up to 100 cards at stores of your choice.
                   </ListItem>
-                  <ListItem href="/advancedsearch" title="Advanced Search">
+                  {/* <ListItem href="/advancedsearch" title="Advanced Search">
                     Search and filter cards by art type, set, and more.
-                  </ListItem>
+                  </ListItem> */}
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
