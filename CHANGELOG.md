@@ -1,5 +1,13 @@
 # Changelog
 
+## 2024-08-11
+
+### Changed
+
+- updated the gitignore to not push .env or /development
+- removed advanced search from the navbar components/ui/navbar.tsx
+- adjusted pages/api/ads.ts to read /development/ads.json so new developers can load the client without the postgres URI (New devs will have to ask an admin for the /development/ads.json file)
+
 ## 2024-07-31
 
 ### Changed
