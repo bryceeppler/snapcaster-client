@@ -20,11 +20,17 @@ export interface SingleSearchResult {
   image: string;
   set: string;
   condition: string;
-  foil: boolean;
+  foil: string;
   price: number;
   priceBeforeDiscount: number;
   website: string;
   s3_image_url?: string;
+  collector_number: string;
+  frame: string;
+  showcase: string;
+  promo: string;
+  alternate_art: string;
+  art_series: string;
 }
 
 export type MultiSearchCard = {

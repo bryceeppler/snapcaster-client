@@ -1,4 +1,4 @@
-import { useState, useMemo, SetStateAction } from 'react';
+import { useState, useMemo, SetStateAction, useEffect } from 'react';
 import {
   Accordion,
   AccordionItem,
@@ -30,6 +30,7 @@ import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import BackToTopButton from '../ui/back-to-top-btn';
 import { MessageSquareWarning } from 'lucide-react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import SingleFilterAccordian from './single-filter-accordian';
 type ResultItem = SingleSearchResult | Ad;
 
 const getRandomAd = (ads: Ad[]): Ad => {
@@ -61,19 +62,41 @@ const insertAdvertisements = (
 };
 
 export default function SingleCatalog({ loading }: { loading: boolean }) {
-  const { filteredResults, promotedCards } = useSingleStore();
+  const { filteredResults, promotedCards, tcg, results, searchStarted } =
+    useSingleStore();
   const { ads } = useGlobalStore();
   const { websites } = useStore();
   const { hasActiveSubscription } = useAuthStore();
   const adsFromPosition5 = ads.position['5']?.ads || [];
-
   const [filters, setFilters] = useState({
     condition: [] as string[],
     priceRange: [0, 10000] as [number, number],
     vendor: [] as string[],
     set: [] as string[],
-    foil: [] as string[]
+    foil: [] as string[],
+    alternate_art: [] as string[],
+    showcase: [] as string[],
+    frame: [] as string[],
+    promo: [] as string[],
+    art_series: [] as string[],
+    collector_number: [] as string[]
   });
+  useEffect(() => {
+    setFilters({
+      condition: [],
+      priceRange: [0, 10000],
+      vendor: [],
+      foil: [],
+      set: [],
+      alternate_art: [],
+      showcase: [],
+      frame: [],
+      promo: [],
+      art_series: [],
+      collector_number: []
+    });
+    console.log('useEffect');
+  }, [tcg]);
   const [sortBy, setSortBy] = useState('relevance');
   const filteredProducts = useMemo(() => {
     const tempFiltered = filteredResults
@@ -95,8 +118,39 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
         const foilMatch =
           filters.foil.length === 0 || filters.foil.includes(product.foil);
 
+        const collector_number =
+          filters.collector_number.length === 0 ||
+          filters.collector_number.includes(product.collector_number);
+
+        const alternate_art =
+          filters.alternate_art.length === 0 ||
+          filters.alternate_art.includes(product.alternate_art);
+
+        const showcase =
+          filters.showcase.length === 0 ||
+          filters.showcase.includes(product.showcase);
+
+        const frame =
+          filters.frame.length === 0 || filters.frame.includes(product.frame);
+
+        const promo =
+          filters.promo.length === 0 || filters.promo.includes(product.promo);
+
+        const art_series =
+          filters.art_series.length === 0 ||
+          filters.art_series.includes(product.art_series);
         return (
-          conditionMatch && priceMatch && vendorMatch && setMatch && foilMatch
+          conditionMatch &&
+          priceMatch &&
+          vendorMatch &&
+          setMatch &&
+          foilMatch &&
+          collector_number &&
+          alternate_art &&
+          showcase &&
+          frame &&
+          promo &&
+          art_series
         );
       })
       .sort((a, b) => {
@@ -132,6 +186,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
   }, [filters, sortBy, filteredResults]);
 
   const handleFilterChange = (type: string, value: any[]) => {
+    console.log(filters);
     setFilters((prevFilters) => {
       let newValue = value;
       if (type === 'priceRange') {
@@ -145,6 +200,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
         [type]: newValue
       };
     });
+    console.log(filters);
   };
   const handleSortChange = (value: SetStateAction<string>) => {
     setSortBy(value);
@@ -288,40 +344,61 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                 </div>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="foil">
-              <AccordionTrigger className="text-base">Foil</AccordionTrigger>
-              <AccordionContent>
-                <div className="grid gap-2">
-                  {Array.from(
-                    new Set(
-                      filteredResults
-                        .map((product) => product.foil)
-                        .filter((foil) => foil && foil.trim() !== '')
-                    )
-                  )
-                    .sort()
-                    .map((foil) => (
-                      <Label
-                        key={foil}
-                        className="flex items-center gap-2 overflow-clip text-left text-xs font-normal capitalize"
-                      >
-                        <Checkbox
-                          checked={filters.foil.includes(foil)}
-                          onCheckedChange={() =>
-                            handleFilterChange(
-                              'foil',
-                              filters.foil.includes(foil)
-                                ? filters.foil.filter((s) => s !== foil)
-                                : [...filters.foil, foil]
-                            )
-                          }
-                        />
-                        <div className="line-clamp-1">{foil}</div>
-                      </Label>
-                    ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+            {(tcg === 'pokemon' || tcg === 'lorcana' || tcg === 'yugioh') && (
+              <SingleFilterAccordian
+                filters={filters}
+                filterOption="collector_number"
+                header="Collector Number"
+                handleFilterChange={handleFilterChange}
+              />
+            )}
+
+            <SingleFilterAccordian
+              filters={filters}
+              filterOption="foil"
+              header="Foil"
+              handleFilterChange={handleFilterChange}
+            ></SingleFilterAccordian>
+            {tcg == 'mtg' && (
+              <>
+                <SingleFilterAccordian
+                  filters={filters}
+                  filterOption="frame"
+                  header="Frame"
+                  handleFilterChange={handleFilterChange}
+                ></SingleFilterAccordian>
+                <SingleFilterAccordian
+                  filters={filters}
+                  filterOption="showcase"
+                  header="Showcase"
+                  handleFilterChange={handleFilterChange}
+                ></SingleFilterAccordian>
+                <SingleFilterAccordian
+                  filters={filters}
+                  filterOption="alternate_art"
+                  header="Alternate Art"
+                  handleFilterChange={handleFilterChange}
+                ></SingleFilterAccordian>
+                <SingleFilterAccordian
+                  filters={filters}
+                  filterOption="promo"
+                  header="Promo"
+                  handleFilterChange={handleFilterChange}
+                ></SingleFilterAccordian>
+                <SingleFilterAccordian
+                  filters={filters}
+                  filterOption="art_series"
+                  header="Art Series"
+                  handleFilterChange={handleFilterChange}
+                ></SingleFilterAccordian>
+              </>
+            )}
+            <SingleFilterAccordian
+              filters={filters}
+              filterOption="set"
+              header="Set"
+              handleFilterChange={handleFilterChange}
+            ></SingleFilterAccordian>
             <AccordionItem value="vendor">
               <AccordionTrigger className="text-base">Vendor</AccordionTrigger>
               <AccordionContent>
@@ -355,43 +432,6 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                 </ScrollArea>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="set">
-              <AccordionTrigger className="text-base">Set</AccordionTrigger>
-              <AccordionContent>
-                <ScrollArea className="h-[200px] overflow-y-auto">
-                  <div className="grid gap-2">
-                    {Array.from(
-                      new Set(
-                        filteredResults
-                          .map((product) => product.set)
-                          .filter((set) => set && set.trim() !== '')
-                      )
-                    )
-                      .sort()
-                      .map((set) => (
-                        <Label
-                          key={set}
-                          className="flex items-center gap-2 overflow-clip text-left text-xs font-normal capitalize"
-                        >
-                          <Checkbox
-                            checked={filters.set.includes(set)}
-                            onCheckedChange={() =>
-                              handleFilterChange(
-                                'set',
-                                filters.set.includes(set)
-                                  ? filters.set.filter((s) => s !== set)
-                                  : [...filters.set, set]
-                              )
-                            }
-                          />
-                          <div className="line-clamp-1">{set}</div>
-                        </Label>
-                      ))}
-                  </div>
-                  <ScrollBar orientation="vertical" />{' '}
-                </ScrollArea>
-              </AccordionContent>
-            </AccordionItem>
           </Accordion>
 
           {
@@ -399,6 +439,12 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
             filters.condition.length > 0 ||
             filters.vendor.length > 0 ||
             filters.set.length > 0 ||
+            filters.collector_number.length > 0 ||
+            filters.alternate_art.length > 0 ||
+            filters.showcase.length > 0 ||
+            filters.frame.length > 0 ||
+            filters.promo.length > 0 ||
+            filters.art_series.length > 0 ||
             filters.priceRange[0] !== 0 ||
             filters.priceRange[1] !== 10000 ? (
               <Button
@@ -407,8 +453,14 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                     condition: [],
                     priceRange: [0, 10000],
                     vendor: [],
+                    foil: [],
                     set: [],
-                    foil: []
+                    alternate_art: [],
+                    showcase: [],
+                    frame: [],
+                    promo: [],
+                    art_series: [],
+                    collector_number: []
                   })
                 }
               >
@@ -418,8 +470,8 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
           }
         </div>
       </div>
-      <div className="grid gap-6">
-        <div className="flex items-center justify-between">
+      <div className="grid h-min gap-6">
+        <div className="flex justify-between">
           <h1 className="text-2xl font-bold">Search Results</h1>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -458,7 +510,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
         {loading && <ResultsSkeleton />}
 
         {!loading && (
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
             {!hasActiveSubscription &&
               filteredProducts.map((item, index) =>
                 item && 'position' in item ? (
@@ -488,6 +540,7 @@ interface SingleCatalogCard extends SingleSearchResult {
 
 function CatalogItem({ product }: { product: SingleCatalogCard }) {
   const { resultsTcg } = useSingleStore();
+  const { hasActiveSubscription } = useAuthStore();
   const { websites } = useStore();
   const findWebsiteNameByCode = (slug: string) => {
     const website = websites.find((website) => website.slug === slug);
@@ -517,7 +570,22 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
           <div className="text-xs font-bold uppercase text-muted-foreground">
             {product.set}
           </div>
-          <h3 className="text-sm font-bold tracking-tight">{product.name}</h3>
+          {/* set this into the name due to lag*/}
+          <h3 className="text-sm font-bold capitalize tracking-tight">{`${
+            product.name
+          } ${
+            product.collector_number ? `(${product.collector_number})` : ''
+          }`}</h3>
+          {hasActiveSubscription == true && (
+            <h4 className="text-xs  font-semibold capitalize tracking-tight  text-muted-foreground">{` ${
+              product.frame ? product.frame : ''
+            }  ${product.foil !== 'foil' ? product.foil : ''} ${
+              product.showcase ? product.showcase : ''
+            } ${product.alternate_art ? product.alternate_art : ''} ${
+              product.promo ? product.promo : ''
+            } ${product.art_series ? product.art_series : ''}`}</h4>
+          )}
+
           <div className="flex flex-row gap-2">
             {product.website === 'obsidian' && (
               <img src="/obsidian_icon.png" alt="Website" className="h-4 w-4" />
@@ -540,6 +608,7 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
             </div>
           </div>
         </div>
+
         {product.website === 'obsidian' && (
           <div className="mt-3 flex w-full">
             <div className="text-left text-[0.7rem] tracking-tighter text-muted-foreground">
