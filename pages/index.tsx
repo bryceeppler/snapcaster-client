@@ -27,11 +27,27 @@ const Home: NextPage<Props> = ({}: Props) => {
       <div className="flex w-full flex-col justify-center gap-8 text-center">
         {!searchStarted && <Homebanner />}
         <PoweredBy size="small" />
+
+        <p className=" text-center">
+          ✨
+          <a
+            className="text-xs font-bold text-gray-200 underline hover:text-primary  md:text-base"
+            href="https://discord.gg/EnKKHxSq75"
+            target="_none"
+          >
+            Click here to join the Snapcaster Discord and enter the Obsidian
+            Games $200 MTG Singles Giveaway on August 19
+          </a>{' '}
+          ✨
+        </p>
         <MultiTcgSearchbox searchType={'single'} />
         {Object.keys(results).length > 0 && <SingleCatalog loading={loading} />}
         {searchStarted && !loading && Object.keys(results).length === 0 && (
           <div className="flex items-center justify-center pt-5">
-            <p className="text-zinc-500">No results found. Try typing the proper card name using the autofill.</p>
+            <p className="text-zinc-500">
+              No results found. Try typing the proper card name using the
+              autofill.
+            </p>
           </div>
         )}
       </div>

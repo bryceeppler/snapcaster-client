@@ -25,7 +25,16 @@ const MultiTcgSearchbox = (props: Props) => {
 
   return (
     <div className="flex flex-col gap-2 sm:flex-row">
-      <Select value={tcg} onValueChange={(value: Tcgs) => setTcg(value)}>
+      {/*clear filters when we switch tcg's*/}
+      <Select
+        value={tcg}
+        onValueChange={(value: Tcgs) => {
+          setTcg(value);
+          useSingleStore.setState({ results: [] });
+          useSingleStore.setState({ searchStarted: false });
+          useSingleStore.setState({ searchInput: '' });
+        }}
+      >
         <SelectTrigger className="w-full sm:w-[180px]">
           <SelectValue placeholder="MTG" />
         </SelectTrigger>
