@@ -62,8 +62,7 @@ const insertAdvertisements = (
 };
 
 export default function SingleCatalog({ loading }: { loading: boolean }) {
-  const { filteredResults, promotedCards, tcg, results, searchStarted } =
-    useSingleStore();
+  const { filteredResults, promotedCards, tcg, searchQuery } = useSingleStore();
   const { ads } = useGlobalStore();
   const { websites } = useStore();
   const { hasActiveSubscription } = useAuthStore();
@@ -96,7 +95,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
       collector_number: []
     });
     console.log('useEffect');
-  }, [tcg]);
+  }, [tcg, searchQuery]);
   const [sortBy, setSortBy] = useState('relevance');
   const filteredProducts = useMemo(() => {
     const tempFiltered = filteredResults
