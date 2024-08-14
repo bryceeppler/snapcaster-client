@@ -351,13 +351,15 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                 handleFilterChange={handleFilterChange}
               />
             )}
+            {tcg != 'pokemon' && (
+              <SingleFilterAccordian
+                filters={filters}
+                filterOption="foil"
+                header={tcg == 'yugioh' ? 'Rarity' : 'Foil'}
+                handleFilterChange={handleFilterChange}
+              ></SingleFilterAccordian>
+            )}
 
-            <SingleFilterAccordian
-              filters={filters}
-              filterOption="foil"
-              header="Foil"
-              handleFilterChange={handleFilterChange}
-            ></SingleFilterAccordian>
             {tcg == 'mtg' && (
               <>
                 <SingleFilterAccordian
@@ -401,7 +403,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
             <AccordionItem value="vendor">
               <AccordionTrigger className="text-base">Vendor</AccordionTrigger>
               <AccordionContent>
-                <ScrollArea className="h-[200px] overflow-y-auto">
+                <ScrollArea className="flex max-h-[200px] flex-col overflow-y-auto">
                   <div className="grid gap-2">
                     {websites
                       .sort((a, b) => a.name.localeCompare(b.name))
@@ -438,6 +440,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
             filters.condition.length > 0 ||
             filters.vendor.length > 0 ||
             filters.set.length > 0 ||
+            filters.foil.length > 0 ||
             filters.collector_number.length > 0 ||
             filters.alternate_art.length > 0 ||
             filters.showcase.length > 0 ||
@@ -578,11 +581,15 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
           {hasActiveSubscription == true && (
             <h4 className="text-xs  font-semibold capitalize tracking-tight  text-muted-foreground">{` ${
               product.frame ? product.frame : ''
-            }  ${product.foil !== 'foil' ? product.foil : ''} ${
-              product.showcase ? product.showcase : ''
-            } ${product.alternate_art ? product.alternate_art : ''} ${
-              product.promo ? product.promo : ''
-            } ${product.art_series ? product.art_series : ''}`}</h4>
+            }  ${
+              product.foil !== 'foil' && product.foil != null
+                ? product.foil
+                : ''
+            } ${product.showcase ? product.showcase : ''} ${
+              product.alternate_art ? product.alternate_art : ''
+            } ${product.promo ? product.promo : ''} ${
+              product.art_series ? product.art_series : ''
+            }`}</h4>
           )}
 
           <div className="flex flex-row gap-2">
