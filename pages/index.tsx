@@ -36,7 +36,7 @@ const Home: NextPage<Props> = ({}: Props) => {
             target="_none"
           >
             Click here to join the Snapcaster Discord and enter the Obsidian
-            Games $200 MTG Singles Giveaway on August 19
+            Games $200 MTG singles giveaway on August 19
           </a>{' '}
           ✨
         </p>

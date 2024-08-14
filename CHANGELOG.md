@@ -1,5 +1,14 @@
 # Changelog
 
+## 2024-08-13
+
+### Changed
+
+- Fixed UI spacing bugs for single search
+- Fixed bug where filters werent reset when changing tcg's or doing a new query within the same tcg leading to limited results
+- Added advanced filtering options on the home page for all TCG's (One Piece is a WIP)
+- Removed href on cardImage components that would redirect users to snapcaster.ca/# and bring them to the top of the page.
+
 ## 2024-08-11
 
 ### Changed

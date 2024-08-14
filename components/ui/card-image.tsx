@@ -14,12 +14,13 @@ const CardImage: React.FC<Props> = ({ imageUrl, alt, href }) => {
   };
 
   return (
-    <Link
-      className={`relative h-full w-full ${
-        href ? 'cursor-pointer' : 'cursor-default'
-      }`}
-      href={href || '#'}
-    >
+    // <Link
+    //   className={`relative h-full w-full ${
+    //     href ? 'cursor-pointer' : 'cursor-default'
+    //   }`}
+    //   href={href || '#'}
+    // >
+    <>
       {!hasError && imageUrl ? (
         <img
           src={imageUrl}
@@ -34,7 +35,8 @@ const CardImage: React.FC<Props> = ({ imageUrl, alt, href }) => {
           <img src="/logo.png" alt={alt || 'Logo'} className="p-5 opacity-5" />
         </div>
       )}
-    </Link>
+    </>
+    // </Link>
   );
 };
 
