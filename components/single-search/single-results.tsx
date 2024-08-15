@@ -68,6 +68,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
   const { hasActiveSubscription } = useAuthStore();
   const adsFromPosition5 = ads.position['5']?.ads || [];
   const [filters, setFilters] = useState({
+    exactMatch: [false],
     condition: [] as string[],
     priceRange: [0, 10000] as [number, number],
     vendor: [] as string[],
@@ -82,6 +83,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
   });
   useEffect(() => {
     setFilters({
+      exactMatch: [false],
       condition: [],
       priceRange: [0, 10000],
       vendor: [],
@@ -106,6 +108,11 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
         const priceMatch =
           product.price >= filters.priceRange[0] &&
           product.price <= filters.priceRange[1];
+
+        const nameMatch =
+          (filters.exactMatch[0] &&
+            product.name.toLowerCase() === searchQuery.toLowerCase()) ||
+          !filters.exactMatch[0];
 
         const vendorMatch =
           filters.vendor.length === 0 ||
@@ -139,6 +146,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
           filters.art_series.length === 0 ||
           filters.art_series.includes(product.art_series);
         return (
+          nameMatch &&
           conditionMatch &&
           priceMatch &&
           vendorMatch &&
@@ -218,6 +226,21 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
               </p>
             </div>
           )}
+          <div className="grid gap-2">
+            <Label className="flex items-center gap-2 font-normal">
+              <Checkbox
+                checked={filters.exactMatch[0]}
+                onCheckedChange={() =>
+                  handleFilterChange(
+                    'exactMatch',
+                    !filters.exactMatch[0] ? [true] : [false]
+                  )
+                }
+              />
+              Exact match on name
+            </Label>
+          </div>
+
           <Accordion type="single" collapsible>
             <AccordionItem value="condition">
               <AccordionTrigger className="text-base">
@@ -343,7 +366,10 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                 </div>
               </AccordionContent>
             </AccordionItem>
-            {(tcg === 'pokemon' || tcg === 'lorcana' || tcg === 'yugioh') && (
+            {(tcg === 'pokemon' ||
+              tcg === 'lorcana' ||
+              tcg === 'yugioh' ||
+              tcg === 'onepiece') && (
               <SingleFilterAccordian
                 filters={filters}
                 filterOption="collector_number"
@@ -452,6 +478,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
               <Button
                 onClick={() =>
                   setFilters({
+                    exactMatch: [false],
                     condition: [],
                     priceRange: [0, 10000],
                     vendor: [],

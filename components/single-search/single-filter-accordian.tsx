@@ -35,7 +35,13 @@ const SingleFilterAccordian = ({
               new Set(
                 filteredResults
                   .map((product) => product[filterOption])
-                  .filter((value) => value && value.trim() !== '')
+                  // filter out null and empty strings with just whitespace
+                  .filter(
+                    (option) =>
+                      option &&
+                      typeof option === 'string' &&
+                      option.trim() !== ''
+                  )
               )
             )
               .sort()
