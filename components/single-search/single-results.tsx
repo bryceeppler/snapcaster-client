@@ -62,7 +62,8 @@ const insertAdvertisements = (
 };
 
 export default function SingleCatalog({ loading }: { loading: boolean }) {
-  const { filteredResults, promotedCards, tcg, searchQuery } = useSingleStore();
+  const { filteredResults, promotedCards, tcg, searchQuery, results } =
+    useSingleStore();
   const { ads } = useGlobalStore();
   const { websites } = useStore();
   const { hasActiveSubscription } = useAuthStore();
@@ -536,6 +537,12 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        {/* If we have 1000 results, show warning */}
+        {results.length >= 1000 && (
+          <div className=" w-full rounded border bg-red-600/50 p-2 text-xs shadow">
+            Only displaying the first 1000 results. Try narrowing your search.
+          </div>
+        )}
         {loading && <ResultsSkeleton />}
 
         {!loading && (
