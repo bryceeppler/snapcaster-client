@@ -173,6 +173,10 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
             return a.website.localeCompare(b.website);
           case 'vendor-desc':
             return b.website.localeCompare(a.website);
+          case 'name-asc':
+            return a.name.localeCompare(b.name);
+          case 'name-desc':
+            return b.name.localeCompare(a.name);
           case 'set-asc':
             return a.set.localeCompare(b.set);
           case 'set-desc':
@@ -238,7 +242,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                   )
                 }
               />
-              Exact match on name
+              Exact Name Filter
             </Label>
           </div>
 
@@ -521,6 +525,12 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                 <DropdownMenuRadioItem value="price-desc">
                   Price: High to Low
                 </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="name-asc">
+                  Name A-Z
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="name-desc">
+                  Name Z-A
+                </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="set-asc">
                   Set A-Z
                 </DropdownMenuRadioItem>
@@ -540,7 +550,8 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
         {/* If we have 1000 results, show warning */}
         {results.length >= 1000 && (
           <div className=" w-full rounded border bg-red-600/50 p-2 text-xs shadow">
-            Only displaying the first 1000 results. Try narrowing your search.
+            Displaying the first 1000 results. Try narrowing your search with
+            autofill.
           </div>
         )}
         {loading && <ResultsSkeleton />}

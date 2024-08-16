@@ -67,6 +67,7 @@ export default function SingleSearchbox(props: Props) {
     setAutocompleteResults([]);
     setShowAutocomplete(false);
     setSelectedAutocompleteIndex(-1);
+    props.searchFunction(item);
   };
 
   const handleAutocompleteKeyDown = useCallback(
