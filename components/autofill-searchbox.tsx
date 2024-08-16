@@ -64,7 +64,6 @@ export default function SingleSearchbox(props: Props) {
 
   const handleAutocompleteItemClick = (item: string) => {
     props.setSearchInput(item);
-    console.log(item);
     setAutocompleteResults([]);
     setShowAutocomplete(false);
     setSelectedAutocompleteIndex(-1);
