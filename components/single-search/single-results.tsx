@@ -242,7 +242,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                   )
                 }
               />
-              Exact Card Name Filter
+              Exact Name Filter
             </Label>
           </div>
 
@@ -550,7 +550,8 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
         {/* If we have 1000 results, show warning */}
         {results.length >= 1000 && (
           <div className=" w-full rounded border bg-red-600/50 p-2 text-xs shadow">
-            Only displaying the first 1000 results. Try narrowing your search.
+            Displaying the first 1000 results. Try narrowing your search with
+            autofill.
           </div>
         )}
         {loading && <ResultsSkeleton />}
