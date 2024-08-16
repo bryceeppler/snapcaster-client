@@ -173,6 +173,10 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
             return a.website.localeCompare(b.website);
           case 'vendor-desc':
             return b.website.localeCompare(a.website);
+          case 'name-asc':
+            return a.name.localeCompare(b.name);
+          case 'name-desc':
+            return b.name.localeCompare(a.name);
           case 'set-asc':
             return a.set.localeCompare(b.set);
           case 'set-desc':
@@ -238,7 +242,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                   )
                 }
               />
-              Exact match on name
+              Exact Card Name Filter
             </Label>
           </div>
 
@@ -520,6 +524,12 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="price-desc">
                   Price: High to Low
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="name-asc">
+                  Name A-Z
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="name-desc">
+                  Name Z-A
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="set-asc">
                   Set A-Z
