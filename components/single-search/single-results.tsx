@@ -97,7 +97,6 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
       art_series: [],
       collector_number: []
     });
-    console.log('useEffect');
   }, [tcg, searchQuery]);
   const [sortBy, setSortBy] = useState('relevance');
   const filteredProducts = useMemo(() => {
@@ -588,7 +587,7 @@ interface SingleCatalogCard extends SingleSearchResult {
 function CatalogItem({ product }: { product: SingleCatalogCard }) {
   const { resultsTcg } = useSingleStore();
   const { hasActiveSubscription } = useAuthStore();
-  const { websites } = useStore();
+  const { websites, promoMap } = useStore();
   const findWebsiteNameByCode = (slug: string) => {
     const website = websites.find((website) => website.slug === slug);
     return website ? website.name : 'Website not found';
@@ -617,11 +616,31 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
           <div className="text-xs font-bold uppercase text-muted-foreground">
             {product.set}
           </div>
-          {/* set this into the name due to lag*/}
+
+          {/* Remove This September 1 (Will be pro only)*/}
           <h3 className="text-sm font-bold capitalize tracking-tight">{`${
             product.name
           } ${
             product.collector_number ? `(${product.collector_number})` : ''
+          }`}</h3>
+
+          <h4 className="text-xs  font-semibold capitalize tracking-tight text-muted-foreground">{` ${
+            product.frame ? product.frame : ''
+          }  ${
+            product.foil !== 'foil' && product.foil != null ? product.foil : ''
+          } ${product.showcase ? product.showcase : ''} ${
+            product.alternate_art ? product.alternate_art : ''
+          } ${product.promo ? product.promo : ''} ${
+            product.art_series ? product.art_series : ''
+          }`}</h4>
+
+          {/* Uncomment This September 1 (Will be pro only)*/}
+          {/* <h3 className="text-sm font-bold capitalize tracking-tight">{`${
+            product.name
+          } ${
+            hasActiveSubscription == true && product.collector_number
+              ? `(${product.collector_number})`
+              : ''
           }`}</h3>
           {hasActiveSubscription == true && (
             <h4 className="text-xs  font-semibold capitalize tracking-tight  text-muted-foreground">{` ${
@@ -635,46 +654,41 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
             } ${product.promo ? product.promo : ''} ${
               product.art_series ? product.art_series : ''
             }`}</h4>
-          )}
+          )} */}
 
           <div className="flex flex-row gap-2">
-            {product.website === 'obsidian' && (
-              <img src="/obsidian_icon.png" alt="Website" className="h-4 w-4" />
+            {websites.map(
+              (website, index) =>
+                product.website === website.slug &&
+                website.image_source && (
+                  <img
+                    src={website.image_source}
+                    alt="Website"
+                    className="h-4 w-4"
+                    key={index}
+                  />
+                )
             )}
-            {product.website === 'levelup' && (
-              <img src="/levelup_icon.png" alt="Website" className="h-4 w-4" />
-            )}
-            {product.website === 'chimera' && (
-              <img src="/chimera_icon.png" alt="Website" className="h-4 w-4" />
-            )}
-            {product.website === 'exorgames' && (
-              <img
-                src="/exorgames_icon.png"
-                alt="Website"
-                className="h-4 w-4"
-              />
-            )}
+
             <div className="text-xs">
               {findWebsiteNameByCode(product.website)}
             </div>
           </div>
         </div>
 
-        {product.website === 'obsidian' && (
-          <div className="mt-3 flex w-full">
+        {product.website in promoMap && (
+          <div className="mt-3 flex w-full" key={product.website}>
             <div className="text-left text-[0.7rem] tracking-tighter text-muted-foreground">
               With code <br />
-              {product.website === 'obsidian' && (
-                <span className="text-xs font-bold">OBSIDIAN+SNAPCASTER5</span>
-              )}
-              {/* {product.website === 'levelup' && (
-                <span className="text-xs font-bold">SNAPCASTER</span>
-              )} */}
+              <span className="text-xs font-bold">
+                {promoMap[product.website].promoCode}
+              </span>
             </div>
           </div>
         )}
+
         <div className="mt-3">
-          {product.website === 'obsidian' && (
+          {product.website in promoMap && (
             <h4 className="text-right text-xs text-muted-foreground line-through">
               ${Number(product.priceBeforeDiscount)?.toFixed(2)}
             </h4>

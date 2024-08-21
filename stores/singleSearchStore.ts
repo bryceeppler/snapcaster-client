@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Tcgs } from '@/types/index';
 import { toast } from 'sonner';
+import { useStore } from './store';
 const initialConditionLabels = ['NM', 'LP', 'PL', 'MP', 'HP', 'DMG', 'SCAN'];
 
 type SingleSearchState = {
@@ -60,23 +61,21 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
     set({ sortField: field });
     applyFilters();
   },
-
+  
   setDiscounts: () => {
     const resultsAfterDiscount = get().results;
     resultsAfterDiscount.map((item) => {
       item.priceBeforeDiscount = item.price;
-      // if (item.website == 'obsidian' || item.website == 'levelup') {
-      if (item.website == 'obsidian') {
-        item.price = (item.price * 0.95).toFixed(2);
-      }
+          if (item.website in useStore.getState().promoMap) {
+            item.price = (item.price * (1-useStore.getState().promoMap[item.website].discount*0.01)).toFixed(2);
+          }
     });
 
     const promotedAfterDiscount = get().promotedCards;
     promotedAfterDiscount.map((item) => {
       item.priceBeforeDiscount = item.price;
-      if (item.website == 'obsidian') {
-        // if (item.website == 'obsidian' || item.website == 'levelup') {
-        item.price = (item.price * 0.95).toFixed(2);
+      if (item.website in useStore.getState().promoMap) {
+        item.price = (item.price * (1-useStore.getState().promoMap[item.website].discount*0.01)).toFixed(2);
       }
     });
 

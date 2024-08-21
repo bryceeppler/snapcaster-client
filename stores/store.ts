@@ -66,6 +66,7 @@ export const useStore = create<State>((set, get) => ({
   promoMap: promoMap,
 
   initWebsiteInformation: async () => {
+    
     try {
       if (get().websites.length > 0) {
         return;
@@ -77,9 +78,9 @@ export const useStore = create<State>((set, get) => ({
       set({ websites: data.websiteList });
       let tempMap: PromoMap = {};
       for (const website of data.websiteList) {
-        if (website['promoCode'] !== null) {
-          tempMap[website['code']] = {
-            promoCode: website['promoCode'],
+        if (website['code'] !== null) {
+          tempMap[website['slug']] = {
+            promoCode: website['code'],
             discount: website['discount']
           };
         }
