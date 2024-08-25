@@ -270,8 +270,8 @@ const UserSettings = ({
             <DiscordLogoIcon className="h-6 w-6 text-primary" />
             <CardTitle className="text-md">Discord</CardTitle>
             <CardDescription>
-              Connect your Discord account to gain access to exlcusive channels
-              for Pro members!
+              Pro members gain access to exlcusive channels and giveaways after
+              connecting their Discord!
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -287,7 +287,27 @@ const UserSettings = ({
                 </Button>
               </div>
             ) : (
-              <Button onClick={createDiscordAuth}>Connect</Button>
+              <div>
+                <Button onClick={createDiscordAuth}>Connect</Button>
+                <p className="py-2 text-xs ">
+                  By clicking connect, you confirm that you have read,
+                  understood, and consent to the{' '}
+                  <a
+                    href="/privacy"
+                    className="text-primary underline hover:opacity-70"
+                  >
+                    Privacy Notice
+                  </a>{' '}
+                  and{' '}
+                  <a
+                    href="/terms"
+                    className="text-primary underline hover:opacity-70"
+                  >
+                    Terms & Conditions
+                  </a>
+                  .
+                </p>
+              </div>
             )}
           </CardContent>
         </Card>
@@ -308,6 +328,30 @@ const UserSettings = ({
                 <p className="text-sm text-zinc-400">Inactive</p>
               )}
             </div>
+            <div className="flex flex-row items-center gap-2">
+              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+              <p className="text-sm font-semibold text-zinc-400">
+                Multi search up to 100 cards at a time
+              </p>
+            </div>
+            <div className="flex flex-row items-center gap-2">
+              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+              <p className="text-sm font-semibold text-zinc-400">
+                Single search advanced filtering
+              </p>
+            </div>
+            <div className="flex flex-row items-center gap-2">
+              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+              <p className="text-sm font-semibold text-zinc-400">
+                Pro exclusive Discord giveaways (Singles, Packs, Merch)
+              </p>
+            </div>
+            <div className="flex flex-row items-center gap-2">
+              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
+              <p className="text-sm font-semibold text-zinc-400">
+                Reduced Ads (Side Banners, Inline Banners, Promoted Results)
+              </p>
+            </div>
           </CardContent>
           <CardFooter>
             {' '}
@@ -316,7 +360,27 @@ const UserSettings = ({
                 Manage subscription
               </Button>
             ) : (
-              <Button onClick={createCheckoutSession}>Subscribe</Button>
+              <div>
+                <Button onClick={createCheckoutSession}>Subscribe</Button>
+                <p className="py-2 text-xs ">
+                  By clicking subscribe, you confirm that you have read,
+                  understood, and consent to the{' '}
+                  <a
+                    href="/privacy"
+                    className="text-primary underline hover:opacity-70"
+                  >
+                    Privacy Notice
+                  </a>{' '}
+                  and{' '}
+                  <a
+                    href="/terms"
+                    className="text-primary underline hover:opacity-70"
+                  >
+                    Terms & Conditions
+                  </a>
+                  .
+                </p>
+              </div>
             )}
           </CardFooter>
         </Card>

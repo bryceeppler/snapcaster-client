@@ -83,7 +83,6 @@ const Pro: NextPage<Props> = () => {
                   pattern: /^\S+@\S+\.\S+$/
                 })}
                 type="text"
-                className=""
                 placeholder="Email"
               />
               {errors.email && (
@@ -97,7 +96,6 @@ const Pro: NextPage<Props> = () => {
                   required: 'Password is required'
                 })}
                 type="password"
-                className=""
                 placeholder="Password"
               />
               {errors.password && (

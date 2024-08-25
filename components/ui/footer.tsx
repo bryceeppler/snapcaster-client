@@ -2,9 +2,11 @@ import { DiscordLogoIcon, GitHubLogoIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import PoweredBy from '../powered-by';
 import useGlobalStore from '@/stores/globalStore';
+import useAuthStore from '@/stores/authStore';
 
 export default function Footer() {
   const { adsEnabled } = useGlobalStore();
+  const { isAuthenticated } = useAuthStore();
   return (
     <footer className="bg-popover py-12">
       <div className="container grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
@@ -13,15 +15,17 @@ export default function Footer() {
           <nav className="grid gap-2">
             <Link href="#">Home</Link>
             <Link href="/multisearch">Multisearch</Link>
-            {adsEnabled && <Link href="/supporters">Supporters</Link>}
-            {/* <Link href="/blog">Blog</Link> */}
+            <Link href="/supporters">Supporters</Link>
+            {!isAuthenticated ? (
+              <Link href="/signin">Login</Link>
+            ) : (
+              <Link href="/profile">Account</Link>
+            )}
           </nav>
         </div>
         <div className="grid gap-4">
           <h3 className="text-lg font-semibold">Resources</h3>
           <nav className="grid gap-2">
-            {/* <Link href="/contact">Contact</Link> */}
-            {/* <Link href="/guides">Guides</Link> */}
             <Link href="/faq">FAQ</Link>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>

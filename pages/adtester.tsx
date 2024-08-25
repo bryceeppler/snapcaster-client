@@ -128,8 +128,8 @@ export default function Component() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="" />
-          <CarouselNext className="" />
+          <CarouselPrevious />
+          <CarouselNext />
         </Carousel>
       )}
       <div className="flex h-96 w-full bg-zinc-300"></div>

@@ -81,7 +81,6 @@ const SignInCard = (props: Props) => {
                 pattern: /^\S+@\S+\.\S+$/
               })}
               type="text"
-              className=""
               placeholder="m@example.com"
             />
             {errors.email && (
@@ -106,7 +105,6 @@ const SignInCard = (props: Props) => {
                 required: 'Password is required'
               })}
               type="password"
-              className=""
               placeholder=""
             />
             {errors.password && (

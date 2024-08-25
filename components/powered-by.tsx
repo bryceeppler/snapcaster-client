@@ -11,7 +11,7 @@ const PoweredBy = (props: Props) => {
 
   return (
     <Link
-      className={`flex flex-row items-center justify-center gap-2 text-gray-400 ${
+      className={`mx-auto flex w-min flex-row items-center justify-center gap-2 whitespace-nowrap text-gray-400 ${
         size === 'small'
           ? 'text-sm'
           : size === 'medium'

@@ -4,7 +4,7 @@ type Props = {};
 
 export default function Homebanner({}: Props) {
   return (
-    <div className="">
+    <div>
       <img
         className="crisp-edges mx-auto hidden h-16 w-auto md:flex"
         src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
