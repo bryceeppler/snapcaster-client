@@ -224,12 +224,12 @@ const Cart = () => {
           </div>
         )}
         <ScrollArea className="border-1 h-[300px] rounded border border-accent bg-muted">
-          <Table className="">
+          <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead className="text-right">Price</TableHead>
-                <TableHead className=""></TableHead>
+                <TableHead></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -299,7 +299,7 @@ const ResultSelector = () => {
   const { getWebsiteName } = useGlobalStore();
   const totalRequested = results.length;
   const reccomendedWebsites = ['obsidian', 'levelup', 'chimera', 'exorgames'];
-  const [selectedTopStore, setSelectedTopStore] = useState("")
+  const [selectedTopStore, setSelectedTopStore] = useState('');
   const getTopWebsites = (results: MultiSearchProduct[]) => {
     const websiteProductSet: { [website: string]: Set<string> } = {};
     const websiteProductPrices: {
@@ -372,7 +372,14 @@ const ResultSelector = () => {
         <div className="flex flex-col gap-2 overflow-clip rounded px-6">
           {getTopWebsites(results).map((websiteInfo, i) => {
             return (
-              <DialogTrigger asChild onClick={()=>{{setSelectedTopStore(websiteInfo.website)}}}>
+              <DialogTrigger
+                asChild
+                onClick={() => {
+                  {
+                    setSelectedTopStore(websiteInfo.website);
+                  }
+                }}
+              >
                 <div
                   className="border-1 rounded-md border border-accent px-4 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
                   key={i}
