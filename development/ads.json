@@ -3,7 +3,7 @@
         "1": {
             "ads": [
                 {
-                    "id": 2,
+                    "id": 420,
                     "campaign_id": 2,
                     "name": "header",
                     "store_id": 2,
@@ -11,6 +11,34 @@
                     "ad_slot_id": 1,
                     "mobile_image": "https://cdn.snapcaster.ca/feed-banner-mobile.png",
                     "desktop_image": "https://cdn.snapcaster.ca/obsidian_1008x160.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-05-30T00:00:00.000Z",
+                    "status": "ACTIVE",
+                    "position": "1"
+                },
+                {
+                    "id": 69,
+                    "campaign_id": 2,
+                    "name": "header",
+                    "store_id": 2,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 1,
+                    "mobile_image": "https://cdn.snapcaster.ca/exor-mobile.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/exor-desktop.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-05-30T00:00:00.000Z",
+                    "status": "ACTIVE",
+                    "position": "1"
+                },
+                {
+                    "id": 69,
+                    "campaign_id": 2,
+                    "name": "header",
+                    "store_id": 2,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 1,
+                    "mobile_image": "https://cdn.snapcaster.ca/chimera-mobile.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/chimera-desktop-3.png",
                     "url": "https://obsidiangames.ca",
                     "created_at": "2024-05-30T00:00:00.000Z",
                     "status": "ACTIVE",
@@ -33,7 +61,22 @@
                     "created_at": "2024-07-26T15:03:36.114Z",
                     "status": "ACTIVE",
                     "position": "2"
+                },
+                {
+                    "id": 5,
+                    "campaign_id": 2,
+                    "name": "carousel 2",
+                    "store_id": 2,
+                    "dimensions": "100x100",
+                    "ad_slot_id": 3,
+                    "mobile_image": "https://cdn.snapcaster.ca/obsidian_mtg_vertical.png",
+                    "desktop_image": "https://cdn.snapcaster.ca/obsidian_mtg_vertical_lg.png",
+                    "url": "https://obsidiangames.ca",
+                    "created_at": "2024-05-30T00:00:00.000Z",
+                    "status": "ACTIVE",
+                    "position": "3"
                 }
+
             ]
         },
         "3": {

@@ -71,10 +71,9 @@ export default function MainLayout({
     return null; // or a loading spinner
   }
 
-  const topBannerAd = ads.position['1'].ads[0];
-  const leftBannerAd = ads.position['2']?.ads[0]; // Assuming there's only one ad in position 2
-  const carouselAds = ads.position['3']?.ads || [];
-  // const shuffledAds = carouselAds.sort(() => Math.random() - 0.5);
+  const topBannerAds = ads.position['1']?.ads || [];
+  const leftCarouselAds = ads.position['2']?.ads || [];
+  const rightCarouselAds = ads.position['3']?.ads || [];
 
   return (
     <main
@@ -84,59 +83,58 @@ export default function MainLayout({
     >
       <>
         {/* Header : position 1 */}
-        {topBannerAd && (
-          <Link
-            href={topBannerAd.url}
-            ref={bannerRef}
-            target="_blank"
-            data-position-id="1"
-            onClick={() => trackAdClick(topBannerAd.id.toString())}
-            data-ad-id={topBannerAd.id.toString()}
-            className="ad mx-auto flex max-w-6xl items-center justify-center rounded border border-zinc-600 bg-black"
-          >
-            <img
-              className="hidden h-fit w-full md:flex"
-              src={topBannerAd.desktop_image}
-              alt="ad"
-            />
-            <img
-              className="flex h-full w-full object-cover md:hidden"
-              src={topBannerAd.mobile_image}
-              alt="ad"
-            />
-          </Link>
-        )}
-
-        {/* Left ad : position 2 */}
-        {leftBannerAd && (
-          <Link
-            onClick={() => trackAdClick(leftBannerAd.id.toString())}
-            href={leftBannerAd.url}
-            ref={leftBannerRef}
-            target="_blank"
-            data-position-id="2"
-            data-ad-id={leftBannerAd.id.toString()}
-            className="ad fixed left-10 top-1/4 hidden w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xxl:flex xxl:flex-col"
-          >
-            <img src={leftBannerAd.mobile_image} alt="ad" className="h-full" />
-          </Link>
-        )}
-
-        {/* Right ad : position 3 */}
-        {showAds && !hasActiveSubscription && carouselAds.length > 0 && (
+        {topBannerAds && (
           <Carousel
-            className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xxl:flex xxl:flex-col`}
+            className="w-full rounded-lg overflow-hidden "
             plugins={[plugin.current]}
           >
             <CarouselContent>
-              {carouselAds.map((ad, index) => (
+              {topBannerAds.map((ad, index) => (
                 <CarouselItem key={index}>
-                  <CarouselAd ad={ad} />
+                  <CarouselAd ad={ad} forceMobile={false}/>     
+
+                </CarouselItem>
+              ))}
+
+            </CarouselContent>
+            {/* <CarouselPrevious /> */}
+              {/* <CarouselNext /> */}
+          </Carousel>
+        )}
+
+        {/* Left ad : position 2 */}
+        {showAds && !hasActiveSubscription && leftCarouselAds.length > 0 && (
+          <Carousel
+          className={`fixed left-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col`}
+          plugins={[plugin.current]}
+        >
+          <CarouselContent>
+            {leftCarouselAds.map((ad, index) => (
+              <CarouselItem key={index}>
+                <CarouselAd ad={ad} forceMobile={true} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          {/* <CarouselPrevious /> */}
+          {/* <CarouselNext /> */}
+        </Carousel>
+        )}
+
+        {/* Right ad : position 3 */}
+        {showAds && !hasActiveSubscription && rightCarouselAds.length > 0 && (
+          <Carousel
+            className={`fixed right-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col`}
+            plugins={[plugin.current]}
+          >
+            <CarouselContent>
+              {rightCarouselAds.map((ad, index) => (
+                <CarouselItem key={index}>
+                  <CarouselAd ad={ad} forceMobile={true} />
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            {/* <CarouselPrevious /> */}
+            {/* <CarouselNext /> */}
           </Carousel>
         )}
       </>

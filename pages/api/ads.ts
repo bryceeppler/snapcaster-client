@@ -35,8 +35,12 @@ export default async function handler(
 
   if (req.method === 'GET') {
     try {
-      if (process.env.NODE_ENV == 'development') {
+      if (process.env.ENV == 'development') {
         const data = await import('@/development/ads.json'); // Adjust the path as necessary
+        // shuffle the ads for positions 1,2,3
+        data.default.position[1].ads.sort(() => Math.random() - 0.5);
+        data.default.position[2].ads.sort(() => Math.random() - 0.5);
+        data.default.position[3].ads.sort(() => Math.random() - 0.5);
         res.status(200).json(data.default);
       } else {
         const result = await pool.query(
@@ -47,7 +51,7 @@ export default async function handler(
            WHERE campaigns.status = 'ACTIVE'
            AND advertisements.status = 'ACTIVE'`
         );
-
+          
         // Initialize the result object with the top-level "position" key
         const formattedResult: FormattedResult = { position: {} };
 
@@ -59,10 +63,11 @@ export default async function handler(
           }
           formattedResult.position[ad.ad_slot_id].ads.push(ad);
         });
-        // for ad slot 3, shuffle the ads
-        if (formattedResult.position[3]) {
-          formattedResult.position[3].ads.sort(() => Math.random() - 0.5);
-        }
+        // 
+        // Shuffle ads for all ad slots
+        Object.keys(formattedResult.position).forEach((slot) => {
+          formattedResult.position[parseInt(slot)].ads.sort(() => Math.random() - 0.5);
+        });
 
         res.status(200).json(formattedResult); // Return the formatted result
       }
