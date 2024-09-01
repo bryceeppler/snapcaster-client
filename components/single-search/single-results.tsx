@@ -19,7 +19,23 @@ import { handleBuyClick } from '../../utils/analytics';
 import SingleSortBy from './single-sort-by';
 import FilterDropdown from './filter-dropdown';
 import ResultsSkeleton from './results-skeleton';
+
 type ResultItem = SingleSearchResult | Ad;
+
+const defaultFilters = {
+  exactMatch: [false],
+  condition: [] as string[],
+  priceRange: [0, 10000] as [number, number],
+  vendor: [] as string[],
+  set: [] as string[],
+  foil: [] as string[],
+  alternate_art: [] as string[],
+  showcase: [] as string[],
+  frame: [] as string[],
+  promo: [] as string[],
+  art_series: [] as string[],
+  collector_number: [] as string[]
+};
 
 const getRandomAd = (ads: Ad[]): Ad => {
   const randomIndex = Math.floor(Math.random() * ads.length);
@@ -49,21 +65,6 @@ const insertAdvertisements = (
   return resultsWithAds;
 };
 
-const defaultFilters = {
-  exactMatch: [false],
-  condition: [] as string[],
-  priceRange: [0, 10000] as [number, number],
-  vendor: [] as string[],
-  set: [] as string[],
-  foil: [] as string[],
-  alternate_art: [] as string[],
-  showcase: [] as string[],
-  frame: [] as string[],
-  promo: [] as string[],
-  art_series: [] as string[],
-  collector_number: [] as string[]
-};
-
 export default function SingleCatalog({ loading }: { loading: boolean }) {
   // Zustand Stores //
   const { filteredResults, promotedCards, tcg, searchQuery, results } =
@@ -83,7 +84,6 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
   // Filters //
   const [isFilterToggled, setIsFilterToggled] = useState(false);
   const [filters, setFilters] = useState(defaultFilters);
-
   const handleFilterChange = (type: string, value: any[]) => {
     setFilters((prevFilters) => {
       let newValue = value;
@@ -100,8 +100,8 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
     });
   };
 
+  // Check if the filters object is the same as the default filters //
   useEffect(() => {
-    // Check if the filters object is the same as the default filters //
     const isDefault = Object.keys(defaultFilters).every(
       (key) =>
         JSON.stringify(filters[key as keyof typeof filters]) ===
@@ -109,13 +109,14 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
     );
     isDefault ? setIsFilterToggled(false) : setIsFilterToggled(true);
   }, [filters]);
+
+  // Toggle Filters to Default (When user Changes TCG's)//
   useEffect(() => {
     setFilters(defaultFilters);
     setIsFilterToggled(false);
   }, [tcg, searchQuery]);
 
   // Filter & Sorting Products Function (Client Side Filtering & Sorting) //
-
   const filteredProducts = useMemo(() => {
     const tempFiltered = filteredResults
       .filter((product) => {
@@ -286,10 +287,6 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
   );
 }
 
-{
-  /* Resolve Merge Conflicts with client PR #104 at a later date. Leave this hard coded for now.*/
-}
-
 interface SingleCatalogCard extends SingleSearchResult {
   promoted?: boolean;
 }
@@ -297,7 +294,7 @@ interface SingleCatalogCard extends SingleSearchResult {
 function CatalogItem({ product }: { product: SingleCatalogCard }) {
   const { resultsTcg } = useSingleStore();
   const { hasActiveSubscription } = useAuthStore();
-  const { websites } = useStore();
+  const { websites, promoMap } = useStore();
   const findWebsiteNameByCode = (slug: string) => {
     const website = websites.find((website) => website.slug === slug);
     return website ? website.name : 'Website not found';
@@ -322,15 +319,14 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
           <div className="text-xs font-bold uppercase text-muted-foreground">
             {product.set}
           </div>
-          {/* Collector Number will be a pro feature September 1 */}
+
           <h3 className="text-sm font-bold capitalize tracking-tight">{`${
             product.name
           } ${
             product.collector_number ? `(${product.collector_number})` : ''
           }`}</h3>
 
-          {/* These Filters will be a pro feature September 1*/}
-          <h4 className="text-xs  font-semibold capitalize tracking-tight  text-muted-foreground">{` ${
+          <h4 className="text-xs  font-semibold capitalize tracking-tight text-muted-foreground">{` ${
             product.frame ? product.frame : ''
           }  ${
             product.foil !== 'foil' && product.foil != null ? product.foil : ''
@@ -341,43 +337,38 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
           }`}</h4>
 
           <div className="flex flex-row gap-2">
-            {product.website === 'obsidian' && (
-              <img src="/obsidian_icon.png" alt="Website" className="h-4 w-4" />
+            {websites.map(
+              (website, index) =>
+                product.website === website.slug &&
+                website.image_source && (
+                  <img
+                    src={website.image_source}
+                    alt="Website"
+                    className="h-4 w-4"
+                    key={index}
+                  />
+                )
             )}
-            {product.website === 'levelup' && (
-              <img src="/levelup_icon.png" alt="Website" className="h-4 w-4" />
-            )}
-            {product.website === 'chimera' && (
-              <img src="/chimera_icon.png" alt="Website" className="h-4 w-4" />
-            )}
-            {product.website === 'exorgames' && (
-              <img
-                src="/exorgames_icon.png"
-                alt="Website"
-                className="h-4 w-4"
-              />
-            )}
+
             <div className="text-xs">
               {findWebsiteNameByCode(product.website)}
             </div>
           </div>
         </div>
 
-        {product.website === 'obsidian' && (
-          <div className="mt-3 flex w-full">
+        {product.website in promoMap && (
+          <div className="mt-3 flex w-full" key={product.website}>
             <div className="text-left text-[0.7rem] tracking-tighter text-muted-foreground">
               With code <br />
-              {product.website === 'obsidian' && (
-                <span className="text-xs font-bold">OBSIDIAN+SNAPCASTER5</span>
-              )}
-              {/* {product.website === 'levelup' && (
-                <span className="text-xs font-bold">SNAPCASTER</span>
-              )} */}
+              <span className="text-xs font-bold">
+                {promoMap[product.website].promoCode}
+              </span>
             </div>
           </div>
         )}
+
         <div className="mt-3">
-          {product.website === 'obsidian' && (
+          {product.website in promoMap && (
             <h4 className="text-right text-xs text-muted-foreground line-through">
               ${Number(product.priceBeforeDiscount)?.toFixed(2)}
             </h4>
