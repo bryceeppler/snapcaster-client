@@ -21,8 +21,9 @@ const Supporters: NextPage<Props> = () => {
             />
             <div className="space-y-12 text-center">
               <div>
-                <h3 className="mb-6 text-2xl font-bold">Tier 1 Sponsor</h3>
-                <div className="grid grid-cols-1 gap-6">
+                <h3 className="mb-6 text-2xl font-bold">Tier 1 Sponsors</h3>
+                <div className="grid grid-cols-3 gap-6">
+                  {/* OBSIDIAN */}
                   <div className="flex items-center justify-center">
                     <Link
                       href="https://obsidiangames.ca"
@@ -40,50 +41,12 @@ const Supporters: NextPage<Props> = () => {
                       />
                     </Link>
                   </div>
-                </div>
-              </div>
-              <div>
-                <h3 className="mb-6 text-2xl font-bold">Tier 2 Sponsors</h3>
-                <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                  <div className="flex items-center justify-center">
-                    <Link
-                      href="https://levelupgames.ca"
-                      target="_blank"
-                      data-position-id="8" // hardcoded for t2 supporter logo
-                      data-ad-id="42" // hardcoded for the levelup support logo ad
-                      onClick={() => trackAdClick('42')}
-                    >
-                      <img
-                        alt="Level Up Games"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="200"
-                        src="/levelup_icon.png"
-                        width="400"
-                      />
-                    </Link>
-                  </div>
-                  <div className="flex items-center justify-center">
-                    <Link
-                      href="https://chimeragamingonline.com"
-                      target="_blank"
-                      data-position-id="8" // hardcoded for t2 supporter logo
-                      data-ad-id="43" // hardcoded for the chimera support logo ad
-                      onClick={() => trackAdClick('43')}
-                    >
-                      <img
-                        alt="Chimera Gaming"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="200"
-                        src="/chimera_sponsor.png"
-                        width="400"
-                      />
-                    </Link>
-                  </div>
+                  {/* EXOR */}
                   <div className="flex items-center justify-center">
                     <Link
                       href="https://exorgames.com"
                       target="_blank"
-                      data-position-id="8" // hardcoded for t2 supporter logo
+                      data-position-id="6" // hardcoded for t1 supporter logo
                       data-ad-id="44" // hardcoded for the exor support logo ad
                       onClick={() => trackAdClick('44')}
                     >
@@ -96,21 +59,87 @@ const Supporters: NextPage<Props> = () => {
                       />
                     </Link>
                   </div>
+                  {/* CHIMERA */}
                   <div className="flex items-center justify-center">
                     <Link
-                      href="/contact"
-                      className=" aspect-video w-48 rounded border bg-popover"
-                    ></Link>
-                  </div>{' '}
-                  <div className="flex items-center justify-center">
-                    <Link
-                      href="/contact"
-                      className=" aspect-video w-48 rounded border bg-popover"
-                    ></Link>
-                  </div>{' '}
+                      href="https://chimeragamingonline.com/"
+                      target="_blank"
+                      data-position-id="6" // hardcoded for t1 supporter logo
+                      data-ad-id="43" // hardcoded for the obsidian support logo ad
+                      onClick={() => trackAdClick('43')}
+                    >
+                      <img
+                        alt="Chimera Gaming"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="200"
+                        src="/chimera_sponsor.png"
+                        width="400"
+                      />
+                    </Link>
+                  </div>
                 </div>
               </div>
               <div>
+                <h3 className="mb-6 text-2xl font-bold">Tier 2 Sponsors</h3>
+                <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
+                  {/* LEVEL UP */}
+                  <div className="flex items-center justify-center">
+                    <Link
+                      href="https://levelupgames.ca"
+                      target="_blank"
+                      data-position-id="8" // hardcoded for t2 supporter logo
+                      data-ad-id="42" // hardcoded for the levelup support logo ad
+                      onClick={() => trackAdClick('42')}
+                    >
+                      <img
+                        alt="Level Up Games"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="150"
+                        src="/levelup_icon.png"
+                        width="300"
+                      />
+                    </Link>
+                  </div>
+                  {/* The Mythic Store */}
+                  <div className="flex items-center justify-center">
+                    <Link
+                      href="https://themythicstore.com"
+                      target="_blank"
+                      data-position-id="8" 
+                      data-ad-id="55"  
+                      onClick={() => trackAdClick('55')} 
+                    >
+                      <img
+                        alt="The Mythic Store"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="150"
+                        src="/tms_sponsor.webp"
+                        width="300"
+                      />
+                    </Link>
+                  </div>
+                  {/* House of Cards */}
+                  <div className="flex items-center justify-center">
+                    <Link
+                      href="https://houseofcards.ca"
+                      target="_blank"
+                      data-position-id="8" 
+                      data-ad-id="56"  
+                      onClick={() => trackAdClick('56')} 
+                    >
+                      <img
+                        alt="House of Cards"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        height="150"
+                        src="/hoc_sponsor.png"
+                        width="300"
+                      />
+                    </Link>
+                  </div>
+    
+                </div>
+              </div>
+              {/* <div>
                 <h3 className="mb-6 text-2xl font-bold">Tier 3 Sponsors</h3>
                 <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                   <div className="flex items-center justify-center">
@@ -144,7 +173,7 @@ const Supporters: NextPage<Props> = () => {
                     ></Link>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div>
                 <p className="text-left">
                   {' '}
