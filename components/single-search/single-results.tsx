@@ -1,37 +1,41 @@
 import { useState, useMemo, SetStateAction, useEffect } from 'react';
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent
-} from '@/components/ui/accordion';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import AdComponent from '../ad';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import useSingleStore from '@/stores/singleSearchStore';
-import { Ad } from '@/types/ads';
-import { useStore, type SingleSearchResult } from '@/stores/store';
+
 import useGlobalStore from '@/stores/globalStore';
 import useAuthStore from '@/stores/authStore';
-import CardImage from '../ui/card-image';
+import { useStore, type SingleSearchResult } from '@/stores/store';
+import useSingleStore from '@/stores/singleSearchStore';
+
+import { Button } from '@/components/ui/button';
 import { Badge } from '../ui/badge';
-import { handleBuyClick } from '../../utils/analytics';
-import { Input } from '../ui/input';
-import { ScrollArea, ScrollBar } from '../ui/scroll-area';
+import CardImage from '../ui/card-image';
 import BackToTopButton from '../ui/back-to-top-btn';
-import { MessageSquareWarning } from 'lucide-react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
-import SingleFilterAccordian from './single-filter-accordian';
+
+import AdComponent from '../ad';
+import { Ad } from '@/types/ads';
+import { handleBuyClick } from '../../utils/analytics';
+
+import SingleSortBy from './single-sort-by';
+import FilterDropdown from './filter-dropdown';
+import ResultsSkeleton from './results-skeleton';
+
 type ResultItem = SingleSearchResult | Ad;
+
+const defaultFilters = {
+  exactMatch: [false],
+  condition: [] as string[],
+  priceRange: [0, 10000] as [number, number],
+  vendor: [] as string[],
+  set: [] as string[],
+  foil: [] as string[],
+  alternate_art: [] as string[],
+  showcase: [] as string[],
+  frame: [] as string[],
+  promo: [] as string[],
+  art_series: [] as string[],
+  collector_number: [] as string[]
+};
 
 const getRandomAd = (ads: Ad[]): Ad => {
   const randomIndex = Math.floor(Math.random() * ads.length);
@@ -62,43 +66,57 @@ const insertAdvertisements = (
 };
 
 export default function SingleCatalog({ loading }: { loading: boolean }) {
+  // Zustand Stores //
   const { filteredResults, promotedCards, tcg, searchQuery, results } =
     useSingleStore();
   const { ads } = useGlobalStore();
-  const { websites } = useStore();
   const { hasActiveSubscription } = useAuthStore();
+
+  // Ads //
   const adsFromPosition5 = ads.position['5']?.ads || [];
-  const [filters, setFilters] = useState({
-    exactMatch: [false],
-    condition: [] as string[],
-    priceRange: [0, 10000] as [number, number],
-    vendor: [] as string[],
-    set: [] as string[],
-    foil: [] as string[],
-    alternate_art: [] as string[],
-    showcase: [] as string[],
-    frame: [] as string[],
-    promo: [] as string[],
-    art_series: [] as string[],
-    collector_number: [] as string[]
-  });
-  useEffect(() => {
-    setFilters({
-      exactMatch: [false],
-      condition: [],
-      priceRange: [0, 10000],
-      vendor: [],
-      foil: [],
-      set: [],
-      alternate_art: [],
-      showcase: [],
-      frame: [],
-      promo: [],
-      art_series: [],
-      collector_number: []
-    });
-  }, [tcg, searchQuery]);
+
+  // Sorting //
   const [sortBy, setSortBy] = useState('relevance');
+  const handleSortChange = (value: SetStateAction<string>) => {
+    setSortBy(value);
+  };
+
+  // Filters //
+  const [isFilterToggled, setIsFilterToggled] = useState(false);
+  const [filters, setFilters] = useState(defaultFilters);
+  const handleFilterChange = (type: string, value: any[]) => {
+    setFilters((prevFilters) => {
+      let newValue = value;
+      if (type === 'priceRange') {
+        newValue = [
+          value[0] === '' ? 0 : value[0],
+          value[1] === '' ? 10000 : value[1]
+        ];
+      }
+      return {
+        ...prevFilters,
+        [type]: newValue
+      };
+    });
+  };
+
+  // Check if the filters object is the same as the default filters //
+  useEffect(() => {
+    const isDefault = Object.keys(defaultFilters).every(
+      (key) =>
+        JSON.stringify(filters[key as keyof typeof filters]) ===
+        JSON.stringify(defaultFilters[key as keyof typeof defaultFilters])
+    );
+    isDefault ? setIsFilterToggled(false) : setIsFilterToggled(true);
+  }, [filters]);
+
+  // Toggle Filters to Default (When user Changes TCG's)//
+  useEffect(() => {
+    setFilters(defaultFilters);
+    setIsFilterToggled(false);
+  }, [tcg, searchQuery]);
+
+  // Filter & Sorting Products Function (Client Side Filtering & Sorting) //
   const filteredProducts = useMemo(() => {
     const tempFiltered = filteredResults
       .filter((product) => {
@@ -192,33 +210,11 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
     ].flat();
 
     const withAds = insertAdvertisements(combined, 6, adsFromPosition5);
-
     return withAds;
   }, [filters, sortBy, filteredResults]);
 
-  const handleFilterChange = (type: string, value: any[]) => {
-    console.log(filters);
-    setFilters((prevFilters) => {
-      let newValue = value;
-      if (type === 'priceRange') {
-        newValue = [
-          value[0] === '' ? 0 : value[0],
-          value[1] === '' ? 10000 : value[1]
-        ];
-      }
-      return {
-        ...prevFilters,
-        [type]: newValue
-      };
-    });
-    console.log(filters);
-  };
-  const handleSortChange = (value: SetStateAction<string>) => {
-    setSortBy(value);
-  };
-
   return (
-    <div className="grid gap-6 md:grid-cols-[240px_1fr]">
+    <div className="grid min-h-svh gap-6 md:grid-cols-[240px_1fr]">
       <div className="flex flex-col gap-6">
         <div className="grid gap-4">
           {!hasActiveSubscription && (
@@ -230,321 +226,32 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
               </p>
             </div>
           )}
-          <div className="grid gap-2">
-            <Label className="flex items-center gap-2 font-normal">
-              <Checkbox
-                checked={filters.exactMatch[0]}
-                onCheckedChange={() =>
-                  handleFilterChange(
-                    'exactMatch',
-                    !filters.exactMatch[0] ? [true] : [false]
-                  )
-                }
+
+          <div className="relative flex w-full gap-2">
+            <div className="child-1 w-1/2 md:w-full">
+              <FilterDropdown
+                filters={filters}
+                isFilterToggled={isFilterToggled}
+                defaultFilters={defaultFilters}
+                setFilters={setFilters}
+                handleFilterChange={handleFilterChange}
               />
-              Exact Name Filter
-            </Label>
+            </div>
+            <div className="child-2 w-1/2 md:hidden">
+              <SingleSortBy
+                sortBy={sortBy}
+                handleSortChange={handleSortChange}
+              />
+            </div>
           </div>
-
-          <Accordion type="single" collapsible>
-            <AccordionItem value="condition">
-              <AccordionTrigger className="text-base">
-                Condition
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="grid gap-2">
-                  <Label className="flex items-center gap-2 font-normal">
-                    <Checkbox
-                      checked={filters.condition.includes('NM')}
-                      onCheckedChange={() =>
-                        handleFilterChange(
-                          'condition',
-                          filters.condition.includes('NM')
-                            ? filters.condition.filter((c) => c !== 'NM')
-                            : [...filters.condition, 'NM']
-                        )
-                      }
-                    />
-                    NM
-                  </Label>
-                  <Label className="flex items-center gap-2 font-normal">
-                    <Checkbox
-                      checked={filters.condition.includes('LP')}
-                      onCheckedChange={() =>
-                        handleFilterChange(
-                          'condition',
-                          filters.condition.includes('LP')
-                            ? filters.condition.filter((c) => c !== 'LP')
-                            : [...filters.condition, 'LP']
-                        )
-                      }
-                    />
-                    LP
-                  </Label>
-                  <Label className="flex items-center gap-2 font-normal">
-                    <Checkbox
-                      checked={filters.condition.includes('MP')}
-                      onCheckedChange={() =>
-                        handleFilterChange(
-                          'condition',
-                          filters.condition.includes('MP')
-                            ? filters.condition.filter((c) => c !== 'MP')
-                            : [...filters.condition, 'MP']
-                        )
-                      }
-                    />
-                    MP
-                  </Label>
-                  <Label className="flex items-center gap-2 font-normal">
-                    <Checkbox
-                      checked={filters.condition.includes('HP')}
-                      onCheckedChange={() =>
-                        handleFilterChange(
-                          'condition',
-                          filters.condition.includes('HP')
-                            ? filters.condition.filter((c) => c !== 'HP')
-                            : [...filters.condition, 'HP']
-                        )
-                      }
-                    />
-                    HP
-                  </Label>
-                  <Label className="flex items-center gap-2 font-normal">
-                    <Checkbox
-                      checked={filters.condition.includes('DMG')}
-                      onCheckedChange={() =>
-                        handleFilterChange(
-                          'condition',
-                          filters.condition.includes('DMG')
-                            ? filters.condition.filter((c) => c !== 'DMG')
-                            : [...filters.condition, 'DMG']
-                        )
-                      }
-                    />
-                    DMG
-                  </Label>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="price">
-              <AccordionTrigger className="text-base">Price</AccordionTrigger>
-              <AccordionContent>
-                {/* from x to y inputs */}
-                <div className="grid gap-2">
-                  <div className="flex items-center gap-2 p-2">
-                    <Input
-                      type="number"
-                      value={filters.priceRange[0]}
-                      onChange={(e) =>
-                        handleFilterChange('priceRange', [
-                          e.target.value === '' ? '' : parseInt(e.target.value),
-                          filters.priceRange[1]
-                        ])
-                      }
-                      onBlur={(e) =>
-                        handleFilterChange('priceRange', [
-                          e.target.value === '' ? 0 : parseInt(e.target.value),
-                          filters.priceRange[1]
-                        ])
-                      }
-                    />
-                    <span>to</span>
-                    <Input
-                      type="number"
-                      value={filters.priceRange[1]}
-                      onChange={(e) =>
-                        handleFilterChange('priceRange', [
-                          filters.priceRange[0],
-                          e.target.value === '' ? '' : parseInt(e.target.value)
-                        ])
-                      }
-                      onBlur={(e) =>
-                        handleFilterChange('priceRange', [
-                          filters.priceRange[0],
-                          e.target.value === ''
-                            ? 10000
-                            : parseInt(e.target.value)
-                        ])
-                      }
-                    />
-                  </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            {(tcg === 'pokemon' ||
-              tcg === 'lorcana' ||
-              tcg === 'yugioh' ||
-              tcg === 'onepiece') && (
-              <SingleFilterAccordian
-                filters={filters}
-                filterOption="collector_number"
-                header="Collector Number"
-                handleFilterChange={handleFilterChange}
-              />
-            )}
-            {tcg != 'pokemon' && (
-              <SingleFilterAccordian
-                filters={filters}
-                filterOption="foil"
-                header={tcg == 'yugioh' ? 'Rarity' : 'Foil'}
-                handleFilterChange={handleFilterChange}
-              ></SingleFilterAccordian>
-            )}
-
-            {tcg == 'mtg' && (
-              <>
-                <SingleFilterAccordian
-                  filters={filters}
-                  filterOption="frame"
-                  header="Frame"
-                  handleFilterChange={handleFilterChange}
-                ></SingleFilterAccordian>
-                <SingleFilterAccordian
-                  filters={filters}
-                  filterOption="showcase"
-                  header="Showcase"
-                  handleFilterChange={handleFilterChange}
-                ></SingleFilterAccordian>
-                <SingleFilterAccordian
-                  filters={filters}
-                  filterOption="alternate_art"
-                  header="Alternate Art"
-                  handleFilterChange={handleFilterChange}
-                ></SingleFilterAccordian>
-                <SingleFilterAccordian
-                  filters={filters}
-                  filterOption="promo"
-                  header="Promo"
-                  handleFilterChange={handleFilterChange}
-                ></SingleFilterAccordian>
-                <SingleFilterAccordian
-                  filters={filters}
-                  filterOption="art_series"
-                  header="Art Series"
-                  handleFilterChange={handleFilterChange}
-                ></SingleFilterAccordian>
-              </>
-            )}
-            <SingleFilterAccordian
-              filters={filters}
-              filterOption="set"
-              header="Set"
-              handleFilterChange={handleFilterChange}
-            ></SingleFilterAccordian>
-            <AccordionItem value="vendor">
-              <AccordionTrigger className="text-base">Vendor</AccordionTrigger>
-              <AccordionContent>
-                <ScrollArea className="flex max-h-[200px] flex-col overflow-y-auto">
-                  <div className="grid gap-2">
-                    {websites
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map((website) => (
-                        <Label
-                          key={website.slug}
-                          className="flex items-center gap-2 font-normal"
-                        >
-                          <Checkbox
-                            checked={filters.vendor.includes(website.slug)}
-                            onCheckedChange={() =>
-                              handleFilterChange(
-                                'vendor',
-                                filters.vendor.includes(website.slug)
-                                  ? filters.vendor.filter(
-                                      (v) => v !== website.slug
-                                    )
-                                  : [...filters.vendor, website.slug]
-                              )
-                            }
-                          />
-                          {website.name}
-                        </Label>
-                      ))}
-                  </div>
-                  <ScrollBar orientation="vertical" />{' '}
-                </ScrollArea>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
-          {
-            // if filters are not default, show clear filters button
-            filters.condition.length > 0 ||
-            filters.vendor.length > 0 ||
-            filters.set.length > 0 ||
-            filters.foil.length > 0 ||
-            filters.collector_number.length > 0 ||
-            filters.alternate_art.length > 0 ||
-            filters.showcase.length > 0 ||
-            filters.frame.length > 0 ||
-            filters.promo.length > 0 ||
-            filters.art_series.length > 0 ||
-            filters.priceRange[0] !== 0 ||
-            filters.priceRange[1] !== 10000 ? (
-              <Button
-                onClick={() =>
-                  setFilters({
-                    exactMatch: [false],
-                    condition: [],
-                    priceRange: [0, 10000],
-                    vendor: [],
-                    foil: [],
-                    set: [],
-                    alternate_art: [],
-                    showcase: [],
-                    frame: [],
-                    promo: [],
-                    art_series: [],
-                    collector_number: []
-                  })
-                }
-              >
-                Clear Filters
-              </Button>
-            ) : null
-          }
         </div>
       </div>
       <div className="grid h-min gap-6">
         <div className="flex justify-between">
           <h1 className="text-2xl font-bold">Search Results</h1>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="shrink-0">
-                <ArrowUpDownIcon className="mr-2 h-4 w-4" />
-                Sort by
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[200px]" align="end">
-              <DropdownMenuRadioGroup
-                value={sortBy}
-                onValueChange={handleSortChange}
-              >
-                <DropdownMenuRadioItem value="price-asc">
-                  Price: Low to High
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="price-desc">
-                  Price: High to Low
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="name-asc">
-                  Name A-Z
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="name-desc">
-                  Name Z-A
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="set-asc">
-                  Set A-Z
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="set-desc">
-                  Set Z-A
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="vendor-asc">
-                  Vendor A-Z
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="vendor-desc">
-                  Vendor Z-A
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="hidden md:block">
+            <SingleSortBy sortBy={sortBy} handleSortChange={handleSortChange} />
+          </div>
         </div>
         {/* If we have 1000 results, show warning */}
         {results.length >= 1000 && (
@@ -601,11 +308,7 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
         }`}
       >
         <div className="relative mx-auto max-w-[150px] md:max-w-[250px]">
-          <CardImage
-            imageUrl={product.image}
-            alt={product.name}
-            // href={product.link}
-          />
+          <CardImage imageUrl={product.image} alt={product.name} />
           {product.promoted && (
             <Badge className="absolute -left-2 -top-2 bg-gradient-to-tr from-primary to-red-700 shadow">
               Promoted
@@ -617,7 +320,6 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
             {product.set}
           </div>
 
-          {/* Remove This September 1 (Will be pro only)*/}
           <h3 className="text-sm font-bold capitalize tracking-tight">{`${
             product.name
           } ${
@@ -633,28 +335,6 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
           } ${product.promo ? product.promo : ''} ${
             product.art_series ? product.art_series : ''
           }`}</h4>
-
-          {/* Uncomment This September 1 (Will be pro only)*/}
-          {/* <h3 className="text-sm font-bold capitalize tracking-tight">{`${
-            product.name
-          } ${
-            hasActiveSubscription == true && product.collector_number
-              ? `(${product.collector_number})`
-              : ''
-          }`}</h3>
-          {hasActiveSubscription == true && (
-            <h4 className="text-xs  font-semibold capitalize tracking-tight  text-muted-foreground">{` ${
-              product.frame ? product.frame : ''
-            }  ${
-              product.foil !== 'foil' && product.foil != null
-                ? product.foil
-                : ''
-            } ${product.showcase ? product.showcase : ''} ${
-              product.alternate_art ? product.alternate_art : ''
-            } ${product.promo ? product.promo : ''} ${
-              product.art_series ? product.art_series : ''
-            }`}</h4>
-          )} */}
 
           <div className="flex flex-row gap-2">
             {websites.map(
@@ -703,7 +383,7 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
                 {product.condition}
               </Badge>
             </div>
-            <h4 className="">${Number(product.price).toFixed(2)}</h4>
+            <h4>${Number(product.price).toFixed(2)}</h4>
           </div>
         </div>
       </div>
@@ -729,38 +409,5 @@ function CatalogItem({ product }: { product: SingleCatalogCard }) {
         </Button>
       </Link>
     </div>
-  );
-}
-
-function ResultsSkeleton() {
-  return (
-    <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      <div className="h-96 w-full animate-pulse rounded-lg bg-accent"></div>
-      <div className="h-96 w-full animate-pulse rounded-lg bg-accent"></div>
-      <div className="h-96 w-full animate-pulse rounded-lg bg-accent"></div>
-      <div className="h-96 w-full animate-pulse rounded-lg bg-accent"></div>
-    </div>
-  );
-}
-
-function ArrowUpDownIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m21 16-4 4-4-4" />
-      <path d="M17 20V4" />
-      <path d="m3 8 4-4 4 4" />
-      <path d="M7 4v16" />
-    </svg>
   );
 }

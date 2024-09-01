@@ -10,13 +10,13 @@ const About: NextPage<Props> = () => {
         <section className="w-full py-6 md:py-12">
           <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
             <h1 className="text-2xl font-bold">TERMS AND CONDITIONS</h1>
-            <p>Last updated: February 30, 2024</p>
+            <p>Last updated: August 25, 2024</p>
 
             <h2 className="text-lg font-bold">AGREEMENT TO OUR LEGAL TERMS</h2>
             <p>
-              We are Snapcaster ( <strong>"Company," "we," "us," "our" </strong>
-              ) , a company registered in Canada at Victoria BC , Victoria ,
-              British Columbia .
+              We are Eppler Software ({' '}
+              <strong>"Company," "we," "us," "our" </strong>) , a company
+              registered in Canada at Victoria, British Columbia.
             </p>
             <p>
               We operate the website{' '}
@@ -33,22 +33,35 @@ const About: NextPage<Props> = () => {
               <strong>"Services"</strong> ).
             </p>
             <p>
-              We aggregate the cheapest options for purchasing trading card game
-              cards in Canada.
+              We provide a way for users to aggregate TCG related products
+              across various online shops across Canada.
             </p>
-            <p>
-              You can contact us by email at epplerdev@gmail.com or by mail to
-              Victoria BC , Victoria , British Columbia , Canada .
-            </p>
+            <p>You can contact us by email at epplerdev@gmail.com.</p>
             <p>
               These Legal Terms constitute a legally binding agreement made
               between you, whether personally or on behalf of an entity (
-              <strong>"you"</strong>), and Snapcaster, concerning your access to
-              and use of the Services. You agree that by accessing the Services,
-              you have read, understood, and agreed to be bound by all of these
-              Legal Terms. IF YOU DO NOT AGREE WITH ALL OF THESE LEGAL TERMS,
-              THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE SERVICES AND YOU
-              MUST DISCONTINUE USE IMMEDIATELY.
+              <strong>"you"</strong>), and Eppler Software, concerning your
+              access to and use of the Services. You agree that by accessing the
+              Services, you have read, understood, and agreed to be bound by all
+              of these Legal Terms. IF YOU DO NOT AGREE WITH ALL OF THESE LEGAL
+              TERMS, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE SERVICES
+              AND YOU MUST DISCONTINUE USE IMMEDIATELY.
+            </p>
+
+            <p>
+              Supplemental terms and conditions or documents that may be posted
+              on the Services from time to time are hereby expressly
+              incorporated herein by reference. We reserve the right, in our
+              sole discretion, to make changes or modifications to these Legal
+              Terms at any time and for any reason. We will alert you about any
+              changes by updating the "Last updated" date of these Legal Terms,
+              and you waive any right to receive specific notice of each such
+              change. It is your responsibility to periodically review these
+              Legal Terms to stay informed of updates. You will be subject to,
+              and will be deemed to have been made aware of and to have
+              accepted, the changes in any revised Legal Terms by your continued
+              use of the Services after the date such revised Legal Terms are
+              posted.
             </p>
             <p>
               We will provide you with prior notice of any scheduled changes to
@@ -93,63 +106,70 @@ const About: NextPage<Props> = () => {
                 <a href="#subscriptions">6. SUBSCRIPTIONS</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#prohibited">7. PROHIBITED ACTIVITIES</a>
+                <a href="#software">7. SOFTWARE</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#ugc">8. USER GENERATED CONTRIBUTIONS</a>
+                <a href="#prohibited">8. PROHIBITED ACTIVITIES</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#license">9. CONTRIBUTION LICENSE</a>
+                <a href="#ugc">9. USER GENERATED CONTRIBUTIONS</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#thirdparty">10. THIRD-PARTY WEBSITES AND CONTENT</a>
+                <a href="#license">10. CONTRIBUTION LICENSE</a>
+              </div>
+
+              <div className="text-primary hover:text-primary-muted">
+                <a href="#socialmedia">11. SOCIAL MEDIA</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#advertisers">11. ADVERTISERS</a>
+                <a href="#advertisers">12. ADVERTISERS</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#sitemanage">12. SERVICES MANAGEMENT</a>
+                <a href="#thirdparty">13. THIRD-PARTY WEBSITES AND CONTENT</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#ppyes">13. PRIVACY POLICY</a>
+                <a href="#sitemanage">14. SERVICES MANAGEMENT</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#terms">14. TERM AND TERMINATION</a>
+                <a href="#ppyes">15. PRIVACY POLICY</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#modifications">15. MODIFICATIONS AND INTERRUPTIONS</a>
+                <a href="#terms">16. TERM AND TERMINATION</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#law">16. GOVERNING LAW</a>
+                <a href="#modifications">17. MODIFICATIONS AND INTERRUPTIONS</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#disputes">17. DISPUTE RESOLUTION</a>
+                <a href="#law">18. GOVERNING LAW</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#corrections">18. CORRECTIONS</a>
+                <a href="#disputes">19. DISPUTE RESOLUTION</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#disclaimer">19. DISCLAIMER</a>
+                <a href="#corrections">20. CORRECTIONS</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#liability">20. LIMITATIONS OF LIABILITY</a>
+                <a href="#disclaimer">21. DISCLAIMER</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#indemnification">21. INDEMNIFICATION</a>
+                <a href="#liability">22. LIMITATIONS OF LIABILITY</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#userdata">22. USER DATA</a>
+                <a href="#indemnification">23. INDEMNIFICATION</a>
+              </div>
+              <div className="text-primary hover:text-primary-muted">
+                <a href="#userdata">24. USER DATA</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
                 <a href="#electronic">
-                  23. ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES
+                  25. ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES
                 </a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#misc">24. MISCELLANEOUS</a>
+                <a href="#misc">26. MISCELLANEOUS</a>
               </div>
               <div className="text-primary hover:text-primary-muted">
-                <a href="#contact">25. CONTACT US</a>
+                <a href="#contact">27. CONTACT US</a>
               </div>
             </ul>
 
@@ -324,9 +344,9 @@ const About: NextPage<Props> = () => {
               information and promptly update such registration information as
               necessary; (3) you have the legal capacity and you agree to comply
               with these Legal Terms; (4) you are not under the age of 13; (5)
-              you are not a minor in the jurisdiction in which you reside , or
-              if a minor, you have received parental permission to use the
-              Services ; (6) you will not access the Services through automated
+              you are not a minor in the jurisdiction in which you reside, or if
+              a minor, you have received parental permission to use the
+              Services; (6) you will not access the Services through automated
               or non-human means, whether through a bot, script or otherwise;
               (7) you will not use the Services for any illegal or unauthorized
               purpose; and (8) your use of the Services will not violate any
@@ -427,10 +447,30 @@ const About: NextPage<Props> = () => {
               and will communicate any price changes to you in accordance with
               applicable law.
             </p>
-
+            <div className="MsoNormal" id="software">
+              <strong>
+                <span>7. SOFTWARE</span>
+              </strong>
+            </div>
+            <p>
+              We may include software for use in connection with our Services.
+              If such software is accompanied by an end user license agreement
+              ("EULA"), the terms of the EULA will govern your use of the
+              software. If such software is not accompanied by a EULA, then we
+              grant to you a non-exclusive, revocable, personal, and
+              non-transferable license to use such software solely in connection
+              with our services and in accordance with these Legal Terms. Any
+              software and any related documentation is provided "AS IS" without
+              warranty of any kind, either express or implied, including,
+              without limitation, the implied warranties of merchantability,
+              fitness for a particular purpose, or non-infringement. You accept
+              any and all risk arising out of use or performance of any
+              software. You may not reproduce or redistribute any software
+              except in accordance with the EULA or these Legal Terms.
+            </p>
             <div className="MsoNormal" id="prohibited">
               <strong>
-                <span>7. PROHIBITED ACTIVITIES</span>
+                <span>8. PROHIBITED ACTIVITIES</span>
               </strong>
             </div>
             <p>
@@ -570,7 +610,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="ugc">
               <strong>
-                <span>8. USER GENERATED CONTRIBUTIONS</span>
+                <span>9. USER GENERATED CONTRIBUTIONS</span>
               </strong>
             </div>
             <p>
@@ -668,7 +708,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="license">
               <strong>
-                <span>9. CONTRIBUTION LICENSE</span>
+                <span>10. CONTRIBUTION LICENSE</span>
               </strong>
             </div>
             <p>
@@ -693,9 +733,79 @@ const About: NextPage<Props> = () => {
               against us regarding your Contributions.
             </p>
 
+            <div className="MsoNormal" id="socialmedia">
+              <strong>
+                <span>11. SOCIAL MEDIA</span>
+              </strong>
+            </div>
+            <p>
+              As part of the functionality of the Services, you may link your
+              account with online accounts you have with third-party service
+              providers (each such account, a "Third-Party Account") by either:
+              (1) providing your Third-Party Account login information through
+              the Services; or (2) allowing us to access your Third-Party
+              Account, as is permitted under the applicable terms and conditions
+              that govern your use of each Third-Party Account. You represent
+              and warrant that you are entitled to disclose your Third-Party
+              Account login information to us and/or grant us access to your
+              Third-Party Account, without breach by you of any of the terms and
+              conditions that govern your use of the applicable Third-Party
+              Account, and without obligating us to pay any fees or making us
+              subject to any usage limitations imposed by the third-party
+              service provider of the Third-Party Account. By granting us access
+              to any Third-Party Accounts, you understand that (1) we may
+              access, make available, and store (if applicable) any content that
+              you have provided to and stored in your Third-Party Account (the
+              "Social Network Content") so that it is available on and through
+              the Services via your account, including without limitation any
+              friend lists and (2) we may submit to and receive from your
+              Third-Party Account additional information to the extent you are
+              notified when you link your account with the Third-Party Account.
+              Depending on the Third-Party Accounts you choose and subject to
+              the privacy settings that you have set in such Third-Party
+              Accounts, personally identifiable information that you post to
+              your Third-Party Accounts may be available on and through your
+              account on the Services. Please note that if a Third-Party Account
+              or associated service becomes unavailable or our access to such
+              Third-Party Account is terminated by the third-party service
+              provider, then Social Network Content may no longer be available
+              on and through the Services. You will have the ability to disable
+              the connection between your account on the Services and your
+              Third-Party Accounts at any time. PLEASE NOTE THAT YOUR
+              RELATIONSHIP WITH THE THIRD- PARTY SERVICE PROVIDERS ASSOCIATED
+              WITH YOUR THIRD-PARTY ACCOUNTS IS GOVERNED SOLELY BY YOUR
+              AGREEMENT(S) WITH SUCH THIRD-PARTY SERVICE PROVIDERS. We make no
+              effort to review any Social Network Content for any purpose,
+              including but not limited to, for accuracy, legality, or
+              non-infringement, and we are not responsible for any Social
+              Network Content. You acknowledge and agree that we may access your
+              email address book associated with a Third-Party Account and your
+              contacts list stored on your mobile device or tablet computer
+              solely for purposes of identifying and informing you of those
+              contacts who have also registered to use the Services. You can
+              deactivate the connection between the Services and your
+              Third-Party Account by contacting us using the contact information
+              below or through your account settings (if applicable). We will
+              attempt to delete any information stored on our servers that was
+              obtained through such Third-Party Account, except the username and
+              profile picture that become associated with your account.
+            </p>
+            <div className="MsoNormal" id="advertisers">
+              <strong>
+                <span>12. ADVERTISERS</span>
+              </strong>
+            </div>
+            <p>
+              We allow advertisers to display their advertisements and other
+              information in certain areas of the Services, such as sidebar
+              advertisements or banner advertisements. We simply provide the
+              space to place such advertisements, and we have no other
+              relationship with advertisers.
+            </p>
+
             <div className="MsoNormal" id="thirdparty">
               <strong>
-                <span>10. THIRD-PARTY WEBSITES AND CONTENT</span>
+                <span>13. THIRD-PARTY WEBSITES AND CONTENT</span>
               </strong>
             </div>
             <p>
@@ -731,25 +841,11 @@ const About: NextPage<Props> = () => {
               purchase of such products or services. Additionally, you shall
               hold us blameless from any losses sustained by you or harm caused
               to you relating to or resulting in any way from any Third-Party
-              Content or any contact with Third-Party Websites.
+              Content or any contact
             </p>
-
-            <div className="MsoNormal" id="advertisers">
-              <strong>
-                <span>11. ADVERTISERS</span>
-              </strong>
-            </div>
-            <p>
-              We allow advertisers to display their advertisements and other
-              information in certain areas of the Services, such as sidebar
-              advertisements or banner advertisements. We simply provide the
-              space to place such advertisements, and we have no other
-              relationship with advertisers.
-            </p>
-
             <div className="MsoNormal" id="sitemanage">
               <strong>
-                <span>12. SERVICES MANAGEMENT</span>
+                <span>14. SERVICES MANAGEMENT</span>
               </strong>
             </div>
             <p>
@@ -771,7 +867,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="ppyes">
               <strong>
-                <span>13. PRIVACY POLICY</span>
+                <span>15. PRIVACY POLICY</span>
               </strong>
             </div>
             <p>
@@ -786,19 +882,19 @@ const About: NextPage<Props> = () => {
               </a>{' '}
               . By using the Services, you agree to be bound by our Privacy
               Policy, which is incorporated into these Legal Terms. Please be
-              advised the Services are hosted in the United States . If you
+              advised the Services are hosted in the United States. If you
               access the Services from any other region of the world with laws
               or other requirements governing personal data collection, use, or
-              disclosure that differ from applicable laws in the United States ,
+              disclosure that differ from applicable laws in the United States,
               then through your continued use of the Services, you are
-              transferring your data to the United States , and you expressly
+              transferring your data to the United States, and you expressly
               consent to have your data transferred to and processed in the
-              United States .
+              United States.
             </p>
 
             <div className="MsoNormal" id="terms">
               <strong>
-                <span>14. TERM AND TERMINATION</span>
+                <span>16. TERM AND TERMINATION</span>
               </strong>
             </div>
             <p>
@@ -826,7 +922,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="modifications">
               <strong>
-                <span>15. MODIFICATIONS AND INTERRUPTIONS</span>
+                <span>17. MODIFICATIONS AND INTERRUPTIONS</span>
               </strong>
             </div>
             <p>
@@ -854,19 +950,20 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="law">
               <strong>
-                <span>16. GOVERNING LAW</span>
+                <span>18. GOVERNING LAW</span>
               </strong>
             </div>
             <p>
               These Legal Terms shall be governed by and defined following the
-              laws of Canada . Snapcaster and yourself irrevocably consent that
-              the courts of Canada shall have exclusive jurisdiction to resolve
-              any dispute which may arise in connection with these Legal Terms.
+              laws of Canada. Eppler Software and yourself irrevocably consent
+              that the courts of Canada shall have exclusive jurisdiction to
+              resolve any dispute which may arise in connection with these Legal
+              Terms.
             </p>
 
             <div className="MsoNormal" id="disputes">
               <strong>
-                <span>17. DISPUTE RESOLUTION</span>
+                <span>19. DISPUTE RESOLUTION</span>
               </strong>
             </div>
             <h3 className=" font-bold">Informal Negotiations</h3>
@@ -892,9 +989,9 @@ const About: NextPage<Props> = () => {
               according to the Rules of this ICAC, which, as a result of
               referring to it, is considered as the part of this clause. The
               number of arbitrators shall be three (3). The seat, or legal
-              place, or arbitration shall be Victoria, Canada . The language of
+              place, or arbitration shall be Victoria, Canada. The language of
               the proceedings shall be English. The governing law of these Legal
-              Terms shall be substantive law of Canada .
+              Terms shall be substantive law of Canada.
             </p>
 
             <h3 className=" font-bold">Restrictions</h3>
@@ -930,7 +1027,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="corrections">
               <strong>
-                <span>18. CORRECTIONS</span>
+                <span>20. CORRECTIONS</span>
               </strong>
             </div>
             <p>
@@ -944,7 +1041,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="disclaimer">
               <strong>
-                <span>19. DISCLAIMER</span>
+                <span>21. DISCLAIMER</span>
               </strong>
             </div>
             <p>
@@ -983,7 +1080,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="liability">
               <strong>
-                <span>20. LIMITATIONS OF LIABILITY</span>
+                <span>22. LIMITATIONS OF LIABILITY</span>
               </strong>
             </div>
             <p>
@@ -997,7 +1094,7 @@ const About: NextPage<Props> = () => {
               LIABILITY TO YOU FOR ANY CAUSE WHATSOEVER AND REGARDLESS OF THE
               FORM OF THE ACTION, WILL AT ALL TIMES BE LIMITED TO THE AMOUNT
               PAID, IF ANY, BY YOU TO US DURING THE SIX (6) MONTH PERIOD PRIOR
-              TO ANY CAUSE OF ACTION ARISING . CERTAIN US STATE LAWS AND
+              TO ANY CAUSE OF ACTION ARISING. CERTAIN US STATE LAWS AND
               INTERNATIONAL LAWS DO NOT ALLOW LIMITATIONS ON IMPLIED WARRANTIES
               OR THE EXCLUSION OR LIMITATION OF CERTAIN DAMAGES. IF THESE LAWS
               APPLY TO YOU, SOME OR ALL OF THE ABOVE DISCLAIMERS OR LIMITATIONS
@@ -1006,7 +1103,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="indemnification">
               <strong>
-                <span>21. INDEMNIFICATION</span>
+                <span>23. INDEMNIFICATION</span>
               </strong>
             </div>
             <p>
@@ -1032,7 +1129,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="userdata">
               <strong>
-                <span>22. USER DATA</span>
+                <span>24. USER DATA</span>
               </strong>
             </div>
             <p>
@@ -1050,7 +1147,7 @@ const About: NextPage<Props> = () => {
             <div className="MsoNormal" id="electronic">
               <strong>
                 <span>
-                  23. ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES
+                  25. ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES
                 </span>
               </strong>
             </div>
@@ -1073,7 +1170,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="misc">
               <strong>
-                <span>24. MISCELLANEOUS</span>
+                <span>26. MISCELLANEOUS</span>
               </strong>
             </div>
             <p>
@@ -1102,7 +1199,7 @@ const About: NextPage<Props> = () => {
 
             <div className="MsoNormal" id="contact">
               <strong>
-                <span>25. CONTACT US</span>
+                <span>27. CONTACT US</span>
               </strong>
             </div>
             <p>
@@ -1113,13 +1210,10 @@ const About: NextPage<Props> = () => {
 
             <span>
               <p>
-                <strong>Snapcaster</strong>
+                <strong>Eppler Software</strong>
               </p>
               <p>
-                <strong>Victoria BC</strong>
-              </p>
-              <p>
-                <strong>Victoria , British Columbia</strong>
+                <strong>Victoria, British Columbia</strong>
               </p>
               <p>
                 <strong>Canada</strong>

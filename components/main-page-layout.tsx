@@ -135,8 +135,8 @@ export default function MainLayout({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="" />
-            <CarouselNext className="" />
+            <CarouselPrevious />
+            <CarouselNext />
           </Carousel>
         )}
       </>

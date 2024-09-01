@@ -151,15 +151,21 @@ const Signup: NextPage<Props> = () => {
             </div>
           </CardContent>
           <CardFooter>
-            <p className="text-xs">
+            <p className="py-1 text-xs ">
               By creating an account, you confirm that you have read,
               understood, and consent to the{' '}
               <a
-                href="/terms"
-                target="_blank"
-                className="text-primary hover:opacity-70"
+                href="/privacy"
+                className="text-primary underline hover:opacity-70"
               >
-                Terms of Use
+                Privacy Notice
+              </a>{' '}
+              and{' '}
+              <a
+                href="/terms"
+                className="text-primary underline hover:opacity-70"
+              >
+                Terms & Conditions
               </a>
               .
             </p>
