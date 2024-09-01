@@ -10,6 +10,7 @@ import { getAllBlogPosts } from '@/lib/blog';
 import MultiTcgSearchbox from '@/components/single-search/multitcg-searchbox';
 import useSingleStore from '@/stores/singleSearchStore';
 import PoweredBy from '@/components/powered-by';
+import SingleSearchBar from '@/components/search-bar/search-bar';
 
 type Props = {};
 
@@ -28,7 +29,9 @@ const Home: NextPage<Props> = ({}: Props) => {
         {!searchStarted && <Homebanner />}
         <PoweredBy size="small" />
 
-        <MultiTcgSearchbox searchType={'single'} />
+        <div className="mx-auto flex w-full justify-center">
+          <SingleSearchBar />
+        </div>
         {Object.keys(results).length > 0 && <SingleCatalog loading={loading} />}
         {searchStarted && !loading && Object.keys(results).length === 0 && (
           <div className="flex items-center justify-center pt-5">
