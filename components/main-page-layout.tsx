@@ -28,7 +28,20 @@ export default function MainLayout({
   const { ads } = useGlobalStore();
   const { showAds } = useAdContext();
   const { hasActiveSubscription } = useAuthStore();
-  const plugin = React.useRef(
+  const leftAutoplayPlugin = React.useRef(
+    Autoplay({
+      delay: 20000,
+      stopOnInteraction: true
+    }) as any
+  );
+  const rightAutoplayPlugin = React.useRef(
+    Autoplay({
+      delay: 20000,
+      stopOnInteraction: true
+    }) as any
+  );
+
+  const topAutoPlayPlugin = React.useRef(
     Autoplay({
       delay: 20000,
       stopOnInteraction: true
@@ -86,7 +99,7 @@ export default function MainLayout({
         {topBannerAds && (
           <Carousel
             className="w-full rounded-lg overflow-hidden "
-            plugins={[plugin.current]}
+            plugins={[topAutoPlayPlugin.current]}
           >
             <CarouselContent>
               {topBannerAds.map((ad, index) => (
@@ -106,7 +119,7 @@ export default function MainLayout({
         {showAds && !hasActiveSubscription && leftCarouselAds.length > 0 && (
           <Carousel
           className={`fixed left-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col`}
-          plugins={[plugin.current]}
+          plugins={[leftAutoplayPlugin.current]}
         >
           <CarouselContent>
             {leftCarouselAds.map((ad, index) => (
@@ -124,7 +137,7 @@ export default function MainLayout({
         {showAds && !hasActiveSubscription && rightCarouselAds.length > 0 && (
           <Carousel
             className={`fixed right-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col`}
-            plugins={[plugin.current]}
+            plugins={[rightAutoplayPlugin.current]}
           >
             <CarouselContent>
               {rightCarouselAds.map((ad, index) => (
