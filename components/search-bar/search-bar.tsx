@@ -9,8 +9,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { ChevronDown } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { useDebounceCallback } from 'usehooks-ts';
 
-const gameNames = [
+const suggestionQueryResults = [
   { name: 'Courageous' },
   { name: 'Counterbore' },
   { name: 'Counterspell' },
@@ -22,8 +23,16 @@ interface AutocompleteResult {
   name: string;
 }
 
+type Props = {
+  search(searchText: string): void;
+  autocompleteSearch(searchText: string): void; 
+}
 
-export default function Component() {
+
+
+
+
+export default function SingleSearchBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
@@ -31,14 +40,40 @@ export default function Component() {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const autoCompleteRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
+
+  const fetchAutoCompleteResults = useCallback(
+    (value: string) => {
+      const url = `${autoCompleteUrl}/cards?tcg=${
+        'mtg'
+      }&query=${encodeURIComponent(value)}`;
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          setSuggestions(data.data);
+          setIsAutoCompleteVisible(true);
+          setSelectedIndex(-1);
+        })
+        .catch((error) => {
+          console.error('Error fetching autocomplete results: ', error);
+        });
+    },
+    [autoCompleteUrl, 'mtg']
+  );
+  const debouncedAutoCompleteResults = useDebounceCallback(fetchAutoCompleteResults, 500);
+
 
   useEffect(() => {
-    const filtered = gameNames.filter((result) =>
+    const filtered = suggestionQueryResults.filter((result) =>
       result.name.toLowerCase().includes(inputValue.toLowerCase())
     );
-    setSuggestions(filtered);
-    setIsAutoCompleteVisible(inputValue.length > 0 && filtered.length > 0);
-    setSelectedIndex(-1);
+    if (inputValue.trim().length > 2) {
+      debouncedAutoCompleteResults(inputValue);
+    } else {
+      setSuggestions([]);
+      setIsAutoCompleteVisible(false);
+      setSelectedIndex(-1);
+    }
   }, [inputValue]);
 
   useEffect(() => {
@@ -57,22 +92,29 @@ export default function Component() {
     };
   }, []);
 
-  const search = (query: string) => {
-    console.log('Searching for:', query);
-  }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputValue(value);
+
+    if (value.trim().length > 2) {
+      debouncedAutoCompleteResults(value);
+    } else {
+      setSuggestions([]);
+      setIsAutoCompleteVisible(false);
+      setSelectedIndex(-1);
+    }
   };
 
   const handleSuggestionClick = (suggestion: AutocompleteResult) => {
     setInputValue(suggestion.name);
     setIsAutoCompleteVisible(false);
-    search(suggestion.name); // Trigger search
+    handleSearch(); // Trigger search
   };
 
   const handleSearch = () => {
     console.log('Searching for:', inputValue);
+    // search(inputValue);
     setIsAutoCompleteVisible(false);
   };
 
@@ -102,7 +144,7 @@ export default function Component() {
             const item = suggestions[selectedIndex];
             if (item) {
               handleSuggestionClick(item);
-              search(item.name);
+              // search(item.name);
             }
           }
           break;
@@ -114,7 +156,7 @@ export default function Component() {
           break;
       }
     },
-    [suggestions, selectedIndex, search]
+    [suggestions, selectedIndex]
   );
 
   return (
@@ -154,12 +196,12 @@ export default function Component() {
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute left-[200px] right-12 z-10 mt-1 rounded-md bg-popover shadow-lg"
+          className="absolute left-[200px] p-1 right-12 z-10 mt-1 rounded-md bg-popover shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
-              className={`mx-1 cursor-pointer rounded px-4 py-2  ${
+              className={`cursor-pointer rounded px-4 py-2  ${
                 selectedIndex === index ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
               } `}
               onClick={() => handleSuggestionClick(suggestion)}
