@@ -26,7 +26,7 @@ type SingleSearchState = {
   toggleSortOrder: () => void;
   toggleFoil: () => void;
   clearFilters: () => void;
-  fetchCards: () => Promise<void>;
+  fetchCards: (cardName:string) => Promise<void>;
 };
 
 /**
@@ -105,25 +105,21 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
       filteredResults: get().results
     });
   },
-  fetchCards: async () => {
+  fetchCards: async (cardName:string) => {
     try {
       set({ loading: true, searchStarted: true });
       set({ resultsTcg: get().tcg });
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search/?tcg=${
           get().tcg
-        }&name=${encodeURIComponent(get().searchInput.trim())}`
+        }&name=${encodeURIComponent(cardName.trim())}`
       );
-      // if response is not 200, throw error
       if (response.status !== 200) {
-        // throw error message with status  and statusText
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-      set({ searchQuery: get().searchInput });
       set({
         results: response.data.data,
-        filteredResults: response.data.data,
-        promotedCards: response.data.promotedCards
+        promotedCards: response.data.promotedResults
       });
       get().setDiscounts();
       set({ loading: false });

@@ -10,6 +10,9 @@ import { Input } from '@/components/ui/input';
 import { ChevronDown } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
+import useSingleStore from '@/stores/singleSearchStore';
+import { Tcgs } from '@/types';
+
 
 const suggestionQueryResults = [
   { name: 'Courageous' },
@@ -35,17 +38,19 @@ type Props = {
 export default function SingleSearchBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [tcgValue, setTcgValue] = useState('mtg');
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const autoCompleteRef = useRef<HTMLDivElement>(null);
+  const selectRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
-
+  const {fetchCards, tcg, setTcg} = useSingleStore();
   const fetchAutoCompleteResults = useCallback(
     (value: string) => {
       const url = `${autoCompleteUrl}/cards?tcg=${
-        'mtg'
+        tcgValue
       }&query=${encodeURIComponent(value)}`;
       fetch(url)
         .then((response) => response.json())
@@ -64,9 +69,6 @@ export default function SingleSearchBar() {
 
 
   useEffect(() => {
-    const filtered = suggestionQueryResults.filter((result) =>
-      result.name.toLowerCase().includes(inputValue.toLowerCase())
-    );
     if (inputValue.trim().length > 2) {
       debouncedAutoCompleteResults(inputValue);
     } else {
@@ -75,6 +77,7 @@ export default function SingleSearchBar() {
       setSelectedIndex(-1);
     }
   }, [inputValue]);
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -114,7 +117,7 @@ export default function SingleSearchBar() {
 
   const handleSearch = () => {
     console.log('Searching for:', inputValue);
-    // search(inputValue);
+    fetchCards(inputValue); 
     setIsAutoCompleteVisible(false);
   };
 
@@ -162,7 +165,16 @@ export default function SingleSearchBar() {
   return (
     <div className="relative w-full max-w-3xl">
       <div className="flex w-full items-center rounded-full bg-popover p-1">
-        <Select onOpenChange={setIsOpen}>
+        <Select onOpenChange={setIsOpen}
+          value={tcg}
+          onValueChange={(value: Tcgs) => {
+            setTcg(value);
+            useSingleStore.setState({ results: [] });
+            useSingleStore.setState({ searchStarted: false });
+            useSingleStore.setState({ searchInput: '' });
+          }
+          }
+        >
           <SelectTrigger className="w-[180px] border-none bg-transparent p-2 pl-4 font-bold text-foreground focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
             <SelectValue placeholder="TCG" />
             <ChevronDown
