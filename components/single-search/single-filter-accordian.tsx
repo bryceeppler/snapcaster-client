@@ -23,49 +23,13 @@ const SingleFilterAccordian = ({
   header,
   handleFilterChange
 }: Props) => {
-  const { filteredResults } = useSingleStore();
 
   return (
     <AccordionItem value={filterOption}>
-      <AccordionTrigger className="text-base">{header}</AccordionTrigger>
+      <AccordionTrigger className="text-base" >{header}</AccordionTrigger>
       <AccordionContent>
         <ScrollArea className="flex max-h-[200px] flex-col overflow-y-auto">
           <div className="grid gap-2">
-            {Array.from(
-              new Set(
-                filteredResults
-                  .map((product) => product[filterOption])
-                  // filter out null and empty strings with just whitespace
-                  .filter(
-                    (option) =>
-                      option &&
-                      typeof option === 'string' &&
-                      option.trim() !== ''
-                  )
-              )
-            )
-              .sort()
-              .map((option) => (
-                <Label
-                  key={option}
-                  className="flex items-center gap-2 overflow-clip text-left text-xs font-normal capitalize"
-                >
-                  <Checkbox
-                    checked={filters[filterOption].includes(option)}
-                    onCheckedChange={() =>
-                      handleFilterChange(
-                        filterOption,
-                        filters[filterOption].includes(option)
-                          ? filters[filterOption].filter(
-                              (s: any) => s !== option
-                            )
-                          : [...filters[filterOption], option]
-                      )
-                    }
-                  />
-                  <div className="line-clamp-1">{option}</div>
-                </Label>
-              ))}
           </div>
           <ScrollBar orientation="vertical" />{' '}
         </ScrollArea>

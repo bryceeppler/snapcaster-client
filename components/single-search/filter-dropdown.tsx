@@ -13,22 +13,10 @@ import SingleFilterAccordian from './single-filter-accordian';
 import { useStore } from '@/stores/store';
 import useSingleStore from '@/stores/singleSearchStore';
 import { SetStateAction } from 'react';
-type Props = {
-  filters: any;
-  setFilters(value: SetStateAction<any>): void;
-  handleFilterChange(type: string, value: any): void;
-  isFilterToggled: boolean;
-  defaultFilters: any;
-};
-export default function FilterDropdown({
-  filters,
-  handleFilterChange,
-  setFilters,
-  isFilterToggled,
-  defaultFilters
-}: Props) {
+
+export default function FilterDropdown() {
   const { websites } = useStore();
-  const { tcg } = useSingleStore();
+  const { filters, setFilters, applyFilters, clearFilters } = useSingleStore();
   return (
     <>
       <Accordion type="single" collapsible>
@@ -37,18 +25,7 @@ export default function FilterDropdown({
             Filters
           </AccordionTrigger>
           <AccordionContent className="absolute left-0 z-20 my-2 w-full bg-background shadow-md">
-            <Label className="flex h-12 cursor-pointer items-center gap-2 font-normal hover:underline">
-              <Checkbox
-                checked={filters.exactMatch[0]}
-                onCheckedChange={() =>
-                  handleFilterChange(
-                    'exactMatch',
-                    !filters.exactMatch[0] ? [true] : [false]
-                  )
-                }
-              />
-              Toggle Exact Name Filter
-            </Label>
+
 
             <Accordion type="single" collapsible className="pb-4">
               <AccordionItem value="condition">
@@ -59,80 +36,81 @@ export default function FilterDropdown({
                   <div className="grid gap-2">
                     <Label className="flex items-center gap-2 font-normal">
                       <Checkbox
-                        checked={filters.condition.includes('NM')}
+                        checked={filters.conditions.includes('NM')}
                         onCheckedChange={() =>
-                          handleFilterChange(
-                            'condition',
-                            filters.condition.includes('NM')
-                              ? filters.condition.filter(
-                                  (c: string) => c !== 'NM'
-                                )
-                              : [...filters.condition, 'NM']
-                          )
+                          // partial update on filters.conditions to toggle NM
+                          setFilters({
+                              ...filters,
+                              conditions: filters.conditions.includes('NM')
+                                ? filters.conditions.filter(
+                                    (c: string) => c !== 'NM'
+                                  )
+                                : [...filters.conditions, 'NM']
+                            })
                         }
                       />
                       NM
                     </Label>
                     <Label className="flex items-center gap-2 font-normal">
                       <Checkbox
-                        checked={filters.condition.includes('LP')}
+                        checked={filters.conditions.includes('LP')}
                         onCheckedChange={() =>
-                          handleFilterChange(
-                            'condition',
-                            filters.condition.includes('LP')
-                              ? filters.condition.filter(
-                                  (c: string) => c !== 'LP'
-                                )
-                              : [...filters.condition, 'LP']
-                          )
+                          setFilters({
+                              ...filters,
+                              conditions: filters.conditions.includes('LP')
+                                ? filters.conditions.filter(
+                                    (c: string) => c !== 'LP'
+                                  )
+                                : [...filters.conditions, 'LP']
+                            })
                         }
                       />
                       LP
                     </Label>
                     <Label className="flex items-center gap-2 font-normal">
                       <Checkbox
-                        checked={filters.condition.includes('MP')}
+                        checked={filters.conditions.includes('MP')}
                         onCheckedChange={() =>
-                          handleFilterChange(
-                            'condition',
-                            filters.condition.includes('MP')
-                              ? filters.condition.filter(
-                                  (c: string) => c !== 'MP'
-                                )
-                              : [...filters.condition, 'MP']
-                          )
+                          setFilters({
+                              ...filters,
+                              conditions: filters.conditions.includes('MP')
+                                ? filters.conditions.filter(
+                                    (c: string) => c !== 'MP'
+                                  )
+                                : [...filters.conditions, 'MP']
+                            })
                         }
                       />
                       MP
                     </Label>
                     <Label className="flex items-center gap-2 font-normal">
                       <Checkbox
-                        checked={filters.condition.includes('HP')}
+                        checked={filters.conditions.includes('HP')}
                         onCheckedChange={() =>
-                          handleFilterChange(
-                            'condition',
-                            filters.condition.includes('HP')
-                              ? filters.condition.filter(
-                                  (c: string) => c !== 'HP'
-                                )
-                              : [...filters.condition, 'HP']
-                          )
+                          setFilters({
+                              ...filters,
+                              conditions: filters.conditions.includes('HP')
+                                ? filters.conditions.filter(
+                                    (c: string) => c !== 'HP'
+                                  )
+                                : [...filters.conditions, 'HP']
+                            })
                         }
                       />
                       HP
                     </Label>
                     <Label className="flex items-center gap-2 font-normal">
                       <Checkbox
-                        checked={filters.condition.includes('DMG')}
+                        checked={filters.conditions.includes('DMG')}
                         onCheckedChange={() =>
-                          handleFilterChange(
-                            'condition',
-                            filters.condition.includes('DMG')
-                              ? filters.condition.filter(
-                                  (c: string) => c !== 'DMG'
-                                )
-                              : [...filters.condition, 'DMG']
-                          )
+                          setFilters({
+                              ...filters,
+                              conditions: filters.conditions.includes('DMG')
+                                ? filters.conditions.filter(
+                                    (c: string) => c !== 'DMG'
+                                  )
+                                : [...filters.conditions, 'DMG']
+                            })
                         }
                       />
                       DMG
@@ -140,10 +118,9 @@ export default function FilterDropdown({
                   </div>
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="price">
+              {/* <AccordionItem value="price">
                 <AccordionTrigger className="text-base">Price</AccordionTrigger>
                 <AccordionContent>
-                  {/* from x to y inputs */}
                   <div className="grid gap-2">
                     <div className="flex items-center gap-2 p-2">
                       <Input
@@ -285,25 +262,20 @@ export default function FilterDropdown({
                     <ScrollBar orientation="vertical" />{' '}
                   </ScrollArea>
                 </AccordionContent>
-              </AccordionItem>
+              </AccordionItem> */}
             </Accordion>
-            {
-              // if filters are not default, show clear filters button
               <Button
-                className={
-                  isFilterToggled
-                    ? `w-full bg-red-700 font-semibold transition-all duration-300`
-                    : `w-full cursor-default bg-red-400 font-semibold text-slate-800 opacity-35 transition-all duration-300`
-                }
                 onClick={() => {
-                  if (isFilterToggled == true) {
-                    setFilters(defaultFilters);
-                  }
+                  applyFilters();
+                }}
+              >Apply Filters</Button>
+              <Button
+                onClick={() => {
+                  clearFilters();
                 }}
               >
                 Clear Filters
               </Button>
-            }
           </AccordionContent>
         </AccordionItem>
       </Accordion>

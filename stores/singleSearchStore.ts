@@ -2,168 +2,152 @@ import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Tcgs } from '@/types/index';
 import { toast } from 'sonner';
-const initialConditionLabels = ['NM', 'LP', 'PL', 'MP', 'HP', 'DMG', 'SCAN'];
+
+const conditions = [
+  'NM',
+  'LP',
+  'MP',
+  'HP',
+  'DMG',
+];
+
+type FilterState = {
+  conditions: string[];
+  priceRange: { min: number | null, max: number | null };
+  foil: boolean;
+  vendors: string[];
+  sortField: string;
+  sortOrder: 'asc' | 'desc';
+};
 
 type SingleSearchState = {
   searchInput: string;
-  searchQuery: string;
   results: any[];
-  filteredResults: any[];
   loading: boolean;
-  tcg: Tcgs;
   searchStarted: boolean;
-  conditions: string[];
-  sortField: string;
-  sortOrder: 'asc' | 'desc';
-  foil: boolean;
+  tcg: Tcgs;
   resultsTcg: string;
   promotedCards: any[];
+  filters: FilterState; 
   setSearchInput: (input: string) => void;
   setTcg: (tcg: Tcgs) => void;
-  setConditions: (conditions: string[]) => void;
-  setSortField: (field: string) => void;
-  setDiscounts: () => void;
-  toggleSortOrder: () => void;
-  toggleFoil: () => void;
+  setFilters: (filters: Partial<FilterState>) => void;
+  applyFilters: () => void; 
   clearFilters: () => void;
-  fetchCards: (cardName:string) => Promise<void>;
+  fetchCards: (searchInput:string, filters?: FilterState) => Promise<void>; // Pass filters as a parameter
 };
 
-/**
- * Zustand store for the single search page, including input, results, filtering, and sorting state
- */
 const useSingleStore = create<SingleSearchState>((set, get) => ({
   searchInput: '',
-  searchQuery: '',
   results: [],
-  filteredResults: [],
   loading: false,
   searchStarted: false,
   tcg: 'mtg',
-  conditions: initialConditionLabels,
-  sortField: 'price',
-  sortOrder: 'asc',
-  foil: false,
+  filters: {
+    conditions: conditions,
+    priceRange: { min: null, max: null },
+    foil: false,
+    showcase: false,
+    alternateArt: false,
+    promo: false,
+    sets: [],
+    vendors: [],
+    sortField: 'price',
+    sortOrder: 'asc',
+  },
   resultsTcg: '',
   promotedCards: [],
+  
+  // Update search input
   setSearchInput: (input: string) => {
     set({ searchInput: input });
   },
+  
+  // Set selected TCG
   setTcg: (tcg: Tcgs) => {
     set({ tcg });
   },
-  setConditions: (conditions: string[]) => {
-    set({ conditions });
-    applyFilters();
+  
+  // Set filters by passing a partial object
+  setFilters: (filters: Partial<FilterState>) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        ...filters,
+      },
+    }));
   },
-  setSortField: (field: string) => {
-    set({ sortField: field });
-    applyFilters();
+  
+  // Apply the current filters to the results and fetch cards with filters
+  applyFilters: () => {
+    const { searchInput, filters } = useSingleStore.getState();
+    get().fetchCards(searchInput, filters);
   },
-
-  setDiscounts: () => {
-    const resultsAfterDiscount = get().results;
-    resultsAfterDiscount.map((item) => {
-      item.priceBeforeDiscount = item.price;
-      // if (item.website == 'obsidian' || item.website == 'levelup') {
-      if (item.website == 'obsidian') {
-        item.price = (item.price * 0.95).toFixed(2);
-      }
-    });
-
-    const promotedAfterDiscount = get().promotedCards;
-    promotedAfterDiscount.map((item) => {
-      item.priceBeforeDiscount = item.price;
-      if (item.website == 'obsidian') {
-        // if (item.website == 'obsidian' || item.website == 'levelup') {
-        item.price = (item.price * 0.95).toFixed(2);
-      }
-    });
-
-    set({
-      results: resultsAfterDiscount,
-      filteredResults: resultsAfterDiscount,
-      promotedCards: promotedAfterDiscount
-    });
-    applyFilters();
-  },
-
-  toggleSortOrder: () => {
-    set({ sortOrder: get().sortOrder === 'asc' ? 'desc' : 'asc' });
-    applyFilters();
-  },
-  toggleFoil: () => {
-    set({ foil: !get().foil });
-    applyFilters();
-  },
+  
   clearFilters: () => {
     set({
-      conditions: initialConditionLabels,
-      sortField: 'price',
-      sortOrder: 'asc',
-      foil: false,
-      filteredResults: get().results
+      filters: {
+        conditions: conditions,
+        priceRange: { min: null, max: null },
+        foil: false,
+        vendors: [],
+        sortField: 'price',
+        sortOrder: 'asc',
+      },
     });
+
   },
-  fetchCards: async (cardName:string) => {
+
+  // Fetch cards with the filters
+  fetchCards: async (cardName: string, filters?: FilterState) => {
     try {
       set({ loading: true, searchStarted: true });
-      set({ resultsTcg: get().tcg });
+
+      // Construct the query string for filters
+      const queryParams = new URLSearchParams({
+        tcg: get().tcg,
+        name: encodeURIComponent(cardName.trim()),
+        search: 'fuzzy',
+      });
+
+      if (filters) {
+        // Add conditions as individual query parameters
+        if (filters.conditions.length > 0) {
+          filters.conditions.forEach((condition) => {
+            queryParams.append('condition[]', condition.toLowerCase());
+          });
+        }
+        if (filters.foil) queryParams.append('foil', 'true');
+        if (filters.priceRange.min !== null) {
+          queryParams.append('price_gte', filters.priceRange.min.toString());
+        }
+        if (filters.priceRange.max !== null) {
+          queryParams.append('price_lte', filters.priceRange.max.toString());
+        }
+        if (filters.vendors.length > 0) {
+          filters.vendors.forEach((vendor) => queryParams.append('vendors[]', vendor));
+        }
+      }
+
       const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search/?tcg=${
-          get().tcg
-        }&name=${encodeURIComponent(cardName.trim())}`
+        `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search/?${queryParams.toString()}`
       );
+
       if (response.status !== 200) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
+
       set({
         results: response.data.data,
-        promotedCards: response.data.promotedResults
+        promotedCards: response.data.promotedResults,
       });
-      get().setDiscounts();
       set({ loading: false });
     } catch (error) {
       console.error(error);
       toast.error('Unable to fetch cards: ' + error);
+      set({ loading: false });
     }
-  }
+  },
 }));
-
-function applyFilters() {
-  const { results, conditions, sortField, sortOrder, foil } =
-    useSingleStore.getState();
-
-  // Apply filtering based on conditions and foil status
-  let filtered = results.filter((result) => {
-    const matchesConditions =
-      conditions.length === 0 || conditions.includes(result.condition);
-
-    // Normalize the `foil` value to treat all truthy values as `true`
-    const resultFoil = Boolean(result.foil);
-    const matchesFoil = foil ? resultFoil === true : true;
-
-    return matchesConditions && matchesFoil;
-  });
-
-  // Sort based on the selected field and order
-  filtered.sort((a, b) => {
-    let comparison = 0;
-
-    // Check if both items have the sort field
-    if (a[sortField] === undefined || b[sortField] === undefined) {
-      // Items without the sorting field will be placed at the end
-      return a[sortField] === undefined ? 1 : -1;
-    }
-
-    if (a[sortField] < b[sortField]) comparison = -1;
-    if (a[sortField] > b[sortField]) comparison = 1;
-
-    return sortOrder === 'asc' ? comparison : -comparison;
-  });
-
-  // Update the filtered results
-  useSingleStore.setState({ filteredResults: filtered });
-}
 
 export default useSingleStore;

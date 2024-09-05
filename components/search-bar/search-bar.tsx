@@ -37,16 +37,14 @@ type Props = {
 
 export default function SingleSearchBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('');
   const [tcgValue, setTcgValue] = useState('mtg');
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const autoCompleteRef = useRef<HTMLDivElement>(null);
-  const selectRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
-  const {fetchCards, tcg, setTcg} = useSingleStore();
+  const {fetchCards, tcg, setTcg, searchInput, setSearchInput} = useSingleStore();
   const fetchAutoCompleteResults = useCallback(
     (value: string) => {
       const url = `${autoCompleteUrl}/cards?tcg=${
@@ -69,14 +67,14 @@ export default function SingleSearchBar() {
 
 
   useEffect(() => {
-    if (inputValue.trim().length > 2) {
-      debouncedAutoCompleteResults(inputValue);
+    if (searchInput.trim().length > 2) {
+      debouncedAutoCompleteResults(searchInput);
     } else {
       setSuggestions([]);
       setIsAutoCompleteVisible(false);
       setSelectedIndex(-1);
     }
-  }, [inputValue]);
+  }, [searchInput]);
 
 
   useEffect(() => {
@@ -98,7 +96,7 @@ export default function SingleSearchBar() {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setInputValue(value);
+    setSearchInput(value);
 
     if (value.trim().length > 2) {
       debouncedAutoCompleteResults(value);
@@ -110,14 +108,14 @@ export default function SingleSearchBar() {
   };
 
   const handleSuggestionClick = (suggestion: AutocompleteResult) => {
-    setInputValue(suggestion.name);
+    setSearchInput(suggestion.name);
     setIsAutoCompleteVisible(false);
     handleSearch(); // Trigger search
   };
 
   const handleSearch = () => {
-    console.log('Searching for:', inputValue);
-    fetchCards(inputValue); 
+    console.log('Searching for:', searchInput);
+    fetchCards(searchInput); 
     setIsAutoCompleteVisible(false);
   };
 
@@ -131,14 +129,14 @@ export default function SingleSearchBar() {
           event.preventDefault();
           setSelectedIndex((prevIndex) => {
             const nextIndex = prevIndex + 1;
-            return nextIndex < totalResults ? nextIndex : prevIndex;
+            return nextIndex < totalResults ? nextIndex : 0;
           });
           break;
         case 'ArrowUp':
           event.preventDefault();
           setSelectedIndex((prevIndex) => {
             const nextIndex = prevIndex - 1;
-            return nextIndex >= 0 ? nextIndex : -1;
+            return nextIndex >= 0 ? nextIndex : suggestions.length - 1;
           });
           break;
         case 'Enter':
@@ -147,7 +145,6 @@ export default function SingleSearchBar() {
             const item = suggestions[selectedIndex];
             if (item) {
               handleSuggestionClick(item);
-              // search(item.name);
             }
           }
           break;
@@ -195,9 +192,9 @@ export default function SingleSearchBar() {
         <Input
           ref={inputRef}
           type="text"
-          placeholder="Game Name + #NA1"
+          placeholder="Search for a card..."
           className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
-          value={inputValue}
+          value={searchInput}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
         />

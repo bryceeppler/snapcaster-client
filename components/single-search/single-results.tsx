@@ -1,4 +1,4 @@
-import { useState, useMemo, SetStateAction, useEffect } from 'react';
+import { useState, SetStateAction, useEffect } from 'react';
 import Link from 'next/link';
 
 import useGlobalStore from '@/stores/globalStore';
@@ -66,7 +66,7 @@ const defaultFilters = {
 
 export default function SingleCatalog({ loading }: { loading: boolean }) {
   // Zustand Stores //
-  const { filteredResults, promotedCards, tcg, searchQuery, results } =
+  const { promotedCards, tcg, results } =
     useSingleStore();
   const { ads } = useGlobalStore();
   const { hasActiveSubscription } = useAuthStore();
@@ -112,129 +112,15 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
   useEffect(() => {
     setFilters(defaultFilters);
     setIsFilterToggled(false);
-  }, [tcg, searchQuery]);
-
-  // Filter & Sorting Products Function (Client Side Filtering & Sorting) //
-
-  const filteredProducts = useMemo(() => {
-    const tempFiltered = filteredResults
-      .filter((product) => {
-        const conditionMatch =
-          filters.condition.length === 0 ||
-          filters.condition.includes(product.condition);
-        const priceMatch =
-          product.price >= filters.priceRange[0] &&
-          product.price <= filters.priceRange[1];
-
-        const nameMatch =
-          (filters.exactMatch[0] &&
-            product.name.toLowerCase() === searchQuery.toLowerCase()) ||
-          !filters.exactMatch[0];
-
-        const vendorMatch =
-          filters.vendor.length === 0 ||
-          filters.vendor.includes(product.website);
-
-        const setMatch =
-          filters.set.length === 0 || filters.set.includes(product.set);
-
-        const foilMatch =
-          filters.foil.length === 0 || filters.foil.includes(product.foil);
-
-        const collector_number =
-          filters.collector_number.length === 0 ||
-          filters.collector_number.includes(product.collector_number);
-
-        const alternate_art =
-          filters.alternate_art.length === 0 ||
-          filters.alternate_art.includes(product.alternate_art);
-
-        const showcase =
-          filters.showcase.length === 0 ||
-          filters.showcase.includes(product.showcase);
-
-        const frame =
-          filters.frame.length === 0 || filters.frame.includes(product.frame);
-
-        const promo =
-          filters.promo.length === 0 || filters.promo.includes(product.promo);
-
-        const art_series =
-          filters.art_series.length === 0 ||
-          filters.art_series.includes(product.art_series);
-        return (
-          nameMatch &&
-          conditionMatch &&
-          priceMatch &&
-          vendorMatch &&
-          setMatch &&
-          foilMatch &&
-          collector_number &&
-          alternate_art &&
-          showcase &&
-          frame &&
-          promo &&
-          art_series
-        );
-      })
-      .sort((a, b) => {
-        if (a.promoted && !b.promoted) return -1;
-        if (!a.promoted && b.promoted) return 1;
-        switch (sortBy) {
-          case 'price-asc':
-            return a.price - b.price;
-          case 'price-desc':
-            return b.price - a.price;
-          case 'vendor-asc':
-            return a.website.localeCompare(b.website);
-          case 'vendor-desc':
-            return b.website.localeCompare(a.website);
-          case 'name-asc':
-            return a.name.localeCompare(b.name);
-          case 'name-desc':
-            return b.name.localeCompare(a.name);
-          case 'set-asc':
-            return a.set.localeCompare(b.set);
-          case 'set-desc':
-            return b.set.localeCompare(a.set);
-          default:
-            return 0;
-        }
-      });
-
-    // add "promoted"=true to promoted cards, and "promoted"=false to the rest
-    const combined = [
-      promotedCards.map((card) => ({ ...card, promoted: true })),
-      tempFiltered.map((card) => ({ ...card, promoted: false }))
-    ].flat();
-
-    const withAds = insertAdvertisements(combined, 6, adsFromPosition5);
-    return withAds;
-  }, [filters, sortBy, filteredResults]);
+  }, [tcg]);
 
   return (
     <div className="grid min-h-svh gap-6 md:grid-cols-[240px_1fr]">
       <div className="flex flex-col gap-6">
         <div className="grid gap-4">
-          {!hasActiveSubscription && (
-            <div className="flex flex-row items-center gap-2 rounded-lg bg-popover p-3">
-              <ExclamationTriangleIcon className="aspect-square h-4 min-w-4 text-yellow-500" />
-              <p className="text-left text-xs">
-                Snapcaster Pro filters will be available until the end of August
-                for all users.
-              </p>
-            </div>
-          )}
-
           <div className="relative flex w-full gap-2">
             <div className="child-1 w-1/2 md:w-full">
-              <FilterDropdown
-                filters={filters}
-                isFilterToggled={isFilterToggled}
-                defaultFilters={defaultFilters}
-                setFilters={setFilters}
-                handleFilterChange={handleFilterChange}
-              />
+              <FilterDropdown/>
             </div>
             <div className="child-2 w-1/2 md:hidden">
               <SingleSortBy
@@ -252,19 +138,12 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
             <SingleSortBy sortBy={sortBy} handleSortChange={handleSortChange} />
           </div>
         </div>
-        {/* If we have 1000 results, show warning */}
-        {results.length >= 1000 && (
-          <div className=" w-full rounded border bg-red-600/50 p-2 text-xs shadow">
-            Displaying the first 1000 results. Try narrowing your search with
-            autofill.
-          </div>
-        )}
         {loading && <ResultsSkeleton />}
 
         {!loading && (
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
             {!hasActiveSubscription &&
-              filteredProducts.map((item, index) =>
+              results.map((item, index) =>
                 item && 'position' in item ? (
                   <AdComponent ad={item} key={index} />
                 ) : (
@@ -272,7 +151,7 @@ export default function SingleCatalog({ loading }: { loading: boolean }) {
                 )
               )}
             {hasActiveSubscription &&
-              filteredProducts.map((item, index) => {
+              results.map((item, index) => {
                 if ('position' in item) {
                   return;
                 }

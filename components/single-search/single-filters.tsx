@@ -14,22 +14,10 @@ import { Button } from '../ui/button';
 import useSingleStore from '@/stores/singleSearchStore';
 type Props = {};
 
-const conditionLabels = ['NM', 'LP', 'PL', 'MP', 'HP', 'DMG', 'SCAN'];
+const conditionLabels = ['NM', 'LP', 'MP', 'HP', 'DMG'];
 
 const SingleSearchFilter = (props: Props) => {
   const [showFilters, setShowFilters] = React.useState(false);
-
-  const {
-    sortOrder,
-    sortField,
-    conditions,
-    foil,
-    toggleFoil,
-    toggleSortOrder,
-    setSortField,
-    setConditions,
-    clearFilters
-  } = useSingleStore();
 
   // Handle toggling checkbox selection for conditions
   const handleConditionToggle = (condition: string) => {
