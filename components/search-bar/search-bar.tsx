@@ -8,29 +8,22 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { ChevronDown } from 'lucide-react';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 
 const gameNames = [
-  { name: 'League of Legends' },
-  { name: 'Valorant' },
-  { name: 'Counter-Strike: Global Offensive' },
-  { name: 'Dota 2' },
-  { name: 'Overwatch' },
-  { name: 'Apex Legends' },
-  { name: 'Call of Duty: Warzone' },
-  { name: 'Fortnite' },
-  { name: 'PUBG' },
-  { name: 'Rainbow Six Siege' }
+  { name: 'Courageous' },
+  { name: 'Counterbore' },
+  { name: 'Counterspell' },
+  { name: 'Counterflux' },
+  { name: 'Countermand' },
 ];
 
 interface AutocompleteResult {
   name: string;
 }
 
-type Props = {
-  suggestionsSearchFunction(searchText: string): void;
-}
 
-export default function Component(props: Props) {
+export default function Component() {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
@@ -64,6 +57,10 @@ export default function Component(props: Props) {
     };
   }, []);
 
+  const search = (query: string) => {
+    console.log('Searching for:', query);
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -71,7 +68,7 @@ export default function Component(props: Props) {
   const handleSuggestionClick = (suggestion: AutocompleteResult) => {
     setInputValue(suggestion.name);
     setIsAutoCompleteVisible(false);
-    props.suggestionsSearchFunction(suggestion.name); // Trigger search
+    search(suggestion.name); // Trigger search
   };
 
   const handleSearch = () => {
@@ -105,7 +102,7 @@ export default function Component(props: Props) {
             const item = suggestions[selectedIndex];
             if (item) {
               handleSuggestionClick(item);
-              props.suggestionsSearchFunction(item.name);
+              search(item.name);
             }
           }
           break;
@@ -117,49 +114,53 @@ export default function Component(props: Props) {
           break;
       }
     },
-    [suggestions, selectedIndex, props]
+    [suggestions, selectedIndex, search]
   );
 
   return (
-    <div className="relative">
-      <div className="flex w-full max-w-3xl items-center rounded-full bg-gray-800 p-1">
+    <div className="relative w-full max-w-3xl">
+      <div className="flex w-full items-center rounded-full bg-popover p-1">
         <Select onOpenChange={setIsOpen}>
-          <SelectTrigger className="w-[180px] border-none bg-transparent p-2 text-gray-400 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
-            <SelectValue placeholder="Region" />
+          <SelectTrigger className="w-[180px] border-none bg-transparent p-2 pl-4 font-bold text-foreground focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+            <SelectValue placeholder="TCG" />
             <ChevronDown
               className={`ml-2 h-4 w-4 shrink-0 transition-transform duration-200 ${
                 isOpen ? 'rotate-180' : ''
               }`}
             />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="na">North America</SelectItem>
-            <SelectItem value="eu">Europe</SelectItem>
-            <SelectItem value="as">Asia</SelectItem>
+          <SelectContent className="mt-1">
+            <SelectItem value="mtg">MTG</SelectItem>
+            <SelectItem value="lorcana">Lorcana</SelectItem>
+            <SelectItem value="onepiece">One Piece</SelectItem>
+            <SelectItem value="pokemon">Pokemon</SelectItem>
+            <SelectItem value="yugioh">Yu-Gi-Oh</SelectItem>
           </SelectContent>
         </Select>
-        <div className="mx-2 h-8 w-px bg-gray-700"></div>
+        <div className="mx-2 h-8 w-px"></div>
         <Input
           ref={inputRef}
           type="text"
           placeholder="Game Name + #NA1"
-          className="flex-grow border-none bg-transparent text-gray-300 placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
         />
-        <div className="mr-4 text-lg font-bold text-blue-400">.GG</div>
+        <div className="mr-4 text-primary">
+          <MagnifyingGlassIcon className='w-5 h-5' onClick={handleSearch} />
+        </div>
       </div>
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute left-[200px] right-12 z-10 mt-1 rounded-md bg-gray-800 shadow-lg"
+          className="absolute left-[200px] right-12 z-10 mt-1 rounded-md bg-popover shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
               className={`mx-1 cursor-pointer rounded px-4 py-2  ${
-                selectedIndex === index ? 'bg-primary' : 'hover:bg-accent'
+                selectedIndex === index ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
               } `}
               onClick={() => handleSuggestionClick(suggestion)}
             >
