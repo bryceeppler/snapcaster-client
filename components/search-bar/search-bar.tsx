@@ -1,118 +1,173 @@
-import { useState } from 'react';
-import { Check, ChevronsUpDown, Search } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem
-} from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTriggerNoIcon as SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { ChevronDown } from 'lucide-react';
 
-const cardGames = [
-  { value: 'mtg', label: 'MTG' },
-  { value: 'pokemon', label: 'Pokémon' },
-  { value: 'yugioh', label: 'Yu-Gi-Oh!' },
-  { value: 'onepiece', label: 'One Piece' },
-  { value: 'lorcana', label: 'Lorcana' }
+const gameNames = [
+  { name: 'League of Legends' },
+  { name: 'Valorant' },
+  { name: 'Counter-Strike: Global Offensive' },
+  { name: 'Dota 2' },
+  { name: 'Overwatch' },
+  { name: 'Apex Legends' },
+  { name: 'Call of Duty: Warzone' },
+  { name: 'Fortnite' },
+  { name: 'PUBG' },
+  { name: 'Rainbow Six Siege' }
 ];
 
-export default function SingleSearchBar() {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('mtg');
-  const [search, setSearch] = useState('');
-  const [results, setResults] = useState([]);
+interface AutocompleteResult {
+  name: string;
+}
 
-  // const handleSearch = (value: string) => {
-  //   setSearch(value);
-  //   // Simulating autocomplete results
-  //   const filteredResults = cardGames
-  //     .filter((game) => game.label.toLowerCase().includes(value.toLowerCase()))
-  //     .slice(0, 5);
-  //   setResults(filteredResults);
-  // };
+type Props = {
+  suggestionsSearchFunction(searchText: string): void;
+}
+
+export default function Component(props: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
+  const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const autoCompleteRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const filtered = gameNames.filter((result) =>
+      result.name.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    setSuggestions(filtered);
+    setIsAutoCompleteVisible(inputValue.length > 0 && filtered.length > 0);
+    setSelectedIndex(-1);
+  }, [inputValue]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        autoCompleteRef.current &&
+        !autoCompleteRef.current.contains(event.target as Node)
+      ) {
+        setIsAutoCompleteVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleSuggestionClick = (suggestion: AutocompleteResult) => {
+    setInputValue(suggestion.name);
+    setIsAutoCompleteVisible(false);
+    props.suggestionsSearchFunction(suggestion.name); // Trigger search
+  };
+
+  const handleSearch = () => {
+    console.log('Searching for:', inputValue);
+    setIsAutoCompleteVisible(false);
+  };
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      const key = event.key;
+      const totalResults = suggestions?.length || 0;
+
+      switch (key) {
+        case 'ArrowDown':
+          event.preventDefault();
+          setSelectedIndex((prevIndex) => {
+            const nextIndex = prevIndex + 1;
+            return nextIndex < totalResults ? nextIndex : prevIndex;
+          });
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          setSelectedIndex((prevIndex) => {
+            const nextIndex = prevIndex - 1;
+            return nextIndex >= 0 ? nextIndex : -1;
+          });
+          break;
+        case 'Enter':
+        case 'ArrowRight':
+          if (selectedIndex >= 0 && selectedIndex < totalResults) {
+            const item = suggestions[selectedIndex];
+            if (item) {
+              handleSuggestionClick(item);
+              props.suggestionsSearchFunction(item.name);
+            }
+          }
+          break;
+        case 'Escape':
+          setIsAutoCompleteVisible(false);
+          setSelectedIndex(-1);
+          break;
+        default:
+          break;
+      }
+    },
+    [suggestions, selectedIndex, props]
+  );
 
   return (
-    <div className="flex w-full max-w-3xl items-center space-x-4 rounded-full bg-zinc-600 p-2">
-      {/* TCG Selector */}
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            role="combobox"
-            aria-expanded={open}
-            className="r w-[180px] justify-between bg-zinc-600"
-          >
-            {value
-              ? cardGames.find((game) => game.value === value)?.label
-              : 'Select a TCG'}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] bg-zinc-500 p-0">
-          <Command>
-            <CommandInput
-              placeholder="Search card game..."
-              className="h-9 bg-zinc-500 text-white"
+    <div className="relative">
+      <div className="flex w-full max-w-3xl items-center rounded-full bg-gray-800 p-1">
+        <Select onOpenChange={setIsOpen}>
+          <SelectTrigger className="w-[180px] border-none bg-transparent p-2 text-gray-400 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+            <SelectValue placeholder="Region" />
+            <ChevronDown
+              className={`ml-2 h-4 w-4 shrink-0 transition-transform duration-200 ${
+                isOpen ? 'rotate-180' : ''
+              }`}
             />
-            <CommandEmpty>No card game found.</CommandEmpty>
-            <CommandGroup>
-              {cardGames.map((game) => (
-                <CommandItem
-                  key={game.value}
-                  value={game.value}
-                  onSelect={() => {
-                    setValue(game.value); // Correctly set the value using game.value
-                    setOpen(false);
-                  }}
-                  className="text-white hover:bg-gray-600"
-                >
-                  <Check
-                    className={cn(
-                      'mr-2 h-4 w-4',
-                      value === game.value ? 'opacity-100' : 'opacity-0'
-                    )}
-                  />
-                  {game.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </Command>
-        </PopoverContent>
-      </Popover>
-      {/* Input */}
-      <div className="relative flex-grow">
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="na">North America</SelectItem>
+            <SelectItem value="eu">Europe</SelectItem>
+            <SelectItem value="as">Asia</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="mx-2 h-8 w-px bg-gray-700"></div>
         <Input
+          ref={inputRef}
           type="text"
-          placeholder="Search for a card..."
-          value={search}
-          // onChange={(e) => handleSearch(e.target.value)}
-          className="w-full rounded-full bg-zinc-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Game Name + #NA1"
+          className="flex-grow border-none bg-transparent text-gray-300 placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
         />
-        {results.length > 0 && (
-          <ul className="absolute z-10 mt-1 w-full rounded-md bg-gray-700 shadow-lg">
-            {results.map((result, index) => (
-              <li
-                key={index}
-                className="cursor-pointer px-4 py-2 text-white hover:bg-gray-600"
-                onClick={() => {
-                  setSearch(result.label);
-                  setResults([]);
-                }}
-              >
-                {result.label}
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="mr-4 text-lg font-bold text-blue-400">.GG</div>
       </div>
-      <Search className="h-6 w-10 text-white" />
+      {isAutoCompleteVisible && (
+        <div
+          ref={autoCompleteRef}
+          className="absolute left-[200px] right-12 z-10 mt-1 rounded-md bg-gray-800 shadow-lg"
+        >
+          {suggestions.map((suggestion, index) => (
+            <div
+              key={index}
+              className={`mx-1 cursor-pointer rounded px-4 py-2  ${
+                selectedIndex === index ? 'bg-primary' : 'hover:bg-accent'
+              } `}
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
+              {suggestion.name}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
