@@ -114,7 +114,7 @@ const useSingleStore = create<SingleSearchState>((set, get) => ({
         // Add conditions as individual query parameters
         if (filters.conditions.length > 0) {
           filters.conditions.forEach((condition) => {
-            queryParams.append('condition[]', condition.toLowerCase());
+            queryParams.append('condition[]', condition);
           });
         }
         if (filters.foil) queryParams.append('foil', 'true');
