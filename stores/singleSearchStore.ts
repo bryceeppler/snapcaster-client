@@ -19,7 +19,6 @@ type FilterState = {
   sortField: string;
   sortOrder: 'asc' | 'desc';
 };
-
 type SingleSearchState = {
   searchInput: string;
   results: any[];

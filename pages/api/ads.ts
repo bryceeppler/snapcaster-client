@@ -32,11 +32,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-
   if (req.method === 'GET') {
     try {
-      if (process.env.NODE_ENV == 'development') {
+      if (process.env.ENV == 'development') {
         const data = await import('@/development/ads.json'); // Adjust the path as necessary
+        // shuffle the ads for positions 1, 2, 3
+        data.default.position[1].ads.sort(() => Math.random() - 0.5);
+        data.default.position[2].ads.sort(() => Math.random() - 0.5);
+        data.default.position[3].ads.sort(() => Math.random() - 0.5);
         res.status(200).json(data.default);
       } else {
         const result = await pool.query(
@@ -53,16 +56,44 @@ export default async function handler(
 
         result.rows.forEach((ad: Ad) => {
           if (!formattedResult.position[ad.ad_slot_id]) {
-            formattedResult.position[ad.ad_slot_id] = {
-              ads: []
-            };
+            formattedResult.position[ad.ad_slot_id] = { ads: [] };
           }
           formattedResult.position[ad.ad_slot_id].ads.push(ad);
         });
-        // for ad slot 3, shuffle the ads
-        if (formattedResult.position[3]) {
-          formattedResult.position[3].ads.sort(() => Math.random() - 0.5);
-        }
+
+        // Ensure each store has exactly 2 ads per slot
+        Object.keys(formattedResult.position).forEach((slot) => {
+          const ads = formattedResult.position[parseInt(slot)].ads;
+          const adsByStore: { [store_id: number]: Ad[] } = {};
+
+          // Group ads by store_id
+          ads.forEach((ad: Ad) => {
+            if (!adsByStore[ad.store_id]) {
+              adsByStore[ad.store_id] = [];
+            }
+            adsByStore[ad.store_id].push(ad);
+          });
+
+          const adjustedAds: Ad[] = [];
+
+          // Ensure each store has exactly 2 ads
+          Object.keys(adsByStore).forEach((storeId) => {
+            const storeAds = adsByStore[parseInt(storeId)];
+
+            if (storeAds.length >= 2) {
+              // Randomly pick 2 ads if there are more than 2
+              adjustedAds.push(...storeAds.slice(0, 2));
+            } else if (storeAds.length === 1) {
+              // Duplicate the ad if there's only 1
+              adjustedAds.push(storeAds[0], storeAds[0]);
+            }
+          });
+
+          // Shuffle the adjusted ads before assigning back to the position
+          formattedResult.position[parseInt(slot)].ads = adjustedAds.sort(
+            () => Math.random() - 0.5
+          );
+        });
 
         res.status(200).json(formattedResult); // Return the formatted result
       }

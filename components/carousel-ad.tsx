@@ -6,9 +6,10 @@ import Link from 'next/link';
 
 type AdProps = {
   ad: Ad;
+  forceMobile?: boolean;
 };
 
-const CarouselAd: React.FC<AdProps> = ({ ad }) => {
+const CarouselAd: React.FC<AdProps> = ({ ad, forceMobile }) => {
   const { ref, inView, entry } = useInView({
     threshold: 0.5,
     triggerOnce: false,
@@ -32,7 +33,14 @@ const CarouselAd: React.FC<AdProps> = ({ ad }) => {
       onClick={() => trackAdClick(ad.id.toString())}
       className="ad"
     >
-      <img src={ad.mobile_image} alt="ad" />
+      {
+        forceMobile ? (<img src={ad.mobile_image} className="rounded overflow-hidden border border-1 border-border" alt="ad" />) : (
+          <>
+          <img src={ad.mobile_image} className="flex h-full w-full object-cover md:hidden rounded overflow-hidden border border-1 border-border" alt="ad" />
+          <img src={ad.desktop_image} className="hidden w-full md:flex" alt="ad" />
+          </>
+        )
+      }
     </Link>
   );
 };

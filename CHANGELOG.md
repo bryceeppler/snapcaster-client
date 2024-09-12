@@ -1,5 +1,13 @@
 # Changelog
 
+## 2024-08-21
+
+- Updated store.ts promoMap which is used to apply discount codes based on discound codes and percentages stores in postgres
+- Fixed a bug that didnt list advanced filtering fields in the card for non pro members (make sure to disable this September 1)
+- Updated single-results.tsx to make use of the new websites fields and promoMap details. Logos and anbd discount codes are pulled from postgres /search endpoint instead of being hard coded now
+- Note 1: Take a second and update the image_source field data to come from our S3 instead of our public folder
+- Note 2: Make sure the backend /search micro service is updated and you run the sql queries that updates our vendors table before merging this into main.
+
 ## 2024-08-13
 
 ### Changed
