@@ -19,7 +19,7 @@ import {
 
 import CardImage from '../ui/card-image';
 import { Button } from '../ui/button';
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { log } from 'console';
 import useBuyListStore from '@/stores/buyListStore';
 
@@ -30,17 +30,10 @@ export default function ResultCard({ cardData }: Props) {
   const [cashPrice, setCashPrice] = useState(0);
   const [creditPrice, setCreditPrice] = useState(0);
 
-  const [conditionOptions, setConditionOptions] = useState(cardData.nm);
   const { individualStoreCart, addToCart } = useBuyListStore();
   useEffect(() => {
-    // cardData.nm.map((item: any) => {
-    //   for (const key in item) {
-    //     console.log(key);
-    //   }
-    // });
-    setConditionOptions(cardData[selectedCondition]);
     setSelectedStore(Object.keys(cardData.nm[0])[0]);
-    // console.log(`new store from changing condition: ${selectedStore}`);
+
     if (cardData[selectedCondition].length == 0) {
       setCashPrice(0);
       setCreditPrice(0);
@@ -51,8 +44,6 @@ export default function ResultCard({ cardData }: Props) {
       const { cashPrice, creditPrice } = item[storeName];
 
       if (selectedStore == storeName) {
-        // console.log(cashPrice);
-        // console.log(creditPrice);
         setCashPrice(cashPrice);
         setCreditPrice(creditPrice);
       }
@@ -65,8 +56,6 @@ export default function ResultCard({ cardData }: Props) {
       const { cashPrice, creditPrice } = item[storeName];
 
       if (selectedStore == storeName) {
-        // console.log(cashPrice);
-        // console.log(creditPrice);
         setCashPrice(cashPrice);
         setCreditPrice(creditPrice);
       }
@@ -102,112 +91,103 @@ export default function ResultCard({ cardData }: Props) {
               <div className="flex text-sm">
                 <div className="w-1/2 text-center">
                   <p className="font-medium text-muted-foreground ">Cash</p>
-                  <p className="font-semibold">$2.00</p>
+                  <p className="font-semibold">${cashPrice}</p>
                 </div>
                 <div className="w-1/2 text-center">
                   <p className="font-medium text-muted-foreground">Credit</p>
-                  <p className="font-semibold">$1.00</p>
+                  <p className="font-semibold">${creditPrice}</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className=" flex font-bold">
-          <Select>
+          <Select
+            value={selectedCondition}
+            onValueChange={(value) => {
+              setSelectedCondition(value);
+            }}
+          >
             <SelectTrigger className=" border-border-colour  mr-2 w-1/2 focus:ring-0 focus:ring-offset-0">
               <SelectValue placeholder="Near Mint" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Select Condition</SelectLabel>
-                <SelectItem value="NM">Near Mint</SelectItem>
-                <SelectItem value="LP">Lightly Played</SelectItem>
-                <SelectItem value="MP">Moderetly Played</SelectItem>
-                <SelectItem value="HP">Heavily Played</SelectItem>
-                <SelectItem value="DMG">Damaged</SelectItem>
+                <SelectItem value="nm">Near Mint</SelectItem>
+                <SelectItem value="lp">Lightly Played</SelectItem>
+                <SelectItem value="mp">Moderetly Played</SelectItem>
+                <SelectItem value="hp">Heavily Played</SelectItem>
+                <SelectItem value="dmg">Damaged</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
           <Button
             className="w-1/2 font-bold"
             onClick={() => {
-              toast(`${cardData.name} Added to Cart`, {
-                description: `${cardData.set}`
-              });
+              const tempCardData = {
+                name: cardData.name,
+                set: cardData.set,
+                foil: cardData.foil,
+                cashPrice: 1,
+                creditPrice: 2,
+                condition: selectedCondition
+              };
+
+              selectedStore !== 'N/A'
+                ? (toast(`${cardData.name} Added to Cart`, {
+                    description: `${cardData.set}`
+                  }),
+                  addToCart(selectedStore, tempCardData))
+                : toast(`Error Adding ${cardData.name} to Cart`, {
+                    description: `Item is not Elibible for Purchase`
+                  });
             }}
           >
             Add To Cart
           </Button>
         </div>
         <div className="mt-2 font-bold">
-          <Select>
+          <Select
+            onValueChange={(value) => {
+              setSelectedStore(value);
+            }}
+          >
             <SelectTrigger className="   border-border-colour  w-full focus:ring-0 focus:ring-offset-0">
               {/* <SelectValue placeholder="obsidian" /> */}
-              <span>Obsidian Games</span>
+              <span>{selectedStore}</span>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Select Store</SelectLabel>
-                <SelectItem value="obsidian" className="w-full ">
-                  <div className="flex items-center">
-                    <div className="w-3/5">Obsidian Games</div>
-                    <div className="w-2/5">
-                      <div className="ml-auto flex w-min">
-                        <p className=" w-min">Cash:</p>
-                        <p className=" w-min">$2.00</p>
-                      </div>
-                      <div className="ml-auto flex w-min">
-                        <p className="w-min ">Credit:</p>
-                        <p className=" w-min">$2.00</p>
-                      </div>
-                    </div>
-                  </div>
-                </SelectItem>{' '}
-                <SelectItem value="exorgames" className="w-full ">
-                  <div className="flex items-center">
-                    <div className="w-3/5">Exor Games</div>
-                    <div className="w-2/5">
-                      <div className="ml-auto flex w-min">
-                        <p className=" w-min">Cash:</p>
-                        <p className=" w-min">$2.00</p>
-                      </div>
-                      <div className="ml-auto flex w-min">
-                        <p className="w-min ">Credit:</p>
-                        <p className=" w-min">$2.00</p>
-                      </div>
-                    </div>
-                  </div>
-                </SelectItem>{' '}
-                <SelectItem value="levelup" className="w-full ">
-                  <div className="flex items-center">
-                    <div className="w-3/5">Level Up Games</div>
-                    <div className="w-2/5">
-                      <div className="ml-auto flex w-min">
-                        <p className=" w-min">Cash:</p>
-                        <p className=" w-min">$2.00</p>
-                      </div>
-                      <div className="ml-auto flex w-min">
-                        <p className="w-min ">Credit:</p>
-                        <p className=" w-min">$2.00</p>
-                      </div>
-                    </div>
-                  </div>
-                </SelectItem>
-                <SelectItem value="mythicstore" className="w-full ">
-                  <div className="flex items-center">
-                    <div className="w-3/5">The Mythic Store</div>
-                    <div className="w-2/5">
-                      <div className="ml-auto flex w-min">
-                        <p className=" w-min">Cash:</p>
-                        <p className=" w-min">$2.00</p>
-                      </div>
-                      <div className="ml-auto flex w-min">
-                        <p className="w-min ">Credit:</p>
-                        <p className=" w-min">$2.00</p>
-                      </div>
-                    </div>
-                  </div>
-                </SelectItem>
+                {cardData[selectedCondition].map((item: any) =>
+                  // Extracting key and values dynamically
+                  (() => {
+                    const storeName = Object.keys(item)[0];
+                    const { cashPrice, creditPrice } = item[storeName];
+
+                    return (
+                      <SelectItem
+                        key={storeName}
+                        value={storeName}
+                        className="w-full"
+                      >
+                        <div className="flex items-center">
+                          <div className="w-3/5">{storeName}</div>
+                          <div className="w-2/5">
+                            <div className="ml-auto flex w-min">
+                              <p className=" w-min">Cash:</p>
+                              <p className=" w-min">${cashPrice}</p>
+                            </div>
+                            <div className="ml-auto flex w-min">
+                              <p className="w-min">Credit:</p>
+                              <p className=" w-min">${creditPrice}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    );
+                  })()
+                )}
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -254,7 +234,6 @@ export default function ResultCard({ cardData }: Props) {
                   value={selectedCondition}
                   onValueChange={(value) => {
                     setSelectedCondition(value);
-                    // console.log(selectedCondition);
                   }}
                 >
                   <SelectTrigger className=" border-border-colour  mr-2 w-1/2 focus:ring-0 focus:ring-offset-0">
@@ -299,11 +278,7 @@ export default function ResultCard({ cardData }: Props) {
               <div className="mt-2 font-bold">
                 <Select
                   onValueChange={(value) => {
-                    console.log('test');
-                    // console.log(value);
-
                     setSelectedStore(value);
-                    // console.log(selectedStore);
                   }}
                 >
                   <SelectTrigger className="   border-border-colour  w-full focus:ring-0 focus:ring-offset-0">

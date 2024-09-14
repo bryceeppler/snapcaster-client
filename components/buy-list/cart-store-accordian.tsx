@@ -16,7 +16,6 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
     let cashTotal = 0;
     let creditTotal = 0;
     storeCartData[key].map((item: any) => {
-      // console.log(`use state print: ${item.name} from ${item.set}`);
       cashTotal += item.cashPrice * item.quantity;
       creditTotal += item.creditPrice * item.quantity;
     });

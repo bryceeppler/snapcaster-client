@@ -34,10 +34,12 @@ const Buylist: NextPage<Props> = () => {
           {/* Results Container*/}
           <div className="col-span-7">
             <h1 className="pb-2 text-2xl">Results</h1>
-            {/* Results Cards Container*/}
-            <div>
-              <ResultCard cardData={buyListQueryResults[0]} />
-            </div>
+            {/* Results Cards Containers*/}
+            {buyListQueryResults.map((item: any, key: number) => (
+              <div className="mb-2">
+                <ResultCard key={key} cardData={item} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -52,17 +54,18 @@ const Buylist: NextPage<Props> = () => {
           <BuyListFilterContainer mobile={false} />
         </div>
 
-        {/* Results and Cart Container*/}
+        {/* Results and Cart Containers*/}
         <div className="grid grid-cols-12 gap-x-4 ">
           {/* Results Container*/}
           <div className="col-span-7">
             <h1 className="pb-2 text-2xl">Results</h1>
             {/* Results Cards Container*/}
-            <div>
-              {buyListQueryResults.map((item: any, key: number) => (
+
+            {buyListQueryResults.map((item: any, key: number) => (
+              <div className="mb-2">
                 <ResultCard key={key} cardData={item} />
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
           {/*  Cart Container*/}
           <div className="col-span-5">

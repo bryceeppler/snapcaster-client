@@ -579,7 +579,7 @@ export const advancedUseStore = create<State>((set, get) => ({
       }
 
       set({ advancedSearchResults: response.data });
-      console.log(get().advancedSearchResults);
+
 
       get().updateSortByFilter(get().selectedSortBy);
       set({ advancedSearchLoading: false });
@@ -606,7 +606,7 @@ export const advancedUseStore = create<State>((set, get) => ({
       set({ setList: result });
     } catch (error) {
       console.log('getSetInformation ERROR');
-      console.log(error);
+
     }
   }
 }));

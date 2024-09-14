@@ -68,7 +68,7 @@ export default function BuyListCart({ mobile }: Props) {
                   <p className="font-bold text-muted-foreground">Cash:</p>
                 </div>
                 <div className="col-span-2 col-start-11">
-                  <p className="font-semibold ">$4.00</p>
+                  <p className="font-semibold ">${cashTotalAllStores}</p>
                 </div>
               </div>
               <div className="grid grid-cols-12">
@@ -76,11 +76,19 @@ export default function BuyListCart({ mobile }: Props) {
                   <p className="font-bold text-muted-foreground">Credit:</p>
                 </div>
                 <div className="col-span-2 col-start-11">
-                  <p className="font-semibold ">$8.00</p>
+                  <p className="font-semibold ">${creditTotalAllStores}</p>
                 </div>
               </div>
               <div className="mt-2">
-                <Button className="w-full font-bold"> Clear Cart</Button>
+                <Button
+                  onClick={() => {
+                    clearAllCartItems();
+                  }}
+                  className="w-full font-bold"
+                >
+                  {' '}
+                  Clear Cart
+                </Button>
               </div>
             </div>
           </SheetContent>
@@ -119,7 +127,6 @@ export default function BuyListCart({ mobile }: Props) {
               }}
               className="w-full font-bold"
             >
-              {' '}
               Clear Cart
             </Button>
           </div>
