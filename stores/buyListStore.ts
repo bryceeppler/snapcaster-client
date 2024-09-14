@@ -36,7 +36,7 @@ const dummyConditionData: Filter[] = [
 
 const dummyFoilData: Filter[] = [
   { key: 'foil', value: 'Foil' },
-  { key: 'nonfoil', value: 'Non Foil' }
+  { key: 'normal', value: 'Normal' }
 ];
 
 const dummyRarityData: Filter[] = [
@@ -54,24 +54,24 @@ const buyListQueryResults: any[] = [
   {
     name: 'Blood Moon - Borderless Anime (WOT)',
     set: 'Wilds of Eldraine: Enchanting Tales',
-    foil: 'foil',
+    foil: 'Foil',
     rarity: 'uncommon',
     image:
       'https://store.401games.ca/cdn/shop/files/Blood-Moon-Borderless-Anime-WOT_394x.png?v=1698694124',
     nm: [
-      { exor: { cashPrice: 1.0, creditPrice: 2.0 } },
+      { exorgames: { cashPrice: 1.0, creditPrice: 2.0 } },
       { levelup: { cashPrice: 3.0, creditPrice: 5.0 } }
     ],
     lp: [
-      { exor: { cashPrice: 6.0, creditPrice: 7.0 } },
+      { exorgames: { cashPrice: 6.0, creditPrice: 7.0 } },
       { levelup: { cashPrice: 8.0, creditPrice: 9.0 } }
     ],
     mp: [
-      { exor: { cashPrice: 10.0, creditPrice: 11.0 } },
+      { exorgames: { cashPrice: 10.0, creditPrice: 11.0 } },
       { levelup: { cashPrice: 12.0, creditPrice: 13.0 } }
     ],
     hp: [
-      { exor: { cashPrice: 14.0, creditPrice: 15.0 } },
+      { exorgames: { cashPrice: 14.0, creditPrice: 15.0 } },
       { levelup: { cashPrice: 16.0, creditPrice: 17.0 } }
     ],
     dmg: []
@@ -79,24 +79,24 @@ const buyListQueryResults: any[] = [
   {
     name: 'Fury Sliver',
     set: 'Time Spiral',
-    foil: 'normal',
+    foil: 'Normal',
     rarity: 'uncommon',
     image:
       'https://store.401games.ca/cdn/shop/files/Fury-Sliver-TSP_394x.jpg?v=1698387902',
     nm: [
-      { exor: { cashPrice: 1.0, creditPrice: 2.0 } },
+      { exorgames: { cashPrice: 1.0, creditPrice: 2.0 } },
       { levelup: { cashPrice: 3.0, creditPrice: 5.0 } }
     ],
     lp: [
-      { exor: { cashPrice: 6.0, creditPrice: 7.0 } },
+      { exorgames: { cashPrice: 6.0, creditPrice: 7.0 } },
       { levelup: { cashPrice: 8.0, creditPrice: 9.0 } }
     ],
     mp: [
-      { exor: { cashPrice: 10.0, creditPrice: 11.0 } },
+      { exorgames: { cashPrice: 10.0, creditPrice: 11.0 } },
       { levelup: { cashPrice: 12.0, creditPrice: 13.0 } }
     ],
     hp: [
-      { exor: { cashPrice: 14.0, creditPrice: 15.0 } },
+      { exorgames: { cashPrice: 14.0, creditPrice: 15.0 } },
       { levelup: { cashPrice: 16.0, creditPrice: 17.0 } }
     ],
     dmg: []
@@ -104,7 +104,7 @@ const buyListQueryResults: any[] = [
   {
     name: 'Sol Ring',
     set: 'fallout',
-    foil: 'normal',
+    foil: 'Normal',
     rarity: 'uncommon',
     image:
       'https://cdn.shopify.com/s/files/1/0281/4803/9815/files/8b3ceeb4-d497-50b4-ad40-ad2a5bddba6d_c8d89ed9-eea9-4580-8279-fbf26b0ce3da.png?v=1723848976',
@@ -130,21 +130,21 @@ const buyListQueryResults: any[] = [
 
 const buyListCartData: any[] = [
   {
-    exor: [
+    exorgames: [
       {
-        name: 'Counterspell',
-        set: 'Commander Masters',
+        name: 'Blood Moon - Borderless Anime (WOT)',
+        set: 'Wilds of Eldraine: Enchanting Tales',
         condition: 'nm',
-        foil: 'normal',
+        foil: 'Foil',
         quantity: 2,
         cashPrice: 1,
         creditPrice: 2
       },
       {
-        name: 'Blood Moon',
-        set: 'Eigth Edition',
+        name: 'Fury Sliver',
+        set: 'Time Spiral',
         condition: 'lp',
-        foil: 'foil',
+        foil: 'Normal',
         quantity: 2,
         cashPrice: 2,
         creditPrice: 4
@@ -157,7 +157,7 @@ const buyListCartData: any[] = [
         name: 'Counterspell',
         set: 'Commander Masters',
         condition: 'nm',
-        foil: 'foil',
+        foil: 'Foil',
         quantity: 4,
         cashPrice: 1,
         creditPrice: 2
@@ -165,7 +165,7 @@ const buyListCartData: any[] = [
       {
         name: 'Blood Moon',
         set: 'Eigth Edition',
-        foil: 'foil',
+        foil: 'Foil',
         condition: 'lp',
         quantity: 4,
         cashPrice: 2,

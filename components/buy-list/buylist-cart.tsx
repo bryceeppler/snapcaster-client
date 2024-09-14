@@ -86,7 +86,6 @@ export default function BuyListCart({ mobile }: Props) {
                   }}
                   className="w-full font-bold"
                 >
-                  {' '}
                   Clear Cart
                 </Button>
               </div>

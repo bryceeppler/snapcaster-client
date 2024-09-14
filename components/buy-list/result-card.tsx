@@ -22,6 +22,7 @@ import { Button } from '../ui/button';
 import { useState, useEffect } from 'react';
 import { log } from 'console';
 import useBuyListStore from '@/stores/buyListStore';
+import { useStore } from '@/stores/store';
 
 type Props = { cardData: any };
 export default function ResultCard({ cardData }: Props) {
@@ -29,8 +30,9 @@ export default function ResultCard({ cardData }: Props) {
   const [selectedStore, setSelectedStore] = useState('');
   const [cashPrice, setCashPrice] = useState(0);
   const [creditPrice, setCreditPrice] = useState(0);
-
   const { individualStoreCart, addToCart } = useBuyListStore();
+  const { getWebsiteNameByCode } = useStore();
+
   useEffect(() => {
     setSelectedStore(Object.keys(cardData.nm[0])[0]);
 
@@ -283,7 +285,7 @@ export default function ResultCard({ cardData }: Props) {
                 >
                   <SelectTrigger className="   border-border-colour  w-full focus:ring-0 focus:ring-offset-0">
                     {/* <SelectValue placeholder="obsidian" /> */}
-                    <span>{selectedStore}</span>
+                    <span>{getWebsiteNameByCode(selectedStore)}</span>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -302,7 +304,9 @@ export default function ResultCard({ cardData }: Props) {
                                 className="w-full"
                               >
                                 <div className="flex items-center">
-                                  <div className="w-3/5">{storeName}</div>
+                                  <div className="w-3/5">
+                                    {getWebsiteNameByCode(storeName)}
+                                  </div>
                                   <div className="w-2/5">
                                     <div className="ml-auto flex w-min">
                                       <p className=" w-min">Cash:</p>
