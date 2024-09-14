@@ -29,15 +29,19 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
+    
   }
 
   .dark {
-    --background: #27272a; /* zinc 800*/
+    /* --background: #27272a; zinc 800 */
+    --background: #1D1B1F;
     --foreground: #ffffff;
     --card: #27272a; /* zinc 800 */
     --card-foreground: #fafafa;
     --popover: #18181b; /* zinc 900 */
+    --border-colour: #5F606A;
     --popover-foreground: #ffffff;
+    --tcg-dropdown: #3C3C41;
     /* --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%; */
     --primary: #f95b60;

@@ -7,6 +7,7 @@ import {
   ReactNode
 } from 'react';
 import React from 'react';
+
 import { AppProps } from 'next/app';
 import MainLayout from '@/components/main-page-layout';
 import Layout from '@/components/ui/root-layout';
