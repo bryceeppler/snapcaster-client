@@ -67,15 +67,13 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                     <p className="font-medium text-muted-foreground">
                       {item.set}
                     </p>
-                    <span className="flex font-medium text-muted-foreground">
-                      <p className="font-medium uppercase">
-                        {item.condition} -
-                      </p>
+                    <span className="flex  text-muted-foreground">
+                      <p className=" uppercase">{item.condition} -</p>
                       &nbsp;
-                      <p className="font-semibold">{item.foil}</p>
+                      <p className="">{item.foil}</p>
                     </span>
                     <div className="grid grid-cols-7">
-                      <p className="col-span-1 w-full text-muted-foreground">
+                      <p className="col-span-1 w-full font-medium text-muted-foreground">
                         Cash:
                       </p>
                       <p className="col-span-6 col-start-2 w-min">
@@ -83,7 +81,7 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                       </p>
                     </div>
                     <div className="grid grid-cols-7">
-                      <p className="col-span-1 w-full text-muted-foreground">
+                      <p className="col-span-1 w-full font-medium text-muted-foreground">
                         Credit:
                       </p>
                       <p className="col-span-6 col-start-2 w-min">

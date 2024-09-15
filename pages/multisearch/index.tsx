@@ -298,7 +298,14 @@ const ResultSelector = () => {
     useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
   const totalRequested = results.length;
-  const reccomendedWebsites = ['obsidian', 'levelup', 'chimera', 'exorgames', 'mythicstore','houseofcards'];
+  const reccomendedWebsites = [
+    'obsidian',
+    'levelup',
+    'chimera',
+    'exorgames',
+    'mythicstore',
+    'houseofcards'
+  ];
   const [selectedTopStore, setSelectedTopStore] = useState('');
   const getTopWebsites = (results: MultiSearchProduct[]) => {
     const websiteProductSet: { [website: string]: Set<string> } = {};

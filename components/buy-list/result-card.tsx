@@ -31,7 +31,7 @@ export default function ResultCard({ cardData }: Props) {
   const [cashPrice, setCashPrice] = useState(0);
   const [creditPrice, setCreditPrice] = useState(0);
   const { individualStoreCart, addToCart } = useBuyListStore();
-  const { getWebsiteNameByCode } = useStore();
+  const { getWebsiteNameByCode, websites } = useStore();
 
   useEffect(() => {
     setSelectedStore(Object.keys(cardData.nm[0])[0]);
@@ -82,13 +82,8 @@ export default function ResultCard({ cardData }: Props) {
               </CardDescription>
             </div>
             <div className="mt-auto">
-              <div className="flex flex-row gap-2 text-sm">
-                <img
-                  src="/obsidian_icon.png"
-                  alt="Obsidian"
-                  className="my-auto h-4 w-4 "
-                />
-                <p className="text-sm font-semibold"> Obsidian Games</p>
+              <div className="flex flex-row gap-2 text-sm font-semibold text-muted-foreground">
+                <p>{cardData.foil}</p>
               </div>
               <div className="flex text-sm">
                 <div className="w-1/2 text-center">
@@ -157,7 +152,21 @@ export default function ResultCard({ cardData }: Props) {
           >
             <SelectTrigger className="   border-border-colour  w-full focus:ring-0 focus:ring-offset-0">
               {/* <SelectValue placeholder="obsidian" /> */}
-              <span>{selectedStore}</span>
+              <div className="flex">
+                {websites.map(
+                  (website, index) =>
+                    selectedStore === website.slug &&
+                    website.image_source && (
+                      <img
+                        src={website.image_source}
+                        alt="Website"
+                        className="h-4 w-4"
+                        key={index}
+                      />
+                    )
+                )}
+                &nbsp;{getWebsiteNameByCode(selectedStore)}
+              </div>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -174,7 +183,22 @@ export default function ResultCard({ cardData }: Props) {
                         className="w-full"
                       >
                         <div className="flex items-center">
-                          <div className="w-3/5">{storeName}</div>
+                          <div className="flex w-3/5">
+                            {' '}
+                            {websites.map(
+                              (website, index) =>
+                                storeName === website.slug &&
+                                website.image_source && (
+                                  <img
+                                    src={website.image_source}
+                                    alt="Website"
+                                    className="h-4 w-4"
+                                    key={index}
+                                  />
+                                )
+                            )}
+                            &nbsp;{getWebsiteNameByCode(storeName)}
+                          </div>
                           <div className="w-2/5">
                             <div className="ml-auto flex w-min">
                               <p className=" w-min">Cash:</p>
@@ -213,13 +237,8 @@ export default function ResultCard({ cardData }: Props) {
               </CardDescription>
             </div>
             <div className="mt-auto">
-              <div className="flex flex-row gap-2 text-sm">
-                <img
-                  src="/obsidian_icon.png"
-                  alt="Obsidian"
-                  className="my-auto h-4 w-4 "
-                />
-                <p className="font-semibold"> Obsidian Games</p>
+              <div className="flex flex-row gap-2 text-sm font-semibold text-muted-foreground">
+                <p>{cardData.foil} </p>
               </div>
               <div className="flex text-sm">
                 <div className="w-1/2 text-center">
@@ -285,7 +304,21 @@ export default function ResultCard({ cardData }: Props) {
                 >
                   <SelectTrigger className="   border-border-colour  w-full focus:ring-0 focus:ring-offset-0">
                     {/* <SelectValue placeholder="obsidian" /> */}
-                    <span>{getWebsiteNameByCode(selectedStore)}</span>
+                    <div className="flex">
+                      {websites.map(
+                        (website, index) =>
+                          selectedStore === website.slug &&
+                          website.image_source && (
+                            <img
+                              src={website.image_source}
+                              alt="Website"
+                              className="h-4 w-4"
+                              key={index}
+                            />
+                          )
+                      )}
+                      &nbsp;{getWebsiteNameByCode(selectedStore)}
+                    </div>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -294,6 +327,8 @@ export default function ResultCard({ cardData }: Props) {
                         {cardData[selectedCondition].map((item: any) =>
                           // Extracting key and values dynamically
                           (() => {
+                            console.log(websites);
+
                             const storeName = Object.keys(item)[0];
                             const { cashPrice, creditPrice } = item[storeName];
 
@@ -304,7 +339,20 @@ export default function ResultCard({ cardData }: Props) {
                                 className="w-full"
                               >
                                 <div className="flex items-center">
-                                  <div className="w-3/5">
+                                  <div className="flex w-3/5">
+                                    {websites.map(
+                                      (website, index) =>
+                                        storeName === website.slug &&
+                                        website.image_source && (
+                                          <img
+                                            src={website.image_source}
+                                            alt="Website"
+                                            className="h-4 w-4"
+                                            key={index}
+                                          />
+                                        )
+                                    )}
+                                    &nbsp;
                                     {getWebsiteNameByCode(storeName)}
                                   </div>
                                   <div className="w-2/5">

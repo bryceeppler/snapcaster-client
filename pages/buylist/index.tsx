@@ -8,10 +8,17 @@ import FilterDropDownMultiple from '@/components/buy-list/filter-drop-down-multi
 
 import BuyListCart from '@/components/buy-list/buylist-cart';
 import useBuyListStore from '@/stores/buyListStore';
+import useGlobalStore from '@/stores/globalStore';
+import { useEffect } from 'react';
+import { useStore } from '@/stores/store';
 
 type Props = {};
 
 const Buylist: NextPage<Props> = () => {
+  const { initWebsiteInformation } = useStore();
+  useEffect(() => {
+    initWebsiteInformation();
+  }, []);
   const { buyListQueryResults } = useBuyListStore();
   return (
     <>
