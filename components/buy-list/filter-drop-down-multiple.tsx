@@ -2,14 +2,14 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '../ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CaretDownIcon } from '@radix-ui/react-icons';
+import useBuyListStore from '@/stores/buyListStore';
 
 interface Props {
   values: {
@@ -17,9 +17,15 @@ interface Props {
     value: string;
   }[];
   filterName: string;
+  setFilterFunction: (filters: string[]) => void;
 }
 
-export default function FilterDropDownMultiple({ values, filterName }: Props) {
+export default function FilterDropDownMultiple({
+  values,
+  filterName,
+  setFilterFunction
+}: Props) {
+  const { checkAtleastOneFilter, atLeastOneFilter } = useBuyListStore();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const handleSelectChange = (value: string) => {
     if (!selectedItems.includes(value)) {
@@ -36,10 +42,29 @@ export default function FilterDropDownMultiple({ values, filterName }: Props) {
     return selectedItems.includes(value) ? true : false;
   };
 
+  useEffect(() => {
+    setFilterFunction(selectedItems);
+    checkAtleastOneFilter();
+  }, [selectedItems]);
+
+  useEffect(() => {
+    if (atLeastOneFilter == false) {
+      setSelectedItems([]);
+    }
+  }, [atLeastOneFilter]);
+
   return (
     <DropdownMenu>
       <span>
-        <p className="text-sm">{filterName}</p>
+        <span className="flex">
+          <p className="text-sm">{filterName}:</p> &nbsp;
+          {selectedItems.length > 0 ? (
+            <p className="text-sm">({selectedItems.length})</p>
+          ) : (
+            <p className="text-sm">Any</p>
+          )}
+        </span>
+
         <DropdownMenuTrigger
           asChild
           className="border-border-colour mx-auto  h-8  w-full bg-popover focus:ring-0 sm:w-[180px] "

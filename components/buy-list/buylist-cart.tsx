@@ -1,13 +1,12 @@
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
 
-import { TriangleRightIcon } from '@radix-ui/react-icons';
+import { TriangleRightIcon, TriangleDownIcon } from '@radix-ui/react-icons';
 import { Button } from '../ui/button';
 import CartStoreAccordian from './cart-store-accordian';
 import useBuyListStore from '@/stores/buyListStore';
@@ -47,7 +46,6 @@ export default function BuyListCart({ mobile }: Props) {
               <p className="absolute left-1/2 -translate-x-1/2 transform">
                 View Cart
               </p>
-              <TriangleRightIcon className="ml-auto h-8 w-8  pr-2" />
             </Button>
           </SheetTrigger>
           <SheetContent className="w-svw  sm:max-w-full">

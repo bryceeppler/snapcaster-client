@@ -7,7 +7,6 @@ import {
 import useBuyListStore from '@/stores/buyListStore';
 import { PlusIcon, MinusIcon, CopyIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
-import { Button } from '../ui/button';
 import { toast } from 'sonner';
 import { useStore } from '@/stores/store';
 
@@ -64,7 +63,7 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                       {`(${item.quantity}) ${item.name}`}
                     </p>
 
-                    <p className="font-medium text-muted-foreground">
+                    <p className="font-medium capitalize text-muted-foreground">
                       {item.set}
                     </p>
                     <span className="flex  text-muted-foreground">
@@ -76,7 +75,7 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                       <p className="col-span-1 w-full font-medium text-muted-foreground">
                         Cash:
                       </p>
-                      <p className="col-span-6 col-start-2 w-min">
+                      <p className="col-span-6 col-start-2 ml-1 w-min">
                         ${item.cashPrice * item.quantity}
                       </p>
                     </div>
@@ -84,7 +83,7 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                       <p className="col-span-1 w-full font-medium text-muted-foreground">
                         Credit:
                       </p>
-                      <p className="col-span-6 col-start-2 w-min">
+                      <p className="col-span-6 col-start-2 ml-1 w-min">
                         ${item.creditPrice * item.quantity}
                       </p>
                     </div>

@@ -17,6 +17,19 @@ type BuyListState = {
   addToCart: (store: string, cardData: any) => void;
   removeFromCart: (store: string, cardData: any) => void;
   clearAllCartItems: () => void;
+  selectedStoreFilters: any[];
+  selectedConditionFilters: any[];
+  selectedFoilFilters: any[];
+  selectedRarityFilters: any[];
+  selectedSetFilters: any[];
+  updateSelectedStoreFilters: (filters: string[]) => void;
+  updateSelectedConditionFilters: (filters: string[]) => void;
+  updateSelectedFoilFilters: (filters: string[]) => void;
+  updateSelectedRarityFilters: (filters: string[]) => void;
+  updateSelectedSetFilters: (filters: string[]) => void;
+  atLeastOneFilter: boolean;
+  checkAtleastOneFilter: () => void;
+  resetAllFilters: () => void;
 };
 
 const dummyStoreData: Filter[] = [
@@ -174,6 +187,7 @@ const buyListCartData: any[] = [
     ]
   }
 ];
+
 /**
  * Zustand store for the single search page, including input, results, filtering, and sorting state
  */
@@ -186,7 +200,58 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   buyListQueryResults: buyListQueryResults,
   individualStoreCart: [],
   buyListCartData: buyListCartData,
-
+  selectedStoreFilters: [],
+  selectedConditionFilters: [],
+  selectedFoilFilters: [],
+  selectedRarityFilters: [],
+  selectedSetFilters: [],
+  atLeastOneFilter: false,
+  updateSelectedStoreFilters(filters: string[]) {
+    set({ selectedStoreFilters: filters });
+  },
+  updateSelectedConditionFilters(filters: string[]) {
+    set({ selectedStoreFilters: filters });
+  },
+  updateSelectedFoilFilters(filters: string[]) {
+    set({ selectedStoreFilters: filters });
+  },
+  updateSelectedRarityFilters(filters: string[]) {
+    set({ selectedStoreFilters: filters });
+  },
+  updateSelectedSetFilters(filters: string[]) {
+    set({ selectedStoreFilters: filters });
+  },
+  checkAtleastOneFilter() {
+    if (get().selectedStoreFilters.length !== 0) {
+      set({ atLeastOneFilter: true });
+      return;
+    }
+    if (get().selectedConditionFilters.length !== 0) {
+      set({ atLeastOneFilter: true });
+      return;
+    }
+    if (get().selectedFoilFilters.length !== 0) {
+      set({ atLeastOneFilter: true });
+      return;
+    }
+    if (get().selectedRarityFilters.length !== 0) {
+      set({ atLeastOneFilter: true });
+      return;
+    }
+    if (get().selectedSetFilters.length !== 0) {
+      set({ atLeastOneFilter: true });
+      return;
+    }
+    set({ atLeastOneFilter: false });
+  },
+  resetAllFilters() {
+    set({ selectedStoreFilters: [] });
+    set({ selectedConditionFilters: [] });
+    set({ selectedFoilFilters: [] });
+    set({ selectedRarityFilters: [] });
+    set({ selectedSetFilters: [] });
+    set({ atLeastOneFilter: false });
+  },
   addToCart(store: string, cardData: any) {
     const currentCartData = get().buyListCartData;
 

@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import {
   Select,
@@ -20,7 +13,6 @@ import {
 import CardImage from '../ui/card-image';
 import { Button } from '../ui/button';
 import { useState, useEffect } from 'react';
-import { log } from 'console';
 import useBuyListStore from '@/stores/buyListStore';
 import { useStore } from '@/stores/store';
 
@@ -30,7 +22,7 @@ export default function ResultCard({ cardData }: Props) {
   const [selectedStore, setSelectedStore] = useState('');
   const [cashPrice, setCashPrice] = useState(0);
   const [creditPrice, setCreditPrice] = useState(0);
-  const { individualStoreCart, addToCart } = useBuyListStore();
+  const { addToCart } = useBuyListStore();
   const { getWebsiteNameByCode, websites } = useStore();
 
   useEffect(() => {
@@ -77,7 +69,7 @@ export default function ResultCard({ cardData }: Props) {
               <CardTitle className="text-sm font-semibold">
                 {cardData.name}
               </CardTitle>
-              <CardDescription className="text-xs font-semibold">
+              <CardDescription className="text-xs font-semibold capitalize">
                 {cardData.set}
               </CardDescription>
             </div>
@@ -184,7 +176,6 @@ export default function ResultCard({ cardData }: Props) {
                       >
                         <div className="flex items-center">
                           <div className="flex w-3/5">
-                            {' '}
                             {websites.map(
                               (website, index) =>
                                 storeName === website.slug &&
@@ -232,7 +223,7 @@ export default function ResultCard({ cardData }: Props) {
               <CardTitle className="text-md font-semibold">
                 {cardData.name}
               </CardTitle>
-              <CardDescription className="text-sm font-semibold">
+              <CardDescription className="text-sm font-semibold capitalize">
                 {cardData.set}
               </CardDescription>
             </div>
@@ -304,7 +295,7 @@ export default function ResultCard({ cardData }: Props) {
                 >
                   <SelectTrigger className="   border-border-colour  w-full focus:ring-0 focus:ring-offset-0">
                     {/* <SelectValue placeholder="obsidian" /> */}
-                    <div className="flex">
+                    <div className="flex items-center">
                       {websites.map(
                         (website, index) =>
                           selectedStore === website.slug &&
@@ -327,8 +318,6 @@ export default function ResultCard({ cardData }: Props) {
                         {cardData[selectedCondition].map((item: any) =>
                           // Extracting key and values dynamically
                           (() => {
-                            console.log(websites);
-
                             const storeName = Object.keys(item)[0];
                             const { cashPrice, creditPrice } = item[storeName];
 
@@ -339,7 +328,7 @@ export default function ResultCard({ cardData }: Props) {
                                 className="w-full"
                               >
                                 <div className="flex items-center">
-                                  <div className="flex w-3/5">
+                                  <div className="flex w-3/5 items-center">
                                     {websites.map(
                                       (website, index) =>
                                         storeName === website.slug &&

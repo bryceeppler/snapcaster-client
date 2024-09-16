@@ -18,7 +18,6 @@ export default function SingleCatalogRow({ cardData, promo, tcg }: Props) {
 
   const findWebsiteNameByCode = (slug: string): string => {
     const website = websites.find((website) => website.slug === slug);
-    console.log(websites);
 
     return website ? website.name : 'Website not found';
   };
