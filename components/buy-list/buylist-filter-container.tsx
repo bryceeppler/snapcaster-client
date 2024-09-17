@@ -49,13 +49,6 @@ export default function BuyListFilterContainer({ mobile }: Props) {
     resetAllFilters
   } = useBuyListStore();
 
-  // useEffect(() => {}, [
-  //   dummyStoreData,
-  //   dummyConditionData,
-  //   dummyFoilData,
-  //   dummyRarityData,
-  //   dummySetData
-  // ]);
   return (
     <>
       {mobile == true ? (
@@ -110,9 +103,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 <Button className="text-md mt-6 h-9 rounded-sm  font-semibold ">
                   Apply Filters
                 </Button>
-                {/* <Button className="text-md mt-2 h-9 rounded-sm bg-[#FFF7F7]  font-semibold text-red-300">
-                  Reset Filters
-                </Button> */}
+
                 <Button
                   disabled={atLeastOneFilter ? false : true}
                   onClick={() => {

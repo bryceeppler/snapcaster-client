@@ -51,10 +51,10 @@ export default function FilterDropDownMultiple({
     checkAtleastOneFilter();
   }, [selectedTCG]);
 
-  // useEffect(() => {
-  //   setFilterFunction([]);
-  //   checkAtleastOneFilter();
-  // }, [selectedZustandFilters]);
+  useEffect(() => {
+    setFilterFunction(selectedItems);
+    checkAtleastOneFilter();
+  }, [selectedItems]);
 
   useEffect(() => {
     if (atLeastOneFilter == false) {

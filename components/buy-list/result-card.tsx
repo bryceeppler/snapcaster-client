@@ -145,18 +145,19 @@ export default function ResultCard({ cardData }: Props) {
             <SelectTrigger className="   border-border-colour  w-full focus:ring-0 focus:ring-offset-0">
               {/* <SelectValue placeholder="obsidian" /> */}
               <div className="flex">
-                {websites.map(
-                  (website, index) =>
-                    selectedStore === website.slug &&
-                    website.image_source && (
-                      <img
-                        src={website.image_source}
-                        alt="Website"
-                        className="h-4 w-4"
-                        key={index}
-                      />
-                    )
-                )}
+                {websites &&
+                  websites.map(
+                    (website, index) =>
+                      selectedStore === website.slug &&
+                      website.image_source && (
+                        <img
+                          src={website.image_source}
+                          alt="Website"
+                          className="h-4 w-4"
+                          key={index}
+                        />
+                      )
+                  )}
                 &nbsp;{getWebsiteNameByCode(selectedStore)}
               </div>
             </SelectTrigger>
@@ -296,18 +297,19 @@ export default function ResultCard({ cardData }: Props) {
                   <SelectTrigger className="   border-border-colour  w-full focus:ring-0 focus:ring-offset-0">
                     {/* <SelectValue placeholder="obsidian" /> */}
                     <div className="flex items-center">
-                      {websites.map(
-                        (website, index) =>
-                          selectedStore === website.slug &&
-                          website.image_source && (
-                            <img
-                              src={website.image_source}
-                              alt="Website"
-                              className="h-4 w-4"
-                              key={index}
-                            />
-                          )
-                      )}
+                      {websites &&
+                        websites.map(
+                          (website, index) =>
+                            selectedStore === website.slug &&
+                            website.image_source && (
+                              <img
+                                src={website.image_source}
+                                alt="Website"
+                                className="h-4 w-4"
+                                key={index}
+                              />
+                            )
+                        )}
                       &nbsp;{getWebsiteNameByCode(selectedStore)}
                     </div>
                   </SelectTrigger>
@@ -329,18 +331,19 @@ export default function ResultCard({ cardData }: Props) {
                               >
                                 <div className="flex items-center">
                                   <div className="flex w-3/5 items-center">
-                                    {websites.map(
-                                      (website, index) =>
-                                        storeName === website.slug &&
-                                        website.image_source && (
-                                          <img
-                                            src={website.image_source}
-                                            alt="Website"
-                                            className="h-4 w-4"
-                                            key={index}
-                                          />
-                                        )
-                                    )}
+                                    {websites &&
+                                      websites.map(
+                                        (website, index) =>
+                                          storeName === website.slug &&
+                                          website.image_source && (
+                                            <img
+                                              src={website.image_source}
+                                              alt="Website"
+                                              className="h-4 w-4"
+                                              key={index}
+                                            />
+                                          )
+                                      )}
                                     &nbsp;
                                     {getWebsiteNameByCode(storeName)}
                                   </div>
