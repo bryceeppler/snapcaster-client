@@ -82,7 +82,7 @@ export default function BuyListCart({ mobile }: Props) {
                   onClick={() => {
                     clearAllCartItems();
                   }}
-                  className="w-full font-bold"
+                  className="w-full bg-red-600 font-bold"
                 >
                   Clear Cart
                 </Button>
@@ -122,7 +122,7 @@ export default function BuyListCart({ mobile }: Props) {
               onClick={() => {
                 clearAllCartItems();
               }}
-              className="w-full font-bold"
+              className="w-full bg-red-600 font-bold"
             >
               Clear Cart
             </Button>

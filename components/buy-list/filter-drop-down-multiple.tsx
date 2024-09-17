@@ -18,14 +18,17 @@ interface Props {
   }[];
   filterName: string;
   setFilterFunction: (filters: string[]) => void;
+  selectedZustandFilters: string[];
 }
 
 export default function FilterDropDownMultiple({
   values,
   filterName,
-  setFilterFunction
+  setFilterFunction,
+  selectedZustandFilters
 }: Props) {
-  const { checkAtleastOneFilter, atLeastOneFilter } = useBuyListStore();
+  const { checkAtleastOneFilter, atLeastOneFilter, selectedTCG } =
+    useBuyListStore();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const handleSelectChange = (value: string) => {
     if (!selectedItems.includes(value)) {
@@ -43,9 +46,15 @@ export default function FilterDropDownMultiple({
   };
 
   useEffect(() => {
-    setFilterFunction(selectedItems);
+    setFilterFunction([]);
+    setSelectedItems([]);
     checkAtleastOneFilter();
-  }, [selectedItems]);
+  }, [selectedTCG]);
+
+  // useEffect(() => {
+  //   setFilterFunction([]);
+  //   checkAtleastOneFilter();
+  // }, [selectedZustandFilters]);
 
   useEffect(() => {
     if (atLeastOneFilter == false) {

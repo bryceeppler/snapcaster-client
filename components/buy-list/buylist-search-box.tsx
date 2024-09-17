@@ -9,14 +9,21 @@ import {
 } from '@/components/ui/select';
 import { Input } from '../ui/input';
 import { Search } from 'lucide-react';
+import useBuyListStore from '@/stores/buyListStore';
 
 type Props = {};
 export default function BuyListSearchBox({}: Props) {
+  const { changeTCG } = useBuyListStore();
   return (
     <>
       {/* Search Container*/}
       <div className="flex">
-        <Select>
+        <Select
+          onValueChange={(value) => {
+            console.log(value);
+            changeTCG(value);
+          }}
+        >
           <SelectTrigger className=" border-border-colour w-1/2 rounded-r-none focus:ring-0 focus:ring-offset-0  sm:w-[180px] ">
             <SelectValue placeholder="MTG" />
           </SelectTrigger>

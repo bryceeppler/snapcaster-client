@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
+import { StringToBoolean } from 'class-variance-authority/dist/types';
 
 export interface Filter {
   key: string;
@@ -30,6 +31,8 @@ type BuyListState = {
   atLeastOneFilter: boolean;
   checkAtleastOneFilter: () => void;
   resetAllFilters: () => void;
+  selectedTCG: string;
+  changeTCG: (tcg:string) => void;
 };
 
 const dummyStoreData: Filter[] = [
@@ -52,11 +55,81 @@ const dummyFoilData: Filter[] = [
   { key: 'normal', value: 'Normal' }
 ];
 
-const dummyRarityData: Filter[] = [
+//Rarity Options By TCG this will need to be automated in the future
+
+
+const dummyMTGRarityData: Filter[] = [
   { key: 'common', value: 'Common' },
   { key: 'uncommon', value: 'Uncommon' },
   { key: 'rare', value: 'Rare' },
   { key: 'mythicrare', value: 'Mythic Rare' }
+];
+
+const dummyOnePieceRarityData: Filter[] = [
+  { key: 'common', value: 'Common' },
+  { key: 'uncommon', value: 'Uncommon' },
+  { key: 'rare', value: 'Rare' },
+  { key: 'superrare', value: 'Super Rare' },
+  { key: 'secretrare', value: 'Secret Rare' },
+  { key: 'promo', value: 'Promo' },
+  { key: 'leader', value: 'Leader' },
+  { key: 'don', value: 'DON!!' }
+];
+
+const dummyPokemonRarityData: Filter[] = [
+  { key: 'common', value: 'Common' },
+  { key: 'uncommon', value: 'Uncommon' },
+  { key: 'rare', value: 'Rare' },
+  { key: 'holorare', value: 'Holo Rare' },
+  { key: 'secretrare', value: 'Secret Rare' },
+  { key: 'shinyrare', value: 'Shiny Rare' },
+  { key: 'shinyultrarare', value: 'Shiny Ultra Rare' },
+  { key: 'doublerare', value: 'Double Rare' },
+  { key: 'hyperrare', value: 'Hyper Rare' },
+  { key: 'illustrationrare', value: 'Illustration Rare' },
+  { key: 'specialillustrationrare', value: 'Special Illustration Rare' },
+  { key: 'raidiantrare', value: 'Radiant Rare' },
+  { key: 'blackstarpromo', value: 'Black Star Promo' },
+  { key: 'rareace', value: 'Rare Ace' },
+  { key: 'promo', value: 'Promo' },
+  { key: 'unspecified', value: 'Unspecified' }
+];
+
+const dummyLorcanaRarityData: Filter[] = [
+  { key: 'common', value: 'Common' },
+  { key: 'uncommon', value: 'Uncommon' },
+  { key: 'rare', value: 'Rare' },
+  { key: 'superrare', value: 'Super Rare' },
+  { key: 'legendary', value: 'Legendary' },
+  { key: 'enchanted', value: 'Enchanted' },
+  { key: 'promo', value: 'Promo' }
+];
+const dummyYugiohRarityData: Filter[] = [
+  { key: 'common', value: 'Common' },
+  { key: 'superrare', value: 'Super Rare' },
+  { key: 'rare', value: 'Rare' },
+  { key: 'ultra rare', value: 'Ultra Rare' },
+  { key: 'secretrare', value: 'Secret Rare' },
+  { key: 'ultimaterare', value: 'Ultimate Rare' },
+  { key: 'starfoilrare', value: 'Starfoil Rare' },
+  { key: 'goldrare', value: 'Gold Rare' },
+  { key: 'mosaicrare', value: 'Mosaic Rare' },
+  { key: 'quartercenturysecretrare', value: 'Quarter Century Secret Rare' },
+  { key: 'shatterfoilrare', value: 'Shatterfoil Rare' },
+  { key: 'prismaticsecretrare', value: 'Prismatic Secret Rare' },
+  { key: 'collectorsrare', value: "Collector's Rare" },
+  { key: 'prismaticultimaterare', value: 'Prismatic Ultimate Rare' },
+  { key: 'prismaticcollectorsrare', value: "Prismatic Collector's Rare" },
+  { key: 'platinumsecretrare', value: 'Platinum Secret Rare' },
+  { key: 'goldsecretrare', value: 'Gold Secret Rare' },
+  { key: 'parallelrare', value: 'Parallel Rare' },
+  { key: 'starlightrare', value: 'Starlight Rare' },
+  { key: 'ghostrare', value: 'Ghost Rare' },
+  { key: 'promo', value: 'Promo' },
+  { key: 'shoirtprint', value: 'Short Print' },
+  { key: 'platinumrare', value: 'Platinum Rare' },
+  { key: 'ghostgoldrare', value: 'Ghost/Gold Rare' },
+  { key: '10000secretrare', value: '10000 Secret Rare' }
 ];
 
 const dummySetData: Filter[] = [
@@ -195,7 +268,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   dummyStoreData: dummyStoreData,
   dummyConditionData: dummyConditionData,
   dummyFoilData: dummyFoilData,
-  dummyRarityData: dummyRarityData,
+  dummyRarityData: dummyMTGRarityData,
   dummySetData: dummySetData,
   buyListQueryResults: buyListQueryResults,
   individualStoreCart: [],
@@ -206,6 +279,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   selectedRarityFilters: [],
   selectedSetFilters: [],
   atLeastOneFilter: false,
+  selectedTCG:"mtg",
   updateSelectedStoreFilters(filters: string[]) {
     set({ selectedStoreFilters: filters });
   },
@@ -324,6 +398,33 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   clearAllCartItems() {
     set({ buyListCartData: [] });
+  },
+  changeTCG(tcg:string){
+    //clear selected filters for rarity (will need to do for sets too down the line)
+    set({selectedRarityFilters:[]})
+    switch (tcg) {
+      case 'mtg':
+        set({dummyRarityData:dummyMTGRarityData})
+        set({selectedTCG:"mtg"})
+        break;
+      case 'onepiece':
+        set({dummyRarityData:dummyOnePieceRarityData})
+        set({selectedTCG:"onepiece"})
+        break;
+      case 'pokemon':
+        set({dummyRarityData:dummyPokemonRarityData})
+        set({selectedTCG:"pokemon"})
+        break;
+      case 'lorcana':
+        set({dummyRarityData:dummyLorcanaRarityData})
+        set({selectedTCG:"lorcana"})
+        break;
+      case 'yugioh':
+        set({dummyRarityData:dummyYugiohRarityData})
+        set({selectedTCG:"yugioh"})
+        break;
+    }
+    
   }
 }));
 export default useBuyListStore;

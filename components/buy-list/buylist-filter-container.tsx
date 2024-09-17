@@ -23,6 +23,7 @@ import {
 import { Button } from '../ui/button';
 import FilterDropDownMultiple from './filter-drop-down-multiple';
 import useBuyListStore from '@/stores/buyListStore';
+import { useEffect } from 'react';
 
 type Props = { mobile: boolean };
 
@@ -33,6 +34,12 @@ export default function BuyListFilterContainer({ mobile }: Props) {
     dummyFoilData,
     dummyRarityData,
     dummySetData,
+    selectedStoreFilters,
+    selectedConditionFilters,
+    selectedFoilFilters,
+    selectedRarityFilters,
+    selectedSetFilters,
+
     updateSelectedStoreFilters,
     updateSelectedConditionFilters,
     updateSelectedFoilFilters,
@@ -41,6 +48,14 @@ export default function BuyListFilterContainer({ mobile }: Props) {
     atLeastOneFilter,
     resetAllFilters
   } = useBuyListStore();
+
+  // useEffect(() => {}, [
+  //   dummyStoreData,
+  //   dummyConditionData,
+  //   dummyFoilData,
+  //   dummyRarityData,
+  //   dummySetData
+  // ]);
   return (
     <>
       {mobile == true ? (
@@ -65,26 +80,31 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                   values={dummyStoreData}
                   filterName={'Store'}
                   setFilterFunction={updateSelectedStoreFilters}
+                  selectedZustandFilters={selectedStoreFilters}
                 />
                 <FilterDropDownMultiple
                   values={dummyConditionData}
                   filterName={'Condition'}
                   setFilterFunction={updateSelectedConditionFilters}
+                  selectedZustandFilters={selectedConditionFilters}
                 />
                 <FilterDropDownMultiple
                   values={dummyFoilData}
                   filterName={'Foil'}
                   setFilterFunction={updateSelectedFoilFilters}
+                  selectedZustandFilters={selectedFoilFilters}
                 />
                 <FilterDropDownMultiple
                   values={dummyRarityData}
                   filterName={'Rarity'}
                   setFilterFunction={updateSelectedRarityFilters}
+                  selectedZustandFilters={selectedRarityFilters}
                 />
                 <FilterDropDownMultiple
                   values={dummySetData}
                   filterName={'Set'}
                   setFilterFunction={updateSelectedSetFilters}
+                  selectedZustandFilters={selectedSetFilters}
                 />
 
                 <Button className="text-md mt-6 h-9 rounded-sm  font-semibold ">
@@ -124,26 +144,31 @@ export default function BuyListFilterContainer({ mobile }: Props) {
               values={dummyStoreData}
               filterName={'Store'}
               setFilterFunction={updateSelectedStoreFilters}
+              selectedZustandFilters={selectedStoreFilters}
             />
             <FilterDropDownMultiple
               values={dummyConditionData}
               filterName={'Condition'}
               setFilterFunction={updateSelectedConditionFilters}
+              selectedZustandFilters={selectedConditionFilters}
             />
             <FilterDropDownMultiple
               values={dummyFoilData}
               filterName={'Foil'}
               setFilterFunction={updateSelectedFoilFilters}
+              selectedZustandFilters={selectedFoilFilters}
             />
             <FilterDropDownMultiple
               values={dummyRarityData}
               filterName={'Rarity'}
               setFilterFunction={updateSelectedRarityFilters}
+              selectedZustandFilters={selectedRarityFilters}
             />
             <FilterDropDownMultiple
               values={dummySetData}
               filterName={'Set'}
               setFilterFunction={updateSelectedSetFilters}
+              selectedZustandFilters={selectedSetFilters}
             />
           </div>
           <div className="flex">

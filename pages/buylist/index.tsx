@@ -10,10 +10,11 @@ import { useStore } from '@/stores/store';
 type Props = {};
 
 const Buylist: NextPage<Props> = () => {
-  const { initWebsiteInformation } = useStore();
-  useEffect(() => {
-    initWebsiteInformation();
-  }, []);
+  const { initWebsiteInformation, websites } = useStore();
+  // useEffect(() => {
+  //   initWebsiteInformation();
+  //   console.log(`index.tsx ${websites}`);
+  // }, []);
   const { buyListQueryResults } = useBuyListStore();
   return (
     <>
