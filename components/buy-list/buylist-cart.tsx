@@ -5,8 +5,6 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-
-import { TriangleRightIcon, TriangleDownIcon } from '@radix-ui/react-icons';
 import { Button } from '../ui/button';
 import CartStoreAccordian from './cart-store-accordian';
 import useBuyListStore from '@/stores/buyListStore';

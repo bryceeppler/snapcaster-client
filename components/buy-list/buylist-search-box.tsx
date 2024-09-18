@@ -20,7 +20,6 @@ export default function BuyListSearchBox({}: Props) {
       <div className="flex">
         <Select
           onValueChange={(value) => {
-            console.log(value);
             changeTCG(value);
           }}
         >

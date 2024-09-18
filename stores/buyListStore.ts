@@ -6,12 +6,16 @@ export interface Filter {
   key: string;
   value: string;
 }
+
+export interface DropDownOptions {
+  [key: string]: { key: string; value: string }[];
+}
 type BuyListState = {
-  dummyStoreData: Filter[];
-  dummyConditionData: Filter[];
-  dummyFoilData: Filter[];
-  dummyRarityData: Filter[];
-  dummySetData: Filter[];
+  dummyStoreData: DropDownOptions;
+  dummyConditionData: DropDownOptions;
+  dummyFoilData: DropDownOptions;
+  dummyRarityData: DropDownOptions;
+  dummySetData: DropDownOptions;
   buyListQueryResults: any[];
   individualStoreCart: any[];
   buyListCartData: any[];
@@ -32,110 +36,155 @@ type BuyListState = {
   checkAtleastOneFilter: () => void;
   resetAllFilters: () => void;
   selectedTCG: string;
-  changeTCG: (tcg:string) => void;
+  changeTCG: (tcg: string) => void;
 };
 
-const dummyStoreData: Filter[] = [
-  { key: 'obsidian', value: 'Obsidian Games' },
-  { key: 'chimera', value: 'Chimera Gaming' },
-  { key: 'levelup', value: 'Level Up Games' },
-  { key: 'exorgames', value: 'Exor Games' },
-  { key: 'mythicstore', value: 'The Mythic Store' }
-];
-const dummyConditionData: Filter[] = [
-  { key: 'nm', value: 'Near Mint' },
-  { key: 'lp', value: 'Lightly Played' },
-  { key: 'mp', value: 'Moderetly Played' },
-  { key: 'hp', value: 'Heavily Played' },
-  { key: 'dmg', value: 'Damaged' }
-];
+const dummyStoreData: DropDownOptions = {
+  Stores: [
+    { key: 'obsidian', value: 'Obsidian Games' },
+    { key: 'chimera', value: 'Chimera Gaming' },
+    { key: 'levelup', value: 'Level Up Games' },
+    { key: 'exorgames', value: 'Exor Games' },
+    { key: 'mythicstore', value: 'The Mythic Store' }
+  ]
+};
+const dummyConditionData: DropDownOptions = {
+  Condition: [
+    { key: 'nm', value: 'Near Mint' },
+    { key: 'lp', value: 'Lightly Played' },
+    { key: 'mp', value: 'Moderetly Played' },
+    { key: 'hp', value: 'Heavily Played' },
+    { key: 'dmg', value: 'Damaged' }
+  ]
+};
 
-const dummyFoilData: Filter[] = [
-  { key: 'foil', value: 'Foil' },
-  { key: 'normal', value: 'Normal' }
-];
+const dummyMTGFoilData: DropDownOptions = {
+  Foil: [
+    { key: 'foil', value: 'Foil' },
+    { key: 'normal', value: 'Normal' }
+  ]
+};
 
-//Rarity Options By TCG this will need to be automated in the future
+const dummyPokemonFoilData: DropDownOptions = {
+  Foil: [
+    { key: 'foil', value: 'Foil' },
+    { key: 'normal', value: 'Normal' }
+  ]
+};
 
+const dummyLorcanaFoilData: DropDownOptions = {
+  Foil: [
+    { key: 'foil', value: 'Foil' },
+    { key: 'normal', value: 'Normal' }
+  ]
+};
 
-const dummyMTGRarityData: Filter[] = [
-  { key: 'common', value: 'Common' },
-  { key: 'uncommon', value: 'Uncommon' },
-  { key: 'rare', value: 'Rare' },
-  { key: 'mythicrare', value: 'Mythic Rare' }
-];
+const dummyYugiohFoilData: DropDownOptions = {
+  Edition: [
+    { key: 'foil', value: 'Foil' },
+    { key: 'normal', value: 'Normal' }
+  ]
+};
 
-const dummyOnePieceRarityData: Filter[] = [
-  { key: 'common', value: 'Common' },
-  { key: 'uncommon', value: 'Uncommon' },
-  { key: 'rare', value: 'Rare' },
-  { key: 'superrare', value: 'Super Rare' },
-  { key: 'secretrare', value: 'Secret Rare' },
-  { key: 'promo', value: 'Promo' },
-  { key: 'leader', value: 'Leader' },
-  { key: 'don', value: 'DON!!' }
-];
+const dummyOnePieceFoilData: DropDownOptions = {
+  Foil: [
+    { key: 'foil', value: 'Foil' },
+    { key: 'normal', value: 'Normal' }
+  ]
+};
 
-const dummyPokemonRarityData: Filter[] = [
-  { key: 'common', value: 'Common' },
-  { key: 'uncommon', value: 'Uncommon' },
-  { key: 'rare', value: 'Rare' },
-  { key: 'holorare', value: 'Holo Rare' },
-  { key: 'secretrare', value: 'Secret Rare' },
-  { key: 'shinyrare', value: 'Shiny Rare' },
-  { key: 'shinyultrarare', value: 'Shiny Ultra Rare' },
-  { key: 'doublerare', value: 'Double Rare' },
-  { key: 'hyperrare', value: 'Hyper Rare' },
-  { key: 'illustrationrare', value: 'Illustration Rare' },
-  { key: 'specialillustrationrare', value: 'Special Illustration Rare' },
-  { key: 'raidiantrare', value: 'Radiant Rare' },
-  { key: 'blackstarpromo', value: 'Black Star Promo' },
-  { key: 'rareace', value: 'Rare Ace' },
-  { key: 'promo', value: 'Promo' },
-  { key: 'unspecified', value: 'Unspecified' }
-];
+const dummyMTGRarityData: DropDownOptions = {
+  Rarirty: [
+    { key: 'common', value: 'Common' },
+    { key: 'uncommon', value: 'Uncommon' },
+    { key: 'rare', value: 'Rare' },
+    { key: 'mythicrare', value: 'Mythic Rare' }
+  ]
+};
 
-const dummyLorcanaRarityData: Filter[] = [
-  { key: 'common', value: 'Common' },
-  { key: 'uncommon', value: 'Uncommon' },
-  { key: 'rare', value: 'Rare' },
-  { key: 'superrare', value: 'Super Rare' },
-  { key: 'legendary', value: 'Legendary' },
-  { key: 'enchanted', value: 'Enchanted' },
-  { key: 'promo', value: 'Promo' }
-];
-const dummyYugiohRarityData: Filter[] = [
-  { key: 'common', value: 'Common' },
-  { key: 'superrare', value: 'Super Rare' },
-  { key: 'rare', value: 'Rare' },
-  { key: 'ultra rare', value: 'Ultra Rare' },
-  { key: 'secretrare', value: 'Secret Rare' },
-  { key: 'ultimaterare', value: 'Ultimate Rare' },
-  { key: 'starfoilrare', value: 'Starfoil Rare' },
-  { key: 'goldrare', value: 'Gold Rare' },
-  { key: 'mosaicrare', value: 'Mosaic Rare' },
-  { key: 'quartercenturysecretrare', value: 'Quarter Century Secret Rare' },
-  { key: 'shatterfoilrare', value: 'Shatterfoil Rare' },
-  { key: 'prismaticsecretrare', value: 'Prismatic Secret Rare' },
-  { key: 'collectorsrare', value: "Collector's Rare" },
-  { key: 'prismaticultimaterare', value: 'Prismatic Ultimate Rare' },
-  { key: 'prismaticcollectorsrare', value: "Prismatic Collector's Rare" },
-  { key: 'platinumsecretrare', value: 'Platinum Secret Rare' },
-  { key: 'goldsecretrare', value: 'Gold Secret Rare' },
-  { key: 'parallelrare', value: 'Parallel Rare' },
-  { key: 'starlightrare', value: 'Starlight Rare' },
-  { key: 'ghostrare', value: 'Ghost Rare' },
-  { key: 'promo', value: 'Promo' },
-  { key: 'shoirtprint', value: 'Short Print' },
-  { key: 'platinumrare', value: 'Platinum Rare' },
-  { key: 'ghostgoldrare', value: 'Ghost/Gold Rare' },
-  { key: '10000secretrare', value: '10000 Secret Rare' }
-];
+const dummyOnePieceRarityData: DropDownOptions = {
+  Rarirty: [
+    { key: 'common', value: 'Common' },
+    { key: 'uncommon', value: 'Uncommon' },
+    { key: 'rare', value: 'Rare' },
+    { key: 'superrare', value: 'Super Rare' },
+    { key: 'secretrare', value: 'Secret Rare' },
+    { key: 'promo', value: 'Promo' },
+    { key: 'leader', value: 'Leader' },
+    { key: 'don', value: 'DON!!' }
+  ]
+};
 
-const dummySetData: Filter[] = [
-  { key: 'modernhorizons2', value: 'Modern Horizons 2' },
-  { key: 'modernhorizons3', value: 'Modern Horizons 3' }
-];
+const dummyPokemonRarityData: DropDownOptions = {
+  Rarirty: [
+    { key: 'common', value: 'Common' },
+    { key: 'uncommon', value: 'Uncommon' },
+    { key: 'rare', value: 'Rare' },
+    { key: 'holorare', value: 'Holo Rare' },
+    { key: 'secretrare', value: 'Secret Rare' },
+    { key: 'shinyrare', value: 'Shiny Rare' },
+    { key: 'shinyultrarare', value: 'Shiny Ultra Rare' },
+    { key: 'doublerare', value: 'Double Rare' },
+    { key: 'hyperrare', value: 'Hyper Rare' },
+    { key: 'illustrationrare', value: 'Illustration Rare' },
+    { key: 'specialillustrationrare', value: 'Special Illustration Rare' },
+    { key: 'raidiantrare', value: 'Radiant Rare' },
+    { key: 'blackstarpromo', value: 'Black Star Promo' },
+    { key: 'rareace', value: 'Rare Ace' },
+    { key: 'promo', value: 'Promo' },
+    { key: 'unspecified', value: 'Unspecified' }
+  ]
+};
+
+const dummyLorcanaRarityData: DropDownOptions = {
+  Rarirty: [
+    { key: 'common', value: 'Common' },
+    { key: 'uncommon', value: 'Uncommon' },
+    { key: 'rare', value: 'Rare' },
+    { key: 'superrare', value: 'Super Rare' },
+    { key: 'legendary', value: 'Legendary' },
+    { key: 'enchanted', value: 'Enchanted' },
+    { key: 'promo', value: 'Promo' }
+  ]
+};
+
+const dummyYugiohRarityData: DropDownOptions = {
+  Rarirty: [
+    { key: 'common', value: 'Common' },
+    { key: 'superrare', value: 'Super Rare' },
+    { key: 'rare', value: 'Rare' },
+    { key: 'ultra rare', value: 'Ultra Rare' },
+    { key: 'secretrare', value: 'Secret Rare' },
+    { key: 'ultimaterare', value: 'Ultimate Rare' },
+    { key: 'starfoilrare', value: 'Starfoil Rare' },
+    { key: 'goldrare', value: 'Gold Rare' },
+    { key: 'mosaicrare', value: 'Mosaic Rare' },
+    { key: 'quartercenturysecretrare', value: 'Quarter Century Secret Rare' },
+    { key: 'shatterfoilrare', value: 'Shatterfoil Rare' },
+    { key: 'prismaticsecretrare', value: 'Prismatic Secret Rare' },
+    { key: 'collectorsrare', value: "Collector's Rare" },
+    { key: 'prismaticultimaterare', value: 'Prismatic Ultimate Rare' },
+    { key: 'prismaticcollectorsrare', value: "Prismatic Collector's Rare" },
+    { key: 'platinumsecretrare', value: 'Platinum Secret Rare' },
+    { key: 'goldsecretrare', value: 'Gold Secret Rare' },
+    { key: 'parallelrare', value: 'Parallel Rare' },
+    { key: 'starlightrare', value: 'Starlight Rare' },
+    { key: 'ghostrare', value: 'Ghost Rare' },
+    { key: 'promo', value: 'Promo' },
+    { key: 'shoirtprint', value: 'Short Print' },
+    { key: 'platinumrare', value: 'Platinum Rare' },
+    { key: 'ghostgoldrare', value: 'Ghost/Gold Rare' },
+    { key: '10000secretrare', value: '10000 Secret Rare' }
+  ]
+};
+
+const dummySetData: DropDownOptions = {
+  Set: [
+    { key: 'modernhorizons2', value: 'Modern Horizons 2' },
+    { key: 'modernhorizons3', value: 'Modern Horizons 3' }
+  ]
+};
+
 const buyListQueryResults: any[] = [
   {
     name: 'Blood Moon - Borderless Anime (WOT)',
@@ -144,23 +193,23 @@ const buyListQueryResults: any[] = [
     rarity: 'uncommon',
     image:
       'https://store.401games.ca/cdn/shop/files/Blood-Moon-Borderless-Anime-WOT_394x.png?v=1698694124',
-    nm: [
-      { exorgames: { cashPrice: 1.0, creditPrice: 2.0 } },
-      { levelup: { cashPrice: 3.0, creditPrice: 5.0 } }
-    ],
-    lp: [
-      { exorgames: { cashPrice: 6.0, creditPrice: 7.0 } },
-      { levelup: { cashPrice: 8.0, creditPrice: 9.0 } }
-    ],
-    mp: [
-      { exorgames: { cashPrice: 10.0, creditPrice: 11.0 } },
-      { levelup: { cashPrice: 12.0, creditPrice: 13.0 } }
-    ],
-    hp: [
-      { exorgames: { cashPrice: 14.0, creditPrice: 15.0 } },
-      { levelup: { cashPrice: 16.0, creditPrice: 17.0 } }
-    ],
-    dmg: []
+    nm: {
+      exorgames: { cashPrice: 1.0, creditPrice: 2.0 },
+      levelup: { cashPrice: 3.0, creditPrice: 5.0 }
+    },
+    lp: {
+      exorgames: { cashPrice: 6.0, creditPrice: 7.0 },
+      levelup: { cashPrice: 8.0, creditPrice: 9.0 }
+    },
+    mp: {
+      exorgames: { cashPrice: 10.0, creditPrice: 11.0 },
+      levelup: { cashPrice: 12.0, creditPrice: 13.0 }
+    },
+    hp: {
+      exorgames: { cashPrice: 14.0, creditPrice: 15.0 },
+      levelup: { cashPrice: 16.0, creditPrice: 17.0 }
+    },
+    dmg: {}
   },
   {
     name: 'Fury Sliver',
@@ -169,23 +218,23 @@ const buyListQueryResults: any[] = [
     rarity: 'uncommon',
     image:
       'https://store.401games.ca/cdn/shop/files/Fury-Sliver-TSP_394x.jpg?v=1698387902',
-    nm: [
-      { exorgames: { cashPrice: 1.0, creditPrice: 2.0 } },
-      { levelup: { cashPrice: 3.0, creditPrice: 5.0 } }
-    ],
-    lp: [
-      { exorgames: { cashPrice: 6.0, creditPrice: 7.0 } },
-      { levelup: { cashPrice: 8.0, creditPrice: 9.0 } }
-    ],
-    mp: [
-      { exorgames: { cashPrice: 10.0, creditPrice: 11.0 } },
-      { levelup: { cashPrice: 12.0, creditPrice: 13.0 } }
-    ],
-    hp: [
-      { exorgames: { cashPrice: 14.0, creditPrice: 15.0 } },
-      { levelup: { cashPrice: 16.0, creditPrice: 17.0 } }
-    ],
-    dmg: []
+    nm: {
+      exorgames: { cashPrice: 1.0, creditPrice: 2.0 },
+      levelup: { cashPrice: 3.0, creditPrice: 5.0 }
+    },
+    lp: {
+      exorgames: { cashPrice: 6.0, creditPrice: 7.0 },
+      levelup: { cashPrice: 8.0, creditPrice: 9.0 }
+    },
+    mp: {
+      exorgames: { cashPrice: 10.0, creditPrice: 11.0 },
+      levelup: { cashPrice: 12.0, creditPrice: 13.0 }
+    },
+    hp: {
+      exorgames: { cashPrice: 14.0, creditPrice: 15.0 },
+      levelup: { cashPrice: 16.0, creditPrice: 17.0 }
+    },
+    dmg: {}
   },
   {
     name: 'Sol Ring',
@@ -194,23 +243,23 @@ const buyListQueryResults: any[] = [
     rarity: 'uncommon',
     image:
       'https://cdn.shopify.com/s/files/1/0281/4803/9815/files/8b3ceeb4-d497-50b4-ad40-ad2a5bddba6d_c8d89ed9-eea9-4580-8279-fbf26b0ce3da.png?v=1723848976',
-    nm: [
-      { obsidian: { cashPrice: 1.0, creditPrice: 2.0 } },
-      { levelup: { cashPrice: 3.0, creditPrice: 5.0 } }
-    ],
-    lp: [
-      { obsidian: { cashPrice: 6.0, creditPrice: 7.0 } },
-      { levelup: { cashPrice: 8.0, creditPrice: 9.0 } }
-    ],
-    mp: [
-      { obsidian: { cashPrice: 10.0, creditPrice: 11.0 } },
-      { levelup: { cashPrice: 12.0, creditPrice: 13.0 } }
-    ],
-    hp: [
-      { obsidian: { cashPrice: 14.0, creditPrice: 15.0 } },
-      { levelup: { cashPrice: 16.0, creditPrice: 17.0 } }
-    ],
-    dmg: []
+    nm: {
+      obsidian: { cashPrice: 1.0, creditPrice: 2.0 },
+      levelup: { cashPrice: 3.0, creditPrice: 5.0 }
+    },
+    lp: {
+      obsidian: { cashPrice: 6.0, creditPrice: 7.0 },
+      levelup: { cashPrice: 8.0, creditPrice: 9.0 }
+    },
+    mp: {
+      obsidian: { cashPrice: 10.0, creditPrice: 11.0 },
+      levelup: { cashPrice: 12.0, creditPrice: 13.0 }
+    },
+    hp: {
+      obsidian: { cashPrice: 14.0, creditPrice: 15.0 },
+      levelup: { cashPrice: 16.0, creditPrice: 17.0 }
+    },
+    dmg: {}
   }
 ];
 
@@ -267,7 +316,7 @@ const buyListCartData: any[] = [
 const useBuyListStore = create<BuyListState>((set, get) => ({
   dummyStoreData: dummyStoreData,
   dummyConditionData: dummyConditionData,
-  dummyFoilData: dummyFoilData,
+  dummyFoilData: dummyMTGFoilData,
   dummyRarityData: dummyMTGRarityData,
   dummySetData: dummySetData,
   buyListQueryResults: buyListQueryResults,
@@ -279,7 +328,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   selectedRarityFilters: [],
   selectedSetFilters: [],
   atLeastOneFilter: false,
-  selectedTCG:"mtg",
+  selectedTCG: 'mtg',
   updateSelectedStoreFilters(filters: string[]) {
     set({ selectedStoreFilters: filters });
   },
@@ -399,32 +448,36 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   clearAllCartItems() {
     set({ buyListCartData: [] });
   },
-  changeTCG(tcg:string){
+  changeTCG(tcg: string) {
     //clear selected filters for rarity (will need to do for sets too down the line)
-    set({selectedRarityFilters:[]})
+    set({ selectedRarityFilters: [] });
     switch (tcg) {
       case 'mtg':
-        set({dummyRarityData:dummyMTGRarityData})
-        set({selectedTCG:"mtg"})
+        set({ dummyRarityData: dummyMTGRarityData });
+        set({ dummyFoilData: dummyMTGFoilData });
+        set({ selectedTCG: 'mtg' });
         break;
       case 'onepiece':
-        set({dummyRarityData:dummyOnePieceRarityData})
-        set({selectedTCG:"onepiece"})
+        set({ dummyRarityData: dummyOnePieceRarityData });
+        set({ dummyFoilData: dummyOnePieceFoilData });
+        set({ selectedTCG: 'onepiece' });
         break;
       case 'pokemon':
-        set({dummyRarityData:dummyPokemonRarityData})
-        set({selectedTCG:"pokemon"})
+        set({ dummyRarityData: dummyPokemonRarityData });
+        set({ dummyFoilData: dummyPokemonFoilData });
+        set({ selectedTCG: 'pokemon' });
         break;
       case 'lorcana':
-        set({dummyRarityData:dummyLorcanaRarityData})
-        set({selectedTCG:"lorcana"})
+        set({ dummyRarityData: dummyLorcanaRarityData });
+        set({ dummyFoilData: dummyLorcanaFoilData });
+        set({ selectedTCG: 'lorcana' });
         break;
       case 'yugioh':
-        set({dummyRarityData:dummyYugiohRarityData})
-        set({selectedTCG:"yugioh"})
+        set({ dummyRarityData: dummyYugiohRarityData });
+        set({ dummyFoilData: dummyYugiohFoilData });
+        set({ selectedTCG: 'yugioh' });
         break;
     }
-    
   }
 }));
 export default useBuyListStore;

@@ -14,12 +14,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import {
-  TriangleRightIcon,
-  MixerHorizontalIcon,
-  MixerVerticalIcon,
-  ArchiveIcon
-} from '@radix-ui/react-icons';
+import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { Button } from '../ui/button';
 import FilterDropDownMultiple from './filter-drop-down-multiple';
 import useBuyListStore from '@/stores/buyListStore';
@@ -70,32 +65,34 @@ export default function BuyListFilterContainer({ mobile }: Props) {
               </SheetHeader>
               <div className="mt-8 grid gap-y-2">
                 <FilterDropDownMultiple
-                  values={dummyStoreData}
-                  filterName={'Store'}
+                  values={dummyStoreData[Object.keys(dummyStoreData)[0]]}
+                  filterName={Object.keys(dummyStoreData)[0]}
                   setFilterFunction={updateSelectedStoreFilters}
                   selectedZustandFilters={selectedStoreFilters}
                 />
                 <FilterDropDownMultiple
-                  values={dummyConditionData}
-                  filterName={'Condition'}
+                  values={
+                    dummyConditionData[Object.keys(dummyConditionData)[0]]
+                  }
+                  filterName={Object.keys(dummyConditionData)[0]}
                   setFilterFunction={updateSelectedConditionFilters}
                   selectedZustandFilters={selectedConditionFilters}
                 />
                 <FilterDropDownMultiple
-                  values={dummyFoilData}
-                  filterName={'Foil'}
+                  values={dummyFoilData[Object.keys(dummyFoilData)[0]]}
+                  filterName={Object.keys(dummyFoilData)[0]}
                   setFilterFunction={updateSelectedFoilFilters}
                   selectedZustandFilters={selectedFoilFilters}
                 />
                 <FilterDropDownMultiple
-                  values={dummyRarityData}
-                  filterName={'Rarity'}
+                  values={dummyRarityData[Object.keys(dummyRarityData)[0]]}
+                  filterName={Object.keys(dummyRarityData)[0]}
                   setFilterFunction={updateSelectedRarityFilters}
                   selectedZustandFilters={selectedRarityFilters}
                 />
                 <FilterDropDownMultiple
-                  values={dummySetData}
-                  filterName={'Set'}
+                  values={dummySetData[Object.keys(dummySetData)[0]]}
+                  filterName={Object.keys(dummySetData)[0]}
                   setFilterFunction={updateSelectedSetFilters}
                   selectedZustandFilters={selectedSetFilters}
                 />
@@ -123,7 +120,10 @@ export default function BuyListFilterContainer({ mobile }: Props) {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Sort By:</SelectLabel>
-                <SelectItem value="test">Sort By:A-Z</SelectItem>
+                <SelectItem value="name">Sort By: Name</SelectItem>
+                <SelectItem value="test">Sort By: Set</SelectItem>
+                <SelectItem value="cash">Sort By: Cash</SelectItem>
+                <SelectItem value="credit">Sort By: Credit</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -132,32 +132,32 @@ export default function BuyListFilterContainer({ mobile }: Props) {
         <>
           <div className="mx-auto flex w-full justify-between">
             <FilterDropDownMultiple
-              values={dummyStoreData}
-              filterName={'Store'}
+              values={dummyStoreData[Object.keys(dummyStoreData)[0]]}
+              filterName={Object.keys(dummyStoreData)[0]}
               setFilterFunction={updateSelectedStoreFilters}
               selectedZustandFilters={selectedStoreFilters}
             />
             <FilterDropDownMultiple
-              values={dummyConditionData}
-              filterName={'Condition'}
+              values={dummyConditionData[Object.keys(dummyConditionData)[0]]}
+              filterName={Object.keys(dummyConditionData)[0]}
               setFilterFunction={updateSelectedConditionFilters}
               selectedZustandFilters={selectedConditionFilters}
             />
             <FilterDropDownMultiple
-              values={dummyFoilData}
-              filterName={'Foil'}
+              values={dummyFoilData[Object.keys(dummyFoilData)[0]]}
+              filterName={Object.keys(dummyFoilData)[0]}
               setFilterFunction={updateSelectedFoilFilters}
               selectedZustandFilters={selectedFoilFilters}
             />
             <FilterDropDownMultiple
-              values={dummyRarityData}
-              filterName={'Rarity'}
+              values={dummyRarityData[Object.keys(dummyRarityData)[0]]}
+              filterName={Object.keys(dummyRarityData)[0]}
               setFilterFunction={updateSelectedRarityFilters}
               selectedZustandFilters={selectedRarityFilters}
             />
             <FilterDropDownMultiple
-              values={dummySetData}
-              filterName={'Set'}
+              values={dummySetData[Object.keys(dummySetData)[0]]}
+              filterName={Object.keys(dummySetData)[0]}
               setFilterFunction={updateSelectedSetFilters}
               selectedZustandFilters={selectedSetFilters}
             />
@@ -185,7 +185,10 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Sort By:</SelectLabel>
-                    <SelectItem value="test">Sort By:A-Z</SelectItem>
+                    <SelectItem value="name">Sort By: Name</SelectItem>
+                    <SelectItem value="test">Sort By: Set</SelectItem>
+                    <SelectItem value="cash">Sort By: Cash</SelectItem>
+                    <SelectItem value="credit">Sort By: Credit</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>

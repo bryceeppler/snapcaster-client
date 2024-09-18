@@ -26,34 +26,35 @@ export default function ResultCard({ cardData }: Props) {
   const { getWebsiteNameByCode, websites } = useStore();
 
   useEffect(() => {
-    setSelectedStore(Object.keys(cardData.nm[0])[0]);
+    setSelectedStore(Object.keys(cardData.nm)[0]);
 
-    if (cardData[selectedCondition].length == 0) {
+    if (Object.keys(cardData[selectedCondition]).length === 0) {
       setCashPrice(0);
       setCreditPrice(0);
       setSelectedStore('N/A');
+    } else {
+      Object.entries(cardData[selectedCondition]).forEach(
+        ([storeName, prices]: any) => {
+          const { cashPrice, creditPrice } = prices;
+          if (selectedStore === storeName) {
+            setCashPrice(cashPrice);
+            setCreditPrice(creditPrice);
+          }
+        }
+      );
     }
-    cardData[selectedCondition].map((item: any) => {
-      const storeName = Object.keys(item)[0];
-      const { cashPrice, creditPrice } = item[storeName];
-
-      if (selectedStore == storeName) {
-        setCashPrice(cashPrice);
-        setCreditPrice(creditPrice);
-      }
-    });
   }, [selectedCondition]);
 
   useEffect(() => {
-    cardData[selectedCondition].map((item: any) => {
-      const storeName = Object.keys(item)[0];
-      const { cashPrice, creditPrice } = item[storeName];
-
-      if (selectedStore == storeName) {
-        setCashPrice(cashPrice);
-        setCreditPrice(creditPrice);
+    Object.entries(cardData[selectedCondition]).forEach(
+      ([storeName, prices]: any) => {
+        const { cashPrice, creditPrice } = prices;
+        if (selectedStore === storeName) {
+          setCashPrice(cashPrice);
+          setCreditPrice(creditPrice);
+        }
       }
-    });
+    );
   }, [selectedStore]);
   return (
     <>
@@ -118,8 +119,8 @@ export default function ResultCard({ cardData }: Props) {
                 name: cardData.name,
                 set: cardData.set,
                 foil: cardData.foil,
-                cashPrice: 1,
-                creditPrice: 2,
+                cashPrice: cashPrice,
+                creditPrice: creditPrice,
                 condition: selectedCondition
               };
 
@@ -163,21 +164,17 @@ export default function ResultCard({ cardData }: Props) {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {cardData[selectedCondition].map((item: any) =>
-                  // Extracting key and values dynamically
-                  (() => {
-                    const storeName = Object.keys(item)[0];
-                    const { cashPrice, creditPrice } = item[storeName];
-
-                    return (
-                      <SelectItem
-                        key={storeName}
-                        value={storeName}
-                        className="w-full"
-                      >
-                        <div className="flex items-center">
-                          <div className="flex w-3/5">
-                            {websites.map(
+                {Object.entries(cardData[selectedCondition]).map(
+                  ([storeName, { cashPrice, creditPrice }]: any) => (
+                    <SelectItem
+                      key={storeName}
+                      value={storeName}
+                      className="w-full"
+                    >
+                      <div className="flex items-center">
+                        <div className="flex w-3/5 items-center">
+                          {websites &&
+                            websites.map(
                               (website, index) =>
                                 storeName === website.slug &&
                                 website.image_source && (
@@ -189,22 +186,22 @@ export default function ResultCard({ cardData }: Props) {
                                   />
                                 )
                             )}
-                            &nbsp;{getWebsiteNameByCode(storeName)}
+                          &nbsp;
+                          {getWebsiteNameByCode(storeName)}
+                        </div>
+                        <div className="w-2/5">
+                          <div className="ml-auto flex w-min">
+                            <p className="w-min">Cash:</p>
+                            <p className="w-min">${cashPrice}</p>
                           </div>
-                          <div className="w-2/5">
-                            <div className="ml-auto flex w-min">
-                              <p className=" w-min">Cash:</p>
-                              <p className=" w-min">${cashPrice}</p>
-                            </div>
-                            <div className="ml-auto flex w-min">
-                              <p className="w-min">Credit:</p>
-                              <p className=" w-min">${creditPrice}</p>
-                            </div>
+                          <div className="ml-auto flex w-min">
+                            <p className="w-min">Credit:</p>
+                            <p className="w-min">${creditPrice}</p>
                           </div>
                         </div>
-                      </SelectItem>
-                    );
-                  })()
+                      </div>
+                    </SelectItem>
+                  )
                 )}
               </SelectGroup>
             </SelectContent>
@@ -270,8 +267,8 @@ export default function ResultCard({ cardData }: Props) {
                       name: cardData.name,
                       set: cardData.set,
                       foil: cardData.foil,
-                      cashPrice: 1,
-                      creditPrice: 2,
+                      cashPrice: cashPrice,
+                      creditPrice: creditPrice,
                       condition: selectedCondition
                     };
 
@@ -317,50 +314,44 @@ export default function ResultCard({ cardData }: Props) {
                     <SelectGroup>
                       <SelectLabel>Select Store</SelectLabel>
                       <SelectGroup>
-                        {cardData[selectedCondition].map((item: any) =>
-                          // Extracting key and values dynamically
-                          (() => {
-                            const storeName = Object.keys(item)[0];
-                            const { cashPrice, creditPrice } = item[storeName];
-
-                            return (
-                              <SelectItem
-                                key={storeName}
-                                value={storeName}
-                                className="w-full"
-                              >
-                                <div className="flex items-center">
-                                  <div className="flex w-3/5 items-center">
-                                    {websites &&
-                                      websites.map(
-                                        (website, index) =>
-                                          storeName === website.slug &&
-                                          website.image_source && (
-                                            <img
-                                              src={website.image_source}
-                                              alt="Website"
-                                              className="h-4 w-4"
-                                              key={index}
-                                            />
-                                          )
-                                      )}
-                                    &nbsp;
-                                    {getWebsiteNameByCode(storeName)}
+                        {Object.entries(cardData[selectedCondition]).map(
+                          ([storeName, { cashPrice, creditPrice }]: any) => (
+                            <SelectItem
+                              key={storeName}
+                              value={storeName}
+                              className="w-full"
+                            >
+                              <div className="flex items-center">
+                                <div className="flex w-3/5 items-center">
+                                  {websites &&
+                                    websites.map(
+                                      (website, index) =>
+                                        storeName === website.slug &&
+                                        website.image_source && (
+                                          <img
+                                            src={website.image_source}
+                                            alt="Website"
+                                            className="h-4 w-4"
+                                            key={index}
+                                          />
+                                        )
+                                    )}
+                                  &nbsp;
+                                  {getWebsiteNameByCode(storeName)}
+                                </div>
+                                <div className="w-2/5">
+                                  <div className="ml-auto flex w-min">
+                                    <p className="w-min">Cash:</p>
+                                    <p className="w-min">${cashPrice}</p>
                                   </div>
-                                  <div className="w-2/5">
-                                    <div className="ml-auto flex w-min">
-                                      <p className=" w-min">Cash:</p>
-                                      <p className=" w-min">${cashPrice}</p>
-                                    </div>
-                                    <div className="ml-auto flex w-min">
-                                      <p className="w-min">Credit:</p>
-                                      <p className=" w-min">${creditPrice}</p>
-                                    </div>
+                                  <div className="ml-auto flex w-min">
+                                    <p className="w-min">Credit:</p>
+                                    <p className="w-min">${creditPrice}</p>
                                   </div>
                                 </div>
-                              </SelectItem>
-                            );
-                          })()
+                              </div>
+                            </SelectItem>
+                          )
                         )}
                       </SelectGroup>
                     </SelectGroup>

@@ -13,7 +13,6 @@ const Buylist: NextPage<Props> = () => {
   const { initWebsiteInformation, websites } = useStore();
   useEffect(() => {
     initWebsiteInformation();
-    console.log(`index.tsx ${websites}`);
   }, []);
   const { buyListQueryResults } = useBuyListStore();
   return (

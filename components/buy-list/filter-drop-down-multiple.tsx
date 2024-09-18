@@ -10,7 +10,7 @@ import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import { CaretDownIcon } from '@radix-ui/react-icons';
 import useBuyListStore from '@/stores/buyListStore';
-
+import { ScrollArea } from '@/components/ui/scroll-area';
 interface Props {
   values: {
     key: string;
@@ -87,24 +87,29 @@ export default function FilterDropDownMultiple({
       </span>
 
       <DropdownMenuContent
-        className="w-[--radix-dropdown-menu-trigger-width]"
+        className="max-h-80 w-[--radix-dropdown-menu-trigger-width]"
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DropdownMenuLabel>Select {filterName}:</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {Array.isArray(values) &&
-          values.map((value: Props['values'][0], index: number) => {
-            return (
-              <DropdownMenuCheckboxItem
-                onSelect={(e) => e.preventDefault()}
-                key={index}
-                checked={isOptionSelected(value.key)}
-                onCheckedChange={() => handleSelectChange(value.key)}
-              >
-                {value.value}
-              </DropdownMenuCheckboxItem>
-            );
-          })}
+        <ScrollArea
+          className="flex max-h-80 flex-col overflow-y-auto  "
+          type="always"
+        >
+          {Array.isArray(values) &&
+            values.map((value: Props['values'][0], index: number) => {
+              return (
+                <DropdownMenuCheckboxItem
+                  onSelect={(e) => e.preventDefault()}
+                  key={index}
+                  checked={isOptionSelected(value.key)}
+                  onCheckedChange={() => handleSelectChange(value.key)}
+                >
+                  {value.value}
+                </DropdownMenuCheckboxItem>
+              );
+            })}
+        </ScrollArea>
       </DropdownMenuContent>
     </DropdownMenu>
   );
