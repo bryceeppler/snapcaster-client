@@ -1,3 +1,4 @@
+// globalStore.ts
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Website } from '@/types/index';
@@ -7,52 +8,46 @@ type GlobalState = {
   websites: Website[];
   adsEnabled: boolean;
   ads: AdsResponse;
-  fetchAds: () => Promise<void>;
   getWebsiteName: (websiteCode: string) => string;
-  fetchWebsites: () => Promise<void>;
-  setAds: (ads: AdsResponse) => void;
 };
 
-const useGlobalStore = create<GlobalState>((set, get) => ({
-  websites: [],
-  adsEnabled: true,
-  ads: { position: {} },
-  fetchAds: async () => {
+const useGlobalStore = create<GlobalState>((set, get) => {
+  // Fetch websites during store initialization
+  (async () => {
     try {
-      if (Object.keys(get().ads.position).length > 0) {
-        return;
-      }
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
+      );
+      const websites = response.data.websiteList.sort((a: Website, b: Website) =>
+        a.name.localeCompare(b.name)
+      );
+      set({ websites });
+    } catch (error) {
+      console.error('Error fetching websites:', error);
+    }
+  })();
+
+  // Fetch ads during store initialization
+  (async () => {
+    try {
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/ads`
       );
       set({ ads: response.data });
-    } catch {
-      console.log('fetchAds ERROR');
+    } catch (error) {
+      console.error('Error fetching ads:', error);
     }
-  },
-  setAds: (ads) => {
-    set({ ads });
-  },
-  getWebsiteName: (websiteCode: string) => {
-    const website = get().websites.find((w) => w.slug === websiteCode);
-    return website ? website.name : '';
-  },
-  fetchWebsites: async () => {
-    try {
-      if (get().websites.length > 0) {
-        return;
-      }
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
-      );
-      response.data.websiteList.sort((a: Website, b: Website) =>
-        a.name.localeCompare(b.name)
-      );
-      set({ websites: response.data.websiteList });
-    } catch {
-      console.log('getWebsiteInformation or promoMap ERROR');
-    }
-  }
-}));
+  })();
+
+  return {
+    websites: [],
+    adsEnabled: true,
+    ads: { position: {} },
+    getWebsiteName: (websiteCode: string) => {
+      const website = get().websites.find((w) => w.slug === websiteCode);
+      return website ? website.name : '';
+    },
+  };
+});
 
 export default useGlobalStore;

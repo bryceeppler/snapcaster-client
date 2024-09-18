@@ -1,17 +1,20 @@
-export type Tcgs = 'yugioh' | 'pokemon' | 'lorcana' | 'mtg' | 'onepiece';
+export type Tcg = 'yugioh' | 'pokemon' | 'lorcana' | 'mtg' | 'onepiece';
 
 export type Product = {
-  _id: string;
   name: string;
   set: string;
   price: number;
-  foil: boolean;
   condition: string;
-  image: string;
-  link: string;
+  foil: string;
   website: string;
-  product_type: string;
+  link: string;
+  image: string;
+  [key: string]: any;
 };
+
+export interface SingleCatalogCard extends Product {
+  promoted?: boolean;
+}
 
 export type MultiSearchProduct = {
   name: string;

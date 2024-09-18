@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/select';
 import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
-import { MultiSearchProduct, Product, Tcgs } from '@/types';
+import { MultiSearchProduct, Product, Tcg } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Table,
@@ -546,8 +546,8 @@ const SearchView = ({
   selectedWebsites,
   onWebsiteSelect
 }: {
-  tcg: Tcgs;
-  setTcg: (value: Tcgs) => void;
+  tcg: Tcg;
+  setTcg: (value: Tcg) => void;
   searchInput: string;
   setSearchInput: (value: string) => void;
   handleSubmit: (tcg: string) => void;
@@ -572,7 +572,7 @@ const SearchView = ({
     <div className="border-1 flex w-full flex-col gap-4 rounded-md border border-accent bg-muted p-6">
       <div className="flex flex-col items-center gap-4 md:flex-row">
         {/* TCG Select */}
-        <Select value={tcg} onValueChange={(value: Tcgs) => setTcg(value)}>
+        <Select value={tcg} onValueChange={(value: Tcg) => setTcg(value)}>
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="MTG" />
           </SelectTrigger>

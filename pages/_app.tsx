@@ -18,7 +18,6 @@ import 'styles/main.css';
 import 'styles/chrome-bug.css';
 import { useWindowSize } from 'usehooks-ts';
 import { Inter } from 'next/font/google';
-import useGlobalStore from '@/stores/globalStore';
 import useAuthStore from '@/stores/authStore';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -46,7 +45,6 @@ interface AdProviderProps {
 
 const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
   const [showAds, setShowAds] = useState(true);
-  const { ads } = useGlobalStore();
   const { hasActiveSubscription } = useAuthStore();
 
   useEffect(() => {
@@ -64,11 +62,6 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
 
 function MyApp({ Component, pageProps }: MyAppProps) {
   const { width = 0 } = useWindowSize();
-  const globalStore = useGlobalStore();
-
-  useEffect(() => {
-    globalStore.fetchAds();
-  }, []);
 
   useEffect(() => {
     document.body.classList?.remove('loading');

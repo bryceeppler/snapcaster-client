@@ -8,14 +8,10 @@ import {
 
 import { Button } from '@/components/ui/button';
 import { ArrowUpDownIcon } from 'lucide-react';
-import { SetStateAction } from 'react';
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 
-type Props = {
-  handleSortChange(value: SetStateAction<string>): void;
-  sortBy: string;
-};
+export default function SingleSortBy() {
 
-export default function SingleSortBy(props: Props) {
   return (
     <>
       <DropdownMenu>
@@ -25,7 +21,7 @@ export default function SingleSortBy(props: Props) {
             className="flex h-10 w-full shrink-0 items-center"
           >
             <span>Sort by</span>
-            <ArrowUpDownIcon className="ml-auto h-4 w-4" />
+            <ArrowUpDownIcon className="ml-2 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -33,8 +29,8 @@ export default function SingleSortBy(props: Props) {
           align="end"
         >
           <DropdownMenuRadioGroup
-            value={props.sortBy}
-            onValueChange={props.handleSortChange}
+            value={"price-asc"}
+            onValueChange={() => {}}
           >
             <DropdownMenuRadioItem value="price-asc">
               Price: Low to High
@@ -54,10 +50,10 @@ export default function SingleSortBy(props: Props) {
             <DropdownMenuRadioItem value="set-desc">
               Set Z-A
             </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="vendor-asc">
+            <DropdownMenuRadioItem value="website-asc">
               Vendor A-Z
             </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="vendor-desc">
+            <DropdownMenuRadioItem value="website-desc">
               Vendor Z-A
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>

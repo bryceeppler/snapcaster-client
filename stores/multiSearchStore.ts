@@ -1,13 +1,13 @@
 import { WebsiteMapping } from '@/types/website';
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
-import type { Tcgs, MultiSearchProduct, Product } from '@/types';
+import type { Tcg, MultiSearchProduct, Product } from '@/types';
 import { handleQuerySingleCard } from '@/utils/analytics';
 
 type MultiSearchState = {
   mode: 'search' | 'results';
   selectedWebsites: WebsiteMapping[];
-  tcg: Tcgs;
+  tcg: Tcg;
   searchInput: string;
   searchQuery: string;
   loading: boolean;
@@ -15,20 +15,20 @@ type MultiSearchState = {
   selectedVariants: {
     [key: string]: Product;
   };
-  resultsTcg: Tcgs;
+  resultsTcg: Tcg;
   selectedResult?: MultiSearchProduct;
   cart: Product[];
   resetSearch: () => void;
   removeFromCart: (product: Product) => void;
   isInCart: (product: Product) => boolean;
   addToCart: (product: Product) => void;
-  setResultsTcg: (value: Tcgs) => void;
+  setResultsTcg: (value: Tcg) => void;
   setSelectedResult: (value: MultiSearchProduct) => void;
   setMode: (mode: 'search' | 'results') => void;
   selectVariant: (key: string, product: Product) => void;
   handleSubmit: (tcg: string) => void;
   setSearchInput: (value: string) => void;
-  setTcg: (value: Tcgs) => void;
+  setTcg: (value: Tcg) => void;
   onWebsiteSelect: (value: WebsiteMapping) => void;
   resetSelectedWebsites: () => void;
 };
@@ -82,7 +82,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   setSelectedResult: (value: MultiSearchProduct) => {
     set({ selectedResult: value });
   },
-  setResultsTcg: (value: Tcgs) => {
+  setResultsTcg: (value: Tcg) => {
     set({ resultsTcg: value });
   },
   selectVariant: (key: string, product: Product) => {
@@ -138,7 +138,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   setSearchInput: (value: string) => {
     set({ searchInput: value });
   },
-  setTcg: (value: Tcgs) => {
+  setTcg: (value: Tcg) => {
     set({ tcg: value });
   },
   onWebsiteSelect: (value: WebsiteMapping) => {

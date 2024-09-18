@@ -2,25 +2,19 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Homebanner from '@/components/homebanner';
-import { useStore } from '@/stores/store';
-import SingleCatalog from '@/components/single-search/single-results';
-import { useEffect } from 'react';
+import SingleCatalog from '@/components/single-search/single-catalog-container';
 import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
-import MultiTcgSearchbox from '@/components/single-search/multitcg-searchbox';
-import useSingleStore from '@/stores/singleSearchStore';
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import PoweredBy from '@/components/powered-by';
 import SingleSearchBar from '@/components/search-bar/search-bar';
+import ResultsSkeleton from '@/components/single-search/results-skeleton';
 
 type Props = {};
 
 const Home: NextPage<Props> = ({}: Props) => {
-  const { initWebsiteInformation } = useStore();
-  const { results, searchStarted, loading } = useSingleStore();
+  const { searchResults, loading } = useSingleSearchStore();
 
-  useEffect(() => {
-    initWebsiteInformation();
-  }, []);
 
   return (
     <>
@@ -32,8 +26,13 @@ const Home: NextPage<Props> = ({}: Props) => {
         <div className="mx-auto flex w-full justify-center">
           <SingleSearchBar />
         </div>
-        {Object.keys(results).length > 0 && <SingleCatalog loading={loading} />}
-        {searchStarted && !loading && Object.keys(results).length === 0 && (
+        {loading && <ResultsSkeleton />}
+
+        {!loading && searchResults && searchResults.length > 0 && (
+          <SingleCatalog />
+        )}
+
+        {!loading && searchResults && searchResults.length === 0 && (
           <div className="flex items-center justify-center pt-5">
             <p className="text-zinc-500">
               No results found. Try typing the proper card name using the
