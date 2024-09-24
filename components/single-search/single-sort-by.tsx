@@ -6,11 +6,21 @@ import {
   DropdownMenuRadioItem
 } from '@/components/ui/dropdown-menu';
 
+import { SortOptions } from '@/stores/useSingleSearchStore';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDownIcon } from 'lucide-react';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 
 export default function SingleSortBy() {
+
+  const { sortBy, setSortBy, fetchCards } = useSingleSearchStore();
+
+  const handleSortByChange = (value: SortOptions) => {
+    setSortBy(value);
+    fetchCards();
+
+  }
+
 
   return (
     <>
@@ -29,9 +39,12 @@ export default function SingleSortBy() {
           align="end"
         >
           <DropdownMenuRadioGroup
-            value={"price-asc"}
-            onValueChange={() => {}}
+            value={sortBy}
+            onValueChange={(value) => handleSortByChange(value as SortOptions)}
           >
+            <DropdownMenuRadioItem value="relevance">
+              Relevance
+            </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="price-asc">
               Price: Low to High
             </DropdownMenuRadioItem>
@@ -39,22 +52,10 @@ export default function SingleSortBy() {
               Price: High to Low
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="name-asc">
-              Name A-Z
+              Name: A-Z
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="name-desc">
-              Name Z-A
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="set-asc">
-              Set A-Z
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="set-desc">
-              Set Z-A
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="website-asc">
-              Vendor A-Z
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="website-desc">
-              Vendor Z-A
+              Name: Z-A
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>

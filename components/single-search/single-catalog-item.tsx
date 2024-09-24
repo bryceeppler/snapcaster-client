@@ -60,7 +60,7 @@ const SingleCatalogItem = ({ product }: Props) => {
           <div className="flex flex-row gap-2">
             {websites.map(
               (website, index) =>
-                product.website === website.slug &&
+                product.vendor === website.slug &&
                 website.imageUrl && (
                   <img
                     src={website.imageUrl}
@@ -72,13 +72,13 @@ const SingleCatalogItem = ({ product }: Props) => {
             )}
 
             <div className="text-xs">
-              {findWebsiteNameByCode(product.website)}
+              {findWebsiteNameByCode(product.vendor)}
             </div>
           </div>
         </div>
 
         {product.couponCode && (
-            <div className="mt-3 flex w-full" key={product.website}>
+            <div className="mt-3 flex w-full" key={product.vendor}>
               <div className="text-left text-[0.7rem] tracking-tighter text-muted-foreground">
                 With code <br />
                 <span className="text-xs font-bold">

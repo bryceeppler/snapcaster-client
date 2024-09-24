@@ -12,6 +12,8 @@ export interface FilterOptionValues {
   selected: boolean;
 }
 
+export type SortOptions = 'price-asc' | 'price-desc' | 'relevance' | 'name-asc' | 'name-desc';
+
 export interface FilterOption {
   name: string;
   field: string;
@@ -26,16 +28,16 @@ interface SearchState {
   tcg: Tcg;
   setTcg: (tcg: Tcg) => void;
   filters: FilterOption[] | null;
-  sortField: string;
-  setSortField: (field: string) => void;
-  sortOrder: 'asc' | 'desc';
-  setSortOrder: (order: 'asc' | 'desc') => void;
+  setFilter: (filterField:string, value: string, selected: boolean) => void;
+  sortBy: SortOptions;
+  setSortBy: (sortBy: SortOptions) => void;
   loading: boolean;
   searchResults: Product[] | null;
   resultsTcg: Tcg;
   promotedResults: Product[] | null;
   autocompleteSuggestions: string[];
   filterOptions?: FilterOption[];
+  clearFilters: () => void;
   setAutocompleteSuggestions: (suggestions: string[]) => void;
   fetchCards: () => Promise<void>;
   clearSearchResults: () => void;
@@ -47,23 +49,40 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
   tcg: 'mtg',
   resultsTcg: 'mtg',
   filters: null,
-  sortField: 'price',
-  sortOrder: 'asc',
+  sortBy: 'price-asc',
   loading: false,
   searchResults: null,
   promotedResults: null,
   autocompleteSuggestions: [],
 
   // Actions
+  setFilter: (filterField:string, value: string, selected: boolean) => {
+    const filters = get().filters || [];
+    const updatedFilters = filters.map((filter) => {
+      if (filter.field === filterField) {
+        const updatedValues = filter.values.map((option) => {
+          if (option.value === value) {
+            return { ...option, selected };
+          }
+          return option;
+        });
+        return { ...filter, values: updatedValues };
+      }
+      return filter;
+    });
+    set({ filters: updatedFilters });
+  },
+    
   setSearchTerm: (term: string) => set({ searchTerm: term }),
   setTcg: (tcg: Tcg) => set({ tcg }),
-  setSortField: (field: string) => set({ sortField: field }),
-  setSortOrder: (order: 'asc' | 'desc') => set({ sortOrder: order }),
+  setSortBy: (sortBy: SortOptions) =>
+    set({ sortBy }),
+
   setAutocompleteSuggestions: (suggestions: string[]) =>
     set({ autocompleteSuggestions: suggestions }),
-
+  clearFilters: () => set({ filters: null }),
   fetchCards: async () => {
-    const { tcg, searchTerm, filters, sortField, sortOrder } = get();
+    const { tcg, searchTerm, filters, sortBy } = get();
     try {
       set({ loading: true });
 
@@ -72,19 +91,22 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
         index: `singles_${tcg}*`,
         keyword: searchTerm.trim(),
         search: 'fuzzy', // Default to 'fuzzy' search
-        sortBy: `${sortField}-${sortOrder}`, // Sort format like 'price-asc' or 'price-desc'
+        sortBy: `${sortBy}`,
         maxResultsPerPage: '100'
       });
 
       // Handle dynamic filters
       if (filters) {
-        Object.entries(filters).forEach(([key, values]) => {
-          if (Array.isArray(values)) {
-            values.forEach((value) => queryParams.append(`filterSelections[${key}]`, value));
-          }
+        Object.entries(filters).forEach(([index, filter]) => {
+          filter.values.forEach((value) => {
+            if (value.selected) {
+              queryParams.append(`filterSelections[${filter.field}][]`, value.value);
+            }
+          })
         });
       }
 
+      console.log(queryParams.toString());
       // Fetch data from the API
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search?${queryParams.toString()}`
@@ -113,6 +135,7 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
         searchResults: updatedSearchResults,
         promotedResults: updatedPromotedResults,
         filterOptions: filterOptionsFromResponse,
+        filters: filterOptionsFromResponse,
         resultsTcg: tcg,
       });
     } catch (error: any) {

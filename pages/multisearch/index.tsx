@@ -137,7 +137,7 @@ const Toolbar = () => {
   const exportCart = () => {
     // Group products by website
     const groupedByWebsite = cart.reduce((acc, product) => {
-      const websiteName = getWebsiteName(product.website);
+      const websiteName = getWebsiteName(product.vendor);
       if (!acc[websiteName]) {
         acc[websiteName] = [];
       }
@@ -200,7 +200,7 @@ const Cart = () => {
 
   // Group products by website
   const storeSummary = cart.reduce((acc, product) => {
-    const websiteName = getWebsiteName(product.website);
+    const websiteName = getWebsiteName(product.vendor);
     if (!acc[websiteName]) {
       acc[websiteName] = {
         count: 0,
@@ -308,17 +308,17 @@ const ResultSelector = () => {
 
     results.forEach((result) => {
       result.results.forEach((product: Product) => {
-        if (!websiteProductSet[product.website]) {
-          websiteProductSet[product.website] = new Set();
-          websiteProductPrices[product.website] = {};
+        if (!websiteProductSet[product.vendor]) {
+          websiteProductSet[product.vendor] = new Set();
+          websiteProductPrices[product.vendor] = {};
         }
-        websiteProductSet[product.website].add(product.name);
+        websiteProductSet[product.vendor].add(product.name);
 
-        if (!websiteProductPrices[product.website][product.name]) {
-          websiteProductPrices[product.website][product.name] = product.price;
+        if (!websiteProductPrices[product.vendor][product.name]) {
+          websiteProductPrices[product.vendor][product.name] = product.price;
         } else {
-          websiteProductPrices[product.website][product.name] = Math.min(
-            websiteProductPrices[product.website][product.name],
+          websiteProductPrices[product.vendor][product.name] = Math.min(
+            websiteProductPrices[product.vendor][product.name],
             product.price
           );
         }
@@ -353,7 +353,7 @@ const ResultSelector = () => {
 
     // Ensure "obsidian" appears at the top
     const obsidianIndex = sortedWebsites.findIndex(
-      (site) => site.website === 'obsidian'
+      (site) => site.vendor === 'obsidian'
     );
     if (obsidianIndex !== -1) {
       const [obsidian] = sortedWebsites.splice(obsidianIndex, 1);
@@ -376,7 +376,7 @@ const ResultSelector = () => {
                 asChild
                 onClick={() => {
                   {
-                    setSelectedTopStore(websiteInfo.website);
+                    setSelectedTopStore(websiteInfo.vendor);
                   }
                 }}
               >
@@ -386,7 +386,7 @@ const ResultSelector = () => {
                 >
                   <div className="text-xs font-semibold">
                     {' '}
-                    {getWebsiteName(websiteInfo.website)}
+                    {getWebsiteName(websiteInfo.vendor)}
                   </div>
                   <div className=" text-foreground">
                     ${websiteInfo.totalCost.toFixed(2)}
@@ -446,7 +446,7 @@ const ResultSelector = () => {
               onClick={() => {
                 results.forEach((result) => {
                   const obsidianProducts = result.results.filter(
-                    (product) => product.website === selectedTopStore
+                    (product) => product.vendor === selectedTopStore
                   );
                   if (obsidianProducts.length > 0) {
                     const cheapestProduct = obsidianProducts.reduce(
@@ -509,7 +509,7 @@ const ResultsTable = ({ results }: { results: any[] }) => {
                 <Badge variant="outline">{result.condition}</Badge>
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                {getWebsiteName(result.website)}
+                {getWebsiteName(result.vendor)}
               </TableCell>
               <TableCell className="hidden md:table-cell">
                 ${result.price}
