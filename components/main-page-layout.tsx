@@ -89,7 +89,7 @@ export default function MainLayout({
   const rightCarouselAds = ads.position['3']?.ads || [];
 
   return (
-    <main
+    <div
       className={`container w-full ${
         width === 'md' ? 'max-w-6xl' : ''
       } flex-1 flex-col items-center justify-center px-2 py-8`}
@@ -153,6 +153,6 @@ export default function MainLayout({
       </>
 
       <div className="mt-8">{children}</div>
-    </main>
+    </div>
   );
 }
