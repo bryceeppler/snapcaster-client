@@ -12,7 +12,7 @@ export interface FilterOptionValues {
   selected: boolean;
 }
 
-export type SortOptions = 'price-asc' | 'price-desc' | 'relevance' | 'name-asc' | 'name-desc';
+export type SortOptions = 'price-asc' | 'price-desc' | 'score' | 'name-asc' | 'name-desc';
 
 export interface FilterOption {
   name: string;
@@ -37,6 +37,9 @@ interface SearchState {
   promotedResults: Product[] | null;
   autocompleteSuggestions: string[];
   filterOptions?: FilterOption[];
+  currentPage: number;
+  numPages: number | null;
+  setCurrentPage: (currentPage: number) => void;
   clearFilters: () => void;
   setAutocompleteSuggestions: (suggestions: string[]) => void;
   fetchCards: () => Promise<void>;
@@ -54,6 +57,8 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
   searchResults: null,
   promotedResults: null,
   autocompleteSuggestions: [],
+  currentPage: 1,
+  numPages: null,
 
   // Actions
   setFilter: (filterField:string, value: string, selected: boolean) => {
@@ -92,7 +97,8 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
         keyword: searchTerm.trim(),
         search: 'fuzzy', // Default to 'fuzzy' search
         sortBy: `${sortBy}`,
-        maxResultsPerPage: '100'
+        maxResultsPerPage: '100',
+        pageNumber: get().currentPage.toString(),
       });
 
       // Handle dynamic filters
@@ -137,6 +143,8 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
         filterOptions: filterOptionsFromResponse,
         filters: filterOptionsFromResponse,
         resultsTcg: tcg,
+        numPages: response.data.pagination.numPages,
+        
       });
     } catch (error: any) {
       console.error('Error fetching cards:', error);
@@ -147,4 +155,5 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
   },
 
   clearSearchResults: () => set({ searchResults: null, promotedResults: null }),
+  setCurrentPage: (currentPage: number) => set({ currentPage }),
 }));

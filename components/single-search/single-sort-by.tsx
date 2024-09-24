@@ -13,10 +13,11 @@ import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 
 export default function SingleSortBy() {
 
-  const { sortBy, setSortBy, fetchCards } = useSingleSearchStore();
+  const { sortBy, setSortBy, fetchCards, setCurrentPage } = useSingleSearchStore();
 
   const handleSortByChange = (value: SortOptions) => {
     setSortBy(value);
+    setCurrentPage(1);
     fetchCards();
 
   }
@@ -42,7 +43,7 @@ export default function SingleSortBy() {
             value={sortBy}
             onValueChange={(value) => handleSortByChange(value as SortOptions)}
           >
-            <DropdownMenuRadioItem value="relevance">
+            <DropdownMenuRadioItem value="score">
               Relevance
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="price-asc">

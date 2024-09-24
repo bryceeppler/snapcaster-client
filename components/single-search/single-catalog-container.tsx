@@ -5,6 +5,7 @@ import BackToTopButton from "../ui/back-to-top-btn";
 import SingleSortBy from "./single-sort-by";
 import SingleCatalogItem from "./single-catalog-item";
 import FilterSection from "./single-filter-container";
+import SinglePagination from "./single-pagination";
 
 export default function SingleCatalog() {
   const { searchResults, promotedResults } = useSingleSearchStore();
@@ -41,6 +42,9 @@ export default function SingleCatalog() {
               return <SingleCatalogItem product={item} key={index} />;
             })}
           </div>
+        )}
+        {searchResults && (
+          <SinglePagination />
         )}
       </div>
       <BackToTopButton />

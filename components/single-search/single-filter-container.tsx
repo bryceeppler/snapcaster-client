@@ -55,9 +55,10 @@ interface FilterFactoryProps {
 }
 
 const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
-  const { fetchCards, setFilter, filters } = useSingleSearchStore();
+  const { fetchCards, setFilter, filters, setCurrentPage } = useSingleSearchStore();
   const handleOptionChange = (filter: FilterOption, option: FilterOptionValues) => {
     setFilter(filter.field, option.value, !option.selected);
+    setCurrentPage(1);
     fetchCards();
   }
   const { getWebsiteName } = useGlobalStore();
