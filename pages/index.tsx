@@ -28,17 +28,8 @@ const Home: NextPage<Props> = ({}: Props) => {
         </div>
         {loading && <ResultsSkeleton />}
 
-        {!loading && searchResults && searchResults.length > 0 && (
+        {!loading && searchResults && (
           <SingleCatalog />
-        )}
-
-        {!loading && searchResults && searchResults.length === 0 && (
-          <div className="flex items-center justify-center pt-5">
-            <p className="text-zinc-500">
-              No results found. Try typing the proper card name using the
-              autofill.
-            </p>
-          </div>
         )}
       </div>
     </>

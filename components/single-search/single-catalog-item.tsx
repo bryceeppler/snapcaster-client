@@ -77,19 +77,19 @@ const SingleCatalogItem = ({ product }: Props) => {
           </div>
         </div>
 
-        {product.couponCode && (
+        {product.discount_code && (
             <div className="mt-3 flex w-full" key={product.vendor}>
               <div className="text-left text-[0.7rem] tracking-tighter text-muted-foreground">
                 With code <br />
                 <span className="text-xs font-bold">
-                  {product.couponCode}
+                  {product.discount_code}
                 </span>
               </div>
             </div>
           )}
 
         <div className="mt-3">
-          {product.discountedPrice && (
+          {product.discounted_price && (
               <h4 className="text-right text-xs text-muted-foreground line-through">
                 ${Number(product.price)?.toFixed(2)}
               </h4>
@@ -104,7 +104,7 @@ const SingleCatalogItem = ({ product }: Props) => {
                 {product.condition}
               </Badge>
             </div>
-            <h4>${Number(product.discountedPrice || product.price).toFixed(2)}</h4>
+            <h4>${Number(product.discounted_price || product.price).toFixed(2)}</h4>
           </div>
         </div>
       </div>

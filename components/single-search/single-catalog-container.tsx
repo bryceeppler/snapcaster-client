@@ -6,9 +6,11 @@ import SingleSortBy from "./single-sort-by";
 import SingleCatalogItem from "./single-catalog-item";
 import FilterSection from "./single-filter-container";
 import SinglePagination from "./single-pagination";
+import useAuthStore from "@/stores/authStore";
 
 export default function SingleCatalog() {
   const { searchResults, promotedResults } = useSingleSearchStore();
+  const {hasActiveSubscription} = useAuthStore()
 
   return (
     <div className="grid min-h-svh gap-6 md:grid-cols-[240px_1fr]">
@@ -34,7 +36,7 @@ export default function SingleCatalog() {
 
         {searchResults && (
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
-            {promotedResults &&
+            {promotedResults && !hasActiveSubscription &&
               promotedResults.map((item, index) => {
                 return <SingleCatalogItem product={item} key={index} />;
               })}

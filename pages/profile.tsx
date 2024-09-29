@@ -8,6 +8,7 @@ import LoadingPage from '@/components/loading-page';
 import { Button } from '@/components/ui/button';
 // import SubscriptionCards from '@/components/subscription-options';
 import axios from 'axios';
+import { createCheckoutSession, createPortalSession } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
   Card,
@@ -42,34 +43,6 @@ const Profile: NextPage = () => {
   };
 
   const [loading, setLoading] = useState(true);
-
-  const createCheckoutSession = async () => {
-    try {
-      const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_PAYMENT_URL}/createcheckoutsession`
-      );
-      if (response.status !== 200) throw new Error('Failed to create session');
-      const data = await response.data;
-      console.log('Checkout session created:', data);
-      window.location.href = data.url;
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-    }
-  };
-
-  const createPortalSession = async () => {
-    try {
-      const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_PAYMENT_URL}/createportalsession`
-      );
-      if (response.status !== 200) throw new Error('Failed to create session');
-      const data = await response.data;
-      console.log('Portal session created:', data);
-      window.location.href = data.url;
-    } catch (error) {
-      console.error('Error creating portal session:', error);
-    }
-  };
 
   const createDiscordAuth = async () => {
     try {
@@ -128,9 +101,6 @@ const Profile: NextPage = () => {
       <ProfileHead />
       <section className="flex w-full justify-center py-6 md:py-12">
         <div className="flex w-full flex-col justify-center gap-6">
-          {/* {!hasActiveSubscription && (
-            <SubscriptionCards createCheckoutSession={createCheckoutSession} />
-          )} */}
 
           <UserSettings
             email={email}
