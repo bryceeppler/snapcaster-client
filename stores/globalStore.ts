@@ -2,13 +2,14 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Website } from '@/types/index';
-import type { AdsResponse } from '@/types/ads';
+import type { Ad, AdsResponse } from '@/types/ads';
 
 type GlobalState = {
   websites: Website[];
   adsEnabled: boolean;
   ads: AdsResponse;
   getWebsiteName: (websiteCode: string) => string;
+  getRandomAd: (position: string) => Ad;
 };
 
 const useGlobalStore = create<GlobalState>((set, get) => {
@@ -46,6 +47,11 @@ const useGlobalStore = create<GlobalState>((set, get) => {
     getWebsiteName: (websiteCode: string) => {
       const website = get().websites.find((w) => w.slug === websiteCode);
       return website ? website.name : '';
+    },
+    getRandomAd: (position: string) => {
+      const ads = get().ads.position[position].ads;
+      const randomIndex = Math.floor(Math.random() * ads.length);
+      return ads[randomIndex];
     },
   };
 });
