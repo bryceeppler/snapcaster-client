@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {
   Dialog,
   DialogContent,
@@ -63,12 +65,8 @@ export default function Multisearch({}: Props) {
     onWebsiteSelect,
     setTcg
   } = useMultiSearchStore();
-  const { fetchWebsites, websites } = useGlobalStore();
+  const { websites } = useGlobalStore();
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
-
-  useEffect(() => {
-    fetchWebsites();
-  }, []);
 
   if (!isAuthenticated) {
     return (
@@ -78,33 +76,42 @@ export default function Multisearch({}: Props) {
 
   return (
     <>
-      <MultisearchHead />
-      <div className="flex w-full flex-col justify-center gap-8 text-center">
-        {mode === 'search' && (
-          <>
-            <SearchView
-              tcg={tcg}
-              setTcg={setTcg}
-              searchInput={searchInput}
-              setSearchInput={setSearchInput}
-              handleSubmit={handleSubmit}
-              websites={websites}
-              selectedWebsites={selectedWebsites}
-              onWebsiteSelect={onWebsiteSelect}
-            />
-          </>
-        )}
-        {mode === 'results' && (
-          <>
-            <div className="flex w-full flex-col gap-4 md:flex-row">
-              <ResultsView results={results} />
-            </div>
-          </>
-        )}
-      </div>
-      <BackToTopButton />
+     <MultisearchHead/>
+     <div className="flex w-full flex-col justify-center gap-8 text-center">
+      Multisearch is under maintenance as we transition to new servers! Please check back later.
+    </div>
     </>
-  );
+  )
+
+  // return (
+  //   <>
+  //     <MultisearchHead />
+  //     <div className="flex w-full flex-col justify-center gap-8 text-center">
+  //       {mode === 'search' && (
+  //         <>
+  //           <SearchView
+  //             tcg={tcg}
+  //             setTcg={setTcg}
+  //             searchInput={searchInput}
+  //             setSearchInput={setSearchInput}
+  //             handleSubmit={handleSubmit}
+  //             websites={websites}
+  //             selectedWebsites={selectedWebsites}
+  //             onWebsiteSelect={onWebsiteSelect}
+  //           />
+  //         </>
+  //       )}
+  //       {mode === 'results' && (
+  //         <>
+  //           <div className="flex w-full flex-col gap-4 md:flex-row">
+  //             <ResultsView results={results} />
+  //           </div>
+  //         </>
+  //       )}
+  //     </div>
+  //     <BackToTopButton />
+  //   </>
+  // );
 }
 
 const ResultsView = ({ results }: { results: MultiSearchProduct[] }) => {
