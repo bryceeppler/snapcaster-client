@@ -1,19 +1,10 @@
-// components/MainLayout.tsx
-import React, { useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAdContext } from '@/pages/_app';
 import useGlobalStore from '@/stores/globalStore';
-import Link from 'next/link';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
-import { trackAdClick, trackAdVisible } from '@/utils/analytics';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel';
-
-import CarouselAd from './carousel-ad';
-import { useInView } from 'react-intersection-observer';
 import useAuthStore from '@/stores/authStore';
+import CarouselAd from './carousel-ad';
 
 type Props = {
   width?: 'md' | 'xl';
@@ -21,65 +12,38 @@ type Props = {
 
 export default function MainLayout({
   children,
-  width = 'md'
+  width = 'md',
 }: React.PropsWithChildren<Props>) {
   const { ads } = useGlobalStore();
   const { showAds } = useAdContext();
   const { hasActiveSubscription } = useAuthStore();
-  const leftAutoplayPlugin = React.useRef(
+  const [hydrated, setHydrated] = useState(false); 
+
+  const leftAutoplayPlugin = useRef(
     Autoplay({
       delay: 20000,
-      stopOnInteraction: true
+      stopOnInteraction: true,
     }) as any
   );
-  const rightAutoplayPlugin = React.useRef(
+  const rightAutoplayPlugin = useRef(
     Autoplay({
       delay: 20000,
-      stopOnInteraction: true
+      stopOnInteraction: true,
+    }) as any
+  );
+  const topAutoPlayPlugin = useRef(
+    Autoplay({
+      delay: 20000,
+      stopOnInteraction: true,
     }) as any
   );
 
-  const topAutoPlayPlugin = React.useRef(
-    Autoplay({
-      delay: 20000,
-      stopOnInteraction: true
-    }) as any
-  );
-  const {
-    ref: bannerRef,
-    inView: bannerInView,
-    entry: bannerEntry
-  } = useInView({
-    threshold: 0.5,
-    triggerOnce: false,
-    onChange: (inView, entry) => {
-      if (inView) {
-        const adId = entry.target.getAttribute('data-ad-id');
-        if (adId) {
-          trackAdVisible(adId);
-        }
-      }
-    }
-  });
+  useEffect(() => {
+    setHydrated(true); 
+  }, []);
 
-  const {
-    ref: leftBannerRef,
-    inView: leftBannerInView,
-    entry: leftBannerEntry
-  } = useInView({
-    threshold: 0.5,
-    triggerOnce: false,
-    onChange: (inView, entry) => {
-      if (inView) {
-        const adId = entry.target.getAttribute('data-ad-id');
-        if (adId) {
-          trackAdVisible(adId);
-        }
-      }
-    }
-  });
-  if (!ads.position || Object.keys(ads.position).length === 0) {
-    return null; // or a loading spinner
+  if (!ads.position || Object.keys(ads.position).length === 0 || !hydrated) {
+    return null; 
   }
 
   const topBannerAds = ads.position['1']?.ads || [];
@@ -94,7 +58,7 @@ export default function MainLayout({
     >
       <>
         {/* Header : position 1 */}
-        {topBannerAds && (
+        {topBannerAds.length > 0 && (
           <Carousel
             className="w-full rounded-lg overflow-hidden "
             plugins={[topAutoPlayPlugin.current]}
@@ -102,33 +66,27 @@ export default function MainLayout({
             <CarouselContent>
               {topBannerAds.map((ad, index) => (
                 <CarouselItem key={index}>
-                  <CarouselAd ad={ad} forceMobile={false}/>     
-
+                  <CarouselAd ad={ad} forceMobile={false} />
                 </CarouselItem>
               ))}
-
             </CarouselContent>
-            {/* <CarouselPrevious /> */}
-              {/* <CarouselNext /> */}
           </Carousel>
         )}
 
         {/* Left ad : position 2 */}
         {showAds && !hasActiveSubscription && leftCarouselAds.length > 0 && (
           <Carousel
-          className={`fixed left-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col`}
-          plugins={[leftAutoplayPlugin.current]}
-        >
-          <CarouselContent>
-            {leftCarouselAds.map((ad, index) => (
-              <CarouselItem key={index}>
-                <CarouselAd ad={ad} forceMobile={true} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          {/* <CarouselPrevious /> */}
-          {/* <CarouselNext /> */}
-        </Carousel>
+            className={`fixed left-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col`}
+            plugins={[leftAutoplayPlugin.current]}
+          >
+            <CarouselContent>
+              {leftCarouselAds.map((ad, index) => (
+                <CarouselItem key={index}>
+                  <CarouselAd ad={ad} forceMobile={true} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         )}
 
         {/* Right ad : position 3 */}
@@ -144,8 +102,6 @@ export default function MainLayout({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            {/* <CarouselPrevious /> */}
-            {/* <CarouselNext /> */}
           </Carousel>
         )}
       </>
