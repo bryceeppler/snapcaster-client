@@ -39,13 +39,14 @@ export default function SingleCatalog() {
     <div className="grid min-h-svh gap-6 md:grid-cols-[240px_1fr]">
       <div className="flex flex-col gap-6">
         <div className="grid gap-4">
-          <div className="relative flex w-full gap-2">
-            <div className="child-1 w-1/2 md:w-full">
-              <FilterSection />
-            </div>
-            <div className="child-2 w-1/2 md:hidden">
+          <div className="relative flex flex-col w-full gap-2">
+          <div className="child-2 md:hidden">
               <SingleSortBy />
             </div>
+            <div className="child-1 w-full">
+              <FilterSection />
+            </div>
+
           </div>
         </div>
       </div>

@@ -22,7 +22,7 @@ export default function FilterSection(): JSX.Element {
   };
 
   return (
-    <div className="mx-auto w-full max-w-sm rounded-lg bg-popover text-left shadow-md p-4">
+    <div className="mx-auto w-full md:max-w-sm rounded-lg bg-popover text-left shadow-md p-4">
       <h2 className="mb-6 text-2xl font-bold">Filters</h2>
 
       {filterOptions &&
