@@ -29,7 +29,7 @@ export default function SingleSortBy() {
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
-            className="flex h-10 w-full shrink-0 items-center"
+            className="flex h-10 w-full shrink-0 items-center bg-popover"
           >
             <span>Sort by</span>
             <ArrowUpDownIcon className="ml-2 h-4 w-4" />

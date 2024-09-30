@@ -23,6 +23,7 @@ import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { DiscordLogoIcon } from '@radix-ui/react-icons';
 import { CheckCircle2 } from 'lucide-react';
+import ModeToggle from '@/components/theme-toggle';
 
 const Profile: NextPage = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -233,6 +234,8 @@ const UserSettings = ({
           <Label htmlFor="email">Email</Label>
           <Input type="text" disabled={true} value={email} />
         </div>
+        {/* dark mode */}
+        <ModeToggle />
 
         {/* discord */}
         <Card>

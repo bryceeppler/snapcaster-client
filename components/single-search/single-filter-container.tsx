@@ -22,7 +22,7 @@ export default function FilterSection(): JSX.Element {
   };
 
   return (
-    <div className="mx-auto w-full max-w-sm rounded-lg bg-background text-left shadow-md">
+    <div className="mx-auto w-full max-w-sm rounded-lg bg-popover text-left shadow-md p-4">
       <h2 className="mb-6 text-2xl font-bold">Filters</h2>
 
       {filterOptions &&
@@ -65,11 +65,11 @@ const FilterScrollArea: React.FC<FilterScrollAreaProps> = ({
 }) => {
   return (
     <div className="mb-4">
-      <h3 className="mb-2 text-xl font-semibold capitalize">
+      <h3 className="mb-2 text-lg font-semibold capitalize">
         {filterOption.name}
       </h3>
       <div className="flex">
-        <ScrollArea className="max-h-48 w-full rounded-md border p-3">
+        <ScrollArea className="max-h-48 w-full rounded-md border px-3">
           <FilterFactory filterOption={filterOption} />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
@@ -106,7 +106,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
               onChange={(e) => handleOptionChange(filterOption, option)}
               className="mr-2 mt-1"
             />
-            <label htmlFor={option.value} className="leading-5">
+            <label htmlFor={option.value} className="leading-5 text-sm">
               {filterOption.field === 'vendor'
                 ? getWebsiteName(option.value)
                 : option.label}{' '}

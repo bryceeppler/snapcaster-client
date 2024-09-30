@@ -35,7 +35,8 @@ export default function SingleSearchBar() {
     searchTerm,
     setSearchTerm,
     clearSearchResults,
-    fetchCards
+    fetchCards,
+    clearFilters
   } = useSingleSearchStore();
 
   const fetchAutocomplete = useCallback(
@@ -158,6 +159,7 @@ export default function SingleSearchBar() {
           onValueChange={(value: Tcg) => {
             setTcg(value);
             clearSearchResults();
+            clearFilters();
             setSearchTerm('');
             setSuggestions([]);
             setIsAutoCompleteVisible(false);

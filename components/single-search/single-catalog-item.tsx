@@ -97,8 +97,8 @@ const SingleCatalogItem = ({ product }: Props) => {
           <div className="   flex flex-row justify-between">
             <div className="flex flex-col justify-end">
               <Badge
-                className={` border-2 border-accent-foreground text-white ${
-                  product.foil ? "bg-foil bg-cover bg-center" : "bg-accent"
+                className={` border-2 border-muted-foreground text-white ${
+                  product.finish ? "bg-foil bg-cover bg-center" : "bg-slate-700"
                 }`}
               >
                 {product.condition}

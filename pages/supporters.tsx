@@ -1,13 +1,13 @@
 import { type NextPage } from 'next';
-import { useStore } from '@/stores/store';
 import Head from 'next/head';
 import Link from 'next/link';
 import PageTitle from '@/components/ui/page-title';
 import { trackAdClick } from '@/utils/analytics';
+import useGlobalStore from '@/stores/globalStore';
 type Props = {};
 
 const Supporters: NextPage<Props> = () => {
-  const { websites } = useStore();
+  const { websites } = useGlobalStore(); 
 
   return (
     <>
@@ -34,7 +34,7 @@ const Supporters: NextPage<Props> = () => {
                     >
                       <img
                         alt="Obsidian Games Vernon"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
+                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center bg-zinc-800 px-5"
                         height="200"
                         src="https://cdn.snapcaster.ca/obsidian_supporter.png"
                         width="400"
@@ -42,7 +42,7 @@ const Supporters: NextPage<Props> = () => {
                     </Link>
                   </div>
                   {/* EXOR */}
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center bg-zinc-800 px-5">
                     <Link
                       href="https://exorgames.com"
                       target="_blank"
@@ -60,7 +60,7 @@ const Supporters: NextPage<Props> = () => {
                     </Link>
                   </div>
                   {/* CHIMERA */}
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center bg-zinc-800 px-5">
                     <Link
                       href="https://chimeragamingonline.com/"
                       target="_blank"
@@ -83,7 +83,7 @@ const Supporters: NextPage<Props> = () => {
                 <h3 className="mb-6 text-2xl font-bold">Tier 2 Sponsors</h3>
                 <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
                   {/* LEVEL UP */}
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center bg-zinc-800 px-5">
                     <Link
                       href="https://levelupgames.ca"
                       target="_blank"
@@ -101,7 +101,7 @@ const Supporters: NextPage<Props> = () => {
                     </Link>
                   </div>
                   {/* The Mythic Store */}
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center bg-zinc-800 px-5">
                     <Link
                       href="https://themythicstore.com"
                       target="_blank"
@@ -119,7 +119,7 @@ const Supporters: NextPage<Props> = () => {
                     </Link>
                   </div>
                   {/* House of Cards */}
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center bg-zinc-800 px-5">
                     <Link
                       href="https://houseofcards.ca"
                       target="_blank"

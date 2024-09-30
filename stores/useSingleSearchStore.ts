@@ -2,6 +2,7 @@ import type { Product } from '@/types';
 import { create } from 'zustand';
 import axios from 'axios';
 import { toast } from 'sonner'; 
+import { useEffect } from 'react';
 
 type Tcg = 'mtg' | 'yugioh' | 'lorcana' | 'pokemon' | 'onepiece';
 
@@ -46,10 +47,18 @@ interface SearchState {
   clearSearchResults: () => void;
 }
 
+const loadTcgFromLocalStorage = (): Tcg => {
+  if (typeof window !== 'undefined') {
+    const savedTcg = localStorage.getItem('tcg');
+    return (savedTcg as Tcg) || 'mtg';  
+  }
+  return 'mtg';  
+};
+
 export const useSingleSearchStore = create<SearchState>((set, get) => ({
   // Initial State
   searchTerm: '',
-  tcg: 'mtg',
+  tcg: "mtg",
   resultsTcg: 'mtg',
   filters: null,
   sortBy: 'price-asc',
@@ -79,7 +88,12 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
   },
     
   setSearchTerm: (term: string) => set({ searchTerm: term }),
-  setTcg: (tcg: Tcg) => set({ tcg }),
+  setTcg: (tcg: Tcg) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tcg', tcg);
+    }
+    set({ tcg, resultsTcg: tcg });
+  },
   setSortBy: (sortBy: SortOptions) =>
     set({ sortBy }),
 
@@ -112,7 +126,6 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
         });
       }
 
-      console.log(queryParams.toString());
       // Fetch data from the API
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search?${queryParams.toString()}`
@@ -136,7 +149,6 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
 
       const filterOptionsFromResponse: FilterOption[] = response.data.filters || [];
 
-        console.log(filterOptionsFromResponse);
       set({
         searchResults: updatedSearchResults,
         promotedResults: updatedPromotedResults,
@@ -157,3 +169,12 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
   clearSearchResults: () => set({ searchResults: null, promotedResults: null }),
   setCurrentPage: (currentPage: number) => set({ currentPage }),
 }));
+
+export const useInitializeTcg = () => {
+  const { setTcg } = useSingleSearchStore();
+
+  useEffect(() => {
+    const storedTcg = loadTcgFromLocalStorage();
+    setTcg(storedTcg);
+  }, [setTcg]);
+};
