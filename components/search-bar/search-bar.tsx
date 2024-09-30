@@ -152,7 +152,7 @@ export default function SingleSearchBar() {
 
   return (
     <div className="relative w-full max-w-3xl">
-      <div className="flex w-full items-center rounded-full bg-popover p-1">
+      <div className="flex w-full items-center rounded-full bg-popover p-1 border border-border">
         <Select
           onOpenChange={setIsOpen}
           value={tcg}

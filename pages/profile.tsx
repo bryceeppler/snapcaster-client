@@ -205,7 +205,7 @@ const UserSettings = ({
     }
   };
   return (
-    <Card className="lg mx-auto w-full max-w-lg">
+    <Card className="lg mx-auto w-full max-w-lg bg-popover">
       <CardHeader>
         <CardTitle className="text-2xl">Settings</CardTitle>
         <CardDescription>Adjust your account settings.</CardDescription>

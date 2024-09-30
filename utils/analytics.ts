@@ -72,7 +72,7 @@ export const trackAdClick = (adId: string) => {
   });
 };
 
-export const handleQuerySingleCard = (
+export const trackSearch = (
   searchTerm: string,
   tradingCardGame: string,
   searchTool: string

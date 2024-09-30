@@ -1,8 +1,9 @@
 import { WebsiteMapping } from '@/types/website';
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
-import type { Tcg, MultiSearchProduct, Product } from '@/types';
-import { handleQuerySingleCard } from '@/utils/analytics';
+import type { Tcg, Product } from '@/types';
+import { trackSearch } from '@/utils/analytics';
+import axios from 'axios';
 
 type MultiSearchState = {
   mode: 'search' | 'results';
@@ -11,19 +12,18 @@ type MultiSearchState = {
   searchInput: string;
   searchQuery: string;
   loading: boolean;
-  results: MultiSearchProduct[];
+  results: Product[][];
   selectedVariants: {
     [key: string]: Product;
   };
   resultsTcg: Tcg;
-  selectedResult?: MultiSearchProduct;
   cart: Product[];
+  resultsList: {name:string, normalized_name:string}[];
   resetSearch: () => void;
   removeFromCart: (product: Product) => void;
   isInCart: (product: Product) => boolean;
   addToCart: (product: Product) => void;
   setResultsTcg: (value: Tcg) => void;
-  setSelectedResult: (value: MultiSearchProduct) => void;
   setMode: (mode: 'search' | 'results') => void;
   selectVariant: (key: string, product: Product) => void;
   handleSubmit: (tcg: string) => void;
@@ -36,7 +36,6 @@ type MultiSearchState = {
 const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   cart: [],
   resultsTcg: 'mtg',
-  selectedResult: undefined,
   mode: 'search',
   selectedWebsites: [],
   tcg: 'mtg',
@@ -45,6 +44,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   loading: false,
   results: [],
   selectedVariants: {},
+  resultsList: [],
   resetSelectedWebsites: () => {
     set({ selectedWebsites: [] });
   },
@@ -57,19 +57,18 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
       results: [],
       selectedVariants: {},
       resultsTcg: 'mtg',
-      selectedResult: undefined
     });
   },
   removeFromCart: (product) => {
     set((state) => {
       return {
         ...state,
-        cart: state.cart.filter((p) => p._id !== product._id)
+        cart: state.cart.filter((p) => p !== product)
       };
     });
   },
   isInCart: (product) => {
-    return get().cart.some((p) => p._id === product._id);
+    return get().cart.some((p) => p === product);
   },
   addToCart: (product) => {
     set((state) => {
@@ -78,9 +77,6 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
         cart: [...state.cart, product]
       };
     });
-  },
-  setSelectedResult: (value: MultiSearchProduct) => {
-    set({ selectedResult: value });
   },
   setResultsTcg: (value: Tcg) => {
     set({ resultsTcg: value });
@@ -105,30 +101,22 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
     set({ resultsTcg: get().tcg });
 
     try {
-      // Split by newlines to handle multiple lines and encode each name
-      // Split by newlines and collect all card names
-      const cardNames = get()
-        .searchInput.split('\n')
-        .map((name) => name.trim())
-        .filter((name) => name.length > 0);
-      cardNames.forEach((card) => {
-        handleQuerySingleCard(card, tcg, 'multi');
-      });
-      // JSON encode the array and then URL encode it
-      const encodedNames = encodeURIComponent(JSON.stringify(cardNames));
-
-      // Construct the URL
+      const cardNames = get().searchInput
+      trackSearch(cardNames, tcg, 'multi');
       const url = `${
         process.env.NEXT_PUBLIC_CATALOG_URL
-      }/api/v1/search_multiple?tcg=${get().tcg}&websites=${get()
-        .selectedWebsites.map((v) => v.slug)
-        .join(',')}&names=${encodedNames}`;
+      }/api/v1/multisearch`
+      const body = {
+        cardData: cardNames,
+        index: `singles_${tcg}_prod*`,
+        // TODO: Add acceptable conditions
+      }
 
-      const response = await axiosInstance.get(url);
+      const response = await axios.post(url, body);
 
       set({ mode: 'results' });
-      set({ results: response.data.data });
-      set({ selectedResult: response.data.data[0] });
+      set({ results: response.data.results });
+      set({ resultsList: response.data.list});
       set({ loading: false });
     } catch (error) {
       console.error(error);

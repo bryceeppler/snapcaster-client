@@ -107,9 +107,9 @@ export const useSingleSearchStore = create<SearchState>((set, get) => ({
 
       // Construct the query parameters
       const queryParams = new URLSearchParams({
-        index: `singles_${tcg}*`,
+        index: `singles_${tcg}_prod*`,
         keyword: searchTerm.trim(),
-        search: 'fuzzy', // Default to 'fuzzy' search
+        // search: 'fuzzy',
         sortBy: `${sortBy}`,
         maxResultsPerPage: '100',
         pageNumber: get().currentPage.toString(),

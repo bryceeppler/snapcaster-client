@@ -5,8 +5,8 @@ export type Product = {
   set: string;
   price: number;
   condition: string;
-  foil: string;
-  website: string;
+  finish: string;
+  vendor: string;
   link: string;
   image: string;
   [key: string]: any;
@@ -16,7 +16,3 @@ export interface SingleCatalogCard extends Product {
   promoted?: boolean;
 }
 
-export type MultiSearchProduct = {
-  name: string;
-  results: Product[];
-};
