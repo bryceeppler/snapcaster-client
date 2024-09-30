@@ -13,9 +13,6 @@ type MultiSearchState = {
   searchQuery: string;
   loading: boolean;
   results: Product[][];
-  selectedVariants: {
-    [key: string]: Product;
-  };
   resultsTcg: Tcg;
   cart: Product[];
   resultsList: {name:string, normalized_name:string}[];
@@ -25,7 +22,6 @@ type MultiSearchState = {
   addToCart: (product: Product) => void;
   setResultsTcg: (value: Tcg) => void;
   setMode: (mode: 'search' | 'results') => void;
-  selectVariant: (key: string, product: Product) => void;
   handleSubmit: (tcg: string) => void;
   setSearchInput: (value: string) => void;
   setTcg: (value: Tcg) => void;
@@ -43,7 +39,6 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   searchQuery: '',
   loading: false,
   results: [],
-  selectedVariants: {},
   resultsList: [],
   resetSelectedWebsites: () => {
     set({ selectedWebsites: [] });
@@ -55,7 +50,6 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
       searchQuery: '',
       loading: false,
       results: [],
-      selectedVariants: {},
       resultsTcg: 'mtg',
     });
   },
@@ -81,17 +75,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
   setResultsTcg: (value: Tcg) => {
     set({ resultsTcg: value });
   },
-  selectVariant: (key: string, product: Product) => {
-    set((state) => {
-      return {
-        ...state,
-        selectedVariants: {
-          ...state.selectedVariants,
-          [key]: product
-        }
-      };
-    });
-  },
+
   setMode: (mode: 'search' | 'results') => {
     set({ mode });
   },

@@ -3,6 +3,7 @@ import Head from "next/head";
 import { Loader2 } from "lucide-react";
 import useAuthStore from "@/stores/authStore";
 import LoginRequired from "@/components/login-required";
+import { createCheckoutSession } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -156,10 +157,18 @@ const SearchView = ({
       </div>
 
       {/* Textarea */}
-      <img src="/3cards.svg" alt="3 cards" className="mx-auto mt-4 w-20" />
+      <div className="mx-auto mt-4 w-20">
+  <svg className="w-full h-auto" viewBox="0 0 374 202" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3.19031" y="42.1871" width="117" height="166" rx="5.5" transform="rotate(-19.4696 3.19031 42.1871)" className="fill-accent stroke-accent-foreground" strokeWidth="5"/>
+    <rect x="-2.5" y="2.5" width="117" height="166" rx="5.5" transform="matrix(-1 8.74228e-08 8.74228e-08 1 243 2.18557e-07)" className="fill-accent stroke-accent-foreground" strokeWidth="5"/>
+    <rect x="-3.19031" y="1.52378" width="117" height="166" rx="5.5" transform="matrix(-0.942819 -0.333306 -0.333306 0.942819 367.329 39.6871)" className="fill-accent stroke-accent-foreground" strokeWidth="5"/>
+  </svg>
+</div>
+
       <div className="mx-auto max-w-xs text-center text-sm text-muted-foreground">
         Search up to 100 cards at once. Paste your decklist in below!
       </div>
+      {!hasActiveSubscription && <div>✨{" "}<span className="underline text-primary" onClick={() => createCheckoutSession()}>Upgrade to Snapcaster Pro</span> to search 100 cards at a time.</div>}
       <Textarea
         rows={10}
         className="text-[16px]"
