@@ -82,7 +82,7 @@ function MyApp({ Component, pageProps }: MyAppProps) {
     <main className={cn('antialiased', inter.className)}>
       <ThemeProvider
         attribute="class"
-        defaultTheme="dark"
+        defaultTheme="system"
         enableSystem
         // disableTransitionOnChange
       >
