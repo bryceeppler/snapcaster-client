@@ -12,7 +12,7 @@ import { createCheckoutSession } from '@/lib/utils';
 
 export default function FilterSection(): JSX.Element {
   const { filterOptions, fetchCards, clearFilters } = useSingleSearchStore();
-  const { hasActiveSubscription } = useAuthStore();
+  const { hasActiveSubscription, isAuthenticated } = useAuthStore();
 
   const freeFilters = ['condition', 'finish'];
 
@@ -41,11 +41,14 @@ export default function FilterSection(): JSX.Element {
         })}
 
         {!hasActiveSubscription && (
-          <div className="p-4 text-sm text-center border border-1 mb-4">
+          <div className="p-4 text-sm text-left border border-1 mb-4 flex flex-col gap-2">
             <p>
-              Snapcaster <span className="text-primary font-bold">Pro</span> members get advanced filtering options{' '}
-              <Button onClick={createCheckoutSession}>Subscribe</Button>
+              Snapcaster <span className="text-primary font-bold">Pro</span> members get advanced filtering options.
+              
             </p>
+
+            <Button onClick={
+              isAuthenticated ? createCheckoutSession : () => window.location.href = '/signin'}>Subscribe</Button>
           </div>
         )}
 

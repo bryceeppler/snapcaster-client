@@ -43,11 +43,11 @@ export default function Multisearch({}: Props) {
   const { websites } = useGlobalStore();
   const { isAuthenticated } = useAuthStore();
 
-  if (!isAuthenticated) {
-    return (
-      <LoginRequired message="You must be logged in to use this feature." />
-    );
-  }
+  // if (!isAuthenticated) {
+  //   return (
+  //     <LoginRequired message="You must be logged in to use this feature." />
+  //   );
+  // }
 
   return (
     <>
@@ -121,7 +121,7 @@ const SearchView = ({
   onWebsiteSelect: (value: any) => void;
 }) => {
   const { loading } = useMultiSearchStore();
-  const { hasActiveSubscription } = useAuthStore();
+  const { hasActiveSubscription, isAuthenticated } = useAuthStore();
   const { adsEnabled } = useGlobalStore();
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -168,7 +168,9 @@ const SearchView = ({
       <div className="mx-auto max-w-xs text-center text-sm text-muted-foreground">
         Search up to 100 cards at once. Paste your decklist in below!
       </div>
-      {!hasActiveSubscription && <div>✨{" "}<span className="underline text-primary" onClick={() => createCheckoutSession()}>Upgrade to Snapcaster Pro</span> to search 100 cards at a time.</div>}
+      {!hasActiveSubscription && <div>✨{" "}<span className="underline text-primary hover:cursor-pointer hover:text-primary/80" onClick={() => {
+        isAuthenticated ? createCheckoutSession() : window.location.href = '/signin'
+      }}>Upgrade to Snapcaster Pro</span> to search 100 cards at a time.</div>}
       <Textarea
         rows={10}
         className="text-[16px]"
