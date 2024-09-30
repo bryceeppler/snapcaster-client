@@ -3,9 +3,8 @@ export type Website = {
   slug: string;
   url: string;
   code: string;
-  discount:number;
   tcgs: string[];
-  image_source: string;
+  imageUrl: string;
 };
 
 export type WebsiteMapping = {

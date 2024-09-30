@@ -6,26 +6,33 @@ import {
   DropdownMenuRadioItem
 } from '@/components/ui/dropdown-menu';
 
+import { SortOptions } from '@/stores/useSingleSearchStore';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDownIcon } from 'lucide-react';
-import { SetStateAction } from 'react';
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 
-type Props = {
-  handleSortChange(value: SetStateAction<string>): void;
-  sortBy: string;
-};
+export default function SingleSortBy() {
 
-export default function SingleSortBy(props: Props) {
+  const { sortBy, setSortBy, fetchCards, setCurrentPage } = useSingleSearchStore();
+
+  const handleSortByChange = (value: SortOptions) => {
+    setSortBy(value);
+    setCurrentPage(1);
+    fetchCards();
+
+  }
+
+
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
-            className="flex h-10 w-full shrink-0 items-center"
+            className="flex h-10 w-full shrink-0 items-center bg-popover"
           >
             <span>Sort by</span>
-            <ArrowUpDownIcon className="ml-auto h-4 w-4" />
+            <ArrowUpDownIcon className="ml-2 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -33,9 +40,12 @@ export default function SingleSortBy(props: Props) {
           align="end"
         >
           <DropdownMenuRadioGroup
-            value={props.sortBy}
-            onValueChange={props.handleSortChange}
+            value={sortBy}
+            onValueChange={(value) => handleSortByChange(value as SortOptions)}
           >
+            <DropdownMenuRadioItem value="score">
+              Relevance
+            </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="price-asc">
               Price: Low to High
             </DropdownMenuRadioItem>
@@ -43,22 +53,10 @@ export default function SingleSortBy(props: Props) {
               Price: High to Low
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="name-asc">
-              Name A-Z
+              Name: A-Z
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="name-desc">
-              Name Z-A
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="set-asc">
-              Set A-Z
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="set-desc">
-              Set Z-A
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="vendor-asc">
-              Vendor A-Z
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="vendor-desc">
-              Vendor Z-A
+              Name: Z-A
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>

@@ -66,7 +66,6 @@ export function WebsiteCombobox({
                       value={website.name}
                       onSelect={(currentValue) => {
                         onWebsiteSelect(website);
-                        console.log('Selecting website', currentValue);
                       }}
                     >
                       <Check
