@@ -6,7 +6,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTriggerNoIcon as SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '@/components/ui/select';
 
 import { Input } from '@/components/ui/input';
@@ -41,7 +41,9 @@ export default function SingleSearchBar() {
 
   const fetchAutocomplete = useCallback(
     (value: string) => {
-      const url = `${autoCompleteUrl}/cards?tcg=${tcg}&query=${encodeURIComponent(value)}`;
+      const url = `${autoCompleteUrl}/cards?tcg=${tcg}&query=${encodeURIComponent(
+        value
+      )}`;
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
@@ -55,7 +57,10 @@ export default function SingleSearchBar() {
     },
     [autoCompleteUrl, tcg]
   );
-  const debouncedAutoCompleteResults = useDebounceCallback(fetchAutocomplete, 500);
+  const debouncedAutoCompleteResults = useDebounceCallback(
+    fetchAutocomplete,
+    500
+  );
 
   useEffect(() => {
     if (searchTerm.trim().length > 2) {
@@ -101,7 +106,6 @@ export default function SingleSearchBar() {
     setIsAutoCompleteVisible(false);
     handleSearch(); // Trigger search
   };
-
 
   const handleSearch = () => {
     fetchCards();
@@ -152,7 +156,7 @@ export default function SingleSearchBar() {
 
   return (
     <div className="relative w-full max-w-3xl">
-      <div className="flex w-full items-center rounded-full bg-popover p-1 border border-border">
+      <div className="flex w-full items-center rounded-full border border-border bg-popover p-1">
         <Select
           onOpenChange={setIsOpen}
           value={tcg}
@@ -193,19 +197,21 @@ export default function SingleSearchBar() {
           onKeyDown={handleKeyDown}
         />
         <div className="mr-4 text-primary">
-          <MagnifyingGlassIcon className="w-5 h-5" onClick={handleSearch} />
+          <MagnifyingGlassIcon className="h-5 w-5" onClick={handleSearch} />
         </div>
       </div>
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute left-[200px] p-1 right-12 z-10 mt-1 rounded-md bg-popover shadow-lg"
+          className="absolute z-10 mt-1 w-full rounded-md bg-popover p-1 shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
               className={`cursor-pointer rounded px-4 py-2  ${
-                selectedIndex === index ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+                selectedIndex === index
+                  ? 'bg-primary text-primary-foreground'
+                  : 'hover:bg-accent'
               } `}
               onClick={() => handleSuggestionClick(suggestion)}
             >
