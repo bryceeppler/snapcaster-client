@@ -15,7 +15,7 @@ export const CardInfo = ({
       <div className="flex justify-between items-center">
         <div className="text-lg font-bold">{resultInfo.name}</div>
         <div className="text-sm text-muted-foreground">
-          {results.length} results
+          {results?.length || 0} results
         </div>
       </div>
       <Separator />

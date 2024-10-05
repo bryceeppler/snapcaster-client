@@ -35,6 +35,9 @@ export const RecommendedStores = () => {
     } = {};
 
     results.forEach((product) => {
+      if (!product) {
+        return;
+      }
       product.forEach((card) => {
         if (!websiteProductSet[card.vendor]) {
           websiteProductSet[card.vendor] = new Set();

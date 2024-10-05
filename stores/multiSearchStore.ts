@@ -2,8 +2,8 @@ import { WebsiteMapping } from '@/types/website';
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Tcg, Product } from '@/types';
+import { devtools } from 'zustand/middleware';
 import { trackSearch } from '@/utils/analytics';
-import axios from 'axios';
 
 type MultiSearchState = {
   mode: 'search' | 'results';
@@ -29,7 +29,7 @@ type MultiSearchState = {
   resetSelectedWebsites: () => void;
 };
 
-const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
+const useMultiSearchStore = create<MultiSearchState>()(devtools((set, get) => ({
   cart: [],
   resultsTcg: 'mtg',
   mode: 'search',
@@ -96,7 +96,7 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
         // TODO: Add acceptable conditions
       }
 
-      const response = await axios.post(url, body);
+      const response = await axiosInstance.post(url, body);
 
       set({ mode: 'results' });
       set({ results: response.data.results });
@@ -135,6 +135,6 @@ const useMultiSearchStore = create<MultiSearchState>((set, get) => ({
       };
     });
   }
-}));
+})));
 
 export default useMultiSearchStore;
