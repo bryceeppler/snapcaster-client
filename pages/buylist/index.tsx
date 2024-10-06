@@ -26,7 +26,7 @@ const Buylist: NextPage<Props> = () => {
           <BuyListSearchBox />
         </div>
         <div className="mb-8 flex space-x-4">
-          {filtersVisibile && <BuyListFilterContainer mobile={true} />}
+          <BuyListFilterContainer mobile={true} />
         </div>
         <div className="mb-8">
           <BuyListCart mobile={true} />
@@ -53,7 +53,7 @@ const Buylist: NextPage<Props> = () => {
         </div>
         {/* Filter Container*/}
         <div className="mb-8 w-full">
-          {filtersVisibile && <BuyListFilterContainer mobile={false} />}
+          <BuyListFilterContainer mobile={false} />
         </div>
 
         {/* Results and Cart Containers*/}

@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import { CaretDownIcon } from '@radix-ui/react-icons';
-import useBuyListStore from '@/stores/buyListStore';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -10,10 +7,15 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '../ui/button';
+import { useEffect, useState } from 'react';
+import { CaretDownIcon } from '@radix-ui/react-icons';
+import useBuyListStore from '@/stores/buyListStore';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
 interface Props {
-  values: { key: string; value: string }[];
+  values: {
+    key: string;
+    value: string;
+  }[];
   filterName: string;
   setFilterFunction: (filters: string[]) => void;
   selectedZustandFilters: string[];
@@ -28,46 +30,61 @@ export default function FilterDropDownMultiple({
   const { checkAtleastOneFilter, atLeastOneFilter, selectedTCG } =
     useBuyListStore();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
   const handleSelectChange = (value: string) => {
-    setSelectedItems((prev) =>
-      prev.includes(value)
-        ? prev.filter((item) => item !== value)
-        : [...prev, value]
-    );
+    if (!selectedItems.includes(value)) {
+      setSelectedItems((prev) => [...prev, value]);
+    } else {
+      const referencedArray = [...selectedItems];
+      const indexOfItemToBeRemoved = referencedArray.indexOf(value);
+      referencedArray.splice(indexOfItemToBeRemoved, 1);
+      setSelectedItems(referencedArray);
+    }
   };
 
-  const isOptionSelected = (value: string) => selectedItems.includes(value);
-
-  useEffect(() => {
-    setFilterFunction(selectedItems);
-    checkAtleastOneFilter();
-  }, [selectedItems, setFilterFunction, checkAtleastOneFilter]);
+  const isOptionSelected = (value: string): boolean => {
+    return selectedItems.includes(value) ? true : false;
+  };
 
   useEffect(() => {
     setFilterFunction([]);
     setSelectedItems([]);
-  }, [selectedTCG, setFilterFunction]);
+    checkAtleastOneFilter();
+  }, [selectedTCG]);
 
   useEffect(() => {
-    if (!atLeastOneFilter) setSelectedItems([]);
+    setFilterFunction(selectedItems);
+    checkAtleastOneFilter();
+  }, [selectedItems]);
+
+  useEffect(() => {
+    if (atLeastOneFilter == false) {
+      setSelectedItems([]);
+    }
   }, [atLeastOneFilter]);
 
   return (
     <DropdownMenu>
-      <span className="flex items-center gap-2">
-        <p className="text-sm">{filterName}:</p>
-        <p className="text-sm">
-          {selectedItems.length > 0 ? `(${selectedItems.length})` : 'Any'}
-        </p>
-      </span>
+      <span className="flex-1">
+        <span className="flex">
+          <p className="text-sm">{filterName}:</p> &nbsp;
+          {selectedItems.length > 0 ? (
+            <p className="text-sm">({selectedItems.length})</p>
+          ) : (
+            <p className="text-sm">Any</p>
+          )}
+        </span>
 
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex gap-2 font-bold">
-          <span className="w-full font-medium">{filterName}</span>
-          <CaretDownIcon />
-        </Button>
-      </DropdownMenuTrigger>
+        <DropdownMenuTrigger
+          asChild
+          className="border-border-colour h-8 w-full bg-popover  focus:ring-0 "
+        >
+          <Button variant="outline" className="flex gap-2 text-left font-bold">
+            <span className="w-full font-medium"> {filterName}</span>
+            {/* <p className="w-full font-medium">{filterName}</p> */}
+            <CaretDownIcon></CaretDownIcon>
+          </Button>
+        </DropdownMenuTrigger>
+      </span>
 
       <DropdownMenuContent
         className="max-h-80 w-[--radix-dropdown-menu-trigger-width]"
@@ -75,17 +92,23 @@ export default function FilterDropDownMultiple({
       >
         <DropdownMenuLabel>Select {filterName}:</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <ScrollArea className="max-h-80 overflow-y-auto">
-          {values.map(({ key, value }) => (
-            <DropdownMenuCheckboxItem
-              key={key}
-              checked={isOptionSelected(key)}
-              onCheckedChange={() => handleSelectChange(key)}
-              onSelect={(e) => e.preventDefault()}
-            >
-              {value}
-            </DropdownMenuCheckboxItem>
-          ))}
+        <ScrollArea
+          className="flex max-h-80 flex-col overflow-y-auto  "
+          type="always"
+        >
+          {Array.isArray(values) &&
+            values.map((value: Props['values'][0], index: number) => {
+              return (
+                <DropdownMenuCheckboxItem
+                  onSelect={(e) => e.preventDefault()}
+                  key={index}
+                  checked={isOptionSelected(value.key)}
+                  onCheckedChange={() => handleSelectChange(value.key)}
+                >
+                  {value.value}
+                </DropdownMenuCheckboxItem>
+              );
+            })}
         </ScrollArea>
       </DropdownMenuContent>
     </DropdownMenu>

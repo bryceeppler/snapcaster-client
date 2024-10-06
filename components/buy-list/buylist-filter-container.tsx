@@ -127,7 +127,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
         </>
       ) : (
         <>
-          <div className="mx-auto flex w-full justify-between">
+          <div className="mx-auto flex w-full space-x-4">
             <FilterDropDownMultiple
               values={dummyConditionData[Object.keys(dummyConditionData)[0]]}
               filterName={Object.keys(dummyConditionData)[0]}
@@ -152,19 +152,22 @@ export default function BuyListFilterContainer({ mobile }: Props) {
               setFilterFunction={updateSelectedSetFilters}
               selectedZustandFilters={selectedSetFilters}
             />
-            <Select>
-              <SelectTrigger className="border-border-colour mt-auto  h-8 bg-popover focus:ring-0 focus:ring-offset-0 sm:w-[180px]">
-                <SelectValue placeholder="Sort By:A-Z" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Sort By:</SelectLabel>
-                  <SelectItem value="name">Sort By: Name</SelectItem>
-                  <SelectItem value="test">Sort By: Set</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <span className="mt-auto flex-1">
+              <Select>
+                <SelectTrigger className="border-border-colour mt-auto h-8 bg-popover focus:ring-0 focus:ring-offset-0">
+                  <SelectValue placeholder="Sort By:A-Z" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Sort By:</SelectLabel>
+                    <SelectItem value="name">Sort By: Name</SelectItem>
+                    <SelectItem value="test">Sort By: Set</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </span>
           </div>
+
           <div className="flex">
             <div className="mt-4 flex w-full ">
               <Button className=" h-8 rounded-sm text-sm font-semibold sm:w-[180px]">
