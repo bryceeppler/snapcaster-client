@@ -8,12 +8,16 @@ import useBuyListStore from '@/stores/buyListStore';
 import { PlusIcon, MinusIcon, CopyIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useStore } from '@/stores/store';
+// import { useStore } from '@/stores/store';
+import useGlobalStore from '@/stores/globalStore';
 
 type Props = { storeCartData: any };
 export default function CartStoreAccordian({ storeCartData }: Props) {
-  const { getWebsiteNameByCode } = useStore();
+  const { getWebsiteName } = useGlobalStore();
   const { buyListCartData, addToCart, removeFromCart } = useBuyListStore();
+  useEffect(() => {
+    console.log('cart-store-accordian mounted and re-rendered');
+  }, []); // Empty array makes this run once on mount
   useEffect(() => {
     const key = Object.keys(storeCartData)[0];
     let cashTotal = 0;
@@ -32,7 +36,7 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1" className="rounded-md border-none">
         <AccordionTrigger className="border-border-colour mb-2 max-h-10 rounded-md border bg-popover px-2 text-sm font-bold">
-          {`${getWebsiteNameByCode(Object.keys(storeCartData)[0])} (${
+          {`${getWebsiteName(Object.keys(storeCartData)[0])} (${
             storeCartData[Object.keys(storeCartData)[0]].length
           }) `}
         </AccordionTrigger>
@@ -76,7 +80,7 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                         Cash:
                       </p>
                       <p className="col-span-6 col-start-2 ml-1 w-min">
-                        ${item.cashPrice * item.quantity}
+                        ${(item.cashPrice * item.quantity).toFixed(2)}
                       </p>
                     </div>
                     <div className="grid grid-cols-7">
@@ -84,7 +88,7 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                         Credit:
                       </p>
                       <p className="col-span-6 col-start-2 ml-1 w-min">
-                        ${item.creditPrice * item.quantity}
+                        ${(item.creditPrice * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -116,7 +120,7 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                 <p className="font-bold text-muted-foreground">Cash:</p>
               </div>
               <div className="col-span-2 col-start-11">
-                <p className="font-bold ">${totalCash}</p>
+                <p className="font-bold ">${totalCash.toFixed(2)}</p>
               </div>
             </div>
             <div className="grid grid-cols-12">
@@ -124,7 +128,7 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                 <p className="font-bold text-muted-foreground">Credit:</p>
               </div>
               <div className="col-span-2 col-start-11">
-                <p className="font-bold ">${totalCredit}</p>
+                <p className="font-bold ">${totalCredit.toFixed(2)}</p>
               </div>
             </div>
           </div>

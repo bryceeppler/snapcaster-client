@@ -11,7 +11,7 @@ const PoweredBy = (props: Props) => {
 
   return (
     <Link
-      className={`mx-auto flex w-min flex-row items-center justify-center gap-2 whitespace-nowrap text-gray-400 ${
+      className={`mx-auto flex w-min flex-row items-center justify-center gap-2 whitespace-nowrap text-foreground ${
         size === 'small'
           ? 'text-sm'
           : size === 'medium'
@@ -31,7 +31,7 @@ const PoweredBy = (props: Props) => {
         src="/obsidian_icon.png"
         alt="Obsidian Games"
       />
-      <p className="text-zinc-400 hover:text-primary">
+      <p className="text-foreground hover:text-primary">
         Powered by Obsidian Games
       </p>
     </Link>

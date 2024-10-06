@@ -19,8 +19,8 @@ import 'styles/main.css';
 import 'styles/chrome-bug.css';
 import { useWindowSize } from 'usehooks-ts';
 import { Inter } from 'next/font/google';
-import useGlobalStore from '@/stores/globalStore';
 import useAuthStore from '@/stores/authStore';
+import { useInitializeTcg } from '@/stores/useSingleSearchStore';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -47,9 +47,9 @@ interface AdProviderProps {
 
 const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
   const [showAds, setShowAds] = useState(true);
-  const { ads } = useGlobalStore();
   const { hasActiveSubscription } = useAuthStore();
 
+  useInitializeTcg();
   useEffect(() => {
     if (hasActiveSubscription) {
       setShowAds(false);
@@ -65,11 +65,6 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
 
 function MyApp({ Component, pageProps }: MyAppProps) {
   const { width = 0 } = useWindowSize();
-  const globalStore = useGlobalStore();
-
-  useEffect(() => {
-    globalStore.fetchAds();
-  }, []);
 
   useEffect(() => {
     document.body.classList?.remove('loading');
@@ -88,9 +83,9 @@ function MyApp({ Component, pageProps }: MyAppProps) {
     <main className={cn('antialiased', inter.className)}>
       <ThemeProvider
         attribute="class"
-        defaultTheme="dark"
+        defaultTheme="system"
         enableSystem
-        disableTransitionOnChange
+        // disableTransitionOnChange
       >
         <Layout>
           <AdProvider>

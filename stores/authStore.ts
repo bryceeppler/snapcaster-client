@@ -53,7 +53,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
   },
   refreshAccessToken: async () => {
     try {
-      console.log('Refreshing access token...');
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_USER_URL}/refresh`,
         {
@@ -62,7 +61,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
       );
       const { accessToken, refreshToken } = response.data;
       get().setTokens(accessToken, refreshToken);
-      console.log('Access token refreshed');
       return accessToken;
     } catch (error) {
       console.error('Error refreshing access token:', error);

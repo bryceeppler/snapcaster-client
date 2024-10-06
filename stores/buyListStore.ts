@@ -1,10 +1,24 @@
 import { create } from 'zustand';
+import axios from 'axios';
 import axiosInstance from '@/utils/axiosWrapper';
 import { StringToBoolean } from 'class-variance-authority/dist/types';
 
 export interface Filter {
   key: string;
   value: string;
+}
+
+export interface BuyListQueryResults {
+  name: string ;
+  set: any;
+  foil: any;
+  rarity: any;
+  image:string;
+  nm?: any;
+  lp?: any;
+  mp?: any;
+  hp?: any;
+  dmg?: any;
 }
 
 export interface DropDownOptions {
@@ -16,7 +30,7 @@ type BuyListState = {
   dummyFoilData: DropDownOptions;
   dummyRarityData: DropDownOptions;
   dummySetData: DropDownOptions;
-  buyListQueryResults: any[];
+  buyListQueryResults: BuyListQueryResults[];
   individualStoreCart: any[];
   buyListCartData: any[];
   addToCart: (store: string, cardData: any) => void;
@@ -37,6 +51,11 @@ type BuyListState = {
   resetAllFilters: () => void;
   selectedTCG: string;
   changeTCG: (tcg: string) => void;
+  searchTerm: string;
+  setSearchTerm: (searchBoxValue:string) => void;
+  fetchCards: () => void;
+  filtersVisibile:boolean;
+
 };
 
 const dummyStoreData: DropDownOptions = {
@@ -185,7 +204,7 @@ const dummySetData: DropDownOptions = {
   ]
 };
 
-const buyListQueryResults: any[] = [
+const buyListQueryResultsDummyData: BuyListQueryResults[] = [
   {
     name: 'Blood Moon - Borderless Anime (WOT)',
     set: 'Wilds of Eldraine: Enchanting Tales',
@@ -208,8 +227,7 @@ const buyListQueryResults: any[] = [
     hp: {
       exorgames: { cashPrice: 14.0, creditPrice: 15.0 },
       levelup: { cashPrice: 16.0, creditPrice: 17.0 }
-    },
-    dmg: {}
+    }
   },
   {
     name: 'Fury Sliver',
@@ -233,8 +251,7 @@ const buyListQueryResults: any[] = [
     hp: {
       exorgames: { cashPrice: 14.0, creditPrice: 15.0 },
       levelup: { cashPrice: 16.0, creditPrice: 17.0 }
-    },
-    dmg: {}
+    }
   },
   {
     name: 'Sol Ring',
@@ -259,7 +276,6 @@ const buyListQueryResults: any[] = [
       obsidian: { cashPrice: 14.0, creditPrice: 15.0 },
       levelup: { cashPrice: 16.0, creditPrice: 17.0 }
     },
-    dmg: {}
   }
 ];
 
@@ -319,7 +335,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   dummyFoilData: dummyMTGFoilData,
   dummyRarityData: dummyMTGRarityData,
   dummySetData: dummySetData,
-  buyListQueryResults: buyListQueryResults,
+  buyListQueryResults: buyListQueryResultsDummyData,
   individualStoreCart: [],
   buyListCartData: buyListCartData,
   selectedStoreFilters: [],
@@ -329,6 +345,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   selectedSetFilters: [],
   atLeastOneFilter: false,
   selectedTCG: 'mtg',
+  searchTerm: '',
+  filtersVisibile:false,
   updateSelectedStoreFilters(filters: string[]) {
     set({ selectedStoreFilters: filters });
   },
@@ -389,7 +407,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         (card: any) =>
           card.name === cardData.name &&
           card.set === cardData.set &&
-          card.condition === cardData.condition
+          card.condition === cardData.condition &&
+          card.foil === cardData.foil &&
+          card.rarity === cardData.rarity
       );
 
       if (cardIndex !== -1) {
@@ -449,8 +469,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     set({ buyListCartData: [] });
   },
   changeTCG(tcg: string) {
-    //clear selected filters for rarity (will need to do for sets too down the line)
-    set({ selectedRarityFilters: [] });
+    //clear selected filters (will need to do for the other options down the line too)
+    // set({ selectedRarityFilters: [] });
     switch (tcg) {
       case 'mtg':
         set({ dummyRarityData: dummyMTGRarityData });
@@ -478,6 +498,30 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         set({ selectedTCG: 'yugioh' });
         break;
     }
+    set({filtersVisibile:false})
+  },
+  fetchCards: async () =>{
+    const queryParams = new URLSearchParams({
+      name:get().searchTerm,
+      tcg:get().selectedTCG
+    });
+    // Fetch data from the API
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/search?${queryParams.toString()}`
+    );
+
+    if (response.status !== 200) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
+    const x:BuyListQueryResults[]  = response.data.results;
+
+    set({buyListQueryResults:x.slice(0, 100)})
+    set({filtersVisibile:true})
+    
+  },
+  setSearchTerm (searchBoxValue:string){
+    set({searchTerm:searchBoxValue});
   }
 }));
 export default useBuyListStore;

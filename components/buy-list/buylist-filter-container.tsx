@@ -18,7 +18,6 @@ import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { Button } from '../ui/button';
 import FilterDropDownMultiple from './filter-drop-down-multiple';
 import useBuyListStore from '@/stores/buyListStore';
-import { useEffect } from 'react';
 
 type Props = { mobile: boolean };
 
@@ -122,8 +121,6 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 <SelectLabel>Sort By:</SelectLabel>
                 <SelectItem value="name">Sort By: Name</SelectItem>
                 <SelectItem value="test">Sort By: Set</SelectItem>
-                <SelectItem value="cash">Sort By: Cash</SelectItem>
-                <SelectItem value="credit">Sort By: Credit</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -131,12 +128,6 @@ export default function BuyListFilterContainer({ mobile }: Props) {
       ) : (
         <>
           <div className="mx-auto flex w-full justify-between">
-            <FilterDropDownMultiple
-              values={dummyStoreData[Object.keys(dummyStoreData)[0]]}
-              filterName={Object.keys(dummyStoreData)[0]}
-              setFilterFunction={updateSelectedStoreFilters}
-              selectedZustandFilters={selectedStoreFilters}
-            />
             <FilterDropDownMultiple
               values={dummyConditionData[Object.keys(dummyConditionData)[0]]}
               filterName={Object.keys(dummyConditionData)[0]}
@@ -161,6 +152,18 @@ export default function BuyListFilterContainer({ mobile }: Props) {
               setFilterFunction={updateSelectedSetFilters}
               selectedZustandFilters={selectedSetFilters}
             />
+            <Select>
+              <SelectTrigger className="border-border-colour mt-auto  h-8 bg-popover focus:ring-0 focus:ring-offset-0 sm:w-[180px]">
+                <SelectValue placeholder="Sort By:A-Z" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Sort By:</SelectLabel>
+                  <SelectItem value="name">Sort By: Name</SelectItem>
+                  <SelectItem value="test">Sort By: Set</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex">
             <div className="mt-4 flex w-full ">
@@ -177,22 +180,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 Reset Filters
               </Button>
             </div>
-            <div className="mt-4 flex w-full justify-end ">
-              <Select>
-                <SelectTrigger className="border-border-colour h-8 bg-popover focus:ring-0 focus:ring-offset-0 sm:w-[180px]">
-                  <SelectValue placeholder="Sort By:A-Z" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Sort By:</SelectLabel>
-                    <SelectItem value="name">Sort By: Name</SelectItem>
-                    <SelectItem value="test">Sort By: Set</SelectItem>
-                    <SelectItem value="cash">Sort By: Cash</SelectItem>
-                    <SelectItem value="credit">Sort By: Credit</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+            <div className="mt-4 flex w-full justify-end "></div>
           </div>
         </>
       )}

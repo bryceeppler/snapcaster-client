@@ -9,7 +9,6 @@ import { Button } from '../ui/button';
 import CartStoreAccordian from './cart-store-accordian';
 import useBuyListStore from '@/stores/buyListStore';
 import { useEffect, useState } from 'react';
-
 type Props = {
   mobile: boolean;
 };
@@ -23,11 +22,10 @@ export default function BuyListCart({ mobile }: Props) {
     let creditTotal = 0;
 
     buyListCartData.map((item: any) => {
-      const key = Object.keys(item)[0]; // Get the dynamic key like 'exor' or 'levelup'
-
+      const key = Object.keys(item)[0];
       item[key].map((variant: any) => {
-        cashTotal += variant.cashPrice * variant.quantity; // Corrected to cashPrice
-        creditTotal += variant.creditPrice * variant.quantity; // Corrected to creditPrice
+        cashTotal += variant.cashPrice * variant.quantity;
+        creditTotal += variant.creditPrice * variant.quantity;
       });
     });
 
@@ -64,7 +62,9 @@ export default function BuyListCart({ mobile }: Props) {
                   <p className="font-bold text-muted-foreground">Cash:</p>
                 </div>
                 <div className="col-span-2 col-start-11">
-                  <p className="font-semibold ">${cashTotalAllStores}</p>
+                  <p className="font-semibold ">
+                    ${cashTotalAllStores.toFixed(2)}
+                  </p>
                 </div>
               </div>
               <div className="grid grid-cols-12">
@@ -72,7 +72,9 @@ export default function BuyListCart({ mobile }: Props) {
                   <p className="font-bold text-muted-foreground">Credit:</p>
                 </div>
                 <div className="col-span-2 col-start-11">
-                  <p className="font-semibold ">${creditTotalAllStores}</p>
+                  <p className="font-semibold ">
+                    ${creditTotalAllStores.toFixed(2)}
+                  </p>
                 </div>
               </div>
               <div className="mt-2">
@@ -104,7 +106,7 @@ export default function BuyListCart({ mobile }: Props) {
               <p className="font-bold text-muted-foreground">Cash:</p>
             </div>
             <div className="col-span-2 col-start-11">
-              <p className="font-semibold ">${cashTotalAllStores}</p>
+              <p className="font-semibold ">${cashTotalAllStores.toFixed(2)}</p>
             </div>
           </div>
           <div className="grid grid-cols-12">
@@ -112,7 +114,9 @@ export default function BuyListCart({ mobile }: Props) {
               <p className="font-bold text-muted-foreground">Credit:</p>
             </div>
             <div className="col-span-2 col-start-11">
-              <p className="font-semibold ">${creditTotalAllStores}</p>
+              <p className="font-semibold ">
+                ${creditTotalAllStores.toFixed(2)}
+              </p>
             </div>
           </div>
           <div className="mt-2">
