@@ -19,7 +19,6 @@ import 'styles/chrome-bug.css';
 import { useWindowSize } from 'usehooks-ts';
 import { Inter } from 'next/font/google';
 import useAuthStore from '@/stores/authStore';
-import { useInitializeTcg } from '@/stores/useSingleSearchStore';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -48,7 +47,6 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
   const [showAds, setShowAds] = useState(true);
   const { hasActiveSubscription } = useAuthStore();
 
-  useInitializeTcg();
   useEffect(() => {
     if (hasActiveSubscription) {
       setShowAds(false);

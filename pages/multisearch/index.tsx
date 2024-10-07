@@ -2,7 +2,6 @@ import React from "react";
 import Head from "next/head";
 import { Loader2 } from "lucide-react";
 import useAuthStore from "@/stores/authStore";
-import LoginRequired from "@/components/login-required";
 import { createCheckoutSession } from "@/lib/utils";
 import {
   Select,
@@ -25,6 +24,7 @@ import { Toolbar } from "@/components/multi-search/toolbar";
 import BackToTopButton from "@/components/ui/back-to-top-btn";
 import PoweredBy from "@/components/powered-by";
 import { ResultsContainer } from "@/components/multi-search/results-container";
+import { FREE_MULTISEARCH_CARD_LIMIT } from "@/lib/constants";
 
 type Props = {};
 
@@ -127,7 +127,7 @@ const SearchView = ({
     const value = e.target.value;
     if (!hasActiveSubscription) {
       const lines = value.split("\n");
-      if (lines.length > 3) {
+      if (lines.length > FREE_MULTISEARCH_CARD_LIMIT) {
         return;
       }
     }
@@ -175,7 +175,7 @@ const SearchView = ({
         rows={10}
         className="text-[16px]"
         placeholder={`Enter card names (one per line). Max ${
-          hasActiveSubscription ? 100 : 3
+          hasActiveSubscription ? 100 : FREE_MULTISEARCH_CARD_LIMIT
         } cards.${
           !hasActiveSubscription
             ? " \nUpgrade to Pro to search up to 100 cards."
@@ -191,7 +191,7 @@ const SearchView = ({
         disabled={
           searchInput.length === 0 ||
           loading ||
-          (!hasActiveSubscription && searchInput.split("\n").length > 3) ||
+          (!hasActiveSubscription && searchInput.split("\n").length > FREE_MULTISEARCH_CARD_LIMIT) ||
           searchInput.split("\n").length > 100
         }
       >
