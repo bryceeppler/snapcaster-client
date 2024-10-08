@@ -96,11 +96,11 @@ export const RecommendedStores = () => {
 
   return (
     <Dialog>
-      <Card className="flex flex-col gap-2 bg-popover pb-2 text-xs">
+      <Card className="flex flex-col gap-2 bg-popover pb-4 text-xs">
         <CardHeader className="text-left">
           <CardTitle className="text-lg">Recommended Stores</CardTitle>
         </CardHeader>
-        <div className="flex flex-col gap-2 overflow-clip rounded px-6">
+        <div className="flex flex-col gap-2 overflow-clip rounded-lg px-4">
           {getTopWebsites(results).map((websiteInfo, i) => {
             return (
               <DialogTrigger
@@ -112,7 +112,7 @@ export const RecommendedStores = () => {
                 }}
               >
                 <div
-                  className="border-1 rounded-md border border-border px-4 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
+                  className="border-1 rounded-lg border border-border px-4 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
                   key={i}
                 >
                   <div className="text-xs font-semibold">

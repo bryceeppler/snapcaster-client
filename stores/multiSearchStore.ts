@@ -15,6 +15,7 @@ type MultiSearchState = {
   results: Product[][];
   resultsTcg: Tcg;
   cart: Product[];
+  notFound: string[];
   resultsList: { name: string; normalized_name: string }[];
   resetSearch: () => void;
   removeFromCart: (product: Product) => void;
@@ -102,6 +103,7 @@ const useMultiSearchStore = create<MultiSearchState>()(
             set({ mode: 'results' });
             set({ results: response.data.results });
             set({ resultsList: response.data.list });
+            set({ notFound : response.data.not_found });
             set({ loading: false });
           } catch (error) {
             console.error(error);

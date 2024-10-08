@@ -37,7 +37,7 @@ const GuideIndex: React.FC<GuideIndexProps> = ({ posts }) => {
               {post.data.tags.map((tag, index) => (
                 <li
                   key={index}
-                  className=" rounded border px-2 py-1 text-xs text-primary"
+                  className=" rounded-lg border px-2 py-1 text-xs text-primary"
                 >
                   {tag}
                 </li>

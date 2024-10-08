@@ -1,8 +1,8 @@
-import React from "react";
-import Head from "next/head";
-import { Loader2 } from "lucide-react";
-import useAuthStore from "@/stores/authStore";
-import { createCheckoutSession } from "@/lib/utils";
+import React from 'react';
+import Head from 'next/head';
+import { Loader2 } from 'lucide-react';
+import useAuthStore from '@/stores/authStore';
+import { createCheckoutSession } from '@/lib/utils';
 import {
   Select,
   SelectContent,
@@ -10,21 +10,21 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Cart } from "@/components/multi-search/cart";
-import { RecommendedStores } from "@/components/multi-search/recommended-stores";
-import useGlobalStore from "@/stores/globalStore";
-import useMultiSearchStore from "@/stores/multiSearchStore";
-import { Product, Tcg } from "@/types";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+  SelectValue
+} from '@/components/ui/select';
+import { Cart } from '@/components/multi-search/cart';
+import { RecommendedStores } from '@/components/multi-search/recommended-stores';
+import useGlobalStore from '@/stores/globalStore';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import { Product, Tcg } from '@/types';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 
-import { Toolbar } from "@/components/multi-search/toolbar";
-import BackToTopButton from "@/components/ui/back-to-top-btn";
-import PoweredBy from "@/components/powered-by";
-import { ResultsContainer } from "@/components/multi-search/results-container";
-import { FREE_MULTISEARCH_CARD_LIMIT } from "@/lib/constants";
+import { Toolbar } from '@/components/multi-search/toolbar';
+import BackToTopButton from '@/components/ui/back-to-top-btn';
+import PoweredBy from '@/components/powered-by';
+import { ResultsContainer } from '@/components/multi-search/results-container';
+import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
 
 type Props = {};
 
@@ -38,7 +38,7 @@ export default function Multisearch({}: Props) {
     handleSubmit,
     setSearchInput,
     onWebsiteSelect,
-    setTcg,
+    setTcg
   } = useMultiSearchStore();
   const { websites } = useGlobalStore();
   const { isAuthenticated } = useAuthStore();
@@ -53,7 +53,7 @@ export default function Multisearch({}: Props) {
     <>
       <MultisearchHead />
       <div className="flex w-full flex-col justify-center gap-8 text-center">
-        {mode === "search" && (
+        {mode === 'search' && (
           <>
             <SearchView
               tcg={tcg}
@@ -67,7 +67,7 @@ export default function Multisearch({}: Props) {
             />
           </>
         )}
-        {mode === "results" && (
+        {mode === 'results' && (
           <>
             <div className="flex w-full flex-col gap-4 md:flex-row">
               <ResultsView results={results} />
@@ -109,7 +109,7 @@ const SearchView = ({
   setTcg,
   searchInput,
   setSearchInput,
-  handleSubmit,
+  handleSubmit
 }: {
   tcg: Tcg;
   setTcg: (value: Tcg) => void;
@@ -126,7 +126,7 @@ const SearchView = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     if (!hasActiveSubscription) {
-      const lines = value.split("\n");
+      const lines = value.split('\n');
       if (lines.length > FREE_MULTISEARCH_CARD_LIMIT) {
         return;
       }
@@ -134,7 +134,7 @@ const SearchView = ({
     setSearchInput(value);
   };
   return (
-    <div className="border-1 flex w-full flex-col gap-4 rounded-md border border-accent bg-popover p-6">
+    <div className="flex w-full flex-col gap-4 rounded-lg border border-border bg-popover p-4">
       <div className="flex flex-col items-center gap-4 md:flex-row">
         <Select value={tcg} onValueChange={(value: Tcg) => setTcg(value)}>
           <SelectTrigger className="w-[200px]">
@@ -158,19 +158,63 @@ const SearchView = ({
 
       {/* Textarea */}
       <div className="mx-auto mt-4 w-20">
-  <svg className="w-full h-auto" viewBox="0 0 374 202" xmlns="http://www.w3.org/2000/svg">
-    <rect x="3.19031" y="42.1871" width="117" height="166" rx="5.5" transform="rotate(-19.4696 3.19031 42.1871)" className="fill-accent stroke-accent-foreground" strokeWidth="5"/>
-    <rect x="-2.5" y="2.5" width="117" height="166" rx="5.5" transform="matrix(-1 8.74228e-08 8.74228e-08 1 243 2.18557e-07)" className="fill-accent stroke-accent-foreground" strokeWidth="5"/>
-    <rect x="-3.19031" y="1.52378" width="117" height="166" rx="5.5" transform="matrix(-0.942819 -0.333306 -0.333306 0.942819 367.329 39.6871)" className="fill-accent stroke-accent-foreground" strokeWidth="5"/>
-  </svg>
-</div>
+        <svg
+          className="h-auto w-full"
+          viewBox="0 0 374 202"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="3.19031"
+            y="42.1871"
+            width="117"
+            height="166"
+            rx="5.5"
+            transform="rotate(-19.4696 3.19031 42.1871)"
+            className="fill-accent stroke-border"
+            strokeWidth="5"
+          />
+          <rect
+            x="-2.5"
+            y="2.5"
+            width="117"
+            height="166"
+            rx="5.5"
+            transform="matrix(-1 8.74228e-08 8.74228e-08 1 243 2.18557e-07)"
+            className="fill-accent stroke-border"
+            strokeWidth="5"
+          />
+          <rect
+            x="-3.19031"
+            y="1.52378"
+            width="117"
+            height="166"
+            rx="5.5"
+            transform="matrix(-0.942819 -0.333306 -0.333306 0.942819 367.329 39.6871)"
+            className="fill-accent stroke-border"
+            strokeWidth="5"
+          />
+        </svg>
+      </div>
 
       <div className="mx-auto max-w-xs text-center text-sm text-muted-foreground">
         Search up to 100 cards at once. Paste your decklist in below!
       </div>
-      {!hasActiveSubscription && <div>✨{" "}<span className="underline text-primary hover:cursor-pointer hover:text-primary/80" onClick={() => {
-        isAuthenticated ? createCheckoutSession() : window.location.href = '/signin'
-      }}>Upgrade to Snapcaster Pro</span> to search 100 cards at a time.</div>}
+      {!hasActiveSubscription && (
+        <div>
+          ✨{' '}
+          <span
+            className="text-primary underline hover:cursor-pointer hover:text-primary/80"
+            onClick={() => {
+              isAuthenticated
+                ? createCheckoutSession()
+                : (window.location.href = '/signin');
+            }}
+          >
+            Upgrade to Snapcaster Pro
+          </span>{' '}
+          to search 100 cards at a time.
+        </div>
+      )}
       <Textarea
         rows={10}
         className="text-[16px]"
@@ -178,8 +222,8 @@ const SearchView = ({
           hasActiveSubscription ? 100 : FREE_MULTISEARCH_CARD_LIMIT
         } cards.${
           !hasActiveSubscription
-            ? " \nUpgrade to Pro to search up to 100 cards."
-            : ""
+            ? ' \nUpgrade to Pro to search up to 100 cards.'
+            : ''
         }`}
         value={searchInput}
         onChange={handleInputChange}
@@ -191,8 +235,9 @@ const SearchView = ({
         disabled={
           searchInput.length === 0 ||
           loading ||
-          (!hasActiveSubscription && searchInput.split("\n").length > FREE_MULTISEARCH_CARD_LIMIT) ||
-          searchInput.split("\n").length > 100
+          (!hasActiveSubscription &&
+            searchInput.split('\n').length > FREE_MULTISEARCH_CARD_LIMIT) ||
+          searchInput.split('\n').length > 100
         }
       >
         {loading ? (
@@ -200,10 +245,10 @@ const SearchView = ({
             <Loader2 className="animate-spin" size={16} />
             <span className="ml-2">Loading</span>
           </>
-        ) : searchInput.split("\n").length > 100 ? (
-          "Too many cards"
+        ) : searchInput.split('\n').length > 100 ? (
+          'Too many cards'
         ) : (
-          "Search"
+          'Search'
         )}
       </Button>
     </div>

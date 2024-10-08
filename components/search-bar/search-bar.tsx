@@ -203,12 +203,12 @@ export default function SingleSearchBar() {
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute z-10 mt-1 w-full rounded-md bg-popover p-1 shadow-lg"
+          className="absolute z-10 mt-1 w-full rounded-lg bg-popover p-1 shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
-              className={`cursor-pointer rounded px-4 py-2  ${
+              className={`cursor-pointer rounded-lg px-4 py-2  ${
                 selectedIndex === index
                   ? 'bg-primary text-primary-foreground'
                   : 'hover:bg-accent'

@@ -33,7 +33,7 @@ const AdComponent: React.FC<AdComponentProps> = ({ ad }) => {
       data-position-id="4" // 4 is horizontal feed ad
       data-ad-id={ad.id.toString()}
       onClick={() => handleAdClick(ad.id.toString())}
-      className="ad mx-auto my-auto flex h-fit max-w-5xl items-center justify-center rounded border border-zinc-600 bg-black"
+      className="ad mx-auto my-auto flex h-fit max-w-5xl items-center justify-center rounded-lg border border-border bg-black"
     >
       <img
         src={ad.desktop_image}

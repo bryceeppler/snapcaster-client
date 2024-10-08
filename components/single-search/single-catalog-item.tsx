@@ -25,7 +25,7 @@ const SingleCatalogItem = ({ product }: Props) => {
     <div className="flex flex-col">
       <div
         className={`group flex h-full flex-col rounded-t-lg border border-accent bg-popover ${
-          product.promoted ? "bg-primary/10 p-6" : "p-6"
+          product.promoted ? "bg-primary/10 p-4" : "p-4"
         }`}
       >
         <div className="relative mx-auto max-w-[150px] md:max-w-[250px]">

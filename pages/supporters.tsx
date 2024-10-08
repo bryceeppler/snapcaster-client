@@ -24,7 +24,7 @@ const Supporters: NextPage<Props> = () => {
                 <h3 className="mb-6 text-2xl font-bold">Tier 1 Sponsors</h3>
                 <div className="grid grid-cols-3 gap-6">
                   {/* OBSIDIAN */}
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center bg-zinc-800 p-4">
                     <Link
                       href="https://obsidiangames.ca"
                       target="_blank"
@@ -42,7 +42,7 @@ const Supporters: NextPage<Props> = () => {
                     </Link>
                   </div>
                   {/* EXOR */}
-                  <div className="flex items-center justify-center bg-zinc-800 px-5">
+                  <div className="flex items-center justify-center bg-zinc-800 p-4">
                     <Link
                       href="https://exorgames.com"
                       target="_blank"
@@ -60,7 +60,7 @@ const Supporters: NextPage<Props> = () => {
                     </Link>
                   </div>
                   {/* CHIMERA */}
-                  <div className="flex items-center justify-center bg-zinc-800 px-5">
+                  <div className="flex items-center justify-center bg-zinc-800 p-4">
                     <Link
                       href="https://chimeragamingonline.com/"
                       target="_blank"
@@ -83,7 +83,7 @@ const Supporters: NextPage<Props> = () => {
                 <h3 className="mb-6 text-2xl font-bold">Tier 2 Sponsors</h3>
                 <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
                   {/* LEVEL UP */}
-                  <div className="flex items-center justify-center bg-zinc-800 px-5">
+                  <div className="flex items-center justify-center bg-zinc-800 p-4">
                     <Link
                       href="https://levelupgames.ca"
                       target="_blank"
@@ -101,7 +101,7 @@ const Supporters: NextPage<Props> = () => {
                     </Link>
                   </div>
                   {/* The Mythic Store */}
-                  <div className="flex items-center justify-center bg-zinc-800 px-5">
+                  <div className="flex items-center justify-center bg-zinc-800 p-4">
                     <Link
                       href="https://themythicstore.com"
                       target="_blank"
@@ -119,7 +119,7 @@ const Supporters: NextPage<Props> = () => {
                     </Link>
                   </div>
                   {/* House of Cards */}
-                  <div className="flex items-center justify-center bg-zinc-800 px-5">
+                  <div className="flex items-center justify-center bg-zinc-800 p-4">
                     <Link
                       href="https://houseofcards.ca"
                       target="_blank"
@@ -145,31 +145,31 @@ const Supporters: NextPage<Props> = () => {
                   <div className="flex items-center justify-center">
                     <Link
                       href="/contact"
-                      className=" aspect-video w-32 rounded border bg-popover"
+                      className=" aspect-video w-32 rounded-lg border bg-popover"
                     ></Link>
                   </div>
                   <div className="flex items-center justify-center">
                     <Link
                       href="/contact"
-                      className=" aspect-video w-32 rounded border bg-popover"
+                      className=" aspect-video w-32 rounded-lg border bg-popover"
                     ></Link>
                   </div>{' '}
                   <div className="flex items-center justify-center">
                     <Link
                       href="/contact"
-                      className=" aspect-video w-32 rounded border bg-popover"
+                      className=" aspect-video w-32 rounded-lg border bg-popover"
                     ></Link>
                   </div>{' '}
                   <div className="flex items-center justify-center">
                     <Link
                       href="/contact"
-                      className=" aspect-video w-32 rounded border bg-popover"
+                      className=" aspect-video w-32 rounded-lg border bg-popover"
                     ></Link>
                   </div>{' '}
                   <div className="flex items-center justify-center">
                     <Link
                       href="/contact"
-                      className=" aspect-video w-32 rounded border bg-popover"
+                      className=" aspect-video w-32 rounded-lg border bg-popover"
                     ></Link>
                   </div>
                 </div>

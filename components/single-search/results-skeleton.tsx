@@ -10,11 +10,11 @@ export default function ResultsSkeleton() {
           <div className="relative flex w-full gap-2">
             <div className="child-1 w-1/2 md:w-full">
               {/* Skeleton for FilterDropdown */}
-              <div className="h-10 w-full animate-pulse rounded bg-accent"></div>
+              <div className="h-10 w-full animate-pulse rounded-lg bg-accent"></div>
             </div>
             <div className="child-2 w-1/2 md:hidden">
               {/* Skeleton for SingleSortBy */}
-              <div className="h-10 w-full animate-pulse rounded bg-accent"></div>
+              <div className="h-10 w-full animate-pulse rounded-lg bg-accent"></div>
             </div>
           </div>
         </div>
@@ -24,10 +24,10 @@ export default function ResultsSkeleton() {
       <div className="grid h-min gap-6">
         <div className="flex justify-between">
           {/* Skeleton for Heading */}
-          <div className="h-8 w-40 animate-pulse rounded bg-accent"></div>
+          <div className="h-8 w-40 animate-pulse rounded-lg bg-accent"></div>
           <div className="hidden md:block">
             {/* Skeleton for SingleSortBy */}
-            <div className="h-10 w-40 animate-pulse rounded bg-accent"></div>
+            <div className="h-10 w-40 animate-pulse rounded-lg bg-accent"></div>
           </div>
         </div>
 

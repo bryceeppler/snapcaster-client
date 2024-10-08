@@ -46,11 +46,11 @@ export const Cart = () => {
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           {cart.length === 0 && (
-            <div className="mb-6 flex w-full justify-center">
+            <div className="mb-4 flex w-full justify-center">
               <CardDescription>Your cart is empty</CardDescription>
             </div>
           )}
-          <ScrollArea className="border-1 h-[300px] rounded border border-accent bg-popover">
+          <ScrollArea className="h-[300px] rounded-lg border border-border">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -85,7 +85,7 @@ export const Cart = () => {
             </Table>
             <ScrollBar orientation="vertical" />
           </ScrollArea>
-          <ScrollArea className="border-1 h-[300px] rounded border border-accent bg-popover">
+          <ScrollArea className="h-[300px] rounded-lg border border-border">
             <Table>
               <TableHeader>
                 <TableRow>
