@@ -2,7 +2,6 @@ import type { Product, Tcg } from '@/types';
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
 export interface FilterOptionValues {
@@ -43,6 +42,7 @@ type SearchState = {
   autocompleteSuggestions: string[];
   filterOptions?: FilterOption[];
   currentPage: number;
+  numResults?: number;
   numPages: number | null;
   setCurrentPage: (currentPage: number) => void;
   clearFilters: () => void;
@@ -160,7 +160,8 @@ export const useSingleSearchStore = create<SearchState>()(
               filterOptions: filterOptionsFromResponse,
               filters: filterOptionsFromResponse,
               resultsTcg: tcg,
-              numPages: response.data.pagination.numPages
+              numPages: response.data.pagination.numPages,
+              numResults: response.data.pagination.numResults
             });
           } catch (error: any) {
             console.error('Error fetching cards:', error);
