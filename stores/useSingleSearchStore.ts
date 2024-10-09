@@ -4,6 +4,15 @@ import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
+const normalizeString = (input:string) => {
+  return input
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9 ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 export interface FilterOptionValues {
   label: string;
   value: string;
@@ -104,7 +113,7 @@ export const useSingleSearchStore = create<SearchState>()(
 
             const queryParams = new URLSearchParams({
               index: `singles_${tcg}_prod*`,
-              keyword: searchTerm.trim(),
+              keyword: normalizeString(searchTerm),
               // search: 'fuzzy',
               sortBy: `${sortBy}`,
               maxResultsPerPage: '100',

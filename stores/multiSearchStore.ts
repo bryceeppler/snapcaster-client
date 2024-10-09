@@ -5,6 +5,15 @@ import type { Tcg, Product } from '@/types';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 import { trackSearch } from '@/utils/analytics';
 
+const normalizeString = (input:string) => {
+  return input
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9 ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 type MultiSearchState = {
   mode: 'search' | 'results';
   selectedWebsites: WebsiteMapping[];
@@ -90,10 +99,14 @@ const useMultiSearchStore = create<MultiSearchState>()(
 
           try {
             const cardNames = get().searchInput;
-            trackSearch(cardNames, tcg, 'multi');
+            const normalizedLines = cardNames
+              .split('\n')
+              .map(normalizeString)
+              .join('\n');    
+            trackSearch(normalizedLines, tcg, 'multi');
             const url = `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/multisearch`;
             const body = {
-              cardData: cardNames,
+              cardData: normalizedLines,
               index: `singles_${tcg}_prod*`
               // TODO: Add acceptable conditions
             };

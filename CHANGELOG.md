@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-10-09
+
+- Added a normalizeString function that pre proccesses the user card name input before requesting for card results to the server
+
 ## 2024-08-21
 
 - Updated store.ts promoMap which is used to apply discount codes based on discound codes and percentages stores in postgres
