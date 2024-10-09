@@ -2,7 +2,6 @@ import React from 'react';
 import Head from 'next/head';
 import { Loader2 } from 'lucide-react';
 import useAuthStore from '@/stores/authStore';
-import LoginRequired from '@/components/login-required';
 import { createCheckoutSession } from '@/lib/utils';
 import {
   Select,
@@ -25,6 +24,7 @@ import { Toolbar } from '@/components/multi-search/toolbar';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
 import { ResultsContainer } from '@/components/multi-search/results-container';
+import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
 
 type Props = {};
 
@@ -127,14 +127,14 @@ const SearchView = ({
     const value = e.target.value;
     if (!hasActiveSubscription) {
       const lines = value.split('\n');
-      if (lines.length > 3) {
+      if (lines.length > FREE_MULTISEARCH_CARD_LIMIT) {
         return;
       }
     }
     setSearchInput(value);
   };
   return (
-    <div className="border-1 flex w-full flex-col gap-4 rounded-md border border-accent bg-popover p-6">
+    <div className="flex w-full flex-col gap-4 rounded-lg border border-border bg-popover p-4">
       <div className="flex flex-col items-center gap-4 md:flex-row">
         <Select value={tcg} onValueChange={(value: Tcg) => setTcg(value)}>
           <SelectTrigger className="w-[200px]">
@@ -170,7 +170,7 @@ const SearchView = ({
             height="166"
             rx="5.5"
             transform="rotate(-19.4696 3.19031 42.1871)"
-            className="fill-accent stroke-accent-foreground"
+            className="fill-accent stroke-border"
             strokeWidth="5"
           />
           <rect
@@ -180,7 +180,7 @@ const SearchView = ({
             height="166"
             rx="5.5"
             transform="matrix(-1 8.74228e-08 8.74228e-08 1 243 2.18557e-07)"
-            className="fill-accent stroke-accent-foreground"
+            className="fill-accent stroke-border"
             strokeWidth="5"
           />
           <rect
@@ -190,7 +190,7 @@ const SearchView = ({
             height="166"
             rx="5.5"
             transform="matrix(-0.942819 -0.333306 -0.333306 0.942819 367.329 39.6871)"
-            className="fill-accent stroke-accent-foreground"
+            className="fill-accent stroke-border"
             strokeWidth="5"
           />
         </svg>
@@ -219,7 +219,7 @@ const SearchView = ({
         rows={10}
         className="text-[16px]"
         placeholder={`Enter card names (one per line). Max ${
-          hasActiveSubscription ? 100 : 3
+          hasActiveSubscription ? 100 : FREE_MULTISEARCH_CARD_LIMIT
         } cards.${
           !hasActiveSubscription
             ? ' \nUpgrade to Pro to search up to 100 cards.'
@@ -235,7 +235,8 @@ const SearchView = ({
         disabled={
           searchInput.length === 0 ||
           loading ||
-          (!hasActiveSubscription && searchInput.split('\n').length > 3) ||
+          (!hasActiveSubscription &&
+            searchInput.split('\n').length > FREE_MULTISEARCH_CARD_LIMIT) ||
           searchInput.split('\n').length > 100
         }
       >

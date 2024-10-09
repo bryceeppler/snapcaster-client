@@ -1,8 +1,8 @@
 import { NextPage } from 'next';
-import ResultCard from '@/components/buy-list/result-card';
-import BuyListSearchBox from '@/components/buy-list/buylist-search-box';
-import BuyListFilterContainer from '@/components/buy-list/buylist-filter-container';
-import BuyListCart from '@/components/buy-list/buylist-cart';
+import ResultCard from '@/components/buylists/result-card';
+import BuyListSearchBox from '@/components/buylists/buylist-search-box';
+import BuyListFilterContainer from '@/components/buylists/buylist-filter-container';
+import BuyListCart from '@/components/buylists/buylist-cart';
 import { shallow } from 'zustand/shallow';
 import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/buyListStore';

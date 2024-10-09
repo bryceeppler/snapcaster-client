@@ -21,7 +21,7 @@ export default function Component() {
             </div>
             <Accordion type="single" collapsible className="grid gap-4">
               <AccordionItem value="what-is-this">
-                <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
+                <AccordionTrigger className="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
                   What is Snapcaster?
                 </AccordionTrigger>
                 <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
@@ -33,7 +33,7 @@ export default function Component() {
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="how-it-works">
-                <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
+                <AccordionTrigger className="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
                   How does Snapcaster work?
                 </AccordionTrigger>
                 <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
@@ -47,7 +47,7 @@ export default function Component() {
               </AccordionItem>
 
               <AccordionItem value="add-store">
-                <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
+                <AccordionTrigger className="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
                   Can you add a store to Snapcaster?
                 </AccordionTrigger>
                 <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
@@ -59,7 +59,7 @@ export default function Component() {
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="advertising">
-                <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
+                <AccordionTrigger className="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
                   How can I advertise my business on Snapcaster?
                 </AccordionTrigger>
                 <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
@@ -69,7 +69,7 @@ export default function Component() {
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="contact">
-                <AccordionTrigger className="flex items-center justify-between rounded-md border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
+                <AccordionTrigger className="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover">
                   I still have questions, who can I contact?
                 </AccordionTrigger>
                 <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">

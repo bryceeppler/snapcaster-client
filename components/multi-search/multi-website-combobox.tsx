@@ -58,7 +58,7 @@ export function WebsiteCombobox({
           <CommandEmpty>No website found.</CommandEmpty>
           <CommandGroup>
             <CommandList>
-              <ScrollArea className=" h-72  rounded-md ">
+              <ScrollArea className=" h-72  rounded-lg ">
                 <div className="pr-2">
                   {websites.map((website) => (
                     <CommandItem

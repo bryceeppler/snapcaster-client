@@ -43,7 +43,7 @@ export const Toolbar = () => {
     URL.revokeObjectURL(url);
   };
   return (
-    <div className="flex w-full gap-4 rounded border border-border bg-popover p-4">
+    <div className="flex w-full gap-4 rounded-lg border border-border bg-popover p-4">
       <Button
         size="sm"
         onClick={() => {

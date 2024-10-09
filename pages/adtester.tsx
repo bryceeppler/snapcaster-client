@@ -80,7 +80,7 @@ export default function Component() {
         target="_blank"
         data-position-id="1"
         data-ad-id={topBannerAd.id.toString()}
-        className="ad flex items-center justify-center rounded border border-zinc-600 bg-black"
+        className="ad flex items-center justify-center rounded-lg border border-zinc-600 bg-black"
       >
         <img
           className="hidden h-fit w-full md:flex"
@@ -102,7 +102,7 @@ export default function Component() {
           target="_blank"
           data-position-id="2"
           data-ad-id={leftBannerAd.id.toString()}
-          className="ad fixed left-10 top-1/4 hidden w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col"
+          className="ad fixed left-10 top-1/4 hidden w-40 items-center justify-center rounded-lg border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col"
         >
           <img src={leftBannerAd.mobile_image} alt="ad" className="h-full" />
         </Link>
@@ -111,7 +111,7 @@ export default function Component() {
       {/* Right ad : position 3 */}
       {carouselAds.length > 0 && (
         <Carousel
-          className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
+          className={`fixed right-10 top-1/4 hidden max-h-[480px] w-40 items-center justify-center rounded-lg border border-zinc-600 bg-zinc-700 xl:flex xl:flex-col`}
         >
           <CarouselContent>
             {carouselAds.map((ad, index) => (

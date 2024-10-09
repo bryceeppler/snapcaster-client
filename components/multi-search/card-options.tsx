@@ -66,9 +66,9 @@ export const CardOptions = ({
 }) => {
   return (
     <ScrollArea className="w-full h-[400px]">
-      <div className="flex w-full flex-col gap-4 text-left">
+      <div className="flex w-full flex-col gap-4 text-left mt-2">
         <div className="text-muted-foreground text-sm">Results for {name}</div>
-        {results.map((product, index) => {
+        {results?.map((product, index) => {
           return <CardOption product={product} key={index} />;
         })}
       </div>

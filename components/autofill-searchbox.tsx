@@ -186,14 +186,14 @@ export default function SingleSearchbox(props: Props) {
           </button>
           {showAutocomplete && (
             <div
-              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-border  bg-popover py-1 shadow-md"
+              className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-border  bg-popover py-1 shadow-md"
               ref={autocompleteRef}
             >
               {autocompleteResults &&
                 autocompleteResults.map((result, index) => (
                   <div
                     key={index}
-                    className={`mx-1 cursor-pointer rounded px-4 py-2  ${
+                    className={`mx-1 cursor-pointer rounded-lg px-4 py-2  ${
                       selectedAutocompleteIndex === index
                         ? 'bg-primary'
                         : 'hover:bg-accent'

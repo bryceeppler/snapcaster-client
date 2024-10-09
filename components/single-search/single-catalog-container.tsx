@@ -11,7 +11,7 @@ import type { Ad } from "@/types/ads";
 import React, { useState, useEffect, useMemo } from "react";
 
 export default function SingleCatalog() {
-  const { searchResults, promotedResults } = useSingleSearchStore();
+  const { searchResults, promotedResults, numResults } = useSingleSearchStore();
   const { hasActiveSubscription } = useAuthStore();
   const { getRandomAd } = useGlobalStore();
 
@@ -52,7 +52,12 @@ export default function SingleCatalog() {
       </div>
       <div className="grid h-min gap-6">
         <div className="flex justify-between">
+          <div className="text-left flex flex-col">
           <h1 className="text-2xl font-bold">Search Results</h1>
+          <p className="text-sm text-gray-500">
+            {numResults} results found
+          </p>
+          </div>
           <div className="hidden md:block">
             <SingleSortBy />
           </div>

@@ -72,7 +72,7 @@ const FilterScrollArea: React.FC<FilterScrollAreaProps> = ({
         {filterOption.name}
       </h3>
       <div className="flex">
-        <ScrollArea className="max-h-48 w-full rounded-md border px-3">
+        <ScrollArea className="max-h-48 w-full rounded-lg border px-3">
           <FilterFactory filterOption={filterOption} />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
@@ -98,7 +98,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
   };
   const { getWebsiteName } = useGlobalStore();
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 py-2">
       {filterOption &&
         filterOption.values.map((option) => (
           <div key={option.value} className="flex items-start">

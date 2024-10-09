@@ -2,6 +2,7 @@
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import type { Website } from '@/types/index';
+import { devtools } from 'zustand/middleware';
 import type { Ad, AdsResponse } from '@/types/ads';
 
 type GlobalState = {
@@ -12,7 +13,7 @@ type GlobalState = {
   getRandomAd: (position: string) => Ad;
 };
 
-const useGlobalStore = create<GlobalState>((set, get) => {
+const useGlobalStore = create<GlobalState>()(devtools((set, get) => {
   // Fetch websites during store initialization
   (async () => {
     try {
@@ -54,6 +55,6 @@ const useGlobalStore = create<GlobalState>((set, get) => {
       return ads[randomIndex];
     },
   };
-});
+}));
 
 export default useGlobalStore;

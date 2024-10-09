@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import axiosInstance from '@/utils/axiosWrapper';
+import { devtools } from 'zustand/middleware';
 
 type AuthState = {
   accessToken: string | null;
@@ -19,7 +20,7 @@ type AuthState = {
   fetchUser: () => Promise<void>;
 };
 
-const useAuthStore = create<AuthState>((set, get) => ({
+const useAuthStore = create<AuthState>()(devtools((set, get) => ({
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
@@ -92,6 +93,6 @@ const useAuthStore = create<AuthState>((set, get) => ({
       set({ hasActiveSubscription: false });
     }
   }
-}));
+})));
 
 export default useAuthStore;
