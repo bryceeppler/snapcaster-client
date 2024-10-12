@@ -21,14 +21,17 @@ const CardImage: React.FC<Props> = ({ imageUrl, alt, href }) => {
   return (
     <>
       {!hasError && imageUrl ? (
-        <div className="relative aspect-card w-full rounded-lg overflow-hidden">
-          {/* Placeholder */}
+        <div className="relative aspect-card w-full overflow-hidden rounded-lg">
           <div
             className={`absolute inset-0 flex items-center justify-center bg-gradient-to-b from-zinc-800 to-zinc-900 transition-opacity duration-500 ${
               isLoaded ? 'opacity-0' : 'opacity-100'
             }`}
           >
-            <img src="/logo.png" alt="Placeholder Logo" className="p-5 opacity-5" />
+            <img
+              src="/logo.png"
+              alt="Placeholder Logo"
+              className="p-5 opacity-5"
+            />
           </div>
 
           <img

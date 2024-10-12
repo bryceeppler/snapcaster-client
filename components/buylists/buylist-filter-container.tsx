@@ -23,19 +23,14 @@ type Props = { mobile: boolean };
 
 export default function BuyListFilterContainer({ mobile }: Props) {
   const {
-    dummyStoreData,
-    dummyConditionData,
     dummyFoilData,
     dummyRarityData,
     dummySetData,
-    selectedStoreFilters,
-    selectedConditionFilters,
+
     selectedFoilFilters,
     selectedRarityFilters,
     selectedSetFilters,
 
-    updateSelectedStoreFilters,
-    updateSelectedConditionFilters,
     updateSelectedFoilFilters,
     updateSelectedRarityFilters,
     updateSelectedSetFilters,
@@ -63,20 +58,18 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-8 grid gap-y-2">
-                <FilterDropDownMultiple
-                  values={dummyStoreData[Object.keys(dummyStoreData)[0]]}
-                  filterName={Object.keys(dummyStoreData)[0]}
-                  setFilterFunction={updateSelectedStoreFilters}
-                  selectedZustandFilters={selectedStoreFilters}
-                />
-                <FilterDropDownMultiple
-                  values={
-                    dummyConditionData[Object.keys(dummyConditionData)[0]]
-                  }
-                  filterName={Object.keys(dummyConditionData)[0]}
-                  setFilterFunction={updateSelectedConditionFilters}
-                  selectedZustandFilters={selectedConditionFilters}
-                />
+                <Select>
+                  <SelectTrigger className="border-border-colour mx-auto h-8  w-full bg-popover text-sm focus:ring-0 focus:ring-offset-0">
+                    <SelectValue placeholder="Sort By: Name" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Sort By:</SelectLabel>
+                      <SelectItem value="name">Sort By: Name</SelectItem>
+                      <SelectItem value="set">Sort By: Set</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
                 <FilterDropDownMultiple
                   values={dummyFoilData[Object.keys(dummyFoilData)[0]]}
                   filterName={Object.keys(dummyFoilData)[0]}
@@ -95,7 +88,6 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                   setFilterFunction={updateSelectedSetFilters}
                   selectedZustandFilters={selectedSetFilters}
                 />
-
                 <Button className="text-md mt-6 h-9 rounded-sm  font-semibold ">
                   Apply Filters
                 </Button>
@@ -112,28 +104,10 @@ export default function BuyListFilterContainer({ mobile }: Props) {
               </div>
             </SheetContent>
           </Sheet>
-          <Select>
-            <SelectTrigger className=" border-border-colour  mx-auto  w-full bg-popover focus:ring-0 focus:ring-offset-0 ">
-              <SelectValue placeholder="Sort By:A-Z" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Sort By:</SelectLabel>
-                <SelectItem value="name">Sort By: Name</SelectItem>
-                <SelectItem value="test">Sort By: Set</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
         </>
       ) : (
         <>
           <div className="mx-auto flex w-full space-x-4">
-            <FilterDropDownMultiple
-              values={dummyConditionData[Object.keys(dummyConditionData)[0]]}
-              filterName={Object.keys(dummyConditionData)[0]}
-              setFilterFunction={updateSelectedConditionFilters}
-              selectedZustandFilters={selectedConditionFilters}
-            />
             <FilterDropDownMultiple
               values={dummyFoilData[Object.keys(dummyFoilData)[0]]}
               filterName={Object.keys(dummyFoilData)[0]}
@@ -169,7 +143,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
           </div>
 
           <div className="flex">
-            <div className="mt-4 flex w-full ">
+            <div className="mt-8 flex w-full ">
               <Button className=" h-8 rounded-sm text-sm font-semibold sm:w-[180px]">
                 Apply Filters
               </Button>

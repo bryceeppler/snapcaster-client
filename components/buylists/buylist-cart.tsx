@@ -57,27 +57,27 @@ export default function BuyListCart({ mobile }: Props) {
                   storeCartData={item}
                 ></CartStoreAccordian>
               ))}
-              <div className="grid grid-cols-12">
-                <div className="col-span-9 col-start-2">
+              <div className="flex justify-between">
+                <div>
                   <p className="font-bold text-muted-foreground">Cash:</p>
                 </div>
-                <div className="col-span-2 col-start-11">
+                <div>
                   <p className="font-semibold ">
                     ${cashTotalAllStores.toFixed(2)}
                   </p>
                 </div>
               </div>
-              <div className="grid grid-cols-12">
-                <div className="col-span-9 col-start-2">
+              <div className="flex justify-between">
+                <div>
                   <p className="font-bold text-muted-foreground">Credit:</p>
                 </div>
-                <div className="col-span-2 col-start-11">
+                <div>
                   <p className="font-semibold ">
                     ${creditTotalAllStores.toFixed(2)}
                   </p>
                 </div>
               </div>
-              <div className="mt-2">
+              <div className="mt-4 md:mt-2">
                 <Button
                   onClick={() => {
                     clearAllCartItems();
@@ -101,19 +101,19 @@ export default function BuyListCart({ mobile }: Props) {
               ></CartStoreAccordian>
             ))}
           </div>
-          <div className="grid grid-cols-12">
-            <div className="col-span-9 col-start-2">
+          <div className="flex justify-between">
+            <div>
               <p className="font-bold text-muted-foreground">Cash:</p>
             </div>
-            <div className="col-span-2 col-start-11">
+            <div>
               <p className="font-semibold ">${cashTotalAllStores.toFixed(2)}</p>
             </div>
           </div>
-          <div className="grid grid-cols-12">
-            <div className="col-span-9 col-start-2">
+          <div className="flex justify-between">
+            <div>
               <p className="font-bold text-muted-foreground">Credit:</p>
             </div>
-            <div className="col-span-2 col-start-11">
+            <div>
               <p className="font-semibold ">
                 ${creditTotalAllStores.toFixed(2)}
               </p>

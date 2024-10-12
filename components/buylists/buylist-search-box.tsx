@@ -16,18 +16,23 @@ import { shallow } from 'zustand/shallow';
 export default function BuyListSearchBox() {
   const searchBoxRef = useRef<HTMLInputElement>(null);
 
-  const { changeTCG, searchTerm, fetchCards, setSearchTerm } = useBuyListStore(
-    (state) => ({
-      changeTCG: state.changeTCG,
-      searchTerm: state.searchTerm,
-      fetchCards: state.fetchCards,
-      setSearchTerm: state.setSearchTerm
-    }),
-    shallow
-  );
+  const { changeTCG, searchTerm, fetchCards, setSearchTerm, resetAllFilters } =
+    useBuyListStore(
+      (state) => ({
+        changeTCG: state.changeTCG,
+        searchTerm: state.searchTerm,
+        fetchCards: state.fetchCards,
+        setSearchTerm: state.setSearchTerm,
+        resetAllFilters: state.resetAllFilters
+      }),
+      shallow
+    );
 
   const handleClick = () => {
     if (searchBoxRef.current) {
+      if (searchTerm != searchBoxRef.current.value) {
+        resetAllFilters();
+      }
       setSearchTerm(searchBoxRef.current.value);
       fetchCards();
     }
@@ -57,6 +62,11 @@ export default function BuyListSearchBox() {
         className="border-l-none border-border-colour bg-card rounded-l-none pr-8 focus-visible:ring-0 focus-visible:ring-offset-0"
         placeholder="Card Name"
         ref={searchBoxRef}
+        onKeyDown={(event) => {
+          if (event.key == 'Enter') {
+            handleClick();
+          }
+        }}
       />
 
       {/* Search Button */}

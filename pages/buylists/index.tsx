@@ -6,60 +6,54 @@ import BuyListCart from '@/components/buylists/buylist-cart';
 import { shallow } from 'zustand/shallow';
 import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/buyListStore';
+import { useState, useEffect } from 'react';
 type Props = {};
 
 const Buylist: NextPage<Props> = () => {
   const {} = useGlobalStore();
-  const { buyListQueryResults, filtersVisibile } = useBuyListStore(
+  const { buyListQueryResults, showFilters } = useBuyListStore(
     (state) => ({
       buyListQueryResults: state.buyListQueryResults,
-      filtersVisibile: state.filtersVisibile
+      showFilters: state.showFilters
     }),
     shallow
   );
+  const useMediaQuery = (width: number): boolean => {
+    const [isMobile, setIsMobile] = useState(false);
 
+    useEffect(() => {
+      const handleResize = () => setIsMobile(window.innerWidth <= width);
+      window.addEventListener('resize', handleResize);
+      handleResize(); // Call once to set the initial value
+
+      return () => window.removeEventListener('resize', handleResize);
+    }, [width]);
+
+    return isMobile;
+  };
+  const isMobile = useMediaQuery(768);
   return (
     <>
-      {/* Mobile */}
-      <div className="block min-h-svh md:hidden ">
-        <div className="relative mx-auto mb-8  ">
-          <BuyListSearchBox />
-        </div>
-        <div className="mb-8 flex space-x-4">
-          <BuyListFilterContainer mobile={true} />
-        </div>
-        <div className="mb-8">
-          <BuyListCart mobile={true} />
-        </div>
-        Results and Cart Container
-        <div className=" ">
-          <div className="col-span-7">
-            <h1 className="pb-2 text-2xl">Results</h1>
-
-            {buyListQueryResults.map((item: any, key: number) => (
-              <div key={key} className="mb-2">
-                <ResultCard key={key} cardData={item} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Desktop */}
-      <div className="hidden min-h-svh md:block ">
-        <div className="relative mx-auto mb-8 w-4/5 ">
+      <div className=" min-h-svh ">
+        <div className="relative mx-auto mb-8 w-full md:w-4/5 ">
           {/* Search Container*/}
           <BuyListSearchBox />
         </div>
         {/* Filter Container*/}
-        <div className="mb-8 w-full">
-          <BuyListFilterContainer mobile={false} />
-        </div>
-
+        {showFilters && (
+          <div className="mb-4 w-full">
+            <BuyListFilterContainer mobile={isMobile} />
+          </div>
+        )}
+        {isMobile && (
+          <div className="md:col-span-5">
+            <BuyListCart mobile={true} />
+          </div>
+        )}
         {/* Results and Cart Containers*/}
-        <div className="grid grid-cols-12 gap-x-4 ">
+        <div className="mt-8 w-full md:grid md:grid-cols-12 md:gap-x-4  ">
           {/* Results Container*/}
-          <div className="col-span-7">
+          <div className=" md:col-span-7">
             <h1 className="pb-2 text-2xl">Results</h1>
             {/* Results Cards Container*/}
 
@@ -70,9 +64,11 @@ const Buylist: NextPage<Props> = () => {
             ))}
           </div>
           {/*  Cart Container*/}
-          <div className="col-span-5">
-            <BuyListCart mobile={false} />
-          </div>
+          {!isMobile && (
+            <div className="md:col-span-5">
+              <BuyListCart mobile={false} />
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -80,7 +80,6 @@ export default function FilterDropDownMultiple({
         >
           <Button variant="outline" className="flex gap-2 text-left font-bold">
             <span className="w-full font-medium"> {filterName}</span>
-            {/* <p className="w-full font-medium">{filterName}</p> */}
             <CaretDownIcon></CaretDownIcon>
           </Button>
         </DropdownMenuTrigger>
@@ -104,6 +103,7 @@ export default function FilterDropDownMultiple({
                   key={index}
                   checked={isOptionSelected(value.key)}
                   onCheckedChange={() => handleSelectChange(value.key)}
+                  className="capitalize"
                 >
                   {value.value}
                 </DropdownMenuCheckboxItem>
