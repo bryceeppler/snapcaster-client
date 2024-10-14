@@ -32,12 +32,15 @@ type BuyListState = {
   individualStoreCart: any[];
   buyListCartData: any[];
   showFilters: boolean;
+  
   addToCart: (store: string, cardData: any) => void;
   removeFromCart: (store: string, cardData: any) => void;
   clearAllCartItems: () => void;
   selectedFoilFilters: any[];
   selectedRarityFilters: any[];
   selectedSetFilters: any[];
+  selectedSortBy:string;
+  updateSelectedSortBy: (sortByOption:string) => void;
   updateSelectedFoilFilters: (filters: string[]) => void;
   updateSelectedRarityFilters: (filters: string[]) => void;
   updateSelectedSetFilters: (filters: string[]) => void;
@@ -116,6 +119,12 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   searchTerm: '',
   filtersVisibile: false,
   showFilters: false,
+  selectedSortBy:'best-match',
+  updateSelectedSortBy(sortByOption: string){
+    console.log(sortByOption);
+    
+    set({selectedSortBy:sortByOption})
+  },
 
   updateSelectedFoilFilters(filters: string[]) {
     set({ selectedFoilFilters: filters });
@@ -272,9 +281,15 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
 
   fetchCards: async () => {
+    console.log(get().selectedSortBy);
+    
     const queryParams = new URLSearchParams({
       name: get().searchTerm,
-      tcg: get().selectedTCG
+      tcg: get().selectedTCG,
+      sortBy: get().selectedSortBy,
+      sets:  get().selectedSetFilters.map(set => encodeURIComponent(set)).join(','), // Comma-separated values
+      foils: get().selectedFoilFilters.map(foil => encodeURIComponent(foil)).join(','), // Comma-separated values
+      rarities: get().selectedRarityFilters.map(rarity => encodeURIComponent(rarity)).join(',') // Comma-separated values
     });
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/search?${queryParams.toString()}`
@@ -289,19 +304,19 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
     const setData = {
       Sets: response.data.sets.map((item: string) => ({
-        key: item.toLowerCase(),
+        key: item,
         value: item
       }))
     };
     const rarityData = {
       Rarity: response.data.rarities.map((item: string) => ({
-        key: item.toLowerCase(),
+        key: item,
         value: item
       }))
     };
     const foilData = {
       Foil: response.data.foils.map((item: string) => ({
-        key: item.toLowerCase(),
+        key: item,
         value: item
       }))
     };

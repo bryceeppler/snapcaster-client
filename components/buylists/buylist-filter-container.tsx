@@ -26,7 +26,6 @@ export default function BuyListFilterContainer({ mobile }: Props) {
     dummyFoilData,
     dummyRarityData,
     dummySetData,
-
     selectedFoilFilters,
     selectedRarityFilters,
     selectedSetFilters,
@@ -35,7 +34,9 @@ export default function BuyListFilterContainer({ mobile }: Props) {
     updateSelectedRarityFilters,
     updateSelectedSetFilters,
     atLeastOneFilter,
-    resetAllFilters
+    resetAllFilters,
+    updateSelectedSortBy,
+    fetchCards
   } = useBuyListStore();
 
   return (
@@ -58,15 +59,27 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-8 grid gap-y-2">
-                <Select>
-                  <SelectTrigger className="border-border-colour mx-auto h-8  w-full bg-popover text-sm focus:ring-0 focus:ring-offset-0">
-                    <SelectValue placeholder="Sort By: Name" />
-                  </SelectTrigger>
+                <Select
+                  onValueChange={(value) => {
+                    updateSelectedSortBy(value);
+                  }}
+                >
+                  <span className="flex-1">
+                    <span className="flex">
+                      <p className="text-sm">Sort By</p> &nbsp;
+                    </span>
+                    <SelectTrigger className="border-border-colour mx-auto h-8  w-full bg-popover text-sm focus:ring-0 focus:ring-offset-0">
+                      <SelectValue placeholder="Best Match" />
+                    </SelectTrigger>
+                  </span>
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Sort By:</SelectLabel>
-                      <SelectItem value="name">Sort By: Name</SelectItem>
-                      <SelectItem value="set">Sort By: Set</SelectItem>
+                      <SelectItem value="best-match">Best Match</SelectItem>
+                      <SelectItem value="name-asc">Name: A-Z</SelectItem>
+                      <SelectItem value="name-desc">Name: Z-A</SelectItem>
+                      <SelectItem value="set-asc">Set: A-Z</SelectItem>
+                      <SelectItem value="set-desc">Set: Z-A</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -88,7 +101,12 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                   setFilterFunction={updateSelectedSetFilters}
                   selectedZustandFilters={selectedSetFilters}
                 />
-                <Button className="text-md mt-6 h-9 rounded-sm  font-semibold ">
+                <Button
+                  onClick={() => {
+                    fetchCards();
+                  }}
+                  className="text-md mt-6 h-9 rounded-sm  font-semibold "
+                >
                   Apply Filters
                 </Button>
 
@@ -127,15 +145,27 @@ export default function BuyListFilterContainer({ mobile }: Props) {
               selectedZustandFilters={selectedSetFilters}
             />
             <span className="mt-auto flex-1">
-              <Select>
-                <SelectTrigger className="border-border-colour mt-auto h-8 bg-popover focus:ring-0 focus:ring-offset-0">
-                  <SelectValue placeholder="Sort By:A-Z" />
-                </SelectTrigger>
+              <Select
+                onValueChange={(value) => {
+                  updateSelectedSortBy(value);
+                }}
+              >
+                <span className="flex-1">
+                  <span className="flex">
+                    <p className="text-sm">Sort By</p> &nbsp;
+                  </span>
+                  <SelectTrigger className="border-border-colour mt-auto h-8 bg-popover focus:ring-0 focus:ring-offset-0">
+                    <SelectValue placeholder="Best Match" />
+                  </SelectTrigger>
+                </span>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Sort By:</SelectLabel>
-                    <SelectItem value="name">Sort By: Name</SelectItem>
-                    <SelectItem value="test">Sort By: Set</SelectItem>
+                    <SelectLabel>Sort By</SelectLabel>
+                    <SelectItem value="best-match">Best Match</SelectItem>
+                    <SelectItem value="name-asc">Name: A-Z</SelectItem>
+                    <SelectItem value="name-desc">Name: Z-A</SelectItem>
+                    <SelectItem value="set-asc">Set: A-Z</SelectItem>
+                    <SelectItem value="set-desc">Set: Z-A</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -144,7 +174,12 @@ export default function BuyListFilterContainer({ mobile }: Props) {
 
           <div className="flex">
             <div className="mt-8 flex w-full ">
-              <Button className=" h-8 rounded-sm text-sm font-semibold sm:w-[180px]">
+              <Button
+                onClick={() => {
+                  fetchCards();
+                }}
+                className=" h-8 rounded-sm text-sm font-semibold sm:w-[180px]"
+              >
                 Apply Filters
               </Button>
               <Button

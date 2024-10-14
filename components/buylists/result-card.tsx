@@ -127,7 +127,7 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
                   }}
                 >
                   <SelectTrigger className=" border-border-colour mr-2  w-1/2 uppercase focus:ring-0 focus:ring-offset-0">
-                    <SelectValue placeholder="Near Mint" />
+                    <SelectValue placeholder="" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
