@@ -59,11 +59,11 @@ export default function SingleSearchBar() {
   );
   const debouncedAutoCompleteResults = useDebounceCallback(
     fetchAutocomplete,
-    500
+    100
   );
 
   useEffect(() => {
-    if (searchTerm.trim().length > 2) {
+    if (searchTerm.trim().length > 1) {
       debouncedAutoCompleteResults(searchTerm);
     } else {
       setSuggestions([]);

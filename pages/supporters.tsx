@@ -22,7 +22,7 @@ const Supporters: NextPage<Props> = () => {
             <div className="space-y-12 text-center">
               <div>
                 <h3 className="mb-6 text-2xl font-bold">Tier 1 Sponsors</h3>
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
                   {/* OBSIDIAN */}
                   <div className="flex items-center justify-center bg-zinc-800 p-4">
                     <Link
@@ -81,7 +81,7 @@ const Supporters: NextPage<Props> = () => {
               </div>
               <div>
                 <h3 className="mb-6 text-2xl font-bold">Tier 2 Sponsors</h3>
-                <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
+                <div className="grid sm:grid-cols-2 gap-6 md:grid-cols-3">
                   {/* LEVEL UP */}
                   <div className="flex items-center justify-center bg-zinc-800 p-4">
                     <Link
