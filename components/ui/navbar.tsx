@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
@@ -9,12 +8,14 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
+
 import { Button } from './button';
 import useAuthStore from '@/stores/authStore';
 import { AlignJustify } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import RegionSelector from './region-selector';
 
-export default function Navbar() {
+const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [atTop, setAtTop] = useState(true);
@@ -190,6 +191,11 @@ export default function Navbar() {
               </Button>
             </Link>
           )}
+          <div className="flex items-center gap-2 ml-4">
+          <RegionSelector />
+
+            <span className="text-sm">Region</span>
+          </div>
         </div>
       </div>
 
@@ -208,7 +214,7 @@ export default function Navbar() {
             <NavigationMenuItem className="cursor:pointer">
               <Link legacyBehavior href="/" passHref>
                 <img
-                  className="mx-1 h-auto w-5 cursor-pointer"
+                  className=" mx-5 h-auto w-4 cursor-pointer"
                   src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
                   alt="Snapcaster"
                 />
@@ -265,16 +271,21 @@ export default function Navbar() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        {!isAuthenticated && (
-          <Link href="/signin">
-            <Button className="px-4 py-2 text-sm font-medium">Login</Button>
-          </Link>
-        )}
-        {isAuthenticated && (
-          <Link href="/profile">
-            <Button className="px-4 py-2 text-sm font-medium">Account</Button>
-          </Link>
-        )}
+
+        <div className="flex items-center gap-2">
+          {' '}
+          <RegionSelector />
+          {!isAuthenticated && (
+            <Link href="/signin">
+              <Button className="px-4 py-2 text-sm font-medium">Login</Button>
+            </Link>
+          )}
+          {isAuthenticated && (
+            <Link href="/profile">
+              <Button className="px-4 py-2 text-sm font-medium">Account</Button>
+            </Link>
+          )}
+        </div>
       </div>
     </>
   );
@@ -305,3 +316,5 @@ const ListItem = React.forwardRef<
   );
 });
 ListItem.displayName = 'ListItem';
+
+export default Navbar;
