@@ -44,13 +44,13 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
     const conditionList: string[] = [];
     if (cardData.nm)
       (store = Object.keys(cardData.nm)[0]), conditionList.push('nm');
-    if (cardData.lp)
+    else if (cardData.lp)
       (store = Object.keys(cardData.lp)[0]), conditionList.push('lp');
-    if (cardData.mp)
+    else if (cardData.mp)
       (store = Object.keys(cardData.mp)[0]), conditionList.push('mp');
-    if (cardData.hp)
+    else if (cardData.hp)
       (store = Object.keys(cardData.hp)[0]), conditionList.push('hp');
-    if (cardData.dmg)
+    else if (cardData.dmg)
       (store = Object.keys(cardData.dmg)[0]), conditionList.push('dmg');
     setSelectedCondition(conditionList[0]);
     setSelectedStore(store);
