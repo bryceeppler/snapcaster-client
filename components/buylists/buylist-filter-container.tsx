@@ -23,9 +23,9 @@ type Props = { mobile: boolean };
 
 export default function BuyListFilterContainer({ mobile }: Props) {
   const {
-    dummyFoilData,
-    dummyRarityData,
-    dummySetData,
+    foilData,
+    rarityData,
+    setData,
     selectedFoilFilters,
     selectedRarityFilters,
     selectedSetFilters,
@@ -84,20 +84,20 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                   </SelectContent>
                 </Select>
                 <FilterDropDownMultiple
-                  values={dummyFoilData[Object.keys(dummyFoilData)[0]]}
-                  filterName={Object.keys(dummyFoilData)[0]}
+                  values={foilData[Object.keys(foilData)[0]]}
+                  filterName={Object.keys(foilData)[0]}
                   setFilterFunction={updateSelectedFoilFilters}
                   selectedZustandFilters={selectedFoilFilters}
                 />
                 <FilterDropDownMultiple
-                  values={dummyRarityData[Object.keys(dummyRarityData)[0]]}
-                  filterName={Object.keys(dummyRarityData)[0]}
+                  values={rarityData[Object.keys(rarityData)[0]]}
+                  filterName={Object.keys(rarityData)[0]}
                   setFilterFunction={updateSelectedRarityFilters}
                   selectedZustandFilters={selectedRarityFilters}
                 />
                 <FilterDropDownMultiple
-                  values={dummySetData[Object.keys(dummySetData)[0]]}
-                  filterName={Object.keys(dummySetData)[0]}
+                  values={setData[Object.keys(setData)[0]]}
+                  filterName={Object.keys(setData)[0]}
                   setFilterFunction={updateSelectedSetFilters}
                   selectedZustandFilters={selectedSetFilters}
                 />
@@ -127,20 +127,20 @@ export default function BuyListFilterContainer({ mobile }: Props) {
         <>
           <div className="mx-auto flex w-full space-x-4">
             <FilterDropDownMultiple
-              values={dummyFoilData[Object.keys(dummyFoilData)[0]]}
-              filterName={Object.keys(dummyFoilData)[0]}
+              values={foilData[Object.keys(foilData)[0]]}
+              filterName={Object.keys(foilData)[0]}
               setFilterFunction={updateSelectedFoilFilters}
               selectedZustandFilters={selectedFoilFilters}
             />
             <FilterDropDownMultiple
-              values={dummyRarityData[Object.keys(dummyRarityData)[0]]}
-              filterName={Object.keys(dummyRarityData)[0]}
+              values={rarityData[Object.keys(rarityData)[0]]}
+              filterName={Object.keys(rarityData)[0]}
               setFilterFunction={updateSelectedRarityFilters}
               selectedZustandFilters={selectedRarityFilters}
             />
             <FilterDropDownMultiple
-              values={dummySetData[Object.keys(dummySetData)[0]]}
-              filterName={Object.keys(dummySetData)[0]}
+              values={setData[Object.keys(setData)[0]]}
+              filterName={Object.keys(setData)[0]}
               setFilterFunction={updateSelectedSetFilters}
               selectedZustandFilters={selectedSetFilters}
             />

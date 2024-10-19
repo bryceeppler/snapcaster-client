@@ -9,6 +9,7 @@ import { Button } from '../ui/button';
 import CartStoreAccordian from './cart-store-accordian';
 import useBuyListStore from '@/stores/buyListStore';
 import { useEffect, useState } from 'react';
+import { ScrollArea } from '../ui/scroll-area';
 type Props = {
   mobile: boolean;
 };
@@ -51,85 +52,97 @@ export default function BuyListCart({ mobile }: Props) {
               </SheetTitle>
             </SheetHeader>
             <div className="mt-8">
+              <ScrollArea
+                className="flex max-h-[85svh] flex-col overflow-y-auto rounded"
+                type="scroll"
+              >
+                {buyListCartData.map((item, key) => (
+                  <CartStoreAccordian
+                    key={key}
+                    storeCartData={item}
+                  ></CartStoreAccordian>
+                ))}
+                <div className="flex justify-between">
+                  <div>
+                    <p className="font-bold text-muted-foreground">Cash:</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold ">
+                      ${cashTotalAllStores.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div>
+                    <p className="font-bold text-muted-foreground">Credit:</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold ">
+                      ${creditTotalAllStores.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 md:mt-2">
+                  <Button
+                    onClick={() => {
+                      clearAllCartItems();
+                    }}
+                    className="w-full bg-red-600 font-bold"
+                  >
+                    Clear Cart
+                  </Button>
+                </div>
+              </ScrollArea>
+            </div>
+          </SheetContent>
+        </Sheet>
+      ) : (
+        <div className="sticky top-5 max-h-[85svh]">
+          <h1 className="pb-2 text-2xl">Cart</h1>
+          <ScrollArea
+            className="flex max-h-[85svh] flex-col overflow-y-auto rounded"
+            type="scroll"
+          >
+            <div>
               {buyListCartData.map((item, key) => (
                 <CartStoreAccordian
                   key={key}
                   storeCartData={item}
                 ></CartStoreAccordian>
               ))}
-              <div className="flex justify-between">
-                <div>
-                  <p className="font-bold text-muted-foreground">Cash:</p>
-                </div>
-                <div>
-                  <p className="font-semibold ">
-                    ${cashTotalAllStores.toFixed(2)}
-                  </p>
-                </div>
+            </div>
+            <div className="flex justify-between">
+              <div>
+                <p className="font-bold text-muted-foreground">Cash:</p>
               </div>
-              <div className="flex justify-between">
-                <div>
-                  <p className="font-bold text-muted-foreground">Credit:</p>
-                </div>
-                <div>
-                  <p className="font-semibold ">
-                    ${creditTotalAllStores.toFixed(2)}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 md:mt-2">
-                <Button
-                  onClick={() => {
-                    clearAllCartItems();
-                  }}
-                  className="w-full bg-red-600 font-bold"
-                >
-                  Clear Cart
-                </Button>
+              <div>
+                <p className="font-semibold ">
+                  ${cashTotalAllStores.toFixed(2)}
+                </p>
               </div>
             </div>
-          </SheetContent>
-        </Sheet>
-      ) : (
-        <>
-          <h1 className="pb-2 text-2xl">Cart</h1>
-          <div className="">
-            {buyListCartData.map((item, key) => (
-              <CartStoreAccordian
-                key={key}
-                storeCartData={item}
-              ></CartStoreAccordian>
-            ))}
-          </div>
-          <div className="flex justify-between">
-            <div>
-              <p className="font-bold text-muted-foreground">Cash:</p>
+            <div className="flex justify-between">
+              <div>
+                <p className="font-bold text-muted-foreground">Credit:</p>
+              </div>
+              <div>
+                <p className="font-semibold ">
+                  ${creditTotalAllStores.toFixed(2)}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="font-semibold ">${cashTotalAllStores.toFixed(2)}</p>
+            <div className="mt-2">
+              <Button
+                onClick={() => {
+                  clearAllCartItems();
+                }}
+                className="w-full bg-red-600 font-bold"
+              >
+                Clear Cart
+              </Button>
             </div>
-          </div>
-          <div className="flex justify-between">
-            <div>
-              <p className="font-bold text-muted-foreground">Credit:</p>
-            </div>
-            <div>
-              <p className="font-semibold ">
-                ${creditTotalAllStores.toFixed(2)}
-              </p>
-            </div>
-          </div>
-          <div className="mt-2">
-            <Button
-              onClick={() => {
-                clearAllCartItems();
-              }}
-              className="w-full bg-red-600 font-bold"
-            >
-              Clear Cart
-            </Button>
-          </div>
-        </>
+          </ScrollArea>
+        </div>
       )}
     </>
   );

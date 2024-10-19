@@ -86,7 +86,7 @@ export default function FilterDropDownMultiple({
       </span>
 
       <DropdownMenuContent
-        className="max-h-80 w-[--radix-dropdown-menu-trigger-width]"
+        className="max-h-85 w-[--radix-dropdown-menu-trigger-width]"
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DropdownMenuLabel>Select {filterName}:</DropdownMenuLabel>

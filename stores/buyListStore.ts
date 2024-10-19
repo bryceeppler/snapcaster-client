@@ -1,7 +1,5 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import axiosInstance from '@/utils/axiosWrapper';
-import { StringToBoolean } from 'class-variance-authority/dist/types';
 
 export interface Filter {
   key: string;
@@ -25,9 +23,9 @@ export interface DropDownOptions {
   [key: string]: { key: string; value: string }[];
 }
 type BuyListState = {
-  dummyFoilData: DropDownOptions;
-  dummyRarityData: DropDownOptions;
-  dummySetData: DropDownOptions;
+  foilData: DropDownOptions;
+  rarityData: DropDownOptions;
+  setData: DropDownOptions;
   buyListQueryResults: BuyListQueryResults[];
   individualStoreCart: any[];
   buyListCartData: any[];
@@ -55,60 +53,14 @@ type BuyListState = {
   filtersVisibile: boolean;
 };
 
-const buyListCartData: any[] = [
-  {
-    exorgames: [
-      {
-        name: 'Blood Moon - Borderless Anime (WOT)',
-        set: 'Wilds of Eldraine: Enchanting Tales',
-        condition: 'nm',
-        foil: 'Foil',
-        quantity: 2,
-        cashPrice: 1,
-        creditPrice: 2
-      },
-      {
-        name: 'Fury Sliver',
-        set: 'Time Spiral',
-        condition: 'lp',
-        foil: 'Normal',
-        quantity: 2,
-        cashPrice: 2,
-        creditPrice: 4
-      }
-    ]
-  },
-  {
-    levelup: [
-      {
-        name: 'Counterspell',
-        set: 'Commander Masters',
-        condition: 'nm',
-        foil: 'Foil',
-        quantity: 4,
-        cashPrice: 1,
-        creditPrice: 2
-      },
-      {
-        name: 'Blood Moon',
-        set: 'Eigth Edition',
-        foil: 'Foil',
-        condition: 'lp',
-        quantity: 4,
-        cashPrice: 2,
-        creditPrice: 4
-      }
-    ]
-  }
-];
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
-  dummyFoilData: {},
-  dummyRarityData: {},
-  dummySetData: {},
+  foilData: {},
+  rarityData: {},
+  setData: {},
   buyListQueryResults: [],
   individualStoreCart: [],
-  buyListCartData: buyListCartData,
+  buyListCartData: [],
   selectedStoreFilters: [],
   selectedConditionFilters: [],
   selectedFoilFilters: [],
@@ -121,8 +73,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   showFilters: false,
   selectedSortBy:'best-match',
   updateSelectedSortBy(sortByOption: string){
-    console.log(sortByOption);
-    
     set({selectedSortBy:sortByOption})
   },
 
@@ -206,9 +156,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
           card.foil === cardData.foil &&
           card.rarity === cardData.rarity
       );
-
+      // Remove or decrement card quantity
       if (cardIndex !== -1) {
-        // Remove or decrement card quantity
         if (storeCart[cardIndex].quantity > 1) {
           storeCart[cardIndex].quantity -= 1;
         } else {
@@ -219,8 +168,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         if (storeCart.length === 0) {
           currentCartData.splice(storeIndex, 1);
         }
-
-        // Update Zustand state
         set({ buyListCartData: [...currentCartData] });
       }
     }
@@ -233,45 +180,45 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     switch (tcg) {
       case 'mtg':
         set({
-          dummyRarityData: { Rarity: [] },
-          dummyFoilData: { Foil: [] },
-          dummySetData: { Set: [] },
+          rarityData: { Rarity: [] },
+          foilData: { Foil: [] },
+          setData: { Set: [] },
           showFilters: false,
           selectedTCG: 'mtg'
         });
         break;
       case 'onepiece':
         set({
-          dummyRarityData: { Rarity: [] },
-          dummyFoilData: { Foil: [] },
-          dummySetData: { Set: [] },
+          rarityData: { Rarity: [] },
+          foilData: { Foil: [] },
+          setData: { Set: [] },
           showFilters: false,
           selectedTCG: 'onepiece'
         });
         break;
       case 'pokemon':
         set({
-          dummyRarityData: { Rarity: [] },
-          dummyFoilData: { Foil: [] },
-          dummySetData: { Set: [] },
+          rarityData: { Rarity: [] },
+          foilData: { Foil: [] },
+          setData: { Set: [] },
           showFilters: false,
           selectedTCG: 'pokemon'
         });
         break;
       case 'lorcana':
         set({
-          dummyRarityData: { Rarity: [] },
-          dummyFoilData: { Foil: [] },
-          dummySetData: { Set: [] },
+          rarityData: { Rarity: [] },
+          foilData: { Foil: [] },
+          setData: { Set: [] },
           showFilters: false,
           selectedTCG: 'lorcana'
         });
         break;
       case 'yugioh':
         set({
-          dummyRarityData: { Rarity: [] },
-          dummyFoilData: { Edition: [] },
-          dummySetData: { Set: [] },
+          rarityData: { Rarity: [] },
+          foilData: { Edition: [] },
+          setData: { Set: [] },
           showFilters: false,
           selectedTCG: 'yugioh'
         });
@@ -281,8 +228,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
 
   fetchCards: async () => {
-    console.log(get().selectedSortBy);
-    
+    if (get().searchTerm){
     const queryParams = new URLSearchParams({
       name: get().searchTerm,
       tcg: get().selectedTCG,
@@ -303,30 +249,39 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     set({ filtersVisibile: true });
 
     const setData = {
-      Sets: response.data.sets.map((item: string) => ({
-        key: item,
-        value: item
-      }))
+      Sets: response.data.sets
+        .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
+        .map((item: string) => ({
+          key: item,
+          value: item
+        }))
     };
     const rarityData = {
-      Rarity: response.data.rarities.map((item: string) => ({
+      Rarity: response.data.rarities
+      .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
+      .map((item: string) => ({
         key: item,
         value: item
       }))
     };
     const foilData = {
-      Foil: response.data.foils.map((item: string) => ({
+      Foil: response.data.foils
+      .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
+      .map((item: string) => ({
         key: item,
         value: item
       }))
     };
     set({
-      dummySetData: setData,
-      dummyRarityData: rarityData,
-      dummyFoilData: foilData
+      setData: setData,
+      rarityData: rarityData,
+      foilData: foilData
     });
     set({ showFilters: true });
+    }
+
   },
+  
   setSearchTerm(searchBoxValue: string) {
     set({ searchTerm: searchBoxValue });
   }

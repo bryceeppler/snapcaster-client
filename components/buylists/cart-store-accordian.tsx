@@ -8,16 +8,13 @@ import useBuyListStore from '@/stores/buyListStore';
 import { PlusIcon, MinusIcon, CopyIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-// import { useStore } from '@/stores/store';
 import useGlobalStore from '@/stores/globalStore';
 
 type Props = { storeCartData: any };
 export default function CartStoreAccordian({ storeCartData }: Props) {
   const { getWebsiteName } = useGlobalStore();
   const { buyListCartData, addToCart, removeFromCart } = useBuyListStore();
-  useEffect(() => {
-    console.log('cart-store-accordian mounted and re-rendered');
-  }, []); // Empty array makes this run once on mount
+
   useEffect(() => {
     const key = Object.keys(storeCartData)[0];
     let cashTotal = 0;
@@ -70,10 +67,12 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                     <p className="font-medium capitalize text-muted-foreground">
                       {item.set}
                     </p>
-                    <span className="flex  text-muted-foreground">
-                      <p className=" uppercase">{item.condition} -</p>
+                    <span className="flex capitalize  text-muted-foreground">
+                      <p className='uppercase'>{item.condition} -</p>
                       &nbsp;
-                      <p className="">{item.foil}</p>
+                      <p> {item.rarity}</p>
+                      &nbsp;
+                      <p> {item.foil}</p>
                     </span>
                     <div className="grid grid-cols-7">
                       <p className="col-span-1 w-full font-medium text-muted-foreground">

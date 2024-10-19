@@ -7,6 +7,7 @@ import { shallow } from 'zustand/shallow';
 import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/buyListStore';
 import { useState, useEffect } from 'react';
+import BackToTopButton from '@/components/ui/back-to-top-btn';
 type Props = {};
 
 const Buylist: NextPage<Props> = () => {
@@ -70,6 +71,7 @@ const Buylist: NextPage<Props> = () => {
             </div>
           )}
         </div>
+        <BackToTopButton />
       </div>
     </>
   );

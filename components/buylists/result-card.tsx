@@ -12,16 +12,13 @@ import {
 import { shallow } from 'zustand/shallow';
 import CardImage from '../ui/card-image';
 import { Button } from '../ui/button';
-// import { useState, useEffect } from 'react';
 import useBuyListStore from '@/stores/buyListStore';
-// import { useStore } from '@/stores/store';
 import useGlobalStore from '@/stores/globalStore';
-import React, { memo, useState, useEffect, useCallback } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 
 type Props = { cardData: any };
 
 const ResultCard = memo(function ResultCard({ cardData }: Props) {
-  // console.log('ResultCard rendered', { cardData });
   const [selectedCondition, setSelectedCondition] = useState<string>('');
   const [selectableConditions, setSelectableConditions] = useState<string[]>(
     []
@@ -29,10 +26,6 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
   const [selectedStore, setSelectedStore] = useState('');
   const [cashPrice, setCashPrice] = useState(0);
   const [creditPrice, setCreditPrice] = useState(0);
-
-  useEffect(() => {
-    console.log('ResultCard mounted');
-  }, []);
   const { addToCart } = useBuyListStore(
     (state) => ({
       addToCart: state.addToCart
@@ -106,8 +99,10 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
               </CardDescription>
             </div>
             <div className="mt-auto">
-              <div className="flex flex-row gap-2 text-sm font-semibold text-muted-foreground">
-                <p>{cardData.foil} </p>
+              <div className="flex flex-row gap-2 text-sm font-semibold capitalize text-muted-foreground">
+                <p>
+                  {cardData.rarity} {cardData.foil}
+                </p>
               </div>
               <div className="flex text-sm">
                 <div className="w-1/2 text-center">
@@ -151,6 +146,7 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
                       name: cardData.name,
                       set: cardData.set,
                       foil: cardData.foil,
+                      rarity: cardData.rarity,
                       cashPrice: cashPrice,
                       creditPrice: creditPrice,
                       condition: selectedCondition
