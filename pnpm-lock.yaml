@@ -98,9 +98,6 @@ dependencies:
   gray-matter:
     specifier: ^4.0.3
     version: 4.0.3
-  lodash:
-    specifier: ^4.17.21
-    version: 4.17.21
   lucide-react:
     specifier: ^0.344.0
     version: 0.344.0(react@18.2.0)
@@ -3401,10 +3398,6 @@ packages:
 
   /lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
-    dev: false
-
-  /lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: false
 
   /longest-streak@3.1.0:
