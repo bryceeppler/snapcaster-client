@@ -146,7 +146,7 @@ const SelectItem = React.forwardRef<
       </SelectPrimitive.ItemIndicator>
     </span>
 
-    <SelectPrimitive.ItemText class="w-full">
+    <SelectPrimitive.ItemText className="w-full">
       {children}
     </SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
