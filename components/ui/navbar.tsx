@@ -12,74 +12,15 @@ import {
 import { Button } from './button';
 import useAuthStore from '@/stores/authStore';
 import { AlignJustify } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 export default function Navbar() {
   const { isAuthenticated } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [atTop, setAtTop] = useState(true);
-  const [hideNav, setHideNav] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setAtTop(window.scrollY === 0);
-      // Show the menu if scrolled
-      if (window.scrollY > 0) {
-        setHideNav(false);
-      }
-    };
-
-    const resetTimer = () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-      timerRef.current = setTimeout(() => {
-        if (!atTop) {
-          setHideNav(true);
-        }
-      }, 3000);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', resetTimer); // Reset timer on mouse move
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', resetTimer);
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
-  }, [atTop]);
-
-  const handleMouseEnter = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    // Reset the timer when the mouse leaves
-    timerRef.current = setTimeout(() => {
-      if (!atTop) {
-        setHideNav(true);
-      }
-    }, 3000);
-  };
-
   return (
     <>
       {/* MOBILE NAV */}
-      <div
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className={`sticky top-0 z-50 flex h-16 items-center justify-between transition-all duration-500 ${
-          atTop ? 'bg-background' : 'bg-popover'
-        } ${
-          hideNav && !atTop ? 'pointer-events-none opacity-0' : 'opacity-100'
-        } md:hidden`}
-      >
+      <div className="relative flex h-16 items-center justify-between bg-popover md:hidden">
         <div className="absolute inset-y-0 left-0 flex items-center">
           <Button
             variant="ghost"
@@ -106,17 +47,9 @@ export default function Navbar() {
         </div>
       </div>
       <div
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
         className={`${
-          mobileMenuOpen
-            ? 'outlined-container sticky top-16 z-50 m-1 block h-fit bg-background '
-            : 'hidden'
-        } ${
-          hideNav && !atTop ? 'pointer-events-none opacity-0' : 'opacity-100'
-        } ${
-          !atTop && 'bg-popover'
-        } transition-all duration-500 animate-in md:hidden `}
+          mobileMenuOpen ? 'outlined-container m-1 block h-fit p-2' : 'hidden'
+        } animate-in md:hidden`}
         id="mobile-menu"
       >
         <div className="space-y-1 px-2 pb-3 pt-2">
@@ -132,7 +65,6 @@ export default function Navbar() {
             </Button>
           </Link>
 
-          {/* Multi Search */}
           <Link href="/multisearch" as="/multisearch">
             <Button
               variant="ghost"
@@ -142,6 +74,18 @@ export default function Navbar() {
               }}
             >
               Multi Search
+            </Button>
+          </Link>
+
+          <Link href="/buylists" as="/buylists">
+            <Button
+              variant="ghost"
+              className="block w-full text-left text-sm"
+              onClick={() => {
+                setMobileMenuOpen(false);
+              }}
+            >
+              Buy Lists
             </Button>
           </Link>
 
@@ -159,6 +103,7 @@ export default function Navbar() {
               Discord
             </Button>
           </Link>
+
           <Link href="/supporters" as="/supporters">
             <Button
               variant="ghost"
@@ -167,9 +112,10 @@ export default function Navbar() {
                 setMobileMenuOpen(false);
               }}
             >
-              Sponsors
+              Supporters
             </Button>
           </Link>
+
           {!isAuthenticated && (
             <Link href="/signin">
               <Button
@@ -194,21 +140,13 @@ export default function Navbar() {
       </div>
 
       {/* DESKTOP NAV SM+ */}
-      <div
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className={`sticky top-0 z-50 hidden items-center justify-between p-3 transition-all duration-500 md:flex ${
-          atTop ? 'bg-background' : 'bg-popover'
-        }
-        ${hideNav && !atTop ? 'pointer-events-none opacity-0' : 'opacity-100'}
-        `}
-      >
+      <div className="hidden items-center justify-between p-3 md:flex">
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem className="cursor:pointer">
+            <NavigationMenuItem>
               <Link legacyBehavior href="/" passHref>
                 <img
-                  className="mx-1 h-auto w-5 cursor-pointer"
+                  className="mx-1 h-auto w-5"
                   src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
                   alt="Snapcaster"
                 />
@@ -216,23 +154,22 @@ export default function Navbar() {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link legacyBehavior href="/" passHref>
-                <NavigationMenuLink
-                  className={`${navigationMenuTriggerStyle()}   transition-all duration-500 ${
-                    atTop ? 'bg-background' : 'bg-popover'
-                  }`}
-                >
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Home
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link legacyBehavior href="/multisearch" passHref>
-                <NavigationMenuLink
-                  className={`${navigationMenuTriggerStyle()}   transition-all duration-500 ${
-                    atTop ? 'bg-background' : 'bg-popover'
-                  }`}
-                >
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Multi Search
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link legacyBehavior href="/buylists" passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Buy Lists
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -242,24 +179,15 @@ export default function Navbar() {
                 href="https://discord.gg/EnKKHxSq75"
                 passHref
               >
-                <NavigationMenuLink
-                  className={`${navigationMenuTriggerStyle()}   transition-all duration-500 ${
-                    atTop ? 'bg-background' : 'bg-popover'
-                  }`}
-                >
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Discord
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
-
             <NavigationMenuItem>
               <Link legacyBehavior href="/supporters" passHref>
-                <NavigationMenuLink
-                  className={`${navigationMenuTriggerStyle()}   transition-all duration-500 ${
-                    atTop ? 'bg-background' : 'bg-popover'
-                  }`}
-                >
-                  Sponsors
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Supporters
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -290,7 +218,7 @@ const ListItem = React.forwardRef<
         <Link
           href={props.href as string}
           className={cn(
-            'block select-none space-y-1 rounded-lg p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
             className
           )}
           {...props}
