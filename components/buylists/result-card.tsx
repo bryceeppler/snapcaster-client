@@ -42,16 +42,15 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
   useEffect(() => {
     let store = '';
     const conditionList: string[] = [];
-    if (cardData.nm)
-      (store = Object.keys(cardData.nm)[0]), conditionList.push('nm');
-    else if (cardData.lp)
-      (store = Object.keys(cardData.lp)[0]), conditionList.push('lp');
-    else if (cardData.mp)
-      (store = Object.keys(cardData.mp)[0]), conditionList.push('mp');
-    else if (cardData.hp)
-      (store = Object.keys(cardData.hp)[0]), conditionList.push('hp');
-    else if (cardData.dmg)
-      (store = Object.keys(cardData.dmg)[0]), conditionList.push('dmg');
+    if (cardData.nm) conditionList.push('nm');
+    if (cardData.lp) conditionList.push('lp');
+    if (cardData.mp) conditionList.push('mp');
+    if (cardData.hp) conditionList.push('hp');
+    if (cardData.dmg) conditionList.push('dmg');
+    const randomIndex = Math.floor(
+      Math.random() * Object.keys(cardData[conditionList[0]]).length
+    );
+    store = Object.keys(cardData[conditionList[0]])[randomIndex];
     setSelectedCondition(conditionList[0]);
     setSelectedStore(store);
     setSelectableConditions(conditionList);
