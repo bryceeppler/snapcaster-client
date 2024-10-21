@@ -47,7 +47,7 @@ export default function BuyListCart({ mobile }: Props) {
           </SheetTrigger>
           <SheetContent className="w-svw  sm:max-w-full">
             <SheetHeader>
-              <SheetTitle className="text-left text-3xl font-medium">
+              <SheetTitle className="text-left text-3xl font-semibold">
                 Cart
               </SheetTitle>
             </SheetHeader>
@@ -98,7 +98,7 @@ export default function BuyListCart({ mobile }: Props) {
         </Sheet>
       ) : (
         <div className="sticky top-5 max-h-[85svh]">
-          <h1 className="pb-2 text-2xl">Cart</h1>
+          <h1 className="pb-2 text-2xl font-semibold">Cart</h1>
           <ScrollArea
             className="flex max-h-[85svh] flex-col overflow-y-auto rounded"
             type="scroll"

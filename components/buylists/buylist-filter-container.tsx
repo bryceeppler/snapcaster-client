@@ -18,6 +18,7 @@ import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { Button } from '../ui/button';
 import FilterDropDownMultiple from './filter-drop-down-multiple';
 import useBuyListStore from '@/stores/buyListStore';
+import { useState } from 'react';
 
 type Props = { mobile: boolean };
 
@@ -38,12 +39,12 @@ export default function BuyListFilterContainer({ mobile }: Props) {
     updateSelectedSortBy,
     fetchCards
   } = useBuyListStore();
-
+  const [sheetOpen, setSheetOpen] = useState(false);
   return (
     <>
       {mobile == true ? (
         <>
-          <Sheet>
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild={true} className="w-full">
               <Button className="relative flex w-full items-center justify-center">
                 <p className="absolute left-1/2 -translate-x-1/2 transform">
@@ -54,7 +55,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
             </SheetTrigger>
             <SheetContent side={'left'} className="w-svw  sm:max-w-full">
               <SheetHeader>
-                <SheetTitle className="text-left text-3xl font-medium">
+                <SheetTitle className="text-left text-3xl font-semibold">
                   Filters
                 </SheetTitle>
               </SheetHeader>
@@ -104,8 +105,9 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 <Button
                   onClick={() => {
                     fetchCards();
+                    setSheetOpen(false);
                   }}
-                  className="text-md mt-6 h-9 rounded-sm  font-semibold "
+                  className="text-md mt-6 h-9 font-semibold "
                 >
                   Apply Filters
                 </Button>
@@ -115,7 +117,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                   onClick={() => {
                     resetAllFilters();
                   }}
-                  className={`text-md mt-2 h-9 rounded-sm bg-red-600  font-semibold  `}
+                  className={`text-md mt-2 h-9 bg-red-600  font-semibold  `}
                 >
                   Reset Filters
                 </Button>
@@ -178,7 +180,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 onClick={() => {
                   fetchCards();
                 }}
-                className=" h-8 rounded-sm text-sm font-semibold sm:w-[180px]"
+                className=" h-8 text-sm font-semibold sm:w-[180px]"
               >
                 Apply Filters
               </Button>
@@ -187,7 +189,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 onClick={() => {
                   resetAllFilters();
                 }}
-                className={`ml-2 h-8  rounded-sm  bg-red-600 font-semibold  sm:w-[180px]`}
+                className={`ml-2 h-8 bg-red-600 font-semibold  sm:w-[180px]`}
               >
                 Reset Filters
               </Button>

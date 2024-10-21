@@ -81,14 +81,7 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
     <>
       <Card>
         <div className="border-border-colour grid grid-cols-12 rounded-md bg-popover p-4">
-          <div className="col-span-3">
-            <div className="flex h-full items-center justify-center">
-              <div className="relative mx-auto max-w-[150px] md:max-w-[250px]">
-                <CardImage imageUrl={cardData.image} alt="test image" />
-              </div>
-            </div>
-          </div>
-          <div className="col-span-9 flex flex-col pl-4">
+          <div className="col-span-9 flex flex-col pr-4">
             <div>
               <CardTitle className="text-md font-semibold">
                 {cardData.name}
@@ -100,7 +93,7 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
             <div className="mt-auto">
               <div className="flex flex-row gap-2 text-sm font-semibold capitalize text-muted-foreground">
                 <p>
-                  {cardData.rarity} {cardData.foil}
+                  {cardData.rarity} - {cardData.foil}
                 </p>
               </div>
               <div className="flex text-sm">
@@ -236,6 +229,13 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+          </div>
+          <div className="col-span-3">
+            <div className="flex h-full items-center justify-center">
+              <div className="relative mx-auto max-w-[150px] md:max-w-[250px]">
+                <CardImage imageUrl={cardData.image} alt="test image" />
               </div>
             </div>
           </div>
