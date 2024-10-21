@@ -66,10 +66,7 @@ export default function FilterDropDownMultiple({
     <DropdownMenu>
       <span className="flex-1">
         <span className="flex">
-          <p className="text-sm">
-            {filterName == 'Foil' ? 'Edition' : 'Foil'}:
-          </p>{' '}
-          &nbsp;
+          <p className="text-sm">{filterName}:</p> &nbsp;
           {selectedItems.length > 0 ? (
             <p className="text-sm">({selectedItems.length})</p>
           ) : (
@@ -82,9 +79,7 @@ export default function FilterDropDownMultiple({
           className="border-border-colour h-8 w-full bg-popover  focus:ring-0 "
         >
           <Button variant="outline" className="flex gap-2 text-left font-bold">
-            <span className="w-full font-medium">
-              {filterName == 'Foil' ? 'Edition' : 'Foil'}
-            </span>
+            <span className="w-full font-medium"> {filterName}</span>
             <CaretDownIcon></CaretDownIcon>
           </Button>
         </DropdownMenuTrigger>
