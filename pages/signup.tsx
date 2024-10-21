@@ -55,7 +55,6 @@ const Signup: NextPage<Props> = () => {
       toast.success('Registration successful! You can now sign in.');
       router.push('/signin');
     } catch (error: any) {
-      console.log(error);
       toast.error('Could not register user');
     }
   };
