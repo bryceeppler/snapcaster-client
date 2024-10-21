@@ -55,7 +55,7 @@ const Buylist: NextPage<Props> = () => {
         <div className="mt-8 w-full md:grid md:grid-cols-12 md:gap-x-4  ">
           {/* Results Container*/}
           <div className=" md:col-span-7">
-            <h1 className="pb-2 text-2xl">Results</h1>
+            <h1 className="pb-2 text-2xl font-semibold">Results</h1>
             {/* Results Cards Container*/}
 
             {buyListQueryResults.map((item: any, key: number) => (

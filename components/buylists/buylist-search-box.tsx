@@ -42,7 +42,7 @@ export default function BuyListSearchBox() {
     <div className="flex">
       {/* Select TCG Dropdown */}
       <Select onValueChange={changeTCG}>
-        <SelectTrigger className="border-border-colour w-1/2 rounded-r-none focus:ring-0 focus:ring-offset-0 sm:w-[180px]">
+        <SelectTrigger className="border-border-colour w-1/2 rounded-r-none font-semibold focus:ring-0 focus:ring-offset-0 sm:w-[180px]">
           <SelectValue placeholder="MTG" />
         </SelectTrigger>
         <SelectContent>
