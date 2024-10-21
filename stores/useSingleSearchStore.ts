@@ -44,12 +44,15 @@ type SearchState = {
   currentPage: number;
   numResults?: number;
   numPages: number | null;
+  region: string;
+  setRegion: (region: string) => void;
   setCurrentPage: (currentPage: number) => void;
   clearFilters: () => void;
   setAutocompleteSuggestions: (suggestions: string[]) => void;
   fetchCards: () => Promise<void>;
   clearSearchResults: () => void;
 };
+
 
 export const useSingleSearchStore = create<SearchState>()(
   // @ts-ignore
@@ -67,7 +70,8 @@ export const useSingleSearchStore = create<SearchState>()(
         autocompleteSuggestions: [],
         currentPage: 1,
         numPages: null,
-
+        region: 'ca',
+        setRegion: (region: string) => set({ region }),
         setFilter: (filterField: string, value: string, selected: boolean) => {
           const filters = get().filters || [];
           const updatedFilters = filters.map((filter) => {
@@ -98,12 +102,12 @@ export const useSingleSearchStore = create<SearchState>()(
           set({ autocompleteSuggestions: suggestions }),
         clearFilters: () => set({ filters: null }),
         fetchCards: async () => {
-          const { tcg, searchTerm, filters, sortBy } = get();
+          const { tcg, searchTerm, filters, sortBy, region } = get();
           try {
             set({ loading: true });
 
             const queryParams = new URLSearchParams({
-              index: `singles_${tcg}_prod*`,
+              index: `ca_singles_${tcg}_prod*`,
               keyword: searchTerm.trim(),
               // search: 'fuzzy',
               sortBy: `${sortBy}`,
@@ -178,7 +182,7 @@ export const useSingleSearchStore = create<SearchState>()(
       {
         name: 'single-search-store',
         storage: createJSONStorage(() => localStorage),
-        partialize: (state) => ({ tcg: state.tcg })
+        partialize: (state) => ({ tcg: state.tcg, region: state.region })
       }
     )
   )
