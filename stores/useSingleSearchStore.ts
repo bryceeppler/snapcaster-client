@@ -107,7 +107,7 @@ export const useSingleSearchStore = create<SearchState>()(
             set({ loading: true });
 
             const queryParams = new URLSearchParams({
-              index: `${region}_singles_${tcg}_prod*`,
+              index: `ca_singles_${tcg}_prod*`,
               keyword: searchTerm.trim(),
               // search: 'fuzzy',
               sortBy: `${sortBy}`,

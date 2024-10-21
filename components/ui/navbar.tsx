@@ -191,11 +191,11 @@ const Navbar: React.FC = () => {
               </Button>
             </Link>
           )}
-          <div className="flex items-center gap-2 ml-4">
+          {/* <div className="flex items-center gap-2 ml-4">
           <RegionSelector />
 
             <span className="text-sm">Region</span>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -274,7 +274,7 @@ const Navbar: React.FC = () => {
 
         <div className="flex items-center gap-2">
           {' '}
-          <RegionSelector />
+          {/* <RegionSelector /> */}
           {!isAuthenticated && (
             <Link href="/signin">
               <Button className="px-4 py-2 text-sm font-medium">Login</Button>
