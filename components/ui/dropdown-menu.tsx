@@ -5,10 +5,58 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 import { cn } from '@/lib/utils';
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+const DropdownMenuContext = React.createContext<
+  React.Dispatch<React.SetStateAction<boolean>>
+>(() => {});
 
-const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
-
+// const DropdownMenu = DropdownMenuPrimitive.Root;
+const DropdownMenu: React.FC<DropdownMenuPrimitive.DropdownMenuProps> = (
+  props
+) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  return (
+    <DropdownMenuContext.Provider value={setIsOpen}>
+      <DropdownMenuPrimitive.Root
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        {...props}
+      />
+    </DropdownMenuContext.Provider>
+  );
+};
+// const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+const DropdownMenuTrigger = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => {
+  const setIsOpen = React.useContext(DropdownMenuContext);
+  return (
+    <DropdownMenuPrimitive.Trigger
+      ref={(ref) => {
+        if (!ref) return;
+        ref.ontouchstart = (e) => {
+          e.preventDefault();
+        };
+      }}
+      className={cn(
+        'flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+        className
+      )}
+      {...props}
+      onPointerDown={(e) => {
+        if (e.pointerType === 'touch') e.preventDefault(); // disable the default behavior in mobile
+      }}
+      onPointerUp={(e) => {
+        if (e.pointerType === 'touch') {
+          setIsOpen((prevState) => !prevState); // use onPointerUp to simulate onClick in mobile
+        }
+      }}
+    >
+      {children}
+    </DropdownMenuPrimitive.Trigger>
+  );
+});
+DropdownMenuTrigger.displayName = DropdownMenuPrimitive.Trigger.displayName;
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;

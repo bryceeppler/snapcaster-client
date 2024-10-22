@@ -7,10 +7,10 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '../ui/button';
-import { useEffect, useState } from 'react';
 import { CaretDownIcon } from '@radix-ui/react-icons';
 import useBuyListStore from '@/stores/buyListStore';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
 interface Props {
   values: {
     key: string;
@@ -27,48 +27,24 @@ export default function FilterDropDownMultiple({
   setFilterFunction,
   selectedZustandFilters
 }: Props) {
-  const { checkAtleastOneFilter, atLeastOneFilter, selectedTCG } =
-    useBuyListStore();
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const { checkAtleastOneFilter, atLeastOneFilter } = useBuyListStore();
+
   const handleSelectChange = (value: string) => {
-    if (!selectedItems.includes(value)) {
-      setSelectedItems((prev) => [...prev, value]);
-    } else {
-      const referencedArray = [...selectedItems];
-      const indexOfItemToBeRemoved = referencedArray.indexOf(value);
-      referencedArray.splice(indexOfItemToBeRemoved, 1);
-      setSelectedItems(referencedArray);
-    }
+    const newSelectedItems = selectedZustandFilters.includes(value)
+      ? selectedZustandFilters.filter((item) => item !== value) // Deselect
+      : [...selectedZustandFilters, value]; // Select
+
+    setFilterFunction(newSelectedItems); // Update Zustand store
+    checkAtleastOneFilter(); // Check if at least one filter is selected
   };
-
-  const isOptionSelected = (value: string): boolean => {
-    return selectedItems.includes(value) ? true : false;
-  };
-
-  useEffect(() => {
-    setFilterFunction([]);
-    setSelectedItems([]);
-    checkAtleastOneFilter();
-  }, [selectedTCG]);
-
-  useEffect(() => {
-    setFilterFunction(selectedItems);
-    checkAtleastOneFilter();
-  }, [selectedItems]);
-
-  useEffect(() => {
-    if (atLeastOneFilter == false) {
-      setSelectedItems([]);
-    }
-  }, [atLeastOneFilter]);
 
   return (
     <DropdownMenu>
       <span className="flex-1">
         <span className="flex">
           <p className="text-sm">{filterName}:</p> &nbsp;
-          {selectedItems.length > 0 ? (
-            <p className="text-sm">({selectedItems.length})</p>
+          {selectedZustandFilters.length > 0 ? (
+            <p className="text-sm">({selectedZustandFilters.length})</p>
           ) : (
             <p className="text-sm">Any</p>
           )}
@@ -80,7 +56,7 @@ export default function FilterDropDownMultiple({
         >
           <Button variant="outline" className="flex gap-2 text-left font-bold">
             <span className="w-full font-medium"> {filterName}</span>
-            <CaretDownIcon></CaretDownIcon>
+            <CaretDownIcon />
           </Button>
         </DropdownMenuTrigger>
       </span>
@@ -92,23 +68,21 @@ export default function FilterDropDownMultiple({
         <DropdownMenuLabel>Select {filterName}:</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <ScrollArea
-          className="flex max-h-80 flex-col overflow-y-auto  "
+          className="flex max-h-80 flex-col overflow-y-auto"
           type="always"
         >
           {Array.isArray(values) &&
-            values.map((value: Props['values'][0], index: number) => {
-              return (
-                <DropdownMenuCheckboxItem
-                  onSelect={(e) => e.preventDefault()}
-                  key={index}
-                  checked={isOptionSelected(value.key)}
-                  onCheckedChange={() => handleSelectChange(value.key)}
-                  className="capitalize"
-                >
-                  {value.value}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
+            values.map((value, index) => (
+              <DropdownMenuCheckboxItem
+              onSelect={(e) => e.preventDefault()}
+              key={index}
+                checked={selectedZustandFilters.includes(value.key)}
+                onCheckedChange={() => handleSelectChange(value.key)}
+                className="capitalize"
+              >
+                {value.value}
+              </DropdownMenuCheckboxItem>
+            ))}
         </ScrollArea>
       </DropdownMenuContent>
     </DropdownMenu>

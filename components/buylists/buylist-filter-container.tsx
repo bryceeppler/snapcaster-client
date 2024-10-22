@@ -27,6 +27,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
     foilData,
     rarityData,
     setData,
+    selectedSortBy,
     selectedFoilFilters,
     selectedRarityFilters,
     selectedSetFilters,
@@ -40,6 +41,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
     fetchCards
   } = useBuyListStore();
   const [sheetOpen, setSheetOpen] = useState(false);
+
   return (
     <>
       {mobile == true ? (
@@ -61,6 +63,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
               </SheetHeader>
               <div className="mt-8 grid gap-y-2">
                 <Select
+                  value={selectedSortBy}
                   onValueChange={(value) => {
                     updateSelectedSortBy(value);
                   }}
@@ -148,6 +151,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
             />
             <span className="mt-auto flex-1">
               <Select
+                value={selectedSortBy}
                 onValueChange={(value) => {
                   updateSelectedSortBy(value);
                 }}

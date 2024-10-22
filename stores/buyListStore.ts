@@ -30,15 +30,15 @@ type BuyListState = {
   individualStoreCart: any[];
   buyListCartData: any[];
   showFilters: boolean;
-  
+
   addToCart: (store: string, cardData: any) => void;
   removeFromCart: (store: string, cardData: any) => void;
   clearAllCartItems: () => void;
   selectedFoilFilters: any[];
   selectedRarityFilters: any[];
   selectedSetFilters: any[];
-  selectedSortBy:string;
-  updateSelectedSortBy: (sortByOption:string) => void;
+  selectedSortBy: string;
+  updateSelectedSortBy: (sortByOption: string) => void;
   updateSelectedFoilFilters: (filters: string[]) => void;
   updateSelectedRarityFilters: (filters: string[]) => void;
   updateSelectedSetFilters: (filters: string[]) => void;
@@ -52,7 +52,6 @@ type BuyListState = {
   fetchCards: () => void;
   filtersVisibile: boolean;
 };
-
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
   foilData: {},
@@ -71,9 +70,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   searchTerm: '',
   filtersVisibile: false,
   showFilters: false,
-  selectedSortBy:'best-match',
-  updateSelectedSortBy(sortByOption: string){
-    set({selectedSortBy:sortByOption})
+  selectedSortBy: 'best-match',
+  updateSelectedSortBy(sortByOption: string) {
+    set({ selectedSortBy: sortByOption });
   },
 
   updateSelectedFoilFilters(filters: string[]) {
@@ -228,60 +227,67 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
 
   fetchCards: async () => {
-    if (get().searchTerm){
-    const queryParams = new URLSearchParams({
-      name: get().searchTerm,
-      tcg: get().selectedTCG,
-      sortBy: get().selectedSortBy,
-      sets:  get().selectedSetFilters.map(set => encodeURIComponent(set)).join(','), // Comma-separated values
-      foils: get().selectedFoilFilters.map(foil => encodeURIComponent(foil)).join(','), // Comma-separated values
-      rarities: get().selectedRarityFilters.map(rarity => encodeURIComponent(rarity)).join(',') // Comma-separated values
-    });
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/search?${queryParams.toString()}`
-    );
+    if (get().searchTerm) {
+      const queryParams = new URLSearchParams({
+        name: get().searchTerm,
+        tcg: get().selectedTCG,
+        sortBy: get().selectedSortBy,
+        sets: get()
+          .selectedSetFilters.map((set) => encodeURIComponent(set))
+          .join(','), // Comma-separated values
+        foils: get()
+          .selectedFoilFilters.map((foil) => encodeURIComponent(foil))
+          .join(','), // Comma-separated values
+        rarities: get()
+          .selectedRarityFilters.map((rarity) => encodeURIComponent(rarity))
+          .join(',') // Comma-separated values
+      });
+      const response = await axios.get(
+        `${
+          process.env.NEXT_PUBLIC_BUYLISTS_URL
+        }/search?${queryParams.toString()}`
+      );
 
-    if (response.status !== 200) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      if (response.status !== 200) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
+      set({ buyListQueryResults: response.data.results.slice(0, 500) });
+      set({ filtersVisibile: true });
+
+      const setData = {
+        Sets: response.data.sets
+          .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
+          .map((item: string) => ({
+            key: item,
+            value: item
+          }))
+      };
+      const rarityData = {
+        Rarity: response.data.rarities
+          .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
+          .map((item: string) => ({
+            key: item,
+            value: item
+          }))
+      };
+      const foilData = {
+        Foil: response.data.foils
+          .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
+          .map((item: string) => ({
+            key: item,
+            value: item
+          }))
+      };
+      set({
+        setData: setData,
+        rarityData: rarityData,
+        foilData: foilData
+      });
+      set({ showFilters: true });
     }
-
-    set({ buyListQueryResults: response.data.results.slice(0, 500) });
-    set({ filtersVisibile: true });
-
-    const setData = {
-      Sets: response.data.sets
-        .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
-        .map((item: string) => ({
-          key: item,
-          value: item
-        }))
-    };
-    const rarityData = {
-      Rarity: response.data.rarities
-      .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
-      .map((item: string) => ({
-        key: item,
-        value: item
-      }))
-    };
-    const foilData = {
-      Foil: response.data.foils
-      .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
-      .map((item: string) => ({
-        key: item,
-        value: item
-      }))
-    };
-    set({
-      setData: setData,
-      rarityData: rarityData,
-      foilData: foilData
-    });
-    set({ showFilters: true });
-    }
-
   },
-  
+
   setSearchTerm(searchBoxValue: string) {
     set({ searchTerm: searchBoxValue });
   }
