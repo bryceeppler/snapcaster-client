@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTriggerNoIcon as SelectTrigger,
   SelectValue
@@ -158,7 +159,7 @@ export default function SingleSearchBar() {
     <div className="relative w-full max-w-3xl">
       <div className="flex w-full items-center rounded-full border border-border bg-popover p-1">
         <Select
-          onOpenChange={setIsOpen}
+          //onOpenChange={setIsOpen}
           value={tcg}
           onValueChange={(value: Tcg) => {
             setTcg(value);
@@ -178,12 +179,15 @@ export default function SingleSearchBar() {
               }`}
             />
           </SelectTrigger>
+
           <SelectContent className="mt-1">
-            <SelectItem value="mtg">MTG</SelectItem>
-            <SelectItem value="lorcana">Lorcana</SelectItem>
-            <SelectItem value="onepiece">One Piece</SelectItem>
-            <SelectItem value="pokemon">Pokemon</SelectItem>
-            <SelectItem value="yugioh">Yu-Gi-Oh</SelectItem>
+            <SelectGroup>
+              <SelectItem value="mtg">MTG</SelectItem>
+              <SelectItem value="lorcana">Lorcana</SelectItem>
+              <SelectItem value="onepiece">One Piece</SelectItem>
+              <SelectItem value="pokemon">Pokemon</SelectItem>
+              <SelectItem value="yugioh">Yu-Gi-Oh</SelectItem>
+            </SelectGroup>
           </SelectContent>
         </Select>
         <div className="mx-2 h-8 w-px"></div>
