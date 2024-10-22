@@ -5,7 +5,19 @@ import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
-const Select = SelectPrimitive.Root;
+
+const SelectContext = React.createContext<
+  React.Dispatch<React.SetStateAction<boolean>>
+>(() => {});
+
+const Select: React.FC<SelectPrimitive.SelectProps> = (props) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  return (
+    <SelectContext.Provider value={setIsOpen}>
+      <SelectPrimitive.Root open={isOpen} onOpenChange={setIsOpen} {...props} />
+    </SelectContext.Provider>
+  );
+};
 
 const SelectGroup = SelectPrimitive.Group;
 
@@ -14,21 +26,32 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      'flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-      className
-    )}
-    {...props}
-  >
-    {children}
-    <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 opacity-50" />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
-));
+>(({ className, children, ...props }, ref) => {
+  const setIsOpen = React.useContext(SelectContext);
+  return (
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        'flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+        className
+      )}
+      {...props}
+      onPointerDown={(e) => {
+        if (e.pointerType === 'touch') e.preventDefault(); // disable the default behavior in mobile
+      }}
+      onPointerUp={(e) => {
+        if (e.pointerType === 'touch') {
+          setIsOpen((prevState) => !prevState); // use onPointerUp to simulate onClick in mobile
+        }
+      }}
+    >
+      {children}
+      <SelectPrimitive.Icon asChild>
+        <ChevronDown className="h-4 w-4 opacity-50" />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  );
+});
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectTriggerNoIcon = React.forwardRef<
@@ -89,9 +112,6 @@ const SelectContent = React.forwardRef<
 >(({ className, children, position = 'popper', ...props }, ref) => (
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
-      //radix bug that causes elemensts from the selectable drop down option also click the element behind it on mobile devices specifically
-      //I replaced the ref to prevent this from happening on screen touch - Henry
-      //ref={ref}
       ref={(ref) => {
         if (!ref) return;
         ref.ontouchstart = (e) => {
