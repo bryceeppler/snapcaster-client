@@ -16,6 +16,7 @@ import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { Tcg } from '@/types';
+import { trackSearch } from '@/utils/analytics';
 interface AutocompleteResult {
   name: string;
 }
@@ -110,6 +111,7 @@ export default function SingleSearchBar() {
 
   const handleSearch = () => {
     fetchCards();
+    trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
   };
 
