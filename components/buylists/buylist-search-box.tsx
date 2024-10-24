@@ -34,7 +34,11 @@ export default function BuyListSearchBox() {
       if (searchTerm != searchBoxRef.current.value) {
         resetAllFilters();
       }
-      trackSearch(searchTerm, selectedTCG, 'buylist');
+      trackSearch(
+        searchTerm ?? searchBoxRef.current.value,
+        selectedTCG,
+        'buylist'
+      );
       setSearchTerm(searchBoxRef.current.value);
       fetchCards();
     }
