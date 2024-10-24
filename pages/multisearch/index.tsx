@@ -25,6 +25,7 @@ import BackToTopButton from '@/components/ui/back-to-top-btn';
 import PoweredBy from '@/components/powered-by';
 import { ResultsContainer } from '@/components/multi-search/results-container';
 import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
+import { trackSearch } from '@/utils/analytics';
 
 type Props = {};
 
@@ -230,6 +231,7 @@ const SearchView = ({
       ></Textarea>
       <Button
         onClick={() => {
+          trackSearch(searchInput, tcg, 'multi');
           handleSubmit(tcg);
         }}
         disabled={

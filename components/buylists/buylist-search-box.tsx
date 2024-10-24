@@ -12,16 +12,17 @@ import { Search } from 'lucide-react';
 import useBuyListStore from '@/stores/buyListStore';
 import { useRef } from 'react';
 import { shallow } from 'zustand/shallow';
-
+import { trackSearch } from '@/utils/analytics';
 export default function BuyListSearchBox() {
   const searchBoxRef = useRef<HTMLInputElement>(null);
 
-  const { changeTCG, searchTerm, fetchCards, setSearchTerm, resetAllFilters } =
+  const { changeTCG, searchTerm, fetchCards, selectedTCG, setSearchTerm, resetAllFilters } =
     useBuyListStore(
       (state) => ({
         changeTCG: state.changeTCG,
         searchTerm: state.searchTerm,
         fetchCards: state.fetchCards,
+        selectedTCG: state.selectedTCG,
         setSearchTerm: state.setSearchTerm,
         resetAllFilters: state.resetAllFilters
       }),
@@ -33,6 +34,7 @@ export default function BuyListSearchBox() {
       if (searchTerm != searchBoxRef.current.value) {
         resetAllFilters();
       }
+      trackSearch(searchTerm, selectedTCG, 'buylist');
       setSearchTerm(searchBoxRef.current.value);
       fetchCards();
     }
