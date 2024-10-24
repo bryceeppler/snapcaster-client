@@ -22,6 +22,7 @@ export const handleBuyClick = (
   link: string,
   price: number,
   cardName: string,
+  setName: string,
   promoted: boolean,
   tcg: string
 ) => {
@@ -38,6 +39,7 @@ export const handleBuyClick = (
     event: 'buy_button_click',
     website: domain,
     card_name: cardName,
+    set_name: setName,
     card_price: priceInCents,
     tcg: tcg
   });

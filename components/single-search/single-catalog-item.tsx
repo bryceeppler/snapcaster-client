@@ -121,6 +121,7 @@ const SingleCatalogItem = ({ product }: Props) => {
               product.link,
               product.price,
               product.name,
+              product.set,
               product.promoted ?? false,
               resultsTcg
             )
