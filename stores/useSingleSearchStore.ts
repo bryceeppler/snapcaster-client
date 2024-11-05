@@ -35,7 +35,8 @@ type SearchState = {
   setFilter: (filterField: string, value: string, selected: boolean) => void;
   sortBy: SortOptions;
   setSortBy: (sortBy: SortOptions) => void;
-  loading: boolean;
+  loadingCardResults: boolean;
+  loadingFilterResults: boolean;
   searchResults: Product[] | null;
   resultsTcg: Tcg;
   promotedResults: Product[] | null;
@@ -50,6 +51,7 @@ type SearchState = {
   clearFilters: () => void;
   setAutocompleteSuggestions: (suggestions: string[]) => void;
   fetchCards: () => Promise<void>;
+  applyFilters: () => Promise<void>;
   clearSearchResults: () => void;
 };
 
@@ -64,7 +66,8 @@ export const useSingleSearchStore = create<SearchState>()(
         resultsTcg: 'mtg',
         filters: null,
         sortBy: 'price-asc',
-        loading: false,
+        loadingCardResults: false,
+        loadingFilterResults:false,
         searchResults: null,
         promotedResults: null,
         autocompleteSuggestions: [],
@@ -104,7 +107,7 @@ export const useSingleSearchStore = create<SearchState>()(
         fetchCards: async () => {
           const { tcg, searchTerm, filters, sortBy, region } = get();
           try {
-            set({ loading: true });
+            set({ loadingCardResults: true, loadingFilterResults:true });
 
             const queryParams = new URLSearchParams({
               index: `ca_singles_${tcg}_prod*`,
@@ -171,10 +174,78 @@ export const useSingleSearchStore = create<SearchState>()(
             console.error('Error fetching cards:', error);
             toast.error('Unable to fetch cards: ' + error.message);
           } finally {
-            set({ loading: false });
+            set({ loadingCardResults: false, loadingFilterResults:false });
           }
         },
+        applyFilters: async () => {
+          const { tcg, searchTerm, filters, sortBy, region } = get();
+          try {
+            const queryParams = new URLSearchParams({
+              index: `ca_singles_${tcg}_prod*`,
+              keyword: searchTerm.trim(),
+              // search: 'fuzzy',
+              sortBy: `${sortBy}`,
+              maxResultsPerPage: '100',
+              pageNumber: get().currentPage.toString()
+            });
 
+            if (filters) {
+              Object.entries(filters).forEach(([index, filter]) => {
+                filter.values.forEach((value) => {
+                  if (value.selected) {
+                    queryParams.append(
+                      `filterSelections[${filter.field}][]`,
+                      value.value
+                    );
+                  }
+                });
+              });
+            }
+
+            const response = await axiosInstance.get(
+              `${
+                process.env.NEXT_PUBLIC_CATALOG_URL
+              }/api/v1/search?${queryParams.toString()}`
+            );
+
+            if (response.status !== 200) {
+              throw new Error(
+                `Error: ${response.status} - ${response.statusText}`
+              );
+            }
+
+            const updatedSearchResults = response.data.results.map(
+              (item: Product) => ({
+                ...item,
+                promoted: false
+              })
+            );
+
+            const promotedResults = response.data.promotedResults || [];
+            const updatedPromotedResults = promotedResults.map(
+              (item: Product) => ({
+                ...item,
+                promoted: true
+              })
+            );
+
+            const filterOptionsFromResponse: FilterOption[] =
+              response.data.filters || [];
+
+            set({
+              searchResults: updatedSearchResults,
+              promotedResults: updatedPromotedResults,
+              filterOptions: filterOptionsFromResponse,
+              filters: filterOptionsFromResponse,
+              resultsTcg: tcg,
+              numPages: response.data.pagination.numPages,
+              numResults: response.data.pagination.numResults
+            });
+          } catch (error: any) {
+            console.error('Error fetching cards:', error);
+            toast.error('Unable to fetch cards: ' + error.message);
+          }
+        },
         clearSearchResults: () =>
           set({ searchResults: null, promotedResults: null }),
         setCurrentPage: (currentPage: number) => set({ currentPage })
