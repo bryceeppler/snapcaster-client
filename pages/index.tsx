@@ -13,8 +13,6 @@ import ResultsSkeleton from '@/components/single-search/results-skeleton';
 type Props = {};
 
 const Home: NextPage<Props> = ({}: Props) => {
-  const { searchResults, loading } = useSingleSearchStore();
-
   return (
     <>
       <HomeHead />
