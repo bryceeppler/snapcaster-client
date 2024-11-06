@@ -8,14 +8,26 @@ import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/buyListStore';
 import { useState, useEffect } from 'react';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
+import SinglePagination from '@/components/single-search/single-pagination';
 type Props = {};
 
 const Buylist: NextPage<Props> = () => {
   const {} = useGlobalStore();
-  const { buyListQueryResults, showFilters } = useBuyListStore(
+  const {
+    buyListQueryResults,
+    showFilters,
+    currentPage,
+    totalPages,
+    setCurrentPage,
+    fetchCards
+  } = useBuyListStore(
     (state) => ({
       buyListQueryResults: state.buyListQueryResults,
-      showFilters: state.showFilters
+      showFilters: state.showFilters,
+      currentPage: state.currentPage,
+      totalPages: state.totalPages,
+      setCurrentPage: state.setCurrentPage,
+      fetchCards: state.fetchCards
     }),
     shallow
   );
@@ -55,7 +67,7 @@ const Buylist: NextPage<Props> = () => {
         <div className="mt-8 w-full md:grid md:grid-cols-12 md:gap-x-4  ">
           {/* Results Container*/}
           <div className=" md:col-span-7">
-            <h1 className="pb-2 text-2xl font-semibold">Results</h1>
+            <h1 className="pb-2 text-2xl font-semibold"> Search Results</h1>
             {/* Results Cards Container*/}
 
             {buyListQueryResults.map((item: any, key: number) => (
@@ -71,6 +83,14 @@ const Buylist: NextPage<Props> = () => {
             </div>
           )}
         </div>
+        {totalPages > 0 && (
+          <SinglePagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            numPages={totalPages}
+            fetchCards={fetchCards}
+          />
+        )}
         <BackToTopButton />
       </div>
     </>

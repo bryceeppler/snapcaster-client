@@ -1,17 +1,25 @@
-import { useSingleSearchStore } from "@/stores/useSingleSearchStore";
-import BackToTopButton from "../ui/back-to-top-btn";
-import SingleSortBy from "./single-sort-by";
-import SingleCatalogItem from "./single-catalog-item";
-import FilterSection from "./single-filter-container";
-import SinglePagination from "./single-pagination";
-import useAuthStore from "@/stores/authStore";
-import useGlobalStore from "@/stores/globalStore";
-import AdComponent from "../ad";
-import type { Ad } from "@/types/ads";
-import React, { useState, useEffect, useMemo } from "react";
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
+import BackToTopButton from '../ui/back-to-top-btn';
+import SingleSortBy from './single-sort-by';
+import SingleCatalogItem from './single-catalog-item';
+import FilterSection from './single-filter-container';
+import SinglePagination from './single-pagination';
+import useAuthStore from '@/stores/authStore';
+import useGlobalStore from '@/stores/globalStore';
+import AdComponent from '../ad';
+import type { Ad } from '@/types/ads';
+import React, { useState, useEffect, useMemo } from 'react';
 
 export default function SingleCatalog() {
-  const { searchResults, promotedResults, numResults } = useSingleSearchStore();
+  const {
+    searchResults,
+    promotedResults,
+    numResults,
+    currentPage,
+    setCurrentPage,
+    numPages,
+    fetchCards
+  } = useSingleSearchStore();
   const { hasActiveSubscription } = useAuthStore();
   const { getRandomAd } = useGlobalStore();
 
@@ -19,7 +27,7 @@ export default function SingleCatalog() {
 
   const adBeforePromoted = useMemo(() => {
     if (!hasActiveSubscription) {
-      return getRandomAd('5'); 
+      return getRandomAd('5');
     }
     return null;
   }, [hasActiveSubscription, getRandomAd]);
@@ -31,32 +39,29 @@ export default function SingleCatalog() {
       for (let i = 0; i < adCount; i++) {
         adList.push(getRandomAd('5'));
       }
-      setAds(adList); 
+      setAds(adList);
     }
-  }, [searchResults, hasActiveSubscription, getRandomAd]); 
+  }, [searchResults, hasActiveSubscription, getRandomAd]);
 
   return (
     <div className="grid min-h-svh gap-6 md:grid-cols-[240px_1fr]">
       <div className="flex flex-col gap-6">
         <div className="grid gap-4">
-          <div className="relative flex flex-col w-full gap-2">
-          <div className="child-2 md:hidden">
+          <div className="relative flex w-full flex-col gap-2">
+            <div className="child-2 md:hidden">
               <SingleSortBy />
             </div>
             <div className="child-1 w-full">
               <FilterSection />
             </div>
-
           </div>
         </div>
       </div>
       <div className="grid h-min gap-6">
         <div className="flex justify-between">
-          <div className="text-left flex flex-col">
-          <h1 className="text-2xl font-bold">Search Results</h1>
-          <p className="text-sm text-gray-500">
-            {numResults} results found
-          </p>
+          <div className="flex flex-col text-left">
+            <h1 className="text-2xl font-bold">Search Results</h1>
+            <p className="text-sm text-gray-500">{numResults} results found</p>
           </div>
           <div className="hidden md:block">
             <SingleSortBy />
@@ -68,7 +73,8 @@ export default function SingleCatalog() {
             {adBeforePromoted && !hasActiveSubscription && (
               <AdComponent ad={adBeforePromoted} />
             )}
-            {promotedResults && !hasActiveSubscription &&
+            {promotedResults &&
+              !hasActiveSubscription &&
               promotedResults.map((item, index) => {
                 return <SingleCatalogItem product={item} key={index} />;
               })}
@@ -77,15 +83,24 @@ export default function SingleCatalog() {
               <React.Fragment key={index}>
                 <SingleCatalogItem product={item} />
 
-                {(!hasActiveSubscription && (index + 1) % 6 === 0 && ads[Math.floor(index / 6)]) && (
-                  <AdComponent ad={ads[Math.floor(index / 6)]} />
-                )}
+                {!hasActiveSubscription &&
+                  (index + 1) % 6 === 0 &&
+                  ads[Math.floor(index / 6)] && (
+                    <AdComponent ad={ads[Math.floor(index / 6)]} />
+                  )}
               </React.Fragment>
             ))}
           </div>
         )}
 
-        {searchResults && <SinglePagination />}
+        {searchResults && (
+          <SinglePagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            numPages={numPages}
+            fetchCards={fetchCards}
+          />
+        )}
       </div>
       <BackToTopButton />
     </div>

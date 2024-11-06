@@ -52,14 +52,9 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
 
   return (
     <div className="flex w-full space-x-1">
-      <button className="mb-2 max-h-10">
-        <a href={getBuylistLink(Object.keys(storeCartData)[0])} target="_blank">
-          <ExternalLinkIcon className="text-card h-5 w-5 hover:text-primary"></ExternalLinkIcon>
-        </a>
-      </button>
       <Accordion type="single" className="w-full" collapsible>
         <AccordionItem value="item-1" className="rounded-md border-none">
-          <AccordionTrigger className="border-border-colour mb-2 max-h-10 rounded-md border bg-popover px-2 text-sm font-bold">
+          <AccordionTrigger className="border-border-colour mb-2 max-h-10 rounded-md border bg-popover px-2 text-sm font-bold hover:no-underline">
             {`${getWebsiteName(Object.keys(storeCartData)[0])} (${
               storeCartData[Object.keys(storeCartData)[0]].length
             }) `}
@@ -140,7 +135,6 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                   </div>
                 )
               )}
-
               <div className="grid grid-cols-12">
                 <div className="col-span-9 col-start-2">
                   <p className="font-bold text-muted-foreground">Cash:</p>
@@ -156,7 +150,16 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                 <div className="col-span-2 col-start-11">
                   <p className="font-bold ">${totalCredit.toFixed(2)}</p>
                 </div>
-              </div>
+              </div>{' '}
+              <a
+                href={getBuylistLink(Object.keys(storeCartData)[0])}
+                target="_blank"
+                className=""
+              >
+                <div className="mx-6 mb-2 mt-4 flex justify-center">
+                  <Button className="h-9 w-full	">Sell</Button>
+                </div>
+              </a>
             </div>
           </AccordionContent>
         </AccordionItem>

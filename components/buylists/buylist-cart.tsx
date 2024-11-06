@@ -15,7 +15,8 @@ type Props = {
 };
 
 export default function BuyListCart({ mobile }: Props) {
-  const { buyListCartData, clearAllCartItems } = useBuyListStore();
+  const { buyListCartData, clearAllCartItems, individualStoreCart } =
+    useBuyListStore();
   const [cashTotalAllStores, setCashTotalAllStores] = useState(0);
   const [creditTotalAllStores, setCreditTotalAllStores] = useState(0);
   useEffect(() => {
@@ -82,22 +83,24 @@ export default function BuyListCart({ mobile }: Props) {
                     </p>
                   </div>
                 </div>
-                <div className="mt-4 md:mt-2">
-                  <Button
-                    onClick={() => {
-                      clearAllCartItems();
-                    }}
-                    className="w-full bg-red-600 font-bold"
-                  >
-                    Clear Cart
-                  </Button>
-                </div>
+                {buyListCartData.length > 0 && (
+                  <div className="mt-4 md:mt-2">
+                    <Button
+                      onClick={() => {
+                        clearAllCartItems();
+                      }}
+                      className="w-full bg-red-500 font-bold hover:bg-red-600"
+                    >
+                      Clear Cart
+                    </Button>
+                  </div>
+                )}
               </ScrollArea>
             </div>
           </SheetContent>
         </Sheet>
       ) : (
-        <div className="sticky top-5 max-h-[85svh]">
+        <div className="sticky top-5 max-h-[85svh] ">
           <h1 className="pb-2 text-2xl font-semibold">Cart</h1>
           <ScrollArea
             className="flex max-h-[85svh] flex-col overflow-y-auto rounded"
@@ -111,6 +114,7 @@ export default function BuyListCart({ mobile }: Props) {
                 ></CartStoreAccordian>
               ))}
             </div>
+
             <div className="flex justify-between">
               <div>
                 <p className="font-bold text-muted-foreground">Cash:</p>
@@ -131,12 +135,14 @@ export default function BuyListCart({ mobile }: Props) {
                 </p>
               </div>
             </div>
+
             <div className="mt-2">
               <Button
+                disabled={buyListCartData.length > 0 ? false : true}
                 onClick={() => {
                   clearAllCartItems();
                 }}
-                className="w-full bg-red-600 font-bold"
+                className="w-full bg-red-500 font-bold hover:bg-red-600"
               >
                 Clear Cart
               </Button>

@@ -120,7 +120,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                   onClick={() => {
                     resetAllFilters();
                   }}
-                  className={`text-md mt-2 h-9 bg-red-600  font-semibold  `}
+                  className={`text-md mt-2 h-9 bg-red-500 font-semibold  hover:bg-red-600  `}
                 >
                   Reset Filters
                 </Button>
@@ -193,7 +193,7 @@ export default function BuyListFilterContainer({ mobile }: Props) {
                 onClick={() => {
                   resetAllFilters();
                 }}
-                className={`ml-2 h-8 bg-red-600 font-semibold  sm:w-[180px]`}
+                className={`ml-2 h-8 bg-red-500 font-semibold hover:bg-red-600  sm:w-[180px]`}
               >
                 Reset Filters
               </Button>

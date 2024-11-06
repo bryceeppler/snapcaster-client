@@ -30,7 +30,10 @@ type BuyListState = {
   individualStoreCart: any[];
   buyListCartData: any[];
   showFilters: boolean;
-
+  maxResultsPerPage: number;
+  currentPage: number;
+  totalPages:number ;
+  setCurrentPage: (currentPage: number) => void;
   addToCart: (store: string, cardData: any) => void;
   removeFromCart: (store: string, cardData: any) => void;
   clearAllCartItems: () => void;
@@ -70,6 +73,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   searchTerm: '',
   filtersVisibile: false,
   showFilters: false,
+  maxResultsPerPage: 100,
+  currentPage: 1,
+  totalPages:0,
   selectedSortBy: 'best-match',
   updateSelectedSortBy(sortByOption: string) {
     set({ selectedSortBy: sortByOption });
@@ -223,7 +229,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         });
         break;
     }
-    set({ filtersVisibile: false });
+
+    set({ filtersVisibile: false,currentPage:1,totalPages:0 });
   },
 
   fetchCards: async () => {
@@ -232,6 +239,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         name: get().searchTerm,
         tcg: get().selectedTCG,
         sortBy: get().selectedSortBy,
+        pageNumber:get().currentPage.toString(),
+        maxResultsPerPage:get().maxResultsPerPage.toString(),
         sets: get()
           .selectedSetFilters.map((set) => encodeURIComponent(set))
           .join(','), // Comma-separated values
@@ -280,6 +289,10 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
           }))
       };
       set({
+        totalPages:response.data.pagination.numPages
+
+      });
+      set({
         setData: setData,
         rarityData: rarityData,
         foilData: foilData
@@ -290,6 +303,10 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
   setSearchTerm(searchBoxValue: string) {
     set({ searchTerm: searchBoxValue });
+  },
+  setCurrentPage(currentPage:number){
+    set({currentPage:currentPage})
   }
+
 }));
 export default useBuyListStore;
