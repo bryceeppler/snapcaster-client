@@ -15,8 +15,7 @@ type Props = {
 };
 
 export default function BuyListCart({ mobile }: Props) {
-  const { buyListCartData, clearAllCartItems, individualStoreCart } =
-    useBuyListStore();
+  const { buyListCartData, clearAllCartItems } = useBuyListStore();
   const [cashTotalAllStores, setCashTotalAllStores] = useState(0);
   const [creditTotalAllStores, setCreditTotalAllStores] = useState(0);
   useEffect(() => {
@@ -101,7 +100,15 @@ export default function BuyListCart({ mobile }: Props) {
         </Sheet>
       ) : (
         <div className="sticky top-5 max-h-[85svh] ">
-          <h1 className="pb-2 text-2xl font-semibold">Cart</h1>
+          <div className="mb-2 flex flex-col text-left capitalize">
+            <h1 className="text-2xl font-bold">Cart</h1>
+
+            <p className="text-sm text-gray-500">
+              {' '}
+              {buyListCartData.length} Stores Selected
+            </p>
+          </div>
+
           <ScrollArea
             className="flex max-h-[85svh] flex-col overflow-y-auto rounded"
             type="scroll"

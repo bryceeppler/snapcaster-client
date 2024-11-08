@@ -124,9 +124,9 @@ export default function CartStoreAccordian({ storeCartData }: Props) {
                         </button>
 
                         <button
-                          onClick={() =>
-                            addToCart(Object.keys(storeCartData)[0], item)
-                          }
+                          onClick={() => {
+                            addToCart(Object.keys(storeCartData)[0], item);
+                          }}
                         >
                           <PlusIcon className="h-6 w-6 stroke-1" />
                         </button>

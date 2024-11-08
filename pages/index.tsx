@@ -15,12 +15,11 @@ type Props = {};
 const Home: NextPage<Props> = ({}: Props) => {
   const { searchResults, loading } = useSingleSearchStore();
 
-
   return (
     <>
       <HomeHead />
       <div className="flex w-full flex-col justify-center gap-8 text-center">
-        <Homebanner />
+        <Homebanner prefixText={'Search for'} />
         <PoweredBy size="small" />
 
         <div className="mx-auto flex w-full justify-center">
@@ -28,9 +27,7 @@ const Home: NextPage<Props> = ({}: Props) => {
         </div>
         {loading && <ResultsSkeleton />}
 
-        {!loading && searchResults && (
-          <SingleCatalog />
-        )}
+        {!loading && searchResults && <SingleCatalog />}
       </div>
     </>
   );

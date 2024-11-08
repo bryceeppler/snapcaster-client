@@ -14,6 +14,7 @@ import useAuthStore from '@/stores/authStore';
 import { AlignJustify } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import RegionSelector from './region-selector';
+import ModeToggle from '../theme-toggle';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
@@ -137,6 +138,9 @@ const Navbar: React.FC = () => {
               </Button>
             </Link>
           )}
+
+          <ModeToggle />
+
           {/* <div className="flex items-center gap-2 ml-4">
           <RegionSelector />
 
@@ -213,11 +217,12 @@ const Navbar: React.FC = () => {
               <Button className="px-4 py-2 text-sm font-medium">Account</Button>
             </Link>
           )}
+          <ModeToggle />
         </div>
       </div>
     </>
   );
-}
+};
 
 const ListItem = React.forwardRef<
   React.ElementRef<'a'>,
