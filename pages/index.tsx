@@ -13,8 +13,6 @@ import ResultsSkeleton from '@/components/single-search/results-skeleton';
 type Props = {};
 
 const Home: NextPage<Props> = ({}: Props) => {
-  const { searchResults, loading } = useSingleSearchStore();
-
   return (
     <>
       <HomeHead />
@@ -25,9 +23,7 @@ const Home: NextPage<Props> = ({}: Props) => {
         <div className="mx-auto flex w-full justify-center">
           <SingleSearchBar />
         </div>
-        {loading && <ResultsSkeleton />}
-
-        {!loading && searchResults && <SingleCatalog />}
+        <SingleCatalog />
       </div>
     </>
   );

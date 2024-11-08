@@ -22,7 +22,7 @@ export default function FilterSection(): JSX.Element {
   };
 
   return (
-    <div className="mx-auto w-full md:max-w-sm rounded-lg bg-popover text-left shadow-md p-4">
+    <div className="mx-auto w-full rounded-lg bg-popover p-4 text-left shadow-md md:max-w-sm">
       <h2 className="mb-6 text-2xl font-bold">Filters</h2>
 
       {filterOptions &&
@@ -40,17 +40,24 @@ export default function FilterSection(): JSX.Element {
           }
         })}
 
-        {!hasActiveSubscription && (
-          <div className="p-4 text-sm text-left border border-1 mb-4 flex flex-col gap-2">
-            <p>
-              Snapcaster <span className="text-primary font-bold">Pro</span> members get advanced filtering options.
-              
-            </p>
+      {!hasActiveSubscription && (
+        <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
+          <p>
+            Snapcaster <span className="font-bold text-primary">Pro</span>{' '}
+            members get advanced filtering options.
+          </p>
 
-            <Button onClick={
-              isAuthenticated ? createCheckoutSession : () => window.location.href = '/signin'}>Subscribe</Button>
-          </div>
-        )}
+          <Button
+            onClick={
+              isAuthenticated
+                ? createCheckoutSession
+                : () => (window.location.href = '/signin')
+            }
+          >
+            Subscribe
+          </Button>
+        </div>
+      )}
 
       <Button onClick={handleClearFilters} className="w-full">
         Clear Filters
@@ -86,7 +93,7 @@ interface FilterFactoryProps {
 }
 
 const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
-  const { fetchCards, setFilter, filters, setCurrentPage } =
+  const { fetchCards, setFilter, filters, setCurrentPage, applyFilters } =
     useSingleSearchStore();
   const handleOptionChange = (
     filter: FilterOption,
@@ -94,7 +101,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
   ) => {
     setFilter(filter.field, option.value, !option.selected);
     setCurrentPage(1);
-    fetchCards();
+    applyFilters();
   };
   const { getWebsiteName } = useGlobalStore();
   return (
@@ -109,7 +116,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
               onChange={(e) => handleOptionChange(filterOption, option)}
               className="mr-2 mt-1"
             />
-            <label htmlFor={option.value} className="leading-5 text-sm">
+            <label htmlFor={option.value} className="text-sm leading-5">
               {filterOption.field === 'vendor'
                 ? getWebsiteName(option.value)
                 : option.label}{' '}
