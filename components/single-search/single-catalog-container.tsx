@@ -15,6 +15,10 @@ export default function SingleCatalog() {
     searchResults,
     promotedResults,
     numResults,
+    currentPage,
+    setCurrentPage,
+    numPages,
+    fetchCards,
     loadingCardResults,
     loadingFilterResults,
     filters
@@ -126,7 +130,14 @@ export default function SingleCatalog() {
             </div>
           )}
 
-          {searchResults && <SinglePagination />}
+          {searchResults && (
+            <SinglePagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              numPages={numPages}
+              fetchCards={fetchCards}
+            />
+          )}
         </div>
       )}
 

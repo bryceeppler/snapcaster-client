@@ -15,10 +15,13 @@ import { Button } from '../ui/button';
 import useBuyListStore from '@/stores/buyListStore';
 import useGlobalStore from '@/stores/globalStore';
 import React, { memo, useState, useEffect } from 'react';
+import { BuyListCartCardData } from '@/types/product';
 
 type Props = { cardData: any };
 
 const ResultCard = memo(function ResultCard({ cardData }: Props) {
+  console.log('result card');
+
   const [selectedCondition, setSelectedCondition] = useState<string>('');
   const [selectableConditions, setSelectableConditions] = useState<string[]>(
     []
@@ -134,14 +137,15 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
                 <Button
                   className="w-1/2 font-bold"
                   onClick={() => {
-                    const tempCardData = {
+                    const tempCardData: BuyListCartCardData = {
                       name: cardData.name,
                       set: cardData.set,
                       foil: cardData.foil,
                       rarity: cardData.rarity,
                       cashPrice: cashPrice,
                       creditPrice: creditPrice,
-                      condition: selectedCondition
+                      condition: selectedCondition,
+                      quantity: 1
                     };
 
                     selectedStore !== 'N/A'

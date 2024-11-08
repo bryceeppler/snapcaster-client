@@ -1,8 +1,8 @@
 import React from 'react';
 import { TypeAnimation } from 'react-type-animation';
-type Props = {};
+type Props = { prefixText: string };
 
-export default function Homebanner({}: Props) {
+export default function Homebanner({ prefixText }: Props) {
   return (
     <div>
       <img
@@ -11,22 +11,22 @@ export default function Homebanner({}: Props) {
         alt="Snapcaster"
       />
 
-      <h1 className="mt-2 text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+      <h1 className="mb-2 mt-2 text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
         Snapcaster
       </h1>
       <TypeAnimation
         preRenderFirstString={true}
         sequence={[
           1400,
-          'Search for Magic: the Gathering',
+          `${prefixText} Magic: the Gathering`,
           1400,
-          'Search for One Piece',
+          `${prefixText} One Piece`,
           1400,
-          'Search for Pokemon',
+          `${prefixText} Pokemon`,
           1400,
-          'Search for Yu-gi-oh',
+          `${prefixText} Yu-gi-oh`,
           1400,
-          'Search for Lorcana',
+          `${prefixText} Lorcana`,
           1400
         ]}
         wrapper="span"

@@ -82,23 +82,33 @@ export default function BuyListCart({ mobile }: Props) {
                     </p>
                   </div>
                 </div>
-                <div className="mt-4 md:mt-2">
-                  <Button
-                    onClick={() => {
-                      clearAllCartItems();
-                    }}
-                    className="w-full bg-red-600 font-bold"
-                  >
-                    Clear Cart
-                  </Button>
-                </div>
+                {buyListCartData.length > 0 && (
+                  <div className="mt-4 md:mt-2">
+                    <Button
+                      onClick={() => {
+                        clearAllCartItems();
+                      }}
+                      className="w-full bg-red-500 font-bold hover:bg-red-600"
+                    >
+                      Clear Cart
+                    </Button>
+                  </div>
+                )}
               </ScrollArea>
             </div>
           </SheetContent>
         </Sheet>
       ) : (
-        <div className="sticky top-5 max-h-[85svh]">
-          <h1 className="pb-2 text-2xl font-semibold">Cart</h1>
+        <div className="sticky top-5 max-h-[85svh] ">
+          <div className="mb-2 flex flex-col text-left capitalize">
+            <h1 className="text-2xl font-bold">Cart</h1>
+
+            <p className="text-sm text-gray-500">
+              {' '}
+              {buyListCartData.length} Stores Selected
+            </p>
+          </div>
+
           <ScrollArea
             className="flex max-h-[85svh] flex-col overflow-y-auto rounded"
             type="scroll"
@@ -111,6 +121,7 @@ export default function BuyListCart({ mobile }: Props) {
                 ></CartStoreAccordian>
               ))}
             </div>
+
             <div className="flex justify-between">
               <div>
                 <p className="font-bold text-muted-foreground">Cash:</p>
@@ -131,12 +142,14 @@ export default function BuyListCart({ mobile }: Props) {
                 </p>
               </div>
             </div>
+
             <div className="mt-2">
               <Button
+                disabled={buyListCartData.length > 0 ? false : true}
                 onClick={() => {
                   clearAllCartItems();
                 }}
-                className="w-full bg-red-600 font-bold"
+                className="w-full bg-red-500 font-bold hover:bg-red-600"
               >
                 Clear Cart
               </Button>

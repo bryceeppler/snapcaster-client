@@ -17,7 +17,7 @@ const Home: NextPage<Props> = ({}: Props) => {
     <>
       <HomeHead />
       <div className="flex w-full flex-col justify-center gap-8 text-center">
-        <Homebanner />
+        <Homebanner prefixText={'Search for'} />
         <PoweredBy size="small" />
 
         <div className="mx-auto flex w-full justify-center">

@@ -1,42 +1,29 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import { Tcg, BuyListQueryCard,BuyListCartStoreData,BuyListCartCardData } from '@/types/product';
 
-export interface Filter {
-  key: string;
-  value: string;
-}
-
-export interface BuyListQueryResults {
-  name: string;
-  set: any;
-  foil: any;
-  rarity: any;
-  image: string;
-  nm?: any;
-  lp?: any;
-  mp?: any;
-  hp?: any;
-  dmg?: any;
-}
-
-export interface DropDownOptions {
+interface DropDownOptions {
   [key: string]: { key: string; value: string }[];
 }
+
 type BuyListState = {
   foilData: DropDownOptions;
   rarityData: DropDownOptions;
   setData: DropDownOptions;
-  buyListQueryResults: BuyListQueryResults[];
-  individualStoreCart: any[];
-  buyListCartData: any[];
+  buyListQueryResults: BuyListQueryCard[];
+  buyListCartData: BuyListCartStoreData[];
   showFilters: boolean;
-
-  addToCart: (store: string, cardData: any) => void;
-  removeFromCart: (store: string, cardData: any) => void;
+  maxResultsPerPage: number;
+  currentPage: number;
+  totalPages:number ;
+  resultsTotal:number ;
+  setCurrentPage: (currentPage: number) => void;
+  addToCart: (store: string, cardData: BuyListCartCardData) => void;
+  removeFromCart: (store: string, cardData: BuyListCartCardData) => void;
   clearAllCartItems: () => void;
-  selectedFoilFilters: any[];
-  selectedRarityFilters: any[];
-  selectedSetFilters: any[];
+  selectedFoilFilters: string[];
+  selectedRarityFilters: string[];
+  selectedSetFilters: string[];
   selectedSortBy: string;
   updateSelectedSortBy: (sortByOption: string) => void;
   updateSelectedFoilFilters: (filters: string[]) => void;
@@ -45,12 +32,11 @@ type BuyListState = {
   atLeastOneFilter: boolean;
   checkAtleastOneFilter: () => void;
   resetAllFilters: () => void;
-  selectedTCG: string;
-  changeTCG: (tcg: string) => void;
+  selectedTCG: Tcg;
+  changeTCG: (tcg: Tcg) => void;
   searchTerm: string;
   setSearchTerm: (searchBoxValue: string) => void;
   fetchCards: () => void;
-  filtersVisibile: boolean;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
@@ -58,7 +44,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   rarityData: {},
   setData: {},
   buyListQueryResults: [],
-  individualStoreCart: [],
   buyListCartData: [],
   selectedStoreFilters: [],
   selectedConditionFilters: [],
@@ -68,13 +53,16 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   atLeastOneFilter: false,
   selectedTCG: 'mtg',
   searchTerm: '',
-  filtersVisibile: false,
   showFilters: false,
+  maxResultsPerPage: 100,
+  currentPage: 1,
+  totalPages:0,
+  resultsTotal:0,
   selectedSortBy: 'best-match',
+
   updateSelectedSortBy(sortByOption: string) {
     set({ selectedSortBy: sortByOption });
   },
-
   updateSelectedFoilFilters(filters: string[]) {
     set({ selectedFoilFilters: filters });
   },
@@ -139,7 +127,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     // Update Zustand state with the new cart data
     set({ buyListCartData: [...currentCartData] });
   },
-
   removeFromCart(store: string, cardData: any) {
     const currentCartData = get().buyListCartData;
     // Find the store in buyListCartData
@@ -162,7 +149,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         } else {
           storeCart.splice(cardIndex, 1);
         }
-
         // If no cards are left in the store, remove the store from the cart
         if (storeCart.length === 0) {
           currentCartData.splice(storeIndex, 1);
@@ -174,56 +160,19 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   clearAllCartItems() {
     set({ buyListCartData: [] });
   },
-  changeTCG(tcg: string) {
-    set({ buyListQueryResults: [] });
-    switch (tcg) {
-      case 'mtg':
-        set({
-          rarityData: { Rarity: [] },
-          foilData: { Foil: [] },
-          setData: { Set: [] },
-          showFilters: false,
-          selectedTCG: 'mtg'
-        });
-        break;
-      case 'onepiece':
-        set({
-          rarityData: { Rarity: [] },
-          foilData: { Foil: [] },
-          setData: { Set: [] },
-          showFilters: false,
-          selectedTCG: 'onepiece'
-        });
-        break;
-      case 'pokemon':
-        set({
-          rarityData: { Rarity: [] },
-          foilData: { Foil: [] },
-          setData: { Set: [] },
-          showFilters: false,
-          selectedTCG: 'pokemon'
-        });
-        break;
-      case 'lorcana':
-        set({
-          rarityData: { Rarity: [] },
-          foilData: { Foil: [] },
-          setData: { Set: [] },
-          showFilters: false,
-          selectedTCG: 'lorcana'
-        });
-        break;
-      case 'yugioh':
-        set({
-          rarityData: { Rarity: [] },
-          foilData: { Edition: [] },
-          setData: { Set: [] },
-          showFilters: false,
-          selectedTCG: 'yugioh'
-        });
-        break;
-    }
-    set({ filtersVisibile: false });
+  changeTCG(tcg: Tcg) {
+    // reset query results, filters, tcg category, and pagination states
+    set({
+      buyListQueryResults: [],
+      rarityData: { Rarity: [] },
+      foilData: { Foil: [] },
+      setData: { Set: [] },
+      showFilters: false,
+      selectedTCG: tcg,
+      currentPage:1,
+      totalPages:0,
+      resultsTotal:0
+    });
   },
 
   fetchCards: async () => {
@@ -232,16 +181,19 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         name: get().searchTerm,
         tcg: get().selectedTCG,
         sortBy: get().selectedSortBy,
+        pageNumber:get().currentPage.toString(),
+        maxResultsPerPage:get().maxResultsPerPage.toString(),
         sets: get()
           .selectedSetFilters.map((set) => encodeURIComponent(set))
-          .join(','), // Comma-separated values
+          .join(','),
         foils: get()
           .selectedFoilFilters.map((foil) => encodeURIComponent(foil))
-          .join(','), // Comma-separated values
+          .join(','),
         rarities: get()
           .selectedRarityFilters.map((rarity) => encodeURIComponent(rarity))
-          .join(',') // Comma-separated values
+          .join(',')
       });
+
       const response = await axios.get(
         `${
           process.env.NEXT_PUBLIC_BUYLISTS_URL
@@ -252,12 +204,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
 
-      set({ buyListQueryResults: response.data.results.slice(0, 500) });
-      set({ filtersVisibile: true });
-
       const setData = {
         Sets: response.data.sets
-          .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
+          .sort((a: string, b: string) => a.localeCompare(b))
           .map((item: string) => ({
             key: item,
             value: item
@@ -265,7 +214,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       };
       const rarityData = {
         Rarity: response.data.rarities
-          .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
+          .sort((a: string, b: string) => a.localeCompare(b))
           .map((item: string) => ({
             key: item,
             value: item
@@ -273,23 +222,30 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       };
       const foilData = {
         Foil: response.data.foils
-          .sort((a: string, b: string) => a.localeCompare(b)) // Sort the sets alphabetically
+          .sort((a: string, b: string) => a.localeCompare(b))
           .map((item: string) => ({
             key: item,
             value: item
           }))
       };
       set({
+        buyListQueryResults: response.data.results.slice(0, 500),
+        totalPages:response.data.pagination.numPages,
+        resultsTotal:response.data.pagination.numResults,
         setData: setData,
         rarityData: rarityData,
-        foilData: foilData
+        foilData: foilData,
+        showFilters: true,
       });
-      set({ showFilters: true });
     }
   },
 
   setSearchTerm(searchBoxValue: string) {
     set({ searchTerm: searchBoxValue });
+  },
+  setCurrentPage(currentPage:number){
+    set({currentPage:currentPage})
   }
+
 }));
 export default useBuyListStore;
