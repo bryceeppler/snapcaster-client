@@ -20,6 +20,17 @@ const Home: NextPage<Props> = ({}: Props) => {
         <Homebanner prefixText={'Search for'} />
         <PoweredBy size="small" />
 
+        <a
+          className="mx-auto w-min font-bold   hover:text-primary md:text-base"
+          href="https://discord.gg/EnKKHxSq75"
+          target="_none"
+        >
+          <p className="w-min whitespace-nowrap text-center text-sm">
+            ✨Join the Snapcaster Discord to enter the Obsidian Games Pokemon
+            sealed raffle in #public-giveaways on November 22 ✨
+          </p>
+        </a>
+
         <div className="mx-auto flex w-full justify-center">
           <SingleSearchBar />
         </div>

@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
             </Button>
           </Link>
 
-          <Link href="/buylists" as="/buylists">
+          {/* <Link href="/buylists" as="/buylists">
             <Button
               variant="ghost"
               className="block w-full text-left text-sm"
@@ -89,7 +89,7 @@ const Navbar: React.FC = () => {
             >
               Buy Lists
             </Button>
-          </Link>
+          </Link> */}
 
           <Link
             href="https://discord.gg/EnKKHxSq75"
@@ -176,13 +176,13 @@ const Navbar: React.FC = () => {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
-            <NavigationMenuItem>
+            {/* <NavigationMenuItem>
               <Link legacyBehavior href="/buylists" passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Buy Lists
                 </NavigationMenuLink>
               </Link>
-            </NavigationMenuItem>
+            </NavigationMenuItem> */}
             <NavigationMenuItem>
               <Link
                 legacyBehavior

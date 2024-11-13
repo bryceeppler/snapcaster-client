@@ -143,6 +143,7 @@ export default function SingleSearchBar() {
               handleSuggestionClick(item);
             }
           } else {
+            clearFilters();
             handleSearch();
           }
           break;
@@ -203,7 +204,13 @@ export default function SingleSearchBar() {
           onKeyDown={handleKeyDown}
         />
         <div className="mr-4 text-primary">
-          <MagnifyingGlassIcon className="h-5 w-5" onClick={handleSearch} />
+          <MagnifyingGlassIcon
+            className="h-5 w-5"
+            onClick={() => {
+              clearFilters();
+              handleSearch();
+            }}
+          />
         </div>
       </div>
       {isAutoCompleteVisible && (
