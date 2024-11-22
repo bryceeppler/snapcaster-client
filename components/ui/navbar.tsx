@@ -205,8 +205,7 @@ const Navbar: React.FC = () => {
         </NavigationMenu>
 
         <div className="flex items-center gap-2">
-          {' '}
-          {/* <RegionSelector /> */}
+          <ModeToggle />
           {!isAuthenticated && (
             <Link href="/signin">
               <Button className="px-4 py-2 text-sm font-medium">Login</Button>
@@ -217,7 +216,6 @@ const Navbar: React.FC = () => {
               <Button className="px-4 py-2 text-sm font-medium">Account</Button>
             </Link>
           )}
-          <ModeToggle />
         </div>
       </div>
     </>
