@@ -94,7 +94,7 @@ const useMultiSearchStore = create<MultiSearchState>()(
             const url = `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/multisearch`;
             const body = {
               cardData: cardNames,
-              index: `singles_${tcg}_prod*`
+              index: `ca_singles_${tcg}_prod*`
               // TODO: Add acceptable conditions
             };
 
