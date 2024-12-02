@@ -61,8 +61,9 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
   );
 };
 
-function MyApp({ Component, pageProps }: MyAppProps) {
+function MyApp({ Component, pageProps, router }: MyAppProps) {
   const { width = 0 } = useWindowSize();
+  const isWelcomePage = router.pathname === '/welcome';
 
   useEffect(() => {
     document.body.classList?.remove('loading');
@@ -83,18 +84,26 @@ function MyApp({ Component, pageProps }: MyAppProps) {
         attribute="class"
         defaultTheme="system"
         enableSystem
-        // disableTransitionOnChange
       >
-        <Layout>
-          <AdProvider>
-            <MainLayout>
-              <Toaster
-                position={width > 640 ? 'bottom-center' : 'bottom-right'}
-              />
-              <Component {...pageProps} />
-            </MainLayout>
-          </AdProvider>
-        </Layout>
+        {isWelcomePage ? (
+          <>
+            <Toaster
+              position={width > 640 ? 'bottom-center' : 'bottom-right'}
+            />
+            <Component {...pageProps} />
+          </>
+        ) : (
+          <Layout>
+            <AdProvider>
+              <MainLayout>
+                <Toaster
+                  position={width > 640 ? 'bottom-center' : 'bottom-right'}
+                />
+                <Component {...pageProps} />
+              </MainLayout>
+            </AdProvider>
+          </Layout>
+        )}
       </ThemeProvider>
     </main>
   );
