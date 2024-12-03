@@ -15,7 +15,7 @@ const SubscriptionCards = ({ createCheckoutSession }: Props) => {
           <div className="outlined-container flex w-full flex-col p-6 text-left">
             <h3 className="font-semibold text-primary">Snapcaster Pro</h3>
             <h2 className="text-2xl font-bold">
-              $3.99 <span className="text-sm font-normal">/mo</span>
+              $2.99 <span className="text-sm font-normal">/mo</span>
             </h2>
             <div className="p-1" />
 
