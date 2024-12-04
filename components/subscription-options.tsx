@@ -27,26 +27,19 @@ const SubscriptionCards = ({ createCheckoutSession }: Props) => {
               <div className="flex flex-row items-center gap-2">
                 <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
                 <p className="text-sm font-semibold text-zinc-400">
-                  Search over 65 Canadian stores
+                  Search over 80 Canadian stores
                 </p>
               </div>
               <div className="flex flex-row items-center gap-2">
                 <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
                 <p className="text-sm font-semibold text-zinc-400">
-                  Search up to 100 cards at a time
+                  Search up to 100 cards at a time with multi search
                 </p>
               </div>
               <div className="flex flex-row items-center gap-2">
                 <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
                 <p className="text-sm font-semibold text-zinc-400">
-                  Advanced filtering for card searches and multi-search
-                </p>
-              </div>
-
-              <div className="flex flex-row items-center gap-2">
-                <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-                <p className="text-sm font-semibold text-zinc-400">
-                  Participate in Snapcaster giveaways
+                  Participate in pro member exclusive giveaways
                 </p>
               </div>
               <div className="flex flex-row items-center gap-2">
