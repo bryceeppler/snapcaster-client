@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
@@ -9,12 +9,19 @@ import {
 import useGlobalStore from '@/stores/globalStore';
 import useAuthStore from '@/stores/authStore';
 import { createCheckoutSession } from '@/lib/utils';
+import shallow from 'zustand/shallow';
 
-export default function FilterSection(): JSX.Element {
-  const { filterOptions, fetchCards, clearFilters } = useSingleSearchStore();
-  const { hasActiveSubscription, isAuthenticated } = useAuthStore();
+const FilterSection: React.FC = memo(() => {
+  const { filterOptions, fetchCards, clearFilters } = useSingleSearchStore(
+    (state) => ({
+      filterOptions: state.filterOptions,
+      fetchCards: state.fetchCards,
+      clearFilters: state.clearFilters
+    }),
+    shallow // Compare state values shallowly
+  );
 
-  const freeFilters = ['condition', 'finish'];
+  const { isAuthenticated } = useAuthStore();
 
   const handleClearFilters = () => {
     clearFilters();
@@ -26,45 +33,37 @@ export default function FilterSection(): JSX.Element {
       <h2 className="mb-6 text-2xl font-bold">Filters</h2>
 
       {filterOptions &&
-        filterOptions.map((filterOption) => {
-          if (
-            hasActiveSubscription ||
-            freeFilters.includes(filterOption.field)
-          ) {
-            return (
-              <FilterScrollArea
-                key={filterOption.field}
-                filterOption={filterOption}
-              />
-            );
+        filterOptions.map((filterOption) => (
+          <FilterScrollArea
+            key={filterOption.field}
+            filterOption={filterOption}
+          />
+        ))}
+
+      <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
+        <p>
+          Support us with{' '}
+          <span className="font-bold text-primary">Snapcaster Pro</span> and
+          remove promoted results with reduced ads for $2.99/mo.
+        </p>
+
+        <Button
+          onClick={
+            isAuthenticated
+              ? createCheckoutSession
+              : () => (window.location.href = '/signin')
           }
-        })}
-
-      {!hasActiveSubscription && (
-        <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
-          <p>
-            Snapcaster <span className="font-bold text-primary">Pro</span>{' '}
-            members get advanced filtering options.
-          </p>
-
-          <Button
-            onClick={
-              isAuthenticated
-                ? createCheckoutSession
-                : () => (window.location.href = '/signin')
-            }
-          >
-            Subscribe
-          </Button>
-        </div>
-      )}
+        >
+          Subscribe
+        </Button>
+      </div>
 
       <Button onClick={handleClearFilters} className="w-full">
         Clear Filters
       </Button>
     </div>
   );
-}
+});
 
 interface FilterScrollAreaProps {
   filterOption: FilterOption;
@@ -127,3 +126,4 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
     </div>
   );
 };
+export default memo(FilterSection);
