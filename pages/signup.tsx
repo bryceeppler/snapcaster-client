@@ -6,10 +6,7 @@ import { toast } from 'sonner';
 import useAuthStore from '@/stores/authStore';
 import Profile from './profile';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+import { SignupForm } from '@/components/forms/SignupForm';
 import {
   Card,
   CardHeader,
@@ -19,50 +16,15 @@ import {
   CardFooter
 } from '@/components/ui/card';
 
-type SignupFormData = {
-  email: string;
-  password: string;
-  fullName: string;
-  confirmPassword: string;
-};
-
 type Props = {};
 
 const Signup: NextPage<Props> = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch
-  } = useForm<SignupFormData>();
-
-  const router = Router;
   const { isAuthenticated } = useAuthStore();
-
-  const onSubmit = async (data: SignupFormData) => {
-    const { email, password, fullName } = data;
-    const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/register`;
-
-    try {
-      const response = await axios.post(endpoint, {
-        email,
-        password,
-        fullName
-      });
-      if (response.status !== 200) {
-        throw new Error('Something went wrong with the registration process');
-      }
-      toast.success('Registration successful! You can now sign in.');
-      router.push('/signin');
-    } catch (error: any) {
-      toast.error('Could not register user');
-    }
-  };
-  const password = watch('password');
 
   if (isAuthenticated) {
     return <Profile />;
   }
+
   return (
     <>
       <SignupHead />
@@ -73,97 +35,17 @@ const Signup: NextPage<Props> = () => {
             <CardDescription>Create your Snapcaster account.</CardDescription>
           </CardHeader>
           <CardContent>
-            <form
-              className="grid gap-4 md:gap-4"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="grid gap-2">
-                <Label htmlFor="fullName">Name</Label>
-                <Input
-                  type="text"
-                  {...register('fullName', {
-                    required: 'A name is required'
-                  })}
-                  className={``}
-                  placeholder="Al Dente"
-                />
-                {errors.fullName && (
-                  <p className="text-red-500">{errors.fullName.message}</p>
-                )}
-              </div>{' '}
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  {...register('email', {
-                    required: 'Email is required',
-                    pattern: /^\S+@\S+\.\S+$/
-                  })}
-                  type="text"
-                  className={``}
-                  placeholder="m@example.com"
-                />
-                {errors.email && (
-                  <p className="text-red-500">{errors.email.message}</p>
-                )}
-                {errors.email?.type === 'pattern' && (
-                  <p className="text-red-500">Invalid email</p>
-                )}{' '}
-              </div>{' '}
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  type="password"
-                  {...register('password', {
-                    required: 'Password is required'
-                  })}
-                  className={``}
-                  placeholder=""
-                />
-                {errors.password && (
-                  <p className="text-red-500">{errors.password.message}</p>
-                )}{' '}
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  type="password"
-                  {...register('confirmPassword', {
-                    validate: (value) =>
-                      value === password || 'The passwords do not match'
-                  })}
-                  className={``}
-                  placeholder=""
-                />
-                {errors.confirmPassword && (
-                  <p className="text-red-500">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
-              <Button type="submit">Sign Up</Button>
-            </form>
-            <div className="mt-4 text-center text-sm">
-              Already have an account?{' '}
-              <Link href="/signin" className="underline">
-                Sign in.
-              </Link>
-            </div>
+            <SignupForm />
           </CardContent>
           <CardFooter>
             <p className="py-1 text-xs ">
               By creating an account, you confirm that you have read,
               understood, and consent to the{' '}
-              <a
-                href="/privacy"
-                className="text-primary underline hover:opacity-70"
-              >
+              <a href="/privacy" className="text-primary underline hover:opacity-70">
                 Privacy Notice
               </a>{' '}
               and{' '}
-              <a
-                href="/terms"
-                className="text-primary underline hover:opacity-70"
-              >
+              <a href="/terms" className="text-primary underline hover:opacity-70">
                 Terms & Conditions
               </a>
               .
