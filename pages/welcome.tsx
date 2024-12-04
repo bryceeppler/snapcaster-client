@@ -4,12 +4,12 @@ import { motion } from 'motion/react';
 
 import useGlobalStore from '@/stores/globalStore';
 import { Integrations } from '@/components/welcome/integrations';
-import { MagicCard } from '@/components/ui/magic-card';
 import Testimonials from '@/components/welcome/testimonials';
 import { SignupForm } from '@/components/forms/SignupForm';
 import { toast } from 'sonner';
-import { CheckCircle, MoveRight } from 'lucide-react';
+import { CheckCircle, DollarSignIcon, GlobeIcon, MoveRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { SolutionsGrid } from '@/components/welcome/solutions-grid';
 
 type Props = {};
 
@@ -27,7 +27,7 @@ const Welcome = (props: Props) => {
           <div className="lg:grid lg:grid-cols-2 lg:gap-8">
             <div className="mx-auto max-w-md px-6 sm:max-w-2xl sm:text-center lg:flex lg:items-center lg:px-0 lg:text-left">
               <div className="flex flex-col gap-4 pb-8">
-                <h1 className="text-4xl font-bold tracking-tight text-white mt-4 sm:mt-5 sm:text-6xl lg:mt-6 xl:text-6xl">
+                <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:mt-5 sm:text-6xl lg:mt-6 xl:text-6xl">
                   <span className="block">Find the best prices </span>
                   <span className="block text-primary">
                     on trading cards in Canada
@@ -40,16 +40,23 @@ const Welcome = (props: Props) => {
                   you covered.
                 </p>
                 <div className="relative mt-4 flex w-full flex-col items-stretch justify-stretch gap-2 sm:justify-center md:flex-row lg:justify-start">
-                  <Button size="lg" className="line-clamp-1 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-primary/80"
-                  onClick={() => {
-                    window.open('/', '_blank');
-                  }}
-                  >Search for Free</Button>
-                  <Button 
+                  <Button
+                    size="lg"
+                    className="line-clamp-1 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-primary/80"
+                    onClick={() => {
+                      window.open('/', '_blank');
+                    }}
+                  >
+                    Search for Free
+                  </Button>
+                  <Button
                     onClick={() => {
                       window.open('/faq', '_blank');
                     }}
-                  variant="ghost" className="line-clamp-1 flex items-center justify-center gap-2 px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:text-primary/80 hover:bg-transparent" size="lg">
+                    variant="ghost"
+                    className="line-clamp-1 flex items-center justify-center gap-2 px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-transparent hover:text-primary/80"
+                    size="lg"
+                  >
                     <span>FAQ</span> <MoveRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -96,8 +103,8 @@ const Welcome = (props: Props) => {
 
       <StoreSection />
       <RegisterSection />
-      <SaveMoneySection />
-      <HardToFindSection />
+      <ProblemSection />
+      <SolutionSection />
       <TestimonialsSection />
       <TryNowSection />
       <Footer />
@@ -107,25 +114,28 @@ const Welcome = (props: Props) => {
 
 const Header = () => {
   return (
-      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between gap-x-6 p-6 lg:px-8">
-        <h1 className="flex flex-row items-center gap-2">
-          <img src="/logo.png" alt="Snapcaster Logo" className="h-10 w-10" />
-          <span className="cursor-pointer text-3xl font-bold tracking-tight text-white">
-            snapcaster
-          </span>
-        </h1>
-        <Button className="invisible md:visible"
-            onClick={() => {
-                window.open('/signin', '_blank');
-              }}
-        >Sign In</Button>
-      </div>
+    <div className="mx-auto flex h-24 max-w-7xl items-center justify-between gap-x-6 p-6 lg:px-8">
+      <h1 className="flex flex-row items-center gap-2">
+        <img src="/logo.png" alt="Snapcaster Logo" className="h-10 w-10" />
+        <span className="cursor-pointer text-3xl font-bold tracking-tight text-white">
+          snapcaster
+        </span>
+      </h1>
+      <Button
+        className="invisible md:visible"
+        onClick={() => {
+          window.open('/signin', '_blank');
+        }}
+      >
+        Sign In
+      </Button>
+    </div>
   );
 };
 
 const StoreSection = () => {
   return (
-    <div className="relative mx-auto flex flex-col items-center justify-center gap-32 bg-gray-50 px-4 pb-8 pt-16 sm:px-6 lg:px-8">
+    <div className="relative mx-auto flex flex-col items-center justify-center gap-32 bg-white px-4 pb-8 pt-16 sm:px-6 lg:px-8">
       <svg
         viewBox="0 0 1440 58"
         fill="none"
@@ -156,27 +166,9 @@ const StoreSection = () => {
   );
 };
 
-const HardToFindSection = () => {
-  return (
-    <div className="relative mx-auto flex flex-col items-center justify-center gap-32 bg-gray-50 px-4 py-16 sm:px-6 lg:px-8">
-      <div className="flex w-full max-w-5xl flex-col items-center justify-center">
-        <div className="flex w-full flex-col text-center">
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            Get those hard-to-find cards.
-          </h2>
-          <p className="text-md mx-auto mt-5 max-w-prose text-gray-500 sm:text-lg">
-            Find all the cards you need, right here in Canada.
-          </p>
-       
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const TestimonialsSection = () => {
   return (
-    <div className="relative mx-auto flex flex-col items-center justify-center gap-32 bg-gray-50 px-4 pt-16 pb-24 sm:px-6 lg:px-8">
+    <div className="relative mx-auto flex flex-col items-center justify-center gap-32 bg-white px-4 pb-24 pt-16 sm:px-6 lg:px-8">
       <svg
         viewBox="0 0 1440 58"
         fill="none"
@@ -192,7 +184,7 @@ const TestimonialsSection = () => {
         ></path>
       </svg>
 
-      <div className="flex w-full max-w-5xl flex-col items-center justify-centermb-24">
+      <div className="justify-centermb-24 flex w-full max-w-5xl flex-col items-center">
         <div className="flex w-full flex-col text-center">
           <h2 className="mb-10 mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             See what people are saying.
@@ -205,46 +197,110 @@ const TestimonialsSection = () => {
   );
 };
 
-const SaveMoneySection = () => {
+const SolutionSection = () => {
   return (
-    <div className="relative mx-auto flex flex-col items-center justify-center gap-32 bg-gray-50 px-4 py-16 sm:px-6 lg:px-8">
-      <div className="flex w-full max-w-5xl flex-col items-center justify-center">
-        <div className="flex w-full flex-col text-center">
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            Save money.
-          </h2>
-          <p className="text-md mx-auto mt-5 max-w-prose text-gray-500 sm:text-lg">
-            Find the best deals on your most-wanted cards.
-          </p>
-          {/* <div
-            className={
-              'flex h-[500px] w-full flex-col gap-4 p-10 lg:h-[250px] lg:flex-row'
-            }
-          >
-        <MagicCard
-              className="cursor-pointer flex-col items-center justify-center text-xl md:whitespace-nowrap md:text-3xl shadow-2xl"
-              gradientColor={'#D9D9D955'}
-            >
-              Exclusive discount codes
-            </MagicCard>
-            <MagicCard
-              className="cursor-pointer flex-col items-center justify-center text-xl md:whitespace-nowrap md:text-3xl shadow-2xl"
-              gradientColor={'#D9D9D955'}
-            >
-             No duties or import fees 
-            </MagicCard>
-          </div> */}
+    <section id="solution">
+      <div className="bg-secondary ">
+        <div className="container relative mx-auto max-w-7xl px-4 py-16">
+          <div className="mx-auto space-y-4 pb-6 text-center">
+            <h2 className="font-mono text-sm font-medium uppercase tracking-wider text-primary">
+              Solution
+            </h2>
+            <h3 className="mx-auto mt-4 max-w-xs text-3xl font-semibold sm:max-w-none sm:text-4xl md:text-5xl">
+              Search across Canada, with one click. 
+            </h3>
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+              Search once, search everywhere. Snapcaster allows you to search across 80+ Canadian vendors with one click. Find in-demand cards, at the best prices, while supporting local games stores.
+            </p>
+          </div>
+          <SolutionsGrid />
         </div>
       </div>
-    </div>
+    </section>
+  );
+};
+
+const ProblemSection = () => {
+  return (
+    <section id="problem" className="bg-white">
+      <div>
+        <div className="container relative mx-auto max-w-7xl px-4 py-16">
+          <div className="mx-auto space-y-4 pb-6 text-center">
+            <h2 className="font-mono text-sm font-medium uppercase tracking-wider text-primary">
+              Problem
+            </h2>
+            <h3 className="mx-auto mt-4 max-w-xs text-3xl font-semibold sm:max-w-none sm:text-4xl md:text-5xl">
+              Buying cards is a hassle.
+            </h3>
+          </div>
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="opacity-1 filter-blur-0 transform-translate-y-[-6px] will-change-auto">
+              <div className="rounded-lg border border-none text-card-foreground shadow-none">
+                <div className="space-y-4 p-6">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+                    <GlobeIcon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold">Duties & Import Fees</h3>
+                  <p className="text-muted-foreground">
+                    Shopping for cards internationally means hidden import fees, duties, shipping costs and currency conversion. A card for $10 isn't <span className="italic">really</span> $10.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="opacity-1 filter-blur-0 transform-translate-y-[-6px] will-change-auto">
+              <div className="rounded-lg border border-none text-card-foreground shadow-none">
+                <div className="space-y-4 p-6">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="lucide lucide-zap h-6 w-6 text-primary"
+                    >
+                      <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold">
+                    Finding Hot Cards 
+                  </h3>
+                  <p className="text-muted-foreground">
+                    You want good cards, right? So does everyone else. Half the challenge is just finding them! 
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="opacity-1 filter-blur-0 transform-translate-y-[-6px] will-change-auto">
+              <div className="rounded-lg border border-none text-card-foreground shadow-none">
+                <div className="space-y-4 p-6">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+                    <DollarSignIcon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold">
+                    Inconsistent Prices 
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Have you ever noticed that some cards are just <span className="italic">more expensive</span> than others? Make sure you're not missing out on sales or opportunities.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
 const RegisterSection = () => {
-
-    const [accountCreated, setAccountCreated] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
   return (
-    <div className="relative mx-auto flex flex-col items-center justify-center gap-32 bg-gray-50 px-4 py-16 sm:px-6 lg:px-8 bg-secondary">
+    <div className="relative mx-auto flex flex-col items-center justify-center gap-32 bg-secondary px-4 py-16 sm:px-6 lg:px-8">
       <div className="flex w-full max-w-5xl flex-col items-center justify-center">
         <div className="flex flex-col text-center">
           <h2 className="sm:text-md font-mono text-sm font-light text-primary">
@@ -253,30 +309,44 @@ const RegisterSection = () => {
           <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             The best part? It's free.
           </p>
-          <p className="text-md mx-auto mt-5 max-w-prose text-gray-500 sm:text-lg">Sign up to get started.</p>
+          <p className="text-md mx-auto mt-5 max-w-prose text-gray-500 sm:text-lg">
+            Sign up to get started.
+          </p>
 
           <div className="mx-auto mt-10 w-full max-w-md text-left">
-            <Card className="p-4 bg-white rounded">
-            <SignupForm
-            confirmPassword={false}
-            inputClassName='bg-white rounded'
-            labels={"implicit"}
-              showSignInLink={false}
-              disableToast={true}
-              onSuccess={() => {
-                setAccountCreated(true);
-                toast('Account created successfully!', {
+            <Card className="rounded bg-white p-4">
+              <SignupForm
+                confirmPassword={false}
+                inputClassName="bg-white rounded"
+                labels={'implicit'}
+                showSignInLink={false}
+                disableToast={true}
+                onSuccess={() => {
+                  setAccountCreated(true);
+                  toast('Account created successfully!', {
                     duration: 8000,
                     action: {
                       label: 'Sign In',
                       onClick: () => {
                         window.open('/signin', '_blank');
                       }
-                    },
-                  })
-              }}
-            />
-            {accountCreated && <div className="mt-4 flex flex-row items-center gap-2"> <CheckCircle className="h-4 w-4 text-primary" /> <p className="text-sm">Account created successfully! You can now <a href="/signin" className="text-primary">sign in</a>.</p></div>}
+                    }
+                  });
+                }}
+              />
+              {accountCreated && (
+                <div className="mt-4 flex flex-row items-center gap-2">
+                  {' '}
+                  <CheckCircle className="h-4 w-4 text-primary" />{' '}
+                  <p className="text-sm">
+                    Account created successfully! You can now{' '}
+                    <a href="/signin" className="text-primary">
+                      sign in
+                    </a>
+                    .
+                  </p>
+                </div>
+              )}
             </Card>
           </div>
         </div>
@@ -295,18 +365,25 @@ const TryNowSection = () => {
             <span className="block text-primary">not searching for them.</span>
           </h1>
           <div className="mx-auto flex flex-row gap-4">
-                  <Button size="lg" className="line-clamp-1 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-primary/80"
-                  onClick={() => {
-                    window.open('/', '_blank');
-                  }}
-                  >Search for Free</Button>
-                  <Button 
-                    onClick={() => {
-                      window.open('/faq', '_blank');
-                    }}
-                  variant="ghost" className="line-clamp-1 flex items-center justify-center gap-2 px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:text-primary/80 hover:bg-transparent" size="lg">
-                    <span>FAQ</span> <MoveRight className="ml-2 h-4 w-4" />
-                  </Button>
+            <Button
+              size="lg"
+              className="line-clamp-1 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-primary/80"
+              onClick={() => {
+                window.open('/', '_blank');
+              }}
+            >
+              Search for Free
+            </Button>
+            <Button
+              onClick={() => {
+                window.open('/faq', '_blank');
+              }}
+              variant="ghost"
+              className="line-clamp-1 flex items-center justify-center gap-2 px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-transparent hover:text-primary/80"
+              size="lg"
+            >
+              <span>FAQ</span> <MoveRight className="ml-2 h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>
@@ -339,7 +416,8 @@ const Footer = () => {
             <a
               className="group"
               aria-label="Snapcaster Discord"
-              href="https://discord.gg/EnKKHxSq75"            >
+              href="https://discord.gg/EnKKHxSq75"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="size-6"
@@ -383,11 +461,11 @@ const Footer = () => {
           </div>
           <div className="float-right flex">
             <div className="flex gap-x-6 text-gray-400">
-
               <a
                 className="group"
                 aria-label="Snapcaster Discord"
-                href="https://discord.gg/EnKKHxSq75"              >
+                href="https://discord.gg/EnKKHxSq75"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="size-6"
