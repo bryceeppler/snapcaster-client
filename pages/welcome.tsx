@@ -295,8 +295,16 @@ const TryNowSection = () => {
             <span className="block text-primary">not searching for them.</span>
           </h1>
           <div className="mx-auto flex flex-row gap-4">
-          <Button size="lg" className="line-clamp-1 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-primary/80">Search for Free</Button>
-                  <Button variant="ghost" className="line-clamp-1 flex items-center justify-center gap-2 px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:text-primary/80 hover:bg-transparent" size="lg">
+                  <Button size="lg" className="line-clamp-1 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-primary/80"
+                  onClick={() => {
+                    window.open('/', '_blank');
+                  }}
+                  >Search for Free</Button>
+                  <Button 
+                    onClick={() => {
+                      window.open('/faq', '_blank');
+                    }}
+                  variant="ghost" className="line-clamp-1 flex items-center justify-center gap-2 px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:text-primary/80 hover:bg-transparent" size="lg">
                     <span>FAQ</span> <MoveRight className="ml-2 h-4 w-4" />
                   </Button>
           </div>
