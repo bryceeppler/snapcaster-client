@@ -5,6 +5,9 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import Autoplay from 'embla-carousel-autoplay';
 import useAuthStore from '@/stores/authStore';
 import CarouselAd from './carousel-ad';
+import { AdSelector } from '@/utils/adSelector';
+import { Ad, AdWeight } from '@/types/ads';
+import VerticalCarousel from './vertical-carousel';
 
 type Props = {
   width?: 'md' | 'xl';
@@ -18,6 +21,33 @@ export default function MainLayout({
   const { showAds } = useAdContext();
   const { hasActiveSubscription } = useAuthStore();
   const [hydrated, setHydrated] = useState(false); 
+
+  const topBannerStoreWeights: AdWeight[] = [
+    { store_id: 2, weight: 1 }, // obsidian
+    { store_id: 5, weight: 1 }, // exorgames
+    { store_id: 4, weight: 1 }, // chimera
+    { store_id: 3, weight: 1 }, // levelup
+    { store_id: 8, weight: 1 }, // houseofcards
+    { store_id: 9, weight: 1 }, // mythicstore
+  ]; 
+
+  const leftCarouselStoreWeights: AdWeight[] = [
+    { store_id: 2, weight: 1 }, // obsidian
+    { store_id: 5, weight: 1 }, // exorgames
+    { store_id: 4, weight: 1 }, // chimera
+    { store_id: 3, weight: 1 }, // levelup
+    { store_id: 8, weight: 1 }, // houseofcards
+    { store_id: 9, weight: 1 }, // mythicstore
+  ];
+
+  const rightCarouselStoreWeights: AdWeight[] = [
+    { store_id: 2, weight: 1 }, // obsidian
+    { store_id: 5, weight: 1 }, // exorgames
+    { store_id: 4, weight: 1 }, // chimera
+    { store_id: 3, weight: 1 }, // levelup
+    { store_id: 8, weight: 1 }, // houseofcards
+    { store_id: 9, weight: 1 }, // mythicstore
+  ];
 
   const leftAutoplayPlugin = useRef(
     Autoplay({
@@ -38,17 +68,43 @@ export default function MainLayout({
     }) as any
   );
 
+  const [topBannerAds, setTopBannerAds] = useState<Ad[]>([]);
+  const [leftCarouselAds, setLeftCarouselAds] = useState<Ad[]>([]);
+  const [rightCarouselAds, setRightCarouselAds] = useState<Ad[]>([]);
+
   useEffect(() => {
     setHydrated(true); 
   }, []);
 
+  useEffect(() => {
+    if (!ads.position || Object.keys(ads.position).length === 0) return;
+
+    // Initialize AdSelectors for each position
+    const topSelector = new AdSelector(ads.position['1']?.ads || [], topBannerStoreWeights);
+    const leftSelector = new AdSelector(ads.position['2']?.ads || [], leftCarouselStoreWeights);
+    const rightSelector = new AdSelector(ads.position['3']?.ads || [], rightCarouselStoreWeights);
+
+    // Get all ads for each position using the selector
+    const getPositionAds = (selector: AdSelector, count: number) => {
+      const selectedAds: Ad[] = [];
+      for (let i = 0; i < count; i++) {
+        try {
+          selectedAds.push(selector.getNextAd());
+        } catch (error) {
+          break;
+        }
+      }
+      return selectedAds;
+    };
+
+    setTopBannerAds(getPositionAds(topSelector, ads.position['1']?.ads.length * 2 || 0));
+    setLeftCarouselAds(getPositionAds(leftSelector, ads.position['2']?.ads.length * 2 || 0));
+    setRightCarouselAds(getPositionAds(rightSelector, ads.position['3']?.ads.length * 2 || 0));
+  }, [ads.position]);
+
   if (!ads.position || Object.keys(ads.position).length === 0 || !hydrated) {
     return null; 
   }
-
-  const topBannerAds = ads.position['1']?.ads || [];
-  const leftCarouselAds = ads.position['2']?.ads || [];
-  const rightCarouselAds = ads.position['3']?.ads || [];
 
   return (
     <div
@@ -75,34 +131,16 @@ export default function MainLayout({
 
         {/* Left ad : position 2 */}
         {showAds && !hasActiveSubscription && leftCarouselAds.length > 0 && (
-          <Carousel
-            className={`fixed left-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col`}
-            plugins={[leftAutoplayPlugin.current]}
-          >
-            <CarouselContent>
-              {leftCarouselAds.map((ad, index) => (
-                <CarouselItem key={index}>
-                  <CarouselAd ad={ad} forceMobile={true} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <div className="fixed left-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col">
+            <VerticalCarousel ads={leftCarouselAds} />
+          </div>
         )}
 
         {/* Right ad : position 3 */}
         {showAds && !hasActiveSubscription && rightCarouselAds.length > 0 && (
-          <Carousel
-            className={`fixed right-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col`}
-            plugins={[rightAutoplayPlugin.current]}
-          >
-            <CarouselContent>
-              {rightCarouselAds.map((ad, index) => (
-                <CarouselItem key={index}>
-                  <CarouselAd ad={ad} forceMobile={true} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <div className="fixed right-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col">
+            <VerticalCarousel ads={rightCarouselAds} />
+          </div>
         )}
       </>
 
