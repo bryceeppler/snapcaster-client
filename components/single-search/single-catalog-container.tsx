@@ -8,7 +8,7 @@ import useAuthStore from '@/stores/authStore';
 import useGlobalStore from '@/stores/globalStore';
 import AdComponent from '../ad';
 import type { Ad, AdWeight } from '@/types/ads';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdSelector } from '@/utils/adSelector';
 
 export default function SingleCatalog() {
@@ -28,15 +28,16 @@ export default function SingleCatalog() {
   const { getFeedAds } = useGlobalStore();
 
   const [ads, setAds] = useState<Ad[]>([]);
-  const [adSelector, setAdSelector] = useState<AdSelector | null>(null);
   const [initialAd, setInitialAd] = useState<Ad | null>(null);
 
+  // Note these store_ids come from the ads database
   const storeWeights: AdWeight[] = [
-    { store_id: 1, weight: 1 },
-    { store_id: 2, weight: 1 },
-    { store_id: 3, weight: 1 },
-    { store_id: 4, weight: 1 },
-    { store_id: 5, weight: 1 },
+    { store_id: 2, weight: 1 }, // obsidian
+    { store_id: 5, weight: 1 }, // exorgames
+    { store_id: 4, weight: 1 }, // chimera
+    { store_id: 3, weight: 1 }, // levelup
+    { store_id: 8, weight: 1 }, // houseofcards
+    { store_id: 9, weight: 1 }, // mythicstore
   ];
 
   useEffect(() => {
@@ -118,7 +119,7 @@ export default function SingleCatalog() {
           {searchResults && (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {!hasActiveSubscription && initialAd && (
-                <AdComponent ad={initialAd} />
+                <AdComponent ad={initialAd} key={`initial-${initialAd.id}`} />
               )}
               {promotedResults &&
                 !hasActiveSubscription &&
@@ -133,7 +134,10 @@ export default function SingleCatalog() {
                   {!hasActiveSubscription &&
                     (index + 1) % 6 === 0 &&
                     ads[Math.floor(index / 6)] && (
-                      <AdComponent ad={ads[Math.floor(index / 6)]} />
+                      <AdComponent 
+                        ad={ads[Math.floor(index / 6)]} 
+                        key={`feed-${ads[Math.floor(index / 6)].id}`} 
+                      />
                     )}
                 </React.Fragment>
               ))}
