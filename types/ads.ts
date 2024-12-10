@@ -12,9 +12,19 @@ export type Ad = {
   url: string;
 };
 
+export type AdWeight = {
+  store_id: number;
+  weight: number;
+};
+
+export type WeightedAd = Ad & {
+  currentWeight: number;
+};
+
 export type PositionAds = {
   [key: string]: {
     ads: Ad[];
+    weightedAds?: WeightedAd[];
   };
 };
 

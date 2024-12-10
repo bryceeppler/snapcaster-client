@@ -10,6 +10,7 @@ type GlobalState = {
   adsEnabled: boolean;
   ads: AdsResponse;
   getWebsiteName: (websiteCode: string) => string;
+  getFeedAds: () => Ad[];
   getRandomAd: (position: string) => Ad;
 };
 
@@ -48,6 +49,9 @@ const useGlobalStore = create<GlobalState>()(devtools((set, get) => {
     getWebsiteName: (websiteCode: string) => {
       const website = get().websites.find((w) => w.slug === websiteCode);
       return website ? website.name : '';
+    },
+    getFeedAds: () => {
+      return get().ads.position['5'].ads;
     },
     getRandomAd: (position: string) => {
       const ads = get().ads.position[position].ads;
