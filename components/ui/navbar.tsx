@@ -27,7 +27,7 @@ import SingleFilterContainer from '../single-search/single-filter-container';
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
   const { searchResults, currentPage, setCurrentPage, numPages, fetchCards } =
     useSingleSearchStore();
   const router = useRouter();
@@ -36,8 +36,9 @@ const Navbar: React.FC = () => {
   return (
     <>
       {/* MOBILE NAV */}
+      {/* align middle horizontal */}
       <div className="sticky top-0 z-50 md:hidden">
-        <div className=" flex h-12  justify-between border-b bg-background shadow-xl  ">
+        <div className=" flex h-[60px]  justify-between bg-background shadow-xl px-1">
           <div className=" inset-y-0 left-0 flex items-center">
             <Sheet
               open={mobileNavSheetOpen}
@@ -126,7 +127,7 @@ const Navbar: React.FC = () => {
             <div className="flex flex-shrink-0 items-center">
               <Link legacyBehavior href="/" passHref>
                 <div className="flex cursor-pointer items-center space-x-1">
-                  <p className="pr-4 font-genos text-2xl font-bold italic leading-none">
+                  <p className="pr-4 font-genos text-2xl font-bold tracking-tighter leading-none">
                     Snapcaster
                   </p>
                 </div>
@@ -138,7 +139,7 @@ const Navbar: React.FC = () => {
               {currentPath == '/' ? (
                 <button
                   onClick={() => {
-                    setIsVisible(!isVisible);
+                    setMobileSearchIsVisible(!mobileSearchIsVisible);
                   }}
                 >
                   <Search className="mr-2" />
@@ -150,19 +151,19 @@ const Navbar: React.FC = () => {
             </div>
           </div>
           <div
-            className={`fixed left-0 top-0 z-50 flex h-12 w-full items-center justify-between border-b bg-background px-2 text-white shadow-lg transition-transform duration-500 ${
-              isVisible ? 'translate-y-0' : '-translate-y-full'
+            className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background md:px-2 text-white shadow-lg transition-transform duration-500 ${
+              mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
             }`}
           >
             <NavSearchBar
               type={'mobile'}
               toggleMobileSearch={() => {
-                setIsVisible(!isVisible);
+                setMobileSearchIsVisible(!mobileSearchIsVisible);
               }}
             />
           </div>
         </div>
-        {searchResults && currentPath == '/' && (
+        <div className="h-[0.5px] mx-5 bg-border w-[calc(100%-40px)]"></div>        {searchResults && currentPath == '/' && (
           <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
             <SinglePagination
               currentPage={currentPage}
@@ -174,15 +175,15 @@ const Navbar: React.FC = () => {
               <SheetTrigger>
                 <MixerHorizontalIcon className="h-6 w-6" />
               </SheetTrigger>
-              <SheetContent className="min-w-full px-8 py-8">
-                <SingleFilterContainer></SingleFilterContainer>
+              <SheetContent className="min-w-full">
+                <SingleFilterContainer/>
               </SheetContent>
             </Sheet>
           </div>
         )}
       </div>
 
-      {/* DESKTOP NAV SM+ */}
+      {/* DESKTOP NAV MD+ */}
       <div className="sticky top-0 z-50 bg-background  shadow-md">
         <div className="hidden h-16 items-stretch justify-between py-4 px-6 md:flex">
           {/* Left Section */}
@@ -222,7 +223,10 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
         </div>
-        <div className=" mx-3 hidden items-center justify-between border-t-2 md:flex">
+        {searchResults && currentPath == '/' && (
+          <div className="h-[0.5px] mx-5 bg-border w-[calc(100%-40px)]"></div>
+        )}
+        <div className=" mx-3 hidden items-center justify-between md:flex">
           <NavigationMenu className="my-1">
             <NavigationMenuList>
               <NavigationMenuItem>

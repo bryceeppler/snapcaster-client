@@ -67,7 +67,8 @@ module.exports = {
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
   				muted: 'hsl(var(--primary-muted))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				foreground: 'hsl(var(--primary-foreground))',
+  				light: 'hsl(var(--primary-light))'
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
@@ -103,7 +104,8 @@ module.exports = {
   		fontFamily: {
   			sans: ['var(--font-geist-sans)', ...fontFamily.sans],
   			serif: ['Poppins', 'sans-serif'],
-			genos: ['Genos']
+			genos: ['Genos'],
+			montserrat: ['Montserrat']
 			
   		},
   		keyframes: {

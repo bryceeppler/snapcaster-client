@@ -30,7 +30,7 @@ export default function Homebanner({ prefixText }: Props) {
           1400
         ]}
         wrapper="span"
-        className="text-left font-bold"
+        className="text-left font-bold font-genos tracking-tighter"
         speed={50}
         style={{ fontSize: '1em', display: 'inline-block' }}
         repeat={Infinity}

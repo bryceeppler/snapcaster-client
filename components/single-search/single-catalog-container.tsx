@@ -71,7 +71,9 @@ export default function SingleCatalog() {
                 <SingleSortBy />
               </div>
               <div className="child-1 mt-1 w-full md:sticky md:top-[118px]">
-                <FilterSection />
+                <div className="rounded-lg bg-popover px-3 py-2 text-left shadow-md md:max-w-sm">
+                  <FilterSection />
+                </div>
               </div>
             </div>
           )}
@@ -98,10 +100,10 @@ export default function SingleCatalog() {
       {!loadingCardResults && searchResults && (
         <div className="grid h-min gap-1">
           <div className="z-30 hidden bg-background pt-1 md:sticky md:top-[114px] md:block">
-            <div className="  flex items-center justify-between rounded-lg bg-popover px-4 py-2 ">
-              <p className=" text-center text-sm font-normal text-secondary-foreground ">
-                {numResults} results found
-              </p>
+            <div className="  flex flex-row items-center justify-between rounded-lg bg-popover px-4 py-2 ">
+              <span className="text-center text-sm font-normal text-secondary-foreground ">
+                {numResults} results
+              </span>
               <div>
                 <SinglePagination
                   currentPage={currentPage}
@@ -110,12 +112,14 @@ export default function SingleCatalog() {
                   fetchCards={fetchCards}
                 />
               </div>
+              <SingleSortBy />
+      
             </div>
             <div className="bg-background pb-1"></div>
           </div>
 
           {searchResults && (
-            <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-3 xxl:grid-cols-4">
               {!hasActiveSubscription && initialAd && (
                 <AdComponent ad={initialAd} key={`initial-${initialAd.id}`} />
               )}

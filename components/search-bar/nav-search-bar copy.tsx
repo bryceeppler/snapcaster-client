@@ -1,6 +1,6 @@
 // components/SearchBar.tsx
 
-import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
+import { useState, useEffect, useRef, KeyboardEvent, useCallback, forwardRef, useImperativeHandle } from 'react';
 import {
   Select,
   SelectContent,
@@ -109,6 +109,8 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
   };
 
   const handleSearch = useCallback(() => {
+    clearFilters();
+    clearSearchResults();
     fetchCards();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
@@ -158,18 +160,16 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
   );
 
   return (
-    <div className="relative w-full max-w-2xl bg-transparent ">
+    <div className="relative w-full max-w-2xl bg-transparent md:ml-5 md:mr-3">
       <div
-        className={`flex h-min w-full items-center rounded border border-transparent ${
-          type == 'desktop' ? 'focus-within:border-border' : ''
+        className={`flex h-min w-full items-center rounded ${
+          type == 'desktop' ? 'border border-border' : ''
         }`}
       >
         <Select
           value={tcg}
           onValueChange={(value: Tcg) => {
             setTcg(value);
-            clearSearchResults();
-            clearFilters();
             setSearchTerm('');
             setSuggestions([]);
             setIsAutoCompleteVisible(false);
@@ -222,7 +222,7 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute z-10 mt-1 w-full rounded-lg bg-popover p-1 shadow-lg"
+          className="absolute z-20 mt-1 w-full rounded-lg bg-popover p-1 shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div

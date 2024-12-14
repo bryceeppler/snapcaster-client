@@ -126,7 +126,7 @@ export default function MainLayout({
 
   return (
     <div
-      className={`container w-full max-w-4xl flex-1 flex-col items-center justify-center px-0  py-8 below1550:max-w-6xl`}
+      className={`container w-full max-w-4xl flex-1 flex-col items-center justify-center px-0  below1550:max-w-6xl`}
     >
       <>
         {/* Header : position 1 */}
@@ -147,14 +147,14 @@ export default function MainLayout({
 
         {/* Left ad : position 2 */}
         {showAds && !hasActiveSubscription && leftCarouselAds.length > 0 && (
-          <div className="fixed left-5 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center overflow-hidden rounded-lg smlaptop:flex smlaptop:flex-col">
+          <div className="fixed left-5 top-1/3 hidden max-h-[480px] max-w-[160px] items-center justify-center overflow-hidden rounded-lg smlaptop:flex smlaptop:flex-col">
             <VerticalCarousel ads={leftCarouselAds} />
           </div>
         )}
 
         {/* Right ad : position 3 */}
         {showAds && !hasActiveSubscription && rightCarouselAds.length > 0 && (
-          <div className="fixed right-5 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center overflow-hidden rounded-lg smlaptop:flex smlaptop:flex-col">
+          <div className="fixed right-5 top-1/3 hidden max-h-[480px] max-w-[160px] items-center justify-center overflow-hidden rounded-lg smlaptop:flex smlaptop:flex-col">
             <VerticalCarousel ads={rightCarouselAds} />
           </div>
         )}

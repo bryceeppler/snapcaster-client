@@ -7,10 +7,22 @@ import CardImage from '../ui/card-image';
 import useGlobalStore from '@/stores/globalStore';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { handleBuyClick } from '../../utils/analytics';
-
+import { DISCOUNT_MAP } from '@/lib/constants';
 type Props = {
   product: SingleCatalogCard;
 };
+
+const DiscountBadge = ({ product }: Props) => {
+  if (product.discounted_price) {
+    return (
+      <div className="flex h-[18px] -skew-x-12 transform items-center rounded bg-gradient-to-br from-primary-light/50 to-primary/70 px-2 font-montserrat text-xs font-semibold leading-none text-white">
+        <span className="skew-x-12 transform">- {Math.floor(DISCOUNT_MAP[product.discount_code as keyof typeof DISCOUNT_MAP] * 100)}%</span>
+      </div>
+    );
+  }
+  return null;
+};
+
 const SingleCatalogItem = ({ product }: Props) => {
   const { websites } = useGlobalStore();
   const { resultsTcg } = useSingleSearchStore();
@@ -18,50 +30,51 @@ const SingleCatalogItem = ({ product }: Props) => {
     const website = websites.find((website) => website.slug === slug);
     return website ? website.name : 'Website not found';
   };
-
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col font-montserrat bg-popover">
       <div
-        className={`group flex h-full flex-col rounded-t-lg border border-accent bg-popover  ${
-          product.promoted ? 'bg-primary/10 p-4' : 'p-4'
-        }`}
+        className={`group flex h-full flex-col rounded-t-lg border border-accent bg-popover p-4`}
       >
         <div className="relative mx-auto h-min max-w-[150px] px-4 md:max-w-[250px]">
           <CardImage imageUrl={product.image} alt={product.name} />
           {product.promoted && (
-            <Badge className="absolute -left-2 -top-2 bg-gradient-to-tr from-primary to-red-700 shadow">
-              Promoted
-            </Badge>
+            <div className="absolute -left-2 -top-2 flex h-[18px] -skew-x-12 transform items-center rounded bg-gradient-to-br from-primary-light/80 to-primary/80 px-2 font-montserrat text-xs  leading-none text-white">
+              <span className="skew-x-12 transform">Promoted</span>
+            </div>
           )}
         </div>
 
         <div className="mt-3">
-          <div className="   flex flex-row justify-between">
-            <h4 className="text-xl font-semibold">
+          <div className="flex flex-row items-center gap-2">
+            <h4 className="font-montserrat text-2xl font-semibold">
               ${Number(product.discounted_price || product.price).toFixed(2)}
             </h4>
+            <DiscountBadge product={product} />
           </div>
           {product.discount_code && (
-            <div className=" flex w-full text-[0.65rem]" key={product.vendor}>
-              <div className="text-left  tracking-tighter text-muted-foreground">
+            <div
+              className="-mt-0.5 flex w-full text-[0.65rem]"
+              key={product.vendor}
+            >
+              <div className="text-left font-montserrat tracking-tighter text-muted-foreground">
                 With code:{' '}
-                <span className=" font-bold">{product.discount_code}</span>
+                <span className="font-bold">{product.discount_code}</span>
               </div>
             </div>
           )}
         </div>
-        <div className="flex flex-grow flex-col   text-left">
-          <div className="text-[0.78rem] font-semibold uppercase  text-primary">
+        <div className="mt-3 flex flex-grow flex-col text-left">
+          <div className="font-montserrat text-[0.65rem] font-semibold  uppercase text-primary-light">
             {product.set}
           </div>
 
-          <h3 className="text-[0.9rem] font-semibold capitalize tracking-tight">{`${
+          <h3 className="overflow-hidden text-ellipsis text-[0.9rem] font-semibold capitalize tracking-tight">{`${
             product.name
           } ${
             product.collector_number ? `(${product.collector_number})` : ''
           }`}</h3>
 
-          <h4 className="text-xs  font-semibold capitalize tracking-tight text-muted-foreground">{` ${
+          <h4 className="text-[0.65rem]   uppercase tracking-tighter text-muted-foreground">{` ${
             product.frame ? product.frame : ''
           }  ${
             product.foil !== 'foil' && product.foil != null ? product.foil : ''
@@ -70,8 +83,7 @@ const SingleCatalogItem = ({ product }: Props) => {
           } ${product.promo ? product.promo : ''} ${
             product.art_series ? product.art_series : ''
           }`}</h4>
-
-          <div className="flex flex-row gap-1 pt-1">
+                    <div className=" flex flex-row gap-1 mt-3 mb-2">
             {(() => {
               const matchingWebsite = websites.find(
                 (website) => product.vendor === website.slug && website.imageUrl
@@ -96,16 +108,19 @@ const SingleCatalogItem = ({ product }: Props) => {
           >
             {product.condition}
           </Badge>
+
+
         </div>
       </div>
       <Link
         href={product.link}
         target="_blank"
         rel="noreferrer"
-        className="w-full"
+        className="w-full pb-4 px-4"
       >
         <Button
-          className="w-full rounded-b-lg rounded-t-none"
+          className="w-full bg-popover border-border rounded-b-lg uppercase font-montserrat text-xs"
+          variant="outline"
           onClick={() =>
             handleBuyClick(
               product.link,

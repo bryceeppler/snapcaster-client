@@ -20,6 +20,14 @@ export default function SingleSortBy() {
     fetchCards();
   };
 
+  const sortByLabel = {
+    score: 'Relevance',
+    'price-asc': 'Price: Low to High',
+    'price-desc': 'Price: High to Low',
+    'name-asc': 'Name: A-Z',
+    'name-desc': 'Name: Z-A'
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -30,10 +38,10 @@ export default function SingleSortBy() {
         >
           <Button
             variant="outline"
-            className="flex h-min w-full shrink-0 items-center justify-center bg-popover"
+            className="flex h-min  shrink-0 items-center justify-center bg-popover"
           >
             <div className="flex items-center">
-              <span className="text-sm">Sort By: {sortBy}</span>
+              <span className="text-sm">{sortByLabel[sortBy]}</span>
               <ChevronDown className="ml-2 h-4 w-4" />
             </div>
           </Button>

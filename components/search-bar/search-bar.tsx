@@ -110,6 +110,8 @@ export default function SingleSearchBar() {
   };
 
   const handleSearch = () => {
+    clearFilters();
+    clearSearchResults();
     fetchCards();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
@@ -159,15 +161,13 @@ export default function SingleSearchBar() {
   );
 
   return (
-    <div className="relative w-full max-w-3xl">
+    <div className="relative w-full max-w-2xl">
       <div className="flex w-full items-center rounded-full border border-border bg-popover p-1">
         <Select
           //onOpenChange={setIsOpen}
           value={tcg}
           onValueChange={(value: Tcg) => {
             setTcg(value);
-            clearSearchResults();
-            clearFilters();
             setSearchTerm('');
             setSuggestions([]);
             setIsAutoCompleteVisible(false);
@@ -197,13 +197,13 @@ export default function SingleSearchBar() {
         <Input
           ref={inputRef}
           type="text"
-          placeholder="Search for a card..."
+          placeholder={window.innerWidth >= 768 ? 'Search for a card...' : 'Search...'}
           className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
           value={searchTerm}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
         />
-        <div className="mr-4 text-primary">
+        <div className="mr-4 text-foreground">
           <MagnifyingGlassIcon
             className="h-5 w-5"
             onClick={() => {
