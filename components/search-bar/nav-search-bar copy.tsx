@@ -115,7 +115,7 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
   };
 
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
+    (event: KeyboardEvent<HTMLDivElement>) => {
       const key = event.key;
       const totalResults = suggestions?.length || 0;
 
@@ -160,9 +160,9 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
   return (
     <div className="relative w-full max-w-2xl bg-transparent ">
       <div
-        className={`flex h-min w-full items-center rounded ${
-          type == 'desktop' ? 'border' : ''
-        }  `}
+        className={`flex h-min w-full items-center rounded border border-transparent ${
+          type == 'desktop' ? 'focus-within:border-border' : ''
+        }`}
       >
         <Select
           value={tcg}
@@ -201,7 +201,7 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
         />
-        <div className="mr-1 text-primary">
+        <div className="mr-3 text-foreground">
           <MagnifyingGlassIcon
             className="h-6 w-6 hover:cursor-pointer"
             onClick={() => {

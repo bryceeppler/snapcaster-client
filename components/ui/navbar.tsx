@@ -46,13 +46,13 @@ const Navbar: React.FC = () => {
               <SheetTrigger className="m-1 inline-flex items-center justify-center p-2">
                 <AlignJustify className="h-6 w-6" />
               </SheetTrigger>
-              <SheetContent side={'left'} className="font-genos text-xl">
+              <SheetContent side={'left'} className="text-lg">
                 <SheetHeader>
-                  <div className="space-y-1  pb-3 pt-2">
+                  <div className="flex flex-col gap-3 pb-3 pt-2">
                     <Link href="/" as="/">
                       <Button
                         variant="ghost"
-                        className="block w-full text-left text-2xl "
+                        className="block w-full text-left text-lg "
                         onClick={() => {
                           setMobileNavSheetOpen(false);
                         }}
@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
                     <Link href="/multisearch" as="/multisearch">
                       <Button
                         variant="ghost"
-                        className="block w-full text-left text-2xl"
+                        className="block w-full text-left text-lg"
                         onClick={() => {
                           setMobileNavSheetOpen(false);
                         }}
@@ -78,7 +78,7 @@ const Navbar: React.FC = () => {
                     >
                       <Button
                         variant="ghost"
-                        className="block w-full text-left text-2xl"
+                        className="block w-full text-left text-lg"
                         onClick={() => {
                           setMobileNavSheetOpen(false);
                         }}
@@ -90,7 +90,7 @@ const Navbar: React.FC = () => {
                     <Link href="/supporters" as="/supporters">
                       <Button
                         variant="ghost"
-                        className="block w-full text-left text-2xl"
+                        className="block w-full text-left text-lg"
                         onClick={() => {
                           setMobileNavSheetOpen(false);
                         }}
@@ -102,7 +102,7 @@ const Navbar: React.FC = () => {
                     <Link href={isAuthenticated ? `/profile` : '/signin'}>
                       <Button
                         variant="ghost"
-                        className="block w-full text-left text-2xl "
+                        className="block w-full text-left text-lg "
                         onClick={() => {
                           setMobileNavSheetOpen(false);
                         }}
@@ -126,11 +126,6 @@ const Navbar: React.FC = () => {
             <div className="flex flex-shrink-0 items-center">
               <Link legacyBehavior href="/" passHref>
                 <div className="flex cursor-pointer items-center space-x-1">
-                  <img
-                    className="h-6 w-auto"
-                    src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
-                    alt="Snapcaster"
-                  />
                   <p className="pr-4 font-genos text-2xl font-bold italic leading-none">
                     Snapcaster
                   </p>
@@ -189,7 +184,7 @@ const Navbar: React.FC = () => {
 
       {/* DESKTOP NAV SM+ */}
       <div className="sticky top-0 z-50 bg-background  shadow-md">
-        <div className="hidden h-16 items-stretch justify-between p-3 md:flex">
+        <div className="hidden h-16 items-stretch justify-between py-4 px-6 md:flex">
           {/* Left Section */}
           <div className="flex items-center">
             <NavigationMenu>
@@ -198,11 +193,11 @@ const Navbar: React.FC = () => {
                   <Link legacyBehavior href="/" passHref>
                     <div className="flex cursor-pointer items-center space-x-3">
                       <img
-                        className="h-8 w-auto"
+                        className="h-6 w-auto"
                         src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
                         alt="Snapcaster"
                       />
-                      <p className="pr-4 font-genos text-3xl font-bold italic leading-none">
+                      <p className="font-genos text-2xl font-bold tracking-tighter leading-none">
                         Snapcaster
                       </p>
                     </div>
