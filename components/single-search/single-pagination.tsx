@@ -8,7 +8,6 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '@/components/ui/pagination';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 
 type Props = {
   currentPage: number;
@@ -16,15 +15,12 @@ type Props = {
   numPages: number | null;
   fetchCards: () => void;
 };
-
 const SinglePagination = ({
   currentPage,
   setCurrentPage,
   numPages,
   fetchCards
 }: Props) => {
-  // const { currentPage, setCurrentPage, numPages, fetchCards } = useSingleSearchStore();
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     fetchCards();
@@ -33,7 +29,7 @@ const SinglePagination = ({
   };
 
   return (
-    <Pagination>
+    <Pagination className="w-min">
       <PaginationContent>
         {currentPage > 1 && (
           <PaginationItem className="cursor-pointer">
@@ -42,7 +38,6 @@ const SinglePagination = ({
             />
           </PaginationItem>
         )}
-
         {currentPage > 1 && (
           <PaginationItem className="cursor-pointer">
             <PaginationLink
@@ -52,7 +47,6 @@ const SinglePagination = ({
             </PaginationLink>
           </PaginationItem>
         )}
-
         <PaginationItem className="cursor-default">
           <PaginationLink isActive>{currentPage}</PaginationLink>
         </PaginationItem>
@@ -67,7 +61,6 @@ const SinglePagination = ({
               </PaginationLink>
             </PaginationItem>
           )}
-
         {typeof numPages === 'number' &&
           numPages > 1 &&
           currentPage + 1 < numPages && (
@@ -75,7 +68,6 @@ const SinglePagination = ({
               <PaginationEllipsis />
             </PaginationItem>
           )}
-
         {typeof numPages === 'number' &&
           numPages > 1 &&
           currentPage < numPages && (
@@ -89,5 +81,4 @@ const SinglePagination = ({
     </Pagination>
   );
 };
-
 export default SinglePagination;

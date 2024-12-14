@@ -19,10 +19,8 @@ import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Product, Tcg } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-
 import { Toolbar } from '@/components/multi-search/toolbar';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
-import PoweredBy from '@/components/powered-by';
 import { ResultsContainer } from '@/components/multi-search/results-container';
 import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
 import { trackSearch } from '@/utils/analytics';
@@ -42,13 +40,6 @@ export default function Multisearch({}: Props) {
     setTcg
   } = useMultiSearchStore();
   const { websites } = useGlobalStore();
-  const { isAuthenticated } = useAuthStore();
-
-  // if (!isAuthenticated) {
-  //   return (
-  //     <LoginRequired message="You must be logged in to use this feature." />
-  //   );
-  // }
 
   return (
     <>
@@ -98,7 +89,6 @@ const ResultsView = ({ results }: { results: Product[][] }) => {
       </div>
       <div className="col-span-4 flex flex-col gap-4">
         <RecommendedStores />
-
         <Cart />
       </div>
     </div>
@@ -154,7 +144,7 @@ const SearchView = ({
         </Select>
 
         <div className=" flex-grow "></div>
-        {adsEnabled && <PoweredBy size="small" />}
+        {/* {adsEnabled && <PoweredBy size="small" />} */}
       </div>
 
       {/* Textarea */}

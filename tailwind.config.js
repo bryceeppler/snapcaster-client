@@ -14,7 +14,9 @@ module.exports = {
   		md: '768px',
   		lg: '976px',
   		xl: '1440px',
-  		xxl: '1545px'
+  		xxl: '1545px',
+		smlaptop: '1280px',
+		below1550:'1550px'
   	},
   	extend: {
   		backgroundImage: {
@@ -92,15 +94,17 @@ module.exports = {
   				foreground: 'hsl(var(--card-foreground))'
   			}
   		},
-  		borderRadius: {
-  			xl: '`calc(var(--radius) + 4px)`',
-  			lg: '`var(--radius)`',
-  			md: '`calc(var(--radius) - 2px)`',
-  			sm: 'calc(var(--radius) - 4px)'
-  		},
+		  borderRadius: {
+			xl: 'calc(var(--radius) + 4px)',
+			lg: 'var(--radius)',
+			md: 'calc(var(--radius) - 2px)',
+			sm: 'calc(var(--radius) - 4px)',
+		  },
   		fontFamily: {
   			sans: ['var(--font-geist-sans)', ...fontFamily.sans],
-  			serif: ['Poppins', 'sans-serif']
+  			serif: ['Poppins', 'sans-serif'],
+			genos: ['Genos']
+			
   		},
   		keyframes: {
   			'accordion-down': {
@@ -142,7 +146,7 @@ module.exports = {
   				to: {
   					transform: 'translateY(calc(-100% - var(--gap)))'
   				}
-  			}
+  			},
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',

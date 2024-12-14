@@ -52,10 +52,7 @@ export default function BuyListCart({ mobile }: Props) {
               </SheetTitle>
             </SheetHeader>
             <div className="mt-8">
-              <ScrollArea
-                className="flex max-h-[85svh] flex-col overflow-y-auto rounded"
-                type="scroll"
-              >
+              <ScrollArea className="flex max-h-[85svh] flex-col overflow-y-auto rounded">
                 {buyListCartData.map((item, key) => (
                   <CartStoreAccordian
                     key={key}

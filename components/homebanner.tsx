@@ -6,12 +6,12 @@ export default function Homebanner({ prefixText }: Props) {
   return (
     <div>
       <img
-        className="crisp-edges mx-auto hidden h-16 w-auto md:flex"
+        className="crisp-edges mx-auto  h-12 w-auto md:flex md:h-16"
         src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
         alt="Snapcaster"
       />
 
-      <h1 className="mb-2 mt-2 text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+      <h1 className=" cursor-default font-genos text-3xl font-bold tracking-tighter sm:text-4xl md:text-6xl">
         Snapcaster
       </h1>
       <TypeAnimation

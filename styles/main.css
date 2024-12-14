@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,9 +8,6 @@
     @apply rounded-lg border border-border;
   }
 }
-
-
-
 
 @layer base {
   :root {
@@ -67,8 +66,6 @@
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
@@ -107,4 +104,19 @@
     rgba(9, 9, 121, 1) 100%
   );
   color: white;
+}
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 4s linear infinite;
 }

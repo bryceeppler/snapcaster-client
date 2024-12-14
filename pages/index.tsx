@@ -1,4 +1,3 @@
-// pages/index.tsx
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Homebanner from '@/components/homebanner';
@@ -6,22 +5,27 @@ import SingleCatalog from '@/components/single-search/single-catalog-container';
 import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import PoweredBy from '@/components/powered-by';
-import SingleSearchBar from '@/components/search-bar/search-bar';
-import ResultsSkeleton from '@/components/single-search/results-skeleton';
+import { Button } from '@/components/ui/button';
+import { ChevronRightIcon } from 'lucide-react';
 
 type Props = {};
-
 const Home: NextPage<Props> = ({}: Props) => {
+  const { searchResults } = useSingleSearchStore();
   return (
     <>
       <HomeHead />
-      <div className="flex w-full flex-col justify-center gap-8 text-center">
-        <Homebanner prefixText={'Search for'} />
-        <PoweredBy size="small" />
-        <div className="mx-auto flex w-full justify-center">
-          <SingleSearchBar />
-        </div>
+      <div className="flex w-full flex-col justify-center  text-center">
+        {!searchResults && (
+          <>
+            <Homebanner prefixText={'Search for'} />
+            <div className="mt-4 flex items-center justify-center ">
+              <Button className="group w-min rounded-lg bg-primary">
+                Search Now{' '}
+                <ChevronRightIcon className="ml-1 size-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Button>
+            </div>
+          </>
+        )}
         <SingleCatalog />
       </div>
     </>
@@ -29,7 +33,6 @@ const Home: NextPage<Props> = ({}: Props) => {
 };
 
 export default Home;
-
 const HomeHead = () => {
   return (
     <Head>

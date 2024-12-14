@@ -82,9 +82,9 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
     <main className={cn('antialiased', inter.className)}>
       <ThemeProvider
         attribute="class"
-        defaultTheme={isWelcomePage ? "light" : "system"}
+        defaultTheme={isWelcomePage ? 'light' : 'system'}
         enableSystem={!isWelcomePage}
-        forcedTheme={isWelcomePage ? "light" : undefined}
+        forcedTheme={isWelcomePage ? 'light' : undefined}
       >
         {isWelcomePage ? (
           <>

@@ -5,10 +5,8 @@ import Profile from './profile';
 import SignInCard from '@/components/signin';
 
 type Props = {};
-
 const Signin: NextPage<Props> = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
   if (isAuthenticated) {
     return <Profile />;
   }

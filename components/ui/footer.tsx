@@ -13,7 +13,7 @@ export default function Footer() {
         <div className="grid gap-4">
           <h3 className="text-lg font-semibold">Pages</h3>
           <nav className="grid gap-2">
-            <Link href="#">Home</Link>
+            <Link href="/">Home</Link>
             <Link href="/multisearch">Multisearch</Link>
             <Link href="/supporters">Supporters</Link>
             {!isAuthenticated ? (
@@ -45,7 +45,7 @@ export default function Footer() {
         {adsEnabled && (
           <div className="flex items-start justify-end">
             <div className="flex items-center gap-2">
-              <PoweredBy size="medium" />
+              {/* <PoweredBy size="medium" /> */}
             </div>
           </div>
         )}

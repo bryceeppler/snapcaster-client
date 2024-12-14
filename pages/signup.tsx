@@ -1,11 +1,7 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import axios from 'axios';
-import Router from 'next/router';
-import { toast } from 'sonner';
 import useAuthStore from '@/stores/authStore';
 import Profile from './profile';
-import Link from 'next/link';
 import { SignupForm } from '@/components/forms/SignupForm';
 import {
   Card,
@@ -17,10 +13,8 @@ import {
 } from '@/components/ui/card';
 
 type Props = {};
-
 const Signup: NextPage<Props> = () => {
   const { isAuthenticated } = useAuthStore();
-
   if (isAuthenticated) {
     return <Profile />;
   }
@@ -41,11 +35,17 @@ const Signup: NextPage<Props> = () => {
             <p className="py-1 text-xs ">
               By creating an account, you confirm that you have read,
               understood, and consent to the{' '}
-              <a href="/privacy" className="text-primary underline hover:opacity-70">
+              <a
+                href="/privacy"
+                className="text-primary underline hover:opacity-70"
+              >
                 Privacy Notice
               </a>{' '}
               and{' '}
-              <a href="/terms" className="text-primary underline hover:opacity-70">
+              <a
+                href="/terms"
+                className="text-primary underline hover:opacity-70"
+              >
                 Terms & Conditions
               </a>
               .
