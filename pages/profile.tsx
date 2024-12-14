@@ -6,7 +6,6 @@ import useAuthStore from '@/stores/authStore';
 import Signin from './signin';
 import LoadingPage from '@/components/loading-page';
 import { Button } from '@/components/ui/button';
-// import SubscriptionCards from '@/components/subscription-options';
 import axios from 'axios';
 import { createCheckoutSession, createPortalSession } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -37,7 +36,6 @@ const Profile: NextPage = () => {
     setDiscordUsername,
     clearTokens
   } = useAuthStore();
-
   const handleLogout = () => {
     clearTokens();
     toast.success('You have been logged out');
@@ -320,7 +318,6 @@ const UserSettings = ({
             </div>
           </CardContent>
           <CardFooter>
-            {' '}
             {hasActiveSubscription ? (
               <Button className="w-full" onClick={createPortalSession}>
                 Manage subscription
@@ -352,7 +349,6 @@ const UserSettings = ({
         </Card>
       </CardContent>
       <CardFooter className="justify-end">
-        {' '}
         <Button onClick={handleLogout}>Logout</Button>
       </CardFooter>
     </Card>

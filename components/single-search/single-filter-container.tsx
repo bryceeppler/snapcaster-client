@@ -10,7 +10,13 @@ import useGlobalStore from '@/stores/globalStore';
 import useAuthStore from '@/stores/authStore';
 import { createCheckoutSession } from '@/lib/utils';
 import shallow from 'zustand/shallow';
-
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
+import { Separator } from '@radix-ui/react-dropdown-menu';
 const FilterSection: React.FC = memo(() => {
   const { filterOptions, fetchCards, clearFilters } = useSingleSearchStore(
     (state) => ({
@@ -29,39 +35,48 @@ const FilterSection: React.FC = memo(() => {
   };
 
   return (
-    <div className="mx-auto w-full rounded-lg bg-popover p-4 text-left shadow-md md:max-w-sm">
-      <h2 className="mb-6 text-2xl font-bold">Filters</h2>
+    <ScrollArea className="flex max-h-[95svh] flex-col overflow-y-auto rounded">
+      <div className="sticky top-5 mx-auto h-1/4 w-full rounded-lg px-3 py-2 text-left shadow-md md:max-w-sm">
 
-      {filterOptions &&
-        filterOptions.map((filterOption) => (
-          <FilterScrollArea
-            key={filterOption.field}
-            filterOption={filterOption}
-          />
-        ))}
+        <Accordion type="multiple" className="w-full  ">
+          {filterOptions &&
+            filterOptions.map((filterOption, i) => (
+              <AccordionItem value={filterOption.field} key={i}>
+                <AccordionTrigger className="hover:no-underline">
+                  {filterOption.name}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <FilterScrollArea
+                    key={filterOption.field}
+                    filterOption={filterOption}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+        </Accordion>
+        <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
+          <p>
+            Support us with{' '}
+            <span className="font-bold text-primary">Snapcaster Pro</span> and
+            remove promoted results with reduced ads for $2.99/mo.
+          </p>
+          <Button
+            onClick={
+              isAuthenticated
+                ? createCheckoutSession
+                : () => (window.location.href = '/signin')
+            }
+          >
+            Subscribe
+          </Button>
+        </div>
 
-      <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
-        <p>
-          Support us with{' '}
-          <span className="font-bold text-primary">Snapcaster Pro</span> and
-          remove promoted results with reduced ads for $2.99/mo.
-        </p>
-
-        <Button
-          onClick={
-            isAuthenticated
-              ? createCheckoutSession
-              : () => (window.location.href = '/signin')
-          }
-        >
-          Subscribe
+        <Button onClick={handleClearFilters} className="w-full">
+          Clear Filters
         </Button>
+        <Separator className="mx-2" />
       </div>
-
-      <Button onClick={handleClearFilters} className="w-full">
-        Clear Filters
-      </Button>
-    </div>
+    </ScrollArea>
   );
 });
 
@@ -73,12 +88,9 @@ const FilterScrollArea: React.FC<FilterScrollAreaProps> = ({
   filterOption
 }) => {
   return (
-    <div className="mb-4">
-      <h3 className="mb-2 text-lg font-semibold capitalize">
-        {filterOption.name}
-      </h3>
+    <div>
       <div className="flex">
-        <ScrollArea className="max-h-48 w-full rounded-lg border px-3">
+        <ScrollArea className="90 max-h-48 w-full rounded-lg  px-3">
           <FilterFactory filterOption={filterOption} />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
@@ -92,8 +104,7 @@ interface FilterFactoryProps {
 }
 
 const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
-  const { fetchCards, setFilter, filters, setCurrentPage, applyFilters } =
-    useSingleSearchStore();
+  const { setFilter, setCurrentPage, applyFilters } = useSingleSearchStore();
   const handleOptionChange = (
     filter: FilterOption,
     option: FilterOptionValues

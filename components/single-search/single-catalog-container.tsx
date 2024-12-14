@@ -37,7 +37,7 @@ export default function SingleCatalog() {
     { store_id: 4, weight: 1 }, // chimera
     { store_id: 3, weight: 1 }, // levelup
     { store_id: 8, weight: 1 }, // houseofcards
-    { store_id: 9, weight: 1 }, // mythicstore
+    { store_id: 9, weight: 1 } // mythicstore
   ];
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function SingleCatalog() {
       if (ads?.length) {
         const selector = new AdSelector(ads, storeWeights);
         setInitialAd(selector.getNextAd());
-        
+
         const adCount = Math.floor(searchResults.length / 7);
         const selectedAds = [];
         for (let i = 0; i < adCount; i++) {
@@ -58,40 +58,34 @@ export default function SingleCatalog() {
   }, [searchResults, hasActiveSubscription]);
 
   return (
-    <div className="grid min-h-svh gap-6 md:grid-cols-[240px_1fr]">
-      <div className="flex flex-col gap-6">
-        <div className="grid h-full gap-4">
+    <div className="grid min-h-svh gap-1 md:grid-cols-[240px_1fr] ">
+      <div className="flex flex-col gap-1 ">
+        <div className="grid h-full gap-1">
           {/* Skeleton for Filters */}
           {loadingFilterResults && (
             <div className="h-full w-full animate-pulse rounded-lg bg-accent"></div>
           )}
           {!loadingFilterResults && filters && (
-            <div className="relative flex w-full flex-col gap-2">
+            <div className="relative  hidden w-full flex-col gap-1 md:flex">
               <div className="child-2 md:hidden">
                 <SingleSortBy />
               </div>
-              <div className="child-1 w-full">
-                <FilterSection />
+              <div className="child-1 mt-1 w-full md:sticky md:top-[118px]">
+                <div className="rounded-lg bg-popover px-3 py-2 text-left shadow-md md:max-w-sm">
+                  <FilterSection />
+                </div>
               </div>
             </div>
           )}
         </div>
       </div>
-      {loadingCardResults && (
-        <div className="grid h-min gap-6">
-          <div className="h-10 w-full animate-pulse rounded-lg bg-accent"></div>{' '}
-          <div className="grid h-min gap-6">
-            <div className="flex justify-between">
-              {/* Skeleton for Heading */}
-              <div className="h-8 w-40 animate-pulse rounded-lg bg-accent"></div>
-              <div className="hidden md:block">
-                {/* Skeleton for SingleSortBy */}
-                <div className="h-10 w-40 animate-pulse rounded-lg bg-accent"></div>
-              </div>
-            </div>
 
+      {loadingCardResults && (
+        <div className="grid h-min gap-1">
+          <div className="h-10 w-full animate-pulse rounded-lg bg-accent"></div>
+          <div className="grid h-min gap-1">
             {/* Skeleton for Results Grid */}
-            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid gap-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {[...Array(8)].map((_, index) => (
                 <div
                   key={index}
@@ -102,22 +96,30 @@ export default function SingleCatalog() {
           </div>
         </div>
       )}
+
       {!loadingCardResults && searchResults && (
-        <div className="grid h-min gap-6">
-          <div className="flex justify-between">
-            <div className="flex flex-col text-left">
-              <h1 className="text-2xl font-bold">Search Results</h1>
-              <p className="text-sm text-gray-500">
-                {numResults} results found
-              </p>
-            </div>
-            <div className="hidden md:block">
+        <div className="grid h-min gap-1">
+          <div className="z-30 hidden bg-background pt-1 md:sticky md:top-[114px] md:block">
+            <div className="  flex flex-row items-center justify-between rounded-lg bg-popover px-4 py-2 ">
+              <span className="text-center text-sm font-normal text-secondary-foreground ">
+                {numResults} results
+              </span>
+              <div>
+                <SinglePagination
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  numPages={numPages}
+                  fetchCards={fetchCards}
+                />
+              </div>
               <SingleSortBy />
+      
             </div>
+            <div className="bg-background pb-1"></div>
           </div>
 
           {searchResults && (
-            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-3 xxl:grid-cols-4">
               {!hasActiveSubscription && initialAd && (
                 <AdComponent ad={initialAd} key={`initial-${initialAd.id}`} />
               )}
@@ -130,31 +132,20 @@ export default function SingleCatalog() {
               {searchResults.map((item, index) => (
                 <React.Fragment key={index}>
                   <SingleCatalogItem product={item} />
-
                   {!hasActiveSubscription &&
                     (index + 1) % 6 === 0 &&
                     ads[Math.floor(index / 6)] && (
-                      <AdComponent 
-                        ad={ads[Math.floor(index / 6)]} 
-                        key={`feed-${ads[Math.floor(index / 6)].id}`} 
+                      <AdComponent
+                        ad={ads[Math.floor(index / 6)]}
+                        key={`feed-${ads[Math.floor(index / 6)].id}`}
                       />
                     )}
                 </React.Fragment>
               ))}
             </div>
           )}
-
-          {searchResults && (
-            <SinglePagination
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              numPages={numPages}
-              fetchCards={fetchCards}
-            />
-          )}
         </div>
       )}
-
       <BackToTopButton />
     </div>
   );

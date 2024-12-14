@@ -4,12 +4,31 @@ import { Check, ChevronRight, Circle } from 'lucide-react';
 import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 import { cn } from '@/lib/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
+
+const dropdownMenuVariants = cva('', {
+  variants: {
+    variant: {
+      default:
+        'flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+      noOutline:
+        'flex h-10 w-full items-center border-none justify-between rounded-lg  bg-background px-3 py-2 text-sm  placeholder:text-muted-foreground  disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1'
+    }
+  },
+  defaultVariants: {
+    variant: 'default'
+  }
+});
+
+export interface DropdownMenuProps
+  extends VariantProps<typeof dropdownMenuVariants> {
+  asChild?: boolean;
+}
 
 const DropdownMenuContext = React.createContext<
   React.Dispatch<React.SetStateAction<boolean>>
 >(() => {});
 
-// const DropdownMenu = DropdownMenuPrimitive.Root;
 const DropdownMenu: React.FC<DropdownMenuPrimitive.DropdownMenuProps> = (
   props
 ) => {
@@ -24,11 +43,12 @@ const DropdownMenu: React.FC<DropdownMenuPrimitive.DropdownMenuProps> = (
     </DropdownMenuContext.Provider>
   );
 };
-// const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+
 const DropdownMenuTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>
->(({ className, children, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger> &
+    VariantProps<typeof dropdownMenuVariants>
+>(({ className, variant, children, ...props }, ref) => {
   const setIsOpen = React.useContext(DropdownMenuContext);
   return (
     <DropdownMenuPrimitive.Trigger
@@ -38,10 +58,7 @@ const DropdownMenuTrigger = React.forwardRef<
           e.preventDefault();
         };
       }}
-      className={cn(
-        'flex h-10 w-full items-center justify-between rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-        className
-      )}
+      className={cn(dropdownMenuVariants({ variant }), className)}
       {...props}
       onPointerDown={(e) => {
         if (e.pointerType === 'touch') e.preventDefault(); // disable the default behavior in mobile

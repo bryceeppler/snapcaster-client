@@ -1,6 +1,6 @@
 // components/SearchBar.tsx
 
-import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
+import { useState, useEffect, useRef, KeyboardEvent, useCallback, forwardRef, useImperativeHandle } from 'react';
 import {
   Select,
   SelectContent,
@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select';
 
 import { Input } from '@/components/ui/input';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
@@ -20,9 +20,8 @@ import { trackSearch } from '@/utils/analytics';
 interface AutocompleteResult {
   name: string;
 }
-
-export default function SingleSearchBar() {
-  const [isOpen, setIsOpen] = useState(false);
+type Props = { type: string; toggleMobileSearch?: () => void };
+export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -109,16 +108,16 @@ export default function SingleSearchBar() {
     handleSearch(); // Trigger search
   };
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     clearFilters();
     clearSearchResults();
     fetchCards();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
-  };
+  }, [fetchCards, searchTerm, tcg]);
 
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
+    (event: KeyboardEvent<HTMLDivElement>) => {
       const key = event.key;
       const totalResults = suggestions?.length || 0;
 
@@ -161,10 +160,13 @@ export default function SingleSearchBar() {
   );
 
   return (
-    <div className="relative w-full max-w-2xl">
-      <div className="flex w-full items-center rounded-full border border-border bg-popover p-1">
+    <div className="relative w-full max-w-2xl bg-transparent md:ml-5 md:mr-3">
+      <div
+        className={`flex h-min w-full items-center rounded ${
+          type == 'desktop' ? 'border border-border' : ''
+        }`}
+      >
         <Select
-          //onOpenChange={setIsOpen}
           value={tcg}
           onValueChange={(value: Tcg) => {
             setTcg(value);
@@ -174,16 +176,12 @@ export default function SingleSearchBar() {
             setSelectedIndex(-1);
           }}
         >
-          <SelectTrigger className="w-[180px] border-none bg-transparent p-2 pl-4 font-bold text-foreground focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+          <SelectTrigger className="w-[180px] border-none bg-transparent p-2 pl-4 font-bold text-foreground focus:ring-0 focus:ring-offset-0">
             <SelectValue placeholder="TCG" />
-            <ChevronDown
-              className={`ml-2 h-4 w-4 shrink-0 transition-transform duration-200 ${
-                isOpen ? 'rotate-180' : ''
-              }`}
-            />
+            <ChevronDown className="ml-2 h-4 w-4 shrink-0 transition-transform duration-200 " />
           </SelectTrigger>
 
-          <SelectContent className="mt-1">
+          <SelectContent className="">
             <SelectGroup>
               <SelectItem value="mtg">MTG</SelectItem>
               <SelectItem value="lorcana">Lorcana</SelectItem>
@@ -193,35 +191,43 @@ export default function SingleSearchBar() {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <div className="mx-2 h-8 w-px"></div>
+
         <Input
           ref={inputRef}
           type="text"
-          placeholder={window.innerWidth >= 768 ? 'Search for a card...' : 'Search...'}
+          placeholder="Search for a card"
           className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
           value={searchTerm}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
         />
-        <div className="mr-4 text-foreground">
+        <div className="mr-3 text-foreground">
           <MagnifyingGlassIcon
-            className="h-5 w-5"
+            className="h-6 w-6 hover:cursor-pointer"
             onClick={() => {
               clearFilters();
               handleSearch();
             }}
           />
         </div>
+        {type == 'mobile' ? (
+          <div className="mr-2">
+            <X
+              className="h-6 hover:cursor-pointer"
+              onClick={toggleMobileSearch}
+            />
+          </div>
+        ) : null}
       </div>
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute z-10 mt-1 w-full rounded-lg bg-popover p-1 shadow-lg"
+          className="absolute z-20 mt-1 w-full rounded-lg bg-popover p-1 shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
-              className={`cursor-pointer rounded-lg px-4 py-2  ${
+              className={`cursor-pointer px-4 py-2  ${
                 selectedIndex === index
                   ? 'bg-primary text-primary-foreground'
                   : 'hover:bg-accent'

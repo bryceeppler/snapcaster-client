@@ -5,29 +5,29 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import React, { useState } from "react";
-import useGlobalStore from "@/stores/globalStore";
-import useMultiSearchStore from "@/stores/multiSearchStore";
-import { Product } from "@/types";
-import { Card, CardTitle, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { DialogClose } from "@radix-ui/react-dialog";
+  DialogTrigger
+} from '@/components/ui/dialog';
+import React, { useState } from 'react';
+import useGlobalStore from '@/stores/globalStore';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import { Product } from '@/types';
+import { Card, CardTitle, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 export const RecommendedStores = () => {
   const { results, addToCart, isInCart } = useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
   const totalRequested = results.length;
   const reccomendedWebsites = [
-    "obsidian",
-    "levelup",
-    "chimera",
-    "exorgames",
-    "mythicstore",
-    "houseofcards",
+    'obsidian',
+    'levelup',
+    'chimera',
+    'exorgames',
+    'mythicstore',
+    'houseofcards'
   ];
-  const [selectedTopStore, setSelectedTopStore] = useState("");
+  const [selectedTopStore, setSelectedTopStore] = useState('');
   const getTopWebsites = (results: Product[][]) => {
     const websiteProductSet: { [vendor: string]: Set<string> } = {};
     const websiteProductPrices: {
@@ -73,7 +73,7 @@ export const RecommendedStores = () => {
       .map(([vendor, count]) => ({
         vendor,
         count: Math.min(count, totalRequested),
-        totalCost: websiteTotalCost[vendor],
+        totalCost: websiteTotalCost[vendor]
       }))
       .sort((a, b) => {
         if (b.count !== a.count) {
@@ -84,7 +84,7 @@ export const RecommendedStores = () => {
 
     // Ensure "obsidian" appears at the top
     const obsidianIndex = sortedWebsites.findIndex(
-      (site) => site.vendor === "obsidian"
+      (site) => site.vendor === 'obsidian'
     );
     if (obsidianIndex !== -1) {
       const [obsidian] = sortedWebsites.splice(obsidianIndex, 1);
@@ -104,6 +104,7 @@ export const RecommendedStores = () => {
           {getTopWebsites(results).map((websiteInfo, i) => {
             return (
               <DialogTrigger
+                key={i}
                 asChild
                 onClick={() => {
                   {
@@ -111,12 +112,9 @@ export const RecommendedStores = () => {
                   }
                 }}
               >
-                <div
-                  className="border-1 rounded-lg border border-border px-4 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent"
-                  key={i}
-                >
+                <div className="border-1 rounded-lg border border-border px-4 py-3 text-left transition-colors hover:cursor-pointer hover:bg-accent">
                   <div className="text-xs font-semibold">
-                    {" "}
+                    {' '}
                     {getWebsiteName(websiteInfo.vendor)}
                   </div>
                   <div className=" text-foreground">

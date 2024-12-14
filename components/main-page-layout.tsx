@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAdContext } from '@/pages/_app';
 import useGlobalStore from '@/stores/globalStore';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem
+} from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import useAuthStore from '@/stores/authStore';
 import CarouselAd from './carousel-ad';
@@ -12,15 +16,14 @@ import VerticalCarousel from './vertical-carousel';
 type Props = {
   width?: 'md' | 'xl';
 };
-
 export default function MainLayout({
   children,
-  width = 'md',
+  width = 'md'
 }: React.PropsWithChildren<Props>) {
   const { ads } = useGlobalStore();
   const { showAds } = useAdContext();
   const { hasActiveSubscription } = useAuthStore();
-  const [hydrated, setHydrated] = useState(false); 
+  const [hydrated, setHydrated] = useState(false);
 
   const topBannerStoreWeights: AdWeight[] = [
     { store_id: 2, weight: 1 }, // obsidian
@@ -28,8 +31,8 @@ export default function MainLayout({
     { store_id: 4, weight: 1 }, // chimera
     { store_id: 3, weight: 1 }, // levelup
     { store_id: 8, weight: 1 }, // houseofcards
-    { store_id: 9, weight: 1 }, // mythicstore
-  ]; 
+    { store_id: 9, weight: 1 } // mythicstore
+  ];
 
   const leftCarouselStoreWeights: AdWeight[] = [
     { store_id: 2, weight: 1 }, // obsidian
@@ -37,7 +40,7 @@ export default function MainLayout({
     { store_id: 4, weight: 1 }, // chimera
     { store_id: 3, weight: 1 }, // levelup
     { store_id: 8, weight: 1 }, // houseofcards
-    { store_id: 9, weight: 1 }, // mythicstore
+    { store_id: 9, weight: 1 } // mythicstore
   ];
 
   const rightCarouselStoreWeights: AdWeight[] = [
@@ -46,25 +49,25 @@ export default function MainLayout({
     { store_id: 4, weight: 1 }, // chimera
     { store_id: 3, weight: 1 }, // levelup
     { store_id: 8, weight: 1 }, // houseofcards
-    { store_id: 9, weight: 1 }, // mythicstore
+    { store_id: 9, weight: 1 } // mythicstore
   ];
 
   const leftAutoplayPlugin = useRef(
     Autoplay({
       delay: 20000,
-      stopOnInteraction: true,
+      stopOnInteraction: true
     }) as any
   );
   const rightAutoplayPlugin = useRef(
     Autoplay({
       delay: 20000,
-      stopOnInteraction: true,
+      stopOnInteraction: true
     }) as any
   );
   const topAutoPlayPlugin = useRef(
     Autoplay({
       delay: 20000,
-      stopOnInteraction: true,
+      stopOnInteraction: true
     }) as any
   );
 
@@ -73,16 +76,25 @@ export default function MainLayout({
   const [rightCarouselAds, setRightCarouselAds] = useState<Ad[]>([]);
 
   useEffect(() => {
-    setHydrated(true); 
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
     if (!ads.position || Object.keys(ads.position).length === 0) return;
 
     // Initialize AdSelectors for each position
-    const topSelector = new AdSelector(ads.position['1']?.ads || [], topBannerStoreWeights);
-    const leftSelector = new AdSelector(ads.position['2']?.ads || [], leftCarouselStoreWeights);
-    const rightSelector = new AdSelector(ads.position['3']?.ads || [], rightCarouselStoreWeights);
+    const topSelector = new AdSelector(
+      ads.position['1']?.ads || [],
+      topBannerStoreWeights
+    );
+    const leftSelector = new AdSelector(
+      ads.position['2']?.ads || [],
+      leftCarouselStoreWeights
+    );
+    const rightSelector = new AdSelector(
+      ads.position['3']?.ads || [],
+      rightCarouselStoreWeights
+    );
 
     // Get all ads for each position using the selector
     const getPositionAds = (selector: AdSelector, count: number) => {
@@ -97,26 +109,30 @@ export default function MainLayout({
       return selectedAds;
     };
 
-    setTopBannerAds(getPositionAds(topSelector, ads.position['1']?.ads.length * 2 || 0));
-    setLeftCarouselAds(getPositionAds(leftSelector, ads.position['2']?.ads.length * 2 || 0));
-    setRightCarouselAds(getPositionAds(rightSelector, ads.position['3']?.ads.length * 2 || 0));
+    setTopBannerAds(
+      getPositionAds(topSelector, ads.position['1']?.ads.length * 2 || 0)
+    );
+    setLeftCarouselAds(
+      getPositionAds(leftSelector, ads.position['2']?.ads.length * 2 || 0)
+    );
+    setRightCarouselAds(
+      getPositionAds(rightSelector, ads.position['3']?.ads.length * 2 || 0)
+    );
   }, [ads.position]);
 
   if (!ads.position || Object.keys(ads.position).length === 0 || !hydrated) {
-    return null; 
+    return null;
   }
 
   return (
     <div
-      className={`container w-full ${
-        width === 'md' ? 'max-w-6xl' : ''
-      } flex-1 flex-col items-center justify-center px-2 py-8`}
+      className={`container w-full max-w-4xl flex-1 flex-col items-center justify-center px-0  below1550:max-w-6xl`}
     >
       <>
         {/* Header : position 1 */}
         {topBannerAds.length > 0 && (
           <Carousel
-            className="w-full rounded-lg overflow-hidden "
+            className="w-full overflow-hidden rounded-lg "
             plugins={[topAutoPlayPlugin.current]}
           >
             <CarouselContent>
@@ -131,14 +147,14 @@ export default function MainLayout({
 
         {/* Left ad : position 2 */}
         {showAds && !hasActiveSubscription && leftCarouselAds.length > 0 && (
-          <div className="fixed left-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col">
+          <div className="fixed left-5 top-1/3 hidden max-h-[480px] max-w-[160px] items-center justify-center overflow-hidden rounded-lg smlaptop:flex smlaptop:flex-col">
             <VerticalCarousel ads={leftCarouselAds} />
           </div>
         )}
 
         {/* Right ad : position 3 */}
         {showAds && !hasActiveSubscription && rightCarouselAds.length > 0 && (
-          <div className="fixed right-10 top-1/4 hidden max-h-[480px] max-w-[160px] items-center justify-center rounded-lg overflow-hidden xxl:flex xxl:flex-col">
+          <div className="fixed right-5 top-1/3 hidden max-h-[480px] max-w-[160px] items-center justify-center overflow-hidden rounded-lg smlaptop:flex smlaptop:flex-col">
             <VerticalCarousel ads={rightCarouselAds} />
           </div>
         )}

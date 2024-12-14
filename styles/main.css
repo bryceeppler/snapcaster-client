@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,9 +10,6 @@
     @apply rounded-lg border border-border;
   }
 }
-
-
-
 
 @layer base {
   :root {
@@ -20,6 +21,7 @@
     --popover-foreground: 222.2 84% 4.9%;
     --primary: 221 76% 62%;
     --primary-foreground: 210 40% 98%;
+    --primary-light: 221 76% 62%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
@@ -43,11 +45,11 @@
     --foreground: 210 40% 98%;
     --card: 240 10% 22%;
     --card-foreground: 210 40% 98%;
-    /* --popover: 222.2 84% 4.9%; */
     --popover: 240 10% 22%;
     --popover-foreground: 210 40% 98%;
     --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 210 40% 98%;
+    --primary-light: 217 88% 68%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
@@ -66,8 +68,6 @@
     --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {
@@ -107,4 +107,19 @@
     rgba(9, 9, 121, 1) 100%
   );
   color: white;
+}
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 4s linear infinite;
 }

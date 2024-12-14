@@ -5,34 +5,45 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem
 } from '@/components/ui/dropdown-menu';
-
 import { SortOptions } from '@/stores/useSingleSearchStore';
 import { Button } from '@/components/ui/button';
-import { ArrowUpDownIcon } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 
 export default function SingleSortBy() {
-
-  const { sortBy, setSortBy, fetchCards, setCurrentPage } = useSingleSearchStore();
+  const { sortBy, setSortBy, fetchCards, setCurrentPage } =
+    useSingleSearchStore();
 
   const handleSortByChange = (value: SortOptions) => {
     setSortBy(value);
     setCurrentPage(1);
     fetchCards();
+  };
 
-  }
-
+  const sortByLabel = {
+    score: 'Relevance',
+    'price-asc': 'Price: Low to High',
+    'price-desc': 'Price: High to Low',
+    'name-asc': 'Name: A-Z',
+    'name-desc': 'Name: Z-A'
+  };
 
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger
+          className="w-min px-0"
+          asChild
+          variant={'noOutline'}
+        >
           <Button
             variant="outline"
-            className="flex h-10 w-full shrink-0 items-center bg-popover"
+            className="flex h-min  shrink-0 items-center justify-center bg-popover"
           >
-            <span>Sort by</span>
-            <ArrowUpDownIcon className="ml-2 h-4 w-4" />
+            <div className="flex items-center">
+              <span className="text-sm">{sortByLabel[sortBy]}</span>
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </div>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
