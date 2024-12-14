@@ -7,8 +7,9 @@ import SinglePagination from './single-pagination';
 import useAuthStore from '@/stores/authStore';
 import useGlobalStore from '@/stores/globalStore';
 import AdComponent from '../ad';
-import type { Ad } from '@/types/ads';
-import React, { useState, useEffect, useMemo } from 'react';
+import type { Ad, AdWeight } from '@/types/ads';
+import React, { useState, useEffect } from 'react';
+import { AdSelector } from '@/utils/adSelector';
 
 export default function SingleCatalog() {
   const {
@@ -24,25 +25,37 @@ export default function SingleCatalog() {
     filters
   } = useSingleSearchStore();
   const { hasActiveSubscription } = useAuthStore();
-  const { getRandomAd } = useGlobalStore();
+  const { getFeedAds } = useGlobalStore();
+
   const [ads, setAds] = useState<Ad[]>([]);
-  const adBeforePromoted = useMemo(() => {
-    if (!hasActiveSubscription) {
-      return getRandomAd('5');
-    }
-    return null;
-  }, [hasActiveSubscription, getRandomAd]);
+  const [initialAd, setInitialAd] = useState<Ad | null>(null);
+
+  // Note these store_ids come from the ads database
+  const storeWeights: AdWeight[] = [
+    { store_id: 2, weight: 1 }, // obsidian
+    { store_id: 5, weight: 1 }, // exorgames
+    { store_id: 4, weight: 1 }, // chimera
+    { store_id: 3, weight: 1 }, // levelup
+    { store_id: 8, weight: 1 }, // houseofcards
+    { store_id: 9, weight: 1 } // mythicstore
+  ];
 
   useEffect(() => {
     if (!hasActiveSubscription && searchResults) {
-      const adList = [];
-      const adCount = Math.floor(searchResults.length / 7);
-      for (let i = 0; i < adCount; i++) {
-        adList.push(getRandomAd('5'));
+      const ads = getFeedAds();
+      if (ads?.length) {
+        const selector = new AdSelector(ads, storeWeights);
+        setInitialAd(selector.getNextAd());
+
+        const adCount = Math.floor(searchResults.length / 7);
+        const selectedAds = [];
+        for (let i = 0; i < adCount; i++) {
+          selectedAds.push(selector.getNextAd());
+        }
+        setAds(selectedAds);
       }
-      setAds(adList);
     }
-  }, [searchResults, hasActiveSubscription, getRandomAd]);
+  }, [searchResults, hasActiveSubscription]);
 
   return (
     <div className="grid min-h-svh gap-1 md:grid-cols-[240px_1fr] ">
@@ -103,8 +116,8 @@ export default function SingleCatalog() {
 
           {searchResults && (
             <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-4">
-              {adBeforePromoted && !hasActiveSubscription && (
-                <AdComponent ad={adBeforePromoted} />
+              {!hasActiveSubscription && initialAd && (
+                <AdComponent ad={initialAd} key={`initial-${initialAd.id}`} />
               )}
               {promotedResults &&
                 !hasActiveSubscription &&
@@ -118,7 +131,10 @@ export default function SingleCatalog() {
                   {!hasActiveSubscription &&
                     (index + 1) % 6 === 0 &&
                     ads[Math.floor(index / 6)] && (
-                      <AdComponent ad={ads[Math.floor(index / 6)]} />
+                      <AdComponent
+                        ad={ads[Math.floor(index / 6)]}
+                        key={`feed-${ads[Math.floor(index / 6)].id}`}
+                      />
                     )}
                 </React.Fragment>
               ))}
