@@ -5,8 +5,7 @@ import SingleCatalog from '@/components/single-search/single-catalog-container';
 import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import { Button } from '@/components/ui/button';
-import { ChevronRightIcon } from 'lucide-react';
+import { DollarSignIcon, GlobeIcon } from 'lucide-react';
 
 type Props = {};
 const Home: NextPage<Props> = ({}: Props) => {
@@ -18,15 +17,67 @@ const Home: NextPage<Props> = ({}: Props) => {
         {!searchResults && (
           <>
             <Homebanner prefixText={'Search for'} />
-            <div className="mt-4 flex items-center justify-center ">
-              <Button className="group w-min rounded-lg bg-primary">
-                Search Now{' '}
-                <ChevronRightIcon className="ml-1 size-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Button>
+            <div className="mt-4 grid grid-cols-1 gap-8 px-2 md:grid-cols-3">
+              <div className="opacity-1 filter-blur-0 transform-translate-y-[-6px] rounded-xl border bg-popover  shadow-xl will-change-auto">
+                <div className="rounded-lg border border-none text-card-foreground shadow-none">
+                  <div className="flex flex-col items-center space-y-2 p-6">
+                    <div className="bg-primary-muted- flex h-12 w-12 items-center justify-center rounded-full border-2 border-primary bg-primary-foreground">
+                      <GlobeIcon className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold">Single Search</h3>
+                    <p className="text-muted-foreground">
+                      Search and filter for singles across 80+ Canadian local
+                      game stores!
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="opacity-1 filter-blur-0 transform-translate-y-[-6px] rounded-xl border bg-popover  shadow-xl will-change-auto">
+                <div className="rounded-lg border border-none text-card-foreground shadow-none">
+                  <div className="flex flex-col items-center space-y-2 p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-primary bg-primary-foreground">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        className="lucide lucide-zap h-6 w-6 text-primary"
+                      >
+                        <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold">Multi Search</h3>
+                    <p className="text-muted-foreground">
+                      Submit your decklist to query up to 100 trading cards at
+                      once!
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="opacity-1 filter-blur-0 transform-translate-y-[-6px] rounded-xl border bg-popover  shadow-xl will-change-auto">
+                <div className="rounded-lg border border-none text-card-foreground shadow-none">
+                  <div className="flex flex-col items-center space-y-2 p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-primary bg-primary-foreground">
+                      <DollarSignIcon className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold">Buylists</h3>
+                    <p className="text-muted-foreground">
+                      Coming Soon! Get a direct quote for your cards from one of
+                      our partnered vendors! Ship your cards and get cash or
+                      credit!
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </>
         )}
-        <SingleCatalog />
+        {searchResults && <SingleCatalog />}
       </div>
     </>
   );

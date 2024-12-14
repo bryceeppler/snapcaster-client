@@ -44,8 +44,8 @@ const FilterSection: React.FC = memo(() => {
 
         <Accordion type="multiple" className="w-full  ">
           {filterOptions &&
-            filterOptions.map((filterOption) => (
-              <AccordionItem value={filterOption.field}>
+            filterOptions.map((filterOption, i) => (
+              <AccordionItem value={filterOption.field} key={i}>
                 <AccordionTrigger className="hover:no-underline">
                   {filterOption.name}
                 </AccordionTrigger>
