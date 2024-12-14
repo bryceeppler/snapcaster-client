@@ -108,11 +108,11 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
     handleSearch(); // Trigger search
   };
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     fetchCards();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
-  };
+  }, [fetchCards, searchTerm, tcg]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
