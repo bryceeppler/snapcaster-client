@@ -65,11 +65,12 @@ const Home: NextPage<Props> = ({}: Props) => {
                     <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-primary bg-primary-foreground">
                       <DollarSignIcon className="h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="text-xl font-semibold">Buylists</h3>
+                    <h3 className="text-xl font-semibold">
+                      Buylists Coming Soon
+                    </h3>
                     <p className="text-muted-foreground">
-                      Coming Soon! Get a direct quote for your cards from one of
-                      our partnered vendors! Ship your cards and get cash or
-                      credit!
+                      Get a direct quote for your cards from one of our
+                      partnered vendors! Ship your cards and get cash or credit!
                     </p>
                   </div>
                 </div>
