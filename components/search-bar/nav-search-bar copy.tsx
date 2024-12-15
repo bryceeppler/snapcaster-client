@@ -1,6 +1,14 @@
 // components/SearchBar.tsx
 
-import { useState, useEffect, useRef, KeyboardEvent, useCallback, forwardRef, useImperativeHandle } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  KeyboardEvent,
+  useCallback,
+  forwardRef,
+  useImperativeHandle
+} from 'react';
 import {
   Select,
   SelectContent,
@@ -63,15 +71,15 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
     100
   );
 
-  useEffect(() => {
-    if (searchTerm.trim().length > 1) {
-      debouncedAutoCompleteResults(searchTerm);
-    } else {
-      setSuggestions([]);
-      setIsAutoCompleteVisible(false);
-      setSelectedIndex(-1);
-    }
-  }, [searchTerm]);
+  // useEffect(() => {
+  //   if (searchTerm.trim().length > 1) {
+  //     debouncedAutoCompleteResults(searchTerm);
+  //   } else {
+  //     setSuggestions([]);
+  //     setIsAutoCompleteVisible(false);
+  //     setSelectedIndex(-1);
+  //   }
+  // }, [searchTerm]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -160,7 +168,11 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
   );
 
   return (
-    <div className="relative w-full max-w-2xl bg-transparent md:ml-5 md:mr-3">
+    <div
+      className={`relative w-full  bg-transparent md:ml-4 md:mr-4 ${
+        type == 'desktop' ? 'max-w-2xl' : ''
+      }`}
+    >
       <div
         className={`flex h-min w-full items-center rounded ${
           type == 'desktop' ? 'border border-border' : ''
@@ -211,9 +223,9 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
           />
         </div>
         {type == 'mobile' ? (
-          <div className="mr-2">
+          <div className="mr-2 text-foreground">
             <X
-              className="h-6 hover:cursor-pointer"
+              className="h-6  hover:cursor-pointer"
               onClick={toggleMobileSearch}
             />
           </div>
@@ -222,7 +234,7 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute z-20 mt-1 w-full rounded-lg bg-popover p-1 shadow-lg"
+          className="absolute z-20 mt-1 w-full rounded-lg bg-popover p-1 text-foreground shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div

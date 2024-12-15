@@ -161,7 +161,7 @@ export default function SingleSearchBar() {
   );
 
   return (
-    <div className="relative w-full max-w-2xl">
+    <div className="relative w-full max-w-2xl md:ml-5 md:mr-3">
       <div className="flex w-full items-center rounded-full border border-border bg-popover p-1">
         <Select
           //onOpenChange={setIsOpen}
@@ -197,7 +197,9 @@ export default function SingleSearchBar() {
         <Input
           ref={inputRef}
           type="text"
-          placeholder={window.innerWidth >= 768 ? 'Search for a card...' : 'Search...'}
+          placeholder={
+            window.innerWidth >= 768 ? 'Search for a card...' : 'Search...'
+          }
           className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
           value={searchTerm}
           onChange={handleInputChange}
