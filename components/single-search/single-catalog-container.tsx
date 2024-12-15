@@ -58,7 +58,7 @@ export default function SingleCatalog() {
   }, [searchResults, hasActiveSubscription]);
 
   return (
-    <div className="grid min-h-svh gap-1 md:grid-cols-[240px_1fr] ">
+    <div className="grid min-h-svh gap-1 md:grid-cols-[240px_1fr] mb-8">
       <div className="flex flex-col gap-1 ">
         <div className="grid h-full gap-1">
           {/* Skeleton for Filters */}

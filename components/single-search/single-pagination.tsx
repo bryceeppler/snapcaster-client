@@ -64,7 +64,7 @@ const SinglePagination = ({
         {typeof numPages === 'number' &&
           numPages > 1 &&
           currentPage + 1 < numPages && (
-            <PaginationItem className="">
+            <PaginationItem className="hidden md:block">
               <PaginationEllipsis />
             </PaginationItem>
           )}
