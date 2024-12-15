@@ -80,11 +80,6 @@ const Home: NextPage<Props> = ({}: Props) => {
             {/* <div className="mx-auto mt-6 flex w-full justify-center">
               <SearchBar />
             </div> */}
-            <div className="mt-6 text-2xl font-bold flex w-full justify-center">
-              <span className="text-muted-foreground">
-                Search for a card to get started...
-              </span>
-            </div>
           </div>
         )}
         {searchResults && <SingleCatalog />}
