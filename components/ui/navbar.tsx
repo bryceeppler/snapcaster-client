@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
       {/* MOBILE NAV */}
       {/* align middle horizontal */}
       <div className="sticky top-0 z-50 md:hidden">
-        <div className=" flex h-[60px]  justify-between bg-background shadow-xl px-1">
+        <div className=" flex h-[60px]  justify-between bg-background px-1 shadow-xl">
           <div className=" inset-y-0 left-0 flex items-center">
             <Sheet
               open={mobileNavSheetOpen}
@@ -127,7 +127,7 @@ const Navbar: React.FC = () => {
             <div className="flex flex-shrink-0 items-center">
               <Link legacyBehavior href="/" passHref>
                 <div className="flex cursor-pointer items-center space-x-1">
-                  <p className="pr-4 font-genos text-2xl font-bold tracking-tighter leading-none">
+                  <p className="pr-4 font-genos text-2xl font-bold leading-none tracking-tighter">
                     Snapcaster
                   </p>
                 </div>
@@ -151,7 +151,7 @@ const Navbar: React.FC = () => {
             </div>
           </div>
           <div
-            className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background md:px-2 text-white shadow-lg transition-transform duration-500 ${
+            className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
               mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
             }`}
           >
@@ -163,7 +163,8 @@ const Navbar: React.FC = () => {
             />
           </div>
         </div>
-        <div className="h-[0.5px] mx-5 bg-border w-[calc(100%-40px)]"></div>        {searchResults && currentPath == '/' && (
+        <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>{' '}
+        {searchResults && currentPath == '/' && (
           <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
             <SinglePagination
               currentPage={currentPage}
@@ -176,7 +177,7 @@ const Navbar: React.FC = () => {
                 <MixerHorizontalIcon className="h-6 w-6" />
               </SheetTrigger>
               <SheetContent className="min-w-full">
-                <SingleFilterContainer/>
+                <SingleFilterContainer />
               </SheetContent>
             </Sheet>
           </div>
@@ -185,7 +186,7 @@ const Navbar: React.FC = () => {
 
       {/* DESKTOP NAV MD+ */}
       <div className="sticky top-0 z-50 bg-background  shadow-md">
-        <div className="hidden h-16 items-stretch justify-between py-4 px-6 md:flex">
+        <div className="hidden h-16 items-stretch justify-between px-6 py-4 md:flex">
           {/* Left Section */}
           <div className="flex items-center">
             <NavigationMenu>
@@ -198,7 +199,7 @@ const Navbar: React.FC = () => {
                         src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
                         alt="Snapcaster"
                       />
-                      <p className="font-genos text-2xl font-bold tracking-tighter leading-none">
+                      <p className="font-genos text-2xl font-bold leading-none tracking-tighter">
                         Snapcaster
                       </p>
                     </div>
@@ -223,9 +224,7 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
         </div>
-        {searchResults && currentPath == '/' && (
-          <div className="h-[0.5px] mx-5 bg-border w-[calc(100%-40px)]"></div>
-        )}
+
         <div className=" mx-3 hidden items-center justify-between md:flex">
           <NavigationMenu className="my-1">
             <NavigationMenuList>
