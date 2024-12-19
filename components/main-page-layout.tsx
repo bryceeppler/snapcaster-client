@@ -26,9 +26,9 @@ export default function MainLayout({
   const [hydrated, setHydrated] = useState(false);
 
   const topBannerStoreWeights: AdWeight[] = [
-    { store_id: 2, weight: 1 }, // obsidian
-    { store_id: 5, weight: 1 }, // exorgames
-    { store_id: 4, weight: 1 }, // chimera
+    { store_id: 2, weight: 3 }, // obsidian
+    { store_id: 5, weight: 3 }, // exorgames
+    { store_id: 4, weight: 3 }, // chimera
     { store_id: 3, weight: 1 }, // levelup
     { store_id: 8, weight: 1 }, // houseofcards
     { store_id: 9, weight: 1 } // mythicstore
