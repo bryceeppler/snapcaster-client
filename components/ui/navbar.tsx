@@ -296,7 +296,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
       {notificationStatus == true && (
-        <div className="flex w-full items-center bg-primary px-1">
+        <div className="flex w-full items-center bg-primary px-1 text-secondary">
           <p className="flex-1 text-center text-xs font-medium md:text-base">
             Canada Post shipping has resumed for most stores
           </p>
