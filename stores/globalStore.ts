@@ -9,6 +9,9 @@ type GlobalState = {
   websites: Website[];
   adsEnabled: boolean;
   ads: AdsResponse;
+  notificationStatus:boolean,
+  initNotificationStatus:()=> void;
+  setNotificationStatusFalse:()=> void;
   getWebsiteName: (websiteCode: string) => string;
   getFeedAds: () => Ad[];
   getRandomAd: (position: string) => Ad;
@@ -44,6 +47,7 @@ const useGlobalStore = create<GlobalState>()(devtools((set, get) => {
 
   return {
     websites: [],
+    notificationStatus:false,
     adsEnabled: true,
     ads: { position: {} },
     getWebsiteName: (websiteCode: string) => {
@@ -58,6 +62,31 @@ const useGlobalStore = create<GlobalState>()(devtools((set, get) => {
       const randomIndex = Math.floor(Math.random() * ads.length);
       return ads[randomIndex];
     },
+    initNotificationStatus: () => {
+      const navNotification = localStorage.getItem('navNotification');
+
+      if (navNotification === null) {
+        // If not set, initialize to false
+        localStorage.setItem('navNotification', JSON.stringify(true));
+        set({ notificationStatus: true });
+        return;
+      }
+      const parsedValue = JSON.parse(navNotification);
+      if (parsedValue === true) {
+        set({ notificationStatus: true });
+      } else if (parsedValue === false) {
+        set({ notificationStatus: false });
+      } else {
+        // Handle unexpected value (optional)
+        console.warn('Unexpected value found in navNotification, resetting to false.');
+        localStorage.setItem('navNotification', JSON.stringify(false));
+        set({ notificationStatus: false });
+      }
+    },
+    setNotificationStatusFalse:  () => {
+      localStorage.setItem('navNotification', JSON.stringify(false))
+      set({notificationStatus:false})
+    }
   };
 }));
 

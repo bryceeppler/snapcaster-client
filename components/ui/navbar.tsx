@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Button } from './button';
 import useAuthStore from '@/stores/authStore';
-import { AlignJustify, Search, User } from 'lucide-react';
-import React, { useState } from 'react';
+import { AlignJustify, Search, User, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-bar/nav-search-bar copy';
 import {
@@ -23,6 +23,7 @@ import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import SinglePagination from '../single-search/single-pagination';
 import SingleFilterContainer from '../single-search/single-filter-container';
+import globalStore from '@/stores/globalStore';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
@@ -30,9 +31,16 @@ const Navbar: React.FC = () => {
   const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
   const { searchResults, currentPage, setCurrentPage, numPages, fetchCards } =
     useSingleSearchStore();
+  const {
+    initNotificationStatus,
+    setNotificationStatusFalse,
+    notificationStatus
+  } = globalStore();
   const router = useRouter();
   const currentPath = router.pathname;
-
+  useEffect(() => {
+    initNotificationStatus();
+  }, []);
   return (
     <>
       {/* MOBILE NAV */}
@@ -287,6 +295,16 @@ const Navbar: React.FC = () => {
           </NavigationMenu>
         </div>
       </div>
+      {notificationStatus == true && (
+        <div className="flex w-full items-center bg-primary px-1">
+          <p className="flex-1 text-center text-xs font-medium md:text-base">
+            Canada Post shipping has resumed for most stores
+          </p>
+          <button onClick={setNotificationStatusFalse}>
+            <X />
+          </button>
+        </div>
+      )}
     </>
   );
 };

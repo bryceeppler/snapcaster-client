@@ -126,7 +126,7 @@ export default function MainLayout({
 
   return (
     <div
-      className={`container w-full max-w-4xl flex-1 flex-col items-center justify-center px-0  below1550:max-w-6xl`}
+      className={`container w-full max-w-4xl flex-1 flex-col items-center justify-center px-0  md:mt-4 below1550:max-w-6xl`}
     >
       <>
         {/* Header : position 1 */}
