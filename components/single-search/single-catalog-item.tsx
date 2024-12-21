@@ -16,7 +16,14 @@ const DiscountBadge = ({ product }: Props) => {
   if (product.discounted_price) {
     return (
       <div className="flex h-[18px] -skew-x-12 transform items-center rounded bg-gradient-to-br from-primary-light/50 to-primary/70 px-2 font-montserrat text-xs font-semibold leading-none text-white">
-        <span className="skew-x-12 transform">- {Math.floor(DISCOUNT_MAP[product.discount_code as keyof typeof DISCOUNT_MAP] * 100)}%</span>
+        <span className="skew-x-12 transform">
+          -{' '}
+          {Math.floor(
+            DISCOUNT_MAP[product.discount_code as keyof typeof DISCOUNT_MAP] *
+              100
+          )}
+          %
+        </span>
       </div>
     );
   }
@@ -31,7 +38,7 @@ const SingleCatalogItem = ({ product }: Props) => {
     return website ? website.name : 'Website not found';
   };
   return (
-    <div className="flex flex-col font-montserrat bg-popover">
+    <div className="flex flex-col bg-popover font-montserrat">
       <div
         className={`group flex h-full flex-col rounded-t-lg border border-accent bg-popover p-4`}
       >
@@ -77,13 +84,15 @@ const SingleCatalogItem = ({ product }: Props) => {
           <h4 className="text-[0.65rem]   uppercase tracking-tighter text-muted-foreground">{` ${
             product.frame ? product.frame : ''
           }  ${
-            product.foil !== 'foil' && product.foil != null ? product.foil : ''
+            product.finish !== 'foil' && product.finish != null
+              ? product.finish
+              : ''
           } ${product.showcase ? product.showcase : ''} ${
             product.alternate_art ? product.alternate_art : ''
           } ${product.promo ? product.promo : ''} ${
             product.art_series ? product.art_series : ''
           }`}</h4>
-                    <div className=" flex flex-row gap-1 mt-3 mb-2">
+          <div className=" mb-2 mt-3 flex flex-row gap-1">
             {(() => {
               const matchingWebsite = websites.find(
                 (website) => product.vendor === website.slug && website.imageUrl
@@ -108,18 +117,16 @@ const SingleCatalogItem = ({ product }: Props) => {
           >
             {product.condition}
           </Badge>
-
-
         </div>
       </div>
       <Link
         href={product.link}
         target="_blank"
         rel="noreferrer"
-        className="w-full pb-4 px-4"
+        className="w-full px-4 pb-4"
       >
         <Button
-          className="w-full bg-popover border-border rounded-b-lg uppercase font-montserrat text-xs"
+          className="w-full rounded-b-lg border-border bg-popover font-montserrat text-xs uppercase"
           variant="outline"
           onClick={() =>
             handleBuyClick(

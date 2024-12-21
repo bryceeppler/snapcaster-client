@@ -17,9 +17,13 @@ import {
   SelectTriggerNoIcon as SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
-import { ChevronDown, X } from 'lucide-react';
+import { ChevronDown, HelpCircle, X } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
@@ -213,7 +217,7 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
         />
-        <div className="mr-3 text-foreground">
+        <div className="mr-1 text-foreground">
           <MagnifyingGlassIcon
             className="h-6 w-6 hover:cursor-pointer"
             onClick={() => {
@@ -222,6 +226,51 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
             }}
           />
         </div>
+        <div>
+          <Popover>
+            <PopoverTrigger asChild className="mr-1">
+              <HelpCircle className="hover:cursor-pointer" />
+            </PopoverTrigger>
+            <PopoverContent className="p-2">
+              <div className="rounded-md shadow-md">
+                <div className="w-full">
+                  <div className="space-y-1 text-xs">
+                    <div>
+                      <h1 className="text-sm font-semibold">Exact Search</h1>
+                      <p className="italic">
+                        Double quote your query if you want to do an exact
+                        search. For example:
+                        <span className="rounded px-1 py-0.5 font-mono">
+                          "Mana Crypt"
+                        </span>
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-sm font-semibold">Punctuation</h1>
+                      <p className="italic">
+                        Queries are not sensitive to capitalization or
+                        punctuation. For example:
+                        <span className="rounded px-1 py-0.5 font-mono">
+                          '",:.
+                        </span>
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-sm font-semibold">Exact Search</h1>
+                      <p className="italic">
+                        Queries are based on the card base name only and should
+                        not be combined with set names, foiling, collector
+                        number, etc. Please use the filters to refine your
+                        search.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
         {type == 'mobile' ? (
           <div className="mr-2 text-foreground">
             <X
