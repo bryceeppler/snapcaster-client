@@ -236,6 +236,15 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
                 <div className="w-full">
                   <div className="space-y-1 text-xs">
                     <div>
+                      <h1 className="text-sm font-semibold">Search</h1>
+                      <p className="italic">
+                        Queries are based on the card base name only and should
+                        not be combined with set names, foiling, collector
+                        number, etc. Please use the filters to refine your
+                        search.
+                      </p>
+                    </div>
+                    <div>
                       <h1 className="text-sm font-semibold">Exact Search</h1>
                       <p className="italic">
                         Double quote your query if you want to do an exact
@@ -253,15 +262,6 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
                         <span className="rounded px-1 py-0.5 font-mono">
                           '",:.
                         </span>
-                      </p>
-                    </div>
-                    <div>
-                      <h1 className="text-sm font-semibold">Exact Search</h1>
-                      <p className="italic">
-                        Queries are based on the card base name only and should
-                        not be combined with set names, foiling, collector
-                        number, etc. Please use the filters to refine your
-                        search.
                       </p>
                     </div>
                   </div>
