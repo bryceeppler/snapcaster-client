@@ -1,5 +1,5 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document';
-
+// import FacebookPixel from '@/components/facebook-pixel';
 class MyDocument extends Document {
   render() {
     return (
@@ -31,11 +31,7 @@ class MyDocument extends Document {
               fbq('track', 'PageView');`
             }}
           />
-          <noscript>
-            <img height="1" width="1" style={{ display: 'none' }}
-              src="https://www.facebook.com/tr?id=1297702238099595&ev=PageView&noscript=1"
-            />
-          </noscript>
+
           {/* End Meta Pixel Code */}
         </Head>
         <body className="loading">
@@ -49,6 +45,11 @@ class MyDocument extends Document {
             ></iframe>
           </noscript>
           {/* End Google Tag Manager (noscript) */}
+          <noscript>
+            <img height="1" width="1" style={{ display: 'none' }}
+              src="https://www.facebook.com/tr?id=1297702238099595&ev=PageView&noscript=1"
+            />
+          </noscript>
           <Main />
           <NextScript />
         </body>
