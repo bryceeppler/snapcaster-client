@@ -14,7 +14,7 @@ export default function Homebanner({ prefixText }: Props) {
       <h1 className=" cursor-default font-genos text-3xl font-bold tracking-tighter sm:text-4xl md:text-6xl">
         Snapcaster
       </h1>
-      <h2 className="font-genos text-3xl font-semibold tracking-tight text-muted-foreground">
+      <h2 className="font-montserrat text-2xl font-semibold tracking-tight text-muted-foreground">
         Canada's largest TCG database.
       </h2>
       <TypeAnimation
@@ -33,9 +33,9 @@ export default function Homebanner({ prefixText }: Props) {
           1400
         ]}
         wrapper="span"
-        className="text-left font-semibold font-genos tracking-tighter"
+        className="text-left font-semibold font-montserrat tracking-tighter mt-0.5"
         speed={50}
-        style={{ fontSize: '1.3rem', display: 'inline-block' }}
+        style={{ fontSize: '1rem', display: 'inline-block' }}
         repeat={Infinity}
       />
     </div>
