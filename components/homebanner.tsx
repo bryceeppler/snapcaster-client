@@ -14,7 +14,7 @@ export default function Homebanner({ prefixText }: Props) {
       <h1 className=" cursor-default font-genos text-3xl font-bold tracking-tighter sm:text-4xl md:text-6xl">
         Snapcaster
       </h1>
-      <h2 className="font-montserrat text-2xl font-semibold tracking-tight text-muted-foreground">
+      <h2 className="hidden md:block font-montserrat text-2xl font-semibold tracking-tight text-muted-foreground">
         Canada's largest TCG database.
       </h2>
       <TypeAnimation

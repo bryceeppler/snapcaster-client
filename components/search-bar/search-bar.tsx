@@ -64,15 +64,15 @@ export default function SingleSearchBar() {
     100
   );
 
-  useEffect(() => {
-    if (searchTerm.trim().length > 1) {
-      debouncedAutoCompleteResults(searchTerm);
-    } else {
-      setSuggestions([]);
-      setIsAutoCompleteVisible(false);
-      setSelectedIndex(-1);
-    }
-  }, [searchTerm]);
+  // useEffect(() => {
+  //   if (searchTerm.trim().length > 1) {
+  //     debouncedAutoCompleteResults(searchTerm);
+  //   } else {
+  //     setSuggestions([]);
+  //     setIsAutoCompleteVisible(false);
+  //     setSelectedIndex(-1);
+  //   }
+  // }, [searchTerm]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
