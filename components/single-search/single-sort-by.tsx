@@ -38,7 +38,7 @@ export default function SingleSortBy() {
         >
           <Button
             variant="outline"
-            className="flex h-min  shrink-0 items-center justify-center bg-popover"
+            className="flex h-min  w-full shrink-0 items-center justify-center bg-popover md:w-min"
           >
             <div className="flex items-center">
               <span className="text-sm">{sortByLabel[sortBy]}</span>

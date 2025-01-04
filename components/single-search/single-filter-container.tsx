@@ -17,6 +17,7 @@ import {
   AccordionTrigger
 } from '@/components/ui/accordion';
 import { Separator } from '@radix-ui/react-dropdown-menu';
+import SingleSortBy from './single-sort-by';
 const FilterSection: React.FC = memo(() => {
   const { filterOptions, fetchCards, clearFilters } = useSingleSearchStore(
     (state) => ({
@@ -36,8 +37,10 @@ const FilterSection: React.FC = memo(() => {
 
   return (
     <ScrollArea className="flex max-h-[95svh] flex-col overflow-y-auto rounded">
-      <div className="sticky top-5 mx-auto h-1/4 w-full rounded-lg px-3 py-2 text-left shadow-md md:max-w-sm">
-
+      <div className="sticky top-5 mx-auto h-1/4 w-full rounded-lg bg-popover px-3 py-2 text-left shadow-md md:max-w-sm">
+        <div className=" border-b md:hidden">
+          <SingleSortBy />
+        </div>
         <Accordion type="multiple" className="w-full  ">
           {filterOptions &&
             filterOptions.map((filterOption, i) => (
