@@ -229,7 +229,7 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
         <div>
           <Popover>
             <PopoverTrigger asChild className="mr-1">
-              <HelpCircle className="hover:cursor-pointer" />
+              <HelpCircle className="text-popover-foreground hover:cursor-pointer" />
             </PopoverTrigger>
             <PopoverContent className="p-2">
               <div className="rounded-md shadow-md">

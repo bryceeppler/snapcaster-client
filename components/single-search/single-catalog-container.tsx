@@ -58,7 +58,7 @@ export default function SingleCatalog() {
   }, [searchResults, hasActiveSubscription]);
 
   return (
-    <div className="grid min-h-svh gap-1 md:grid-cols-[240px_1fr] mb-8">
+    <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-[240px_1fr]">
       <div className="flex flex-col gap-1 ">
         <div className="grid h-full gap-1">
           {/* Skeleton for Filters */}
@@ -67,9 +67,7 @@ export default function SingleCatalog() {
           )}
           {!loadingFilterResults && filters && (
             <div className="relative  hidden w-full flex-col gap-1 md:flex">
-              <div className="child-2 md:hidden">
-                <SingleSortBy />
-              </div>
+              <div className="child-2 md:hidden">{/* <SingleSortBy /> */}</div>
               <div className="child-1 mt-1 w-full md:sticky md:top-[118px]">
                 <div className="rounded-lg bg-popover px-3 py-2 text-left shadow-md md:max-w-sm">
                   <FilterSection />
@@ -113,7 +111,6 @@ export default function SingleCatalog() {
                 />
               </div>
               <SingleSortBy />
-      
             </div>
             <div className="bg-background pb-1"></div>
           </div>
