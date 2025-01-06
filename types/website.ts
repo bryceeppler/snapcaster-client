@@ -4,7 +4,14 @@ export type Website = {
   url: string;
   code: string;
   tcgs: string[];
-  imageUrl: string;
+  meta?: {
+    branding?: {  
+      icons?: {
+        light: string;
+        dark: string;
+      }
+    }
+  };
 };
 
 export type WebsiteMapping = {

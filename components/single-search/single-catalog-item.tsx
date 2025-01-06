@@ -8,6 +8,7 @@ import useGlobalStore from '@/stores/globalStore';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { handleBuyClick } from '../../utils/analytics';
 import { DISCOUNT_MAP } from '@/lib/constants';
+import { useTheme } from 'next-themes';
 type Props = {
   product: SingleCatalogCard;
 };
@@ -33,10 +34,13 @@ const DiscountBadge = ({ product }: Props) => {
 const SingleCatalogItem = ({ product }: Props) => {
   const { websites } = useGlobalStore();
   const { resultsTcg } = useSingleSearchStore();
+  const { theme } = useTheme();
+  console.log(websites)
   const findWebsiteNameByCode = (slug: string) => {
     const website = websites.find((website) => website.slug === slug);
     return website ? website.name : 'Website not found';
   };
+
   return (
     <div className="flex flex-col bg-popover font-montserrat">
       <div
@@ -95,11 +99,11 @@ const SingleCatalogItem = ({ product }: Props) => {
           <div className=" mb-2 mt-3 flex flex-row gap-1">
             {(() => {
               const matchingWebsite = websites.find(
-                (website) => product.vendor === website.slug && website.imageUrl
+                (website) => product.vendor === website.slug
               );
               return matchingWebsite ? (
                 <img
-                  src={matchingWebsite.imageUrl}
+                    src={theme === 'dark' ? matchingWebsite.meta?.branding?.icons?.dark : matchingWebsite.meta?.branding?.icons?.light}
                   alt="Website"
                   className="h-4 w-4"
                 />
