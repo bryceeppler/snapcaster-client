@@ -203,9 +203,9 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
                                       websites.map(
                                         (website, index) =>
                                           storeName === website.slug &&
-                                          website.imageUrl && (
+                                          website.meta?.branding?.icons?.light && (
                                             <img
-                                              src={website.imageUrl}
+                                              src={website.meta?.branding?.icons?.light}
                                               alt="Website"
                                               className="h-4 w-4"
                                               key={index}
