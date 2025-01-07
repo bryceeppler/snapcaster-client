@@ -35,7 +35,6 @@ const SingleCatalogItem = ({ product }: Props) => {
   const { websites } = useGlobalStore();
   const { resultsTcg } = useSingleSearchStore();
   const { theme } = useTheme();
-  console.log(websites)
   const findWebsiteNameByCode = (slug: string) => {
     const website = websites.find((website) => website.slug === slug);
     return website ? website.name : 'Website not found';

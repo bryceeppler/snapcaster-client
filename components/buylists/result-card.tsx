@@ -20,7 +20,6 @@ import { BuyListCartCardData } from '@/types/product';
 type Props = { cardData: any };
 
 const ResultCard = memo(function ResultCard({ cardData }: Props) {
-  console.log('result card');
 
   const [selectedCondition, setSelectedCondition] = useState<string>('');
   const [selectableConditions, setSelectableConditions] = useState<string[]>(
