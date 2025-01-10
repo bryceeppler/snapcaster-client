@@ -15,7 +15,7 @@ type Props = {
   setCurrentPage: (currentPage: number) => void;
   sortByLabel: Record<string, string>; // Dynamically pass the label object
 };
-export default function SingleSortBy({
+export default function SearchSortBy({
   sortBy,
   setSortBy,
   fetchCards,

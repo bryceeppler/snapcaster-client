@@ -1,14 +1,4 @@
-// components/SearchBar.tsx
-
-import {
-  useState,
-  useEffect,
-  useRef,
-  KeyboardEvent,
-  useCallback,
-  forwardRef,
-  useImperativeHandle
-} from 'react';
+import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
 import {
   Select,
   SelectContent,
@@ -26,31 +16,37 @@ import { Input } from '@/components/ui/input';
 import { ChevronDown, HelpCircle, X } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
 interface AutocompleteResult {
   name: string;
 }
-type Props = { type: string; toggleMobileSearch?: () => void };
-export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
+type Props = {
+  type: string;
+  toggleMobileSearch?: () => void;
+  fetchQuery: () => void;
+  setSearchTerm: (term: string) => void;
+  searchTerm: string;
+  setTcg: (tcg: Tcg) => void;
+  tcg: Tcg;
+  clearFilters: () => void;
+};
+export default function NavSearchBar({
+  type,
+  toggleMobileSearch,
+  fetchQuery,
+  setSearchTerm,
+  searchTerm,
+  setTcg,
+  tcg,
+  clearFilters
+}: Props) {
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const autoCompleteRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
-
-  // Use the new store
-  const {
-    tcg,
-    setTcg,
-    searchTerm,
-    setSearchTerm,
-    clearSearchResults,
-    fetchCards,
-    clearFilters
-  } = useSingleSearchStore();
 
   const fetchAutocomplete = useCallback(
     (value: string) => {
@@ -75,15 +71,15 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
     100
   );
 
-  // useEffect(() => {
-  //   if (searchTerm.trim().length > 1) {
-  //     debouncedAutoCompleteResults(searchTerm);
-  //   } else {
-  //     setSuggestions([]);
-  //     setIsAutoCompleteVisible(false);
-  //     setSelectedIndex(-1);
-  //   }
-  // }, [searchTerm]);
+  useEffect(() => {
+    if (searchTerm.trim().length > 1) {
+      debouncedAutoCompleteResults(searchTerm);
+    } else {
+      setSuggestions([]);
+      setIsAutoCompleteVisible(false);
+      setSelectedIndex(-1);
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -104,7 +100,6 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
-
     if (value.trim().length > 2) {
       debouncedAutoCompleteResults(value);
     } else {
@@ -117,16 +112,16 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
   const handleSuggestionClick = (suggestion: AutocompleteResult) => {
     setSearchTerm(suggestion.name);
     setIsAutoCompleteVisible(false);
-    handleSearch(); // Trigger search
+    handleSearch();
   };
 
   const handleSearch = useCallback(() => {
     clearFilters();
-    clearSearchResults();
-    fetchCards();
+
+    fetchQuery();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
-  }, [fetchCards, searchTerm, tcg]);
+  }, [fetchQuery, searchTerm, tcg]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -185,7 +180,7 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
         <Select
           value={tcg}
           onValueChange={(value: Tcg) => {
-            setTcg(value);
+            setTcg(value); // adjust this
             setSearchTerm('');
             setSuggestions([]);
             setIsAutoCompleteVisible(false);

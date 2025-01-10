@@ -11,43 +11,37 @@ import { Input } from '../ui/input';
 import { Search } from 'lucide-react';
 import useBuyListStore from '@/stores/buyListStore';
 import { useRef } from 'react';
-import { shallow } from 'zustand/shallow';
 import { trackSearch } from '@/utils/analytics';
+import { Tcg } from '@/types';
 export default function BuyListSearchBox() {
   const searchBoxRef = useRef<HTMLInputElement>(null);
 
-  const { changeTCG, searchTerm, fetchCards, selectedTCG, setSearchTerm, resetAllFilters } =
-    useBuyListStore(
-      (state) => ({
-        changeTCG: state.changeTCG,
-        searchTerm: state.searchTerm,
-        fetchCards: state.fetchCards,
-        selectedTCG: state.selectedTCG,
-        setSearchTerm: state.setSearchTerm,
-        resetAllFilters: state.resetAllFilters
-      }),
-      shallow
-    );
+  const {
+    // changeTCG,
+    searchTerm,
+    fetchCards,
+    tcg,
+    setSearchTerm,
+    setTcg
+  } = useBuyListStore();
 
   const handleClick = () => {
     if (searchBoxRef.current) {
-      if (searchTerm != searchBoxRef.current.value) {
-        resetAllFilters();
-      }
       setSearchTerm(searchBoxRef.current.value);
       fetchCards();
-      trackSearch(
-        searchBoxRef.current.value,
-        selectedTCG,
-        'buylist'
-      );
+      trackSearch(searchBoxRef.current.value, tcg, 'buylist');
     }
   };
 
   return (
     <div className="flex">
       {/* Select TCG Dropdown */}
-      <Select onValueChange={changeTCG}>
+      <Select
+        value={tcg}
+        onValueChange={(value: Tcg) => {
+          setTcg(value); // Call setTcg when the value changes
+        }}
+      >
         <SelectTrigger className="border-border-colour w-1/2 rounded-r-none font-semibold focus:ring-0 focus:ring-offset-0 sm:w-[180px]">
           <SelectValue placeholder="MTG" />
         </SelectTrigger>

@@ -10,7 +10,7 @@ import {
 import { Button } from './button';
 import useAuthStore from '@/stores/authStore';
 import { AlignJustify, Search, User, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-bar/nav-search-bar copy';
 import {
@@ -22,29 +22,88 @@ import {
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import SinglePagination from '../single-search/single-pagination';
-import SingleFilterContainer from '../single-search/single-filter-container';
-import globalStore from '@/stores/globalStore';
+
+import useBuyListStore from '@/stores/buyListStore';
+import { Tcg } from '@/types';
+// import SingleFilterContainer from '../single-search/single-filter-container';
+import FilterSection from '../search-ui/search-filter-container';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
   const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
-  const { searchResults, currentPage, setCurrentPage, numPages, fetchCards } =
-    useSingleSearchStore();
-  const {
-    initNotificationStatus,
-    setNotificationStatusFalse,
-    notificationStatus
-  } = globalStore();
   const router = useRouter();
   const currentPath = router.pathname;
-  useEffect(() => {
-    initNotificationStatus();
-  }, []);
+
+  // Dynamically assign store variables and functions depending on search page (single, buylists, sealed)
+  const singleSearchStore = useSingleSearchStore();
+  const buyListStore = useBuyListStore();
+  const {
+    fetchCards,
+    searchTerm,
+    setSearchTerm,
+    setTcg,
+    tcg,
+    searchResults,
+    clearFilters,
+    currentPage,
+    setCurrentPage,
+    numPages,
+    filterOptions
+  } = (() => {
+    switch (currentPath) {
+      case '/':
+        return {
+          fetchCards: singleSearchStore.fetchCards,
+          searchTerm: singleSearchStore.searchTerm,
+          setSearchTerm: singleSearchStore.setSearchTerm,
+          setTcg: singleSearchStore.setTcg,
+          tcg: singleSearchStore.tcg,
+          searchResults: singleSearchStore.searchResults,
+          clearFilters: singleSearchStore.clearFilters,
+          currentPage: singleSearchStore.currentPage,
+          setCurrentPage: singleSearchStore.setCurrentPage,
+          numPages: singleSearchStore.numPages,
+          filterOptions: singleSearchStore.filterOptions
+        };
+      case '/buylists':
+        return {
+          fetchCards: buyListStore.fetchCards,
+          searchTerm: buyListStore.searchTerm,
+          setSearchTerm: buyListStore.setSearchTerm,
+          setTcg: buyListStore.setTcg,
+          tcg: buyListStore.tcg,
+          searchResults: buyListStore.searchResults,
+          clearFilters: buyListStore.clearFilters,
+          currentPage: buyListStore.currentPage,
+          setCurrentPage: buyListStore.setCurrentPage,
+          numPages: buyListStore.numPages,
+          filterOptions: buyListStore.filterOptions
+        };
+      default:
+        // needs default values for the nav search bar in case the user is not on single or buylist search (these will never be used)
+        return {
+          fetchCards: async () =>
+            console.warn('Currently not on a search feature'),
+          searchTerm: '',
+          setSearchTerm: () =>
+            console.warn('Currently not on a search feature'),
+          setTcg: () => console.warn('Currently not on a search feature'),
+          tcg: 'mtg' as Tcg,
+          searchResults: [],
+          clearFilters: () => console.warn('Currently not on a search feature'),
+          currentPage: 1,
+          numPages: null,
+          setCurrentPage: () =>
+            console.warn('Currently not on a search feature'),
+          filterOptions: []
+        };
+    }
+  })();
+
   return (
     <>
       {/* MOBILE NAV */}
-      {/* align middle horizontal */}
       <div className="sticky top-0 z-50 md:hidden">
         <div className=" flex h-[60px]  justify-between bg-background px-1 shadow-xl">
           <div className=" inset-y-0 left-0 flex items-center">
@@ -80,7 +139,6 @@ const Navbar: React.FC = () => {
                         Multi Search
                       </Button>
                     </Link>
-
                     <Link
                       href="https://discord.gg/EnKKHxSq75"
                       as="https://discord.gg/EnKKHxSq75"
@@ -95,7 +153,17 @@ const Navbar: React.FC = () => {
                         Discord
                       </Button>
                     </Link>
-
+                    <Link href="/buylists" as="/buylists">
+                      <Button
+                        variant="ghost"
+                        className="block w-full text-left text-lg"
+                        onClick={() => {
+                          setMobileNavSheetOpen(false);
+                        }}
+                      >
+                        Buylists
+                      </Button>
+                    </Link>
                     <Link href="/supporters" as="/supporters">
                       <Button
                         variant="ghost"
@@ -107,7 +175,17 @@ const Navbar: React.FC = () => {
                         Supporters
                       </Button>
                     </Link>
-
+                    <Link href="/buylists" as="/buylists">
+                      <Button
+                        variant="ghost"
+                        className="block w-full text-left text-lg"
+                        onClick={() => {
+                          setMobileNavSheetOpen(false);
+                        }}
+                      >
+                        Buylists
+                      </Button>
+                    </Link>
                     <Link href={isAuthenticated ? `/profile` : '/signin'}>
                       <Button
                         variant="ghost"
@@ -123,7 +201,6 @@ const Navbar: React.FC = () => {
                         )}
                       </Button>
                     </Link>
-
                     <ModeToggle />
                   </div>
                 </SheetHeader>
@@ -144,7 +221,7 @@ const Navbar: React.FC = () => {
 
             {/* Right Section */}
             <div className="mx-2 flex items-center ">
-              {currentPath == '/' ? (
+              {currentPath == '/' && (
                 <button
                   onClick={() => {
                     setMobileSearchIsVisible(!mobileSearchIsVisible);
@@ -152,7 +229,16 @@ const Navbar: React.FC = () => {
                 >
                   <Search className="mr-2" />
                 </button>
-              ) : null}
+              )}
+              {currentPath == '/buylists' && (
+                <button
+                  onClick={() => {
+                    setMobileSearchIsVisible(!mobileSearchIsVisible);
+                  }}
+                >
+                  <Search className="mr-2" />
+                </button>
+              )}
               <Link href={isAuthenticated ? `/profile` : '/signin'}>
                 <User />
               </Link>
@@ -168,6 +254,12 @@ const Navbar: React.FC = () => {
               toggleMobileSearch={() => {
                 setMobileSearchIsVisible(!mobileSearchIsVisible);
               }}
+              fetchQuery={fetchCards}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              setTcg={setTcg}
+              tcg={tcg}
+              clearFilters={clearFilters}
             />
           </div>
         </div>
@@ -185,7 +277,35 @@ const Navbar: React.FC = () => {
                 <MixerHorizontalIcon className="h-6 w-6" />
               </SheetTrigger>
               <SheetContent className="min-w-full">
-                <SingleFilterContainer />
+                <FilterSection
+                  filterOptions={filterOptions}
+                  searchType="single"
+                  fetchCards={fetchCards}
+                  clearFilters={clearFilters}
+                />
+              </SheetContent>
+            </Sheet>
+          </div>
+        )}
+        {searchResults && currentPath == '/buylists' && (
+          <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
+            <SinglePagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              numPages={numPages}
+              fetchCards={fetchCards}
+            />
+            <Sheet>
+              <SheetTrigger>
+                <MixerHorizontalIcon className="h-6 w-6" />
+              </SheetTrigger>
+              <SheetContent className="min-w-full">
+                <FilterSection
+                  filterOptions={filterOptions}
+                  searchType="buylist"
+                  fetchCards={fetchCards}
+                  clearFilters={clearFilters}
+                />
               </SheetContent>
             </Sheet>
           </div>
@@ -219,7 +339,28 @@ const Navbar: React.FC = () => {
 
           {/* Center Section */}
           <div className="flex flex-1 items-center justify-center">
-            {currentPath == '/' ? <NavSearchBar type={'desktop'} /> : null}
+            {currentPath == '/' && (
+              <NavSearchBar
+                type={'desktop'}
+                fetchQuery={fetchCards}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                tcg={tcg}
+                clearFilters={clearFilters}
+              />
+            )}
+            {currentPath == '/buylists' && (
+              <NavSearchBar
+                type={'desktop'}
+                fetchQuery={fetchCards}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                tcg={tcg}
+                clearFilters={clearFilters}
+              />
+            )}
           </div>
 
           {/* Right Section */}
@@ -240,9 +381,8 @@ const Navbar: React.FC = () => {
                 <Link legacyBehavior href="/" passHref>
                   <NavigationMenuLink
                     className={`${navigationMenuTriggerStyle()} ${
-                      currentPath == '/'
-                        ? 'rounded-b-none border-b-2 border-primary'
-                        : ''
+                      currentPath == '/' &&
+                      'rounded-b-none border-b-2 border-primary'
                     }`}
                   >
                     Home
@@ -262,14 +402,24 @@ const Navbar: React.FC = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-
+              <NavigationMenuItem>
+                <Link legacyBehavior href="/buylists" passHref>
+                  <NavigationMenuLink
+                    className={`${navigationMenuTriggerStyle()} ${
+                      currentPath == '/buylists' &&
+                      'rounded-b-none border-b-2 border-primary'
+                    }`}
+                  >
+                    Buylists
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link legacyBehavior href="/supporters" passHref>
                   <NavigationMenuLink
                     className={`${navigationMenuTriggerStyle()} ${
-                      currentPath == '/supporters'
-                        ? 'rounded-b-none border-b-2 border-primary'
-                        : ''
+                      currentPath == '/supporters' &&
+                      'rounded-b-none border-b-2 border-primary'
                     }`}
                   >
                     Supporters
@@ -295,16 +445,6 @@ const Navbar: React.FC = () => {
           </NavigationMenu>
         </div>
       </div>
-      {notificationStatus == true && (
-        <div className="flex w-full items-center bg-primary px-1 text-secondary">
-          <p className="flex-1 text-center text-xs font-medium md:text-base">
-            Canada Post shipping has resumed for most stores
-          </p>
-          <button onClick={setNotificationStatusFalse}>
-            <X />
-          </button>
-        </div>
-      )}
     </>
   );
 };

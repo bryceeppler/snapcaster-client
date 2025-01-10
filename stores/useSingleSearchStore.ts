@@ -3,28 +3,9 @@ import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+import { FilterOption, FilterOptionValues, SingleSortOptions } from '@/types/query';
 
-export interface FilterOptionValues {
-  label: string;
-  value: string;
-  count: number;
-  selected: boolean;
-}
 
-export type SortOptions =
-  | 'price-asc'
-  | 'price-desc'
-  | 'score'
-  | 'name-asc'
-  | 'name-desc';
-
-export interface FilterOption {
-  name: string;
-  field: string;
-  fieldType: string;
-  filterType: string;
-  values: FilterOptionValues[];
-}
 
 type SearchState = {
   searchTerm: string;
@@ -33,8 +14,8 @@ type SearchState = {
   setTcg: (tcg: Tcg) => void;
   filters: FilterOption[] | null;
   setFilter: (filterField: string, value: string, selected: boolean) => void;
-  sortBy: SortOptions;
-  setSortBy: (sortBy: SortOptions) => void;
+  sortBy: SingleSortOptions;
+  setSortBy: (sortBy: SingleSortOptions) => void;
   loadingCardResults: boolean;
   loadingFilterResults: boolean;
   searchResults: Product[] | null;
@@ -99,7 +80,7 @@ export const useSingleSearchStore = create<SearchState>()(
           }
           set({ tcg, resultsTcg: tcg });
         },
-        setSortBy: (sortBy: SortOptions) => set({ sortBy }),
+        setSortBy: (sortBy: SingleSortOptions) => set({ sortBy }),
 
         setAutocompleteSuggestions: (suggestions: string[]) =>
           set({ autocompleteSuggestions: suggestions }),
