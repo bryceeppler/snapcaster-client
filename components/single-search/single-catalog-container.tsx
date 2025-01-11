@@ -1,9 +1,7 @@
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import BackToTopButton from '../ui/back-to-top-btn';
-import SingleSortBy from './single-sort-by';
 import SingleCatalogItem from './single-catalog-item';
 import FilterSection from '@/components/search-ui/search-filter-container';
-import SinglePagination from './single-pagination';
 import useAuthStore from '@/stores/authStore';
 import useGlobalStore from '@/stores/globalStore';
 import AdComponent from '../ad';
@@ -12,6 +10,7 @@ import React, { useState, useEffect } from 'react';
 import { AdSelector } from '@/utils/adSelector';
 import { singleSortByLabel } from '@/types/query';
 import SearchPagination from '../search-ui/search-pagination';
+import SearchSortBy from '../search-ui/search-sort-by';
 
 export default function SingleCatalog() {
   const {
@@ -124,7 +123,7 @@ export default function SingleCatalog() {
                   fetchCards={fetchCards}
                 />
               </div>
-              <SingleSortBy
+              <SearchSortBy
                 sortBy={sortBy}
                 setSortBy={setSortBy}
                 fetchCards={fetchCards}

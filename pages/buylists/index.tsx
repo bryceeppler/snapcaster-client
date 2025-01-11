@@ -1,17 +1,16 @@
-import { NextPage } from 'next';
-import ResultCard from '@/components/buylists/result-card';
-import useBuyListStore from '@/stores/buyListStore';
-import { useState, useEffect } from 'react';
-import BackToTopButton from '@/components/ui/back-to-top-btn';
-import SinglePagination from '@/components/single-search/single-pagination';
-import Homebanner from '@/components/homebanner';
-import SingleSortBy from '@/components/single-search/single-sort-by';
-
 import React from 'react';
+import { NextPage } from 'next';
+import { useState, useEffect } from 'react';
 import { buylistSortByLabel } from '@/types/query';
+import useBuyListStore from '@/stores/buyListStore';
+
+import Homebanner from '@/components/homebanner';
 import FilterSection from '@/components/search-ui/search-filter-container';
 import SearchPagination from '@/components/search-ui/search-pagination';
 import SearchSortBy from '@/components/search-ui/search-sort-by';
+import BackToTopButton from '@/components/ui/back-to-top-btn';
+import BuyListCatalogItem from '@/components/buylists/buylist-catalog-item';
+
 type Props = {};
 const Buylist: NextPage<Props> = () => {
   const useMediaQuery = (width: number): boolean => {
@@ -99,7 +98,7 @@ const Buylist: NextPage<Props> = () => {
                     searchResults.map((item, index) => (
                       <React.Fragment key={index}>
                         <div key={index} className="mb-2">
-                          <ResultCard key={index} cardData={item} />
+                          <BuyListCatalogItem key={index} cardData={item} />
                         </div>
                       </React.Fragment>
                     ))}
@@ -108,7 +107,6 @@ const Buylist: NextPage<Props> = () => {
             </div>
           </>
         )}
-
         <BackToTopButton />
       </div>
     </>

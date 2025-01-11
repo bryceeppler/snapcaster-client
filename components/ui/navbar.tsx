@@ -9,10 +9,10 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Button } from './button';
 import useAuthStore from '@/stores/authStore';
-import { AlignJustify, Search, User, X } from 'lucide-react';
+import { AlignJustify, Search, User } from 'lucide-react';
 import React, { useState } from 'react';
 import ModeToggle from '../theme-toggle';
-import NavSearchBar from '../search-bar/nav-search-bar copy';
+import NavSearchBar from '../search-bar/nav-search-bar';
 import {
   Sheet,
   SheetContent,
@@ -20,13 +20,12 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet';
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import SinglePagination from '../single-search/single-pagination';
-
-import useBuyListStore from '@/stores/buyListStore';
 import { Tcg } from '@/types';
-// import SingleFilterContainer from '../single-search/single-filter-container';
 import FilterSection from '../search-ui/search-filter-container';
+import SearchPagination from '../search-ui/search-pagination';
+
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
+import useBuyListStore from '@/stores/buyListStore';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
@@ -35,7 +34,10 @@ const Navbar: React.FC = () => {
   const router = useRouter();
   const currentPath = router.pathname;
 
-  // Dynamically assign store variables and functions depending on search page (single, buylists, sealed)
+  // Dynamically assign store variables and functions for the following components (single, buylists, sealed):
+  // - FilterSection
+  // - NavSearchBar
+  // - SearchPagination
   const singleSearchStore = useSingleSearchStore();
   const buyListStore = useBuyListStore();
   const {
@@ -49,7 +51,8 @@ const Navbar: React.FC = () => {
     currentPage,
     setCurrentPage,
     numPages,
-    filterOptions
+    filterOptions,
+    numResults
   } = (() => {
     switch (currentPath) {
       case '/':
@@ -64,7 +67,8 @@ const Navbar: React.FC = () => {
           currentPage: singleSearchStore.currentPage,
           setCurrentPage: singleSearchStore.setCurrentPage,
           numPages: singleSearchStore.numPages,
-          filterOptions: singleSearchStore.filterOptions
+          filterOptions: singleSearchStore.filterOptions,
+          numResults: singleSearchStore.numResults
         };
       case '/buylists':
         return {
@@ -78,10 +82,11 @@ const Navbar: React.FC = () => {
           currentPage: buyListStore.currentPage,
           setCurrentPage: buyListStore.setCurrentPage,
           numPages: buyListStore.numPages,
-          filterOptions: buyListStore.filterOptions
+          filterOptions: buyListStore.filterOptions,
+          numResults: buyListStore.numResults
         };
+      // needs default values for the nav search bar in case the user is not on single or buylist search (these will never be used)
       default:
-        // needs default values for the nav search bar in case the user is not on single or buylist search (these will never be used)
         return {
           fetchCards: async () =>
             console.warn('Currently not on a search feature'),
@@ -96,7 +101,8 @@ const Navbar: React.FC = () => {
           numPages: null,
           setCurrentPage: () =>
             console.warn('Currently not on a search feature'),
-          filterOptions: []
+          filterOptions: [],
+          numResults: null
         };
     }
   })();
@@ -266,7 +272,10 @@ const Navbar: React.FC = () => {
         <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>{' '}
         {searchResults && currentPath == '/' && (
           <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-            <SinglePagination
+            <span className="text-center text-sm font-normal text-secondary-foreground ">
+              {numResults} results
+            </span>
+            <SearchPagination
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               numPages={numPages}
@@ -289,7 +298,10 @@ const Navbar: React.FC = () => {
         )}
         {searchResults && currentPath == '/buylists' && (
           <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-            <SinglePagination
+            <span className="text-center text-sm font-normal text-secondary-foreground ">
+              {numResults} results
+            </span>
+            <SearchPagination
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               numPages={numPages}

@@ -48,6 +48,7 @@ export default function NavSearchBar({
   const inputRef = useRef<HTMLInputElement>(null);
   const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
 
+  //Autocomplete Logic
   const fetchAutocomplete = useCallback(
     (value: string) => {
       const url = `${autoCompleteUrl}/cards?tcg=${tcg}&query=${encodeURIComponent(
@@ -72,16 +73,6 @@ export default function NavSearchBar({
   );
 
   useEffect(() => {
-    if (searchTerm.trim().length > 1) {
-      debouncedAutoCompleteResults(searchTerm);
-    } else {
-      setSuggestions([]);
-      setIsAutoCompleteVisible(false);
-      setSelectedIndex(-1);
-    }
-  }, [searchTerm]);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         autoCompleteRef.current &&
@@ -100,6 +91,7 @@ export default function NavSearchBar({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
+
     if (value.trim().length > 2) {
       debouncedAutoCompleteResults(value);
     } else {
@@ -112,12 +104,11 @@ export default function NavSearchBar({
   const handleSuggestionClick = (suggestion: AutocompleteResult) => {
     setSearchTerm(suggestion.name);
     setIsAutoCompleteVisible(false);
-    handleSearch();
+    handleSearch(); // Trigger search
   };
 
   const handleSearch = useCallback(() => {
     clearFilters();
-
     fetchQuery();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
@@ -180,7 +171,7 @@ export default function NavSearchBar({
         <Select
           value={tcg}
           onValueChange={(value: Tcg) => {
-            setTcg(value); // adjust this
+            setTcg(value);
             setSearchTerm('');
             setSuggestions([]);
             setIsAutoCompleteVisible(false);
@@ -192,7 +183,7 @@ export default function NavSearchBar({
             <ChevronDown className="ml-2 h-4 w-4 shrink-0 transition-transform duration-200 " />
           </SelectTrigger>
 
-          <SelectContent className="">
+          <SelectContent>
             <SelectGroup>
               <SelectItem value="mtg">MTG</SelectItem>
               <SelectItem value="lorcana">Lorcana</SelectItem>

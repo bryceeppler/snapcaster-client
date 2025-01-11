@@ -14,7 +14,6 @@ import {
   AccordionTrigger
 } from '@/components/ui/accordion';
 import { Separator } from '@radix-ui/react-dropdown-menu';
-import SingleSortBy from '../single-search/single-sort-by';
 import useBuyListStore from '@/stores/buyListStore';
 import {
   FilterOption,

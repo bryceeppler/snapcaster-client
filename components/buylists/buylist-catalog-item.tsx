@@ -5,12 +5,12 @@ import React, { memo } from 'react';
 
 type Props = { cardData: any };
 
-const ResultCard = memo(function ResultCard({ cardData }: Props) {
+const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
   return (
     <>
       <Card>
         <div className="border-border-colour    rounded-md bg-popover p-4">
-          <div className="">
+          <div>
             <div className="flex h-full items-center justify-center">
               <div className="relative mx-auto h-min max-w-[150px] px-4 md:max-w-[250px]">
                 <CardImage imageUrl={cardData.image} alt="test image" />
@@ -46,4 +46,4 @@ const ResultCard = memo(function ResultCard({ cardData }: Props) {
     </>
   );
 });
-export default ResultCard;
+export default BuyListCatalogItem;

@@ -5,17 +5,18 @@ import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { BuylistSortOptions, FilterOption, FilterOptionValues } from '@/types/query';
 
+// Need to Fix a server side bug adding invalid foil options
+// Need to add local storage logic for last selected TCG
+
 type BuyListState = {
   searchResults: BuyListQueryCard[]| null;
-
   currentPage: number; 
   numPages: number | null;
   numResults:number ;
   filterOptions?: FilterOption[];
   tcg: Tcg;
   searchTerm: string;
-
-  sortBy: BuylistSortOptions; // to check
+  sortBy: BuylistSortOptions;
   filters: FilterOption[] | null;
   setSortBy: (sortBy: BuylistSortOptions) => void;
   setTcg: (tcg: Tcg) => void;
@@ -30,18 +31,14 @@ type BuyListState = {
 const useBuyListStore = create<BuyListState>((set, get) => ({
 
   searchResults: null,
-
   currentPage: 1,
   numPages:0,
   numResults:0,
   tcg: 'mtg',
   searchTerm: '',
-
   sortBy: 'name-asc',
   filters: null,
   
-
-
   fetchCards: async () => {
     const {  filters } = get();
     if (get().searchTerm) {
@@ -83,7 +80,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         numResults:response.data.pagination.numResults,
         filterOptions: filterOptionsFromResponse,
         filters: filterOptionsFromResponse,
-        // showFilters: true,
       });
     }
   },
@@ -173,9 +169,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     }
   },
   setTcg: (tcg: Tcg) => {
-    // if (typeof window !== 'undefined') {
-    //   localStorage.setItem('tcg', tcg);
-    // }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tcg', tcg);
+    }
     set({ tcg });
   },
   setSortBy: (sortBy: BuylistSortOptions) => set({ sortBy }),

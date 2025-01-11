@@ -1,5 +1,3 @@
-// components/SearchBar.tsx
-
 import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
 import {
   Select,
@@ -108,17 +106,24 @@ export default function SingleSearchBar() {
     setIsAutoCompleteVisible(false);
     handleSearch(); // Trigger search
   };
-
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     clearFilters();
     clearSearchResults();
     fetchCards();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
-  };
+  }, [fetchCards, searchTerm, tcg]);
+
+  // const handleSearch = () => {
+  //   clearFilters();
+  //   clearSearchResults();
+  //   fetchCards();
+  //   trackSearch(searchTerm, tcg, 'single');
+  //   setIsAutoCompleteVisible(false);
+  // };
 
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
+    (event: KeyboardEvent<HTMLDivElement>) => {
       const key = event.key;
       const totalResults = suggestions?.length || 0;
 
@@ -218,12 +223,12 @@ export default function SingleSearchBar() {
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute z-10 mt-1 w-full rounded-lg bg-popover p-1 shadow-lg"
+          className="absolute z-20 mt-1 w-full rounded-lg bg-popover p-1 text-foreground shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
-              className={`cursor-pointer rounded-lg px-4 py-2  ${
+              className={`cursor-pointer px-4 py-2  ${
                 selectedIndex === index
                   ? 'bg-primary text-primary-foreground'
                   : 'hover:bg-accent'
