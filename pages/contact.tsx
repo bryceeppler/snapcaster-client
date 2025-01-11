@@ -29,7 +29,7 @@ const Contact: NextPage<Props> = () => {
                 <p>
                     We're always looking for ways to improve Snapcaster. If you have any feedback or suggestions, please let us know.
                 </p>
-                <a href="mailto:snapcasterca@gmail.com" className="text-primary hover:underline w-fit">snapcasterca@gmail.com</a>
+                <a href="mailto:info@snapcaster.gg" className="text-primary hover:underline w-fit">info@snapcaster.gg</a>
               </div>
             </div>
           </div>

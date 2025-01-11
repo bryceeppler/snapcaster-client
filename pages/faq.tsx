@@ -65,7 +65,7 @@ export default function Component() {
                 <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
                   If you're interested in our advertising program feel free to
                   reach out to @bryce on our Discord server or via email at
-                  epplerdev@gmail.com for more information.
+                  info@snapcaster.gg for more information.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="contact">
