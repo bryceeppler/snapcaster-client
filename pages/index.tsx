@@ -6,7 +6,7 @@ import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { DollarSignIcon, GlobeIcon } from 'lucide-react';
-import SearchBar from '@/components/search-bar/search-bar';
+import SearchBar from '@/components/search-ui/search-bar';
 
 type Props = {};
 

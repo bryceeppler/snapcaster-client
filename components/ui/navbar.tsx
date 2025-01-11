@@ -12,7 +12,7 @@ import useAuthStore from '@/stores/authStore';
 import { AlignJustify, Search, User } from 'lucide-react';
 import React, { useState } from 'react';
 import ModeToggle from '../theme-toggle';
-import NavSearchBar from '../search-bar/nav-search-bar';
+import NavSearchBar from '../search-ui/nav-search-bar';
 import {
   Sheet,
   SheetContent,
