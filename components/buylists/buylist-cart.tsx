@@ -1,4 +1,5 @@
-// Old buylist cart component. Come back and fix after buylist add to cart logic has been added.
+// Old buylist cart component
+// Currently not being used. Come back and fix after buylist add to cart logic has been added.
 
 import {
   Sheet,

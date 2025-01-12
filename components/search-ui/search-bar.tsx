@@ -15,11 +15,29 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
+
 interface AutocompleteResult {
   name: string;
 }
-
-export default function SingleSearchBar() {
+type Props = {
+  searchTool: string;
+  tcg: Tcg;
+  searchTerm: string;
+  setTcg: (tcg: Tcg) => void;
+  setSearchTerm: (searchBoxValue: string) => void;
+  clearSearchResults: () => void;
+  fetchCards: () => Promise<void>;
+  clearFilters: () => void;
+};
+export default function SearchBar({
+  tcg,
+  searchTerm,
+  setTcg,
+  setSearchTerm,
+  clearSearchResults,
+  fetchCards,
+  clearFilters
+}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
@@ -27,17 +45,6 @@ export default function SingleSearchBar() {
   const autoCompleteRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
-
-  // Use the new store
-  const {
-    tcg,
-    setTcg,
-    searchTerm,
-    setSearchTerm,
-    clearSearchResults,
-    fetchCards,
-    clearFilters
-  } = useSingleSearchStore();
 
   const fetchAutocomplete = useCallback(
     (value: string) => {
@@ -61,16 +68,6 @@ export default function SingleSearchBar() {
     fetchAutocomplete,
     100
   );
-
-  // useEffect(() => {
-  //   if (searchTerm.trim().length > 1) {
-  //     debouncedAutoCompleteResults(searchTerm);
-  //   } else {
-  //     setSuggestions([]);
-  //     setIsAutoCompleteVisible(false);
-  //     setSelectedIndex(-1);
-  //   }
-  // }, [searchTerm]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -104,7 +101,7 @@ export default function SingleSearchBar() {
   const handleSuggestionClick = (suggestion: AutocompleteResult) => {
     setSearchTerm(suggestion.name);
     setIsAutoCompleteVisible(false);
-    handleSearch(); // Trigger search
+    handleSearch();
   };
   const handleSearch = useCallback(() => {
     clearFilters();
@@ -113,14 +110,6 @@ export default function SingleSearchBar() {
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
   }, [fetchCards, searchTerm, tcg]);
-
-  // const handleSearch = () => {
-  //   clearFilters();
-  //   clearSearchResults();
-  //   fetchCards();
-  //   trackSearch(searchTerm, tcg, 'single');
-  //   setIsAutoCompleteVisible(false);
-  // };
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {

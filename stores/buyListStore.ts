@@ -24,6 +24,7 @@ type BuyListState = {
   setFilter: (filterField: string, value: string, selected: boolean) => void;
   clearFilters: () => void;
   applyFilters: () => Promise<void>;
+  clearSearchResults: () => void;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
@@ -172,5 +173,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   setSortBy: (sortBy: BuylistSortOptions) => set({ sortBy }),
   clearFilters: () => set({ filters: null }),
+  clearSearchResults: () =>
+    set({ searchResults: null }),
+
+  
 }));
 export default useBuyListStore;

@@ -61,22 +61,22 @@ const Navbar: React.FC = () => {
     ? queryStore
     : {
         //Default values in case we are not on single, buylist or sealed pages
-        fetchCards: async () => {},
-        applyFilters: async () => {},
-        searchTerm: '',
-        setSearchTerm: () => {},
-        setTcg: () => {},
         tcg: 'mtg' as Tcg,
         searchResults: [],
-        clearFilters: () => {},
-        currentPage: 1,
-        setCurrentPage: () => {},
+        searchTerm: '',
         numPages: null,
         filterOptions: [],
         numResults: null,
-        setFilter: () => {},
         sortBy: '',
-        setSortBy: () => {}
+        currentPage: 1,
+        clearFilters: () => {},
+        setCurrentPage: () => {},
+        setFilter: () => {},
+        setSearchTerm: () => {},
+        setTcg: () => {},
+        setSortBy: () => {},
+        fetchCards: async () => {},
+        applyFilters: async () => {}
       };
 
   return (
