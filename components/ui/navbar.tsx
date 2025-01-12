@@ -34,12 +34,19 @@ const Navbar: React.FC = () => {
   const currentPath = router.pathname;
 
   // Dynamically assign zustand states for the following components (single, buylists, sealed) => FilterSection, NavSearchBar, SearchPagination
+
+  const singleSearchStore = useSingleSearchStore(); // Unconditionally called
+  const buyListStore = useBuyListStore(); // Unconditionally called
+
+  // Dynamically choose the store based on currentPath
   const queryStore =
     currentPath === '/'
-      ? useSingleSearchStore()
+      ? singleSearchStore
       : currentPath === '/buylists'
-      ? useBuyListStore()
+      ? buyListStore
       : null;
+
+  // Destructure variables from queryStore or set defaults
   const {
     searchTerm,
     tcg,
@@ -57,27 +64,24 @@ const Navbar: React.FC = () => {
     clearFilters,
     setCurrentPage,
     setFilter
-  } = queryStore
-    ? queryStore
-    : {
-        //Default values in case we are not on single, buylist or sealed pages
-        tcg: 'mtg' as Tcg,
-        searchResults: [],
-        searchTerm: '',
-        numPages: null,
-        filterOptions: [],
-        numResults: null,
-        sortBy: '',
-        currentPage: 1,
-        clearFilters: () => {},
-        setCurrentPage: () => {},
-        setFilter: () => {},
-        setSearchTerm: () => {},
-        setTcg: () => {},
-        setSortBy: () => {},
-        fetchCards: async () => {},
-        applyFilters: async () => {}
-      };
+  } = queryStore || {
+    tcg: 'mtg' as Tcg,
+    searchResults: [],
+    searchTerm: '',
+    numPages: null,
+    filterOptions: [],
+    numResults: null,
+    sortBy: '',
+    currentPage: 1,
+    clearFilters: () => {},
+    setCurrentPage: () => {},
+    setFilter: () => {},
+    setSearchTerm: () => {},
+    setTcg: () => {},
+    setSortBy: () => {},
+    fetchCards: async () => {},
+    applyFilters: async () => {}
+  };
 
   return (
     <>
