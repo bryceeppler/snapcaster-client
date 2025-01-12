@@ -12,6 +12,7 @@ type SignupFormData = {
   password: string;
   fullName: string;
   confirmPassword: string;
+  newsletter: boolean;
 };
 
 type SignupFormProps = {
@@ -35,14 +36,15 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
   const password = watch('password');
 
   const onSubmit = async (data: SignupFormData) => {
-    const { email, password, fullName } = data;
+    const { email, password, fullName, newsletter } = data;
     const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/register`;
 
     try {
       const response = await axios.post(endpoint, {
         email,
         password,
-        fullName
+        fullName,
+        newsletter
       });
       if (response.status !== 200) {
         throw new Error('Something went wrong with the registration process');
@@ -133,6 +135,19 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
           )}
         </div>
       )}
+
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="newsletter"
+          defaultChecked={true}
+          {...register('newsletter')}
+          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+        />
+        <Label htmlFor="newsletter" className="text-sm text-muted-foreground">
+          Subscribe to our newsletter
+        </Label>
+      </div>
 
       <Button type="submit">Sign Up</Button>
       {showSignInLink && (
