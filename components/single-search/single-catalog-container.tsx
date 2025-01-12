@@ -18,16 +18,18 @@ export default function SingleCatalog() {
     promotedResults,
     numResults,
     currentPage,
-    setCurrentPage,
     numPages,
-    fetchCards,
     loadingCardResults,
     loadingFilterResults,
     filters,
     filterOptions,
     sortBy,
+    fetchCards,
+    setCurrentPage,
     setSortBy,
-    clearFilters
+    clearFilters,
+    setFilter,
+    applyFilters
   } = useSingleSearchStore();
 
   const { hasActiveSubscription } = useAuthStore();
@@ -78,9 +80,13 @@ export default function SingleCatalog() {
                 <div className="rounded-lg bg-popover px-3 py-2 text-left shadow-md md:max-w-sm">
                   <FilterSection
                     filterOptions={filterOptions}
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
                     fetchCards={fetchCards}
-                    searchType="single"
                     clearFilters={clearFilters}
+                    setFilter={setFilter}
+                    setCurrentPage={setCurrentPage}
+                    applyFilters={applyFilters}
                   />
                 </div>
               </div>
@@ -118,17 +124,17 @@ export default function SingleCatalog() {
               <div>
                 <SearchPagination
                   currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
                   numPages={numPages}
                   fetchCards={fetchCards}
+                  setCurrentPage={setCurrentPage}
                 />
               </div>
               <SearchSortBy
                 sortBy={sortBy}
+                sortByLabel={singleSortByLabel}
                 setSortBy={setSortBy}
                 fetchCards={fetchCards}
                 setCurrentPage={setCurrentPage}
-                sortByLabel={singleSortByLabel}
               />
             </div>
             <div className="bg-background pb-1"></div>

@@ -23,7 +23,6 @@ import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { Tcg } from '@/types';
 import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
-
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import useBuyListStore from '@/stores/buyListStore';
 
@@ -34,78 +33,51 @@ const Navbar: React.FC = () => {
   const router = useRouter();
   const currentPath = router.pathname;
 
-  // Dynamically assign store variables and functions for the following components (single, buylists, sealed):
-  // - FilterSection
-  // - NavSearchBar
-  // - SearchPagination
-  const singleSearchStore = useSingleSearchStore();
-  const buyListStore = useBuyListStore();
+  // Dynamically assign zustand states for the following components (single, buylists, sealed) => FilterSection, NavSearchBar, SearchPagination
+  const queryStore =
+    currentPath === '/'
+      ? useSingleSearchStore()
+      : currentPath === '/buylists'
+      ? useBuyListStore()
+      : null;
   const {
-    fetchCards,
     searchTerm,
-    setSearchTerm,
-    setTcg,
     tcg,
     searchResults,
-    clearFilters,
     currentPage,
-    setCurrentPage,
     numPages,
     filterOptions,
-    numResults
-  } = (() => {
-    switch (currentPath) {
-      case '/':
-        return {
-          fetchCards: singleSearchStore.fetchCards,
-          searchTerm: singleSearchStore.searchTerm,
-          setSearchTerm: singleSearchStore.setSearchTerm,
-          setTcg: singleSearchStore.setTcg,
-          tcg: singleSearchStore.tcg,
-          searchResults: singleSearchStore.searchResults,
-          clearFilters: singleSearchStore.clearFilters,
-          currentPage: singleSearchStore.currentPage,
-          setCurrentPage: singleSearchStore.setCurrentPage,
-          numPages: singleSearchStore.numPages,
-          filterOptions: singleSearchStore.filterOptions,
-          numResults: singleSearchStore.numResults
-        };
-      case '/buylists':
-        return {
-          fetchCards: buyListStore.fetchCards,
-          searchTerm: buyListStore.searchTerm,
-          setSearchTerm: buyListStore.setSearchTerm,
-          setTcg: buyListStore.setTcg,
-          tcg: buyListStore.tcg,
-          searchResults: buyListStore.searchResults,
-          clearFilters: buyListStore.clearFilters,
-          currentPage: buyListStore.currentPage,
-          setCurrentPage: buyListStore.setCurrentPage,
-          numPages: buyListStore.numPages,
-          filterOptions: buyListStore.filterOptions,
-          numResults: buyListStore.numResults
-        };
-      // needs default values for the nav search bar in case the user is not on single or buylist search (these will never be used)
-      default:
-        return {
-          fetchCards: async () =>
-            console.warn('Currently not on a search feature'),
-          searchTerm: '',
-          setSearchTerm: () =>
-            console.warn('Currently not on a search feature'),
-          setTcg: () => console.warn('Currently not on a search feature'),
-          tcg: 'mtg' as Tcg,
-          searchResults: [],
-          clearFilters: () => console.warn('Currently not on a search feature'),
-          currentPage: 1,
-          numPages: null,
-          setCurrentPage: () =>
-            console.warn('Currently not on a search feature'),
-          filterOptions: [],
-          numResults: null
-        };
-    }
-  })();
+    numResults,
+    sortBy,
+    setSortBy,
+    fetchCards,
+    applyFilters,
+    setSearchTerm,
+    setTcg,
+    clearFilters,
+    setCurrentPage,
+    setFilter
+  } = queryStore
+    ? queryStore
+    : {
+        //Default values in case we are not on single, buylist or sealed pages
+        fetchCards: async () => {},
+        applyFilters: async () => {},
+        searchTerm: '',
+        setSearchTerm: () => {},
+        setTcg: () => {},
+        tcg: 'mtg' as Tcg,
+        searchResults: [],
+        clearFilters: () => {},
+        currentPage: 1,
+        setCurrentPage: () => {},
+        numPages: null,
+        filterOptions: [],
+        numResults: null,
+        setFilter: () => {},
+        sortBy: '',
+        setSortBy: () => {}
+      };
 
   return (
     <>
@@ -227,16 +199,7 @@ const Navbar: React.FC = () => {
 
             {/* Right Section */}
             <div className="mx-2 flex items-center ">
-              {currentPath == '/' && (
-                <button
-                  onClick={() => {
-                    setMobileSearchIsVisible(!mobileSearchIsVisible);
-                  }}
-                >
-                  <Search className="mr-2" />
-                </button>
-              )}
-              {currentPath == '/buylists' && (
+              {(currentPath === '/' || currentPath === '/buylists') && (
                 <button
                   onClick={() => {
                     setMobileSearchIsVisible(!mobileSearchIsVisible);
@@ -260,68 +223,47 @@ const Navbar: React.FC = () => {
               toggleMobileSearch={() => {
                 setMobileSearchIsVisible(!mobileSearchIsVisible);
               }}
-              fetchQuery={fetchCards}
               searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              setTcg={setTcg}
               tcg={tcg}
               clearFilters={clearFilters}
+              setSearchTerm={setSearchTerm}
+              setTcg={setTcg}
+              fetchQuery={fetchCards}
             />
           </div>
         </div>
         <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>{' '}
-        {searchResults && currentPath == '/' && (
-          <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-            <span className="text-center text-sm font-normal text-secondary-foreground ">
-              {numResults} results
-            </span>
-            <SearchPagination
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              numPages={numPages}
-              fetchCards={fetchCards}
-            />
-            <Sheet>
-              <SheetTrigger>
-                <MixerHorizontalIcon className="h-6 w-6" />
-              </SheetTrigger>
-              <SheetContent className="min-w-full">
-                <FilterSection
-                  filterOptions={filterOptions}
-                  searchType="single"
-                  fetchCards={fetchCards}
-                  clearFilters={clearFilters}
-                />
-              </SheetContent>
-            </Sheet>
-          </div>
-        )}
-        {searchResults && currentPath == '/buylists' && (
-          <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-            <span className="text-center text-sm font-normal text-secondary-foreground ">
-              {numResults} results
-            </span>
-            <SearchPagination
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              numPages={numPages}
-              fetchCards={fetchCards}
-            />
-            <Sheet>
-              <SheetTrigger>
-                <MixerHorizontalIcon className="h-6 w-6" />
-              </SheetTrigger>
-              <SheetContent className="min-w-full">
-                <FilterSection
-                  filterOptions={filterOptions}
-                  searchType="buylist"
-                  fetchCards={fetchCards}
-                  clearFilters={clearFilters}
-                />
-              </SheetContent>
-            </Sheet>
-          </div>
-        )}
+        {searchResults &&
+          (currentPath == '/' || currentPath == '/buylists') && (
+            <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
+              <span className="text-center text-sm font-normal text-secondary-foreground ">
+                {numResults} results
+              </span>
+              <SearchPagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                numPages={numPages}
+                fetchCards={fetchCards}
+              />
+              <Sheet>
+                <SheetTrigger>
+                  <MixerHorizontalIcon className="h-6 w-6" />
+                </SheetTrigger>
+                <SheetContent className="min-w-full">
+                  <FilterSection
+                    filterOptions={filterOptions}
+                    sortBy={sortBy}
+                    fetchCards={fetchCards}
+                    clearFilters={clearFilters}
+                    setFilter={setFilter}
+                    setCurrentPage={setCurrentPage}
+                    applyFilters={applyFilters}
+                    setSortBy={setSortBy}
+                  />
+                </SheetContent>
+              </Sheet>
+            </div>
+          )}
       </div>
 
       {/* DESKTOP NAV MD+ */}
@@ -351,25 +293,14 @@ const Navbar: React.FC = () => {
 
           {/* Center Section */}
           <div className="flex flex-1 items-center justify-center">
-            {currentPath == '/' && (
+            {(currentPath === '/' || currentPath === '/buylists') && (
               <NavSearchBar
                 type={'desktop'}
-                fetchQuery={fetchCards}
                 searchTerm={searchTerm}
+                tcg={tcg}
+                fetchQuery={fetchCards}
                 setSearchTerm={setSearchTerm}
                 setTcg={setTcg}
-                tcg={tcg}
-                clearFilters={clearFilters}
-              />
-            )}
-            {currentPath == '/buylists' && (
-              <NavSearchBar
-                type={'desktop'}
-                fetchQuery={fetchCards}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                setTcg={setTcg}
-                tcg={tcg}
                 clearFilters={clearFilters}
               />
             )}

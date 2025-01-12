@@ -1,12 +1,15 @@
 import React, { memo } from 'react';
-import { Button } from '@/components/ui/button';
-import { ScrollArea, ScrollBar } from '../ui/scroll-area';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-
 import useGlobalStore from '@/stores/globalStore';
 import useAuthStore from '@/stores/authStore';
 import { createCheckoutSession } from '@/lib/utils';
+import {
+  FilterOption,
+  FilterOptionValues,
+  singleSortByLabel
+} from '@/types/query';
 
+import { Button } from '@/components/ui/button';
+import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 import {
   Accordion,
   AccordionContent,
@@ -14,23 +17,31 @@ import {
   AccordionTrigger
 } from '@/components/ui/accordion';
 import { Separator } from '@radix-ui/react-dropdown-menu';
-import useBuyListStore from '@/stores/buyListStore';
-import {
-  FilterOption,
-  FilterOptionValues,
-  singleSortByLabel
-} from '@/types/query';
 import SearchSortBy from './search-sort-by';
+
 type Prop = {
   filterOptions: any;
-  searchType: string;
+  sortBy: any;
   fetchCards: () => Promise<void>;
   clearFilters: () => void;
+  setFilter: (filterField: string, value: string, selected: boolean) => void;
+  setCurrentPage: (currentPage: number) => void;
+  applyFilters: () => Promise<void>;
+  setSortBy: (sortBy: any) => void;
 };
+
 const FilterSection: React.FC<Prop> = memo(
-  ({ filterOptions, searchType, fetchCards, clearFilters }) => {
+  ({
+    filterOptions,
+    sortBy,
+    fetchCards,
+    clearFilters,
+    setFilter,
+    setCurrentPage,
+    applyFilters,
+    setSortBy
+  }) => {
     const { isAuthenticated } = useAuthStore();
-    const { sortBy, setSortBy, setCurrentPage } = useSingleSearchStore();
     const handleClearFilters = () => {
       clearFilters();
       fetchCards();
@@ -59,7 +70,9 @@ const FilterSection: React.FC<Prop> = memo(
                     <FilterScrollArea
                       key={filterOption.field}
                       filterOption={filterOption}
-                      searchType={searchType}
+                      setFilter={setFilter}
+                      setCurrentPage={setCurrentPage}
+                      applyFilters={applyFilters}
                     />
                   </AccordionContent>
                 </AccordionItem>
@@ -94,18 +107,27 @@ const FilterSection: React.FC<Prop> = memo(
 
 interface FilterScrollAreaProps {
   filterOption: FilterOption;
-  searchType: string;
+  setFilter: (filterField: string, value: string, selected: boolean) => void;
+  setCurrentPage: (currentPage: number) => void;
+  applyFilters: () => Promise<void>;
 }
 
 const FilterScrollArea: React.FC<FilterScrollAreaProps> = ({
   filterOption,
-  searchType
+  setFilter,
+  setCurrentPage,
+  applyFilters
 }) => {
   return (
     <div>
       <div className="flex">
         <ScrollArea className="90 max-h-48 w-full rounded-lg  px-3">
-          <FilterFactory filterOption={filterOption} searchType={searchType} />
+          <FilterFactory
+            filterOption={filterOption}
+            setFilter={setFilter}
+            setCurrentPage={setCurrentPage}
+            applyFilters={applyFilters}
+          />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
       </div>
@@ -115,28 +137,17 @@ const FilterScrollArea: React.FC<FilterScrollAreaProps> = ({
 
 interface FilterFactoryProps {
   filterOption: FilterOption;
-  searchType: string;
+  setFilter: (filterField: string, value: string, selected: boolean) => void;
+  setCurrentPage: (currentPage: number) => void;
+  applyFilters: () => Promise<void>;
 }
 
 const FilterFactory: React.FC<FilterFactoryProps> = ({
   filterOption,
-  searchType
+  setFilter,
+  setCurrentPage,
+  applyFilters
 }) => {
-  const singleSearchStore = useSingleSearchStore();
-  const buylistSearchStore = useBuyListStore();
-  // Dynamically determine the functions based on the search type
-  const { setFilter, setCurrentPage, applyFilters } = (() => {
-    switch (searchType) {
-      case 'single':
-        return singleSearchStore;
-      case 'buylist':
-        return buylistSearchStore;
-
-      default:
-        throw new Error(`Unknown search type: ${searchType}`);
-    }
-  })();
-
   const handleOptionChange = (
     filter: FilterOption,
     option: FilterOptionValues

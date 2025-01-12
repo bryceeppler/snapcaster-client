@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Pagination,
   PaginationContent,
@@ -11,14 +11,15 @@ import {
 
 type Props = {
   currentPage: number;
-  setCurrentPage: (value: number) => void;
   numPages: number | null;
+  setCurrentPage: (value: number) => void;
   fetchCards: () => void;
 };
+
 const SearchPagination = ({
   currentPage,
-  setCurrentPage,
   numPages,
+  setCurrentPage,
   fetchCards
 }: Props) => {
   const handlePageChange = (page: number) => {
@@ -27,6 +28,12 @@ const SearchPagination = ({
     window.scrollTo(0, 0);
     return;
   };
+
+  useEffect(() => {
+    console.log('Props inside search pagination useEffect:', {
+      setCurrentPage
+    });
+  }, [setCurrentPage]);
 
   return (
     <Pagination className="w-min">

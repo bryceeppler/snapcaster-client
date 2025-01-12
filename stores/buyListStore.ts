@@ -1,13 +1,11 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { Tcg, BuyListQueryCard,BuyListCartStoreData,BuyListCartCardData } from '@/types/product';
+import { Tcg, BuyListQueryCard } from '@/types/product';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
-import { BuylistSortOptions, FilterOption, FilterOptionValues } from '@/types/query';
+import { BuylistSortOptions, FilterOption } from '@/types/query';
 
-// Need to Fix a server side bug adding invalid foil options
 // Need to add local storage logic for last selected TCG
-
 type BuyListState = {
   searchResults: BuyListQueryCard[]| null;
   currentPage: number; 
@@ -149,8 +147,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
           promoted: false
         })
       );
-
-
 
       const filterOptionsFromResponse: FilterOption[] =
         response.data.filters || [];

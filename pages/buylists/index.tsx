@@ -22,7 +22,6 @@ const Buylist: NextPage<Props> = () => {
       handleResize(); // Call once to set the initial value
       return () => window.removeEventListener('resize', handleResize);
     }, [width]);
-
     return isMobile;
   };
   const isMobile = useMediaQuery(768);
@@ -30,14 +29,16 @@ const Buylist: NextPage<Props> = () => {
   const {
     numResults,
     currentPage,
-    setCurrentPage,
     numPages,
-    fetchCards,
     searchResults,
-    filters,
     sortBy,
+    filterOptions,
+    fetchCards,
+    setFilter,
     setSortBy,
-    clearFilters
+    setCurrentPage,
+    clearFilters,
+    applyFilters
   } = useBuyListStore();
 
   return (
@@ -57,10 +58,14 @@ const Buylist: NextPage<Props> = () => {
                     <div className="child-1 mt-1  w-full md:sticky md:top-[118px]">
                       <div className=" rounded-lg bg-popover  px-3 py-2 text-left shadow-md md:max-w-sm">
                         <FilterSection
-                          searchType="buylist"
-                          filterOptions={filters}
+                          filterOptions={filterOptions}
+                          sortBy={sortBy}
+                          setSortBy={setSortBy}
                           fetchCards={fetchCards}
                           clearFilters={clearFilters}
+                          setFilter={setFilter}
+                          setCurrentPage={setCurrentPage}
+                          applyFilters={applyFilters}
                         />
                       </div>
                     </div>
@@ -77,17 +82,17 @@ const Buylist: NextPage<Props> = () => {
                     <div>
                       <SearchPagination
                         currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}
                         numPages={numPages}
+                        setCurrentPage={setCurrentPage}
                         fetchCards={fetchCards}
                       />
                     </div>
                     <SearchSortBy
                       sortBy={sortBy}
+                      sortByLabel={buylistSortByLabel}
                       setSortBy={setSortBy}
                       fetchCards={fetchCards}
                       setCurrentPage={setCurrentPage}
-                      sortByLabel={buylistSortByLabel}
                     />
                   </div>
                   <div className="bg-background pb-1"></div>
