@@ -24,6 +24,10 @@ const useGlobalStore = create<GlobalState>()(devtools((set, get) => {
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_SEARCH_URL}/websites`
       );
+      if(response.data.error || response.data.websiteList.length === 0){
+        set({websites:[]})
+        return;
+      }
       const websites = response.data.websiteList.sort((a: Website, b: Website) =>
         a.name.localeCompare(b.name)
       );
