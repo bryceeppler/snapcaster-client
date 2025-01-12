@@ -36,7 +36,7 @@ const About: NextPage<Props> = () => {
               We provide a way for users to aggregate TCG related products
               across various online shops across Canada.
             </p>
-            <p>You can contact us by email at epplerdev@gmail.com.</p>
+            <p>You can contact us by email at info@snapcaster.gg.</p>
             <p>
               These Legal Terms constitute a legally binding agreement made
               between you, whether personally or on behalf of an entity (
@@ -66,7 +66,7 @@ const About: NextPage<Props> = () => {
             <p>
               We will provide you with prior notice of any scheduled changes to
               the Services you are using. The modified Legal Terms will become
-              effective upon posting or notifying you by epplerdev@gmail.com, as
+              effective upon posting or notifying you by info@snapcaster.gg, as
               stated in the email message. By continuing to use the Services
               after the effective date of any changes, you agree to be bound by
               the modified terms.
@@ -249,7 +249,7 @@ const About: NextPage<Props> = () => {
             <p>
               If you wish to make any use of the Services, Content, or Marks
               other than as set out in this section or elsewhere in our Legal
-              Terms, please address your request to: epplerdev@gmail.com. If we
+              Terms, please address your request to: info@snapcaster.gg. If we
               ever grant you the permission to post, reproduce, or publicly
               display any part of our Services or Content, you must identify us
               as the owners or licensors of the Services, Content, or Marks and
@@ -438,7 +438,7 @@ const About: NextPage<Props> = () => {
               You can cancel your subscription at any time by logging into your
               account. Your cancellation will take effect at the end of the
               current paid term. If you have any questions or are unsatisfied
-              with our Services, please email us at epplerdev@gmail.com.
+              with our Services, please email us at info@snapcaster.gg.
             </p>
 
             <h3 className=" font-bold">Fee Changes</h3>
@@ -1219,7 +1219,7 @@ const About: NextPage<Props> = () => {
                 <strong>Canada</strong>
               </p>
               <p>
-                <strong>epplerdev@gmail.com</strong>
+                <strong>info@snapcaster.gg</strong>
               </p>
             </span>
 

@@ -587,7 +587,7 @@ const About: NextPage<Props> = () => {
               contact us:
             </p>
             <ul>
-              <li>By email: epplerdev@gmail.com</li>
+              <li>By email: info@snapcaster.gg</li>
             </ul>
           </div>
         </section>

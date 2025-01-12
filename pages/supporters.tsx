@@ -176,7 +176,7 @@ const Supporters: NextPage<Props> = () => {
                   If you're a Local Game Store (LGS) owner and wish to feature
                   your website on Snapcaster, we invite you to join our official
                   Discord server and send us a direct message or send us an
-                  email at epplerdev@gmail.com. We are also now offering
+                  email at info@snapcaster.gg. We are also now offering
                   exclusive advertising opportunities for your webstore on
                   Snapcaster. This is an excellent chance to promote your
                   store's special offers, discount codes, and events such as
