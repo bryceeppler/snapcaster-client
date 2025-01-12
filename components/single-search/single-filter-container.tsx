@@ -28,7 +28,7 @@ const FilterSection: React.FC = memo(() => {
     shallow // Compare state values shallowly
   );
 
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, hasActiveSubscription } = useAuthStore();
 
   const handleClearFilters = () => {
     clearFilters();
@@ -57,11 +57,12 @@ const FilterSection: React.FC = memo(() => {
               </AccordionItem>
             ))}
         </Accordion>
-        <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
-          <p>
-            Support us with{' '}
-            <span className="font-bold text-primary">Snapcaster Pro</span> and
-            remove promoted results with reduced ads for $2.99/mo.
+        {!hasActiveSubscription && (
+          <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
+            <p>
+              Support us with{' '}
+              <span className="font-bold text-primary">Snapcaster Pro</span> and
+              remove promoted results with reduced ads for $2.99/mo.
           </p>
           <Button
             onClick={
@@ -71,8 +72,9 @@ const FilterSection: React.FC = memo(() => {
             }
           >
             Subscribe
-          </Button>
-        </div>
+            </Button>
+          </div>
+        )}
 
         <Button onClick={handleClearFilters} className="w-full">
           Clear Filters
