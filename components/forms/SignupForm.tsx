@@ -22,9 +22,10 @@ type SignupFormProps = {
   inputClassName?: string;
   labels?: 'implicit' | 'explicit';
   confirmPassword?: boolean;
+  callToAction?: string;
 };
 
-export function SignupForm({ onSuccess, showSignInLink = true, disableToast = false, inputClassName = '', labels = 'explicit', confirmPassword = true }: SignupFormProps) {
+export function SignupForm({ onSuccess, showSignInLink = true, disableToast = false, inputClassName = '', labels = 'explicit', confirmPassword = true, callToAction = 'Sign Up' }: SignupFormProps) {
   const {
     register,
     handleSubmit,
@@ -149,7 +150,7 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
         </Label>
       </div>
 
-      <Button type="submit">Sign Up</Button>
+      <Button type="submit">{callToAction}</Button>
       {showSignInLink && (
         <div className="mt-4 text-center text-sm">
           Already have an account?{' '}
