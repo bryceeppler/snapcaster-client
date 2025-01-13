@@ -110,14 +110,34 @@ interface FilterFactoryProps {
 
 const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
   const { setFilter, setCurrentPage, applyFilters } = useSingleSearchStore();
+  const [localSelections, setLocalSelections] = React.useState<{[key: string]: boolean}>({});
+
+  // Initialize local state from filterOption values
+  React.useEffect(() => {
+    const selections = filterOption.values.reduce((acc, option) => {
+      acc[option.value] = option.selected;
+      return acc;
+    }, {} as {[key: string]: boolean});
+    setLocalSelections(selections);
+  }, [filterOption]);
+
   const handleOptionChange = (
     filter: FilterOption,
     option: FilterOptionValues
   ) => {
-    setFilter(filter.field, option.value, !option.selected);
+    // Update local state immediately
+    const newSelected = !localSelections[option.value];
+    setLocalSelections(prev => ({
+      ...prev,
+      [option.value]: newSelected
+    }));
+
+    // Update global state and trigger API call
+    setFilter(filter.field, option.value, newSelected);
     setCurrentPage(1);
     applyFilters();
   };
+
   const { getWebsiteName } = useGlobalStore();
   return (
     <div className="space-y-3 py-2">
@@ -127,7 +147,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({ filterOption }) => {
             <input
               type="checkbox"
               id={option.value}
-              checked={option.selected}
+              checked={localSelections[option.value] ?? option.selected}
               onChange={(e) => handleOptionChange(filterOption, option)}
               className="mr-2 mt-1"
             />
