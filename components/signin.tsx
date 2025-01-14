@@ -42,14 +42,19 @@ const SignInCard = (props: Props) => {
     const endpoint = process.env.NEXT_PUBLIC_USER_URL + '/login';
 
     try {
-      const response = await axios.post(endpoint, { email, password });
+      const response = await axios.post(endpoint, { email, password }, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
 
       if (!response.status) {
         toast.error('Invalid response from server.');
         throw new Error('Something went wrong with the login process');
       } else {
-        const { accessToken, refreshToken } = response.data;
-        setTokens(accessToken, refreshToken);
+        const { accessToken } = response.data;
+        setTokens(accessToken);
         toast.success('Login successful!');
       }
     } catch (error) {

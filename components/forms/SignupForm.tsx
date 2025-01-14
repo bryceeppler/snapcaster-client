@@ -6,6 +6,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import Router from 'next/router';
 import Link from 'next/link';
+import useAuthStore from '@/stores/authStore';
 
 type SignupFormData = {
   email: string;
@@ -23,9 +24,11 @@ type SignupFormProps = {
   labels?: 'implicit' | 'explicit';
   confirmPassword?: boolean;
   callToAction?: string;
+  returnTokens?: boolean;
 };
 
-export function SignupForm({ onSuccess, showSignInLink = true, disableToast = false, inputClassName = '', labels = 'explicit', confirmPassword = true, callToAction = 'Sign Up' }: SignupFormProps) {
+export function SignupForm({ onSuccess, showSignInLink = true, disableToast = false, inputClassName = '', labels = 'explicit', confirmPassword = true, callToAction = 'Sign Up', returnTokens = false }: SignupFormProps) {
+  const setTokens = useAuthStore((state) => state.setTokens);
   const {
     register,
     handleSubmit,
@@ -46,18 +49,33 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
         password,
         fullName,
         newsletter
-      });
-      if (response.status !== 200) {
-        throw new Error('Something went wrong with the registration process');
       }
-      if (!disableToast) {
-        toast.success('Registration successful! You can now sign in.');
+      , {
+        headers: {
+          'Content-Type': 'application/json',
+          ...(returnTokens ? { 'X-Return-Tokens': 'true' } : {})
+        },
+        withCredentials: true
+      }
+    );
+      if (!response.data.success) {
+        throw new Error('Something went wrong with the registration process');
       }
       if (onSuccess) {
         onSuccess();
       } else {
-        router.push('/signin');
+        if (returnTokens) {
+          router.push('/');
+          const accessToken = response.data.data.accessToken;
+          setTokens(accessToken);
+        } else {
+          router.push('/signin');
+        }
       }
+      if (!disableToast) {
+        toast.success('Registration successful! You are now signed in.');
+      }
+
     } catch (error: any) {
       toast.error('Could not register user');
     }

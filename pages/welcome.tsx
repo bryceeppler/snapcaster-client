@@ -40,24 +40,13 @@ const Welcome = (props: Props) => {
                 <div className="relative mt-4  w-full items-stretch justify-stretch gap-2 sm:justify-center md:flex-row">
                 <Card className="rounded bg-white p-4">
               <SignupForm
+                returnTokens={true}
                 confirmPassword={false}
                 inputClassName="bg-white rounded"
                 labels={'implicit'}
                 showSignInLink={false}
-                disableToast={true}
                 callToAction={'Search Now!'}
-                onSuccess={() => {
-                  setAccountCreated(true);
-                  toast('Account created successfully!', {
-                    duration: 8000,
-                    action: {
-                      label: 'Sign In',
-                      onClick: () => {
-                        window.open('/signin', '_blank');
-                      }
-                    }
-                  });
-                }}
+                disableToast={true}
               />
               {accountCreated && (
                 <div className="mt-4 flex flex-row items-center gap-2">
@@ -228,6 +217,11 @@ const SolutionSection = () => {
             </p>
           </div>
           <SolutionsGrid />
+          <div className="flex flex-col items-center justify-center">
+            <Button className="mt-10 mx-auto" onClick={() => {
+              window.open('/', '_blank');
+            }}>Start Searching!</Button>
+          </div>
         </div>
       </div>
     </section>
@@ -334,20 +328,9 @@ const RegisterSection = () => {
                 confirmPassword={false}
                 inputClassName="bg-white rounded"
                 labels={'implicit'}
+                returnTokens={true}
                 showSignInLink={false}
                 disableToast={true}
-                onSuccess={() => {
-                  setAccountCreated(true);
-                  toast('Account created successfully!', {
-                    duration: 8000,
-                    action: {
-                      label: 'Sign In',
-                      onClick: () => {
-                        window.open('/signin', '_blank');
-                      }
-                    }
-                  });
-                }}
               />
               {accountCreated && (
                 <div className="mt-4 flex flex-row items-center gap-2">

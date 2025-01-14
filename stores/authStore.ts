@@ -5,7 +5,6 @@ import { devtools } from 'zustand/middleware';
 
 type AuthState = {
   accessToken: string | null;
-  refreshToken: string | null;
   isAuthenticated: boolean;
   hasActiveSubscription: boolean;
   email: string;
@@ -14,7 +13,7 @@ type AuthState = {
   discordUsername: string;
   initializeState: () => void;
   setDiscordUsername: (discordUsername: string) => void;
-  setTokens: (accessToken: string, refreshToken: string) => void;
+  setTokens: (accessToken: string) => void;
   clearTokens: () => void;
   refreshAccessToken: () => Promise<void>;
   fetchUser: () => Promise<void>;
@@ -22,7 +21,6 @@ type AuthState = {
 
 const useAuthStore = create<AuthState>()(devtools((set, get) => ({
   accessToken: null,
-  refreshToken: null,
   isAuthenticated: false,
   hasActiveSubscription: false,
   emailVerified: false,
@@ -32,36 +30,30 @@ const useAuthStore = create<AuthState>()(devtools((set, get) => ({
 
   initializeState: () => {
     const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (accessToken && refreshToken) {
-      set({ accessToken, refreshToken, isAuthenticated: true });
+    if (accessToken) {
+      set({ accessToken, isAuthenticated: true });
       get().fetchUser();
     }
   },
   setDiscordUsername: (discordUsername: string) => {
     set({ discordUsername });
   },
-  setTokens: (accessToken: string, refreshToken: string) => {
+  setTokens: (accessToken: string) => {
     localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-    set({ accessToken, refreshToken, isAuthenticated: true });
+    set({ accessToken, isAuthenticated: true });
     get().fetchUser();
   },
   clearTokens: () => {
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    set({ accessToken: null, refreshToken: null, isAuthenticated: false });
+    set({ accessToken: null, isAuthenticated: false });
   },
   refreshAccessToken: async () => {
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_USER_URL}/refresh`,
-        {
-          refreshToken: get().refreshToken
-        }
+        `${process.env.NEXT_PUBLIC_USER_URL}/refresh`
       );
-      const { accessToken, refreshToken } = response.data;
-      get().setTokens(accessToken, refreshToken);
+      const { accessToken } = response.data;
+      get().setTokens(accessToken);
       return accessToken;
     } catch (error) {
       console.error('Error refreshing access token:', error);
@@ -76,17 +68,17 @@ const useAuthStore = create<AuthState>()(devtools((set, get) => ({
       );
       const {
         subscription,
-        full_name,
+        fullName,
         email,
-        email_verified,
-        discord_username
+        emailVerified,
+        discordUsername
       } = response.data;
       set({ hasActiveSubscription: subscription === 'active' });
       set({
         email,
-        fullName: full_name,
-        emailVerified: email_verified,
-        discordUsername: discord_username
+        fullName,
+        emailVerified,
+        discordUsername
       });
     } catch (error) {
       console.error('Error fetching subscription status:', error);

@@ -29,7 +29,7 @@ const Signup: NextPage<Props> = () => {
             <CardDescription>Create your Snapcaster account.</CardDescription>
           </CardHeader>
           <CardContent>
-            <SignupForm />
+            <SignupForm returnTokens={true} />
           </CardContent>
           <CardFooter>
             <p className="py-1 text-xs ">
