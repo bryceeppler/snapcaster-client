@@ -2,10 +2,10 @@ import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import axios from 'axios';
 import { toast } from 'sonner';
 import Router from 'next/router';
 import Link from 'next/link';
+import { authService } from '@/services/authService';
 
 type SignupFormData = {
   email: string;
@@ -25,7 +25,15 @@ type SignupFormProps = {
   callToAction?: string;
 };
 
-export function SignupForm({ onSuccess, showSignInLink = true, disableToast = false, inputClassName = '', labels = 'explicit', confirmPassword = true, callToAction = 'Sign Up' }: SignupFormProps) {
+export function SignupForm({
+  onSuccess,
+  showSignInLink = true,
+  disableToast = false,
+  inputClassName = '',
+  labels = 'explicit',
+  confirmPassword = true,
+  callToAction = 'Sign Up'
+}: SignupFormProps) {
   const {
     register,
     handleSubmit,
@@ -37,29 +45,30 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
   const password = watch('password');
 
   const onSubmit = async (data: SignupFormData) => {
-    const { email, password, fullName, newsletter } = data;
-    const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/register`;
-
     try {
-      const response = await axios.post(endpoint, {
-        email,
-        password,
-        fullName,
-        newsletter
+      await authService.signup({
+        email: data.email,
+        password: data.password,
+        fullName: data.fullName,
+        newsletter: data.newsletter
       });
-      if (response.status !== 200) {
-        throw new Error('Something went wrong with the registration process');
-      }
+
       if (!disableToast) {
-        toast.success('Registration successful! You can now sign in.');
+        toast.success('Success! Welcome to Snapcaster 🙂');
       }
+
       if (onSuccess) {
         onSuccess();
       } else {
-        router.push('/signin');
+        router.push('/');
       }
-    } catch (error: any) {
-      toast.error('Could not register user');
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Could not register user');
+      }
+      console.error('Signup error:', error);
     }
   };
 
@@ -122,17 +131,17 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
         <div className="grid gap-2">
           {labels === 'explicit' && <Label htmlFor="confirmPassword">Confirm Password</Label>}
           <Input
-          type="password"
-          {...register('confirmPassword', {
-            required: 'Please confirm your password',
-            validate: value =>
-              value === password || 'The passwords do not match'
-          })}
-          className={`${errors.confirmPassword ? 'border-red-500' : ''} ${inputClassName}`}
-          placeholder={labels === 'implicit' ? 'Confirm Password' : ''}
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500">{errors.confirmPassword.message}</p>
+            type="password"
+            {...register('confirmPassword', {
+              required: 'Please confirm your password',
+              validate: value =>
+                value === password || 'The passwords do not match'
+            })}
+            className={`${errors.confirmPassword ? 'border-red-500' : ''} ${inputClassName}`}
+            placeholder={labels === 'implicit' ? 'Confirm Password' : ''}
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500">{errors.confirmPassword.message}</p>
           )}
         </div>
       )}

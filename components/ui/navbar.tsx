@@ -26,7 +26,7 @@ import SingleFilterContainer from '../single-search/single-filter-container';
 import globalStore from '@/stores/globalStore';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { user } = useAuthStore();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
   const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
   const { searchResults, currentPage, setCurrentPage, numPages, fetchCards } =
@@ -108,7 +108,7 @@ const Navbar: React.FC = () => {
                       </Button>
                     </Link>
 
-                    <Link href={isAuthenticated ? `/profile` : '/signin'}>
+                    <Link href={user ? `/profile` : '/signin'}>
                       <Button
                         variant="ghost"
                         className="block w-full text-left text-lg "
@@ -116,7 +116,7 @@ const Navbar: React.FC = () => {
                           setMobileNavSheetOpen(false);
                         }}
                       >
-                        {isAuthenticated ? (
+                        {user ? (
                           <span> Account</span>
                         ) : (
                           <span> Login</span>
@@ -153,7 +153,7 @@ const Navbar: React.FC = () => {
                   <Search className="mr-2" />
                 </button>
               ) : null}
-              <Link href={isAuthenticated ? `/profile` : '/signin'}>
+              <Link href={user ? `/profile` : '/signin'}>
                 <User />
               </Link>
             </div>
@@ -225,9 +225,9 @@ const Navbar: React.FC = () => {
           {/* Right Section */}
           <div className="flex items-center gap-2">
             <ModeToggle />
-            <Link href={isAuthenticated ? `/profile` : '/signin'}>
+            <Link href={user ? `/profile` : '/signin'}>
               <Button className="px-4 py-2 text-sm font-medium">
-                {isAuthenticated ? <span>Account</span> : <span>Sign In</span>}
+                {user ? <span>Account</span> : <span>Sign In</span>}
               </Button>
             </Link>
           </div>

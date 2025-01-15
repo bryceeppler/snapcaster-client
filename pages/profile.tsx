@@ -1,9 +1,8 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axiosInstance from '@/utils/axiosWrapper';
 import useAuthStore from '@/stores/authStore';
-import Signin from './signin';
 import LoadingPage from '@/components/loading-page';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
@@ -23,25 +22,21 @@ import { useForm } from 'react-hook-form';
 import { DiscordLogoIcon } from '@radix-ui/react-icons';
 import { CheckCircle2 } from 'lucide-react';
 import ModeToggle from '@/components/theme-toggle';
+import { useRouter } from 'next/router';
 
 const Profile: NextPage = () => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const {
-    fetchUser,
-    hasActiveSubscription,
-    email,
-    fullName,
-    emailVerified,
-    discordUsername,
-    setDiscordUsername,
-    clearTokens
-  } = useAuthStore();
+  const { user, logout } = useAuthStore();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  if (!user) {
+    router.replace('/signin');
+  }
+
   const handleLogout = () => {
-    clearTokens();
+    logout();
     toast.success('You have been logged out');
   };
-
-  const [loading, setLoading] = useState(true);
 
   const createDiscordAuth = async () => {
     try {
@@ -62,38 +57,11 @@ const Profile: NextPage = () => {
       );
       if (response.status !== 200) throw new Error('Failed to disconnect');
       toast.success('Discord account disconnected');
-      setDiscordUsername('');
+      // setDiscordUsername('');
     } catch (error) {
       console.error('Error disconnecting discord account:', error);
     }
   };
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!isAuthenticated) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        fetchUser();
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [isAuthenticated]);
-
-  if (loading) {
-    return <LoadingPage />;
-  }
-
-  if (!isAuthenticated) {
-    return <Signin />;
-  }
 
   return (
     <>
@@ -101,11 +69,11 @@ const Profile: NextPage = () => {
       <section className="flex w-full justify-center py-6 md:py-12">
         <div className="flex w-full flex-col justify-center gap-6">
           <UserSettings
-            email={email}
-            fullName={fullName}
-            discordUsername={discordUsername}
-            hasActiveSubscription={hasActiveSubscription}
-            emailVerified={emailVerified}
+            email={user?.email || ''}
+            fullName={user?.fullName || ''}
+            discordUsername={user?.discordUsername || ''}
+            hasActiveSubscription={user?.subscription || false}
+            emailVerified={user?.emailVerified || false}
             createPortalSession={createPortalSession}
             disconnectDiscordAuth={disconnectDiscordAuth}
             createCheckoutSession={createCheckoutSession}

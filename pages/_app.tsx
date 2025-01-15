@@ -46,7 +46,7 @@ interface AdProviderProps {
 
 const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
   const [showAds, setShowAds] = useState(true);
-  const { hasActiveSubscription } = useAuthStore();
+  const hasActiveSubscription = false; // TODO: get from backend
 
   useEffect(() => {
     if (hasActiveSubscription) {
@@ -64,6 +64,7 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
 function MyApp({ Component, pageProps, router }: MyAppProps) {
   const { width = 0 } = useWindowSize();
   const isWelcomePage = router.pathname === '/welcome';
+  const initializeState = useAuthStore((state) => state.initializeState);
 
   useEffect(() => {
     document.body.classList?.remove('loading');
@@ -77,6 +78,10 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
       initGA();
     }
   }, []);
+
+  useEffect(() => {
+    initializeState();
+  }, [initializeState]);
 
   return (
     <main className={cn('antialiased', inter.className)}>

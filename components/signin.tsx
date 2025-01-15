@@ -1,8 +1,6 @@
 import React from 'react';
-import axios from 'axios';
-import useAuthStore from '@/stores/authStore';
 import { toast } from 'sonner';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
@@ -15,13 +13,14 @@ import {
   CardDescription,
   CardContent
 } from '@/components/ui/card';
+import { authService } from '@/services/authService';
 
 type Props = {
   noborder?: boolean;
 };
 
 const SignInCard = (props: Props) => {
-  const setTokens = useAuthStore((state) => state.setTokens);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -33,34 +32,26 @@ const SignInCard = (props: Props) => {
     }
   });
 
-  type Submision = {
+  type Submission = {
     email: string;
     password: string;
   };
-  const onSubmit = async (data: Submision) => {
-    const { email, password } = data;
-    const endpoint = process.env.NEXT_PUBLIC_USER_URL + '/login';
 
+  const onSubmit = async (data: Submission) => {
     try {
-      const response = await axios.post(endpoint, { email, password });
-
-      if (!response.status) {
-        toast.error('Invalid response from server.');
-        throw new Error('Something went wrong with the login process');
-      } else {
-        const { accessToken, refreshToken } = response.data;
-        setTokens(accessToken, refreshToken);
-        toast.success('Login successful!');
-      }
+      await authService.login(data);
+      toast.success('Welcome back!');
+      router.replace('/');
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        toast.error('Invalid email or password');
+      if (error instanceof Error) {
+        toast.error(error.message);
       } else {
-        toast.error('An error occurred during login');
-        console.error(error);
+        toast.error('An unexpected error occurred');
       }
+      console.error('Login error:', error);
     }
   };
+
   return (
     <Card
       className={`w-full max-w-sm

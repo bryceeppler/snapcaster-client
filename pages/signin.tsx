@@ -1,14 +1,15 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import useAuthStore from '@/stores/authStore';
-import Profile from './profile';
 import SignInCard from '@/components/signin';
+import { useRouter } from 'next/router';
 
 type Props = {};
 const Signin: NextPage<Props> = () => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  if (isAuthenticated) {
-    return <Profile />;
+  const { user } = useAuthStore();
+  const router = useRouter();
+  if (user) {
+    router.replace('/profile');
   }
 
   return (

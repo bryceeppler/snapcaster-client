@@ -1,97 +1,62 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import axiosInstance from '@/utils/axiosWrapper';
+import apiClient from '@/utils/apiClient';
 import { devtools } from 'zustand/middleware';
+import type { User } from '@/types/user';
+import { authService } from '@/services/authService';
 
 type AuthState = {
   accessToken: string | null;
-  refreshToken: string | null;
-  isAuthenticated: boolean;
-  hasActiveSubscription: boolean;
-  email: string;
-  emailVerified: boolean;
-  fullName: string;
-  discordUsername: string;
+  user: User | null;
+  isRefreshing: boolean;
+  refreshPromise: Promise<string | null> | null;
   initializeState: () => void;
-  setDiscordUsername: (discordUsername: string) => void;
-  setTokens: (accessToken: string, refreshToken: string) => void;
-  clearTokens: () => void;
-  refreshAccessToken: () => Promise<void>;
-  fetchUser: () => Promise<void>;
+  setAccessToken: (token: string | null) => void;
+  setUser: (user: User | null) => void;
+  logout: () => void;
 };
 
 const useAuthStore = create<AuthState>()(devtools((set, get) => ({
   accessToken: null,
-  refreshToken: null,
-  isAuthenticated: false,
-  hasActiveSubscription: false,
-  emailVerified: false,
-  email: '',
-  discordUsername: '',
-  fullName: '',
-
-  initializeState: () => {
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (accessToken && refreshToken) {
-      set({ accessToken, refreshToken, isAuthenticated: true });
-      get().fetchUser();
-    }
-  },
-  setDiscordUsername: (discordUsername: string) => {
-    set({ discordUsername });
-  },
-  setTokens: (accessToken: string, refreshToken: string) => {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-    set({ accessToken, refreshToken, isAuthenticated: true });
-    get().fetchUser();
-  },
-  clearTokens: () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    set({ accessToken: null, refreshToken: null, isAuthenticated: false });
-  },
-  refreshAccessToken: async () => {
+  user: null,
+  isRefreshing: false,
+  refreshPromise: null,
+  initializeState: async () => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_USER_URL}/refresh`,
-        {
-          refreshToken: get().refreshToken
+      // Only attempt to refresh if we don't have a user
+      if (!get().user) {
+        // If already refreshing, wait for that promise
+        if (get().isRefreshing && get().refreshPromise) {
+          await get().refreshPromise;
+          return;
         }
-      );
-      const { accessToken, refreshToken } = response.data;
-      get().setTokens(accessToken, refreshToken);
-      return accessToken;
+
+        // Start a new refresh
+        set({ isRefreshing: true });
+        const refreshPromise = authService.refreshToken();
+        set({ refreshPromise });
+
+        try {
+          await refreshPromise;
+        } finally {
+          set({ isRefreshing: false, refreshPromise: null });
+        }
+      }
     } catch (error) {
-      console.error('Error refreshing access token:', error);
-      get().clearTokens();
-      throw error;
+      // Clear the state if there's an error
+      set({ accessToken: null, user: null });
+      console.error('Failed to initialize auth state:', error);
     }
   },
-  fetchUser: async () => {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_USER_URL}/profile`
-      );
-      const {
-        subscription,
-        full_name,
-        email,
-        email_verified,
-        discord_username
-      } = response.data;
-      set({ hasActiveSubscription: subscription === 'active' });
-      set({
-        email,
-        fullName: full_name,
-        emailVerified: email_verified,
-        discordUsername: discord_username
-      });
-    } catch (error) {
-      console.error('Error fetching subscription status:', error);
-      set({ hasActiveSubscription: false });
-    }
+  setAccessToken: (token: string | null) => {
+    set({ accessToken: token });
+  },
+  setUser: (user: User | null) => {
+    set({ user: user });
+  },
+  logout: () => {
+    set({ accessToken: null, user: null });
+    apiClient.post(`${process.env.NEXT_PUBLIC_USER_URL}/logout`);
   }
 })));
 
