@@ -63,7 +63,9 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
 
 function MyApp({ Component, pageProps, router }: MyAppProps) {
   const { width = 0 } = useWindowSize();
-  const isWelcomePage = router.pathname === '/welcome';
+  // list of routes that bypass ads
+  const bypassAdsRoutes = ['/welcome', '/apply'];
+  const bypassAds = bypassAdsRoutes.includes(router.pathname);
 
   useEffect(() => {
     document.body.classList?.remove('loading');
@@ -82,11 +84,11 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
     <main className={cn('antialiased', inter.className)}>
       <ThemeProvider
         attribute="class"
-        defaultTheme={isWelcomePage ? 'light' : 'system'}
-        enableSystem={!isWelcomePage}
-        forcedTheme={isWelcomePage ? 'light' : undefined}
+        defaultTheme={bypassAds ? 'light' : 'system'}
+        enableSystem={!bypassAds}
+        forcedTheme={bypassAds ? 'light' : undefined}
       >
-        {isWelcomePage ? (
+        {bypassAds ? (
           <>
             <Toaster
               position={width > 640 ? 'bottom-center' : 'bottom-right'}

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.10.0
+        version: 3.10.0(react-hook-form@7.50.1(react@18.2.0))
       '@radix-ui/react-accordion':
         specifier: ^1.1.2
         version: 1.1.2(@types/react@18.0.28)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -185,6 +188,9 @@ importers:
       usehooks-ts:
         specifier: ^2.14.0
         version: 2.14.0(react@18.2.0)
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
       zustand:
         specifier: ^4.3.6
         version: 4.3.6(react@18.2.0)
@@ -259,6 +265,11 @@ packages:
 
   '@floating-ui/utils@0.2.8':
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
+
+  '@hookform/resolvers@3.10.0':
+    resolution: {integrity: sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -2976,6 +2987,9 @@ packages:
     engines: {node: '>= 14'}
     hasBin: true
 
+  zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+
   zustand@4.3.6:
     resolution: {integrity: sha512-6J5zDxjxLE+yukC2XZWf/IyWVKnXT9b9HUv09VJ/bwGCpKNcaTqp7Ws28Xr8jnbvnZcdRaidztAPsXFBIqufiw==}
     engines: {node: '>=12.7.0'}
@@ -3032,6 +3046,10 @@ snapshots:
   '@floating-ui/utils@0.2.1': {}
 
   '@floating-ui/utils@0.2.8': {}
+
+  '@hookform/resolvers@3.10.0(react-hook-form@7.50.1(react@18.2.0))':
+    dependencies:
+      react-hook-form: 7.50.1(react@18.2.0)
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -5830,6 +5848,8 @@ snapshots:
   xtend@4.0.2: {}
 
   yaml@2.4.1: {}
+
+  zod@3.24.1: {}
 
   zustand@4.3.6(react@18.2.0):
     dependencies:
