@@ -51,7 +51,7 @@ const features = [
   {
     Icon: GlobeIcon,
     name: 'Support local game stores',
-    description: 'Supports 80+ vendors and counting.',
+    description: 'Supports 90+ vendors and counting.',
     href: '/supporters',
     cta: 'Our supporters',
     background: (

@@ -20,7 +20,7 @@ type Props = {};
 
 const Welcome = (props: Props) => {
   const { websites } = useGlobalStore();
-
+  const [accountCreated, setAccountCreated] = useState(false);
   return (
     <>
       <div className="invisible h-2 w-full bg-primary sm:visible"></div>
@@ -39,31 +39,46 @@ const Welcome = (props: Props) => {
                   </span>
                 </h1>
                 <p className="lg:text-md text-lg text-gray-300">
-                  Search the largest trading card database in Canada to find the
-                  best deals across 80+ Canadian stores - for free! From Magic
-                  the Gathering, Lorcana, Yu-Gi-Oh, Pokemon and more, we’ve got
-                  you covered.
+                  Search 90+ Canadian stores - for free! From Magic the
+                  Gathering, Lorcana, Yu-Gi-Oh, Pokemon and more, we've got you
+                  covered.
                 </p>
-                <div className="relative mt-4 flex w-full flex-col items-stretch justify-stretch gap-2 sm:justify-center md:flex-row lg:justify-start">
-                  <Button
-                    size="lg"
-                    className="line-clamp-1 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-primary/80"
-                    onClick={() => {
-                      window.open('/', '_blank');
-                    }}
-                  >
-                    Search for Free
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      window.open('/faq', '_blank');
-                    }}
-                    variant="ghost"
-                    className="line-clamp-1 flex items-center justify-center gap-2 px-6 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-transparent hover:text-primary/80"
-                    size="lg"
-                  >
-                    <span>FAQ</span> <MoveRight className="ml-2 h-4 w-4" />
-                  </Button>
+                <div className="relative mt-4  w-full items-stretch justify-stretch gap-2 sm:justify-center md:flex-row">
+                  <Card className="rounded bg-white p-4">
+                    <SignupForm
+                      confirmPassword={false}
+                      inputClassName="bg-white rounded"
+                      labels={'implicit'}
+                      showSignInLink={false}
+                      disableToast={true}
+                      callToAction={'Search Now!'}
+                      onSuccess={() => {
+                        setAccountCreated(true);
+                        toast('Account created successfully!', {
+                          duration: 8000,
+                          action: {
+                            label: 'Sign In',
+                            onClick: () => {
+                              window.open('/signin', '_blank');
+                            }
+                          }
+                        });
+                      }}
+                    />
+                    {accountCreated && (
+                      <div className="mt-4 flex flex-row items-center gap-2">
+                        {' '}
+                        <CheckCircle className="h-4 w-4 text-primary" />{' '}
+                        <p className="text-sm">
+                          Account created successfully! You can now{' '}
+                          <a href="/signin" className="text-primary">
+                            sign in
+                          </a>
+                          .
+                        </p>
+                      </div>
+                    )}
+                  </Card>
                 </div>
               </div>
             </div>
@@ -162,7 +177,7 @@ const StoreSection = () => {
             We bring all the cards into one place, so you don’t have to.
           </p>
           <p className="text-md mx-auto mb-10 mt-5 max-w-prose text-gray-500 sm:text-lg">
-            Supports 80+ Canadian retailers and counting.
+            Supports 90+ Canadian retailers and counting.
           </p>
           <Integrations />
         </div>
@@ -216,7 +231,7 @@ const SolutionSection = () => {
             </h3>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
               Search once, search everywhere. Snapcaster allows you to search
-              across 80+ Canadian vendors with one click. Find in-demand cards,
+              across 90+ Canadian vendors with one click. Find in-demand cards,
               at the best prices, while supporting local games stores.
             </p>
           </div>
@@ -326,6 +341,7 @@ const RegisterSection = () => {
           <div className="mx-auto mt-10 w-full max-w-md text-left">
             <Card className="rounded bg-white p-4">
               <SignupForm
+                callToAction={'Start Searching!'}
                 confirmPassword={false}
                 inputClassName="bg-white rounded"
                 labels={'implicit'}

@@ -183,6 +183,9 @@ export const useSingleSearchStore = create<SearchState>()(
               });
             }
 
+            // set loadingCardResults to true
+            set({ loadingCardResults: true });
+
             const response = await axiosInstance.get(
               `${
                 process.env.NEXT_PUBLIC_CATALOG_URL
@@ -220,7 +223,8 @@ export const useSingleSearchStore = create<SearchState>()(
               filters: filterOptionsFromResponse,
               resultsTcg: tcg,
               numPages: response.data.pagination.numPages,
-              numResults: response.data.pagination.numResults
+              numResults: response.data.pagination.numResults,
+              loadingCardResults: false
             });
           } catch (error: any) {
             console.error('Error fetching cards:', error);
