@@ -44,6 +44,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       const queryParams = new URLSearchParams({
         keyword: get().searchTerm,
         tcg: get().tcg,
+        index: `buylists_${get().tcg}*`,
         sortBy: get().sortBy,
         pageNumber:get().currentPage.toString(),
         maxResultsPerPage:'100',

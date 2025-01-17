@@ -76,7 +76,7 @@ export default function BuylistCatalog() {
             {searchResults &&
               searchResults.map((item, index) => (
                 <React.Fragment key={index}>
-                  <div key={index} className="mb-2">
+                  <div key={index} className="mb-2 h-full">
                     <BuyListCatalogItem key={index} cardData={item} />
                   </div>
                 </React.Fragment>

@@ -41,7 +41,7 @@ const FilterSection: React.FC<Prop> = memo(
     applyFilters,
     setSortBy
   }) => {
-    const { isAuthenticated } = useAuthStore();
+    const { isAuthenticated, hasActiveSubscription } = useAuthStore();
     const handleClearFilters = () => {
       clearFilters();
       fetchCards();
@@ -78,22 +78,24 @@ const FilterSection: React.FC<Prop> = memo(
                 </AccordionItem>
               ))}
           </Accordion>
-          <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
-            <p>
-              Support us with{' '}
-              <span className="font-bold text-primary">Snapcaster Pro</span> and
-              remove promoted results with reduced ads for $2.99/mo.
-            </p>
-            <Button
-              onClick={
-                isAuthenticated
-                  ? createCheckoutSession
-                  : () => (window.location.href = '/signin')
-              }
-            >
-              Subscribe
-            </Button>
-          </div>
+          {!hasActiveSubscription && (
+            <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
+              <p>
+                Support us with{' '}
+                <span className="font-bold text-primary">Snapcaster Pro</span>{' '}
+                and remove promoted results with reduced ads for $2.99/mo.
+              </p>
+              <Button
+                onClick={
+                  isAuthenticated
+                    ? createCheckoutSession
+                    : () => (window.location.href = '/signin')
+                }
+              >
+                Subscribe
+              </Button>
+            </div>
+          )}
 
           <Button onClick={handleClearFilters} className="w-full">
             Clear Filters
@@ -148,10 +150,26 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
   setCurrentPage,
   applyFilters
 }) => {
+  const [localSelections, setLocalSelections] = React.useState<{
+    [key: string]: boolean;
+  }>({});
+  React.useEffect(() => {
+    const selections = filterOption.values.reduce((acc, option) => {
+      acc[option.value] = option.selected;
+      return acc;
+    }, {} as { [key: string]: boolean });
+    setLocalSelections(selections);
+  }, [filterOption]);
+
   const handleOptionChange = (
     filter: FilterOption,
     option: FilterOptionValues
   ) => {
+    const newSelected = !localSelections[option.value];
+    setLocalSelections((prev) => ({
+      ...prev,
+      [option.value]: newSelected
+    }));
     setFilter(filter.field, option.value, !option.selected);
     setCurrentPage(1);
     applyFilters();
@@ -166,7 +184,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
             <input
               type="checkbox"
               id={option.value}
-              checked={option.selected}
+              checked={localSelections[option.value] ?? option.selected}
               onChange={(e) => handleOptionChange(filterOption, option)}
               className="mr-2 mt-1"
             />
