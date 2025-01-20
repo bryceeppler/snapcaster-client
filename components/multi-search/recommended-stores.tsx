@@ -33,7 +33,12 @@ export const RecommendedStores = () => {
   const { results, addToCart, isInCart, notFound } = useMultiSearchStore();
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
-  const allCardNames = new Set(results.map(group => group[0]?.name).filter(Boolean));
+  
+  // Filter out null values and then get unique card names
+  const allCardNames = new Set(results
+    .filter(group => group && group[0])
+    .map(group => group[0].name));
+  
   const totalRequested = allCardNames.size;
   const reccomendedWebsites = [
     'obsidian',
