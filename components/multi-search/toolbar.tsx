@@ -4,7 +4,6 @@ import useMultiSearchStore from "@/stores/multiSearchStore";
 import { Product } from "@/types";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ShoppingCart, Download, HelpCircle, PlayCircle } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Cart } from './cart';
 import { useState, useEffect } from 'react';
 import {
@@ -13,6 +12,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog"
 import { InteractiveGuide } from "./interactive-guide";
 
@@ -20,6 +20,7 @@ export const Toolbar = () => {
   const { resetSearch, cart } = useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
   const [showHelp, setShowHelp] = useState(false);
+  const [showCart, setShowCart] = useState(false);
   const [runTour, setRunTour] = useState(false);
   const useMediaQuery = (width: number): boolean => {
     const [isMobile, setIsMobile] = useState(false);
@@ -114,17 +115,20 @@ export const Toolbar = () => {
             <Download className="h-4 w-4" />
             Export Cart
           </Button>
-          <Sheet>
-            <SheetTrigger asChild>
+          <Dialog open={showCart} onOpenChange={setShowCart}>
+            <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="cart-button text-foreground">
                 <ShoppingCart className="h-4 w-4 mr-2" />
                 Cart ({cart.length})
               </Button>
-            </SheetTrigger>
-            <SheetContent className="w-svw sm:max-w-[400px]">
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Shopping Cart</DialogTitle>
+              </DialogHeader>
               <Cart />
-            </SheetContent>
-          </Sheet>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
