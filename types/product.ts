@@ -10,6 +10,7 @@ export type Product = {
   vendor: string;
   link: string;
   image: string;
+  variant_id?: string;
   [key: string]: any;
 };
 
