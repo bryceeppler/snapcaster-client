@@ -21,7 +21,7 @@ export function groupProductsByHost(products: Product[]): Record<string, Product
 
 export function buildUpdateParameters(products: Product[]): string {
   return products
-    .map(product => `updates[${product.variantId}]=1`)
+    .map(product => `updates[${product.variant_id}]=1`)
     .join('&');
 }
 

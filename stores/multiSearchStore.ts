@@ -99,13 +99,10 @@ const useMultiSearchStore = create<MultiSearchState>()(
             trackSearch(cardNames, tcg, 'multi');
             const url = `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/multisearch`;
             
-            // Map of conditions in order from best to worst
             const conditionOrder = ['nm', 'lp', 'mp', 'hp', 'dmg'];
             const minConditionIndex = conditionOrder.indexOf(minimumAcceptableCondition);
             
-            // Create condition flags object
             const conditionFlags = conditionOrder.reduce((acc, condition) => {
-              // If this condition's index is >= the minimum condition's index, it's acceptable
               acc[condition.toUpperCase()] = conditionOrder.indexOf(condition) <= minConditionIndex;
               return acc;
             }, {} as Record<string, boolean>);

@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ShoppingCart } from 'lucide-react';
 import useAuthStore from '@/stores/authStore';
 import { createCheckoutSession } from '@/lib/utils';
 import {
@@ -24,6 +24,11 @@ import BackToTopButton from '@/components/ui/back-to-top-btn';
 import { ResultsContainer } from '@/components/multi-search/results-container';
 import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
 import { trackSearch } from '@/utils/analytics';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 type Props = {};
 
@@ -78,23 +83,14 @@ export default function Multisearch({}: Props) {
 
 const ResultsView = ({ results }: { results: Product[][] }) => {
   return (
-    <div className="w-full  grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0">
-      <div className="lg:hidden">
-        <Toolbar />
+    <div className="w-full grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0 mb-8">
+      <div className="flex flex-col col-span-12 gap-4">
+      <Toolbar />
+        <RecommendedStores />
+        <ResultsContainer results={results} />
+
       </div>
 
-      <div className="col-span-8 flex w-full flex-col gap-4">
-        <div className="hidden lg:block">
-          <Toolbar />
-        </div>
-        <div className="results w-full">
-          <ResultsContainer results={results} />
-        </div>
-      </div>
-      <div className="col-span-4 flex flex-col gap-4">
-        <RecommendedStores />
-        <Cart />
-      </div>
     </div>
   );
 };

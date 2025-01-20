@@ -11,8 +11,8 @@ export const CardInfo = ({
   results: Product[];
 }) => {
   return (
-    <div className="w-full flex flex-col border border-border rounded-lg px-4">
-      <div className="flex justify-between items-center my-4">
+    <div className="w-full flex flex-col border border-border rounded-lg bg-popover">
+      <div className="flex flex-col text-left p-4">
         <div className="text-lg font-bold">{resultInfo.name}</div>
         <div className="text-sm text-muted-foreground">
           {results?.length || 0} results

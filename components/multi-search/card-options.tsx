@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Trash2 } from "lucide-react";
+import { Trash2, ShoppingCart, PlusCircle, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 import useGlobalStore from "@/stores/globalStore";
@@ -8,9 +8,25 @@ import useMultiSearchStore from "@/stores/multiSearchStore";
 import { Product } from "@/types";
 
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const CardOption = ({ product }: { product: Product }) => {
   const { getWebsiteName } = useGlobalStore();
+  const useMediaQuery = (width: number): boolean => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+      const handleResize = () => setIsMobile(window.innerWidth <= width);
+      window.addEventListener('resize', handleResize);
+      handleResize(); // Call once to set the initial value
+
+      return () => window.removeEventListener('resize', handleResize);
+    }, [width]);
+
+    return isMobile;
+  };
+  const isMobile = useMediaQuery(768);
+
   const { addToCart, isInCart, removeFromCart } = useMultiSearchStore();
   return (
     <div className="flex flex-row">
@@ -40,7 +56,10 @@ const CardOption = ({ product }: { product: Product }) => {
         <Button
           onClick={() => {
             removeFromCart(product);
+            toast.success('Removed from cart');
           }}
+          variant="ghost"
+          className="p-2"
         >
           <Trash2 />
         </Button>
@@ -48,9 +67,12 @@ const CardOption = ({ product }: { product: Product }) => {
         <Button
           onClick={() => {
             addToCart(product);
+            toast.success('Added to cart');
           }}
+          variant="ghost"
+          className="p-2"
         >
-          Add to Cart
+          <PlusCircle />
         </Button>
       )}
     </div>
@@ -65,9 +87,8 @@ export const CardOptions = ({
   name: string;
 }) => {
   return (
-    <ScrollArea className="w-full h-[400px]">
+    <ScrollArea className="w-full px-4 pb-4 h-[400px]">
       <div className="flex w-full flex-col gap-4 text-left mt-2">
-        <div className="text-muted-foreground text-sm">Results for {name}</div>
         {results?.map((product, index) => {
           return <CardOption product={product} key={index} />;
         })}
