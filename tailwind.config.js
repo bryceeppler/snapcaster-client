@@ -4,7 +4,10 @@ const { fontFamily } = require('tailwindcss/defaultTheme');
 module.exports = {
   darkMode: ['class'],
   content: [
-    'app/**/*.{ts,tsx}',
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
     'components/**/*.{ts,tsx}',
     'pages/**/*.{ts,tsx}'
   ],
@@ -66,9 +69,7 @@ module.exports = {
   			foreground: 'hsl(var(--foreground))',
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
-  				muted: 'hsl(var(--primary-muted))',
   				foreground: 'hsl(var(--primary-foreground))',
-  				light: 'hsl(var(--primary-light))'
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
@@ -91,7 +92,7 @@ module.exports = {
   				foreground: 'hsl(var(--popover-foreground))'
   			},
   			card: {
-  				DEFAULT: 'hsl(var(--card)',
+  				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
   			}
   		},
@@ -105,8 +106,8 @@ module.exports = {
   			sans: ['var(--font-geist-sans)', ...fontFamily.sans],
   			serif: ['Poppins', 'sans-serif'],
 			genos: ['Genos'],
-			montserrat: ['Montserrat']
-			
+			montserrat: ['Montserrat'],
+			inter: ['Inter', 'sans-serif'],
   		},
   		keyframes: {
   			'accordion-down': {

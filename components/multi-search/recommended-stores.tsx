@@ -12,6 +12,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import React, { useState } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
@@ -20,14 +26,15 @@ import { Card, CardTitle, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { groupProductsByHost, buildCartUpdateUrls } from '@/utils/cartUrlBuilder';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, AlertCircle, AlertTriangle } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 export const RecommendedStores = () => {
-  const { results, addToCart, isInCart } = useMultiSearchStore();
+  const { results, addToCart, isInCart, notFound } = useMultiSearchStore();
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
-  const totalRequested = results.length;
+  const allCardNames = new Set(results.map(group => group[0]?.name).filter(Boolean));
+  const totalRequested = allCardNames.size;
   const reccomendedWebsites = [
     'obsidian',
     'levelup',
@@ -40,9 +47,17 @@ export const RecommendedStores = () => {
 
   const getTopWebsites = (results: Product[][]) => {
     const websiteProducts: { [vendor: string]: Map<string, Product> } = {};
+    const websiteNotFound: { [vendor: string]: Set<string> } = {};
 
+    // Initialize not found sets for each recommended website
+    reccomendedWebsites.forEach(vendor => {
+      websiteNotFound[vendor] = new Set();
+    });
+
+    // Process results to find available products
     results.forEach((resultGroup) => {
-      if (!resultGroup) return;
+      if (!resultGroup || resultGroup.length === 0) return;
+      const cardName = resultGroup[0].name; // Get the card name from the first result
       
       resultGroup.forEach((product) => {
         if (!reccomendedWebsites.includes(product.vendor)) return;
@@ -57,6 +72,14 @@ export const RecommendedStores = () => {
           websiteProducts[product.vendor].set(product.name, product);
         }
       });
+
+      // For each recommended store, if they don't have this card, add it to not found
+      reccomendedWebsites.forEach(vendor => {
+        const vendorProducts = resultGroup.filter(p => p.vendor === vendor);
+        if (vendorProducts.length === 0) {
+          websiteNotFound[vendor].add(cardName);
+        }
+      });
     });
 
     let sortedWebsites = Object.entries(websiteProducts)
@@ -65,7 +88,8 @@ export const RecommendedStores = () => {
         return {
           vendor,
           products,
-          count: Math.min(products.length, totalRequested),
+          notFound: Array.from(websiteNotFound[vendor]),
+          count: products.length,
           totalCost: products.reduce((acc, product) => acc + product.price, 0)
         };
       })
@@ -104,7 +128,7 @@ export const RecommendedStores = () => {
 
   return (
     <Dialog>
-      <Card className="col-span-12 flex flex-col gap-2 bg-popover pb-4 text-xs">
+      <Card className="col-span-12 flex flex-col gap-2 bg-popover pb-4 text-xs recommended-stores">
         <CardHeader className="text-left">
           <CardTitle className="text-lg">Recommended Stores</CardTitle>
         </CardHeader>
@@ -129,10 +153,91 @@ export const RecommendedStores = () => {
                     </div>
                   </div>
                 </div>
-                <div className="mt-1 text-xs text-muted-foreground">
-                  {websiteInfo.count}/{totalRequested} results in stock
+                <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
+                  {websiteInfo.notFound.length > 0 && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <AlertTriangle className="h-4 w-4 text-destructive" />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-[300px]">
+                          <p className="font-semibold mb-1">Not in stock:</p>
+                          <ul className="list-disc pl-4 space-y-1">
+                            {websiteInfo.notFound.map((card, index) => (
+                              <li key={index} className="text-xs">{card}</li>
+                            ))}
+                          </ul>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button className="hover:underline store-availability">
+                        {websiteInfo.count}/{allCardNames.size} results in stock
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Available at {getWebsiteName(websiteInfo.vendor)}</DialogTitle>
+                        <DialogDescription>
+                          {websiteInfo.count} out of {allCardNames.size} cards are available at this store
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-medium mb-2">Available Cards</h4>
+                          <div className="max-h-[40vh] overflow-y-auto rounded-md border">
+                            <table className="w-full">
+                              <thead className="sticky top-0 bg-background">
+                                <tr className="border-b">
+                                  <th className="text-left py-2 px-4">Card</th>
+                                  <th className="text-right py-2 px-4">Price</th>
+                                  <th className="text-right py-2 px-4">Condition</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {websiteInfo.products.map((product, index) => (
+                                  <tr key={index} className="border-b border-border/50">
+                                    <td className="py-2 px-4">{product.name}</td>
+                                    <td className="text-right py-2 px-4">${product.price.toFixed(2)}</td>
+                                    <td className="text-right py-2 px-4">{product.condition}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        {websiteInfo.notFound.length > 0 && (
+                          <div>
+                            <h4 className="font-medium mb-2 flex items-center gap-2">
+                              Not Available
+                              <span className="text-xs text-muted-foreground">
+                                ({websiteInfo.notFound.length} cards)
+                              </span>
+                            </h4>
+                            <div className="max-h-[20vh] overflow-y-auto rounded-md border">
+                              <div className="p-4 grid grid-cols-2 gap-2">
+                                {websiteInfo.notFound.map((card, index) => (
+                                  <div key={index} className="text-sm text-muted-foreground">
+                                    {card}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <DialogFooter>
+                        <Button onClick={() => handleCheckout(websiteInfo.products)}>
+                          Checkout (${websiteInfo.totalCost.toFixed(2)})
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
-                <div className="text-foreground text-lg font-bold">
+                <div className="text-foreground text-lg font-bold mt-1">
                   ${websiteInfo.totalCost.toFixed(2)}
                 </div>
 
@@ -141,7 +246,7 @@ export const RecommendedStores = () => {
                     <Button 
                       size="sm" 
                       variant="outline"
-                      className="h-7 mt-2 w-full"
+                      className="h-7 mt-2 w-full store-checkout"
                     >
                       Buy Now! <ExternalLink className="ml-2 h-3 w-3" />
                     </Button>

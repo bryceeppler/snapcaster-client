@@ -3,13 +3,25 @@ import useGlobalStore from "@/stores/globalStore";
 import useMultiSearchStore from "@/stores/multiSearchStore";
 import { Product } from "@/types";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ShoppingCart } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { ArrowLeft, ShoppingCart, Download, HelpCircle, PlayCircle } from 'lucide-react';
 import { Cart } from './cart';
 import { useState, useEffect } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { InteractiveGuide } from "./interactive-guide";
+
 export const Toolbar = () => {
   const { resetSearch, cart } = useMultiSearchStore();
   const { getWebsiteName } = useGlobalStore();
+  const [showHelp, setShowHelp] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [runTour, setRunTour] = useState(false);
   const useMediaQuery = (width: number): boolean => {
     const [isMobile, setIsMobile] = useState(false);
 
@@ -60,39 +72,92 @@ export const Toolbar = () => {
     URL.revokeObjectURL(url);
   };
   return (
-    <div className={`text-primary-foreground sticky ${isMobile ? "top-16" : "top-28"} z-50 flex w-full items-center justify-between gap-4 rounded-lg border border-border bg-primary/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-primary/75`}>
-      <Button
-        onClick={() => {
-          resetSearch();
-        }}
-        variant="ghost"
-        size="sm"
-        className="gap-2"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back
-      </Button>
-      <div className="flex items-center gap-2">
-        <Button
-          onClick={exportCart}
-          variant="ghost"
-          size="sm"
-          className="hidden lg:flex"
-        >
-          Export Cart
-        </Button>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="sm" className="text-foreground">
-              <ShoppingCart className="h-4 w-4 mr-2" />
-              Cart ({cart.length})
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="w-svw sm:max-w-[400px]">
-            <Cart />
-          </SheetContent>
-        </Sheet>
+    <>
+      <div className={`sticky ${isMobile ? "top-16" : "top-28"} z-50 flex w-full items-center justify-between gap-4 rounded-lg border border-border bg-popover/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-popover/75`}>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => {
+              resetSearch();
+            }}
+            variant="ghost"
+            size="sm"
+            className="back-button gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {!isMobile && <span>Back</span>}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowHelp(true)}
+            className="help-button gap-2"
+          >
+            <HelpCircle className="h-4 w-4" />
+            Help
+          </Button>
+          {/* <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setRunTour(true)}
+            className="tour-button gap-2"
+          >
+            <PlayCircle className="h-4 w-4" />
+            Take Tour
+          </Button> */}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={exportCart}
+            variant="ghost"
+            size="sm"
+            className="export-cart-button hidden lg:flex gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export Cart
+          </Button>
+          <Dialog open={showCart} onOpenChange={setShowCart}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="cart-button text-foreground">
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Cart ({cart.length})
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Shopping Cart</DialogTitle>
+              </DialogHeader>
+              <Cart />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
-    </div>
+
+      <Dialog open={showHelp} onOpenChange={setShowHelp}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>How to Use Multi-Search</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <p>Try our interactive tour to see how to use Multi-Search.</p> 
+            </div>
+
+          </div>
+          <div className="mt-6 flex justify-end">
+            <Button onClick={() => {
+              setShowHelp(false);
+              setRunTour(true);
+            }}>
+              Take Interactive Tour
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <InteractiveGuide 
+        run={runTour} 
+        onFinish={() => setRunTour(false)} 
+      />
+    </>
   );
 };
