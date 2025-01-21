@@ -1,4 +1,3 @@
-
 import { Pool } from 'pg';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -27,6 +26,12 @@ interface FormattedResult {
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
 });
+
+const appendUtmParams = (url: string): string => {
+  const utmParams = 'utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement';
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}${utmParams}`;
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -93,6 +98,13 @@ export default async function handler(
           formattedResult.position[parseInt(slot)].ads = adjustedAds.sort(
             () => Math.random() - 0.5
           );
+        });
+
+        // Add UTM parameters to each ad URL
+        Object.values(formattedResult.position).forEach(position => {
+          position.ads.forEach(ad => {
+            ad.url = appendUtmParams(ad.url);
+          });
         });
 
         res.status(200).json(formattedResult); // Return the formatted result
