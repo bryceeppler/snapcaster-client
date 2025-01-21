@@ -145,6 +145,7 @@ const SearchView = ({
                 <SelectItem value="pokemon">Pokemon</SelectItem>
                 <SelectItem value="lorcana">Lorcana</SelectItem>
                 <SelectItem value="yugioh">Yu-gi-oh</SelectItem>
+                <SelectItem value="starwars">Star Wars</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
