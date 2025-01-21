@@ -35,10 +35,8 @@ const appendUtmParams = (url: string): string => {
     return url;
   }
   
-  // Remove trailing slash before adding query parameters
-  const baseUrl = url.replace(/\/$/, '');
-  const separator = baseUrl.includes('?') ? '&' : '?';
-  return `${baseUrl}${separator}${utmParams}`;
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}${utmParams}`;
 };
 
 export default async function handler(
