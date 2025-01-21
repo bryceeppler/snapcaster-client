@@ -122,9 +122,7 @@ export const RecommendedStores = () => {
 
     // Group products by host and build cart URLs
     const groupedProducts = groupProductsByHost(products);
-    console.log(groupedProducts);
     const cartUrls = buildCartUpdateUrls(groupedProducts);
-    console.log(cartUrls);
     // Open the first URL (there should only be one per vendor)
     if (cartUrls.length > 0) {
       window.open(cartUrls[0], '_blank');
