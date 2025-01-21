@@ -29,6 +29,10 @@ const pool = new Pool({
 
 const appendUtmParams = (url: string): string => {
   const utmParams = 'utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement';
+  // Check if UTM parameters already exist
+  if (url.includes(utmParams)) {
+    return url;
+  }
   const separator = url.includes('?') ? '&' : '?';
   return `${url}${separator}${utmParams}`;
 };
