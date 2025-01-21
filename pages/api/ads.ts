@@ -28,13 +28,17 @@ const pool = new Pool({
 });
 
 const appendUtmParams = (url: string): string => {
-  const utmParams = 'utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement';
+  const utmParams = 'utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement'.trim();
+  
   // Check if UTM parameters already exist
   if (url.includes(utmParams)) {
     return url;
   }
-  const separator = url.includes('?') ? '&' : '?';
-  return `${url}${separator}${utmParams}`;
+  
+  // Remove trailing slash before adding query parameters
+  const baseUrl = url.replace(/\/$/, '');
+  const separator = baseUrl.includes('?') ? '&' : '?';
+  return `${baseUrl}${separator}${utmParams}`;
 };
 
 export default async function handler(
