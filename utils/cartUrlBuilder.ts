@@ -26,8 +26,9 @@ export function buildUpdateParameters(products: Product[]): string {
 }
 
 export function buildCartUpdateUrls(groupedProducts: Record<string, Product[]>): string[] {
+  const utmParams = 'utm_source=sc&utm_medium=referral&utm_campaign=referral_multisearch';
   return Object.entries(groupedProducts).map(([host, products]) => {
     const queryParams = buildUpdateParameters(products);
-    return `https://${host}/cart/update?${queryParams}`;
+    return `https://${host}/cart/update?${queryParams}&${utmParams}`;
   });
 } 
