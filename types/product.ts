@@ -1,4 +1,4 @@
-export type Tcg = 'yugioh' | 'pokemon' | 'lorcana' | 'mtg' | 'onepiece';
+export type Tcg = 'yugioh' | 'pokemon' | 'lorcana' | 'mtg' | 'onepiece' | 'starwars';
 export type Condition = 'nm' | 'lp' | 'mp' | 'hp' | 'dmg';
 
 export type Product = {
