@@ -130,7 +130,7 @@ export default function MainLayout({
     >
       <>
         {/* Header : position 1 */}
-        {topBannerAds.length > 0 && (
+        {showAds && !hasActiveSubscription && topBannerAds.length > 0 && (
           <Carousel
             className="w-full overflow-hidden rounded-lg "
             plugins={[topAutoPlayPlugin.current]}
@@ -160,7 +160,7 @@ export default function MainLayout({
         )}
       </>
 
-      <div className="mt-8">{children}</div>
+      <div className={`${showAds ? 'mt-8' : 'mt-24'}`}>{children}</div>
     </div>
   );
 }
