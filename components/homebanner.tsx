@@ -23,6 +23,8 @@ export default function Homebanner({ prefixText }: Props) {
           1400,
           `${prefixText} Magic: the Gathering`,
           1400,
+          `${prefixText} Star Wars: Unlimited`,
+          1400,
           `${prefixText} One Piece`,
           1400,
           `${prefixText} Pokemon`,
