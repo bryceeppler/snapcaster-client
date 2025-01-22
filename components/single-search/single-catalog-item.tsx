@@ -16,7 +16,7 @@ type Props = {
 const DiscountBadge = ({ product }: Props) => {
   if (product.discounted_price) {
     return (
-      <div className="flex h-[18px] -skew-x-12 transform items-center rounded bg-gradient-to-br from-primary-light/50 to-primary/70 px-2 font-montserrat text-xs font-semibold leading-none text-white">
+      <div className="flex h-[18px] -skew-x-12 transform items-center rounded bg-primary/80 px-2 font-montserrat text-xs font-semibold leading-none text-white shadow-md">
         <span className="skew-x-12 transform">
           -{' '}
           {Math.floor(
@@ -45,15 +45,16 @@ const SingleCatalogItem = ({ product }: Props) => {
       <div
         className={`group flex h-full flex-col rounded-t-lg border border-accent bg-popover p-4`}
       >
-        <div className="relative mx-auto h-min max-w-[150px] px-4 md:max-w-[250px]">
+        <div className="relative mx-auto h-min max-w-[150px] md:max-w-[250px]">
           <CardImage imageUrl={product.image} alt={product.name} />
           {product.promoted && (
-            <div className="absolute -left-2 -top-2 flex h-[18px] -skew-x-12 transform items-center rounded bg-gradient-to-br from-primary-light/80 to-primary/80 px-2 font-montserrat text-xs  leading-none text-white">
+            <div className="absolute -left-1 -top-1 flex h-[18px] -skew-x-12 transform items-center rounded bg-primary/90 px-2 font-montserrat text-xs font-semibold leading-none text-white shadow-md">
               <span className="skew-x-12 transform">Promoted</span>
             </div>
           )}
         </div>
 
+          <div>
         <div className="mt-3">
           <div className="flex flex-row items-center gap-2">
             <h4 className="font-montserrat text-2xl font-semibold">
@@ -120,6 +121,7 @@ const SingleCatalogItem = ({ product }: Props) => {
           >
             {product.condition}
           </Badge>
+        </div>
         </div>
       </div>
       <Link
