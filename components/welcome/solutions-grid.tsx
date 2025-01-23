@@ -52,7 +52,7 @@ const features = [
     Icon: GlobeIcon,
     name: 'Support local game stores',
     description: 'Supports 90+ vendors and counting.',
-    href: '/supporters',
+    href: '/about',
     cta: 'Our supporters',
     background: (
       <div

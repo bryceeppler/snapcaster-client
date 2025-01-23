@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
                       </Button>
                     </Link>
 
-                    <Link href="/supporters" as="/supporters">
+                    <Link href="/about" as="/about">
                       <Button
                         variant="ghost"
                         className="block w-full text-left text-lg"
@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
                           setMobileNavSheetOpen(false);
                         }}
                       >
-                        Supporters
+                        About
                       </Button>
                     </Link>
 
@@ -264,15 +264,15 @@ const Navbar: React.FC = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link legacyBehavior href="/supporters" passHref>
+                <Link legacyBehavior href="/about" passHref>
                   <NavigationMenuLink
                     className={`${navigationMenuTriggerStyle()} ${
-                      currentPath == '/supporters'
+                      currentPath == '/about'
                         ? 'rounded-b-none border-b-2 border-primary'
                         : ''
                     }`}
                   >
-                    Supporters
+                    About
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>

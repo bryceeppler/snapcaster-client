@@ -15,7 +15,7 @@ export default function Footer() {
           <nav className="grid gap-2">
             <Link href="/">Home</Link>
             <Link href="/multisearch">Multisearch</Link>
-            <Link href="/supporters">Supporters</Link>
+            <Link href="/about">About</Link>
             {!isAuthenticated ? (
               <Link href="/signin">Login</Link>
             ) : (
