@@ -160,7 +160,7 @@ export default function MainLayout({
         )}
       </>
 
-      <div className={`${showAds ? 'mt-8' : 'mt-24'}`}>{children}</div>
+      <div className={`mt-4`}>{children}</div>
     </div>
   );
 }

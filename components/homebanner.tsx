@@ -4,7 +4,7 @@ type Props = { prefixText: string };
 
 export default function Homebanner({ prefixText }: Props) {
   return (
-    <div>
+    <div className="mt-8">
       <img
         className="crisp-edges mx-auto  h-12 w-auto md:flex md:h-16"
         src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
