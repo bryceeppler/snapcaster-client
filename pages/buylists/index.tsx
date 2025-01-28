@@ -2,31 +2,28 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { NextPage } from 'next';
 import useBuyListStore from '@/stores/buyListStore';
-import Homebanner from '@/components/homebanner';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import BuylistCatalog from '@/components/buylists/buylist-catalog-container';
-import SearchBar from '@/components/search-ui/search-bar';
+import useAuthStore from '@/stores/authStore';
+import { useRouter } from 'next/router';
 
 type Props = {};
 const Buylist: NextPage<Props> = () => {
-  const {
-    searchResults,
-    tcg,
-    searchTerm,
-    setTcg,
-    setSearchTerm,
-    clearSearchResults,
-    fetchCards,
-    clearFilters,
-    fetchCarts
-  } = useBuyListStore();
+  const { isAuthenticated } = useAuthStore()
+  const router = useRouter()
+  const { fetchCarts } = useBuyListStore();
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/signin');
+      return;
+    }
     fetchCarts();
-  }, []);
+  }, [isAuthenticated, router]);
 
   return (
     <>
+      <BuylistHead />
       <div className=" min-h-svh ">
         <BuylistCatalog />
         <BackToTopButton />
@@ -37,10 +34,10 @@ const Buylist: NextPage<Props> = () => {
 
 export default Buylist;
 
-const HomeHead = () => {
+const BuylistHead = () => {
   return (
     <Head>
-      <title>Snapcaster</title>
+      <title>Buylists</title>
       <meta
         name="description"
         content="Search Magic the Gathering cards across Canada"
