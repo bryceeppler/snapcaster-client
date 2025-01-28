@@ -1,7 +1,7 @@
 import { WebsiteMapping } from '@/types/website';
 import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
-import type { Tcg, Product } from '@/types';
+import type { Tcg, Product, Condition } from '@/types';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 import { trackSearch } from '@/utils/analytics';
 
@@ -17,13 +17,15 @@ type MultiSearchState = {
   cart: Product[];
   notFound: string[];
   resultsList: { name: string; normalized_name: string }[];
+  minimumAcceptableCondition: Condition;
+  setMinimumAcceptableCondition: (condition: Condition) => void;
   resetSearch: () => void;
   removeFromCart: (product: Product) => void;
   isInCart: (product: Product) => boolean;
   addToCart: (product: Product) => void;
   setResultsTcg: (value: Tcg) => void;
   setMode: (mode: 'search' | 'results') => void;
-  handleSubmit: (tcg: string) => void;
+  handleSubmit: (tcg: string, minimumAcceptableCondition: Condition) => void;
   setSearchInput: (value: string) => void;
   setTcg: (tcg: Tcg) => void;
   onWebsiteSelect: (value: WebsiteMapping) => void;
@@ -45,6 +47,10 @@ const useMultiSearchStore = create<MultiSearchState>()(
         loading: false,
         results: [],
         resultsList: [],
+        minimumAcceptableCondition: 'mp',
+        setMinimumAcceptableCondition: (condition: Condition) => {
+          set({ minimumAcceptableCondition: condition });
+        },
         resetSelectedWebsites: () => {
           set({ selectedWebsites: [] });
         },
@@ -83,7 +89,7 @@ const useMultiSearchStore = create<MultiSearchState>()(
         setMode: (mode: 'search' | 'results') => {
           set({ mode });
         },
-        handleSubmit: async (tcg) => {
+        handleSubmit: async (tcg: string, minimumAcceptableCondition: Condition) => {
           set({ loading: true });
           set({ searchQuery: get().searchInput });
           set({ resultsTcg: get().tcg });
@@ -92,10 +98,19 @@ const useMultiSearchStore = create<MultiSearchState>()(
             const cardNames = get().searchInput;
             trackSearch(cardNames, tcg, 'multi');
             const url = `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/multisearch`;
+            
+            const conditionOrder = ['nm', 'lp', 'mp', 'hp', 'dmg'];
+            const minConditionIndex = conditionOrder.indexOf(minimumAcceptableCondition);
+            
+            const conditionFlags = conditionOrder.reduce((acc, condition) => {
+              acc[condition.toUpperCase()] = conditionOrder.indexOf(condition) <= minConditionIndex;
+              return acc;
+            }, {} as Record<string, boolean>);
+
             const body = {
               cardData: cardNames,
-              index: `ca_singles_${tcg}_prod*`
-              // TODO: Add acceptable conditions
+              index: `ca_singles_${tcg}_prod*`,
+              ...conditionFlags
             };
 
             const response = await axiosInstance.post(url, body);

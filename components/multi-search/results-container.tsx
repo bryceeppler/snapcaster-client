@@ -7,7 +7,7 @@ import { AlertTriangleIcon } from 'lucide-react';
 export const ResultsContainer = ({ results }: { results: Product[][] }) => {
   const { notFound, resultsList } = useMultiSearchStore();
   return (
-    <div className="flex w-full flex-col gap-4 rounded-lg border border-border bg-popover p-4">
+    <div className="flex w-full flex-col gap-4 results-container">
       {notFound.length > 0 && (
         <div className="flex w-full flex-row rounded-lg border border-destructive bg-destructive/20 p-4">
           <AlertTriangleIcon className="mr-4 h-6 w-6" />

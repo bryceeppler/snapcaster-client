@@ -4,7 +4,7 @@ type Props = { prefixText: string };
 
 export default function Homebanner({ prefixText }: Props) {
   return (
-    <div>
+    <div className="mt-8">
       <img
         className="crisp-edges mx-auto  h-12 w-auto md:flex md:h-16"
         src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
@@ -14,14 +14,13 @@ export default function Homebanner({ prefixText }: Props) {
       <h1 className=" cursor-default font-genos text-3xl font-bold tracking-tighter sm:text-4xl md:text-6xl">
         Snapcaster
       </h1>
-      <h2 className="hidden md:block font-montserrat text-2xl font-semibold tracking-tight text-muted-foreground">
-        Canada's largest TCG database.
-      </h2>
       <TypeAnimation
         preRenderFirstString={true}
         sequence={[
           1400,
           `${prefixText} Magic: the Gathering`,
+          1400,
+          `${prefixText} Star Wars: Unlimited`,
           1400,
           `${prefixText} One Piece`,
           1400,

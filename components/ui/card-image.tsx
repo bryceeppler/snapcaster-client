@@ -1,56 +1,67 @@
 import React, { useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type Props = {
   imageUrl?: string;
   alt?: string;
   href?: string;
+  className?: string;
 };
 
-const CardImage: React.FC<Props> = ({ imageUrl, alt, href }) => {
+const CardImage: React.FC<Props> = ({ imageUrl, alt, href, className = '' }) => {
   const [hasError, setHasError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleError = () => {
     setHasError(true);
+    setIsLoading(false);
   };
 
   const handleLoad = () => {
-    setIsLoaded(true);
+    setIsLoading(false);
   };
 
-  return (
-    <>
-      {!hasError && imageUrl ? (
-        <div className="relative aspect-card w-full overflow-hidden rounded-lg">
-          <div
-            className={`absolute inset-0 flex items-center justify-center bg-gradient-to-b from-zinc-800 to-zinc-900 transition-opacity duration-500 ${
-              isLoaded ? 'opacity-0' : 'opacity-100'
-            }`}
-          >
-            <img
-              src="/logo.png"
-              alt="Placeholder Logo"
-              className="p-5 opacity-5"
-            />
-          </div>
+  // Preload the image
+  React.useEffect(() => {
+    if (imageUrl) {
+      const img = new Image();
+      img.src = imageUrl;
+      img.onload = handleLoad;
+      img.onerror = handleError;
+    }
+  }, [imageUrl]);
 
-          <img
-            src={imageUrl}
-            alt={alt || 'Card Image'}
-            onError={handleError}
-            onLoad={handleLoad}
-            className={`aspect-card w-full object-cover transition-opacity duration-500 ${
-              isLoaded ? 'opacity-100' : 'opacity-0'
-            } ${href ? 'cursor-pointer hover:opacity-80' : ''}`}
-          />
-        </div>
-      ) : (
-        // Fallback when there's an error or no imageUrl
-        <div className="flex aspect-card w-full items-center justify-center rounded-lg bg-gradient-to-b from-zinc-800 to-zinc-900">
-          <img src="/logo.png" alt="Fallback Logo" className="p-5 opacity-5" />
+  return (
+    <div className={`relative aspect-card w-full overflow-hidden rounded-lg ${className}`}>
+      {/* Loading State */}
+      {isLoading && (
+        <div className="absolute inset-0 z-0">
+          <Skeleton className="h-full w-full" />
         </div>
       )}
-    </>
+      
+      {/* Error State / Fallback */}
+      {(hasError || !imageUrl) && (
+        <div className="flex aspect-card w-full items-center justify-center rounded-lg bg-gradient-to-b from-background/80 to-background/90">
+          <img
+            src="/logo.png"
+            alt="Fallback Logo"
+            className="w-1/2 h-auto opacity-10"
+          />
+        </div>
+      )}
+      
+      {/* Main Image */}
+      {imageUrl && !hasError && (
+        <img
+          src={imageUrl}
+          alt={alt || 'Card Image'}
+          className={`w-full object-cover transition-all duration-300 ${
+            isLoading ? 'opacity-0' : 'opacity-100'
+          } ${href ? 'cursor-pointer hover:opacity-80 hover:scale-105' : ''}`}
+        />
+      )}
+    </div>
   );
 };
 

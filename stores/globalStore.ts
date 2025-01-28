@@ -67,11 +67,11 @@ const useGlobalStore = create<GlobalState>()(devtools((set, get) => {
       return ads[randomIndex];
     },
     initNotificationStatus: () => {
-      const navNotification = localStorage.getItem('navNotification');
+      const navNotification = localStorage.getItem('notificationStatus');
 
       if (navNotification === null) {
         // If not set, initialize to false
-        localStorage.setItem('navNotification', JSON.stringify(true));
+        localStorage.setItem('notificationStatus', JSON.stringify(true));
         set({ notificationStatus: true });
         return;
       }
@@ -83,12 +83,12 @@ const useGlobalStore = create<GlobalState>()(devtools((set, get) => {
       } else {
         // Handle unexpected value (optional)
         console.warn('Unexpected value found in navNotification, resetting to false.');
-        localStorage.setItem('navNotification', JSON.stringify(false));
+        localStorage.setItem('notificationStatus', JSON.stringify(false));
         set({ notificationStatus: false });
       }
     },
     setNotificationStatusFalse:  () => {
-      localStorage.setItem('navNotification', JSON.stringify(false))
+      localStorage.setItem('notificationStatus', JSON.stringify(false))
       set({notificationStatus:false})
     }
   };

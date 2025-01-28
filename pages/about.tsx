@@ -3,14 +3,17 @@ import Head from 'next/head';
 import Link from 'next/link';
 import PageTitle from '@/components/ui/page-title';
 import { trackAdClick } from '@/utils/analytics';
+import useGlobalStore from '@/stores/globalStore';
+import { ScrollArea } from '@/components/ui/scroll-area';
 type Props = {};
 
-const Supporters: NextPage<Props> = () => {
+const About: NextPage<Props> = () => {
+  const { websites } = useGlobalStore();
   return (
     <>
-      <SupportersHead />
+      <AboutHead />
       <section className="w-full">
-        <div className="container px-4 md:px-6">
+        <div className="container px-4 md:px-6 mb-16">
           <div className="space-y-8">
             <PageTitle
               title="Our Supporters"
@@ -170,20 +173,22 @@ const Supporters: NextPage<Props> = () => {
                   </div>
                 </div>
               </div> */}
+         
               <div>
+                <h3 className="mb-6 text-2xl font-bold">We support {websites.length} stores across Canada!</h3>
                 <p className="text-left">
                   {' '}
                   If you're a Local Game Store (LGS) owner and wish to feature
                   your website on Snapcaster, we invite you to join our official
                   Discord server and send us a direct message or send us an
-                  email at info@snapcaster.gg. We are also now offering
-                  exclusive advertising opportunities for your webstore on
-                  Snapcaster. This is an excellent chance to promote your
-                  store's special offers, discount codes, and events such as
-                  pre-release tournaments. Don't miss out on this opportunity to
-                  connect with our passionate audience and enhance your store's
-                  visibility.
+                  email at info@snapcaster.gg. This is an excellent chance to
+                  promote your store's special offers, discount codes, and events.
                 </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    {websites.map((website) => (
+                      <a target="_blank" href={website.url} key={website.slug} className="p-2 text-center border rounded-lg hover:bg-popover">{website.name}</a>
+                    ))}
+                  </div>
               </div>
             </div>
           </div>
@@ -193,12 +198,12 @@ const Supporters: NextPage<Props> = () => {
   );
 };
 
-export default Supporters;
+export default About;
 
-const SupportersHead = () => {
+const AboutHead = () => {
   return (
     <Head>
-      <title>Supporters</title>
+      <title>About</title>
       <meta
         name="description"
         content="Search Magic the Gathering cards across Canada"

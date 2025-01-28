@@ -1,121 +1,172 @@
-
-  import React from "react";
-  import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-  import { Trash2 } from "lucide-react";
-  import useGlobalStore from "@/stores/globalStore";
-  import useMultiSearchStore from "@/stores/multiSearchStore";
-  import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table";
-  import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-  } from "@/components/ui/card";
-  import { CardDescription, CardTitle } from "@/components/ui/card";
-  import { Button } from "@/components/ui/button";
-  import { Separator } from "@/components/ui/separator";
+import React from "react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Trash2, ExternalLink } from "lucide-react";
+import useGlobalStore from "@/stores/globalStore";
+import useMultiSearchStore from "@/stores/multiSearchStore";
+import { Product } from "@/types";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { groupProductsByHost, buildCartUpdateUrls } from '@/utils/cartUrlBuilder';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export const Cart = () => {
-    const { cart, removeFromCart } = useMultiSearchStore();
-    const { getWebsiteName } = useGlobalStore();
-  
-    const storeSummary = cart.reduce((acc, product) => {
-      const websiteName = getWebsiteName(product.vendor);
-      if (!acc[websiteName]) {
-        acc[websiteName] = {
-          count: 0,
-          subtotal: 0
-        };
-      }
-      acc[websiteName].count += 1;
-      acc[websiteName].subtotal += product.price;
-      return acc;
-    }, {} as { [website: string]: { count: number; subtotal: number } });
-  
-    return (
-      <Card className="bg-popover">
-        <CardHeader className="text-left">
-          <CardTitle className="text-lg">Cart</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {cart.length === 0 && (
-            <div className="mb-4 flex w-full justify-center">
-              <CardDescription>Your cart is empty</CardDescription>
-            </div>
-          )}
-          <ScrollArea className="h-[300px] rounded-lg border border-border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead className="text-right">Price</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {cart.map((product, i) => (
-                  <TableRow key={i}>
-                    <TableCell className="py-2 text-left text-xs">
-                      {product.name}
-                    </TableCell>
-                    <TableCell className="py-2 text-right">
-                      ${product.price}
-                    </TableCell>
-                    <TableCell className="py-2 text-right">
-                      <Button
-                        onClick={() => {
-                          removeFromCart(product);
-                        }}
-                        variant="ghost"
-                        size="icon"
-                      >
-                        <Trash2 size={15} />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <ScrollBar orientation="vertical" />
-          </ScrollArea>
-          <ScrollArea className="h-[300px] rounded-lg border border-border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-left">Vendor</TableHead>
-                  <TableHead className="max-w-[40px] text-right">Qty</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {Object.entries(storeSummary).map(([store, summary], i) => (
-                  <TableRow key={i} className="text-xs">
-                    <TableCell className="text-left">{store}</TableCell>
-                    <TableCell className="text-right">{summary.count}</TableCell>
-                    <TableCell>${summary.subtotal.toFixed(2)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <ScrollBar orientation="vertical" />
-          </ScrollArea>
-          <Separator />
-        </CardContent>
-        <CardFooter className="flex flex-col gap-2">
-          <div className="flex w-full justify-between">
-            <span className="font-bold">Total</span>
-            <span>
-              ${cart.reduce((acc, product) => acc + product.price, 0).toFixed(2)}
-            </span>
-          </div>
-        </CardFooter>
-      </Card>
-    );
+  const { cart, removeFromCart } = useMultiSearchStore();
+  const { getWebsiteName } = useGlobalStore();
+
+  const recommendedStores = [
+    'obsidian',
+    'levelup',
+    'chimera',
+    'exorgames',
+    'mythicstore',
+    'houseofcards'
+  ];
+
+  const handleCheckout = (products: Product[]) => {
+    if (products.length === 0) return;
+    const groupedProducts = groupProductsByHost(products);
+    const cartUrls = buildCartUpdateUrls(groupedProducts);
+    if (cartUrls.length > 0) {
+      window.open(cartUrls[0], '_blank');
+    }
   };
+
+  const storeSummary = cart.reduce((acc, product) => {
+    const websiteName = getWebsiteName(product.vendor);
+    if (!acc[websiteName]) {
+      acc[websiteName] = {
+        count: 0,
+        subtotal: 0,
+        products: [],
+        vendor: product.vendor,
+      };
+    }
+    acc[websiteName].count += 1;
+    acc[websiteName].subtotal += product.price;
+    acc[websiteName].products.push(product);
+    return acc;
+  }, {} as { [website: string]: { count: number; subtotal: number; products: Product[]; vendor: string } });
+
+  if (cart.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8 text-center text-sm text-muted-foreground">
+        <p>Your cart is empty</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <ScrollArea className="h-[300px] rounded-lg border border-border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead className="text-right">Price</TableHead>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {cart.map((product, i) => (
+              <TableRow key={i}>
+                <TableCell className="py-2 text-left">
+                  <div className="flex flex-col gap-1">
+                    <span className="font-bold text-sm">{product.name}</span>
+                    <span className="uppercase font-medium text-xs text-muted-foreground">{product.set}</span>
+                    <span className="text-xs text-muted-foreground">{getWebsiteName(product.vendor)}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="py-2 text-right">
+                  ${product.price}
+                </TableCell>
+                <TableCell className="py-2 text-right">
+                  <Button
+                    onClick={() => {
+                      removeFromCart(product);
+                    }}
+                    variant="ghost"
+                    size="icon"
+                  >
+                    <Trash2 size={15} />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
+
+      <ScrollArea className="h-[200px] rounded-lg border border-border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-left">Vendor</TableHead>
+              <TableHead className="max-w-[40px] text-right">Qty</TableHead>
+              <TableHead className="text-right">Total</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Object.entries(storeSummary).map(([store, summary], i) => (
+              <TableRow key={i} className="text-xs">
+                <TableCell className="text-left">
+                  <div className="flex flex-col gap-2">
+                    <span>{store}</span>
+                    {recommendedStores.includes(summary.vendor) && (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button 
+                            size="sm" 
+                            className="w-full h-5 store-checkout text-xs max-w-[100px]"
+                          >
+                            Buy Now! <ExternalLink className="ml-2 h-3 w-3" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80">
+                          <div className="grid gap-4">
+                            <div className="space-y-2">
+                              <h4 className="font-medium leading-none">Checkout at {store}</h4>
+                              <p className="text-sm text-muted-foreground">
+                                You will be redirected to {store} to complete your purchase of {summary.count} card(s).
+                              </p>
+                            </div>
+                            <Button onClick={() => handleCheckout(summary.products)}>
+                              Proceed to Checkout
+                            </Button>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">{summary.count}</TableCell>
+                <TableCell className="text-right">${summary.subtotal.toFixed(2)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
+
+      <div className="flex w-full justify-between px-2 pt-2 border-t border-border">
+        <span className="font-bold">Total</span>
+        <span>
+          ${cart.reduce((acc, product) => acc + product.price, 0).toFixed(2)}
+        </span>
+      </div>
+    </div>
+  );
+};

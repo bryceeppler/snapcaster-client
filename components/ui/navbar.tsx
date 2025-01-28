@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Button } from './button';
 import useAuthStore from '@/stores/authStore';
-import { AlignJustify, Search, User } from 'lucide-react';
-import React, { useState } from 'react';
+import { AlignJustify, Search, User, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
 import {
@@ -25,11 +25,23 @@ import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import useBuyListStore from '@/stores/buyListStore';
+import globalStore from '@/stores/globalStore';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
   const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
+
+  const {
+    initNotificationStatus,
+    setNotificationStatusFalse,
+    notificationStatus
+  } = globalStore();
+
+  useEffect(() => {
+    initNotificationStatus();
+  }, []);
+
   const router = useRouter();
   const currentPath = router.pathname;
 
@@ -146,7 +158,7 @@ const Navbar: React.FC = () => {
                         Buylists
                       </Button>
                     </Link>
-                    <Link href="/supporters" as="/supporters">
+                    <Link href="/about" as="/about">
                       <Button
                         variant="ghost"
                         className="block w-full text-left text-lg"
@@ -154,20 +166,10 @@ const Navbar: React.FC = () => {
                           setMobileNavSheetOpen(false);
                         }}
                       >
-                        Supporters
+                        About
                       </Button>
                     </Link>
-                    <Link href="/buylists" as="/buylists">
-                      <Button
-                        variant="ghost"
-                        className="block w-full text-left text-lg"
-                        onClick={() => {
-                          setMobileNavSheetOpen(false);
-                        }}
-                      >
-                        Buylists
-                      </Button>
-                    </Link>
+
                     <Link href={isAuthenticated ? `/profile` : '/signin'}>
                       <Button
                         variant="ghost"
@@ -362,14 +364,15 @@ const Navbar: React.FC = () => {
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link legacyBehavior href="/supporters" passHref>
+                <Link legacyBehavior href="/about" passHref>
                   <NavigationMenuLink
                     className={`${navigationMenuTriggerStyle()} ${
-                      currentPath == '/supporters' &&
-                      'rounded-b-none border-b-2 border-primary'
+                      currentPath == '/about'
+                        ? 'rounded-b-none border-b-2 border-primary'
+                        : ''
                     }`}
                   >
-                    Supporters
+                    About
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -392,6 +395,16 @@ const Navbar: React.FC = () => {
           </NavigationMenu>
         </div>
       </div>
+      {notificationStatus == true && (
+        <div className="flex w-full items-center bg-primary px-1 text-secondary">
+          <p className="flex-1 text-center text-xs font-medium md:text-base">
+            Snapcaster now supports Star Wars: Unlimited! Try it out now!
+          </p>
+          <button onClick={setNotificationStatusFalse}>
+            <X />
+          </button>
+        </div>
+      )}
     </>
   );
 };

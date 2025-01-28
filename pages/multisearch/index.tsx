@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ShoppingCart } from 'lucide-react';
 import useAuthStore from '@/stores/authStore';
 import { createCheckoutSession } from '@/lib/utils';
 import {
@@ -16,7 +16,7 @@ import { Cart } from '@/components/multi-search/cart';
 import { RecommendedStores } from '@/components/multi-search/recommended-stores';
 import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
-import { Product, Tcg } from '@/types';
+import { Condition, Product, Tcg } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Toolbar } from '@/components/multi-search/toolbar';
@@ -24,6 +24,11 @@ import BackToTopButton from '@/components/ui/back-to-top-btn';
 import { ResultsContainer } from '@/components/multi-search/results-container';
 import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
 import { trackSearch } from '@/utils/analytics';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 type Props = {};
 
@@ -34,6 +39,8 @@ export default function Multisearch({}: Props) {
     tcg,
     searchInput,
     results,
+    minimumAcceptableCondition,
+    setMinimumAcceptableCondition,
     handleSubmit,
     setSearchInput,
     onWebsiteSelect,
@@ -56,6 +63,8 @@ export default function Multisearch({}: Props) {
               websites={websites}
               selectedWebsites={selectedWebsites}
               onWebsiteSelect={onWebsiteSelect}
+              minimumAcceptableCondition={minimumAcceptableCondition}
+              setMinimumAcceptableCondition={setMinimumAcceptableCondition}
             />
           </>
         )}
@@ -74,23 +83,14 @@ export default function Multisearch({}: Props) {
 
 const ResultsView = ({ results }: { results: Product[][] }) => {
   return (
-    <div className="w-full  grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0">
-      <div className="lg:hidden">
-        <Toolbar />
+    <div className="w-full grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0 mb-8">
+      <div className="flex flex-col col-span-12 gap-4">
+      <Toolbar />
+        <RecommendedStores />
+        <ResultsContainer results={results} />
+
       </div>
 
-      <div className="col-span-8 flex w-full flex-col gap-4">
-        <div className="hidden lg:block">
-          <Toolbar />
-        </div>
-        <div className="results w-full">
-          <ResultsContainer results={results} />
-        </div>
-      </div>
-      <div className="col-span-4 flex flex-col gap-4">
-        <RecommendedStores />
-        <Cart />
-      </div>
     </div>
   );
 };
@@ -100,16 +100,20 @@ const SearchView = ({
   setTcg,
   searchInput,
   setSearchInput,
-  handleSubmit
+  handleSubmit,
+  minimumAcceptableCondition,
+  setMinimumAcceptableCondition
 }: {
   tcg: Tcg;
   setTcg: (value: Tcg) => void;
   searchInput: string;
   setSearchInput: (value: string) => void;
-  handleSubmit: (tcg: string) => void;
+  handleSubmit: (tcg: string, minimumAcceptableCondition: Condition) => void;
   websites: any[];
   selectedWebsites: any[];
   onWebsiteSelect: (value: any) => void;
+  minimumAcceptableCondition: Condition;
+  setMinimumAcceptableCondition: (value: Condition) => void;
 }) => {
   const { loading } = useMultiSearchStore();
   const { hasActiveSubscription, isAuthenticated } = useAuthStore();
@@ -127,21 +131,43 @@ const SearchView = ({
   return (
     <div className="flex w-full flex-col gap-4 rounded-lg border border-border bg-popover p-4">
       <div className="flex flex-col items-center gap-4 md:flex-row">
-        <Select value={tcg} onValueChange={(value: Tcg) => setTcg(value)}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="MTG" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Select TCG</SelectLabel>
-              <SelectItem value="mtg">MTG</SelectItem>
-              <SelectItem value="onepiece">One Piece</SelectItem>
-              <SelectItem value="pokemon">Pokemon</SelectItem>
-              <SelectItem value="lorcana">Lorcana</SelectItem>
-              <SelectItem value="yugioh">Yu-gi-oh</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="tcg-select" className="text-sm text-left">TCG</label>
+          <Select value={tcg} onValueChange={(value: Tcg) => setTcg(value)}>
+            <SelectTrigger id="tcg-select" className="w-[200px]">
+              <SelectValue placeholder="MTG" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Select TCG</SelectLabel>
+                <SelectItem value="mtg">MTG</SelectItem>
+                <SelectItem value="onepiece">One Piece</SelectItem>
+                <SelectItem value="pokemon">Pokemon</SelectItem>
+                <SelectItem value="lorcana">Lorcana</SelectItem>
+                <SelectItem value="yugioh">Yu-gi-oh</SelectItem>
+                <SelectItem value="starwars">Star Wars</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="condition-select" className="text-sm text-left">Minimum Condition</label>
+          <Select
+            value={minimumAcceptableCondition}
+            onValueChange={(value: Condition) => setMinimumAcceptableCondition(value)}
+          >
+            <SelectTrigger id="condition-select" className="w-[200px]">
+              <SelectValue placeholder="MP" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="nm">NM</SelectItem>
+              <SelectItem value="lp">LP</SelectItem>
+              <SelectItem value="mp">MP</SelectItem>
+              <SelectItem value="hp">HP</SelectItem>
+              <SelectItem value="dmg">DMG</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         <div className=" flex-grow "></div>
         {/* {adsEnabled && <PoweredBy size="small" />} */}
@@ -222,7 +248,7 @@ const SearchView = ({
       <Button
         onClick={() => {
           trackSearch(searchInput, tcg, 'multi');
-          handleSubmit(tcg);
+          handleSubmit(tcg, minimumAcceptableCondition);
         }}
         disabled={
           searchInput.length === 0 ||
