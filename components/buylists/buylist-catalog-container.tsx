@@ -16,8 +16,7 @@ const steps = [
 ];
 
 export default function BuylistCatalog() {
-  const { currentCart, setMode, getBuylistCheckoutBreakdownData } =
-    useBuyListStore();
+  const { currentCart, setMode, getCheckoutData } = useBuyListStore();
   const [currentStep, setCurrentStep] = useState(0);
   const [animateToStep, setAnimateToStep] = useState(0);
 
@@ -32,7 +31,7 @@ export default function BuylistCatalog() {
       steps[currentStep].mode as 'cart' | 'search' | 'checkout' | 'review'
     );
     if (currentStep === 2 || currentStep === 3) {
-      getBuylistCheckoutBreakdownData(currentCart.id);
+      getCheckoutData(currentCart.id);
     }
     const timer = setTimeout(() => {
       setAnimateToStep(currentStep);

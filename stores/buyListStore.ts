@@ -4,24 +4,19 @@ import { Tcg, BuyListQueryCard } from '@/types/product';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { BuylistSortOptions, FilterOption } from '@/types/query';
+import { Mode } from '@/types/buylists';
 
-// Need to add local storage logic for last selected TCG
 type BuyListState = {
-  mode: 'search' | 'cart' | 'checkout' | 'review';
-  searchResults: BuyListQueryCard[]| null;
-  currentPage: number; 
+  //Search State Variables & functions
+  searchResults: BuyListQueryCard[] | null;
+  currentPage: number;
   numPages: number | null;
-  numResults:number ;
+  numResults: number;
   filterOptions?: FilterOption[];
   tcg: Tcg;
   searchTerm: string;
   sortBy: BuylistSortOptions;
   filters: FilterOption[] | null;
-  carts:any[];
-  currentCart:any;
-  currentCartData:any[];
-  buylistCheckoutBreakdownData: any
-  setMode: (mode: 'search' | 'cart' |'checkout' | 'review') => void;
   setSortBy: (sortBy: BuylistSortOptions) => void;
   setTcg: (tcg: Tcg) => void;
   setCurrentPage: (currentPage: number) => void;
@@ -31,6 +26,14 @@ type BuyListState = {
   clearFilters: () => void;
   applyFilters: () => Promise<void>;
   clearSearchResults: () => void;
+
+  //Cart State Variables & Functions
+  mode: Mode;
+  carts: any[];
+  currentCart: any;
+  currentCartData: any[];
+  buylistCheckoutBreakdownData: any;
+  setMode: (mode: Mode) => void;
   fetchCarts: () => Promise<void>;
   getCartData: (cartId: string) => Promise<void>;
   setCurrentCart: (cartName: string | null) => void;
@@ -38,35 +41,41 @@ type BuyListState = {
   createCart: (cartName: string) => Promise<void>;
   deleteCart: (cartId: number) => Promise<void>;
   renameCart: (cartData: any) => Promise<boolean>;
-  getBuylistCheckoutBreakdownData: (cartId: string) => Promise<void>;
+  getCheckoutData: (cartId: string) => Promise<void>;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
-  mode: 'search',
+  //Search State Variables
   searchResults: null,
   currentPage: 1,
-  numPages:0,
-  numResults:0,
+  numPages: 0,
+  numResults: 0,
   tcg: 'mtg',
   searchTerm: '',
   sortBy: 'name-asc',
   filters: null,
-  
-  carts:[],
-  currentCart:null,
-  currentCartData:[],
+
+  //Cart State Variables
+  mode: 'cart',
+  carts: [],
+  currentCart: null,
+  currentCartData: [],
   buylistCheckoutBreakdownData: null,
+
+  //////////////////////
+  // Search Functions //
+  //////////////////////
+
   fetchCards: async () => {
-    const {  filters } = get();
+    const { filters } = get();
     if (get().searchTerm) {
       const queryParams = new URLSearchParams({
         keyword: get().searchTerm,
         tcg: get().tcg,
         index: `buylists_${get().tcg}*`,
         sortBy: get().sortBy,
-        pageNumber:get().currentPage.toString(),
-        maxResultsPerPage:'100',
-
+        pageNumber: get().currentPage.toString(),
+        maxResultsPerPage: '100'
       });
       if (filters) {
         Object.entries(filters).forEach(([index, filter]) => {
@@ -90,14 +99,14 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
       const filterOptionsFromResponse: FilterOption[] =
-      response.data.filters || [];
+        response.data.filters || [];
 
       set({
         searchResults: response.data.results.slice(0, 500),
-        numPages:response.data.pagination.numPages,
-        numResults:response.data.pagination.numResults,
+        numPages: response.data.pagination.numPages,
+        numResults: response.data.pagination.numResults,
         filterOptions: filterOptionsFromResponse,
-        filters: filterOptionsFromResponse,
+        filters: filterOptionsFromResponse
       });
     }
   },
@@ -105,8 +114,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   setSearchTerm(searchBoxValue: string) {
     set({ searchTerm: searchBoxValue });
   },
-  setCurrentPage(currentPage:number){
-    set({currentPage:currentPage})
+  setCurrentPage(currentPage: number) {
+    set({ currentPage: currentPage });
   },
 
   setFilter: (filterField: string, value: string, selected: boolean) => {
@@ -126,7 +135,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     set({ filters: updatedFilters });
   },
   applyFilters: async () => {
-    const { tcg, searchTerm, filters, sortBy, } = get();
+    const { tcg, searchTerm, filters, sortBy } = get();
     try {
       const queryParams = new URLSearchParams({
         index: `buylists_${tcg}*`,
@@ -156,17 +165,13 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       );
 
       if (response.status !== 200) {
-        throw new Error(
-          `Error: ${response.status} - ${response.statusText}`
-        );
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
 
-      const updatedSearchResults = response.data.results.map(
-        (item: any) => ({
-          ...item,
-          promoted: false
-        })
-      );
+      const updatedSearchResults = response.data.results.map((item: any) => ({
+        ...item,
+        promoted: false
+      }));
 
       const filterOptionsFromResponse: FilterOption[] =
         response.data.filters || [];
@@ -194,11 +199,10 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   clearFilters: () => set({ filters: null }),
   clearSearchResults: () => set({ searchResults: null }),
 
-
-
-
-  // Cart Functions
-  setMode: (mode: 'search' | 'cart' | 'checkout' | 'review') => {
+  ////////////////////
+  // Cart Functions //
+  ////////////////////
+  setMode: (mode: Mode) => {
     set({ mode });
   },
 
@@ -206,34 +210,32 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     try {
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`
-      );  
+      );
       if (response.status === 200) {
         set({ carts: response.data.carts });
-        if (get().currentCart === null && Object.keys(response.data.carts).length > 0) {
+        if (
+          get().currentCart === null &&
+          Object.keys(response.data.carts).length > 0
+        ) {
           get().setCurrentCart(response.data.carts[0]);
           get().getCartData(response.data.carts[0].id);
         }
-      }   
-      console.log("carts");
-      console.log(get().carts);
-      console.log("currentCart");
-      console.log(get().currentCart);
-
+      }
     } catch (error: any) {
       toast.error('Error fetching carts: ' + error.message);
       console.error('Error fetching carts:', error);
-    } 
+    }
   },
   setCurrentCart: (cartData: any) => {
     if (!cartData) {
       set({ currentCart: null });
       return;
     }
-    set({ 
+    set({
       currentCart: {
-        ...cartData,
+        ...cartData
       }
-    });   
+    });
     if (cartData.id) {
       get().getCartData(cartData.id);
     }
@@ -242,9 +244,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     try {
       const { currentCart } = get();
       if (!currentCart) return;
-      console.log("A");
-      console.log(card);
-      console.log("");
       // Prevent negative quantities
       if (quantity < 0) {
         quantity = 0;
@@ -252,28 +251,30 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
       // Check for maximum quantity
       if (quantity > 99) {
-        toast.error("Maximum quantity is 99");
+        toast.error('Maximum quantity is 99');
         return;
       }
-      
+
       card.quantity = quantity;
-      
+
       const response = await axiosInstance.put(
         `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCart.id}/cards`,
         card
       );
-      
+
       if (response.status === 200) {
         if (quantity === 0) {
           // Update both currentCart.items and currentCartData
           const filteredItems = (get().currentCartData || []).filter(
-            (item: any) => 
-              !(item.card_name === card.card_name && 
+            (item: any) =>
+              !(
+                item.card_name === card.card_name &&
                 item.condition_name === card.condition_name &&
                 item.set_name === card.set_name &&
                 item.foil === card.foil &&
                 item.rarity === card.rarity &&
-                item.image === card.image)
+                item.image === card.image
+              )
           );
           set({ currentCartData: filteredItems });
         }
@@ -287,19 +288,19 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   createCart: async (cartName: string) => {
     try {
-     const body = {
-      cartName: cartName,
-     }
-     const response = await axiosInstance.post(
-      `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`,
-      body
-     )
-     if (response.status === 201) {
-      toast.success('Cart created successfully');
-      get().fetchCarts();
-     } else {
-      toast.error('Error creating cart');
-     }  
+      const body = {
+        cartName: cartName
+      };
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`,
+        body
+      );
+      if (response.status === 201) {
+        toast.success('Cart created successfully');
+        get().fetchCarts();
+      } else {
+        toast.error('Error creating cart');
+      }
     } catch (error: any) {
       toast.error('Error creating cart: ' + error.message);
       console.error('Error creating cart:', error);
@@ -307,14 +308,16 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   deleteCart: async (cartId: number) => {
     try {
-      const response = await axiosInstance.delete(`${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}`);
+      const response = await axiosInstance.delete(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}`
+      );
       if (response.status === 200) {
         // First set currentCart to null to avoid stale state
         set({ currentCart: null });
-        
+
         toast.success('Cart deleted successfully');
         await get().fetchCarts();
-        
+
         // After fetch completes, set first cart as current if any exist
         const cartKeys = Object.keys(get().carts || {});
         if (cartKeys.length > 0) {
@@ -331,8 +334,11 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     try {
       const body = {
         newName: cartData.name.trim()
-      }
-      const response = await axiosInstance.patch(`${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartData.id}`, body);
+      };
+      const response = await axiosInstance.patch(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartData.id}`,
+        body
+      );
       if (response.status === 200) {
         toast.success('Cart renamed successfully');
         await get().fetchCarts();
@@ -350,44 +356,54 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       console.error('Error renaming cart:', error);
       return false;
     }
-  },  
+  },
   getCartData: async (cartId: string) => {
-    try{
-      const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/cards`);
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/cards`
+      );
       if (response.status === 200) {
-        set({currentCartData: response.data.items});
-        console.log(get().currentCartData);
+        set({ currentCartData: response.data.items });
       }
     } catch (error: any) {
       toast.error('Error fetching cart data: ' + error.message);
       console.error('Error fetching cart data:', error);
     }
   },
-  getBuylistCheckoutBreakdownData: async (cartId: string) => {
+  getCheckoutData: async (cartId: string) => {
     try {
-      const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/checkouts`);
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/checkouts`
+      );
       if (response.status === 200) {
         const storeBreakdowns = response.data.data.storeBreakdowns;
-        const formattedData = Object.entries(storeBreakdowns).map(([storeName, data]: [string, any]) => ({
-          storeName,
-          cashSubtotal: data.cashSubtotal.toFixed(2),
-          creditSubtotal: data.creditSubtotal.toFixed(2),
-          unableToPurchaseItems: data.unableToPurchaseItems,
-          items: data.items
-        }));
-        
+        const formattedData = Object.entries(storeBreakdowns).map(
+          ([storeName, data]: [string, any]) => ({
+            storeName,
+            cashSubtotal: data.cashSubtotal.toFixed(2),
+            creditSubtotal: data.creditSubtotal.toFixed(2),
+            unableToPurchaseItems: data.unableToPurchaseItems,
+            items: data.items
+          })
+        );
+
         set({ buylistCheckoutBreakdownData: formattedData });
       } else {
-        toast.error('Error fetching buylist checkout breakdown data: ' + response.statusText);
-        console.error('Error fetching buylist checkout breakdown data:', response);
+        toast.error(
+          'Error fetching buylist checkout breakdown data: ' +
+            response.statusText
+        );
+        console.error(
+          'Error fetching buylist checkout breakdown data:',
+          response
+        );
       }
     } catch (error: any) {
-      toast.error('Error fetching buylist checkout breakdown data: ' + error.message);
+      toast.error(
+        'Error fetching buylist checkout breakdown data: ' + error.message
+      );
       console.error('Error fetching buylist checkout breakdown data:', error);
     }
   }
-}
-
-
-));
+}));
 export default useBuyListStore;

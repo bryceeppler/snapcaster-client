@@ -30,7 +30,10 @@ export default function SavedLists() {
                           {item.set_name}: {item.rarity}, {item.foil}
                         </p>
                       </div>
-                      <p className="w-min cursor-pointer text-sm font-normal underline">
+                      <p
+                        className="w-min cursor-pointer text-sm font-normal underline"
+                        onClick={() => updateCartItem(item, 0)}
+                      >
                         Remove
                       </p>
                       <div className="grid h-9 w-28 grid-cols-3 items-center rounded-lg border px-2">
