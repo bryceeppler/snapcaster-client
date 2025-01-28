@@ -18,6 +18,8 @@ import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
 import { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
+import buyListStore from '@/stores/buyListStore';
+import { useRouter } from 'next/router';
 interface AutocompleteResult {
   name: string;
 }
@@ -41,6 +43,9 @@ export default function NavSearchBar({
   tcg,
   clearFilters
 }: Props) {
+  const router = useRouter();
+  const currentPath = router.pathname;
+  const { setMode } = buyListStore();
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -105,6 +110,9 @@ export default function NavSearchBar({
     setSearchTerm(suggestion.name);
     setIsAutoCompleteVisible(false);
     handleSearch(); // Trigger search
+    if (currentPath === '/buylists') {
+      setMode('search');
+    }
   };
 
   const handleSearch = useCallback(() => {
@@ -144,6 +152,9 @@ export default function NavSearchBar({
           } else {
             clearFilters();
             handleSearch();
+            if (currentPath === '/buylists') {
+              setMode('search');
+            }
           }
           break;
         case 'Escape':
@@ -207,6 +218,9 @@ export default function NavSearchBar({
           <MagnifyingGlassIcon
             className="h-6 w-6 hover:cursor-pointer"
             onClick={() => {
+              if (currentPath === '/buylists') {
+                setMode('search');
+              }
               clearFilters();
               handleSearch();
             }}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { NextPage } from 'next';
 import useBuyListStore from '@/stores/buyListStore';
@@ -17,36 +17,18 @@ const Buylist: NextPage<Props> = () => {
     setSearchTerm,
     clearSearchResults,
     fetchCards,
-    clearFilters
+    clearFilters,
+    fetchCarts
   } = useBuyListStore();
+
+  useEffect(() => {
+    fetchCarts();
+  }, []);
 
   return (
     <>
       <div className=" min-h-svh ">
-        <div className="flex w-full flex-col justify-center  text-center">
-          {!searchResults && (
-            <div className="flex flex-col items-center justify-center md:mt-6">
-              <Homebanner prefixText={'Sell'} />
-              <div className="mx-auto mt-6 flex w-full justify-center">
-                <SearchBar
-                  searchTool="buylist"
-                  tcg={tcg}
-                  searchTerm={searchTerm}
-                  setTcg={setTcg}
-                  setSearchTerm={setSearchTerm}
-                  clearSearchResults={clearSearchResults}
-                  fetchCards={fetchCards}
-                  clearFilters={clearFilters}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-        {searchResults && (
-          <>
-            <BuylistCatalog />
-          </>
-        )}
+        <BuylistCatalog />
         <BackToTopButton />
       </div>
     </>

@@ -1,88 +1,127 @@
-import React from 'react';
-import { buylistSortByLabel } from '@/types/query';
+import React, { useState } from 'react';
 import useBuyListStore from '@/stores/buyListStore';
-import FilterSection from '@/components/search-ui/search-filter-container';
-import SearchPagination from '@/components/search-ui/search-pagination';
-import SearchSortBy from '@/components/search-ui/search-sort-by';
-import BuyListCatalogItem from '@/components/buylists/buylist-catalog-item';
+import { Button } from '../ui/button';
+import { useEffect } from 'react';
+import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import SavedLists from './saved-lists';
+import Search from './search';
+import Checkout from './checkout';
+import Review from './review';
+
+const steps = [
+  { label: 'Saved Lists', mode: 'cart' },
+  { label: 'Add Cards to Your Buylist', mode: 'search' },
+  { label: 'Submit Buylist', mode: 'checkout' },
+  { label: 'Review', mode: 'review' }
+];
 
 export default function BuylistCatalog() {
-  const {
-    numResults,
-    currentPage,
-    numPages,
-    searchResults,
-    sortBy,
-    filterOptions,
-    fetchCards,
-    setFilter,
-    setSortBy,
-    setCurrentPage,
-    clearFilters,
-    applyFilters
-  } = useBuyListStore();
+  const { currentCart, setMode, getBuylistCheckoutBreakdownData } =
+    useBuyListStore();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [animateToStep, setAnimateToStep] = useState(0);
+
+  const goToStep = (step: number) => {
+    if (step >= 0 && step < steps.length) {
+      setCurrentStep(step);
+    }
+  };
+
+  useEffect(() => {
+    setMode(
+      steps[currentStep].mode as 'cart' | 'search' | 'checkout' | 'review'
+    );
+    if (currentStep === 2 || currentStep === 3) {
+      getBuylistCheckoutBreakdownData(currentCart.id);
+    }
+    const timer = setTimeout(() => {
+      setAnimateToStep(currentStep);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [currentStep]);
 
   return (
     <>
-      {/* #1 Filter Box Section */}
-      <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-[240px_1fr]">
-        <div className="flex flex-col gap-1 ">
-          <div className="grid h-full gap-1">
-            <div className="relative  hidden w-full flex-col gap-1 md:flex">
-              <div className="child-1 mt-1  w-full md:sticky md:top-[118px]">
-                <div className=" rounded-lg bg-popover  px-3 py-2 text-left shadow-md md:max-w-sm">
-                  <FilterSection
-                    filterOptions={filterOptions}
-                    sortBy={sortBy}
-                    setSortBy={setSortBy}
-                    fetchCards={fetchCards}
-                    clearFilters={clearFilters}
-                    setFilter={setFilter}
-                    setCurrentPage={setCurrentPage}
-                    applyFilters={applyFilters}
-                  />
+      <div>
+        <div className=" flex flex-col gap-1 rounded-lg  p-2">
+          <h1 className="text-center font-bold">
+            {currentStep + 1}. {steps[currentStep].label}
+          </h1>
+          <div className="flex items-center justify-between">
+            <Button
+              onClick={() => goToStep(currentStep - 1)}
+              disabled={currentStep === 0}
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 p-0"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Back</span>
+            </Button>
+
+            <div className="mx-2 flex flex-grow items-center justify-between">
+              {steps.map((step, index) => (
+                <div
+                  key={index}
+                  className="flex flex-grow items-center last:flex-grow-0"
+                >
+                  <button
+                    onClick={() => goToStep(index)}
+                    className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 text-xs ${
+                      index <= currentStep
+                        ? 'border-blue-500 bg-blue-500 text-white'
+                        : 'border-gray-300 text-gray-300'
+                    } ${
+                      index < currentStep
+                        ? 'cursor-pointer'
+                        : index > currentStep
+                        ? 'cursor-not-allowed'
+                        : ''
+                    }`}
+                    disabled={index > currentStep}
+                  >
+                    {index < currentStep ? (
+                      <Check className="h-3 w-3" />
+                    ) : (
+                      <span>{index + 1}</span>
+                    )}
+                  </button>
+                  {index < steps.length - 1 && (
+                    <div className="relative mx-1 h-0.5 flex-grow bg-gray-300">
+                      <div
+                        className="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-500 ease-in-out"
+                        style={{
+                          width: index < animateToStep ? '100%' : '0%'
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* #2 Single Search Top Bar Section (# Results, Pagination, Sort By) */}
-        <div className="grid h-min gap-1">
-          <div className="z-30 hidden bg-background pt-1 md:sticky md:top-[114px] md:block">
-            <div className="  flex flex-row items-center  justify-between rounded-lg bg-popover px-4 py-2 ">
-              <span className="text-center text-sm font-normal text-secondary-foreground ">
-                {numResults} results
-              </span>
-              <div>
-                <SearchPagination
-                  currentPage={currentPage}
-                  numPages={numPages}
-                  setCurrentPage={setCurrentPage}
-                  fetchCards={fetchCards}
-                />
-              </div>
-              <SearchSortBy
-                sortBy={sortBy}
-                sortByLabel={buylistSortByLabel}
-                setSortBy={setSortBy}
-                fetchCards={fetchCards}
-                setCurrentPage={setCurrentPage}
-              />
-            </div>
-            <div className="bg-background pb-1"></div>
-          </div>
-          {/* #3 Search Result Cards Section */}
-          <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-3 xxl:grid-cols-4">
-            {searchResults &&
-              searchResults.map((item, index) => (
-                <React.Fragment key={index}>
-                  <div key={index} className="mb-2 h-full">
-                    <BuyListCatalogItem key={index} cardData={item} />
-                  </div>
-                </React.Fragment>
               ))}
+            </div>
+
+            <Button
+              onClick={() => goToStep(currentStep + 1)}
+              disabled={currentStep === steps.length - 1}
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 p-0"
+            >
+              <ChevronRight className="h-4 w-4" />
+              <span className="sr-only">Next</span>
+            </Button>
           </div>
         </div>
+
+        {currentStep === 0 ? (
+          <SavedLists />
+        ) : currentStep === 1 ? (
+          <Search />
+        ) : currentStep === 2 ? (
+          <Checkout setCurrentStep={setCurrentStep} />
+        ) : (
+          currentStep === 3 && <Review />
+        )}
       </div>
     </>
   );

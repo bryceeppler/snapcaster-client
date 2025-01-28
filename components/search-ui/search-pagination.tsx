@@ -29,11 +29,11 @@ const SearchPagination = ({
     return;
   };
 
-  useEffect(() => {
-    console.log('Props inside search pagination useEffect:', {
-      setCurrentPage
-    });
-  }, [setCurrentPage]);
+  // useEffect(() => {
+  //   console.log('Props inside search pagination useEffect:', {
+  //     setCurrentPage
+  //   });
+  // }, [setCurrentPage]);
 
   return (
     <Pagination className="w-min">

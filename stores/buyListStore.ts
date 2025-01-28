@@ -7,6 +7,7 @@ import { BuylistSortOptions, FilterOption } from '@/types/query';
 
 // Need to add local storage logic for last selected TCG
 type BuyListState = {
+  mode: 'search' | 'cart' | 'checkout' | 'review';
   searchResults: BuyListQueryCard[]| null;
   currentPage: number; 
   numPages: number | null;
@@ -16,6 +17,11 @@ type BuyListState = {
   searchTerm: string;
   sortBy: BuylistSortOptions;
   filters: FilterOption[] | null;
+  carts:any[];
+  currentCart:any;
+  currentCartData:any[];
+  buylistCheckoutBreakdownData: any
+  setMode: (mode: 'search' | 'cart' |'checkout' | 'review') => void;
   setSortBy: (sortBy: BuylistSortOptions) => void;
   setTcg: (tcg: Tcg) => void;
   setCurrentPage: (currentPage: number) => void;
@@ -25,10 +31,18 @@ type BuyListState = {
   clearFilters: () => void;
   applyFilters: () => Promise<void>;
   clearSearchResults: () => void;
+  fetchCarts: () => Promise<void>;
+  getCartData: (cartId: string) => Promise<void>;
+  setCurrentCart: (cartName: string | null) => void;
+  updateCartItem: (cardId: string, quantity: number) => void;
+  createCart: (cartName: string) => Promise<void>;
+  deleteCart: (cartId: number) => Promise<void>;
+  renameCart: (cartData: any) => Promise<boolean>;
+  getBuylistCheckoutBreakdownData: (cartId: string) => Promise<void>;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
-
+  mode: 'search',
   searchResults: null,
   currentPage: 1,
   numPages:0,
@@ -38,6 +52,10 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   sortBy: 'name-asc',
   filters: null,
   
+  carts:[],
+  currentCart:null,
+  currentCartData:[],
+  buylistCheckoutBreakdownData: null,
   fetchCards: async () => {
     const {  filters } = get();
     if (get().searchTerm) {
@@ -65,7 +83,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       const response = await axios.get(
         `${
           process.env.NEXT_PUBLIC_BUYLISTS_URL
-        }/search?${queryParams.toString()}`
+        }/v2/search?${queryParams.toString()}`
       );
 
       if (response.status !== 200) {
@@ -134,7 +152,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       const response = await axiosInstance.get(
         `${
           process.env.NEXT_PUBLIC_BUYLISTS_URL
-        }/search?${queryParams.toString()}`
+        }/v2/search?${queryParams.toString()}`
       );
 
       if (response.status !== 200) {
@@ -174,9 +192,202 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   setSortBy: (sortBy: BuylistSortOptions) => set({ sortBy }),
   clearFilters: () => set({ filters: null }),
-  clearSearchResults: () =>
-    set({ searchResults: null }),
+  clearSearchResults: () => set({ searchResults: null }),
 
-  
-}));
+
+
+
+  // Cart Functions
+  setMode: (mode: 'search' | 'cart' | 'checkout' | 'review') => {
+    set({ mode });
+  },
+
+  fetchCarts: async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`
+      );  
+      if (response.status === 200) {
+        set({ carts: response.data.carts });
+        if (get().currentCart === null && Object.keys(response.data.carts).length > 0) {
+          get().setCurrentCart(response.data.carts[0]);
+          get().getCartData(response.data.carts[0].id);
+        }
+      }   
+      console.log("carts");
+      console.log(get().carts);
+      console.log("currentCart");
+      console.log(get().currentCart);
+
+    } catch (error: any) {
+      toast.error('Error fetching carts: ' + error.message);
+      console.error('Error fetching carts:', error);
+    } 
+  },
+  setCurrentCart: (cartData: any) => {
+    if (!cartData) {
+      set({ currentCart: null });
+      return;
+    }
+    set({ 
+      currentCart: {
+        ...cartData,
+      }
+    });   
+    if (cartData.id) {
+      get().getCartData(cartData.id);
+    }
+  },
+  updateCartItem: async (card: any, quantity: number) => {
+    try {
+      const { currentCart } = get();
+      if (!currentCart) return;
+      console.log("A");
+      console.log(card);
+      console.log("");
+      // Prevent negative quantities
+      if (quantity < 0) {
+        quantity = 0;
+      }
+
+      // Check for maximum quantity
+      if (quantity > 99) {
+        toast.error("Maximum quantity is 99");
+        return;
+      }
+      
+      card.quantity = quantity;
+      
+      const response = await axiosInstance.put(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCart.id}/cards`,
+        card
+      );
+      
+      if (response.status === 200) {
+        if (quantity === 0) {
+          // Update both currentCart.items and currentCartData
+          const filteredItems = (get().currentCartData || []).filter(
+            (item: any) => 
+              !(item.card_name === card.card_name && 
+                item.condition_name === card.condition_name &&
+                item.set_name === card.set_name &&
+                item.foil === card.foil &&
+                item.rarity === card.rarity &&
+                item.image === card.image)
+          );
+          set({ currentCartData: filteredItems });
+        }
+        await get().getCartData(currentCart.id);
+      }
+    } catch (error: any) {
+      toast.error('Error updating cart item: ' + error.message);
+      console.error('Error updating cart item:', error);
+      get().fetchCarts();
+    }
+  },
+  createCart: async (cartName: string) => {
+    try {
+     const body = {
+      cartName: cartName,
+     }
+     const response = await axiosInstance.post(
+      `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`,
+      body
+     )
+     if (response.status === 201) {
+      toast.success('Cart created successfully');
+      get().fetchCarts();
+     } else {
+      toast.error('Error creating cart');
+     }  
+    } catch (error: any) {
+      toast.error('Error creating cart: ' + error.message);
+      console.error('Error creating cart:', error);
+    }
+  },
+  deleteCart: async (cartId: number) => {
+    try {
+      const response = await axiosInstance.delete(`${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}`);
+      if (response.status === 200) {
+        // First set currentCart to null to avoid stale state
+        set({ currentCart: null });
+        
+        toast.success('Cart deleted successfully');
+        await get().fetchCarts();
+        
+        // After fetch completes, set first cart as current if any exist
+        const cartKeys = Object.keys(get().carts || {});
+        if (cartKeys.length > 0) {
+          get().setCurrentCart(cartKeys[0]);
+          get().getCartData(cartKeys[0]);
+        }
+      }
+    } catch (error: any) {
+      toast.error('Error deleting cart: ' + error.message);
+      console.error('Error deleting cart:', error);
+    }
+  },
+  renameCart: async (cartData: any) => {
+    try {
+      const body = {
+        newName: cartData.name.trim()
+      }
+      const response = await axiosInstance.patch(`${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartData.id}`, body);
+      if (response.status === 200) {
+        toast.success('Cart renamed successfully');
+        await get().fetchCarts();
+        const updatedCart = Object.values(get().carts).find(
+          (cart: any) => cart.id === cartData.id
+        );
+        if (updatedCart) {
+          get().setCurrentCart(updatedCart);
+        }
+        return true;
+      }
+      return false;
+    } catch (error: any) {
+      toast.error('Error renaming cart: ' + error.message);
+      console.error('Error renaming cart:', error);
+      return false;
+    }
+  },  
+  getCartData: async (cartId: string) => {
+    try{
+      const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/cards`);
+      if (response.status === 200) {
+        set({currentCartData: response.data.items});
+        console.log(get().currentCartData);
+      }
+    } catch (error: any) {
+      toast.error('Error fetching cart data: ' + error.message);
+      console.error('Error fetching cart data:', error);
+    }
+  },
+  getBuylistCheckoutBreakdownData: async (cartId: string) => {
+    try {
+      const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/checkouts`);
+      if (response.status === 200) {
+        const storeBreakdowns = response.data.data.storeBreakdowns;
+        const formattedData = Object.entries(storeBreakdowns).map(([storeName, data]: [string, any]) => ({
+          storeName,
+          cashSubtotal: data.cashSubtotal.toFixed(2),
+          creditSubtotal: data.creditSubtotal.toFixed(2),
+          unableToPurchaseItems: data.unableToPurchaseItems,
+          items: data.items
+        }));
+        
+        set({ buylistCheckoutBreakdownData: formattedData });
+      } else {
+        toast.error('Error fetching buylist checkout breakdown data: ' + response.statusText);
+        console.error('Error fetching buylist checkout breakdown data:', response);
+      }
+    } catch (error: any) {
+      toast.error('Error fetching buylist checkout breakdown data: ' + error.message);
+      console.error('Error fetching buylist checkout breakdown data:', error);
+    }
+  }
+}
+
+
+));
 export default useBuyListStore;
