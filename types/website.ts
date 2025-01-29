@@ -1,4 +1,5 @@
 export type Website = {
+  id: number;
   name: string;
   slug: string;
   url: string;
