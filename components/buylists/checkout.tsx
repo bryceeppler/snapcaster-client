@@ -59,10 +59,15 @@ export default function Checkout({ setCurrentStep }: Props) {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
-                          <p className="text-xs text-muted-foreground">Connected</p>
+                          <p className="text-xs text-muted-foreground">
+                            Connected
+                          </p>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>You've connected to this store with the Snapcaster Chrome Extension</p>
+                          <p>
+                            You've connected to this store with the Snapcaster
+                            Chrome Extension
+                          </p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -70,8 +75,15 @@ export default function Checkout({ setCurrentStep }: Props) {
                 </div>
               </div>
 
-              <Accordion type="single" collapsible className="w-full mt-2 space-y-2">
-                <AccordionItem value="item-1" className="border border-border rounded px-4">
+              <Accordion
+                type="single"
+                collapsible
+                className="mt-2 w-full space-y-2"
+              >
+                <AccordionItem
+                  value="item-1"
+                  className="rounded border border-border px-4"
+                >
                   <AccordionTrigger className="py-2 text-sm hover:no-underline">
                     Purchasing {storeData.items.length} Card(s)
                   </AccordionTrigger>
@@ -94,7 +106,10 @@ export default function Checkout({ setCurrentStep }: Props) {
                   </AccordionContent>
                 </AccordionItem>
                 {storeData.unableToPurchaseItems.length > 0 && (
-                  <AccordionItem value="item-2" className="border border-border rounded px-4">
+                  <AccordionItem
+                    value="item-2"
+                    className="rounded border border-border px-4"
+                  >
                     <AccordionTrigger className="py-2 text-sm hover:no-underline">
                       Not Purchasing {storeData.unableToPurchaseItems.length}{' '}
                       Card(s)
@@ -136,16 +151,16 @@ export default function Checkout({ setCurrentStep }: Props) {
                   </AccordionItem>
                 )}
               </Accordion>
-              <div className="flex flex-row w-full my-4">
-                <div className="w-1/2 flex flex-col items-center">
-                  <p className="text-sm uppercase font-montserrat">Cash</p>
-                  <p className="font-bold text-lg">
-                    ${storeData.cashSubtotal}
-                  </p>
+              <div className="my-4 flex w-full flex-row">
+                <div className="flex w-1/2 flex-col items-center">
+                  <p className="font-montserrat text-sm uppercase">Cash</p>
+                  <p className="text-lg font-bold">${storeData.cashSubtotal}</p>
                 </div>
-                <div className="w-1/2 border-l border-border flex flex-col items-center">
-                  <p className="text-sm uppercase font-montserrat">Credit</p>
-                  <p className="font-bold text-lg">${storeData.creditSubtotal}</p>
+                <div className="flex w-1/2 flex-col items-center border-l border-border">
+                  <p className="font-montserrat text-sm uppercase">Credit</p>
+                  <p className="text-lg font-bold">
+                    ${storeData.creditSubtotal}
+                  </p>
                 </div>
               </div>
               <div className="my-2">

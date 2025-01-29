@@ -25,7 +25,8 @@ const conditions = [
   'Damaged'
 ];
 const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
-  const { updateCartItem, currentCart, currentCartData } = useBuyListStore();
+  const { updateCartItemOptimistic, currentCart, currentCartData } =
+    useBuyListStore();
 
   const getQuantityForCondition = (conditionName: string) => {
     if (!currentCartData) return 0;
@@ -58,7 +59,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
       quantity: newQuantity
     };
 
-    updateCartItem(cartItem, newQuantity);
+    updateCartItemOptimistic(cartItem, newQuantity);
   };
 
   return (
@@ -70,7 +71,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
 
         <div className="mt-2 flex flex-1 flex-col justify-between">
           <div>
-            <div className="font-montserrat text-[0.65rem] font-semibold uppercase text-primary-light">
+            <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
               {cardData.set}
             </div>
             <h3 className="text-[0.9rem] font-semibold capitalize">
@@ -99,7 +100,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
               </div>
 
               <div className="mt-2">
-                <div className="font-montserrat text-[0.65rem] font-semibold uppercase text-primary-light">
+                <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
                   {cardData.set}
                 </div>
                 <h3 className="text-[0.9rem] font-semibold capitalize">
