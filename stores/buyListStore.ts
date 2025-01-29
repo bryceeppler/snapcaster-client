@@ -6,6 +6,11 @@ import { toast } from 'sonner';
 import { BuylistSortOptions, FilterOption } from '@/types/query';
 import { Mode } from '@/types/buylists';
 
+type SubmitBuylistResponse = {
+  success: boolean;
+  message: string;
+};
+
 type BuyListState = {
   //Search State Variables & functions
   searchResults: BuyListQueryCard[] | null;
@@ -43,6 +48,7 @@ type BuyListState = {
   renameCart: (cartData: any) => Promise<boolean>;
   getCheckoutData: (cartId: string) => Promise<void>;
   setSelectedStoreForReview: (storeName: string) => void;
+  submitBuylist: (paymentType: 'Cash' | 'Credit') => Promise<SubmitBuylistResponse>;
   pendingUpdates: { [key: string]: number };
   updateCartItemPending: (card: any, quantity: number) => void;
   updateCartItemAPI: (card: any, quantity: number) => Promise<void>;
@@ -437,6 +443,42 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       toast.error('Error updating cart item: ' + error.message);
       console.error('Error updating cart item:', error);
       await getCartData(currentCart.id);
+    }
+  },
+
+  submitBuylist: async (paymentType: 'Cash' | 'Credit') => {
+    const { currentCart, selectedStoreForReview } = get();
+    if (!currentCart || !selectedStoreForReview) {
+      toast.error('No cart or store selected');
+      return { success: false, message: 'No cart or store selected' };
+    }
+
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCart.id}/submit`,
+        {
+          paymentType,
+          store: selectedStoreForReview
+        }
+      );
+
+      if (response.status === 200) {
+        const message = response.data?.message || 'Order submitted successfully!';
+        toast.success(message);
+        return { 
+          success: true, 
+          message,
+        };
+      } else {
+        const message = response.data?.message || 'Failed to submit order';
+        toast.error(message);
+        return { success: false, message };
+      }
+    } catch (error: any) {
+      const message = error.response?.data?.message || error.message || 'Error submitting order';
+      toast.error(message);
+      console.error('Error submitting order:', error);
+      return { success: false, message };
     }
   }
 }));
