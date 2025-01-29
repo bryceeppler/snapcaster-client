@@ -26,7 +26,7 @@ type Props = {
 };
 
 export default function Checkout({ setCurrentStep }: Props) {
-  const { buylistCheckoutBreakdownData } = useBuyListStore();
+  const { buylistCheckoutBreakdownData, setSelectedStoreForReview } = useBuyListStore();
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
   const { data: connectedVendors, isLoading: isLoadingConnections } = useConnectedVendors();
@@ -41,7 +41,7 @@ export default function Checkout({ setCurrentStep }: Props) {
 
   return (
     <>
-      <div className="mb-8 grid gap-2 md:grid-cols-2">
+      <div className="py-6 container space-y-2 max-w-4xl">
         {buylistCheckoutBreakdownData &&
           buylistCheckoutBreakdownData.map((storeData: any, index: number) => {
             const isConnected = isVendorConnected(storeData.storeName);
@@ -124,17 +124,17 @@ export default function Checkout({ setCurrentStep }: Props) {
                     value="item-1"
                     className="rounded border border-border px-4"
                   >
-                    <AccordionTrigger className="py-2 text-sm hover:no-underline">
+                    <AccordionTrigger className="text-sm hover:no-underline">
                       Purchasing {storeData.items.length} Card(s)
                     </AccordionTrigger>
-                    <AccordionContent className="p-2">
+                    <AccordionContent className="px-3">
                       {storeData.items.map((item: any, itemIndex: number) => (
                         <div
                           key={itemIndex}
-                          className={`pb-2 ${
+                          className={`mb-3 ${
                             itemIndex < storeData.items.length - 1
-                              ? 'mb-2 border-b border-border'
-                              : ''
+                              ? 'pb-3 border-b border-border'
+                              : 'mb-0'
                           }`}
                         >
                           <PurchasingCardDetails
@@ -158,11 +158,11 @@ export default function Checkout({ setCurrentStep }: Props) {
                       value="item-2"
                       className="rounded border border-border px-4"
                     >
-                      <AccordionTrigger className="py-2 text-sm hover:no-underline">
+                      <AccordionTrigger className="text-sm hover:no-underline">
                         Not Purchasing {storeData.unableToPurchaseItems.length}{' '}
                         Card(s)
                       </AccordionTrigger>
-                      <AccordionContent>
+                      <AccordionContent className="px-3">
                         <Alert className=" text-foreground mb-3">
                           <AlertCircle className="size-4 stroke-primary/80" />
                           <AlertTitle className="text-xs">Heads up!</AlertTitle>
@@ -174,11 +174,11 @@ export default function Checkout({ setCurrentStep }: Props) {
                           (item: any, itemIndex: number) => (
                             <div
                               key={itemIndex}
-                              className={`pb-2 ${
+                              className={`mb-3 ${
                                 itemIndex <
                                 storeData.unableToPurchaseItems.length - 1
-                                  ? 'mb-2 border-b border-border'
-                                  : ''
+                                  ? 'pb-2 border-b border-border'
+                                  : 'mb-0'
                               }`}
                             >
                               <UnpurchasableCardDetails
@@ -211,26 +211,27 @@ export default function Checkout({ setCurrentStep }: Props) {
                 <div className="my-2">
                   {isConnected ? <Button
                     onClick={() => {
+                      setSelectedStoreForReview(storeData.storeName);
                       setCurrentStep(3);
                     }}
                     className="h-8 w-full"
                     disabled={!isConnected}
                   >
-                      Sell to {getWebsiteName(storeData.storeName)}
+                    Sell to {getWebsiteName(storeData.storeName)}
                   </Button> : <Alert className="bg-background border">
                     <AlertCircle className="size-4 text-muted-foreground" />
-                      <AlertTitle className="text-sm font-semibold leading-none tracking-tight">Store not connected</AlertTitle>
-                      <AlertDescription className="flex flex-col gap-3">
-                        <span className="text-sm text-muted-foreground">You need to connect to this store using the Snapcaster Chrome Extension to sell cards.</span>
-                        <Link 
-                          href="https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en" 
-                          target="_blank" 
-                          className="flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-                        >
-                          Download Snapcaster Chrome Extension
-                          <ExternalLink className="size-3" />
-                        </Link>
-                      </AlertDescription>
+                    <AlertTitle className="text-sm font-semibold leading-none tracking-tight">Store not connected</AlertTitle>
+                    <AlertDescription className="flex flex-col gap-3">
+                      <span className="text-sm text-muted-foreground">You need to connect to this store using the Snapcaster Chrome Extension to sell cards.</span>
+                      <Link 
+                        href="https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en" 
+                        target="_blank" 
+                        className="flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+                      >
+                        Download Snapcaster Chrome Extension
+                        <ExternalLink className="size-3" />
+                      </Link>
+                    </AlertDescription>
                   </Alert>}
                 </div>
               </div>

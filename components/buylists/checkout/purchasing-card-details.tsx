@@ -35,7 +35,7 @@ interface PriceDisplayProps {
 function PriceDisplay({ label, price, quantity, isBestOffer, className = "" }: PriceDisplayProps) {
   const tooltipText = `This is the best ${label.toLowerCase()} offer available across all stores`;
   const priceDisplay = (
-    <div className={`px-4 w-full md:w-[140px] flex flex-col items-center ${className} ${isBestOffer ? 'cursor-help' : ''}`}>
+    <div className={`px-4 w-full md:w-[120px] flex flex-col items-center ${className} ${isBestOffer ? 'cursor-help' : ''}`}>
       <div className="flex items-center gap-1">
         <span className="text-xs uppercase font-montserrat">{label}</span>
         {isBestOffer && (
