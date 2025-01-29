@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import SavedLists from './saved-lists';
 import Search from './search';
-import Checkout from './checkout';
+import Checkout from './checkout/checkout';
 import Review from './review';
 
 const steps = [
@@ -112,6 +112,7 @@ export default function BuylistCatalog() {
           </div>
         </div>
 
+        <div className="mt-4 mx-4">
         {currentStep === 0 ? (
           <SavedLists />
         ) : currentStep === 1 ? (
@@ -119,8 +120,9 @@ export default function BuylistCatalog() {
         ) : currentStep === 2 ? (
           <Checkout setCurrentStep={setCurrentStep} />
         ) : (
-          currentStep === 3 && <Review />
-        )}
+            currentStep === 3 && <Review />
+          )}
+        </div>
       </div>
     </>
   );
