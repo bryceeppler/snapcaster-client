@@ -22,7 +22,6 @@ export default function BuylistCatalog() {
   const [animateToStep, setAnimateToStep] = useState(0);
 
   const goToStep = (step: number) => {
-    // Don't allow navigation to any step after 0 if no cart is selected
     if (step > 0 && !currentCart) {
       toast.error('Please select or create a cart first');
       return;

@@ -48,7 +48,9 @@ type BuyListState = {
   renameCart: (cartData: any) => Promise<boolean>;
   getCheckoutData: (cartId: string) => Promise<void>;
   setSelectedStoreForReview: (storeName: string) => void;
-  submitBuylist: (paymentType: 'Cash' | 'Credit') => Promise<SubmitBuylistResponse>;
+  submitBuylist: (
+    paymentType: 'Cash' | 'Credit'
+  ) => Promise<SubmitBuylistResponse>;
   pendingUpdates: { [key: string]: number };
   updateCartItemPending: (card: any, quantity: number) => void;
   updateCartItemAPI: (card: any, quantity: number) => Promise<void>;
@@ -469,11 +471,12 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       );
 
       if (response.status === 200) {
-        const message = response.data?.message || 'Order submitted successfully!';
+        const message =
+          response.data?.message || 'Order submitted successfully!';
         toast.success(message);
-        return { 
-          success: true, 
-          message,
+        return {
+          success: true,
+          message
         };
       } else {
         const message = response.data?.message || 'Failed to submit order';
@@ -481,7 +484,10 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         return { success: false, message };
       }
     } catch (error: any) {
-      const message = error.response?.data?.message || error.message || 'Error submitting order';
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        'Error submitting order';
       toast.error(message);
       console.error('Error submitting order:', error);
       return { success: false, message };
