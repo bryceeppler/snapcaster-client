@@ -3,18 +3,12 @@ import CardImage from '../ui/card-image';
 import { Button } from '../ui/button';
 import React, { memo } from 'react';
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '../ui/input';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import useBuyListStore from '@/stores/buyListStore';
+import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = { cardData: any };
 const conditions = [
@@ -25,12 +19,11 @@ const conditions = [
   'Damaged'
 ];
 const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
-  const { updateCartItemOptimistic, currentCart, currentCartData } =
+  const { updateCartItemPending, updateCartItemAPI, currentCartData } =
     useBuyListStore();
-
+  const debouncedApiCall = useDebounceCallback(updateCartItemAPI, 500);
   const getQuantityForCondition = (conditionName: string) => {
     if (!currentCartData) return 0;
-
     return (
       currentCartData.find(
         (item) =>
@@ -59,7 +52,8 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
       quantity: newQuantity
     };
 
-    updateCartItemOptimistic(cartItem, newQuantity);
+    updateCartItemPending(cartItem, newQuantity);
+    debouncedApiCall(cartItem, newQuantity);
   };
 
   return (

@@ -9,8 +9,8 @@ import { useRouter } from 'next/router';
 
 type Props = {};
 const Buylist: NextPage<Props> = () => {
-  const { isAuthenticated } = useAuthStore()
-  const router = useRouter()
+  const { isAuthenticated } = useAuthStore();
+  const router = useRouter();
   const { fetchCarts } = useBuyListStore();
 
   useEffect(() => {

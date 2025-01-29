@@ -2,10 +2,22 @@ import useBuyListStore from '@/stores/buyListStore';
 import CardImage from '../ui/card-image';
 import { ScrollArea } from '../ui/scroll-area';
 import { MinusIcon, PlusIcon } from 'lucide-react';
+import { useDebounceCallback } from 'usehooks-ts';
 
 export default function SavedLists() {
-  const { updateCartItemOptimistic, currentCart, currentCartData } =
-    useBuyListStore();
+  const {
+    updateCartItemPending,
+    updateCartItemAPI,
+    currentCart,
+    currentCartData
+  } = useBuyListStore();
+
+  const debouncedApiCall = useDebounceCallback(updateCartItemAPI, 500);
+
+  const handleUpdateQuantity = (card: any, quantity: number) => {
+    updateCartItemPending(card, quantity);
+    debouncedApiCall(card, quantity);
+  };
 
   return (
     <>
@@ -35,14 +47,14 @@ export default function SavedLists() {
                       </div>
                       <p
                         className="w-min cursor-pointer text-sm font-normal underline"
-                        onClick={() => updateCartItemOptimistic(item, 0)}
+                        onClick={() => handleUpdateQuantity(item, 0)}
                       >
                         Remove
                       </p>
                       <div className="grid h-9 w-28 grid-cols-3 items-center rounded-lg border px-2">
                         <button
                           onClick={() =>
-                            updateCartItemOptimistic(item, item.quantity - 1)
+                            handleUpdateQuantity(item, item.quantity - 1)
                           }
                           className="flex justify-center"
                         >
@@ -53,7 +65,7 @@ export default function SavedLists() {
 
                         <button
                           onClick={() =>
-                            updateCartItemOptimistic(item, item.quantity + 1)
+                            handleUpdateQuantity(item, item.quantity + 1)
                           }
                           className="flex justify-center"
                         >
