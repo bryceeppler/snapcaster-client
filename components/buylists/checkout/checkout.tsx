@@ -41,7 +41,7 @@ export default function Checkout({ setCurrentStep }: Props) {
 
   return (
     <>
-      <div className="mb-8 grid gap-2 md:grid-cols-2">
+      <div className="py-6 container space-y-2 max-w-4xl">
         {buylistCheckoutBreakdownData &&
           buylistCheckoutBreakdownData.map((storeData: any, index: number) => {
             const isConnected = isVendorConnected(storeData.storeName);
