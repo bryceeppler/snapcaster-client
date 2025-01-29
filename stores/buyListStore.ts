@@ -258,7 +258,12 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       );
       if (response.status === 201) {
         toast.success('Cart created successfully');
-        get().fetchCarts();
+        await get().fetchCarts();
+        // Find the newly created cart and set it as current
+        const newCart = get().carts.find((cart: any) => cart.name === cartName);
+        if (newCart) {
+          get().setCurrentCart(newCart);
+        }
       } else {
         toast.error('Error creating cart');
       }
@@ -274,16 +279,17 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       );
       if (response.status === 200) {
         // First set currentCart to null to avoid stale state
-        set({ currentCart: null });
-
+        set({ currentCart: null, currentCartData: [] });
         toast.success('Cart deleted successfully');
+
+        // Fetch latest carts
         await get().fetchCarts();
 
-        // After fetch completes, set first cart as current if any exist
-        const cartKeys = Object.keys(get().carts || {});
-        if (cartKeys.length > 0) {
-          get().setCurrentCart(cartKeys[0]);
-          get().getCartData(cartKeys[0]);
+        // After fetch completes, check if there are any carts
+        const remainingCarts = get().carts;
+        if (remainingCarts && remainingCarts.length > 0) {
+          // Set the first cart as current if any exist
+          get().setCurrentCart(remainingCarts[0]);
         }
       }
     } catch (error: any) {
@@ -294,7 +300,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   renameCart: async (cartData: any) => {
     try {
       const body = {
-        newName: cartData.name.trim()
+        cartName: cartData.name.trim()
       };
       const response = await axiosInstance.patch(
         `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartData.id}`,
