@@ -5,6 +5,7 @@ import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { BuylistSortOptions, FilterOption } from '@/types/query';
 import { Mode } from '@/types/buylists';
+import debounce from 'lodash/debounce';
 
 type BuyListState = {
   //Search State Variables & functions
@@ -44,6 +45,9 @@ type BuyListState = {
   renameCart: (cartData: any) => Promise<boolean>;
   getCheckoutData: (cartId: string) => Promise<void>;
   setSelectedStoreForReview: (storeName: string) => void;
+  pendingUpdates: { [key: string]: number };
+  debouncedUpdateCartItem: (card: any, quantity: number) => void;
+  updateCartItemOptimistic: (card: any, quantity: number) => void;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
@@ -64,6 +68,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   currentCartData: [],
   buylistCheckoutBreakdownData: null,
   selectedStoreForReview: null,
+
+  pendingUpdates: {},
 
   //////////////////////
   // Search Functions //
@@ -410,6 +416,104 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   setSelectedStoreForReview: (storeName: string) => {
     set({ selectedStoreForReview: storeName });
-  }
+  },
+
+  updateCartItemOptimistic: (card: any, quantity: number) => {
+    const { currentCartData } = get();
+
+    // Prevent negative quantities
+    if (quantity < 0) {
+      quantity = 0;
+    }
+
+    // Check for maximum quantity
+    if (quantity > 99) {
+      toast.error('Maximum quantity is 99');
+      return;
+    }
+
+    // Create a unique key for this card
+    const cardKey = `${card.card_name}-${card.condition_name}-${card.set_name}-${card.foil}-${card.rarity}`;
+
+    // Update pending updates
+    set((state) => ({
+      pendingUpdates: {
+        ...state.pendingUpdates,
+        [cardKey]: quantity
+      }
+    }));
+
+    // Optimistically update the UI
+    if (quantity === 0) {
+      const filteredItems = (currentCartData || []).filter(
+        (item: any) =>
+          !(
+            item.card_name === card.card_name &&
+            item.condition_name === card.condition_name &&
+            item.set_name === card.set_name &&
+            item.foil === card.foil &&
+            item.rarity === card.rarity &&
+            item.image === card.image
+          )
+      );
+      set({ currentCartData: filteredItems });
+    } else {
+      const existingItemIndex = (currentCartData || []).findIndex(
+        (item: any) =>
+          item.card_name === card.card_name &&
+          item.condition_name === card.condition_name &&
+          item.set_name === card.set_name &&
+          item.foil === card.foil &&
+          item.rarity === card.rarity
+      );
+
+      if (existingItemIndex === -1) {
+        // Card doesn't exist in cart yet, add it
+        set({
+          currentCartData: [...(currentCartData || []), { ...card, quantity }]
+        });
+      } else {
+        // Card exists, update its quantity
+        const updatedCartData = [...(currentCartData || [])];
+        updatedCartData[existingItemIndex] = {
+          ...updatedCartData[existingItemIndex],
+          quantity
+        };
+        set({ currentCartData: updatedCartData });
+      }
+    }
+
+    // Call the debounced update
+    get().debouncedUpdateCartItem(card, quantity);
+  },
+
+  debouncedUpdateCartItem: debounce(async (card: any, quantity: number) => {
+    const { currentCart, getCartData } = get();
+    if (!currentCart) return;
+
+    try {
+      const response = await axiosInstance.put(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCart.id}/cards`,
+        { ...card, quantity }
+      );
+
+      if (response.status === 200) {
+        // Remove from pending updates
+        const cardKey = `${card.card_name}-${card.condition_name}-${card.set_name}-${card.foil}-${card.rarity}`;
+        set((state) => {
+          const { [cardKey]: _, ...rest } = state.pendingUpdates;
+          return { pendingUpdates: rest };
+        });
+
+        // Fetch latest data from server
+        await getCartData(currentCart.id);
+      }
+    } catch (error: any) {
+      toast.error('Error updating cart item: ' + error.message);
+      console.error('Error updating cart item:', error);
+      // On error, refresh the cart to ensure consistency
+      await getCartData(currentCart.id);
+    }
+  }, 500) // 500ms debounce time
 }));
 export default useBuyListStore;

@@ -2,8 +2,11 @@ import useBuyListStore from '@/stores/buyListStore';
 import CardImage from '../ui/card-image';
 import { ScrollArea } from '../ui/scroll-area';
 import { MinusIcon, PlusIcon } from 'lucide-react';
+
 export default function SavedLists() {
-  const { updateCartItem, currentCart, currentCartData } = useBuyListStore();
+  const { updateCartItemOptimistic, currentCart, currentCartData } =
+    useBuyListStore();
+
   return (
     <>
       <div className="mb-8  mt-1 min-h-svh">
@@ -32,14 +35,14 @@ export default function SavedLists() {
                       </div>
                       <p
                         className="w-min cursor-pointer text-sm font-normal underline"
-                        onClick={() => updateCartItem(item, 0)}
+                        onClick={() => updateCartItemOptimistic(item, 0)}
                       >
                         Remove
                       </p>
                       <div className="grid h-9 w-28 grid-cols-3 items-center rounded-lg border px-2">
                         <button
                           onClick={() =>
-                            updateCartItem(item, item.quantity - 1)
+                            updateCartItemOptimistic(item, item.quantity - 1)
                           }
                           className="flex justify-center"
                         >
@@ -50,7 +53,7 @@ export default function SavedLists() {
 
                         <button
                           onClick={() =>
-                            updateCartItem(item, item.quantity + 1)
+                            updateCartItemOptimistic(item, item.quantity + 1)
                           }
                           className="flex justify-center"
                         >

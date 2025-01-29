@@ -69,7 +69,7 @@ export default function BuylistCatalog() {
                     className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 text-xs ${
                       index <= currentStep
                         ? 'border-blue-500 bg-blue-500 text-white'
-                        : 'border-gray-300 text-gray-300'
+                        : 'border-gray-500 text-gray-500'
                     } ${
                       index < currentStep
                         ? 'cursor-pointer'
@@ -86,7 +86,7 @@ export default function BuylistCatalog() {
                     )}
                   </button>
                   {index < steps.length - 1 && (
-                    <div className="relative mx-1 h-0.5 flex-grow bg-gray-300">
+                    <div className="relative mx-1 h-0.5 flex-grow bg-gray-500">
                       <div
                         className="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-500 ease-in-out"
                         style={{
