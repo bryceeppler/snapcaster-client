@@ -112,15 +112,15 @@ export default function BuylistCatalog() {
           </div>
         </div>
 
-        <div className="mt-4 mx-4">
+        <div className="mt-4">
         {currentStep === 0 ? (
           <SavedLists />
         ) : currentStep === 1 ? (
           <Search />
         ) : currentStep === 2 ? (
           <Checkout setCurrentStep={setCurrentStep} />
-        ) : (
-            currentStep === 3 && <Review />
+          ) : (
+            currentStep === 3 && <Review setCurrentStep={setCurrentStep} />
           )}
         </div>
       </div>

@@ -33,6 +33,7 @@ type BuyListState = {
   currentCart: any;
   currentCartData: any[];
   buylistCheckoutBreakdownData: any;
+  selectedStoreForReview: string | null;
   setMode: (mode: Mode) => void;
   fetchCarts: () => Promise<void>;
   getCartData: (cartId: string) => Promise<void>;
@@ -42,6 +43,7 @@ type BuyListState = {
   deleteCart: (cartId: number) => Promise<void>;
   renameCart: (cartData: any) => Promise<boolean>;
   getCheckoutData: (cartId: string) => Promise<void>;
+  setSelectedStoreForReview: (storeName: string) => void;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
@@ -61,6 +63,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   currentCart: null,
   currentCartData: [],
   buylistCheckoutBreakdownData: null,
+  selectedStoreForReview: null,
 
   //////////////////////
   // Search Functions //
@@ -404,6 +407,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       );
       console.error('Error fetching buylist checkout breakdown data:', error);
     }
+  },
+  setSelectedStoreForReview: (storeName: string) => {
+    set({ selectedStoreForReview: storeName });
   }
 }));
 export default useBuyListStore;

@@ -1,7 +1,7 @@
 import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/buyListStore';
 import { useTheme } from 'next-themes';
-import { AlertCircle, ArrowLeft, Circle, ExternalLink } from 'lucide-react';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,8 +11,6 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
 import type { FC } from 'react';
 import PurchasingCardDetails from './checkout/purchasing-card-details';
 import UnpurchasableCardDetails from './checkout/unpurchasable-card-details';
@@ -22,11 +20,13 @@ interface ReviewProps {
 }
 
 const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
-  const { buylistCheckoutBreakdownData } = useBuyListStore();
+  const { buylistCheckoutBreakdownData, selectedStoreForReview } = useBuyListStore();
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
 
-  const storeData = buylistCheckoutBreakdownData[1];
+  const storeData = buylistCheckoutBreakdownData?.find(
+    (store: any) => store.storeName === selectedStoreForReview
+  );
 
   if (!storeData) {
     return (
@@ -34,8 +34,18 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertTitle>Error</AlertTitle>
-          <AlertDescription>No store data found to review.</AlertDescription>
+          <AlertDescription>No store data found to review. Please select a store from the checkout page.</AlertDescription>
         </Alert>
+        <div className="mt-4">
+          <Button
+            variant="outline"
+            onClick={() => setCurrentStep(2)}
+            className="gap-2"
+          >
+            <ArrowLeft className="size-4" />
+            Back to Checkout
+          </Button>
+        </div>
       </div>
     );
   }
@@ -134,35 +144,32 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
             </div>
           )}
 
+          <Alert>
+            <AlertCircle className="size-4" />
+            <AlertTitle>Heads up!</AlertTitle>
+            <AlertDescription>You can submit a cash order OR a credit order. The prices listed here are not guaranteed by the store and are pending confirmation after submission. Once you submit your order, you will receive and email from {getWebsiteName(storeData.storeName)} with the final prices.</AlertDescription>
+          </Alert>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Order Totals */}
-          <Card className="bg-muted">
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Cash Total</p>
-                  <p className="text-2xl font-bold">
+          <Card className="bg-accent">
+            <CardContent className="pt-4 flex flex-col items-center">
+                  <span className="text-xs font-montserrat font-medium uppercase mb-1">Cash Total</span>
+                  <span className="text-2xl font-bold">
                     ${storeData.cashSubtotal}
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Store Credit Total</p>
-                  <p className="text-2xl font-bold">
-                    ${storeData.creditSubtotal}
-                  </p>
-                </div>
-              </div>
+                  </span>
+                <Button className="mt-4">Submit Cash Order</Button>
+        
             </CardContent>
           </Card>
-
-          {/* Submit Button */}
-          <div className="flex justify-end pt-4">
-            <Button
-              size="lg"
-              onClick={() => setCurrentStep(4)}
-              className="w-full md:w-auto"
-            >
-              Submit Order
-            </Button>
+          <Card className="bg-accent">
+            <CardContent className="pt-4 flex flex-col items-center">
+                  <span className="text-xs font-montserrat font-medium uppercase mb-1">Store Credit Total</span>
+                  <span className="text-2xl font-bold">
+                    ${storeData.creditSubtotal}
+                  </span>
+                <Button className="mt-4">Submit Credit Order</Button>
+            </CardContent>
+          </Card>
           </div>
         </CardContent>
       </Card>
