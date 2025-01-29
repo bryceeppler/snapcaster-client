@@ -1,7 +1,7 @@
 import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/buyListStore';
 import { useTheme } from 'next-themes';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,6 +12,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import type { FC } from 'react';
+import { useState } from 'react';
 import PurchasingCardDetails from './checkout/purchasing-card-details';
 import UnpurchasableCardDetails from './checkout/unpurchasable-card-details';
 
@@ -20,13 +21,60 @@ interface ReviewProps {
 }
 
 const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
-  const { buylistCheckoutBreakdownData, selectedStoreForReview } = useBuyListStore();
+  const { buylistCheckoutBreakdownData, selectedStoreForReview, submitBuylist } = useBuyListStore();
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionResult, setSubmissionResult] = useState<{
+    success: boolean;
+    message: string;
+  }>({
+    success: false,
+    message: '',
+  });
 
   const storeData = buylistCheckoutBreakdownData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
+
+  const handleSubmit = async (paymentType: 'Cash' | 'Credit') => {
+    setIsSubmitting(true);
+    const result = await submitBuylist(paymentType);
+    setIsSubmitting(false);
+    if (result.success) {
+      setSubmissionResult({
+        success: true,
+        message: result.message,
+      });
+    }
+  };
+
+  if (submissionResult.success) {
+    return (
+      <div className="container max-w-4xl py-12">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <CheckCircle2 className="size-12 text-green-500" />
+              <h2 className="text-2xl font-bold">Order Submitted Successfully!</h2>
+            
+                <p className="text-muted-foreground">
+                  Your order has been submitted to {getWebsiteName(selectedStoreForReview || '')}. 
+                  You will receive an email confirmation shortly with payment instructions.
+                </p>
+             
+              <Button 
+                onClick={() => setCurrentStep(0)} 
+                className="mt-4"
+              >
+                Return to Buylists
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (!storeData) {
     return (
@@ -56,6 +104,17 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
 
   return (
     <div className="container max-w-4xl space-y-6 py-6">
+      {/* Header Section */}
+      <div className="flex items-center justify-between">
+        <Button
+          variant="ghost"
+          className="gap-2"
+          onClick={() => setCurrentStep(2)}
+        >
+          <ArrowLeft className="size-4" /> Back
+        </Button>
+      </div>
+
       {/* Order Summary Card */}
       <Card>
         <CardHeader>
@@ -149,27 +208,39 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
             <AlertTitle>Heads up!</AlertTitle>
             <AlertDescription>You can submit a cash order OR a credit order. The prices listed here are not guaranteed by the store and are pending confirmation after submission. Once you submit your order, you will receive and email from {getWebsiteName(storeData.storeName)} with the final prices.</AlertDescription>
           </Alert>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Order Totals */}
-          <Card className="bg-accent">
-            <CardContent className="pt-4 flex flex-col items-center">
-                  <span className="text-xs font-montserrat font-medium uppercase mb-1">Cash Total</span>
-                  <span className="text-2xl font-bold">
-                    ${storeData.cashSubtotal}
-                  </span>
-                <Button className="mt-4">Submit Cash Order</Button>
-        
-            </CardContent>
-          </Card>
-          <Card className="bg-accent">
-            <CardContent className="pt-4 flex flex-col items-center">
-                  <span className="text-xs font-montserrat font-medium uppercase mb-1">Store Credit Total</span>
-                  <span className="text-2xl font-bold">
-                    ${storeData.creditSubtotal}
-                  </span>
-                <Button className="mt-4">Submit Credit Order</Button>
-            </CardContent>
-          </Card>
+            {/* Order Totals */}
+            <Card className="bg-accent">
+              <CardContent className="pt-4 flex flex-col items-center">
+                <span className="text-xs font-montserrat font-medium uppercase mb-1">Cash Total</span>
+                <span className="text-2xl font-bold">
+                  ${storeData.cashSubtotal}
+                </span>
+                <Button 
+                  className="mt-4 w-full" 
+                  onClick={() => handleSubmit('Cash')}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Cash Order'}
+                </Button>
+              </CardContent>
+            </Card>
+            <Card className="bg-accent">
+              <CardContent className="pt-4 flex flex-col items-center">
+                <span className="text-xs font-montserrat font-medium uppercase mb-1">Store Credit Total</span>
+                <span className="text-2xl font-bold">
+                  ${storeData.creditSubtotal}
+                </span>
+                <Button 
+                  className="mt-4 w-full" 
+                  onClick={() => handleSubmit('Credit')}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Credit Order'}
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </CardContent>
       </Card>
