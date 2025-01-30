@@ -202,6 +202,7 @@ export default function NavSearchBar({
               <SelectItem value="onepiece">One Piece</SelectItem>
               <SelectItem value="pokemon">Pokemon</SelectItem>
               <SelectItem value="yugioh">Yu-Gi-Oh</SelectItem>
+              <SelectItem value="starwars">Star Wars</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

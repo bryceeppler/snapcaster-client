@@ -7,9 +7,10 @@ import SavedLists from './saved-lists';
 import Search from './search';
 import Checkout from './checkout/checkout';
 import Review from './review';
+import { toast } from 'sonner';
 
 const steps = [
-  { label: 'Saved Lists', mode: 'cart' },
+  { label: 'Manage', mode: 'cart' },
   { label: 'Add Cards to Your Buylist', mode: 'search' },
   { label: 'Submit Buylist', mode: 'checkout' },
   { label: 'Review', mode: 'review' }
@@ -21,6 +22,11 @@ export default function BuylistCatalog() {
   const [animateToStep, setAnimateToStep] = useState(0);
 
   const goToStep = (step: number) => {
+    if (step > 0 && !currentCart) {
+      toast.error('Please select or create a cart first');
+      return;
+    }
+
     if (step >= 0 && step < steps.length) {
       setCurrentStep(step);
     }
@@ -30,14 +36,18 @@ export default function BuylistCatalog() {
     setMode(
       steps[currentStep].mode as 'cart' | 'search' | 'checkout' | 'review'
     );
-    if (currentStep === 2 || currentStep === 3) {
+    if (currentStep > 0 && !currentCart) {
+      setCurrentStep(0);
+      return;
+    }
+    if (currentStep > 1 && currentCart) {
       getCheckoutData(currentCart.id);
     }
     const timer = setTimeout(() => {
       setAnimateToStep(currentStep);
     }, 50);
     return () => clearTimeout(timer);
-  }, [currentStep]);
+  }, [currentStep, currentCart]);
 
   return (
     <>
@@ -73,11 +83,13 @@ export default function BuylistCatalog() {
                     } ${
                       index < currentStep
                         ? 'cursor-pointer'
-                        : index > currentStep
+                        : index > currentStep || (index > 0 && !currentCart)
                         ? 'cursor-not-allowed'
                         : ''
                     }`}
-                    disabled={index > currentStep}
+                    disabled={
+                      index > currentStep || (index > 0 && !currentCart)
+                    }
                   >
                     {index < currentStep ? (
                       <Check className="h-3 w-3" />
@@ -113,12 +125,12 @@ export default function BuylistCatalog() {
         </div>
 
         <div className="mt-4">
-        {currentStep === 0 ? (
-          <SavedLists />
-        ) : currentStep === 1 ? (
-          <Search />
-        ) : currentStep === 2 ? (
-          <Checkout setCurrentStep={setCurrentStep} />
+          {currentStep === 0 ? (
+            <SavedLists />
+          ) : currentStep === 1 ? (
+            <Search />
+          ) : currentStep === 2 ? (
+            <Checkout setCurrentStep={setCurrentStep} />
           ) : (
             currentStep === 3 && <Review setCurrentStep={setCurrentStep} />
           )}
