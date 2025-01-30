@@ -67,7 +67,7 @@ export default function Search() {
           </div>
         </div>
         <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-[240px_1fr]">
-          <aside className="hidden md:block">
+          {/* <aside className="hidden md:block">
             <div className="sticky top-[227px]">
               {searchResults && (
                 <div className="rounded-lg bg-popover px-3 pb-2 shadow-md">
@@ -84,7 +84,7 @@ export default function Search() {
                 </div>
               )}
             </div>
-          </aside>
+          </aside> */}
 
           <div className="grid h-min auto-rows-auto grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-3 xxl:grid-cols-4">
             {searchResults?.map((item, index) => (
