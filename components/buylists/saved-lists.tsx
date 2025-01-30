@@ -2,8 +2,7 @@ import { useState } from 'react';
 import useBuyListStore from '@/stores/buyListStore';
 import { useUserCarts } from '@/hooks/useUserCarts';
 import { PlusIcon, SquarePen, Trash } from 'lucide-react';
-import { useDebounceCallback } from 'usehooks-ts';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import {
@@ -28,12 +27,7 @@ export default function SavedLists({
 }: {
   setCurrentStep: (step: number) => void;
 }) {
-  const {
-    updateCartItemPending,
-    updateCartItemAPI,
-    currentCart,
-    setCurrentCart
-  } = useBuyListStore();
+  const { currentCartId, setCurrentCartId } = useBuyListStore();
 
   const {
     carts,
@@ -46,14 +40,9 @@ export default function SavedLists({
     isRenaming
   } = useUserCarts();
 
-  const [activeDialogId, setActiveDialogId] = useState<string | null>(null);
+  const [activeDialogId, setActiveDialogId] = useState<number | null>(null);
   const [newCartName, setNewCartName] = useState('');
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const debouncedApiCall = useDebounceCallback(updateCartItemAPI, 500);
-  const handleUpdateQuantity = (card: any, quantity: number) => {
-    updateCartItemPending(card, quantity);
-    debouncedApiCall(card, quantity);
-  };
   const [cartToDelete, setCartToDelete] = useState<any>(null);
 
   if (isLoading) {
@@ -103,7 +92,7 @@ export default function SavedLists({
                   <div
                     className="flex cursor-pointer flex-row items-center justify-between border-b p-3 transition-all duration-300 hover:bg-background/30"
                     onClick={() => {
-                      setCurrentCart(cart);
+                      setCurrentCartId(cart.id);
                       setCurrentStep(1);
                     }}
                   >
@@ -114,7 +103,7 @@ export default function SavedLists({
                         className="h-6 w-6 p-0"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setCurrentCart(cart);
+                          setCurrentCartId(cart.id);
                           setActiveDialogId(cart.id);
                         }}
                       >
@@ -151,7 +140,11 @@ export default function SavedLists({
                           disabled={!cart.items?.length}
                         >
                           <span className="text-sm text-popover-foreground transition-colors group-hover:text-primary">
-                            {cart.items?.length || 0} items
+                            {cart.items?.reduce(
+                              (acc, item) => acc + item.quantity,
+                              0
+                            ) || 0}{' '}
+                            items
                           </span>
                           {cart.items?.length > 0 && (
                             <span className="text-xs text-popover-foreground transition-colors group-hover:text-primary/50">
@@ -193,125 +186,103 @@ export default function SavedLists({
             </div>
           </div>
         )}
+      </div>
 
-        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-          <DialogContent className="max-w-sm md:max-w-lg">
-            <DialogHeader>
-              <DialogTitle>Create New Cart</DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col gap-4">
-              <Input
-                placeholder="Cart name"
-                value={newCartName}
-                onChange={(e) => setNewCartName(e.target.value)}
-              />
-              <Button
-                onClick={async () => {
-                  if (newCartName) {
-                    createCart(newCartName);
-                    setNewCartName('');
-                    setCreateDialogOpen(false);
-                  }
-                }}
-                disabled={isCreating || !newCartName}
-              >
-                {isCreating ? 'Creating...' : 'Create'}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        <AlertDialog
-          open={!!cartToDelete}
-          onOpenChange={(open) => !open && setCartToDelete(null)}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently delete the list "{cartToDelete?.name}" and
-                all its contents. This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={async () => {
-                  if (cartToDelete) {
-                    await deleteCart(cartToDelete.id);
-                    setCartToDelete(null);
-                    if (currentCart?.id === cartToDelete.id) {
-                      setCurrentCart(null);
-                    }
-                  }
-                }}
-                disabled={isDeleting}
-              >
-                {isDeleting ? 'Deleting...' : 'Delete List'}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        <Dialog
-          open={currentCart ? activeDialogId === currentCart.id : false}
-          onOpenChange={(open) => {
-            if (open && currentCart) {
-              setActiveDialogId(currentCart.id);
-              setNewCartName(currentCart.name);
-            } else {
-              setActiveDialogId(null);
-              setNewCartName('');
-            }
-          }}
-        >
-          <DialogContent className="max-w-sm md:max-w-lg">
-            <DialogHeader>
-              <DialogTitle className="text-center">
-                {currentCart?.name}
-              </DialogTitle>
-            </DialogHeader>
+      {/* Create Cart Dialog */}
+      <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Buylist</DialogTitle>
+            <DialogDescription>
+              Enter a name for your new buylist.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4">
             <Input
-              placeholder="New Cart Name"
+              placeholder="Enter buylist name"
               value={newCartName}
               onChange={(e) => setNewCartName(e.target.value)}
             />
-            <div className="mt-2 flex justify-between gap-2">
-              <Button
-                disabled={
-                  !newCartName ||
-                  newCartName === currentCart?.name ||
-                  isRenaming
-                }
-                onClick={async () => {
-                  if (newCartName && currentCart) {
-                    console.log(currentCart);
-                    console.log(newCartName);
-                    await renameCart({
-                      id: currentCart.id,
-                      name: newCartName,
-                      items: currentCart.items
-                    });
-                    setNewCartName('');
-                    setActiveDialogId(null);
-                  }
-                }}
-              >
-                {isRenaming ? 'Renaming...' : 'Rename Cart'}
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => {
-                  setCartToDelete(currentCart);
+            <Button
+              onClick={() => {
+                createCart(newCartName);
+                setCreateDialogOpen(false);
+                setNewCartName('');
+              }}
+              disabled={isCreating || !newCartName.trim()}
+            >
+              {isCreating ? 'Creating...' : 'Create'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rename Cart Dialog */}
+      <Dialog
+        open={!!activeDialogId}
+        onOpenChange={(open) => !open && setActiveDialogId(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rename Buylist</DialogTitle>
+            <DialogDescription>
+              Enter a new name for your buylist.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4">
+            <Input
+              placeholder="Enter new buylist name"
+              value={newCartName}
+              onChange={(e) => setNewCartName(e.target.value)}
+            />
+            <Button
+              onClick={() => {
+                if (activeDialogId) {
+                  renameCart({ id: activeDialogId, name: newCartName, items: [] });
                   setActiveDialogId(null);
-                }}
-              >
-                Delete Cart
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+                  setNewCartName('');
+                }
+              }}
+              disabled={isRenaming || !newCartName.trim()}
+            >
+              {isRenaming ? 'Renaming...' : 'Rename'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Cart Dialog */}
+      <AlertDialog
+        open={!!cartToDelete}
+        onOpenChange={(open) => !open && setCartToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete your buylist "{cartToDelete?.name}".
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (cartToDelete) {
+                  deleteCart(cartToDelete.id);
+                  if (currentCartId === cartToDelete.id) {
+                    setCurrentCartId(null);
+                  }
+                  setCartToDelete(null);
+                }
+              }}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

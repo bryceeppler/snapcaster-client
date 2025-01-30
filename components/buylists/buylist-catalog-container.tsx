@@ -17,12 +17,12 @@ const steps = [
 ];
 
 export default function BuylistCatalog() {
-  const { currentCart, setMode, getCheckoutData } = useBuyListStore();
+  const { currentCartId, setMode, getCheckoutData } = useBuyListStore();
   const [currentStep, setCurrentStep] = useState(0);
   const [animateToStep, setAnimateToStep] = useState(0);
 
   const goToStep = (step: number) => {
-    if (step > 0 && !currentCart) {
+    if (step > 0 && !currentCartId) {
       toast.error('Please select or create a cart first');
       return;
     }
@@ -36,18 +36,18 @@ export default function BuylistCatalog() {
     setMode(
       steps[currentStep].mode as 'cart' | 'search' | 'checkout' | 'review'
     );
-    if (currentStep > 0 && !currentCart) {
+    if (currentStep > 0 && !currentCartId) {
       setCurrentStep(0);
       return;
     }
-    if (currentStep > 1 && currentCart) {
-      getCheckoutData(currentCart.id);
+    if (currentStep > 1 && currentCartId) {
+      getCheckoutData(currentCartId);
     }
     const timer = setTimeout(() => {
       setAnimateToStep(currentStep);
     }, 50);
     return () => clearTimeout(timer);
-  }, [currentStep, currentCart]);
+  }, [currentStep, currentCartId]);
 
   return (
     <>
@@ -56,6 +56,7 @@ export default function BuylistCatalog() {
           <h1 className="text-center font-bold">
             {currentStep + 1}. {steps[currentStep].label}
           </h1>
+          {/* 1234 navigation */}
           <div className="flex items-center justify-between">
             <Button
               onClick={() => goToStep(currentStep - 1)}
@@ -83,12 +84,12 @@ export default function BuylistCatalog() {
                     } ${
                       index < currentStep
                         ? 'cursor-pointer'
-                        : index > currentStep || (index > 0 && !currentCart)
+                        : index > currentStep || (index > 0 && !currentCartId)
                         ? 'cursor-not-allowed'
                         : ''
                     }`}
                     disabled={
-                      index > currentStep || (index > 0 && !currentCart)
+                      index > currentStep || (index > 0 && !currentCartId)
                     }
                   >
                     {index < currentStep ? (
@@ -128,7 +129,7 @@ export default function BuylistCatalog() {
           {currentStep === 0 ? (
             <SavedLists setCurrentStep={setCurrentStep} />
           ) : currentStep === 1 ? (
-            <Search />
+            <Search setCurrentStep={setCurrentStep} />
           ) : currentStep === 2 ? (
             <Checkout setCurrentStep={setCurrentStep} />
           ) : (

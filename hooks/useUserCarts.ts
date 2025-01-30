@@ -36,11 +36,18 @@ export function useUserCarts() {
         `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`,
         { cartName }
       );
-      return response.data.carts[0];
+      if (response.status !== 201) {
+        throw new Error('Failed to create cart');
+      }
+      return response.data;
     },
-    onSuccess: () => {
-      toast.success('Cart created successfully');
-      queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success(data.message);
+        queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
+      } else {
+        toast.error('Failed to create cart');
+      }
     },
     onError: (error: any) => {
       toast.error('Error creating cart: ' + error.message);
@@ -75,7 +82,7 @@ export function useUserCarts() {
       queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
     },
     onError: (error: any) => {
-      toast.error('Error renaming cart: ' + error.message);
+      toast.error('Error renaming cart: ' + error.response.data.message);
     }
   });
 
