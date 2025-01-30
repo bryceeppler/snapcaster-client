@@ -4,11 +4,10 @@ import { Button } from '../ui/button';
 import React, { memo } from 'react';
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '../ui/input';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import useBuyListStore from '@/stores/buyListStore';
-import { useDebounceCallback } from 'usehooks-ts';
+import { useCartItems } from '@/hooks/useCartItems';
 
 type Props = { cardData: any };
 const conditions = [
@@ -19,13 +18,13 @@ const conditions = [
   'Damaged'
 ];
 const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
-  const { updateCartItemPending, updateCartItemAPI, currentCartData } =
-    useBuyListStore();
-  const debouncedApiCall = useDebounceCallback(updateCartItemAPI, 500);
+  const { currentCart } = useBuyListStore();
+  const { cartItems, updateCartItem } = useCartItems(currentCart?.id);
+
   const getQuantityForCondition = (conditionName: string) => {
-    if (!currentCartData) return 0;
+    if (!cartItems) return 0;
     return (
-      currentCartData.find(
+      cartItems.find(
         (item) =>
           item.card_name === cardData.name &&
           item.set_name === cardData.set &&
@@ -37,10 +36,12 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
   };
 
   const handleUpdateQuantity = (conditionName: string, delta: number) => {
+    if (!currentCart?.id) return;
+    
     const currentQuantity = getQuantityForCondition(conditionName);
     const newQuantity = currentQuantity + delta;
 
-    const cartItem: any = {
+    const cartItem = {
       base_card_id: cardData.baseCardId,
       card_name: cardData.name,
       set_name: cardData.set,
@@ -48,12 +49,14 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
       rarity: cardData.rarity,
       condition_name: conditionName,
       foil: cardData.foil,
-      image: cardData.image,
-      quantity: newQuantity
+      image: cardData.image
     };
 
-    updateCartItemPending(cartItem, newQuantity);
-    debouncedApiCall(cartItem, newQuantity);
+    updateCartItem({
+      cartId: currentCart.id,
+      item: cartItem,
+      quantity: newQuantity
+    });
   };
 
   return (

@@ -1,7 +1,6 @@
 import useBuyListStore from '@/stores/buyListStore';
 import FilterSection from '@/components/search-ui/search-filter-container';
 import BuyListCatalogItem from '@/components/buylists/buylist-catalog-item';
-import SearchBar from '../search-ui/search-bar';
 import NavSearchBar from '../search-ui/nav-search-bar';
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';

@@ -51,25 +51,17 @@ type BuyListState = {
   applyFilters: () => Promise<void>;
   clearSearchResults: () => void;
 
-  //Cart State Variables & Functions
+  //Cart State Variables
   mode: Mode;
-  carts: IBuylistCart[];
-  currentCart: any;
-  currentCartData: any[];
+  currentCart: IBuylistCart | null;
+  currentCartData: IBuylistCartItem[];
   buylistCheckoutBreakdownData: any;
   selectedStoreForReview: string | null;
   setMode: (mode: Mode) => void;
-  fetchCarts: () => Promise<void>;
-  getCartData: (cartId: string) => Promise<void>;
   setCurrentCart: (cart: IBuylistCart | null) => void;
-  createCart: (cartName: string) => Promise<void>;
-  deleteCart: (cartId: number) => Promise<void>;
-  renameCart: (cartData: any) => Promise<boolean>;
   getCheckoutData: (cartId: string) => Promise<void>;
   setSelectedStoreForReview: (storeName: string) => void;
-  submitBuylist: (
-    paymentType: 'Cash' | 'Credit'
-  ) => Promise<SubmitBuylistResponse>;
+  submitBuylist: (paymentType: 'Cash' | 'Credit') => Promise<SubmitBuylistResponse>;
   pendingUpdates: { [key: string]: number };
   updateCartItemPending: (card: any, quantity: number) => void;
   updateCartItemAPI: (card: any, quantity: number) => Promise<void>;
@@ -88,12 +80,10 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
   //Cart State Variables
   mode: 'cart',
-  carts: [],
   currentCart: null,
   currentCartData: [],
   buylistCheckoutBreakdownData: null,
   selectedStoreForReview: null,
-
   pendingUpdates: {},
 
   //////////////////////
@@ -240,26 +230,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     set({ mode });
   },
 
-  fetchCarts: async () => {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`
-      );
-      if (response.status === 200) {
-        set({ carts: response.data.carts });
-        if (
-          get().currentCart === null &&
-          Object.keys(response.data.carts).length > 0
-        ) {
-          get().setCurrentCart(response.data.carts[0]);
-          get().getCartData(response.data.carts[0].id);
-        }
-      }
-    } catch (error: any) {
-      toast.error('Error fetching carts: ' + error.message);
-      console.error('Error fetching carts:', error);
-    }
-  },
   setCurrentCart: (cart: IBuylistCart | null) => {
     if (!cart) {
       set({ currentCart: null });
@@ -270,99 +240,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         ...cart
       }
     });
-    if (cart.id) {
-      get().getCartData(cart.id);
-    }
-  },
-  createCart: async (cartName: string) => {
-    try {
-      const body = {
-        cartName: cartName
-      };
-      const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`,
-        body
-      );
-      if (response.status === 201) {
-        toast.success('Cart created successfully');
-        await get().fetchCarts();
-        // Find the newly created cart and set it as current
-        const newCart = get().carts.find((cart: any) => cart.name === cartName);
-        if (newCart) {
-          get().setCurrentCart(newCart);
-        }
-      } else {
-        toast.error('Error creating cart');
-      }
-    } catch (error: any) {
-      toast.error('Error creating cart: ' + error.message);
-      console.error('Error creating cart:', error);
-    }
-  },
-  deleteCart: async (cartId: number) => {
-    try {
-      const response = await axiosInstance.delete(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}`
-      );
-      if (response.status === 200) {
-        // First set currentCart to null to avoid stale state
-        set({ currentCart: null, currentCartData: [] });
-        toast.success('Cart deleted successfully');
-
-        // Fetch latest carts
-        await get().fetchCarts();
-
-        // After fetch completes, check if there are any carts
-        const remainingCarts = get().carts;
-        if (remainingCarts && remainingCarts.length > 0) {
-          // Set the first cart as current if any exist
-          get().setCurrentCart(remainingCarts[0]);
-        }
-      }
-    } catch (error: any) {
-      toast.error('Error deleting cart: ' + error.message);
-      console.error('Error deleting cart:', error);
-    }
-  },
-  renameCart: async (cartData: any) => {
-    try {
-      const body = {
-        cartName: cartData.name.trim()
-      };
-      const response = await axiosInstance.patch(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartData.id}`,
-        body
-      );
-      if (response.status === 200) {
-        toast.success('Cart renamed successfully');
-        await get().fetchCarts();
-        const updatedCart = Object.values(get().carts).find(
-          (cart: any) => cart.id === cartData.id
-        );
-        if (updatedCart) {
-          get().setCurrentCart(updatedCart);
-        }
-        return true;
-      }
-      return false;
-    } catch (error: any) {
-      toast.error('Error renaming cart: ' + error.message);
-      console.error('Error renaming cart:', error);
-      return false;
-    }
-  },
-  getCartData: async (cartId: string) => {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/cards`
-      );
-      if (response.status === 200) {
-        set({ currentCartData: response.data.items });
-      }
-    } catch (error: any) {
-      toast.error('Error fetching cart data: ' + error.message);
-      console.error('Error fetching cart data:', error);
-    }
   },
   getCheckoutData: async (cartId: string) => {
     try {
