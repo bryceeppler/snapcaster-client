@@ -120,6 +120,7 @@ export default function NavSearchBar({
     fetchQuery();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [fetchQuery, searchTerm, tcg]);
 
   const handleKeyDown = useCallback(
