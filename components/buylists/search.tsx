@@ -10,6 +10,7 @@ import BuylistCartSheet from './buylist-cart-sheet';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 import { IBuylistCart, IBuylistCartItem } from '@/stores/buyListStore';
+import { SlidersHorizontal } from 'lucide-react';
 
 const CART_KEY = (cartId: number) => ['cart', cartId] as const;
 
@@ -73,13 +74,14 @@ export default function Search({ setCurrentStep }: Props) {
               clearFilters={clearFilters}
             />
           </div>
-          <div className="flex flex-col items-center justify-center rounded-lg bg-popover px-4 pt-2">
-            <div className="w-full flex flex-row items-center justify-between">
+          <div className="flex flex-col items-center justify-center rounded-lg max-w-2xl mx-auto px-4 pt-2">
+            <div className="w-full flex flex-row items-center justify-between gap-4">
               <Sheet>
                 <SheetTitle hidden>Filters</SheetTitle>
                 <SheetDescription hidden>Filter your search results</SheetDescription>
                 <SheetTrigger asChild>
-                  <Button>
+                  <Button variant="outline" size="sm" className="h-9 gap-2 text-sm font-medium">
+                    <SlidersHorizontal className="h-4 w-4" />
                     Filters
                   </Button>
                 </SheetTrigger>
@@ -100,10 +102,10 @@ export default function Search({ setCurrentStep }: Props) {
                 <SheetTitle hidden>Cart</SheetTitle>
                 <SheetDescription hidden>View your cart</SheetDescription>
                 <SheetTrigger asChild>
-                  <Button className="relative">
-                    <ShoppingCartIcon />
+                  <Button variant="outline" size="sm" className="h-9 relative">
+                    <ShoppingCartIcon className="h-4 w-4" />
                     {cartItemCount > 0 && (
-                      <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                      <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
                         {cartItemCount}
                       </span>
                     )}

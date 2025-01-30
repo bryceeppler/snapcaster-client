@@ -54,6 +54,7 @@ export default function BuylistCatalog() {
             {currentStep + 1}. {steps[currentStep].label}
           </h1>
           {/* 1234 navigation */}
+          <div className="max-w-lg mx-auto w-full">
           <div className="flex items-center justify-between">
             <Button
               onClick={() => goToStep(currentStep - 1)}
@@ -74,7 +75,7 @@ export default function BuylistCatalog() {
                 >
                   <button
                     onClick={() => goToStep(index)}
-                    className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 text-xs ${
+                    className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border-2 text-xs font-montserrat font-medium transition-colors ${
                       index <= currentStep
                         ? 'border-blue-500 bg-blue-500 text-white'
                         : 'border-gray-500 text-gray-500'
@@ -119,6 +120,7 @@ export default function BuylistCatalog() {
               <ChevronRight className="h-4 w-4" />
               <span className="sr-only">Next</span>
             </Button>
+          </div>
           </div>
         </div>
 
