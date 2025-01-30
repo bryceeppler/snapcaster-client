@@ -55,7 +55,7 @@ export default function SingleCatalog() {
         const selector = new AdSelector(ads, storeWeights);
         setInitialAd(selector.getNextAd());
 
-        const adCount = Math.floor(searchResults.length / 7);
+        const adCount = Math.floor(searchResults.length / 11);
         const selectedAds = [];
         for (let i = 0; i < adCount; i++) {
           selectedAds.push(selector.getNextAd());
@@ -156,11 +156,11 @@ export default function SingleCatalog() {
                 <React.Fragment key={index}>
                   <SingleCatalogItem product={item} />
                   {!hasActiveSubscription &&
-                    (index + 1) % 6 === 0 &&
-                    ads[Math.floor(index / 6)] && (
+                    (index + 1) % 10 === 0 &&
+                    ads[Math.floor(index / 10)] && (
                       <AdComponent
-                        ad={ads[Math.floor(index / 6)]}
-                        key={`feed-${ads[Math.floor(index / 6)].id}`}
+                        ad={ads[Math.floor(index / 10)]}
+                        key={`feed-${ads[Math.floor(index / 10)].id}`}
                       />
                     )}
                 </React.Fragment>
