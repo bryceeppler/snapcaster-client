@@ -26,7 +26,7 @@ type Props = {
 };
 
 export default function Checkout({ setCurrentStep }: Props) {
-  const { buylistCheckoutBreakdownData, setSelectedStoreForReview } = useBuyListStore();
+  const { buylistCheckoutBreakdownData, setSelectedStoreForReview, currentCartData } = useBuyListStore();
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
   const { data: connectedVendors, isLoading: isLoadingConnections } = useConnectedVendors();
@@ -42,6 +42,14 @@ export default function Checkout({ setCurrentStep }: Props) {
   return (
     <>
       <div className="py-6 container space-y-2 max-w-4xl">
+        {buylistCheckoutBreakdownData.length === 0 && currentCartData.length > 0 && <div className="flex flex-col items-center justify-center">
+          <span className="text-sm text-muted-foreground">No stores are buying the following cards:</span>
+          {currentCartData.map((item: any, index: number) => (
+            <span key={index} className="text-sm text-muted-foreground">{item.cardName} - {item.condition}</span>
+          ))}
+        </div>}
+        {buylistCheckoutBreakdownData.length === 0 && currentCartData.length === 0 && <span className="text-sm text-muted-foreground">No cards found in your cart</span>}
+
         {buylistCheckoutBreakdownData &&
           buylistCheckoutBreakdownData.map((storeData: any, index: number) => {
             const isConnected = isVendorConnected(storeData.storeName);

@@ -10,7 +10,7 @@ import Review from './review';
 import { toast } from 'sonner';
 
 const steps = [
-  { label: 'Manage', mode: 'cart' },
+  { label: 'My Lists', mode: 'cart' },
   { label: 'Add Cards to Your Buylist', mode: 'search' },
   { label: 'Submit Buylist', mode: 'checkout' },
   { label: 'Review', mode: 'review' }
@@ -126,7 +126,7 @@ export default function BuylistCatalog() {
 
         <div className="mt-4">
           {currentStep === 0 ? (
-            <SavedLists />
+            <SavedLists setCurrentStep={setCurrentStep} />
           ) : currentStep === 1 ? (
             <Search />
           ) : currentStep === 2 ? (

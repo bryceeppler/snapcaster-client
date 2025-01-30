@@ -11,6 +11,25 @@ type SubmitBuylistResponse = {
   message: string;
 };
 
+export interface IBuylistCartItem {
+  buylist_cart_id: string;
+  base_card_id: string;
+  card_name: string;
+  set_name: string;
+  game: string;
+  rarity: string;
+  condition_name: string;
+  foil: string;
+  quantity: number;
+  image: string;
+}
+
+export interface IBuylistCart {
+  id: string;
+  name: string;
+  items: IBuylistCartItem[];
+}
+
 type BuyListState = {
   //Search State Variables & functions
   searchResults: BuyListQueryCard[] | null;
@@ -34,7 +53,7 @@ type BuyListState = {
 
   //Cart State Variables & Functions
   mode: Mode;
-  carts: any[];
+  carts: IBuylistCart[];
   currentCart: any;
   currentCartData: any[];
   buylistCheckoutBreakdownData: any;
@@ -42,7 +61,7 @@ type BuyListState = {
   setMode: (mode: Mode) => void;
   fetchCarts: () => Promise<void>;
   getCartData: (cartId: string) => Promise<void>;
-  setCurrentCart: (cartName: string | null) => void;
+  setCurrentCart: (cart: IBuylistCart | null) => void;
   createCart: (cartName: string) => Promise<void>;
   deleteCart: (cartId: number) => Promise<void>;
   renameCart: (cartData: any) => Promise<boolean>;
@@ -241,18 +260,18 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       console.error('Error fetching carts:', error);
     }
   },
-  setCurrentCart: (cartData: any) => {
-    if (!cartData) {
+  setCurrentCart: (cart: IBuylistCart | null) => {
+    if (!cart) {
       set({ currentCart: null });
       return;
     }
     set({
       currentCart: {
-        ...cartData
+        ...cart
       }
     });
-    if (cartData.id) {
-      get().getCartData(cartData.id);
+    if (cart.id) {
+      get().getCartData(cart.id);
     }
   },
   createCart: async (cartName: string) => {
