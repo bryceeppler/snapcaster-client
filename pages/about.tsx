@@ -5,10 +5,25 @@ import PageTitle from '@/components/ui/page-title';
 import { trackAdClick } from '@/utils/analytics';
 import useGlobalStore from '@/stores/globalStore';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
 type Props = {};
 
 const About: NextPage<Props> = () => {
   const { websites } = useGlobalStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if there's a hash in the URL
+    if (router.asPath.includes('#vendors')) {
+      const element = document.getElementById('vendors');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [router.asPath]);
+
   return (
     <>
       <AboutHead />
@@ -174,7 +189,7 @@ const About: NextPage<Props> = () => {
                 </div>
               </div> */}
          
-              <div>
+              <div  id="vendors" className="scroll-mt-32">
                 <h3 className="mb-6 text-2xl font-bold">We support {websites.length} stores across Canada!</h3>
                 <p className="text-left">
                   {' '}
