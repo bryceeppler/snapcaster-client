@@ -62,16 +62,16 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="h-full py-4">
       <div className="flex items-center justify-between">
-        <h4 className="text-lg font-medium">{currentCart.cart.name}</h4>
+        <h4 className="text-sm font-medium leading-none">{currentCart.cart.name}</h4>
       </div>
       <Separator className="my-4" />
-      <ScrollArea className="flex-1">
+      <ScrollArea className="h-[calc(100vh-200px)]">
         <div className="space-y-6">
           {Object.entries(itemsByStore).map(([storeName, items]) => (
             <div key={storeName} className="space-y-4">
-              <h3 className="font-semibold">{storeName}</h3>
+              <h4 className="text-sm font-medium leading-none">{storeName}</h4>
               {items.map((item: IBuylistCartItem) => (
                 <div
                   key={item.id}
@@ -79,9 +79,9 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
                 >
                   <div className="flex justify-between">
                     <div>
-                      <p className="font-medium">{item.card_name}</p>
+                      <p className="text-sm font-medium">{item.card_name}</p>
                       <div className="flex flex-wrap gap-1 items-center">
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           {item.set_name}
                         </p>
                         <Badge variant="outline" className="text-xs">
@@ -125,7 +125,7 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
                       >
                         <Minus className="h-4 w-4" />
                       </Button>
-                      <span>{item.quantity}</span>
+                      <span className="text-sm">{item.quantity}</span>
                       <Button
                         variant="outline"
                         size="icon"
@@ -141,7 +141,7 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="font-medium">Qty: {item.quantity}</p>
+                    <p className="text-sm font-medium">Qty: {item.quantity}</p>
                   </div>
                 </div>
               ))}
@@ -150,12 +150,12 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
           ))}
         </div>
       </ScrollArea>
-      <div className="mt-auto space-y-4 pt-6">
+      <div className="mt-4 space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-lg font-medium">Total Items</span>
-          <span className="text-lg font-medium">{calculateTotal()}</span>
+          <span className="text-sm font-medium">Total Items</span>
+          <span className="text-sm font-medium">{calculateTotal()}</span>
         </div>
-        <Button className="w-full" size="lg" onClick={() => setCurrentStep(2)}>
+        <Button className="w-full" onClick={() => setCurrentStep(2)}>
           Proceed to Checkout
         </Button>
       </div>

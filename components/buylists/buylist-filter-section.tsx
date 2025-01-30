@@ -34,7 +34,7 @@ export default function BuylistFilterSection({
         <h4 className="text-sm font-medium leading-none">Filters</h4>
         <Button
           variant="ghost"
-          className="px-2 text-xs"
+          className="text-xs font-medium"
           onClick={() => {
             clearFilters();
             fetchCards();
@@ -45,11 +45,11 @@ export default function BuylistFilterSection({
       </div>
       <Separator className="my-4" />
       <ScrollArea className="h-[calc(100vh-200px)]">
-        <div className="space-y-4">
+        <div className="space-y-6">
           {filterOptions.map((filter) => (
             <div key={filter.field} className="space-y-4">
               <h4 className="text-sm font-medium leading-none">{filter.name}</h4>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {filter.values.map((option: FilterOptionValues) => (
                   <div key={option.value} className="flex items-center space-x-2">
                     <input
@@ -63,7 +63,7 @@ export default function BuylistFilterSection({
                       }}
                       className="mr-2"
                     />
-                    <Label htmlFor={option.value}>
+                    <Label htmlFor={option.value} className="text-sm">
                       {option.label} ({option.count})
                     </Label>
                   </div>
