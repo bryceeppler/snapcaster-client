@@ -4,7 +4,6 @@ import { Tcg, BuyListQueryCard } from '@/types/product';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { BuylistSortOptions, FilterOption } from '@/types/query';
-import { Mode } from '@/types/buylists';
 
 type SubmitBuylistResponse = {
   success: boolean;
@@ -38,7 +37,6 @@ type BuyListState = {
   searchResults: BuyListQueryCard[] | null;
   currentPage: number;
   numPages: number | null;
-  numResults: number;
   filterOptions?: FilterOption[];
   tcg: Tcg;
   searchTerm: string;
@@ -52,14 +50,11 @@ type BuyListState = {
   setFilter: (filterField: string, value: string, selected: boolean) => void;
   clearFilters: () => void;
   applyFilters: () => Promise<void>;
-  clearSearchResults: () => void;
 
   //Cart State Variables
-  mode: Mode;
   currentCartId: number | null;
   buylistCheckoutBreakdownData: any;
   selectedStoreForReview: string | null;
-  setMode: (mode: Mode) => void;
   setCurrentCartId: (cartId: number | null) => void;
   getCheckoutData: (cartId: number) => Promise<void>;
   setSelectedStoreForReview: (storeName: string) => void;
@@ -71,14 +66,12 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   searchResults: null,
   currentPage: 1,
   numPages: 0,
-  numResults: 0,
   tcg: 'mtg',
   searchTerm: '',
   sortBy: 'name-asc',
   filters: null,
 
   //Cart State Variables
-  mode: 'cart',
   currentCartId: null,
   buylistCheckoutBreakdownData: null,
   selectedStoreForReview: null,
@@ -125,7 +118,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       set({
         searchResults: response.data.results.slice(0, 500),
         numPages: response.data.pagination.numPages,
-        numResults: response.data.pagination.numResults,
         filterOptions: filterOptionsFromResponse,
         filters: filterOptionsFromResponse
       });
@@ -168,14 +160,10 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   setSortBy: (sortBy: BuylistSortOptions) => set({ sortBy }),
   clearFilters: () => set({ filters: null }),
-  clearSearchResults: () => set({ searchResults: null }),
 
   ////////////////////
   // Cart Functions //
   ////////////////////
-  setMode: (mode: Mode) => {
-    set({ mode });
-  },
 
   setCurrentCartId: (cartId: number | null) => {
     set({ currentCartId: cartId });

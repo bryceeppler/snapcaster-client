@@ -17,7 +17,7 @@ const steps = [
 ];
 
 export default function BuylistCatalog() {
-  const { currentCartId, setMode, getCheckoutData } = useBuyListStore();
+  const { currentCartId, getCheckoutData } = useBuyListStore();
   const [currentStep, setCurrentStep] = useState(0);
   const [animateToStep, setAnimateToStep] = useState(0);
 
@@ -33,9 +33,6 @@ export default function BuylistCatalog() {
   };
 
   useEffect(() => {
-    setMode(
-      steps[currentStep].mode as 'cart' | 'search' | 'checkout' | 'review'
-    );
     if (currentStep > 0 && !currentCartId) {
       setCurrentStep(0);
       return;
