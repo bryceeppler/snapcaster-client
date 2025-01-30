@@ -55,7 +55,7 @@ export default function SavedLists({
 
   return (
     <>
-      <div className="min-h-svh-80 mb-8">
+      <div className="min-h-svh-80 sm:container">
         {carts && carts.length === 0 && (
           <div className="my-8 flex flex-col items-center justify-center">
             <h3 className="text-2xl font-bold">You have no saved buylists</h3>
@@ -72,7 +72,7 @@ export default function SavedLists({
           </div>
         )}
         {carts && carts.length > 0 && (
-          <div className="mb-1 flex flex-col gap-4 px-2 py-1">
+          <div className="mb-1 flex flex-col gap-4 py-1">
             <div className="flex flex-row items-center justify-end">
               <Button
                 className="w-fit"

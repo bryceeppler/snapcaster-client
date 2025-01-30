@@ -54,7 +54,7 @@ export default function BuylistCatalog() {
             {currentStep + 1}. {steps[currentStep].label}
           </h1>
           {/* 1234 navigation */}
-          <div className="max-w-lg mx-auto w-full">
+          <div className="max-w-lg mx-auto w-full mt-4">
           <div className="flex items-center justify-between">
             <Button
               onClick={() => goToStep(currentStep - 1)}

@@ -61,8 +61,8 @@ export default function Search({ setCurrentStep }: Props) {
 
   return (
     <>
-      <div>
-        <div className="z-40  mb-1 rounded-lg border bg-popover px-3 py-2 md:sticky md:top-[113px]">
+      <div className="sm:container">
+        <div className="z-40  mb-1 rounded-lg border bg-popover py-2 md:sticky md:top-[113px] px-4">
           <div className="flex flex-col items-center justify-center">
             <NavSearchBar
               type={'desktop'}
@@ -74,7 +74,7 @@ export default function Search({ setCurrentStep }: Props) {
               clearFilters={clearFilters}
             />
           </div>
-          <div className="flex flex-col items-center justify-center rounded-lg max-w-2xl mx-auto px-4 pt-2">
+          <div className="flex flex-col items-center justify-center rounded-lg mx-auto pt-2">
             <div className="w-full flex flex-row items-center justify-between gap-4">
               <Sheet>
                 <SheetTitle hidden>Filters</SheetTitle>
