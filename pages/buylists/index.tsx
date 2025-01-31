@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { NextPage } from 'next';
-import useBuyListStore from '@/stores/buyListStore';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import BuylistCatalog from '@/components/buylists/buylist-catalog-container';
 import useAuthStore from '@/stores/authStore';
@@ -11,20 +10,19 @@ type Props = {};
 const Buylist: NextPage<Props> = () => {
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
-  const { fetchCarts } = useBuyListStore();
 
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/signin');
-      return;
     }
-    fetchCarts();
   }, [isAuthenticated, router]);
+
+  if (!isAuthenticated) return null;
 
   return (
     <>
       <BuylistHead />
-      <div className=" min-h-svh ">
+      <div className="min-h-svh">
         <BuylistCatalog />
         <BackToTopButton />
       </div>

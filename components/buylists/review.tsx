@@ -51,7 +51,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
 
   if (submissionResult.success) {
     return (
-      <div className="container max-w-4xl py-12">
+      <div className="container py-12">
         <Card>
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center space-y-4">
@@ -103,18 +103,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
   );
 
   return (
-    <div className="container max-w-4xl space-y-6 py-6">
-      {/* Header Section */}
-      <div className="flex items-center justify-between">
-        <Button
-          variant="ghost"
-          className="gap-2"
-          onClick={() => setCurrentStep(2)}
-        >
-          <ArrowLeft className="size-4" /> Back
-        </Button>
-      </div>
-
+    <div className="sm:container space-y-6">
       {/* Order Summary Card */}
       <Card>
         <CardHeader>

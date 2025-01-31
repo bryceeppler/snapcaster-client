@@ -4,7 +4,6 @@ import { Tcg, BuyListQueryCard } from '@/types/product';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { BuylistSortOptions, FilterOption } from '@/types/query';
-import { Mode } from '@/types/buylists';
 
 type SubmitBuylistResponse = {
   success: boolean;
@@ -12,20 +11,23 @@ type SubmitBuylistResponse = {
 };
 
 export interface IBuylistCartItem {
-  buylist_cart_id: string;
-  base_card_id: string;
+  id: number;
+  buylist_cart_id: number;
+  game: string;
+  base_card_id: number;
   card_name: string;
   set_name: string;
-  game: string;
+  image: string;
   rarity: string;
   condition_name: string;
-  foil: string;
+  foil: 'Normal' | 'Foil' | 'Holo';
   quantity: number;
-  image: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface IBuylistCart {
-  id: string;
+  id: number;
   name: string;
   items: IBuylistCartItem[];
 }
@@ -35,7 +37,6 @@ type BuyListState = {
   searchResults: BuyListQueryCard[] | null;
   currentPage: number;
   numPages: number | null;
-  numResults: number;
   filterOptions?: FilterOption[];
   tcg: Tcg;
   searchTerm: string;
@@ -49,30 +50,15 @@ type BuyListState = {
   setFilter: (filterField: string, value: string, selected: boolean) => void;
   clearFilters: () => void;
   applyFilters: () => Promise<void>;
-  clearSearchResults: () => void;
 
-  //Cart State Variables & Functions
-  mode: Mode;
-  carts: IBuylistCart[];
-  currentCart: any;
-  currentCartData: any[];
+  //Cart State Variables
+  currentCartId: number | null;
   buylistCheckoutBreakdownData: any;
   selectedStoreForReview: string | null;
-  setMode: (mode: Mode) => void;
-  fetchCarts: () => Promise<void>;
-  getCartData: (cartId: string) => Promise<void>;
-  setCurrentCart: (cart: IBuylistCart | null) => void;
-  createCart: (cartName: string) => Promise<void>;
-  deleteCart: (cartId: number) => Promise<void>;
-  renameCart: (cartData: any) => Promise<boolean>;
-  getCheckoutData: (cartId: string) => Promise<void>;
+  setCurrentCartId: (cartId: number | null) => void;
+  getCheckoutData: (cartId: number) => Promise<void>;
   setSelectedStoreForReview: (storeName: string) => void;
-  submitBuylist: (
-    paymentType: 'Cash' | 'Credit'
-  ) => Promise<SubmitBuylistResponse>;
-  pendingUpdates: { [key: string]: number };
-  updateCartItemPending: (card: any, quantity: number) => void;
-  updateCartItemAPI: (card: any, quantity: number) => Promise<void>;
+  submitBuylist: (paymentType: 'Cash' | 'Credit') => Promise<SubmitBuylistResponse>;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
@@ -80,21 +66,15 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   searchResults: null,
   currentPage: 1,
   numPages: 0,
-  numResults: 0,
   tcg: 'mtg',
   searchTerm: '',
   sortBy: 'name-asc',
   filters: null,
 
   //Cart State Variables
-  mode: 'cart',
-  carts: [],
-  currentCart: null,
-  currentCartData: [],
+  currentCartId: null,
   buylistCheckoutBreakdownData: null,
   selectedStoreForReview: null,
-
-  pendingUpdates: {},
 
   //////////////////////
   // Search Functions //
@@ -138,7 +118,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       set({
         searchResults: response.data.results.slice(0, 500),
         numPages: response.data.pagination.numPages,
-        numResults: response.data.pagination.numResults,
         filterOptions: filterOptionsFromResponse,
         filters: filterOptionsFromResponse
       });
@@ -168,61 +147,11 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     });
     set({ filters: updatedFilters });
   },
+
   applyFilters: async () => {
-    const { tcg, searchTerm, filters, sortBy } = get();
-    try {
-      const queryParams = new URLSearchParams({
-        index: `buylists_${tcg}*`,
-        keyword: searchTerm.trim(),
-        sortBy: `${sortBy}`,
-        maxResultsPerPage: '100',
-        pageNumber: get().currentPage.toString()
-      });
-
-      if (filters) {
-        Object.entries(filters).forEach(([index, filter]) => {
-          filter.values.forEach((value) => {
-            if (value.selected) {
-              queryParams.append(
-                `filterSelections[${filter.field}][]`,
-                value.value
-              );
-            }
-          });
-        });
-      }
-
-      const response = await axiosInstance.get(
-        `${
-          process.env.NEXT_PUBLIC_BUYLISTS_URL
-        }/v2/search?${queryParams.toString()}`
-      );
-
-      if (response.status !== 200) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
-      }
-
-      const updatedSearchResults = response.data.results.map((item: any) => ({
-        ...item,
-        promoted: false
-      }));
-
-      const filterOptionsFromResponse: FilterOption[] =
-        response.data.filters || [];
-
-      set({
-        searchResults: updatedSearchResults,
-        filters: filterOptionsFromResponse,
-        tcg: tcg,
-        filterOptions: filterOptionsFromResponse,
-        numPages: response.data.pagination.numPages,
-        numResults: response.data.pagination.numResults
-      });
-    } catch (error: any) {
-      console.error('Error fetching cards:', error);
-      toast.error('Unable to fetch cards: ' + error.message);
-    }
+    await get().fetchCards();
   },
+
   setTcg: (tcg: Tcg) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('tcg', tcg);
@@ -231,140 +160,16 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   setSortBy: (sortBy: BuylistSortOptions) => set({ sortBy }),
   clearFilters: () => set({ filters: null }),
-  clearSearchResults: () => set({ searchResults: null }),
 
   ////////////////////
   // Cart Functions //
   ////////////////////
-  setMode: (mode: Mode) => {
-    set({ mode });
+
+  setCurrentCartId: (cartId: number | null) => {
+    set({ currentCartId: cartId });
   },
 
-  fetchCarts: async () => {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`
-      );
-      if (response.status === 200) {
-        set({ carts: response.data.carts });
-        if (
-          get().currentCart === null &&
-          Object.keys(response.data.carts).length > 0
-        ) {
-          get().setCurrentCart(response.data.carts[0]);
-          get().getCartData(response.data.carts[0].id);
-        }
-      }
-    } catch (error: any) {
-      toast.error('Error fetching carts: ' + error.message);
-      console.error('Error fetching carts:', error);
-    }
-  },
-  setCurrentCart: (cart: IBuylistCart | null) => {
-    if (!cart) {
-      set({ currentCart: null });
-      return;
-    }
-    set({
-      currentCart: {
-        ...cart
-      }
-    });
-    if (cart.id) {
-      get().getCartData(cart.id);
-    }
-  },
-  createCart: async (cartName: string) => {
-    try {
-      const body = {
-        cartName: cartName
-      };
-      const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`,
-        body
-      );
-      if (response.status === 201) {
-        toast.success('Cart created successfully');
-        await get().fetchCarts();
-        // Find the newly created cart and set it as current
-        const newCart = get().carts.find((cart: any) => cart.name === cartName);
-        if (newCart) {
-          get().setCurrentCart(newCart);
-        }
-      } else {
-        toast.error('Error creating cart');
-      }
-    } catch (error: any) {
-      toast.error('Error creating cart: ' + error.message);
-      console.error('Error creating cart:', error);
-    }
-  },
-  deleteCart: async (cartId: number) => {
-    try {
-      const response = await axiosInstance.delete(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}`
-      );
-      if (response.status === 200) {
-        // First set currentCart to null to avoid stale state
-        set({ currentCart: null, currentCartData: [] });
-        toast.success('Cart deleted successfully');
-
-        // Fetch latest carts
-        await get().fetchCarts();
-
-        // After fetch completes, check if there are any carts
-        const remainingCarts = get().carts;
-        if (remainingCarts && remainingCarts.length > 0) {
-          // Set the first cart as current if any exist
-          get().setCurrentCart(remainingCarts[0]);
-        }
-      }
-    } catch (error: any) {
-      toast.error('Error deleting cart: ' + error.message);
-      console.error('Error deleting cart:', error);
-    }
-  },
-  renameCart: async (cartData: any) => {
-    try {
-      const body = {
-        cartName: cartData.name.trim()
-      };
-      const response = await axiosInstance.patch(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartData.id}`,
-        body
-      );
-      if (response.status === 200) {
-        toast.success('Cart renamed successfully');
-        await get().fetchCarts();
-        const updatedCart = Object.values(get().carts).find(
-          (cart: any) => cart.id === cartData.id
-        );
-        if (updatedCart) {
-          get().setCurrentCart(updatedCart);
-        }
-        return true;
-      }
-      return false;
-    } catch (error: any) {
-      toast.error('Error renaming cart: ' + error.message);
-      console.error('Error renaming cart:', error);
-      return false;
-    }
-  },
-  getCartData: async (cartId: string) => {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/cards`
-      );
-      if (response.status === 200) {
-        set({ currentCartData: response.data.items });
-      }
-    } catch (error: any) {
-      toast.error('Error fetching cart data: ' + error.message);
-      console.error('Error fetching cart data:', error);
-    }
-  },
-  getCheckoutData: async (cartId: string) => {
+  getCheckoutData: async (cartId: number) => {
     try {
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/checkouts`
@@ -399,90 +204,21 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       console.error('Error fetching buylist checkout breakdown data:', error);
     }
   },
+
   setSelectedStoreForReview: (storeName: string) => {
     set({ selectedStoreForReview: storeName });
   },
 
-  updateCartItemPending: (card: any, quantity: number) => {
-    const { currentCartData } = get();
-    if (quantity < 0) {
-      quantity = 0;
-    }
-    if (quantity > 99) {
-      toast.error('Maximum quantity is 99');
-      return;
-    }
-
-    if (quantity === 0) {
-      const filteredItems = (currentCartData || []).filter(
-        (item: any) =>
-          !(
-            item.card_name === card.card_name &&
-            item.condition_name === card.condition_name &&
-            item.set_name === card.set_name &&
-            item.foil === card.foil &&
-            item.rarity === card.rarity &&
-            item.image === card.image
-          )
-      );
-      set({ currentCartData: filteredItems });
-    } else {
-      const existingItemIndex = (currentCartData || []).findIndex(
-        (item: any) =>
-          item.card_name === card.card_name &&
-          item.condition_name === card.condition_name &&
-          item.set_name === card.set_name &&
-          item.foil === card.foil &&
-          item.rarity === card.rarity
-      );
-
-      if (existingItemIndex === -1) {
-        // Card doesn't exist in cart yet, add it
-        set({
-          currentCartData: [...(currentCartData || []), { ...card, quantity }]
-        });
-      } else {
-        // Card exists, update its quantity
-        const updatedCartData = [...(currentCartData || [])];
-        updatedCartData[existingItemIndex] = {
-          ...updatedCartData[existingItemIndex],
-          quantity
-        };
-        set({ currentCartData: updatedCartData });
-      }
-    }
-  },
-
-  updateCartItemAPI: async (card: any, quantity: number) => {
-    const { currentCart, getCartData } = get();
-    if (!currentCart) return;
-
-    try {
-      const response = await axiosInstance.put(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCart.id}/cards`,
-        { ...card, quantity }
-      );
-
-      if (response.status === 200) {
-        await getCartData(currentCart.id);
-      }
-    } catch (error: any) {
-      toast.error('Error updating cart item: ' + error.message);
-      console.error('Error updating cart item:', error);
-      await getCartData(currentCart.id);
-    }
-  },
-
   submitBuylist: async (paymentType: 'Cash' | 'Credit') => {
-    const { currentCart, selectedStoreForReview } = get();
-    if (!currentCart || !selectedStoreForReview) {
+    const { currentCartId, selectedStoreForReview } = get();
+    if (!currentCartId || !selectedStoreForReview) {
       toast.error('No cart or store selected');
       return { success: false, message: 'No cart or store selected' };
     }
 
     try {
       const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCart.id}/submit`,
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}/submit`,
         {
           paymentType,
           store: selectedStoreForReview
@@ -513,4 +249,5 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     }
   }
 }));
+
 export default useBuyListStore;

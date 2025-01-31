@@ -2,13 +2,13 @@ import { Card } from '@/components/ui/card';
 import CardImage from '../ui/card-image';
 import { Button } from '../ui/button';
 import React, { memo } from 'react';
-
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '../ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
-import useBuyListStore from '@/stores/buyListStore';
-import { useDebounceCallback } from 'usehooks-ts';
+import useBuyListStore, { IBuylistCart } from '@/stores/buyListStore';
+import { useCartItems } from '@/hooks/useCartItems';
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '@/utils/axiosWrapper';
 
 type Props = { cardData: any };
 const conditions = [
@@ -18,14 +18,30 @@ const conditions = [
   'Heavily Played',
   'Damaged'
 ];
+
+const CART_KEY = (cartId: number) => ['cart', cartId] as const;
+
 const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
-  const { updateCartItemPending, updateCartItemAPI, currentCartData } =
-    useBuyListStore();
-  const debouncedApiCall = useDebounceCallback(updateCartItemAPI, 500);
+  const { currentCartId } = useBuyListStore();
+  const { cartItems, updateCartItem } = useCartItems(currentCartId || undefined);
+
+  // Fetch cart data using React Query
+  const { data: currentCart } = useQuery<{ success: boolean; cart: IBuylistCart } | null>({
+    queryKey: CART_KEY(currentCartId || 0),
+    queryFn: async () => {
+      if (!currentCartId) return null;
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
+      );
+      return response.data;
+    },
+    enabled: !!currentCartId
+  });
+
   const getQuantityForCondition = (conditionName: string) => {
-    if (!currentCartData) return 0;
+    if (!cartItems) return 0;
     return (
-      currentCartData.find(
+      cartItems.find(
         (item) =>
           item.card_name === cardData.name &&
           item.set_name === cardData.set &&
@@ -37,10 +53,12 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
   };
 
   const handleUpdateQuantity = (conditionName: string, delta: number) => {
+    if (!currentCartId) return;
+    
     const currentQuantity = getQuantityForCondition(conditionName);
     const newQuantity = currentQuantity + delta;
 
-    const cartItem: any = {
+    const cartItem = {
       base_card_id: cardData.baseCardId,
       card_name: cardData.name,
       set_name: cardData.set,
@@ -48,12 +66,14 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
       rarity: cardData.rarity,
       condition_name: conditionName,
       foil: cardData.foil,
-      image: cardData.image,
-      quantity: newQuantity
+      image: cardData.image
     };
 
-    updateCartItemPending(cartItem, newQuantity);
-    debouncedApiCall(cartItem, newQuantity);
+    updateCartItem({
+      cartId: currentCartId,
+      item: cartItem,
+      quantity: newQuantity
+    });
   };
 
   return (
@@ -77,8 +97,10 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
           </div>
 
           <Dialog>
+            <DialogTitle hidden>Add To Cart</DialogTitle>
+            <DialogDescription hidden>Add this card to your cart</DialogDescription>
             {Object.keys(cardData.conditions) && (
-              <DialogTrigger className="w-full">
+              <DialogTrigger asChild>
                 <Button
                   className="w-full rounded-b-lg font-montserrat text-xs uppercase"
                   variant="outline"
@@ -122,26 +144,30 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
                           </p>
                         </div>
                         <div className="flex h-8 items-center rounded-xl border">
-                          <button
+                          <Button
                             className="flex h-full w-8 items-center justify-center rounded-l-xl hover:bg-accent"
+                            variant="outline"
+                            size="icon"
                             onClick={() =>
                               handleUpdateQuantity(conditionName, -1)
                             }
                             disabled={quantity === 0}
                           >
                             <MinusIcon className="h-4 w-4" />
-                          </button>
+                          </Button>
                           <p className="w-8 bg-background text-center font-semibold">
                             {quantity}
                           </p>
-                          <button
+                          <Button
                             className="flex h-full w-8 items-center justify-center rounded-r-xl hover:bg-accent"
+                            variant="outline"
+                            size="icon"
                             onClick={() =>
                               handleUpdateQuantity(conditionName, 1)
                             }
                           >
                             <PlusIcon className="h-4 w-4" />
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -155,4 +181,5 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
     </Card>
   );
 });
+
 export default BuyListCatalogItem;

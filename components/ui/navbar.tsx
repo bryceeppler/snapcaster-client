@@ -48,15 +48,9 @@ const Navbar: React.FC = () => {
   // Dynamically assign zustand states for the following components (single, buylists, sealed) => FilterSection, NavSearchBar, SearchPagination
 
   const singleSearchStore = useSingleSearchStore(); // Unconditionally called
-  const buyListStore = useBuyListStore(); // Unconditionally called
 
   // Dynamically choose the store based on currentPath
-  const queryStore =
-    currentPath === '/'
-      ? singleSearchStore
-      : currentPath === '/buylists'
-      ? buyListStore
-      : null;
+  const queryStore = singleSearchStore;
 
   // Destructure variables from queryStore or set defaults
   const {
@@ -205,7 +199,7 @@ const Navbar: React.FC = () => {
 
             {/* Right Section */}
             <div className="mx-2 flex items-center ">
-              {(currentPath === '/' || currentPath === '/buylists') && (
+              {currentPath === '/' && (
                 <button
                   onClick={() => {
                     setMobileSearchIsVisible(!mobileSearchIsVisible);
@@ -219,28 +213,30 @@ const Navbar: React.FC = () => {
               </Link>
             </div>
           </div>
-          <div
-            className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
-              mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
-            }`}
-          >
-            <NavSearchBar
-              type={'mobile'}
-              toggleMobileSearch={() => {
-                setMobileSearchIsVisible(!mobileSearchIsVisible);
-              }}
-              searchTerm={searchTerm}
-              tcg={tcg}
-              clearFilters={clearFilters}
-              setSearchTerm={setSearchTerm}
-              setTcg={setTcg}
-              fetchQuery={fetchCards}
-            />
-          </div>
+          {currentPath === '/' && (
+            <div
+              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
+              }`}
+            >
+              <NavSearchBar
+                type={'mobile'}
+                toggleMobileSearch={() => {
+                  setMobileSearchIsVisible(!mobileSearchIsVisible);
+                }}
+                searchTerm={searchTerm}
+                tcg={tcg}
+                clearFilters={clearFilters}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                fetchQuery={fetchCards}
+              />
+            </div>
+          )}
         </div>
         <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>{' '}
         {searchResults &&
-          (currentPath == '/' || currentPath == '/buylists') && (
+          (currentPath == '/') && (
             <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
               <span className="text-center text-sm font-normal text-secondary-foreground ">
                 {numResults} results
@@ -299,7 +295,7 @@ const Navbar: React.FC = () => {
 
           {/* Center Section */}
           <div className="flex flex-1 items-center justify-center">
-            {(currentPath === '/' || currentPath === '/buylists') && (
+            {(currentPath === '/') && (
               <NavSearchBar
                 type={'desktop'}
                 searchTerm={searchTerm}

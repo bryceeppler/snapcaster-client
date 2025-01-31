@@ -17,12 +17,12 @@ const steps = [
 ];
 
 export default function BuylistCatalog() {
-  const { currentCart, setMode, getCheckoutData } = useBuyListStore();
+  const { currentCartId, getCheckoutData } = useBuyListStore();
   const [currentStep, setCurrentStep] = useState(0);
   const [animateToStep, setAnimateToStep] = useState(0);
 
   const goToStep = (step: number) => {
-    if (step > 0 && !currentCart) {
+    if (step > 0 && !currentCartId) {
       toast.error('Please select or create a cart first');
       return;
     }
@@ -33,21 +33,18 @@ export default function BuylistCatalog() {
   };
 
   useEffect(() => {
-    setMode(
-      steps[currentStep].mode as 'cart' | 'search' | 'checkout' | 'review'
-    );
-    if (currentStep > 0 && !currentCart) {
+    if (currentStep > 0 && !currentCartId) {
       setCurrentStep(0);
       return;
     }
-    if (currentStep > 1 && currentCart) {
-      getCheckoutData(currentCart.id);
+    if (currentStep > 1 && currentCartId) {
+      getCheckoutData(currentCartId);
     }
     const timer = setTimeout(() => {
       setAnimateToStep(currentStep);
     }, 50);
     return () => clearTimeout(timer);
-  }, [currentStep, currentCart]);
+  }, [currentStep, currentCartId]);
 
   return (
     <>
@@ -56,6 +53,8 @@ export default function BuylistCatalog() {
           <h1 className="text-center font-bold">
             {currentStep + 1}. {steps[currentStep].label}
           </h1>
+          {/* 1234 navigation */}
+          <div className="max-w-lg mx-auto w-full mt-4">
           <div className="flex items-center justify-between">
             <Button
               onClick={() => goToStep(currentStep - 1)}
@@ -76,19 +75,19 @@ export default function BuylistCatalog() {
                 >
                   <button
                     onClick={() => goToStep(index)}
-                    className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 text-xs ${
+                    className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border-2 text-xs font-montserrat font-medium transition-colors ${
                       index <= currentStep
                         ? 'border-blue-500 bg-blue-500 text-white'
                         : 'border-gray-500 text-gray-500'
                     } ${
                       index < currentStep
                         ? 'cursor-pointer'
-                        : index > currentStep || (index > 0 && !currentCart)
+                        : index > currentStep || (index > 0 && !currentCartId)
                         ? 'cursor-not-allowed'
                         : ''
                     }`}
                     disabled={
-                      index > currentStep || (index > 0 && !currentCart)
+                      index > currentStep || (index > 0 && !currentCartId)
                     }
                   >
                     {index < currentStep ? (
@@ -122,13 +121,14 @@ export default function BuylistCatalog() {
               <span className="sr-only">Next</span>
             </Button>
           </div>
+          </div>
         </div>
 
         <div className="mt-4">
           {currentStep === 0 ? (
             <SavedLists setCurrentStep={setCurrentStep} />
           ) : currentStep === 1 ? (
-            <Search />
+            <Search setCurrentStep={setCurrentStep} />
           ) : currentStep === 2 ? (
             <Checkout setCurrentStep={setCurrentStep} />
           ) : (

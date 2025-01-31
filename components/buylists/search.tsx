@@ -1,19 +1,29 @@
 import useBuyListStore from '@/stores/buyListStore';
-import FilterSection from '@/components/search-ui/search-filter-container';
 import BuyListCatalogItem from '@/components/buylists/buylist-catalog-item';
-import SearchBar from '../search-ui/search-bar';
 import NavSearchBar from '../search-ui/nav-search-bar';
 import SearchPagination from '../search-ui/search-pagination';
-import SearchSortBy from '../search-ui/search-sort-by';
-import { buylistSortByLabel } from '@/types/query';
-export default function Search() {
+import { Button } from '../ui/button';
+import { ShoppingCartIcon } from 'lucide-react';
+import { Sheet, SheetContent, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
+import BuylistFilterSection from './buylist-filter-section';
+import BuylistCartSheet from './buylist-cart-sheet';
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '@/utils/axiosWrapper';
+import { IBuylistCart, IBuylistCartItem } from '@/stores/buyListStore';
+import { SlidersHorizontal } from 'lucide-react';
+
+const CART_KEY = (cartId: number) => ['cart', cartId] as const;
+
+type Props = {
+  setCurrentStep: (step: number) => void;
+};
+
+export default function Search({ setCurrentStep }: Props) {
   const {
     tcg,
     searchTerm,
     setTcg,
     setSearchTerm,
-    clearSearchResults,
-
     searchResults,
     sortBy,
     filterOptions,
@@ -23,16 +33,36 @@ export default function Search() {
     setCurrentPage,
     clearFilters,
     applyFilters,
-    currentCart,
-    numResults,
     currentPage,
+    currentCartId,
     numPages
   } = useBuyListStore();
 
+  // Fetch cart data using React Query
+  const { data: currentCart } = useQuery<{ success: boolean; cart: IBuylistCart } | null>({
+    queryKey: CART_KEY(currentCartId || 0),
+    queryFn: async () => {
+      if (!currentCartId) return null;
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
+      );
+      return response.data;
+    },
+    enabled: !!currentCartId
+  });
+
+  // Calculate total items in cart
+  const cartItemCount = currentCart?.cart?.items?.reduce(
+    (total: number, item: IBuylistCartItem) => total + item.quantity,
+    0
+  ) || 0;
+
+  const showPagination = searchResults && searchResults.length > 0 && numPages && numPages > 1;
+
   return (
     <>
-      <div>
-        <div className="z-40  mb-1 rounded-lg border bg-popover px-3 py-2 md:sticky md:top-[113px]">
+      <div className="sm:container">
+        <div className="z-40  mb-1 rounded-lg border bg-popover py-2 md:sticky md:top-[113px] px-4">
           <div className="flex flex-col items-center justify-center">
             <NavSearchBar
               type={'desktop'}
@@ -44,35 +74,19 @@ export default function Search() {
               clearFilters={clearFilters}
             />
           </div>
-          <div className="hidden flex-row items-center justify-between rounded-lg bg-popover px-4 pt-2 md:flex">
-            <span className="text-center text-sm font-normal text-secondary-foreground">
-              {numResults} results
-            </span>
-            <div>
-              <SearchPagination
-                currentPage={currentPage}
-                numPages={numPages}
-                fetchCards={fetchCards}
-                setCurrentPage={setCurrentPage}
-              />
-            </div>
-            <div className="w-min">
-              <SearchSortBy
-                sortBy={sortBy}
-                sortByLabel={buylistSortByLabel}
-                setSortBy={setSortBy}
-                fetchCards={fetchCards}
-                setCurrentPage={setCurrentPage}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-[240px_1fr]">
-          <aside className="hidden md:block">
-            <div className="sticky top-[227px]">
-              {searchResults && (
-                <div className="rounded-lg bg-popover px-3 pb-2 shadow-md">
-                  <FilterSection
+          <div className="flex flex-col items-center justify-center rounded-lg mx-auto pt-2">
+            <div className="w-full flex flex-row items-center justify-between gap-4">
+              <Sheet>
+                <SheetTitle hidden>Filters</SheetTitle>
+                <SheetDescription hidden>Filter your search results</SheetDescription>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-9 gap-2 text-sm font-medium">
+                    <SlidersHorizontal className="h-4 w-4" />
+                    Filters
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left">
+                  <BuylistFilterSection
                     filterOptions={filterOptions}
                     sortBy={sortBy}
                     setSortBy={setSortBy}
@@ -82,11 +96,39 @@ export default function Search() {
                     setCurrentPage={setCurrentPage}
                     applyFilters={applyFilters}
                   />
-                </div>
-              )}
+                </SheetContent>
+              </Sheet>
+              <Sheet>
+                <SheetTitle hidden>Cart</SheetTitle>
+                <SheetDescription hidden>View your cart</SheetDescription>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-9 relative">
+                    <ShoppingCartIcon className="h-4 w-4" />
+                    {cartItemCount > 0 && (
+                      <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                        {cartItemCount}
+                      </span>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right">
+                  <BuylistCartSheet setCurrentStep={setCurrentStep} />
+                </SheetContent>
+              </Sheet>
             </div>
-          </aside>
-
+            {showPagination && (
+              <div>
+                <SearchPagination
+                  currentPage={currentPage}
+                  numPages={numPages}
+                  fetchCards={fetchCards}
+                  setCurrentPage={setCurrentPage}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-1">
           <div className="grid h-min auto-rows-auto grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-3 xxl:grid-cols-4">
             {searchResults?.map((item, index) => (
               <div key={index} className="h-full">
