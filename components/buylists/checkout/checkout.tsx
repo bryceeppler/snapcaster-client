@@ -174,6 +174,7 @@ export default function Checkout({ setCurrentStep }: Props) {
                           cardName={item.cardName}
                           condition={item.condition}
                           setName={item.setName}
+                          image={item.image}
                           rarity={item.rarity}
                           foil={item.foil}
                           cashPrice={item.cashPrice}
@@ -218,6 +219,7 @@ export default function Checkout({ setCurrentStep }: Props) {
                               cardName={item.cardName}
                               condition={item.condition}
                               setName={item.setName}
+                              image={item.image}
                               rarity={item.rarity}
                               foil={item.foil}
                               reason={item.reason}

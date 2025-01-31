@@ -90,17 +90,20 @@ export default function SavedLists({
                   className="flex flex-col rounded border bg-popover"
                 >
                   <div
-                    className="flex cursor-pointer flex-row items-center justify-between border-b p-3 transition-all duration-300 hover:bg-background/30"
-                    onClick={() => {
-                      setCurrentCartId(cart.id);
-                      setCurrentStep(1);
-                    }}
+                    className="flex flex-row items-center justify-between border-b p-3"
+
                   >
                     <span className="font-medium">{cart.name}</span>
                     <div className="flex flex-row gap-2">
+                      <Button 
+                                            onClick={() => {
+                                              setCurrentCartId(cart.id);
+                                              setCurrentStep(1);
+                                            }}
+                        >Select</Button>
                       <Button
                         size="icon"
-                        className="h-6 w-6 p-0"
+                        variant="ghost"
                         onClick={(e) => {
                           e.stopPropagation();
                           setCurrentCartId(cart.id);
@@ -114,7 +117,6 @@ export default function SavedLists({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6 p-0"
                         onClick={(e) => {
                           e.stopPropagation();
                           setCartToDelete(cart);

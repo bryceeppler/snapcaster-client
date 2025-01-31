@@ -1,3 +1,4 @@
+import CardImage from '@/components/ui/card-image';
 import {
   Tooltip,
   TooltipContent,
@@ -17,6 +18,7 @@ interface CardDetailsProps {
   setName: string;
   rarity: string;
   foil: string;
+  image: string;
   cashPrice: number;
   creditPrice: number;
   purchaseQuantity: number;
@@ -74,6 +76,7 @@ export default function PurchasingCardDetails({
   setName,
   rarity,
   foil,
+  image,
   cashPrice,
   creditPrice,
   purchaseQuantity,
@@ -82,21 +85,28 @@ export default function PurchasingCardDetails({
 }: CardDetailsProps) {
   return (
     <div className="rounded-lg flex flex-col md:flex-row md:justify-between">
-      <div className="space-y-1 flex flex-col w-full">
-        <h3 className="text-sm font-semibold capitalize">
-          {cardName}
-        </h3>
+      <div className="flex flex-row items-center gap-3">
+      <div className="w-12 flex-shrink-0">
+          <CardImage imageUrl={image} alt={cardName} />
+        </div>
+        <div className="space-y-1 flex flex-col w-full">
+          <h3 className="text-sm font-semibold capitalize">
+            {cardName}
+          </h3>
         <div className="font-montserrat text-xs font-medium uppercase text-muted-foreground">
           {setName}
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span className="text-xs">{condition}</span>
+        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">{condition}</span>
           {foil !== "Non-Foil" && foil !== "Normal" && (
             <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
               {foil}
             </span>
           )}
+                    <span className="capitalize rounded bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">{rarity}</span>
+
         </div>
+      </div>
       </div>
 
       <div className="mt-3 md:mt-0 flex flex-row items-center min-w-fit">
