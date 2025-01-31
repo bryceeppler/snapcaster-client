@@ -105,7 +105,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
   );
 
   return (
-    <div className="sm:container space-y-6">
+    <div className="sm:container space-y-6 mb-6">
       {/* Order Summary Card */}
       <Card>
         <CardHeader>

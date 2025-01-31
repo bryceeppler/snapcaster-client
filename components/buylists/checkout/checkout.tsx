@@ -61,7 +61,7 @@ export default function Checkout({ setCurrentStep }: Props) {
 
   return (
     <>
-      <div className="sm:container space-y-2">
+      <div className="sm:container space-y-2 mb-6">
         {breakdownData.length === 0 && cartItems.length > 0 && (
           <div className="flex flex-col items-center justify-center">
             <span className="text-sm text-muted-foreground">No stores are buying the following cards:</span>
