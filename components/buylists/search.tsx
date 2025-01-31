@@ -61,7 +61,7 @@ export default function Search({ setCurrentStep }: Props) {
 
   return (
     <>
-      <div className="sm:container">
+      <div className="sm:container mb-6">
         <div className="z-40  mb-1 rounded-lg border bg-popover py-2 md:sticky md:top-[113px] px-4">
           <div className="flex flex-col items-center justify-center">
             <NavSearchBar

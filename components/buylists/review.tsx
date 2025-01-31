@@ -36,6 +36,8 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
   const storeData = buylistCheckoutBreakdownData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
+  console.log(storeData)
+  console.log("hi")
 
   const handleSubmit = async (paymentType: 'Cash' | 'Credit') => {
     setIsSubmitting(true);
@@ -103,7 +105,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
   );
 
   return (
-    <div className="sm:container space-y-6">
+    <div className="sm:container space-y-6 mb-6">
       {/* Order Summary Card */}
       <Card>
         <CardHeader>
@@ -149,6 +151,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
                     setName={item.setName}
                     rarity={item.rarity}
                     foil={item.foil}
+                    image={item.image}
                     cashPrice={item.cashPrice}
                     creditPrice={item.creditPrice}
                     purchaseQuantity={item.purchaseQuantity}
@@ -180,6 +183,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
                       <UnpurchasableCardDetails
                         cardName={item.cardName}
                         condition={item.condition}
+                        image={item.image}
                         setName={item.setName}
                         rarity={item.rarity}
                         foil={item.foil}

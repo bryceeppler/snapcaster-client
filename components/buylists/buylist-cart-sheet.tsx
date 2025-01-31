@@ -7,6 +7,7 @@ import { useCartItems } from '@/hooks/useCartItems';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 import { Badge } from '@/components/ui/badge';
+import CardImage from '../ui/card-image';
 
 const CART_KEY = (cartId: number) => ['cart', cartId] as const;
 
@@ -78,25 +79,39 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
                   className="flex flex-col space-y-2 rounded-lg border p-3"
                 >
                   <div className="flex justify-between">
-                    <div>
-                      <p className="text-sm font-medium">{item.card_name}</p>
-                      <div className="flex flex-wrap gap-1 items-center">
-                        <p className="text-xs text-muted-foreground">
-                          {item.set_name}
-                        </p>
-                        <Badge variant="outline" className="text-xs">
-                          {item.condition_name}
-                        </Badge>
-                        {item.foil !== 'Normal' && (
-                          <Badge variant="secondary" className="text-xs">
-                            {item.foil}
-                          </Badge>
-                        )}
+                    <div className="flex flex-col">
+                      <div className="flex gap-3">
+                        <div className="w-8 md:w-12 flex-shrink-0">
+                          <CardImage imageUrl={item.image} alt={item.card_name} />
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <p className="text-sm font-medium truncate">{item.card_name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {item.set_name}
+                          </p>
+            
+                          
+                        </div>
+                        
                       </div>
+                      <div className="flex flex-wrap gap-1 items-center mt-1.5">
+                            <Badge variant="outline" className="text-xs">
+                              {item.condition_name}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs capitalize">
+                              {item.rarity}
+                            </Badge>
+                            {item.foil !== 'Normal' && (
+                              <Badge variant="outline" className="text-xs capitalize">
+                                {item.foil}
+                              </Badge>
+                            )}
+                          </div>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
+                      className="hidden md:block h-8 w-8"
                       onClick={() =>
                         currentCartId &&
                         updateCartItem({
@@ -123,7 +138,7 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
                           })
                         }
                       >
-                        <Minus className="h-4 w-4" />
+                        <Minus className="h-3 w-3" />
                       </Button>
                       <span className="text-sm">{item.quantity}</span>
                       <Button
@@ -138,10 +153,10 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
                           })
                         }
                       >
-                        <Plus className="h-4 w-4" />
+                        <Plus className="h-3 w-3" />
                       </Button>
                     </div>
-                    <p className="text-sm font-medium">Qty: {item.quantity}</p>
+                    <p className="text-xs font-medium">Qty: {item.quantity}</p>
                   </div>
                 </div>
               ))}
