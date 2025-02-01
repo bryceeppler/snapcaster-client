@@ -93,8 +93,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         pageNumber: get().currentPage.toString(),
         maxResultsPerPage: '100'
       });
+
       if (filters) {
-        Object.entries(filters).forEach(([index, filter]) => {
+        filters.forEach((filter) => {
           filter.values.forEach((value) => {
             if (value.selected) {
               queryParams.append(
@@ -105,25 +106,33 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
           });
         });
       }
-      const response = await axios.get(
-        `${
-          process.env.NEXT_PUBLIC_BUYLISTS_URL
-        }/v2/search?${queryParams.toString()}`
-      );
 
-      if (response.status !== 200) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      try {
+        const response = await axios.get(
+          `${
+            process.env.NEXT_PUBLIC_BUYLISTS_URL
+          }/v2/search?${queryParams.toString()}`
+        );
+
+        if (response.status !== 200) {
+          console.error('Search API Error:');
+          toast.error('Error fetching cards');
+          return;
+        }
+
+        const filterOptionsFromResponse: FilterOption[] =
+          response.data.filters || [];
+
+        set({
+          searchResults: response.data.results.slice(0, 500),
+          numPages: response.data.pagination.numPages,
+          filterOptions: filterOptionsFromResponse,
+          filters: filterOptionsFromResponse
+        });
+      } catch (error) {
+        console.error('Search API Error:', error);
+        toast.error('Error fetching cards');
       }
-      console.log(response.data.results);
-      const filterOptionsFromResponse: FilterOption[] =
-        response.data.filters || [];
-
-      set({
-        searchResults: response.data.results.slice(0, 500),
-        numPages: response.data.pagination.numPages,
-        filterOptions: filterOptionsFromResponse,
-        filters: filterOptionsFromResponse
-      });
     }
   },
 
