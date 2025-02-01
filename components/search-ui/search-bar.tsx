@@ -177,14 +177,26 @@ export default function SearchBar({
             />
           </SelectTrigger>
 
-          <SelectContent className="mt-1">
+          <SelectContent className="mt-1 touch-auto">
             <SelectGroup>
-              <SelectItem value="mtg">MTG</SelectItem>
-              <SelectItem value="lorcana">Lorcana</SelectItem>
-              <SelectItem value="onepiece">One Piece</SelectItem>
-              <SelectItem value="pokemon">Pokemon</SelectItem>
-              <SelectItem value="yugioh">Yu-Gi-Oh</SelectItem>
-              <SelectItem value="starwars">Star Wars</SelectItem>
+              <SelectItem value="mtg" className="touch-auto">
+                MTG
+              </SelectItem>
+              <SelectItem value="lorcana" className="touch-auto">
+                Lorcana
+              </SelectItem>
+              <SelectItem value="onepiece" className="touch-auto">
+                One Piece
+              </SelectItem>
+              <SelectItem value="pokemon" className="touch-auto">
+                Pokemon
+              </SelectItem>
+              <SelectItem value="yugioh" className="touch-auto">
+                Yu-Gi-Oh
+              </SelectItem>
+              <SelectItem value="starwars" className="touch-auto">
+                Star Wars
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
