@@ -141,7 +141,7 @@ const Navbar: React.FC = () => {
                         Discord
                       </Button>
                     </Link>
-                    {/* <Link href="/buylists" as="/buylists">
+                    <Link href="/buylists" as="/buylists">
                       <Button
                         variant="ghost"
                         className="block w-full text-left text-lg"
@@ -151,7 +151,7 @@ const Navbar: React.FC = () => {
                       >
                         Buylists
                       </Button>
-                    </Link> */}
+                    </Link>
                     <Link href="/about" as="/about">
                       <Button
                         variant="ghost"
@@ -346,7 +346,7 @@ const Navbar: React.FC = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-              {/* <NavigationMenuItem>
+              <NavigationMenuItem>
                 <Link legacyBehavior href="/buylists" passHref>
                   <NavigationMenuLink
                     className={`${navigationMenuTriggerStyle()} ${
@@ -357,7 +357,7 @@ const Navbar: React.FC = () => {
                     Buylists
                   </NavigationMenuLink>
                 </Link>
-              </NavigationMenuItem> */}
+              </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link legacyBehavior href="/about" passHref>
                   <NavigationMenuLink

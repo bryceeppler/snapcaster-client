@@ -27,7 +27,7 @@ export default function BuylistCatalog() {
       return;
     }
 
-    if (step >= 0 && step < steps.length) {
+    if (step >= 0 && currentCartId) {
       setCurrentStep(step);
     }
   };
@@ -54,73 +54,71 @@ export default function BuylistCatalog() {
             {currentStep + 1}. {steps[currentStep].label}
           </h1>
           {/* 1234 navigation */}
-          <div className="max-w-lg mx-auto w-full mt-4">
-          <div className="flex items-center justify-between">
-            <Button
-              onClick={() => goToStep(currentStep - 1)}
-              disabled={currentStep === 0}
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 p-0"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Back</span>
-            </Button>
+          <div className="mx-auto mt-4 w-full max-w-lg">
+            <div className="flex items-center justify-between">
+              <Button
+                onClick={() => goToStep(currentStep - 1)}
+                disabled={currentStep === 0}
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 p-0"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span className="sr-only">Back</span>
+              </Button>
 
-            <div className="mx-2 flex flex-grow items-center justify-between">
-              {steps.map((step, index) => (
-                <div
-                  key={index}
-                  className="flex flex-grow items-center last:flex-grow-0"
-                >
-                  <button
-                    onClick={() => goToStep(index)}
-                    className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border-2 text-xs font-montserrat font-medium transition-colors ${
-                      index <= currentStep
-                        ? 'border-blue-500 bg-blue-500 text-white'
-                        : 'border-gray-500 text-gray-500'
-                    } ${
-                      index < currentStep
-                        ? 'cursor-pointer'
-                        : index > currentStep || (index > 0 && !currentCartId)
-                        ? 'cursor-not-allowed'
-                        : ''
-                    }`}
-                    disabled={
-                      index > currentStep || (index > 0 && !currentCartId)
-                    }
+              <div className="mx-2 flex flex-grow items-center justify-between">
+                {steps.map((step, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-grow items-center last:flex-grow-0"
                   >
-                    {index < currentStep ? (
-                      <Check className="h-3 w-3" />
-                    ) : (
-                      <span>{index + 1}</span>
+                    <button
+                      onClick={() => goToStep(index)}
+                      className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border-2 font-montserrat text-xs font-medium transition-colors ${
+                        index <= currentStep
+                          ? 'border-blue-500 bg-blue-500 text-white'
+                          : 'border-gray-500 text-gray-500'
+                      } ${
+                        index < currentStep
+                          ? 'cursor-pointer'
+                          : index > 0 && !currentCartId
+                          ? 'cursor-not-allowed'
+                          : ''
+                      }`}
+                      disabled={index == 0 && !currentCartId}
+                    >
+                      {index < currentStep ? (
+                        <Check className="h-3 w-3" />
+                      ) : (
+                        <span>{index + 1}</span>
+                      )}
+                    </button>
+                    {index < steps.length - 1 && (
+                      <div className="relative mx-1 h-0.5 flex-grow bg-gray-500">
+                        <div
+                          className="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-500 ease-in-out"
+                          style={{
+                            width: index < animateToStep ? '100%' : '0%'
+                          }}
+                        />
+                      </div>
                     )}
-                  </button>
-                  {index < steps.length - 1 && (
-                    <div className="relative mx-1 h-0.5 flex-grow bg-gray-500">
-                      <div
-                        className="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-500 ease-in-out"
-                        style={{
-                          width: index < animateToStep ? '100%' : '0%'
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                  </div>
+                ))}
+              </div>
 
-            <Button
-              onClick={() => goToStep(currentStep + 1)}
-              disabled={currentStep === steps.length - 1}
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 p-0"
-            >
-              <ChevronRight className="h-4 w-4" />
-              <span className="sr-only">Next</span>
-            </Button>
-          </div>
+              <Button
+                onClick={() => goToStep(currentStep + 1)}
+                disabled={currentStep === steps.length - 1}
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 p-0"
+              >
+                <ChevronRight className="h-4 w-4" />
+                <span className="sr-only">Next</span>
+              </Button>
+            </div>
           </div>
         </div>
 

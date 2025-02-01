@@ -83,6 +83,10 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   //////////////////////
 
   fetchCards: async () => {
+    if (get().tcg === 'starwars') {
+      toast.error('Star Wars will be available soon!');
+      return;
+    }
     const { filters } = get();
     if (get().searchTerm) {
       const queryParams = new URLSearchParams({
