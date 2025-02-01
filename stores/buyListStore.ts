@@ -20,7 +20,7 @@ export interface IBuylistCartItem {
   image: string;
   rarity: string;
   condition_name: string;
-  foil: 'Normal' | 'Foil' | 'Holo';
+  foil: string;
   quantity: number;
   created_at: string;
   updated_at: string;
@@ -58,7 +58,9 @@ type BuyListState = {
   setCurrentCartId: (cartId: number | null) => void;
   getCheckoutData: (cartId: number) => Promise<void>;
   setSelectedStoreForReview: (storeName: string) => void;
-  submitBuylist: (paymentType: 'Cash' | 'Credit') => Promise<SubmitBuylistResponse>;
+  submitBuylist: (
+    paymentType: 'Cash' | 'Credit'
+  ) => Promise<SubmitBuylistResponse>;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
@@ -112,6 +114,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       if (response.status !== 200) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
+      console.log(response.data.results);
       const filterOptionsFromResponse: FilterOption[] =
         response.data.filters || [];
 
