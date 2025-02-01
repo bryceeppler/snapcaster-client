@@ -12,7 +12,7 @@ import useAuthStore from '@/stores/authStore';
 import { AlignJustify, Search, User, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import ModeToggle from '../theme-toggle';
-import NavSearchBar from '../search-bar/nav-search-bar copy';
+import NavSearchBar from '../search-ui/nav-search-bar';
 import {
   Sheet,
   SheetContent,
@@ -20,31 +20,78 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet';
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
+import { Tcg } from '@/types';
+import FilterSection from '../search-ui/search-filter-container';
+import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import SinglePagination from '../single-search/single-pagination';
-import SingleFilterContainer from '../single-search/single-filter-container';
+import useBuyListStore from '@/stores/buyListStore';
 import globalStore from '@/stores/globalStore';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
   const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
-  const { searchResults, currentPage, setCurrentPage, numPages, fetchCards } =
-    useSingleSearchStore();
+
   const {
     initNotificationStatus,
     setNotificationStatusFalse,
     notificationStatus
   } = globalStore();
-  const router = useRouter();
-  const currentPath = router.pathname;
+
   useEffect(() => {
     initNotificationStatus();
   }, []);
+
+  const router = useRouter();
+  const currentPath = router.pathname;
+
+  // Dynamically assign zustand states for the following components (single, buylists, sealed) => FilterSection, NavSearchBar, SearchPagination
+
+  const singleSearchStore = useSingleSearchStore(); // Unconditionally called
+
+  // Dynamically choose the store based on currentPath
+  const queryStore = singleSearchStore;
+
+  // Destructure variables from queryStore or set defaults
+  const {
+    searchTerm,
+    tcg,
+    searchResults,
+    currentPage,
+    numPages,
+    filterOptions,
+    numResults,
+    sortBy,
+    setSortBy,
+    fetchCards,
+    applyFilters,
+    setSearchTerm,
+    setTcg,
+    clearFilters,
+    setCurrentPage,
+    setFilter
+  } = queryStore || {
+    tcg: 'mtg' as Tcg,
+    searchResults: [],
+    searchTerm: '',
+    numPages: null,
+    filterOptions: [],
+    numResults: null,
+    sortBy: '',
+    currentPage: 1,
+    clearFilters: () => {},
+    setCurrentPage: () => {},
+    setFilter: () => {},
+    setSearchTerm: () => {},
+    setTcg: () => {},
+    setSortBy: () => {},
+    fetchCards: async () => {},
+    applyFilters: async () => {}
+  };
+
   return (
     <>
       {/* MOBILE NAV */}
-      {/* align middle horizontal */}
       <div className="sticky top-0 z-50 md:hidden">
         <div className=" flex h-[60px]  justify-between bg-background px-1 shadow-xl">
           <div className=" inset-y-0 left-0 flex items-center">
@@ -80,7 +127,6 @@ const Navbar: React.FC = () => {
                         Multi Search
                       </Button>
                     </Link>
-
                     <Link
                       href="https://discord.gg/EnKKHxSq75"
                       as="https://discord.gg/EnKKHxSq75"
@@ -95,7 +141,17 @@ const Navbar: React.FC = () => {
                         Discord
                       </Button>
                     </Link>
-
+                    <Link href="/buylists" as="/buylists">
+                      <Button
+                        variant="ghost"
+                        className="block w-full text-left text-lg"
+                        onClick={() => {
+                          setMobileNavSheetOpen(false);
+                        }}
+                      >
+                        Buylists
+                      </Button>
+                    </Link>
                     <Link href="/about" as="/about">
                       <Button
                         variant="ghost"
@@ -123,7 +179,6 @@ const Navbar: React.FC = () => {
                         )}
                       </Button>
                     </Link>
-
                     <ModeToggle />
                   </div>
                 </SheetHeader>
@@ -144,7 +199,7 @@ const Navbar: React.FC = () => {
 
             {/* Right Section */}
             <div className="mx-2 flex items-center ">
-              {currentPath == '/' ? (
+              {currentPath === '/' && (
                 <button
                   onClick={() => {
                     setMobileSearchIsVisible(!mobileSearchIsVisible);
@@ -152,44 +207,65 @@ const Navbar: React.FC = () => {
                 >
                   <Search className="mr-2" />
                 </button>
-              ) : null}
+              )}
               <Link href={isAuthenticated ? `/profile` : '/signin'}>
                 <User />
               </Link>
             </div>
           </div>
-          <div
-            className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
-              mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
-            }`}
-          >
-            <NavSearchBar
-              type={'mobile'}
-              toggleMobileSearch={() => {
-                setMobileSearchIsVisible(!mobileSearchIsVisible);
-              }}
-            />
-          </div>
+          {currentPath === '/' && (
+            <div
+              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
+              }`}
+            >
+              <NavSearchBar
+                type={'mobile'}
+                toggleMobileSearch={() => {
+                  setMobileSearchIsVisible(!mobileSearchIsVisible);
+                }}
+                searchTerm={searchTerm}
+                tcg={tcg}
+                clearFilters={clearFilters}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                fetchQuery={fetchCards}
+              />
+            </div>
+          )}
         </div>
         <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>{' '}
-        {searchResults && currentPath == '/' && (
-          <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-            <SinglePagination
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              numPages={numPages}
-              fetchCards={fetchCards}
-            />
-            <Sheet>
-              <SheetTrigger>
-                <MixerHorizontalIcon className="h-6 w-6" />
-              </SheetTrigger>
-              <SheetContent className="min-w-full">
-                <SingleFilterContainer />
-              </SheetContent>
-            </Sheet>
-          </div>
-        )}
+        {searchResults &&
+          (currentPath == '/') && (
+            <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
+              <span className="text-center text-sm font-normal text-secondary-foreground ">
+                {numResults} results
+              </span>
+              <SearchPagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                numPages={numPages}
+                fetchCards={fetchCards}
+              />
+              <Sheet>
+                <SheetTrigger>
+                  <MixerHorizontalIcon className="h-6 w-6" />
+                </SheetTrigger>
+                <SheetContent className="min-w-full">
+                  <FilterSection
+                    filterOptions={filterOptions}
+                    sortBy={sortBy}
+                    fetchCards={fetchCards}
+                    clearFilters={clearFilters}
+                    setFilter={setFilter}
+                    setCurrentPage={setCurrentPage}
+                    applyFilters={applyFilters}
+                    setSortBy={setSortBy}
+                  />
+                </SheetContent>
+              </Sheet>
+            </div>
+          )}
       </div>
 
       {/* DESKTOP NAV MD+ */}
@@ -219,7 +295,17 @@ const Navbar: React.FC = () => {
 
           {/* Center Section */}
           <div className="flex flex-1 items-center justify-center">
-            {currentPath == '/' ? <NavSearchBar type={'desktop'} /> : null}
+            {(currentPath === '/') && (
+              <NavSearchBar
+                type={'desktop'}
+                searchTerm={searchTerm}
+                tcg={tcg}
+                fetchQuery={fetchCards}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                clearFilters={clearFilters}
+              />
+            )}
           </div>
 
           {/* Right Section */}
@@ -240,9 +326,8 @@ const Navbar: React.FC = () => {
                 <Link legacyBehavior href="/" passHref>
                   <NavigationMenuLink
                     className={`${navigationMenuTriggerStyle()} ${
-                      currentPath == '/'
-                        ? 'rounded-b-none border-b-2 border-primary'
-                        : ''
+                      currentPath == '/' &&
+                      'rounded-b-none border-b-2 border-primary'
                     }`}
                   >
                     Home
@@ -262,7 +347,18 @@ const Navbar: React.FC = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-
+              <NavigationMenuItem>
+                <Link legacyBehavior href="/buylists" passHref>
+                  <NavigationMenuLink
+                    className={`${navigationMenuTriggerStyle()} ${
+                      currentPath == '/buylists' &&
+                      'rounded-b-none border-b-2 border-primary'
+                    }`}
+                  >
+                    Buylists
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link legacyBehavior href="/about" passHref>
                   <NavigationMenuLink

@@ -20,6 +20,7 @@ import 'styles/chrome-bug.css';
 import { useWindowSize } from 'usehooks-ts';
 import { Inter } from 'next/font/google';
 import useAuthStore from '@/stores/authStore';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -65,6 +66,18 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
   const { width = 0 } = useWindowSize();
   const isWelcomePage = router.pathname === '/welcome';
 
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60 * 5, // 5 minutes
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
+
   useEffect(() => {
     document.body.classList?.remove('loading');
   }, []);
@@ -79,12 +92,14 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
   }, []);
 
   return (
+    <QueryClientProvider client={queryClient}>
     <main className={cn('antialiased', inter.className)}>
       <ThemeProvider
         attribute="class"
         defaultTheme={isWelcomePage ? 'light' : 'system'}
         enableSystem={!isWelcomePage}
         forcedTheme={isWelcomePage ? 'light' : undefined}
+        disableTransitionOnChange
       >
         {isWelcomePage ? (
           <>
@@ -107,6 +122,7 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
         )}
       </ThemeProvider>
     </main>
+    </QueryClientProvider>
   );
 }
 

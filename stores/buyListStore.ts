@@ -1,241 +1,125 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { Tcg, BuyListQueryCard,BuyListCartStoreData,BuyListCartCardData } from '@/types/product';
+import { Tcg, BuyListQueryCard } from '@/types/product';
+import axiosInstance from '@/utils/axiosWrapper';
+import { toast } from 'sonner';
+import { BuylistSortOptions, FilterOption } from '@/types/query';
 
-interface DropDownOptions {
-  [key: string]: { key: string; value: string }[];
+type SubmitBuylistResponse = {
+  success: boolean;
+  message: string;
+};
+
+export interface IBuylistCartItem {
+  id: number;
+  buylist_cart_id: number;
+  game: string;
+  base_card_id: number;
+  card_name: string;
+  set_name: string;
+  image: string;
+  rarity: string;
+  condition_name: string;
+  foil: 'Normal' | 'Foil' | 'Holo';
+  quantity: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IBuylistCart {
+  id: number;
+  name: string;
+  items: IBuylistCartItem[];
 }
 
 type BuyListState = {
-  foilData: DropDownOptions;
-  rarityData: DropDownOptions;
-  setData: DropDownOptions;
-  buyListQueryResults: BuyListQueryCard[];
-  buyListCartData: BuyListCartStoreData[];
-  showFilters: boolean;
-  maxResultsPerPage: number;
+  //Search State Variables & functions
+  searchResults: BuyListQueryCard[] | null;
   currentPage: number;
-  totalPages:number ;
-  resultsTotal:number ;
-  setCurrentPage: (currentPage: number) => void;
-  addToCart: (store: string, cardData: BuyListCartCardData) => void;
-  removeFromCart: (store: string, cardData: BuyListCartCardData) => void;
-  clearAllCartItems: () => void;
-  selectedFoilFilters: string[];
-  selectedRarityFilters: string[];
-  selectedSetFilters: string[];
-  selectedSortBy: string;
-  updateSelectedSortBy: (sortByOption: string) => void;
-  updateSelectedFoilFilters: (filters: string[]) => void;
-  updateSelectedRarityFilters: (filters: string[]) => void;
-  updateSelectedSetFilters: (filters: string[]) => void;
-  atLeastOneFilter: boolean;
-  checkAtleastOneFilter: () => void;
-  resetAllFilters: () => void;
-  selectedTCG: Tcg;
-  changeTCG: (tcg: Tcg) => void;
+  numPages: number | null;
+  filterOptions?: FilterOption[];
+  tcg: Tcg;
   searchTerm: string;
+  sortBy: BuylistSortOptions;
+  filters: FilterOption[] | null;
+  setSortBy: (sortBy: BuylistSortOptions) => void;
+  setTcg: (tcg: Tcg) => void;
+  setCurrentPage: (currentPage: number) => void;
   setSearchTerm: (searchBoxValue: string) => void;
-  fetchCards: () => void;
+  fetchCards: () => Promise<void>;
+  setFilter: (filterField: string, value: string, selected: boolean) => void;
+  clearFilters: () => void;
+  applyFilters: () => Promise<void>;
+
+  //Cart State Variables
+  currentCartId: number | null;
+  buylistCheckoutBreakdownData: any;
+  selectedStoreForReview: string | null;
+  setCurrentCartId: (cartId: number | null) => void;
+  getCheckoutData: (cartId: number) => Promise<void>;
+  setSelectedStoreForReview: (storeName: string) => void;
+  submitBuylist: (paymentType: 'Cash' | 'Credit') => Promise<SubmitBuylistResponse>;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
-  foilData: {},
-  rarityData: {},
-  setData: {},
-  buyListQueryResults: [],
-  buyListCartData: [],
-  selectedStoreFilters: [],
-  selectedConditionFilters: [],
-  selectedFoilFilters: [],
-  selectedRarityFilters: [],
-  selectedSetFilters: [],
-  atLeastOneFilter: false,
-  selectedTCG: 'mtg',
-  searchTerm: '',
-  showFilters: false,
-  maxResultsPerPage: 100,
+  //Search State Variables
+  searchResults: null,
   currentPage: 1,
-  totalPages:0,
-  resultsTotal:0,
-  selectedSortBy: 'best-match',
+  numPages: 0,
+  tcg: 'mtg',
+  searchTerm: '',
+  sortBy: 'name-asc',
+  filters: null,
 
-  updateSelectedSortBy(sortByOption: string) {
-    set({ selectedSortBy: sortByOption });
-  },
-  updateSelectedFoilFilters(filters: string[]) {
-    set({ selectedFoilFilters: filters });
-  },
-  updateSelectedRarityFilters(filters: string[]) {
-    set({ selectedRarityFilters: filters });
-  },
-  updateSelectedSetFilters(filters: string[]) {
-    set({ selectedSetFilters: filters });
-  },
-  checkAtleastOneFilter() {
-    if (get().selectedFoilFilters.length !== 0) {
-      set({ atLeastOneFilter: true });
-      return;
-    }
-    if (get().selectedRarityFilters.length !== 0) {
-      set({ atLeastOneFilter: true });
-      return;
-    }
-    if (get().selectedSetFilters.length !== 0) {
-      set({ atLeastOneFilter: true });
-      return;
-    }
-    set({ atLeastOneFilter: false });
-  },
-  resetAllFilters() {
-    set({
-      selectedFoilFilters: [],
-      selectedRarityFilters: [],
-      selectedSetFilters: [],
-      atLeastOneFilter: false
-    });
-  },
-  addToCart(store: string, cardData: any) {
-    const currentCartData = get().buyListCartData;
-    // Find the store in buyListCartData
-    const storeIndex = currentCartData.findIndex((item: any) => item[store]);
-    if (storeIndex !== -1) {
-      // Get the store's card list
-      const storeCart = currentCartData[storeIndex][store];
-      // Find the card in the store's array
-      const cardIndex = storeCart.findIndex(
-        (card: any) =>
-          card.name === cardData.name &&
-          card.set === cardData.set &&
-          card.condition === cardData.condition &&
-          card.foil === cardData.foil &&
-          card.rarity === cardData.rarity
-      );
-      if (cardIndex !== -1) {
-        // If card exists, increment the quantity
-        storeCart[cardIndex].quantity += 1;
-      } else {
-        // If card doesn't exist, add it to the store's array
-        storeCart.push({ ...cardData, quantity: 1 });
-      }
-    } else {
-      // If store doesn't exist in buyListCartData, add a new store with the card
-      currentCartData.push({
-        [store]: [{ ...cardData, quantity: 1 }]
-      });
-    }
-    // Update Zustand state with the new cart data
-    set({ buyListCartData: [...currentCartData] });
-  },
-  removeFromCart(store: string, cardData: any) {
-    const currentCartData = get().buyListCartData;
-    // Find the store in buyListCartData
-    const storeIndex = currentCartData.findIndex((item: any) => item[store]);
-    if (storeIndex !== -1) {
-      const storeCart = currentCartData[storeIndex][store];
-      // Find the card in the store's array
-      const cardIndex = storeCart.findIndex(
-        (card: any) =>
-          card.name === cardData.name &&
-          card.set === cardData.set &&
-          card.condition === cardData.condition &&
-          card.foil === cardData.foil &&
-          card.rarity === cardData.rarity
-      );
-      // Remove or decrement card quantity
-      if (cardIndex !== -1) {
-        if (storeCart[cardIndex].quantity > 1) {
-          storeCart[cardIndex].quantity -= 1;
-        } else {
-          storeCart.splice(cardIndex, 1);
-        }
-        // If no cards are left in the store, remove the store from the cart
-        if (storeCart.length === 0) {
-          currentCartData.splice(storeIndex, 1);
-        }
-        set({ buyListCartData: [...currentCartData] });
-      }
-    }
-  },
-  clearAllCartItems() {
-    set({ buyListCartData: [] });
-  },
-  changeTCG(tcg: Tcg) {
-    // reset query results, filters, tcg category, and pagination states
-    set({
-      buyListQueryResults: [],
-      rarityData: { Rarity: [] },
-      foilData: { Foil: [] },
-      setData: { Set: [] },
-      showFilters: false,
-      selectedTCG: tcg,
-      currentPage:1,
-      totalPages:0,
-      resultsTotal:0
-    });
-  },
+  //Cart State Variables
+  currentCartId: null,
+  buylistCheckoutBreakdownData: null,
+  selectedStoreForReview: null,
+
+  //////////////////////
+  // Search Functions //
+  //////////////////////
 
   fetchCards: async () => {
+    const { filters } = get();
     if (get().searchTerm) {
       const queryParams = new URLSearchParams({
-        name: get().searchTerm,
-        tcg: get().selectedTCG,
-        sortBy: get().selectedSortBy,
-        pageNumber:get().currentPage.toString(),
-        maxResultsPerPage:get().maxResultsPerPage.toString(),
-        sets: get()
-          .selectedSetFilters.map((set) => encodeURIComponent(set))
-          .join(','),
-        foils: get()
-          .selectedFoilFilters.map((foil) => encodeURIComponent(foil))
-          .join(','),
-        rarities: get()
-          .selectedRarityFilters.map((rarity) => encodeURIComponent(rarity))
-          .join(',')
+        keyword: get().searchTerm,
+        tcg: get().tcg,
+        index: `buylists_${get().tcg}*`,
+        sortBy: get().sortBy,
+        pageNumber: get().currentPage.toString(),
+        maxResultsPerPage: '100'
       });
-
+      if (filters) {
+        Object.entries(filters).forEach(([index, filter]) => {
+          filter.values.forEach((value) => {
+            if (value.selected) {
+              queryParams.append(
+                `filterSelections[${filter.field}][]`,
+                value.value
+              );
+            }
+          });
+        });
+      }
       const response = await axios.get(
         `${
           process.env.NEXT_PUBLIC_BUYLISTS_URL
-        }/search?${queryParams.toString()}`
+        }/v2/search?${queryParams.toString()}`
       );
 
       if (response.status !== 200) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
+      const filterOptionsFromResponse: FilterOption[] =
+        response.data.filters || [];
 
-      const setData = {
-        Sets: response.data.sets
-          .sort((a: string, b: string) => a.localeCompare(b))
-          .map((item: string) => ({
-            key: item,
-            value: item
-          }))
-      };
-      const rarityData = {
-        Rarity: response.data.rarities
-          .sort((a: string, b: string) => a.localeCompare(b))
-          .map((item: string) => ({
-            key: item,
-            value: item
-          }))
-      };
-      const foilData = {
-        Foil: response.data.foils
-          .sort((a: string, b: string) => a.localeCompare(b))
-          .map((item: string) => ({
-            key: item,
-            value: item
-          }))
-      };
       set({
-        buyListQueryResults: response.data.results.slice(0, 500),
-        totalPages:response.data.pagination.numPages,
-        resultsTotal:response.data.pagination.numResults,
-        setData: setData,
-        rarityData: rarityData,
-        foilData: foilData,
-        showFilters: true,
+        searchResults: response.data.results.slice(0, 500),
+        numPages: response.data.pagination.numPages,
+        filterOptions: filterOptionsFromResponse,
+        filters: filterOptionsFromResponse
       });
     }
   },
@@ -243,9 +127,127 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   setSearchTerm(searchBoxValue: string) {
     set({ searchTerm: searchBoxValue });
   },
-  setCurrentPage(currentPage:number){
-    set({currentPage:currentPage})
-  }
+  setCurrentPage(currentPage: number) {
+    set({ currentPage: currentPage });
+  },
 
+  setFilter: (filterField: string, value: string, selected: boolean) => {
+    const filters = get().filters || [];
+    const updatedFilters = filters.map((filter) => {
+      if (filter.field === filterField) {
+        const updatedValues = filter.values.map((option) => {
+          if (option.value === value) {
+            return { ...option, selected };
+          }
+          return option;
+        });
+        return { ...filter, values: updatedValues };
+      }
+      return filter;
+    });
+    set({ filters: updatedFilters });
+  },
+
+  applyFilters: async () => {
+    await get().fetchCards();
+  },
+
+  setTcg: (tcg: Tcg) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tcg', tcg);
+    }
+    set({ tcg });
+  },
+  setSortBy: (sortBy: BuylistSortOptions) => set({ sortBy }),
+  clearFilters: () => set({ filters: null }),
+
+  ////////////////////
+  // Cart Functions //
+  ////////////////////
+
+  setCurrentCartId: (cartId: number | null) => {
+    set({ currentCartId: cartId });
+  },
+
+  getCheckoutData: async (cartId: number) => {
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/checkouts`
+      );
+      if (response.status === 200) {
+        const storeBreakdowns = response.data.data.storeBreakdowns;
+        const formattedData = Object.entries(storeBreakdowns).map(
+          ([storeName, data]: [string, any]) => ({
+            storeName,
+            cashSubtotal: data.cashSubtotal.toFixed(2),
+            creditSubtotal: data.creditSubtotal.toFixed(2),
+            unableToPurchaseItems: data.unableToPurchaseItems,
+            items: data.items
+          })
+        );
+
+        set({ buylistCheckoutBreakdownData: formattedData });
+      } else {
+        toast.error(
+          'Error fetching buylist checkout breakdown data: ' +
+            response.statusText
+        );
+        console.error(
+          'Error fetching buylist checkout breakdown data:',
+          response
+        );
+      }
+    } catch (error: any) {
+      toast.error(
+        'Error fetching buylist checkout breakdown data: ' + error.message
+      );
+      console.error('Error fetching buylist checkout breakdown data:', error);
+    }
+  },
+
+  setSelectedStoreForReview: (storeName: string) => {
+    set({ selectedStoreForReview: storeName });
+  },
+
+  submitBuylist: async (paymentType: 'Cash' | 'Credit') => {
+    const { currentCartId, selectedStoreForReview } = get();
+    if (!currentCartId || !selectedStoreForReview) {
+      toast.error('No cart or store selected');
+      return { success: false, message: 'No cart or store selected' };
+    }
+
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}/submit`,
+        {
+          paymentType,
+          store: selectedStoreForReview
+        }
+      );
+
+      if (response.status === 200) {
+        const message =
+          response.data?.message || 'Order submitted successfully!';
+        toast.success(message);
+        return {
+          success: true,
+          message
+        };
+      } else {
+        const message = response.data?.message || 'Failed to submit order';
+        toast.error(message);
+        return { success: false, message };
+      }
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        'Error submitting order';
+      toast.error(message);
+      console.error('Error submitting order:', error);
+      return { success: false, message };
+    }
+  }
 }));
+
 export default useBuyListStore;

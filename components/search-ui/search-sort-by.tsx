@@ -5,27 +5,27 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem
 } from '@/components/ui/dropdown-menu';
-import { SortOptions } from '@/stores/useSingleSearchStore';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 
-export default function SingleSortBy() {
-  const { sortBy, setSortBy, fetchCards, setCurrentPage } =
-    useSingleSearchStore();
-
-  const handleSortByChange = (value: SortOptions) => {
+type Props = {
+  sortBy: any;
+  setSortBy: (sortBy: any) => void;
+  fetchCards: () => Promise<void>;
+  setCurrentPage: (currentPage: number) => void;
+  sortByLabel: Record<string, string>; // Dynamically pass the label object
+};
+export default function SearchSortBy({
+  sortBy,
+  setSortBy,
+  fetchCards,
+  setCurrentPage,
+  sortByLabel = {}
+}: Props) {
+  const handleSortByChange = (value: any) => {
     setSortBy(value);
     setCurrentPage(1);
     fetchCards();
-  };
-
-  const sortByLabel = {
-    score: 'Relevance',
-    'price-asc': 'Price: Low to High',
-    'price-desc': 'Price: High to Low',
-    'name-asc': 'Name: A-Z',
-    'name-desc': 'Name: Z-A'
   };
 
   return (
@@ -52,23 +52,13 @@ export default function SingleSortBy() {
         >
           <DropdownMenuRadioGroup
             value={sortBy}
-            onValueChange={(value) => handleSortByChange(value as SortOptions)}
+            onValueChange={(value) => handleSortByChange(value as any)}
           >
-            <DropdownMenuRadioItem value="score">
-              Relevance
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="price-asc">
-              Price: Low to High
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="price-desc">
-              Price: High to Low
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="name-asc">
-              Name: A-Z
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="name-desc">
-              Name: Z-A
-            </DropdownMenuRadioItem>
+            {Object.entries(sortByLabel).map(([key, label]) => (
+              <DropdownMenuRadioItem key={key} value={key}>
+                {label}
+              </DropdownMenuRadioItem>
+            ))}
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>

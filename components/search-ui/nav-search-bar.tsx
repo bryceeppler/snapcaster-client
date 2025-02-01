@@ -1,14 +1,4 @@
-// components/SearchBar.tsx
-
-import {
-  useState,
-  useEffect,
-  useRef,
-  KeyboardEvent,
-  useCallback,
-  forwardRef,
-  useImperativeHandle
-} from 'react';
+import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
 import {
   Select,
   SelectContent,
@@ -26,14 +16,35 @@ import { Input } from '@/components/ui/input';
 import { ChevronDown, HelpCircle, X } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
+import buyListStore from '@/stores/buyListStore';
+import { useRouter } from 'next/router';
 interface AutocompleteResult {
   name: string;
 }
-type Props = { type: string; toggleMobileSearch?: () => void };
-export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
+type Props = {
+  type: string;
+  toggleMobileSearch?: () => void;
+  fetchQuery: () => void;
+  setSearchTerm: (term: string) => void;
+  searchTerm: string;
+  setTcg: (tcg: Tcg) => void;
+  tcg: Tcg;
+  clearFilters: () => void;
+};
+export default function NavSearchBar({
+  type,
+  toggleMobileSearch,
+  fetchQuery,
+  setSearchTerm,
+  searchTerm,
+  setTcg,
+  tcg,
+  clearFilters
+}: Props) {
+  const router = useRouter();
+  const currentPath = router.pathname;
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -41,17 +52,7 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
 
-  // Use the new store
-  const {
-    tcg,
-    setTcg,
-    searchTerm,
-    setSearchTerm,
-    clearSearchResults,
-    fetchCards,
-    clearFilters
-  } = useSingleSearchStore();
-
+  //Autocomplete Logic
   const fetchAutocomplete = useCallback(
     (value: string) => {
       const url = `${autoCompleteUrl}/cards?tcg=${tcg}&query=${encodeURIComponent(
@@ -74,16 +75,6 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
     fetchAutocomplete,
     100
   );
-
-  // useEffect(() => {
-  //   if (searchTerm.trim().length > 1) {
-  //     debouncedAutoCompleteResults(searchTerm);
-  //   } else {
-  //     setSuggestions([]);
-  //     setIsAutoCompleteVisible(false);
-  //     setSelectedIndex(-1);
-  //   }
-  // }, [searchTerm]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -122,11 +113,11 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
 
   const handleSearch = useCallback(() => {
     clearFilters();
-    clearSearchResults();
-    fetchCards();
+    fetchQuery();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
-  }, [fetchCards, searchTerm, tcg]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [fetchQuery, searchTerm, tcg]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -197,7 +188,7 @@ export default function NavSearchBar({ type, toggleMobileSearch }: Props) {
             <ChevronDown className="ml-2 h-4 w-4 shrink-0 transition-transform duration-200 " />
           </SelectTrigger>
 
-          <SelectContent className="">
+          <SelectContent>
             <SelectGroup>
               <SelectItem value="mtg">MTG</SelectItem>
               <SelectItem value="lorcana">Lorcana</SelectItem>

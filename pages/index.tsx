@@ -6,7 +6,7 @@ import { GetStaticProps } from 'next';
 import { getAllBlogPosts } from '@/lib/blog';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { DollarSignIcon, GlobeIcon } from 'lucide-react';
-import SearchBar from '@/components/search-bar/search-bar';
+import SearchBar from '@/components/search-ui/search-bar';
 
 type Props = {};
 
@@ -69,7 +69,17 @@ const HomeContent = (
 );
 
 const Home: NextPage<Props> = ({}: Props) => {
-  const { searchResults } = useSingleSearchStore();
+  const {
+    searchResults,
+    tcg,
+    searchTerm,
+    setTcg,
+    setSearchTerm,
+    clearSearchResults,
+    fetchCards,
+    clearFilters
+  } = useSingleSearchStore();
+
   return (
     <>
       <HomeHead />
@@ -78,7 +88,16 @@ const Home: NextPage<Props> = ({}: Props) => {
           <div className="flex flex-col items-center justify-center md:mt-6">
             <Homebanner prefixText={'Search for'} />
             <div className="mx-auto mt-6 flex w-full justify-center">
-              <SearchBar />
+              <SearchBar
+                searchTool="single"
+                tcg={tcg}
+                searchTerm={searchTerm}
+                setTcg={setTcg}
+                setSearchTerm={setSearchTerm}
+                clearSearchResults={clearSearchResults}
+                fetchCards={fetchCards}
+                clearFilters={clearFilters}
+              />
             </div>
           </div>
         )}

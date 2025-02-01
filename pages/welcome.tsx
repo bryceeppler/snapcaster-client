@@ -7,7 +7,12 @@ import { Integrations } from '@/components/welcome/integrations';
 import Testimonials from '@/components/welcome/testimonials';
 import { SignupForm } from '@/components/forms/SignupForm';
 import { toast } from 'sonner';
-import { CheckCircle, DollarSignIcon, GlobeIcon, MoveRight } from 'lucide-react';
+import {
+  CheckCircle,
+  DollarSignIcon,
+  GlobeIcon,
+  MoveRight
+} from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { SolutionsGrid } from '@/components/welcome/solutions-grid';
 
@@ -34,45 +39,46 @@ const Welcome = (props: Props) => {
                   </span>
                 </h1>
                 <p className="lg:text-md text-lg text-gray-300">
-                  Search 90+ Canadian stores - for free! From Magic
-                  the Gathering, Lorcana, Yu-Gi-Oh, Pokemon and more, we've got you covered.
+                  Search 90+ Canadian stores - for free! From Magic the
+                  Gathering, Lorcana, Yu-Gi-Oh, Pokemon and more, we've got you
+                  covered.
                 </p>
                 <div className="relative mt-4  w-full items-stretch justify-stretch gap-2 sm:justify-center md:flex-row">
-                <Card className="rounded bg-white p-4">
-              <SignupForm
-                confirmPassword={false}
-                inputClassName="bg-white rounded"
-                labels={'implicit'}
-                showSignInLink={false}
-                disableToast={true}
-                callToAction={'Search Now!'}
-                onSuccess={() => {
-                  setAccountCreated(true);
-                  toast('Account created successfully!', {
-                    duration: 8000,
-                    action: {
-                      label: 'Sign In',
-                      onClick: () => {
-                        window.open('/signin', '_blank');
-                      }
-                    }
-                  });
-                }}
-              />
-              {accountCreated && (
-                <div className="mt-4 flex flex-row items-center gap-2">
-                  {' '}
-                  <CheckCircle className="h-4 w-4 text-primary" />{' '}
-                  <p className="text-sm">
-                    Account created successfully! You can now{' '}
-                    <a href="/signin" className="text-primary">
-                      sign in
-                    </a>
-                    .
-                  </p>
-                </div>
-              )}
-            </Card> 
+                  <Card className="rounded bg-white p-4">
+                    <SignupForm
+                      confirmPassword={false}
+                      inputClassName="bg-white rounded"
+                      labels={'implicit'}
+                      showSignInLink={false}
+                      disableToast={true}
+                      callToAction={'Search Now!'}
+                      onSuccess={() => {
+                        setAccountCreated(true);
+                        toast('Account created successfully!', {
+                          duration: 8000,
+                          action: {
+                            label: 'Sign In',
+                            onClick: () => {
+                              window.open('/signin', '_blank');
+                            }
+                          }
+                        });
+                      }}
+                    />
+                    {accountCreated && (
+                      <div className="mt-4 flex flex-row items-center gap-2">
+                        {' '}
+                        <CheckCircle className="h-4 w-4 text-primary" />{' '}
+                        <p className="text-sm">
+                          Account created successfully! You can now{' '}
+                          <a href="/signin" className="text-primary">
+                            sign in
+                          </a>
+                          .
+                        </p>
+                      </div>
+                    )}
+                  </Card>
                 </div>
               </div>
             </div>
@@ -80,7 +86,7 @@ const Welcome = (props: Props) => {
               <div className="mx-auto max-w-md px-6 text-white sm:max-w-2xl lg:max-w-none lg:px-0">
                 <div className="relative flex h-[700px] w-[700px]">
                   <div className="z-10 block h-[700px] w-[700px]">
-                    <div className="" style={{ width: '100%', height: '100%' }}>
+                    <div style={{ width: '100%', height: '100%' }}>
                       <canvas
                         style={{
                           verticalAlign: 'top',
@@ -221,10 +227,12 @@ const SolutionSection = () => {
               Solution
             </h2>
             <h3 className="mx-auto mt-4 max-w-xs text-3xl font-semibold sm:max-w-none sm:text-4xl md:text-5xl">
-              Search across Canada, with one click. 
+              Search across Canada, with one click.
             </h3>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-              Search once, search everywhere. Snapcaster allows you to search across 90+ Canadian vendors with one click. Find in-demand cards, at the best prices, while supporting local games stores.
+              Search once, search everywhere. Snapcaster allows you to search
+              across 90+ Canadian vendors with one click. Find in-demand cards,
+              at the best prices, while supporting local games stores.
             </p>
           </div>
           <SolutionsGrid />
@@ -254,9 +262,13 @@ const ProblemSection = () => {
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
                     <GlobeIcon className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold">Duties & Import Fees</h3>
+                  <h3 className="text-xl font-semibold">
+                    Duties & Import Fees
+                  </h3>
                   <p className="text-muted-foreground">
-                    Shopping for cards internationally means hidden import fees, duties, shipping costs and currency conversion. A card for $10 isn't <span className="italic">really</span> $10.
+                    Shopping for cards internationally means hidden import fees,
+                    duties, shipping costs and currency conversion. A card for
+                    $10 isn't <span className="italic">really</span> $10.
                   </p>
                 </div>
               </div>
@@ -280,11 +292,10 @@ const ProblemSection = () => {
                       <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
                     </svg>
                   </div>
-                  <h3 className="text-xl font-semibold">
-                    Finding Hot Cards 
-                  </h3>
+                  <h3 className="text-xl font-semibold">Finding Hot Cards</h3>
                   <p className="text-muted-foreground">
-                    You want good cards, right? So does everyone else. Half the challenge is just finding them! 
+                    You want good cards, right? So does everyone else. Half the
+                    challenge is just finding them!
                   </p>
                 </div>
               </div>
@@ -295,11 +306,11 @@ const ProblemSection = () => {
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
                     <DollarSignIcon className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold">
-                    Inconsistent Prices 
-                  </h3>
+                  <h3 className="text-xl font-semibold">Inconsistent Prices</h3>
                   <p className="text-muted-foreground">
-                    Have you ever noticed that some cards are just <span className="italic">more expensive</span> than others? Make sure you're not missing out on sales or opportunities.
+                    Have you ever noticed that some cards are just{' '}
+                    <span className="italic">more expensive</span> than others?
+                    Make sure you're not missing out on sales or opportunities.
                   </p>
                 </div>
               </div>

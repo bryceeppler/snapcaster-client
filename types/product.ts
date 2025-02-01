@@ -20,9 +20,7 @@ export interface SingleCatalogCard extends Product {
 
 export interface BuyListQueryCard {
   name: string;
-  set: string;
-  foil: string;
-  rarity: string;
+  filters:any;
   image: string;
   conditions?: {
     [key in Condition]?: BuyListCardPricing;

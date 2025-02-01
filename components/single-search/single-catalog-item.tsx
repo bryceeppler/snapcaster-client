@@ -103,7 +103,11 @@ const SingleCatalogItem = ({ product }: Props) => {
               );
               return matchingWebsite?.meta?.branding?.icons ? (
                 <img
-                  src={theme === 'dark' ? matchingWebsite.meta.branding.icons.dark : matchingWebsite.meta.branding.icons.light}
+                  src={
+                    theme === 'dark'
+                      ? matchingWebsite.meta.branding.icons.dark
+                      : matchingWebsite.meta.branding.icons.light
+                  }
                   alt="Website"
                   className="h-4 w-4"
                 />
