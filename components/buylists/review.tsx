@@ -219,7 +219,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
               <br />
               <br />
               <span className="font-medium text-primary underline">
-                Shipping is your responsibility and insurance is reccomended.
+                Shipping is your responsibility and insurance is recommended.
               </span>
             </AlertDescription>
           </Alert>
