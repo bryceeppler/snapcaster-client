@@ -20,7 +20,7 @@ export interface IBuylistCartItem {
   image: string;
   rarity: string;
   condition_name: string;
-  foil: 'Normal' | 'Foil' | 'Holo';
+  foil: string;
   quantity: number;
   created_at: string;
   updated_at: string;
@@ -58,7 +58,9 @@ type BuyListState = {
   setCurrentCartId: (cartId: number | null) => void;
   getCheckoutData: (cartId: number) => Promise<void>;
   setSelectedStoreForReview: (storeName: string) => void;
-  submitBuylist: (paymentType: 'Cash' | 'Credit') => Promise<SubmitBuylistResponse>;
+  submitBuylist: (
+    paymentType: 'Cash' | 'Credit'
+  ) => Promise<SubmitBuylistResponse>;
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
@@ -86,13 +88,14 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       const queryParams = new URLSearchParams({
         keyword: get().searchTerm,
         tcg: get().tcg,
-        index: `buylists_${get().tcg}*`,
+        index: `buylists_${get().tcg}_prod`,
         sortBy: get().sortBy,
         pageNumber: get().currentPage.toString(),
         maxResultsPerPage: '100'
       });
+
       if (filters) {
-        Object.entries(filters).forEach(([index, filter]) => {
+        filters.forEach((filter) => {
           filter.values.forEach((value) => {
             if (value.selected) {
               queryParams.append(
@@ -103,24 +106,33 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
           });
         });
       }
-      const response = await axios.get(
-        `${
-          process.env.NEXT_PUBLIC_BUYLISTS_URL
-        }/v2/search?${queryParams.toString()}`
-      );
 
-      if (response.status !== 200) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      try {
+        const response = await axios.get(
+          `${
+            process.env.NEXT_PUBLIC_BUYLISTS_URL
+          }/v2/search?${queryParams.toString()}`
+        );
+
+        if (response.status !== 200) {
+          console.error('Search API Error:');
+          toast.error('Error fetching cards');
+          return;
+        }
+
+        const filterOptionsFromResponse: FilterOption[] =
+          response.data.filters || [];
+
+        set({
+          searchResults: response.data.results.slice(0, 500),
+          numPages: response.data.pagination.numPages,
+          filterOptions: filterOptionsFromResponse,
+          filters: filterOptionsFromResponse
+        });
+      } catch (error) {
+        console.error('Search API Error:', error);
+        toast.error('Error fetching cards');
       }
-      const filterOptionsFromResponse: FilterOption[] =
-        response.data.filters || [];
-
-      set({
-        searchResults: response.data.results.slice(0, 500),
-        numPages: response.data.pagination.numPages,
-        filterOptions: filterOptionsFromResponse,
-        filters: filterOptionsFromResponse
-      });
     }
   },
 

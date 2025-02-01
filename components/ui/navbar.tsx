@@ -141,7 +141,7 @@ const Navbar: React.FC = () => {
                         Discord
                       </Button>
                     </Link>
-                    <Link href="/buylists" as="/buylists">
+                    {/* <Link href="/buylists" as="/buylists">
                       <Button
                         variant="ghost"
                         className="block w-full text-left text-lg"
@@ -151,7 +151,7 @@ const Navbar: React.FC = () => {
                       >
                         Buylists
                       </Button>
-                    </Link>
+                    </Link> */}
                     <Link href="/about" as="/about">
                       <Button
                         variant="ghost"
@@ -235,37 +235,36 @@ const Navbar: React.FC = () => {
           )}
         </div>
         <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>{' '}
-        {searchResults &&
-          (currentPath == '/') && (
-            <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-              <span className="text-center text-sm font-normal text-secondary-foreground ">
-                {numResults} results
-              </span>
-              <SearchPagination
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                numPages={numPages}
-                fetchCards={fetchCards}
-              />
-              <Sheet>
-                <SheetTrigger>
-                  <MixerHorizontalIcon className="h-6 w-6" />
-                </SheetTrigger>
-                <SheetContent className="min-w-full">
-                  <FilterSection
-                    filterOptions={filterOptions}
-                    sortBy={sortBy}
-                    fetchCards={fetchCards}
-                    clearFilters={clearFilters}
-                    setFilter={setFilter}
-                    setCurrentPage={setCurrentPage}
-                    applyFilters={applyFilters}
-                    setSortBy={setSortBy}
-                  />
-                </SheetContent>
-              </Sheet>
-            </div>
-          )}
+        {searchResults && currentPath == '/' && (
+          <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
+            <span className="text-center text-sm font-normal text-secondary-foreground ">
+              {numResults} results
+            </span>
+            <SearchPagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              numPages={numPages}
+              fetchCards={fetchCards}
+            />
+            <Sheet>
+              <SheetTrigger>
+                <MixerHorizontalIcon className="h-6 w-6" />
+              </SheetTrigger>
+              <SheetContent className="min-w-full">
+                <FilterSection
+                  filterOptions={filterOptions}
+                  sortBy={sortBy}
+                  fetchCards={fetchCards}
+                  clearFilters={clearFilters}
+                  setFilter={setFilter}
+                  setCurrentPage={setCurrentPage}
+                  applyFilters={applyFilters}
+                  setSortBy={setSortBy}
+                />
+              </SheetContent>
+            </Sheet>
+          </div>
+        )}
       </div>
 
       {/* DESKTOP NAV MD+ */}
@@ -295,7 +294,7 @@ const Navbar: React.FC = () => {
 
           {/* Center Section */}
           <div className="flex flex-1 items-center justify-center">
-            {(currentPath === '/') && (
+            {currentPath === '/' && (
               <NavSearchBar
                 type={'desktop'}
                 searchTerm={searchTerm}
@@ -347,7 +346,7 @@ const Navbar: React.FC = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-              <NavigationMenuItem>
+              {/* <NavigationMenuItem>
                 <Link legacyBehavior href="/buylists" passHref>
                   <NavigationMenuLink
                     className={`${navigationMenuTriggerStyle()} ${
@@ -358,7 +357,7 @@ const Navbar: React.FC = () => {
                     Buylists
                   </NavigationMenuLink>
                 </Link>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
               <NavigationMenuItem>
                 <Link legacyBehavior href="/about" passHref>
                   <NavigationMenuLink
