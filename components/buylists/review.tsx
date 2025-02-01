@@ -21,7 +21,11 @@ interface ReviewProps {
 }
 
 const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
-  const { buylistCheckoutBreakdownData, selectedStoreForReview, submitBuylist } = useBuyListStore();
+  const {
+    buylistCheckoutBreakdownData,
+    selectedStoreForReview,
+    submitBuylist
+  } = useBuyListStore();
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,14 +34,12 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
     message: string;
   }>({
     success: false,
-    message: '',
+    message: ''
   });
 
   const storeData = buylistCheckoutBreakdownData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
-  console.log(storeData)
-  console.log("hi")
 
   const handleSubmit = async (paymentType: 'Cash' | 'Credit') => {
     setIsSubmitting(true);
@@ -46,7 +48,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
     if (result.success) {
       setSubmissionResult({
         success: true,
-        message: result.message,
+        message: result.message
       });
     }
   };
@@ -56,19 +58,19 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
       <div className="container py-12">
         <Card>
           <CardContent className="pt-6">
-            <div className="flex flex-col items-center text-center space-y-4">
+            <div className="flex flex-col items-center space-y-4 text-center">
               <CheckCircle2 className="size-12 text-green-500" />
-              <h2 className="text-2xl font-bold">Order Submitted Successfully!</h2>
-            
-                <p className="text-muted-foreground">
-                  Your order has been submitted to {getWebsiteName(selectedStoreForReview || '')}. 
-                  You will receive an email confirmation shortly with payment instructions.
-                </p>
-             
-              <Button 
-                onClick={() => setCurrentStep(0)} 
-                className="mt-4"
-              >
+              <h2 className="text-2xl font-bold">
+                Order Submitted Successfully!
+              </h2>
+
+              <p className="text-muted-foreground">
+                Your order has been submitted to{' '}
+                {getWebsiteName(selectedStoreForReview || '')}. You will receive
+                an email confirmation shortly with payment instructions.
+              </p>
+
+              <Button onClick={() => setCurrentStep(0)} className="mt-4">
                 Return to Buylists
               </Button>
             </div>
@@ -80,11 +82,14 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
 
   if (!storeData) {
     return (
-      <div className="container max-w-4xl py-6">
-        <Alert variant="destructive">
+      <div className="container max-w-4xl rounded-lg border bg-popover py-6">
+        <Alert className="bg-background font-medium">
           <AlertCircle className="size-4" />
           <AlertTitle>Error</AlertTitle>
-          <AlertDescription>No store data found to review. Please select a store from the checkout page.</AlertDescription>
+          <AlertDescription className="text-foreground">
+            No store data found to review. Please select a store from the
+            checkout page.
+          </AlertDescription>
         </Alert>
         <div className="mt-4">
           <Button
@@ -105,7 +110,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
   );
 
   return (
-    <div className="sm:container space-y-6 mb-6">
+    <div className="mb-6 space-y-6 sm:container">
       {/* Order Summary Card */}
       <Card>
         <CardHeader>
@@ -199,19 +204,38 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
           <Alert>
             <AlertCircle className="size-4" />
             <AlertTitle>Heads up!</AlertTitle>
-            <AlertDescription>You can submit a cash order OR a credit order. The prices listed here are not guaranteed by the store and are pending confirmation after submission. Once you submit your order, you will receive and email from {getWebsiteName(storeData.storeName)} with the final prices.</AlertDescription>
+            <AlertDescription>
+              <br />
+              The prices listed here here are not guaranteed by the store and
+              may be adjusted due to demand, card condition, and new set
+              volatility.
+              <br />
+              <br />
+              In a few business days{' '}
+              <span className="text-primary">
+                {getWebsiteName(storeData.storeName)}
+              </span>{' '}
+              will email you a final adjusted quote and shipping instructions.
+              <br />
+              <br />
+              <span className="font-medium text-primary underline">
+                Shipping is your responsibility and insurance is reccomended.
+              </span>
+            </AlertDescription>
           </Alert>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Order Totals */}
             <Card className="bg-accent">
-              <CardContent className="pt-4 flex flex-col items-center">
-                <span className="text-xs font-montserrat font-medium uppercase mb-1">Cash Total</span>
+              <CardContent className="flex flex-col items-center pt-4">
+                <span className="mb-1 font-montserrat text-xs font-medium uppercase">
+                  Cash Total
+                </span>
                 <span className="text-2xl font-bold">
                   ${storeData.cashSubtotal}
                 </span>
-                <Button 
-                  className="mt-4 w-full" 
+                <Button
+                  className="mt-4 w-full"
                   onClick={() => handleSubmit('Cash')}
                   disabled={isSubmitting}
                 >
@@ -220,13 +244,15 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
               </CardContent>
             </Card>
             <Card className="bg-accent">
-              <CardContent className="pt-4 flex flex-col items-center">
-                <span className="text-xs font-montserrat font-medium uppercase mb-1">Store Credit Total</span>
+              <CardContent className="flex flex-col items-center pt-4">
+                <span className="mb-1 font-montserrat text-xs font-medium uppercase">
+                  Store Credit Total
+                </span>
                 <span className="text-2xl font-bold">
                   ${storeData.creditSubtotal}
                 </span>
-                <Button 
-                  className="mt-4 w-full" 
+                <Button
+                  className="mt-4 w-full"
                   onClick={() => handleSubmit('Credit')}
                   disabled={isSubmitting}
                 >

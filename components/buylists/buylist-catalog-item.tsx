@@ -2,14 +2,26 @@ import { Card } from '@/components/ui/card';
 import CardImage from '../ui/card-image';
 import { Button } from '../ui/button';
 import React, { memo } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import useBuyListStore, { IBuylistCart } from '@/stores/buyListStore';
 import { useCartItems } from '@/hooks/useCartItems';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
+import { toast } from 'sonner';
 type Props = { cardData: any };
 const conditions = [
   'Near Mint',
@@ -23,10 +35,15 @@ const CART_KEY = (cartId: number) => ['cart', cartId] as const;
 
 const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
   const { currentCartId } = useBuyListStore();
-  const { cartItems, updateCartItem } = useCartItems(currentCartId || undefined);
+  const { cartItems, updateCartItem } = useCartItems(
+    currentCartId || undefined
+  );
 
   // Fetch cart data using React Query
-  const { data: currentCart } = useQuery<{ success: boolean; cart: IBuylistCart } | null>({
+  const { data: currentCart } = useQuery<{
+    success: boolean;
+    cart: IBuylistCart;
+  } | null>({
     queryKey: CART_KEY(currentCartId || 0),
     queryFn: async () => {
       if (!currentCartId) return null;
@@ -54,10 +71,13 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
 
   const handleUpdateQuantity = (conditionName: string, delta: number) => {
     if (!currentCartId) return;
-    
+
     const currentQuantity = getQuantityForCondition(conditionName);
     const newQuantity = currentQuantity + delta;
-
+    if (newQuantity > 99) {
+      toast.error('Max Quantity 99');
+      return;
+    }
     const cartItem = {
       base_card_id: cardData.baseCardId,
       card_name: cardData.name,
@@ -98,7 +118,9 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
 
           <Dialog>
             <DialogTitle hidden>Add To Cart</DialogTitle>
-            <DialogDescription hidden>Add this card to your cart</DialogDescription>
+            <DialogDescription hidden>
+              Add this card to your cart
+            </DialogDescription>
             {Object.keys(cardData.conditions) && (
               <DialogTrigger asChild>
                 <Button
@@ -137,7 +159,16 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           {!isAvailable && (
-                            <ExclamationTriangleIcon className="size-4 text-red-500" />
+                            <TooltipProvider>
+                              <Tooltip delayDuration={100}>
+                                <TooltipTrigger asChild className="cursor-help">
+                                  <ExclamationTriangleIcon className="size-4 text-red-500" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>No stores are purchasing this card</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           )}
                           <p className="text-base font-medium">
                             {conditionName}

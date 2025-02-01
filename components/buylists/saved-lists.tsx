@@ -2,7 +2,13 @@ import { useState } from 'react';
 import useBuyListStore from '@/stores/buyListStore';
 import { useUserCarts } from '@/hooks/useUserCarts';
 import { PlusIcon, SquarePen, Trash } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import {
@@ -89,18 +95,13 @@ export default function SavedLists({
                   key={cart.id}
                   className="flex flex-col rounded border bg-popover"
                 >
-                  <div
-                    className="flex flex-row items-center justify-between border-b p-3"
-
-                  >
-                    <span className="font-medium">{cart.name}</span>
+                  <div className="flex flex-row items-center justify-between border-b p-3">
+                    <span className="overflow-hidden   font-medium">
+                      <p className="overflow-hidden text-ellipsis whitespace-nowrap">
+                        {cart.name}
+                      </p>
+                    </span>
                     <div className="flex flex-row gap-2">
-                      <Button 
-                                            onClick={() => {
-                                              setCurrentCartId(cart.id);
-                                              setCurrentStep(1);
-                                            }}
-                        >Select</Button>
                       <Button
                         size="icon"
                         variant="ghost"
@@ -124,6 +125,14 @@ export default function SavedLists({
                       >
                         <Trash className="h-4 w-4" />
                         <span className="sr-only">Delete</span>
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setCurrentCartId(cart.id);
+                          setCurrentStep(1);
+                        }}
+                      >
+                        Select
                       </Button>
                     </div>
                   </div>
@@ -240,7 +249,11 @@ export default function SavedLists({
             <Button
               onClick={() => {
                 if (activeDialogId) {
-                  renameCart({ id: activeDialogId, name: newCartName, items: [] });
+                  renameCart({
+                    id: activeDialogId,
+                    name: newCartName,
+                    items: []
+                  });
                   setActiveDialogId(null);
                   setNewCartName('');
                 }
@@ -256,7 +269,7 @@ export default function SavedLists({
       {/* Delete Cart Dialog */}
       <AlertDialog
         open={!!cartToDelete}
-        onOpenChange={(open) => !open && setCartToDelete(null)}
+        onOpenChange={(open: boolean) => !open && setCartToDelete(null)}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
