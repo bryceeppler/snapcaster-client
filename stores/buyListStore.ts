@@ -59,7 +59,7 @@ type BuyListState = {
   getCheckoutData: (cartId: number) => Promise<void>;
   setSelectedStoreForReview: (storeName: string) => void;
   submitBuylist: (
-    paymentType: 'Cash' | 'Credit'
+    paymentType: 'Cash' | 'Store Credit'
   ) => Promise<SubmitBuylistResponse>;
 };
 
@@ -225,7 +225,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     set({ selectedStoreForReview: storeName });
   },
 
-  submitBuylist: async (paymentType: 'Cash' | 'Credit') => {
+  submitBuylist: async (paymentType: 'Cash' | 'Store Credit') => {
     const { currentCartId, selectedStoreForReview } = get();
     if (!currentCartId || !selectedStoreForReview) {
       toast.error('No cart or store selected');

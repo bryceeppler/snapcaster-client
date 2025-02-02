@@ -41,7 +41,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
     (store: any) => store.storeName === selectedStoreForReview
   );
 
-  const handleSubmit = async (paymentType: 'Cash' | 'Credit') => {
+  const handleSubmit = async (paymentType: 'Cash' | 'Store Credit') => {
     setIsSubmitting(true);
     const result = await submitBuylist(paymentType);
     setIsSubmitting(false);
@@ -253,7 +253,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
                 </span>
                 <Button
                   className="mt-4 w-full"
-                  onClick={() => handleSubmit('Credit')}
+                  onClick={() => handleSubmit('Store Credit')}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit Credit Order'}
