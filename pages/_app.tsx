@@ -64,8 +64,8 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
 
 function MyApp({ Component, pageProps, router }: MyAppProps) {
   const { width = 0 } = useWindowSize();
-  const isWelcomePage = router.pathname === '/welcome';
-
+  const usesMainNav =
+    router.pathname !== '/welcome' && router.pathname !== '/vendors/tier3';
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -96,12 +96,12 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
     <main className={cn('antialiased', inter.className)}>
       <ThemeProvider
         attribute="class"
-        defaultTheme={isWelcomePage ? 'light' : 'system'}
-        enableSystem={!isWelcomePage}
-        forcedTheme={isWelcomePage ? 'light' : undefined}
+        defaultTheme={!usesMainNav ? 'light' : 'system'}
+        enableSystem={usesMainNav}
+        forcedTheme={!usesMainNav ? 'light' : undefined}
         disableTransitionOnChange
       >
-        {isWelcomePage ? (
+        {!usesMainNav ? (
           <>
             <Toaster
               position={width > 640 ? 'bottom-center' : 'bottom-right'}
