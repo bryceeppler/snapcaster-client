@@ -1,29 +1,15 @@
 import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
-import { UsersByDeviceData, PopularSearchedCard, PopularBuyClicksByTCG } from '@/lib/GA4Client';
+import {PopularBuyClicksByTCG } from '@/lib/GA4Client';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import useGlobalStore from '@/stores/globalStore';
-import { Integrations } from '@/components/welcome/integrations';
-import Testimonials from '@/components/welcome/testimonials';
-import { SignupForm } from '@/components/forms/SignupForm';
 import { Tier3SignupForm } from '@/components/forms/Tier3SignupForm';
 import { toast } from 'sonner';
-import {
-  CheckCircle,
-  DollarSignIcon,
-  GlobeIcon,
-  MoveRight
-} from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { SolutionsGrid } from '@/components/welcome/solutions-grid';
 import Hero from '@/components/vendors/tier3/hero';
 import Tier3Overview from '@/components/vendors/tier3/tier-3-overview';
 import Buylists from '@/components/vendors/tier3/buylists';

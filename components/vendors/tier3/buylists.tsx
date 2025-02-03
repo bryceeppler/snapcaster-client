@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import SectionTitle from './section-title';
 import { Button } from '@/components/ui/button';
 import { ArrowRightIcon, PlayIcon } from '@radix-ui/react-icons';

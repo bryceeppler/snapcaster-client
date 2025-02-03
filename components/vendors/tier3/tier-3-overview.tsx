@@ -5,9 +5,7 @@ import {
   Image, 
   ClipboardList, 
   Mail, 
-  Tag, 
   Percent, 
-  MessageCircle,
   ShoppingCart,
   LucideIcon,
   ArrowRightIcon
