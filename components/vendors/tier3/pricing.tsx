@@ -84,14 +84,14 @@ const Pricing = ({ variant, onSignup }: PricingProps) => {
 };
 
 const features = [
-  "Access to our analytics dashboard",
-  "Promotion code integration",
-  "1-Click multisearch checkout",
-  "Brand visibility in search results",
-  "Brand visibility on About page",
-  "Promotions in the newsletter",
-  "Exclusive Discord roles & announcements",
-  "30 Free Snapcaster Pro coupons monthly"
+  "Analytics Dashboard: Track performance metrics and customer behavior",
+  "Boost sales with customizable promotion codes",
+  "1-Click Checkout",
+  "Logo placement in 100% of search results",
+  "Build trust as a verified vendor on our About page",
+  "Newsletter Promotion: Reach 1100+ engaged buyers monthly",
+  "VIP Discord Integration: Direct access to our most active buying community",
+  "Pro Rewards Program ($89/mo value): 30 premium discount codes to drive customer loyalty"
 ];
 
 export default Pricing;
