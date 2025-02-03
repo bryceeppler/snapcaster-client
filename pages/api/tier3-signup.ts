@@ -22,17 +22,23 @@ export default async function handler(
     const fromAddress = "info@snapcaster.gg";
     const subject = "New Tier 3 Signup";
     const replyTo = "info@snapcaster.gg";
-    const textBody = `Name: ${data.name}\nEmail: ${data.email}\nStore Name: ${data.storeName}\nNotes: ${data.notes}\nSubscription Type: ${data.subscriptionType}`;
+    const price = data.subscriptionType === 'monthly' ? '$350' : '$300';
+
+    const textBody = `Name: ${data.name}\nEmail: ${data.email}\nStore Name: ${data.storeName}\nNotes: ${data.notes}\nSubscription Type: ${data.subscriptionType}\nPrice: ${price}/month`;
     const htmlBody = `<p>Name: ${data.name}</p>
     <p>Email: ${data.email}</p>
     <p>Store Name: ${data.storeName}</p>
     <p>Notes: ${data.notes}</p>
-    <p>Subscription Type: ${data.subscriptionType}</p>`;
+    <p>Subscription Type: ${data.subscriptionType}</p>
+    <p>Price: ${price}/month</p>`;
 
-    const response = await fetch(`${process.env.EMAIL_URL}/api/v1/send`, {
+    const url = `${process.env.EMAIL_SERVICE_URL}/api/v1/send`;
+    console.log(url);
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'api-key': process.env.EMAIL_SERVICE_KEY as string,
       },
       body: JSON.stringify({ toAddresses, fromAddress, subject, htmlBody, textBody, replyTo }),
     });
