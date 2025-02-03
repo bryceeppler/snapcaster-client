@@ -1,7 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from "react";
@@ -36,6 +43,7 @@ export function Tier3SignupForm({ onSuccess, initialPlan = "quarterly" }: Tier3S
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
@@ -80,13 +88,21 @@ export function Tier3SignupForm({ onSuccess, initialPlan = "quarterly" }: Tier3S
         <label className="block text-sm font-medium mb-2">
           Subscription Type
         </label>
-        <select
-          {...register("subscriptionType")}
-          className="w-full p-2 border rounded-md bg-background"
-        >
-          <option value="quarterly">Quarterly ($250/month)</option>
-          <option value="monthly">Monthly ($300/month)</option>
-        </select>
+        <Controller
+          control={control}
+          name="subscriptionType"
+          render={({ field }) => (
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select your subscription type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="quarterly">Quarterly ($300/month)</SelectItem>
+                <SelectItem value="monthly">Monthly ($350/month)</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        />
         {errors.subscriptionType && (
           <p className="text-sm text-red-500 mt-1">{errors.subscriptionType.message}</p>
         )}

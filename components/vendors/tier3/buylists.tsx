@@ -1,8 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import SectionTitle from './section-title';
-import { HeroVideoDialog } from '@/components/ui/hero-video-dialog';
 import { Button } from '@/components/ui/button';
-import { ArrowRightIcon } from '@radix-ui/react-icons';
+import { ArrowRightIcon, PlayIcon } from '@radix-ui/react-icons';
 
 const Buylists = ({ variant, onSignup }: { variant: 'dark' | 'light', onSignup: () => void }) => {
   return (
@@ -23,13 +22,12 @@ const Buylists = ({ variant, onSignup }: { variant: 'dark' | 'light', onSignup: 
         <div>
           <div className="mx-auto mt-16 pb-4 md:pb-0 lg:px-8">
             <div className="relative">
-              <HeroVideoDialog
-                className="max-w-[900px]dark:hidden mx-auto block"
-                animationStyle="from-center"
-                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-                thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
-                thumbnailAlt="Hero Video"
-              />
+               {/*Video placeholder  */}
+               <div className="relative w-full h-[500px] bg-gray-200">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <PlayIcon className="w-16 h-16 text-gray-500" />
+                </div>
+               </div>
             </div>
           </div>
         </div>
