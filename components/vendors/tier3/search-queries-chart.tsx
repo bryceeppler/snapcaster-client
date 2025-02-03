@@ -20,6 +20,7 @@ import {
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 import 'chartjs-adapter-date-fns'
+import annotationPlugin from 'chartjs-plugin-annotation'
 
 import {
   Card,
@@ -38,7 +39,8 @@ ChartJS.register(
   Tooltip,
   Filler,
   Legend,
-  TimeScale
+  TimeScale,
+  annotationPlugin
 )
 
 interface DataPoint {
@@ -189,6 +191,29 @@ export function SearchQueriesChart() {
           label: (context) => {
             return `${context.dataset.label}: ${context.parsed.y} searches`
           }
+        }
+      },
+      annotation: {
+        annotations: {
+          strike: {
+            type: 'box' as const,
+            xMin: '2024-11-15',
+            xMax: '2024-12-17',
+            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+            borderColor: 'rgba(255, 99, 132, 0.25)',
+                    label: {
+              display: true,
+              content: 'Canada Post Strike',
+              position: 'center' as const,
+              yAdjust: -80,
+              color: 'rgba(255, 99, 132, 1)',
+              font: {
+                weight: 'bold' as const,
+                size: 10
+              },
+              padding: 6,
+            }
+          },
         }
       }
     },
