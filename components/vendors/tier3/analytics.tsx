@@ -71,7 +71,7 @@ const Analytics = ({ variant, popularBuyClicks, onSignup }: AnalyticsProps) => {
       <div className="container">
         <SectionTitle
           subtitle="ANALYTICS DASHBOARD"
-          title="Transform Your Card Business with Canadian Market Analytics"
+          title="Canadian Market Analytics to Transform Your Card Business"
           paragraph="Get access to our powerful analytics suite for the Canadian TCG market. Backed by real data and actionable insights you can't find anywhere else."
           variant={variant}
         />

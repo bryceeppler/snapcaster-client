@@ -15,7 +15,7 @@ const Buylists = ({ variant, onSignup }: { variant: 'dark' | 'light', onSignup: 
       <div className="container">
         <SectionTitle
           subtitle="BUYLISTS"
-          title="Be featured on our buylists feature"
+          title="Build your inventory with our Buylist feature"
           paragraph="Users can browse and submit BinderPOS buylists to your website directly from Snapcaster. Eliminate the bottleneck of limited inventory!"
           variant={variant}
         />

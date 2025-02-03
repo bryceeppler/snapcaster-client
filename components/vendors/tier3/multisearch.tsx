@@ -8,7 +8,7 @@ const Multisearch = () => {
       <div className="container">
         <SectionTitle
           subtitle="EASY CHECKOUT"
-          title="1-Click Checkout"
+          title="Convert more sales with our friction-free checkout system."
           paragraph="Convert more sales with our friction-free multisearch checkout system. Reduce cart abandonment and increase average order value instantly."
         />
         <div>

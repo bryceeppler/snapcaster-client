@@ -71,14 +71,15 @@ const Tier3 = (props: Props) => {
       <div className="relative min-h-screen lg:overflow-hidden">
         <Hero onSignup={() => openSignupDialog("quarterly")} />
         <Tier3Overview onSignup={() => openSignupDialog("quarterly")} />
+        <Buylists variant="dark" onSignup={() => openSignupDialog("quarterly")} />
+        <Multisearch />
+
         <Analytics 
           variant="dark" 
           popularBuyClicks={popularBuyClicks}
           onSignup={() => openSignupDialog("quarterly")}
         />
         <Visibility />
-        <Buylists variant="dark" onSignup={() => openSignupDialog("quarterly")} />
-        <Multisearch />
         <OtherFeatures variant="dark" />
         <Pricing variant="light" onSignup={openSignupDialog} />
         <footer className="bg-primary text-white py-16 border-t border-white/10">
