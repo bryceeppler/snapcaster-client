@@ -49,7 +49,7 @@ const Pricing = ({ variant, onSignup }: PricingProps) => {
           </Card>
 
           <Card className="flex-1 border-2 border-primary bg-background/50 backdrop-blur-sm relative overflow-hidden">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-primary text-sm font-medium rounded-bl-lg">
+            <div className="absolute top-0 right-0 px-3 py-1 bg-primary text-sm font-medium rounded-bl-lg text-white">
               Popular
             </div>
             <CardHeader className="space-y-2">
