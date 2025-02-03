@@ -64,7 +64,6 @@ const Tier3 = (props: Props) => {
 
   return (
     <>
-      <div className="invisible h-2 w-full bg-primary sm:visible"></div>
       <div className="relative min-h-screen lg:overflow-hidden">
         <Hero onSignup={() => openSignupDialog("quarterly")} />
         <Tier3Overview onSignup={() => openSignupDialog("quarterly")} />
