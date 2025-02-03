@@ -38,6 +38,7 @@ type Props = {};
 const Tier3 = (props: Props) => {
   const [popularBuyClicks, setPopularBuyClicks] = useState<PopularBuyClicksByTCG | undefined>(undefined);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<"monthly" | "quarterly">("quarterly");
 
   useEffect(() => {
@@ -63,6 +64,16 @@ const Tier3 = (props: Props) => {
   const openSignupDialog = (plan: "monthly" | "quarterly" = "quarterly") => {
     setSelectedPlan(plan);
     setIsSignupOpen(true);
+  };
+
+  const handleSignupSuccess = () => {
+    setIsSignupOpen(false);
+    setIsConfirmationOpen(true);
+  };
+
+  const copyEmailToClipboard = () => {
+    navigator.clipboard.writeText('info@snapcaster.gg');
+    toast.success('Email copied to clipboard!');
   };
 
   return (
@@ -142,7 +153,34 @@ const Tier3 = (props: Props) => {
                 Join Canada's fastest growing TCG marketplace platform and start growing your business today.
               </DialogDescription>
             </DialogHeader>
-            <Tier3SignupForm onSuccess={() => setIsSignupOpen(false)} initialPlan={selectedPlan} />
+            <Tier3SignupForm onSuccess={handleSignupSuccess} initialPlan={selectedPlan} />
+          </DialogContent>
+        </Dialog>
+
+        {/* Confirmation Dialog */}
+        <Dialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Application Received! 🎉</DialogTitle>
+              <DialogDescription className="pt-4 space-y-4">
+                <p>
+                  Thank you for applying to become a Tier 3 partner! We're excited to have you join our growing community of successful TCG vendors.
+                </p>
+                <p>
+                  Our team will review your application and get back to you within 1-2 business days with a contract. In the meantime, feel free to email us at{' '}
+                  <button 
+                    onClick={copyEmailToClipboard}
+                    className="text-blue-500 hover:text-blue-600 transition-colors underline cursor-pointer"
+                  >
+                    info@snapcaster.gg
+                  </button>
+                  {' '}if you have any questions.
+                </p>
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end mt-4">
+              <Button onClick={() => setIsConfirmationOpen(false)}>Close</Button>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
