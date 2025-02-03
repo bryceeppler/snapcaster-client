@@ -23,6 +23,7 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [previousVolume, setPreviousVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
@@ -93,7 +94,15 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
     if (videoRef.current) {
       videoRef.current.volume = newVolume;
       setVolume(newVolume);
-      setIsMuted(newVolume === 0);
+      setPreviousVolume(newVolume);
+      
+      if (newVolume === 0) {
+        setIsMuted(true);
+        videoRef.current.muted = true;
+      } else if (isMuted) {
+        setIsMuted(false);
+        videoRef.current.muted = false;
+      }
     }
   };
 
@@ -108,12 +117,18 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
 
   const toggleMute = () => {
     if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-      if (isMuted) {
-        videoRef.current.volume = volume;
-      } else {
+      const newMutedState = !isMuted;
+      videoRef.current.muted = newMutedState;
+      setIsMuted(newMutedState);
+      
+      if (newMutedState) {
+        setPreviousVolume(volume);
         videoRef.current.volume = 0;
+        setVolume(0);
+      } else {
+        const volumeToRestore = previousVolume || 1;
+        videoRef.current.volume = volumeToRestore;
+        setVolume(volumeToRestore);
       }
     }
   };
@@ -291,14 +306,14 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
                 className="text-white hover:bg-white/20"
                 onClick={toggleMute}
               >
-                {isMuted ? (
+                {volume === 0 ? (
                   <VolumeX className="h-5 w-5" />
                 ) : (
                   <Volume2 className="h-5 w-5" />
                 )}
               </Button>
               <Slider
-                value={[isMuted ? 0 : volume]}
+                value={[volume]}
                 onValueChange={handleVolumeChange}
                 max={1}
                 step={0.01}

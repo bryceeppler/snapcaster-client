@@ -41,3 +41,4 @@ const Buylists = ({ variant, onSignup }: { variant: 'dark' | 'light'; onSignup: 
 };
 
 export default Buylists;
+
