@@ -24,7 +24,6 @@ import {
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { SolutionsGrid } from '@/components/welcome/solutions-grid';
-import { HeroVideoDialog } from '@/components/ui/hero-video-dialog';
 import Hero from '@/components/vendors/tier3/hero';
 import Tier3Overview from '@/components/vendors/tier3/tier-3-overview';
 import Buylists from '@/components/vendors/tier3/buylists';
