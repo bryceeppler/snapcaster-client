@@ -6,6 +6,7 @@ import {
   ArrowDownIcon
 } from 'lucide-react';
 import SingleCatalogItem from '@/components/vendors/single-catalog-item';
+import { ShineBorder } from '@/components/ui/shine-border';
 
 const Visibility = () => {
   return (
@@ -67,8 +68,7 @@ const Visibility = () => {
           </div>
           <ArrowRightIcon className="w-12 h-12 hidden md:block" />
           <ArrowDownIcon className="w-12 h-12 block md:hidden" />
-          <div className="max-w-[320px] w-full h-fit p-4 shadow-lg border rounded-lg mx-auto">
-            
+            <ShineBorder borderWidth={2} className="max-w-[320px] w-full h-fit p-4 shadow-lg rounded-lg mx-auto" color={["#A07CFE", "#FE8FB5", "#FFBE7B"]}>
             <SingleCatalogItem
               product={{
                 name: 'Phelia, Exuberant Shepherd',
@@ -86,7 +86,7 @@ const Visibility = () => {
               }}
               storeLogo={true}
             />
-          </div>
+            </ShineBorder>
         </div>
         </div>
       </div>
