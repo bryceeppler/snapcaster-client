@@ -1,8 +1,7 @@
-import SectionTitle from "./section-title";
-import { PlayIcon } from "@radix-ui/react-icons";
+import { VideoPlayer } from '@/components/ui/video-player';
+import SectionTitle from './section-title';
 
 const Multisearch = () => {
-
   return (
     <section className="bg-white py-20 " id="1-click-checkout">
       <div className="container">
@@ -13,13 +12,13 @@ const Multisearch = () => {
         />
         <div>
           <div className="mx-auto mt-16 pb-4 md:pb-0 lg:px-8">
-          <div className="relative">
-               {/*Video placeholder  */}
-               <div className="relative w-full h-[500px] bg-gray-200">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <PlayIcon className="w-16 h-16 text-gray-500" />
-                </div>
-               </div>
+            <div className="relative">
+              <div className="mx-auto mt-16 max-w-4xl">
+                <VideoPlayer
+                  videoUrl="https://cdn.snapcaster.ca/videos/video-test.mp4"
+                  thumbnailUrl="https://placehold.co/1280x720"
+                />
+              </div>
             </div>
           </div>
         </div>
