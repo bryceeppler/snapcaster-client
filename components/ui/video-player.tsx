@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from './button';
 import { Slider } from './slider';
 import {
@@ -123,7 +123,26 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
     return () => video.removeEventListener('timeupdate', handleTimeUpdate);
   }, []);
 
-  const handlePlayPause = () => {
+  // For absolute seeking (progress bar)
+  const seekToPosition = useCallback((position: number) => {
+    if (videoRef.current && duration > 0) {
+      const newTime = Math.min(Math.max(0, position), duration);
+      videoRef.current.currentTime = newTime;
+      setProgress((newTime / duration) * 100);
+    }
+  }, [duration]);
+
+  // For relative seeking (arrow keys)
+  const seekRelative = useCallback((seconds: number) => {
+    if (videoRef.current && duration > 0) {
+      const currentTime = videoRef.current.currentTime;
+      const newTime = Math.min(Math.max(0, currentTime + seconds), duration);
+      videoRef.current.currentTime = newTime;
+      setProgress((newTime / duration) * 100);
+    }
+  }, [duration]);
+
+  const handlePlayPause = useCallback(() => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause();
@@ -132,9 +151,9 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
       }
       setIsPlaying(!isPlaying);
     }
-  };
+  }, [isPlaying]);
 
-  const handleVolumeChange = (value: number[]) => {
+  const handleVolumeChange = useCallback((value: number[]) => {
     const newVolume = value[0];
     if (videoRef.current) {
       videoRef.current.volume = newVolume;
@@ -149,18 +168,9 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
         videoRef.current.muted = false;
       }
     }
-  };
+  }, [isMuted]);
 
-  const handleProgressChange = (value: number[]) => {
-    const newProgress = value[0];
-    if (videoRef.current) {
-      const newTime = (newProgress / 100) * videoRef.current.duration;
-      videoRef.current.currentTime = newTime;
-      setProgress(newProgress);
-    }
-  };
-
-  const toggleMute = () => {
+  const toggleMute = useCallback(() => {
     if (videoRef.current) {
       const newMutedState = !isMuted;
       videoRef.current.muted = newMutedState;
@@ -176,9 +186,9 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
         setVolume(volumeToRestore);
       }
     }
-  };
+  }, [isMuted, volume, previousVolume]);
 
-  const toggleFullscreen = () => {
+  const toggleFullscreen = useCallback(() => {
     if (!containerRef.current) return;
 
     if (!document.fullscreenElement) {
@@ -188,7 +198,7 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
       document.exitFullscreen();
       setIsFullscreen(false);
     }
-  };
+  }, []);
 
   const handleMouseMove = () => {
     setShowControls(true);
@@ -208,15 +218,7 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const seekVideo = (seconds: number) => {
-    if (videoRef.current) {
-      const newTime = videoRef.current.currentTime + seconds;
-      videoRef.current.currentTime = Math.min(Math.max(0, newTime), duration);
-      setProgress((newTime / duration) * 100);
-    }
-  };
-
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!isFocused) return;
 
     // Prevent default behavior for these keys when video is focused
@@ -229,10 +231,10 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
         handlePlayPause();
         break;
       case 'ArrowLeft':
-        seekVideo(-5);
+        seekRelative(-5);
         break;
       case 'ArrowRight':
-        seekVideo(5);
+        seekRelative(5);
         break;
       case 'ArrowUp':
         handleVolumeChange([Math.min(volume + 0.1, 1)]);
@@ -247,14 +249,22 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
         toggleFullscreen();
         break;
     }
-  };
+  }, [
+    isFocused,
+    handlePlayPause,
+    seekRelative,
+    volume,
+    handleVolumeChange,
+    toggleMute,
+    toggleFullscreen
+  ]);
 
   useEffect(() => {
     if (isFocused) {
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isFocused, isPlaying, volume, duration]);
+  }, [isFocused, handleKeyDown]);
 
   return (
     <div
@@ -328,7 +338,10 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
           {/* Progress Bar */}
           <Slider
             value={[progress]}
-            onValueChange={handleProgressChange}
+            onValueChange={(value) => {
+              const newProgress = value[0];
+              seekToPosition((newProgress / 100) * duration);
+            }}
             max={100}
             step={0.1}
             className="mb-4"
