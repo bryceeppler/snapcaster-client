@@ -65,18 +65,49 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
 
     const handlePlaying = () => {
       setIsLoading(false);
+      setIsPlaying(true);
+      setIsVideoReady(true);
     };
 
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
+    const handleCanPlay = () => {
+      setIsLoading(false);
+      setIsVideoReady(true);
+    };
+
+    const handleError = () => {
+      setIsLoading(false);
+      setIsVideoReady(false);
+      console.error('Video failed to load');
+    };
+
+    // Add all relevant event listeners
     video.addEventListener('loadeddata', handleLoadedData);
+    video.addEventListener('loadedmetadata', handleLoadedData);
     video.addEventListener('waiting', handleWaiting);
     video.addEventListener('playing', handlePlaying);
-    video.addEventListener('canplay', handlePlaying);
+    video.addEventListener('pause', handlePause);
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('canplaythrough', handleCanPlay);
+    video.addEventListener('error', handleError);
+
+    // Initial state check
+    if (video.readyState >= 3) { // HAVE_FUTURE_DATA or better
+      handleCanPlay();
+    }
 
     return () => {
       video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener('loadedmetadata', handleLoadedData);
       video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('playing', handlePlaying);
-      video.removeEventListener('canplay', handlePlaying);
+      video.removeEventListener('pause', handlePause);
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('canplaythrough', handleCanPlay);
+      video.removeEventListener('error', handleError);
     };
   }, []);
 
@@ -241,7 +272,7 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
     >
 
       {/* Thumbnail/Loading State */}
-      {(isLoading || !isVideoReady) && thumbnailUrl && (
+      {(isLoading || (!isVideoReady && !videoRef.current?.readyState)) && thumbnailUrl && (
         <div className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center">
           <div className="relative w-full h-full">
             <img
@@ -265,6 +296,10 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
         preload="auto"
         controls={isMobile}
         playsInline
+        onLoadStart={() => {
+          setIsLoading(true);
+          setIsVideoReady(false);
+        }}
       >
         <source src={videoUrl} type="video/mp4" />
         Your browser does not support the video tag.
@@ -300,7 +335,7 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
           />
 
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               {/* Play/Pause Button */}
               <Button
                 variant="ghost"
@@ -339,7 +374,7 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
               </div>
 
               {/* Time Display */}
-              <div className="text-white text-sm">
+              <div className="text-white text-xs">
                 {formatTime(videoRef.current?.currentTime || 0)} / {formatTime(duration)}
               </div>
             </div>
