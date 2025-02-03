@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { format, subDays } from "date-fns"
+import { motion } from "framer-motion"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -202,14 +204,32 @@ export function BuyClicksChart() {
         <CardTitle>Buy Button Clicks</CardTitle>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
-          <div className="flex items-center justify-center h-[300px]">
-            Loading...
-          </div>
+      {isLoading ? (
+          <motion.div 
+            className="flex flex-col items-center justify-center h-[300px] gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <LoadingSpinner size={40} />
+            <motion.p
+              className="text-sm text-muted-foreground"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              Loading analytics data...
+            </motion.p>
+          </motion.div>
         ) : (
-          <div className="h-[300px]">
+          <motion.div 
+            className="h-[300px]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
             <Line data={chartData} options={options} />
-          </div>
+          </motion.div>
         )}
       </CardContent>
     </Card>

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { format, subDays } from "date-fns"
+import { motion } from "framer-motion"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -226,7 +228,21 @@ export function SearchQueriesChart() {
     <Card className="shadow-xl">
       <CardHeader>
         <CardTitle>Snapcaster Searches</CardTitle>
-        {realtimeSearches !== null && (
+        {realtimeSearches === null ? (
+          <motion.div 
+            className="flex items-center gap-2 mt-1"
+            initial={{ opacity: 0.5 }}
+            animate={{ opacity: [0.5, 0.8, 0.5] }}
+            transition={{ 
+              duration: 1.5, 
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <span className="h-2 w-2 rounded-full bg-zinc-200"></span>
+            <div className="h-[20px] w-[180px] rounded-md bg-zinc-200"></div>
+          </motion.div>
+        ) : (
           <p className="text-sm font-medium text-primary mt-1 flex items-center gap-2">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
@@ -237,14 +253,32 @@ export function SearchQueriesChart() {
         )}
       </CardHeader>
       <CardContent>
-        {isLoading ? (
-          <div className="flex items-center justify-center h-[300px]">
-            Loading...
-          </div>
+      {isLoading ? (
+          <motion.div 
+            className="flex flex-col items-center justify-center h-[300px] gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <LoadingSpinner size={40} />
+            <motion.p
+              className="text-sm text-muted-foreground"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              Loading analytics data...
+            </motion.p>
+          </motion.div>
         ) : (
-          <div className="h-[300px]">
+          <motion.div 
+            className="h-[300px]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
             <Line data={chartData} options={options} />
-          </div>
+          </motion.div>
         )}
       </CardContent>
     </Card>
