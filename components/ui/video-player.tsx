@@ -30,10 +30,24 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
   const [duration, setDuration] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Detect mobile devices and iOS
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobileDevice = /iphone|ipad|ipod|android/.test(userAgent);
+      setIsMobile(isMobileDevice);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -216,14 +230,14 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
       ref={containerRef}
       className={cn(
         "relative w-full aspect-video rounded-xl overflow-hidden shadow-2xl bg-black group",
-        isFocused && "ring-2 ring-primary ring-offset-2",
+        isFocused && !isMobile && "ring-2 ring-primary ring-offset-2",
         className
       )}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => isPlaying && setShowControls(false)}
-      tabIndex={0}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
+      onMouseMove={!isMobile ? handleMouseMove : undefined}
+      onMouseLeave={!isMobile ? () => isPlaying && setShowControls(false) : undefined}
+      tabIndex={isMobile ? -1 : 0}
+      onFocus={!isMobile ? () => setIsFocused(true) : undefined}
+      onBlur={!isMobile ? () => setIsFocused(false) : undefined}
     >
 
       {/* Thumbnail/Loading State */}
@@ -246,16 +260,18 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
       <video
         ref={videoRef}
         className="w-full h-full object-cover"
-        onClick={handlePlayPause}
+        onClick={!isMobile ? handlePlayPause : undefined}
         poster={thumbnailUrl}
         preload="auto"
+        controls={isMobile}
+        playsInline
       >
         <source src={videoUrl} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
-      {/* Large Play Button Overlay */}
-      {!isPlaying && isVideoReady && !isLoading && (
+      {/* Large Play Button Overlay - Only show on desktop */}
+      {!isMobile && !isPlaying && isVideoReady && !isLoading && (
         <div 
           className="absolute inset-0 flex items-center justify-center cursor-pointer"
           onClick={handlePlayPause}
@@ -266,82 +282,84 @@ export const VideoPlayer = ({ videoUrl, thumbnailUrl, className }: VideoPlayerPr
         </div>
       )}
 
-      {/* Custom Controls */}
-      <div
-        className={cn(
-          "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 transition-opacity duration-300",
-          showControls ? "opacity-100" : "opacity-0"
-        )}
-      >
-        {/* Progress Bar */}
-        <Slider
-          value={[progress]}
-          onValueChange={handleProgressChange}
-          max={100}
-          step={0.1}
-          className="mb-4"
-        />
+      {/* Custom Controls - Only show on desktop */}
+      {!isMobile && (
+        <div
+          className={cn(
+            "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 transition-opacity duration-300",
+            showControls ? "opacity-100" : "opacity-0"
+          )}
+        >
+          {/* Progress Bar */}
+          <Slider
+            value={[progress]}
+            onValueChange={handleProgressChange}
+            max={100}
+            step={0.1}
+            className="mb-4"
+          />
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            {/* Play/Pause Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-white/20"
-              onClick={handlePlayPause}
-            >
-              {isPlaying ? (
-                <Pause className="h-5 w-5" />
-              ) : (
-                <Play className="h-5 w-5" />
-              )}
-            </Button>
-
-            {/* Volume Control */}
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              {/* Play/Pause Button */}
               <Button
                 variant="ghost"
                 size="icon"
                 className="text-white hover:bg-white/20"
-                onClick={toggleMute}
+                onClick={handlePlayPause}
               >
-                {volume === 0 ? (
-                  <VolumeX className="h-5 w-5" />
+                {isPlaying ? (
+                  <Pause className="h-5 w-5" />
                 ) : (
-                  <Volume2 className="h-5 w-5" />
+                  <Play className="h-5 w-5" />
                 )}
               </Button>
-              <Slider
-                value={[volume]}
-                onValueChange={handleVolumeChange}
-                max={1}
-                step={0.01}
-                className="w-24"
-              />
+
+              {/* Volume Control */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/20"
+                  onClick={toggleMute}
+                >
+                  {volume === 0 ? (
+                    <VolumeX className="h-5 w-5" />
+                  ) : (
+                    <Volume2 className="h-5 w-5" />
+                  )}
+                </Button>
+                <Slider
+                  value={[volume]}
+                  onValueChange={handleVolumeChange}
+                  max={1}
+                  step={0.01}
+                  className="w-24"
+                />
+              </div>
+
+              {/* Time Display */}
+              <div className="text-white text-sm">
+                {formatTime(videoRef.current?.currentTime || 0)} / {formatTime(duration)}
+              </div>
             </div>
 
-            {/* Time Display */}
-            <div className="text-white text-sm">
-              {formatTime(videoRef.current?.currentTime || 0)} / {formatTime(duration)}
-            </div>
+            {/* Fullscreen Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/20"
+              onClick={toggleFullscreen}
+            >
+              {isFullscreen ? (
+                <Minimize className="h-5 w-5" />
+              ) : (
+                <Maximize className="h-5 w-5" />
+              )}
+            </Button>
           </div>
-
-          {/* Fullscreen Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20"
-            onClick={toggleFullscreen}
-          >
-            {isFullscreen ? (
-              <Minimize className="h-5 w-5" />
-            ) : (
-              <Maximize className="h-5 w-5" />
-            )}
-          </Button>
         </div>
-      </div>
+      )}
     </div>
   );
 }; 
