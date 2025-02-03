@@ -13,7 +13,13 @@ import {
   ArrowRightIcon
 } from "lucide-react";
 import Link from "next/link";
-const Tier3Overview = () => {
+import { Button } from "@/components/ui/button";
+
+interface Tier3OverviewProps {
+  onSignup?: () => void;
+}
+
+const Tier3Overview = ({ onSignup }: Tier3OverviewProps) => {
     const features = [
         {
             title: "Analytics Dashboard",
@@ -68,6 +74,16 @@ const Tier3Overview = () => {
               <Feature key={index} {...feature} />
             ))
           }
+        </div>
+
+        <div className="mt-12 text-center">
+          <Button
+            size="lg"
+            className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90"
+            onClick={onSignup}
+          >
+            Upgrade Now
+          </Button>
         </div>
       </div>
     </section>

@@ -2,7 +2,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { CheckIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
 
-const Pricing = ({ variant }: { variant: 'dark' | 'light' }) => {
+interface PricingProps {
+  variant: 'dark' | 'light';
+  onSignup?: (plan: "monthly" | "quarterly") => void;
+}
+
+const Pricing = ({ variant, onSignup }: PricingProps) => {
   return (
     <section
       className={`py-20 ${
@@ -23,7 +28,7 @@ const Pricing = ({ variant }: { variant: 'dark' | 'light' }) => {
                 <CardDescription>Perfect for trying out our platform</CardDescription>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-bold">$300</span>
+                <span className="text-4xl font-bold">$350</span>
                 <span className="text-sm opacity-80">/month</span>
               </div>
               <p className="text-sm opacity-70">1 month fixed term. Cancel anytime.</p>
@@ -39,7 +44,7 @@ const Pricing = ({ variant }: { variant: 'dark' | 'light' }) => {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button className="w-full" variant="outline">Get Started</Button>
+              <Button className="w-full" variant="outline" onClick={() => onSignup?.("monthly")}>Get Started</Button>
             </CardFooter>
           </Card>
 
@@ -53,7 +58,7 @@ const Pricing = ({ variant }: { variant: 'dark' | 'light' }) => {
                 <CardDescription>Save 17% with quarterly billing</CardDescription>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-bold">$250</span>
+                <span className="text-4xl font-bold">$300</span>
                 <span className="text-sm opacity-80">/month</span>
               </div>
               <p className="text-sm opacity-70">3 month fixed term</p>
@@ -69,7 +74,7 @@ const Pricing = ({ variant }: { variant: 'dark' | 'light' }) => {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Get Started</Button>
+              <Button className="w-full" onClick={() => onSignup?.("quarterly")}>Get Started</Button>
             </CardFooter>
           </Card>
         </div>

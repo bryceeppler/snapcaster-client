@@ -2,11 +2,19 @@ import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { UsersByDeviceData, PopularSearchedCard, PopularBuyClicksByTCG } from '@/lib/GA4Client';
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import useGlobalStore from '@/stores/globalStore';
 import { Integrations } from '@/components/welcome/integrations';
 import Testimonials from '@/components/welcome/testimonials';
 import { SignupForm } from '@/components/forms/SignupForm';
+import { Tier3SignupForm } from '@/components/forms/Tier3SignupForm';
 import { toast } from 'sonner';
 import {
   CheckCircle,
@@ -25,10 +33,13 @@ import OtherFeatures from '@/components/vendors/tier3/other-features';
 import Multisearch from '@/components/vendors/tier3/multisearch';
 import Visibility from '@/components/vendors/tier3/visibility';
 import Pricing from '@/components/vendors/tier3/pricing';
+
 type Props = {};
 
 const Tier3 = (props: Props) => {
   const [popularBuyClicks, setPopularBuyClicks] = useState<PopularBuyClicksByTCG | undefined>(undefined);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "quarterly">("quarterly");
 
   useEffect(() => {
     const fetchAnalyticsData = async () => {
@@ -50,21 +61,27 @@ const Tier3 = (props: Props) => {
     fetchAnalyticsData();
   }, []);
 
+  const openSignupDialog = (plan: "monthly" | "quarterly" = "quarterly") => {
+    setSelectedPlan(plan);
+    setIsSignupOpen(true);
+  };
+
   return (
     <>
       <div className="invisible h-2 w-full bg-primary sm:visible"></div>
       <div className="relative min-h-screen lg:overflow-hidden">
-        <Hero />
-        <Tier3Overview />
+        <Hero onSignup={() => openSignupDialog("quarterly")} />
+        <Tier3Overview onSignup={() => openSignupDialog("quarterly")} />
         <Analytics 
           variant="dark" 
           popularBuyClicks={popularBuyClicks}
+          onSignup={() => openSignupDialog("quarterly")}
         />
         <Visibility />
-        <Buylists variant="dark" />
+        <Buylists variant="dark" onSignup={() => openSignupDialog("quarterly")} />
         <Multisearch />
         <OtherFeatures variant="dark" />
-        <Pricing variant="light" />
+        <Pricing variant="light" onSignup={openSignupDialog} />
         <footer className="bg-primary text-white py-16 border-t border-white/10">
           <div className="container">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -100,7 +117,10 @@ const Tier3 = (props: Props) => {
                 <p className="text-sm text-white/70">
                   Join Canada's fastest growing TCG marketplace platform.
                 </p>
-                <Button className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90">
+                <Button 
+                  className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90"
+                  onClick={() => openSignupDialog("quarterly")}
+                >
                   Sign Up Now
                 </Button>
               </div>
@@ -112,6 +132,19 @@ const Tier3 = (props: Props) => {
             </div>
           </div>
         </footer>
+
+        {/* Signup Dialog */}
+        <Dialog open={isSignupOpen} onOpenChange={setIsSignupOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Apply for Tier 3 Access</DialogTitle>
+              <DialogDescription>
+                Join Canada's fastest growing TCG marketplace platform and start growing your business today.
+              </DialogDescription>
+            </DialogHeader>
+            <Tier3SignupForm onSuccess={() => setIsSignupOpen(false)} initialPlan={selectedPlan} />
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );

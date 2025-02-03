@@ -3,7 +3,11 @@ import { SearchQueriesChart } from "./search-queries-chart";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
-const Hero = () => {
+interface HeroProps {
+  onSignup?: () => void;
+}
+
+const Hero = ({ onSignup }: HeroProps) => {
   return (
     <>
       <section
@@ -1179,9 +1183,16 @@ const Hero = () => {
               <Link href="#overview">
                 <Button size="lg" variant="outline" className="">Learn More</Button>
               </Link>
-              <Link href="/vendors/tier3">
-                <Button size="lg" className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90">Get Started <ArrowRightIcon className="w-4 h-4" /></Button>
-              </Link>
+              <Button
+                size="lg"
+                className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onSignup?.();
+                }}
+              >
+                Get Started <ArrowRightIcon className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>

@@ -18,9 +18,10 @@ interface AnalyticsProps {
   variant: 'light' | 'dark';
   deviceData?: UsersByDeviceData;
   popularBuyClicks?: PopularBuyClicksByTCG;
+  onSignup?: () => void;
 }
 
-const Analytics = ({ variant, popularBuyClicks }: AnalyticsProps) => {
+const Analytics = ({ variant, popularBuyClicks, onSignup }: AnalyticsProps) => {
   const features = [
     {
       title: 'Active Users',
@@ -134,6 +135,7 @@ const Analytics = ({ variant, popularBuyClicks }: AnalyticsProps) => {
                 <Button
                   size="lg"
                   className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90"
+                  onClick={onSignup}
                 >
                   Sign Up to View the Dashboard{' '}
                   <ArrowRight className="ml-2 h-4 w-4" />

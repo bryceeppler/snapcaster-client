@@ -4,7 +4,7 @@ import { HeroVideoDialog } from '@/components/ui/hero-video-dialog';
 import { Button } from '@/components/ui/button';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 
-const Buylists = ({ variant }: { variant: 'dark' | 'light' }) => {
+const Buylists = ({ variant, onSignup }: { variant: 'dark' | 'light', onSignup: () => void }) => {
   return (
     <section
       className={`bg-primary py-20 ${
@@ -34,7 +34,7 @@ const Buylists = ({ variant }: { variant: 'dark' | 'light' }) => {
           </div>
         </div>
         <div className="mt-12 text-center">
-          <Button size="lg" className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90">Get Started <ArrowRightIcon className="w-4 h-4" /></Button>
+          <Button size="lg" className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90" onClick={onSignup}>Get Started <ArrowRightIcon className="w-4 h-4" /></Button>
         </div>
       </div>
     </section>
