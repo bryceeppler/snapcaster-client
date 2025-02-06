@@ -110,6 +110,17 @@ module.exports = {
 			inter: ['Inter', 'sans-serif'],
   		},
   		keyframes: {
+			shine: {
+				"0%": {
+				  "background-position": "0% 0%",
+				},
+				"50%": {
+				  "background-position": "100% 100%",
+				},
+				to: {
+				  "background-position": "0% 0%",
+				},
+			  },
   			'accordion-down': {
   				from: {
   					height: '0'
@@ -156,7 +167,8 @@ module.exports = {
   			'accordion-up': 'accordion-up 0.2s ease-out',
   			'caret-blink': 'caret-blink 1.25s ease-out infinite',
   			marquee: 'marquee var(--duration) infinite linear',
-  			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite'
+  			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
+			shine: "shine var(--duration) infinite linear",
   		}
   	}
   },
