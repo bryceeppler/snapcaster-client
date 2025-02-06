@@ -103,6 +103,14 @@ const Feature = ({
   icon: LucideIcon;
   id: string;
 }) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center gap-4">
@@ -110,7 +118,8 @@ const Feature = ({
         <CardTitle className="text-left">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <Link href={`#${id}`} className="flex items-center gap-2 text-primary">
+        <p className="mb-4 text-muted-foreground">{description}</p>
+        <Link href={`#${id}`} className="flex items-center gap-2 text-primary" onClick={handleClick}>
           Learn More <ArrowRightIcon className="h-4 w-4 text-primary" />
         </Link>
       </CardContent>
