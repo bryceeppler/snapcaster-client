@@ -21,7 +21,7 @@ const Buylists = ({ variant, onSignup }: { variant: 'dark' | 'light'; onSignup: 
         
         <div className="max-w-4xl mx-auto mt-16">
         <LoomPlayer
-                  videoId="8b56b0d48167432b9a684abdf21e7536"
+                  videoId="a7b2d758c3e048c7a80b6a421ab5f190"
                   title="Snapcaster Buylists"
                 />
         </div>

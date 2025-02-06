@@ -21,10 +21,10 @@ const Hero = ({ onSignup }: HeroProps) => {
                 className="mx-auto max-w-[780px] text-center"
               >
                 <h1 className="mb-6 text-3xl font-bold leading-snug text-white sm:text-4xl sm:leading-snug lg:text-5xl lg:leading-[1.2]">
-                  Increase Your Sales with Canada's Fastest Growing TCG Search Engine
+                  Increase Your Sales with Canada's Largest TCG Search Engine
                 </h1>
                 <p className="mx-auto mb-9 max-w-[600px] text-base font-medium text-white sm:text-lg sm:leading-[1.44]">
-                  Join the exclusive <span className="text-[#ffcc5d]">Snapcaster Partner Network</span> and instantly connect with 10,000+ monthly active buyers, Canadian market analytics, and premium visibility. Limited spots available - apply now to secure your position in Canada's fastest-growing TCG search engine.
+                  Join the exclusive <span className="text-[#ffcc5d]">Snapcaster Partner Network</span> and instantly connect with 10,000+ monthly active buyers, Canadian market analytics, and premium visibility. Limited spots available - apply now to secure your position in Canada's largest TCG search engine.
                 </p>
               </div>
             </div>

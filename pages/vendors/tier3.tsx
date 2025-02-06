@@ -85,7 +85,7 @@ const Tier3 = (props: Props) => {
               <div className="space-y-4">
                 <h3 className="font-bold text-lg">Snapcaster</h3>
                 <p className="text-sm text-white/70">
-                  Canada's fastest growing TCG price comparison platform, helping vendors reach more customers and grow their business.
+                  Canada's largest TCG price comparison platform, helping vendors reach more customers and grow their business.
                 </p>
               </div>
 
@@ -111,7 +111,7 @@ const Tier3 = (props: Props) => {
               <div className="space-y-4">
                 <h3 className="font-bold text-lg">Ready to Get Started?</h3>
                 <p className="text-sm text-white/70">
-                  Join Canada's fastest growing TCG marketplace platform.
+                  Join Canada's largest TCG marketplace platform.
                 </p>
                 <Button 
                   className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90"
@@ -135,7 +135,7 @@ const Tier3 = (props: Props) => {
             <DialogHeader>
               <DialogTitle>Apply for Tier 3 Access</DialogTitle>
               <DialogDescription>
-                Join Canada's fastest growing TCG marketplace platform and start growing your business today.
+                Join Canada's largest TCG marketplace platform and start growing your business today.
               </DialogDescription>
             </DialogHeader>
             <Tier3SignupForm onSuccess={handleSignupSuccess} initialPlan={selectedPlan} />

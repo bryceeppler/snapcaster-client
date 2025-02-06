@@ -15,7 +15,7 @@ const Multisearch = () => {
             <div className="relative">
               <div className="mx-auto mt-16 max-w-4xl">
                 <LoomPlayer
-                  videoId="1c4db549e59b48328e167b2ade6c64db"
+                  videoId="52617a394f064a85911791c30267582c"
                   title="Snapcaster Multisearch"
                 />
               </div>

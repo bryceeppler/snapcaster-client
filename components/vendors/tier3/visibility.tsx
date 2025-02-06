@@ -24,7 +24,7 @@ const Visibility = () => {
             <Card className="p-4 shadow-lg">
                 <CardHeader><CardTitle>Premium Brand Presence</CardTitle></CardHeader>
                 <CardContent>
-                    Instantly build trust and recognition with your professional store logo displayed prominently on every listing. Partners report 35% higher conversion rates with branded results.
+                    Instantly build trust and recognition with your professional store logo displayed prominently on every listing. Partners report <span className="font-bold">35% higher conversion rates</span>  with branded results.
                 </CardContent>
             </Card>
             <Card className="p-4 shadow-lg">
