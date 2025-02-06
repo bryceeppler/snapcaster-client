@@ -1,7 +1,7 @@
 import SectionTitle from './section-title';
 import { Button } from '@/components/ui/button';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
-import { VideoPlayer } from '@/components/ui/video-player';
+import { LoomPlayer } from '@/components/ui/loom-player';
 
 const Buylists = ({ variant, onSignup }: { variant: 'dark' | 'light'; onSignup: () => void }) => {
   return (
@@ -20,10 +20,10 @@ const Buylists = ({ variant, onSignup }: { variant: 'dark' | 'light'; onSignup: 
         />
         
         <div className="max-w-4xl mx-auto mt-16">
-          <VideoPlayer
-            videoUrl="https://cdn.snapcaster.ca/videos/video-test.mp4"
-            thumbnailUrl="https://placehold.co/1280x720"
-          />
+        <LoomPlayer
+                  videoId="8b56b0d48167432b9a684abdf21e7536"
+                  title="Snapcaster Buylists"
+                />
         </div>
 
         <div className="mt-12 text-center">

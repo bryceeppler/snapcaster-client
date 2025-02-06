@@ -1,5 +1,5 @@
-import { VideoPlayer } from '@/components/ui/video-player';
 import SectionTitle from './section-title';
+import { LoomPlayer } from '@/components/ui/loom-player';
 
 const Multisearch = () => {
   return (
@@ -14,9 +14,9 @@ const Multisearch = () => {
           <div className="mx-auto mt-16 pb-4 md:pb-0 lg:px-8">
             <div className="relative">
               <div className="mx-auto mt-16 max-w-4xl">
-                <VideoPlayer
-                  videoUrl="https://cdn.snapcaster.ca/videos/video-test.mp4"
-                  thumbnailUrl="https://placehold.co/1280x720"
+                <LoomPlayer
+                  videoId="1c4db549e59b48328e167b2ade6c64db"
+                  title="Snapcaster Multisearch"
                 />
               </div>
             </div>
