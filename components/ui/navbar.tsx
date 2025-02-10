@@ -126,14 +126,14 @@ const Navbar: React.FC = () => {
                         Multi Search
                       </Button>
                     </Link>
-                    <Link href="/sealed" as="/sealed">
+                    {/* <Link href="/sealed" as="/sealed">
                       <Button
                         variant="ghost"
                         className="block w-full text-left text-lg"
                       >
                         Sealed Search
                       </Button>
-                    </Link>
+                    </Link> */}
                     <Link
                       href="https://discord.gg/EnKKHxSq75"
                       as="https://discord.gg/EnKKHxSq75"
@@ -353,7 +353,7 @@ const Navbar: React.FC = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-              <NavigationMenuItem>
+              {/* <NavigationMenuItem>
                 <Link legacyBehavior href="/sealed" passHref>
                   <NavigationMenuLink
                     className={`${navigationMenuTriggerStyle()} ${
@@ -365,7 +365,7 @@ const Navbar: React.FC = () => {
                     Sealed Search
                   </NavigationMenuLink>
                 </Link>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
               <NavigationMenuItem>
                 <Link legacyBehavior href="/buylists" passHref>
                   <NavigationMenuLink
