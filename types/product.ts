@@ -1,4 +1,5 @@
-export type Tcg = 'yugioh' | 'pokemon' | 'lorcana' | 'mtg' | 'onepiece' | 'starwars';
+export type Tcg = 'yugioh' | 'pokemon' | 'lorcana' | 'mtg' | 'onepiece' | 'starwars' | 'fleshandblood';
+export type ProductCategory = 'sealed_yugioh' | 'sealed_pokemon' | 'sealed_lorcana' | 'sealed_mtg' | 'sealed_onepiece' | 'sealed_starwars' | 'sealed_fleshandblood';
 export type Condition = 'nm' | 'lp' | 'mp' | 'hp' | 'dmg';
 
 export type Product = {
@@ -7,6 +8,16 @@ export type Product = {
   price: number;
   condition: string;
   finish: string;
+  vendor: string;
+  link: string;
+  image: string;
+  variant_id?: string;
+  [key: string]: any;
+};
+
+export type SealedProduct = {
+  name: string;
+  price: number;
   vendor: string;
   link: string;
   image: string;

@@ -24,7 +24,6 @@ import { Tcg } from '@/types';
 import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import useBuyListStore from '@/stores/buyListStore';
 import globalStore from '@/stores/globalStore';
 
 const Navbar: React.FC = () => {
@@ -125,6 +124,14 @@ const Navbar: React.FC = () => {
                         }}
                       >
                         Multi Search
+                      </Button>
+                    </Link>
+                    <Link href="/sealed" as="/sealed">
+                      <Button
+                        variant="ghost"
+                        className="block w-full text-left text-lg"
+                      >
+                        Sealed Search
                       </Button>
                     </Link>
                     <Link
@@ -343,6 +350,19 @@ const Navbar: React.FC = () => {
                     }`}
                   >
                     Multi Search
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link legacyBehavior href="/sealed" passHref>
+                  <NavigationMenuLink
+                    className={`${navigationMenuTriggerStyle()} ${
+                      currentPath == '/sealed'
+                        ? 'rounded-b-none border-b-2 border-primary'
+                        : ''
+                    }`}
+                  >
+                    Sealed Search
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
