@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 import { Product, ProductCategory } from '@/types';
 import { FilterOption, SingleSortOptions } from '@/types/query';
@@ -9,7 +9,6 @@ interface SearchParams {
   searchTerm: string;
   filters: FilterOption[] | null;
   sortBy: SingleSortOptions;
-  currentPage: number;
   region: string;
 }
 
@@ -29,6 +28,7 @@ export interface TransformedSearchResponse {
   filterOptions: FilterOption[];
   numPages: number;
   numResults: number;
+  nextPage: number | undefined;
 }
 
 const fetchSealedProducts = async ({
@@ -36,21 +36,15 @@ const fetchSealedProducts = async ({
   searchTerm,
   filters,
   sortBy,
-  currentPage,
-  region
-}: SearchParams): Promise<SearchResponse> => {
-  console.log("Calling useSealedSearch with productCategory:", productCategory);
-  console.log("Calling useSealedSearch with searchTerm:", searchTerm);
-  console.log("Calling useSealedSearch with filters:", filters);
-  console.log("Calling useSealedSearch with sortBy:", sortBy);
-  console.log("Calling useSealedSearch with currentPage:", currentPage);
-  console.log("Calling useSealedSearch with region:", region);
+  region,
+  pageParam = 1
+}: SearchParams & { pageParam?: number }): Promise<SearchResponse> => {
   const queryParams = new URLSearchParams({
     index: `ca_${productCategory}_prod*`,
     keyword: searchTerm.trim(),
-    sortBy: `${sortBy}`,
-    maxResultsPerPage: '100',
-    pageNumber: currentPage.toString()
+    sortBy: sortBy,
+    maxResultsPerPage: '24',
+    pageNumber: pageParam.toString()
   });
 
   if (filters) {
@@ -91,19 +85,33 @@ export const useSealedSearch = (
   searchParams: SearchParams,
   options?: { enabled?: boolean }
 ) => {
-  return useQuery<SearchResponse, Error, TransformedSearchResponse>({
-    queryKey: ['sealedSearch', searchParams],
-    queryFn: () => fetchSealedProducts(searchParams),
+  return useInfiniteQuery({
+    queryKey: ['sealedSearch', searchParams.productCategory, searchParams.searchTerm, searchParams.sortBy, searchParams.filters] as const,
+    queryFn: ({ pageParam = 1 }: { pageParam?: number }) => fetchSealedProducts({ ...searchParams, pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return nextPage <= lastPage.pagination.numPages ? nextPage : undefined;
+    },
     enabled: options?.enabled ?? !!searchParams.searchTerm,
-    select: (data): TransformedSearchResponse => ({
-      searchResults: data.results.map((item) => ({ ...item, promoted: false })),
-      promotedResults: (data.promotedResults || []).map((item) => ({
-        ...item,
-        promoted: true
-      })),
-      filterOptions: data.filters || [],
-      numPages: data.pagination.numPages,
-      numResults: data.pagination.numResults
-    })
+    select: (data): TransformedSearchResponse => {
+      const lastPage = data.pages[data.pages.length - 1];
+      const allResults = data.pages.flatMap(page => page.results);
+      const allPromotedResults = data.pages[0].promotedResults || []; // Only show promoted results on first page
+
+      return {
+        searchResults: allResults.map((item) => ({ ...item, promoted: false })),
+        promotedResults: allPromotedResults.map((item) => ({
+          ...item,
+          promoted: true
+        })),
+        filterOptions: lastPage.filters || [],
+        numPages: lastPage.pagination.numPages,
+        numResults: lastPage.pagination.numResults,
+        nextPage: data.pages.length + 1 <= lastPage.pagination.numPages 
+          ? data.pages.length + 1 
+          : undefined
+      };
+    }
   });
 }; 

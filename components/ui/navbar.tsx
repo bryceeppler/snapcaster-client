@@ -13,6 +13,8 @@ import { AlignJustify, Search, User, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import SearchBar from '../sealed/search-bar';
 import {
   Sheet,
   SheetContent,
@@ -25,11 +27,11 @@ import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import globalStore from '@/stores/globalStore';
+import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
-  const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
 
   const {
     initNotificationStatus,
@@ -50,6 +52,43 @@ const Navbar: React.FC = () => {
 
   // Dynamically choose the store based on currentPath
   const queryStore = singleSearchStore;
+
+  const {
+    productCategory,
+    searchTerm: sealedSearchTerm,
+    setProductCategory,
+    setSearchTerm: sealedSetSearchTerm,
+    filters,
+    clearFilters: sealedClearFilters,
+    sortBy: sealedSortBy,
+    region
+  } = useSealedSearchStore();
+
+  const {
+    isLoading,
+    refetch
+  } = useSealedSearch(
+    {
+      productCategory,
+      searchTerm: sealedSearchTerm,
+      filters,
+      sortBy: sealedSortBy,
+      region
+    },
+    {
+      enabled: currentPath === '/sealed'
+    }
+  );
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    sealedSetSearchTerm(value);
+  };
+
+  const handleSearch = () => {
+    sealedSetSearchTerm(sealedSearchTerm.trim());
+    refetch();
+  };
 
   // Destructure variables from queryStore or set defaults
   const {
@@ -92,7 +131,7 @@ const Navbar: React.FC = () => {
     <>
       {/* MOBILE NAV */}
       <div className="sticky top-0 z-50 md:hidden">
-        <div className=" flex h-[60px]  justify-between bg-background px-1 shadow-xl">
+        <div className=" flex h-[60px]  justify-between bg-card px-1 shadow-xl">
           <div className=" inset-y-0 left-0 flex items-center">
             <Sheet
               open={mobileNavSheetOpen}
@@ -126,14 +165,14 @@ const Navbar: React.FC = () => {
                         Multi Search
                       </Button>
                     </Link>
-                    {/* <Link href="/sealed" as="/sealed">
+                    <Link href="/sealed" as="/sealed">
                       <Button
                         variant="ghost"
                         className="block w-full text-left text-lg"
                       >
                         Sealed Search
                       </Button>
-                    </Link> */}
+                    </Link>
                     <Link
                       href="https://discord.gg/EnKKHxSq75"
                       as="https://discord.gg/EnKKHxSq75"
@@ -205,43 +244,43 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Right Section */}
-            <div className="mx-2 flex items-center ">
-              {currentPath === '/' && (
-                <button
-                  onClick={() => {
-                    setMobileSearchIsVisible(!mobileSearchIsVisible);
-                  }}
-                >
-                  <Search className="mr-2" />
-                </button>
-              )}
+            <div className="mx-2 flex items-center">
               <Link href={isAuthenticated ? `/profile` : '/signin'}>
                 <User />
               </Link>
             </div>
           </div>
+        </div>
+        
+        {/* Mobile Search Bar Row */}
+        <div className="w-full border-t border-border bg-card px-2 py-2">
           {currentPath === '/' && (
-            <div
-              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
-                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
-              }`}
-            >
-              <NavSearchBar
-                type={'mobile'}
-                toggleMobileSearch={() => {
-                  setMobileSearchIsVisible(!mobileSearchIsVisible);
-                }}
-                searchTerm={searchTerm}
-                tcg={tcg}
-                clearFilters={clearFilters}
-                setSearchTerm={setSearchTerm}
-                setTcg={setTcg}
-                fetchQuery={fetchCards}
-              />
-            </div>
+            <NavSearchBar
+              type={'mobile'}
+              searchTerm={searchTerm}
+              tcg={tcg}
+              clearFilters={clearFilters}
+              setSearchTerm={setSearchTerm}
+              setTcg={setTcg}
+              fetchQuery={fetchCards}
+            />
+          )}
+          {currentPath === '/sealed' && (
+            <SearchBar
+              type="mobile"
+              productCategory={productCategory}
+              searchTerm={sealedSearchTerm}
+              setProductCategory={setProductCategory}
+              setSearchTerm={sealedSetSearchTerm}
+              handleInputChange={handleInputChange}
+              handleSearch={handleSearch}
+              clearFilters={sealedClearFilters}
+              isLoading={isLoading}
+            />
           )}
         </div>
-        <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>{' '}
+
+        <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>
         {searchResults && currentPath == '/' && (
           <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
             <span className="text-center text-sm font-normal text-secondary-foreground ">
@@ -275,7 +314,7 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* DESKTOP NAV MD+ */}
-      <div className="sticky top-0 z-50 bg-background  shadow-md">
+      <div className="sticky top-0 z-50 bg-card  shadow-md">
         <div className="hidden h-16 items-stretch justify-between px-6 py-4 md:flex">
           {/* Left Section */}
           <div className="flex items-center">
@@ -310,6 +349,18 @@ const Navbar: React.FC = () => {
                 setSearchTerm={setSearchTerm}
                 setTcg={setTcg}
                 clearFilters={clearFilters}
+              />
+            )}
+            {currentPath === '/sealed' && (
+              <SearchBar
+                productCategory={productCategory}
+                searchTerm={sealedSearchTerm}
+                setProductCategory={setProductCategory}
+                setSearchTerm={sealedSetSearchTerm}
+                handleInputChange={handleInputChange}
+                handleSearch={handleSearch}
+                clearFilters={sealedClearFilters}
+                isLoading={isLoading}
               />
             )}
           </div>
@@ -353,7 +404,7 @@ const Navbar: React.FC = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-              {/* <NavigationMenuItem>
+              <NavigationMenuItem>
                 <Link legacyBehavior href="/sealed" passHref>
                   <NavigationMenuLink
                     className={`${navigationMenuTriggerStyle()} ${
@@ -365,7 +416,7 @@ const Navbar: React.FC = () => {
                     Sealed Search
                   </NavigationMenuLink>
                 </Link>
-              </NavigationMenuItem> */}
+              </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link legacyBehavior href="/buylists" passHref>
                   <NavigationMenuLink
