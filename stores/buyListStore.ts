@@ -52,7 +52,7 @@ type BuyListState = {
   setTcg: (tcg: Tcg) => void;
   setCurrentPage: (currentPage: number) => void;
   setSearchTerm: (searchBoxValue: string) => void;
-  fetchCards: () => Promise<void>;
+  fetchCards: (page?: number) => Promise<void>;
   setFilter: (filterField: string, value: string, selected: boolean) => void;
   clearFilters: () => void;
   applyFilters: () => Promise<void>;
@@ -98,7 +98,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   // Search Functions //
   //////////////////////
 
-  fetchCards: async () => {
+  fetchCards: async (page?: number) => {
     const { filters } = get();
     if (get().searchTerm) {
       const queryParams = new URLSearchParams({
@@ -106,7 +106,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         tcg: get().tcg,
         index: `buylists_${get().tcg}_prod`,
         sortBy: get().sortBy,
-        pageNumber: get().currentPage.toString(),
+        pageNumber: (page ?? get().currentPage).toString(),
         maxResultsPerPage: '100'
       });
 
@@ -144,7 +144,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
           numResults: response.data.pagination.numResults,
           numPages: response.data.pagination.numPages,
           filterOptions: filterOptionsFromResponse,
-          filters: filterOptionsFromResponse
+          filters: filterOptionsFromResponse,
+          currentPage: page ?? get().currentPage
         });
         get().updateMode('search');
       } catch (error) {

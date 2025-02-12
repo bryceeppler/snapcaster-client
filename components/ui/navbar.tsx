@@ -340,6 +340,7 @@ const Navbar: React.FC = () => {
                 setCurrentPage={setCurrentPage}
                 numPages={numPages}
                 fetchCards={fetchCards}
+                setIsLoading={setIsLoading}
               />
               <Sheet>
                 <SheetTitle className="hidden">Filters</SheetTitle>

@@ -24,6 +24,7 @@ export default function SingleCatalog() {
     filters,
     filterOptions,
     sortBy,
+    setIsLoading,
     fetchCards,
     setCurrentPage,
     setSortBy,
@@ -127,6 +128,7 @@ export default function SingleCatalog() {
                   numPages={numPages}
                   fetchCards={fetchCards}
                   setCurrentPage={setCurrentPage}
+                  setIsLoading={setIsLoading}
                 />
               </div>
               <SearchSortBy

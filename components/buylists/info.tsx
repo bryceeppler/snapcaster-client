@@ -26,7 +26,8 @@ const Info: FC = () => {
     fetchCards,
     clearFilters,
     isLoading,
-    setIsLoading
+    setIsLoading,
+    setCurrentPage
   } = useBuyListStore();
 
   return (
@@ -69,6 +70,7 @@ const Info: FC = () => {
                     clearSearchResults={clearSearchResults}
                     fetchCards={fetchCards}
                     clearFilters={clearFilters}
+                    setCurrentPage={setCurrentPage}
                   />
               </div>
             )}

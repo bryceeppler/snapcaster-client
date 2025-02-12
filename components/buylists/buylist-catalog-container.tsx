@@ -112,7 +112,8 @@ export default function BuylistCatalog() {
 
     currentPage,
     numPages,
-    setReviewData
+    setReviewData,
+    setIsLoading
   } = useBuyListStore();
   const { isAuthenticated } = useAuthStore();
   const {
@@ -316,6 +317,7 @@ export default function BuylistCatalog() {
                     numPages={numPages}
                     fetchCards={fetchCards}
                     setCurrentPage={setCurrentPage}
+                    setIsLoading={setIsLoading}
                   />
                 </div>
               )}

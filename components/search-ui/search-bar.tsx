@@ -26,10 +26,11 @@ type Props = {
   setTcg: (tcg: Tcg) => void;
   setSearchTerm: (searchBoxValue: string) => void;
   clearSearchResults: () => void;
-  fetchCards: () => Promise<void>;
+  fetchCards: (page: number) => Promise<void>;
   clearFilters: () => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
+  setCurrentPage: (page: number) => void;
 };
 export default function SearchBar({
   tcg,
@@ -40,7 +41,8 @@ export default function SearchBar({
   fetchCards,
   clearFilters,
   isLoading,
-  setIsLoading
+  setIsLoading,
+  setCurrentPage
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
@@ -111,7 +113,7 @@ export default function SearchBar({
     setIsLoading(true);
     clearFilters();
     clearSearchResults();
-    await fetchCards();
+    await fetchCards(1);
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
     setIsLoading(false);

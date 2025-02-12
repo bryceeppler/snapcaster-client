@@ -26,7 +26,7 @@ interface AutocompleteResult {
 type Props = {
   type: string;
   toggleMobileSearch?: () => void;
-  fetchQuery: () => void;
+  fetchQuery: (page: number) => void;
   setSearchTerm: (term: string) => void;
   searchTerm: string;
   setTcg: (tcg: Tcg) => void;
@@ -118,7 +118,7 @@ export default function NavSearchBar({
   const handleSearch = useCallback(async () => {
     setIsLoading(true);
     clearFilters();
-    await fetchQuery();
+    await fetchQuery(1);
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });

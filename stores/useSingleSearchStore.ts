@@ -33,7 +33,7 @@ type SearchState = {
   setCurrentPage: (currentPage: number) => void;
   clearFilters: () => void;
   setAutocompleteSuggestions: (suggestions: string[]) => void;
-  fetchCards: () => Promise<void>;
+  fetchCards: (page?: number) => Promise<void>;
   applyFilters: () => Promise<void>;
   clearSearchResults: () => void;
 };
@@ -89,7 +89,7 @@ export const useSingleSearchStore = create<SearchState>()(
         setAutocompleteSuggestions: (suggestions: string[]) =>
           set({ autocompleteSuggestions: suggestions }),
         clearFilters: () => set({ filters: null }),
-        fetchCards: async () => {
+        fetchCards: async (page?: number) => {
           const { tcg, searchTerm, filters, sortBy, region } = get();
           try {
             set({ loadingCardResults: true, loadingFilterResults:true });
@@ -100,7 +100,7 @@ export const useSingleSearchStore = create<SearchState>()(
               // search: 'fuzzy',
               sortBy: `${sortBy}`,
               maxResultsPerPage: '100',
-              pageNumber: get().currentPage.toString()
+              pageNumber: (page ?? get().currentPage).toString()
             });
 
             if (filters) {
@@ -153,7 +153,8 @@ export const useSingleSearchStore = create<SearchState>()(
               filters: filterOptionsFromResponse,
               resultsTcg: tcg,
               numPages: response.data.pagination.numPages,
-              numResults: response.data.pagination.numResults
+              numResults: response.data.pagination.numResults,
+              currentPage: page ?? get().currentPage
             });
           } catch (error: any) {
             console.error('Error fetching cards:', error);
