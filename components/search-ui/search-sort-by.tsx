@@ -38,7 +38,7 @@ export default function SearchSortBy({
         >
           <Button
             variant="outline"
-            className="flex h-min  w-full shrink-0 items-center justify-center bg-popover md:w-min"
+            className="flex h-min  w-full shrink-0 items-center justify-center bg-transparent md:w-min"
           >
             <div className="flex items-center">
               <span className="text-sm">{sortByLabel[sortBy]}</span>

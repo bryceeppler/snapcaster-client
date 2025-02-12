@@ -177,7 +177,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
                         <div className="flex h-8 items-center rounded-xl border">
                           <Button
                             className="flex h-full w-8 items-center justify-center rounded-l-xl hover:bg-accent"
-                            variant="outline"
+                            variant="ghost"
                             size="icon"
                             onClick={() =>
                               handleUpdateQuantity(conditionName, -1)
@@ -191,7 +191,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
                           </p>
                           <Button
                             className="flex h-full w-8 items-center justify-center rounded-r-xl hover:bg-accent"
-                            variant="outline"
+                            variant="ghost"
                             size="icon"
                             onClick={() =>
                               handleUpdateQuantity(conditionName, 1)

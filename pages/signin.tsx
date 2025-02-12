@@ -3,19 +3,41 @@ import Head from 'next/head';
 import useAuthStore from '@/stores/authStore';
 import Profile from './profile';
 import SignInCard from '@/components/signin';
+import { useRouter } from 'next/router';
+import React from 'react';
+import SignInForm from '@/components/forms/SigninForm';
 
 type Props = {};
 const Signin: NextPage<Props> = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const router = useRouter();
+  const { redirect } = router.query;
+
+  // If authenticated, handle redirect
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      if (redirect) {
+        router.push(decodeURIComponent(redirect as string));
+      } else {
+        router.push('/profile');
+      }
+    }
+  }, [isAuthenticated, redirect, router]);
+
+  // Show loading or signin form
   if (isAuthenticated) {
-    return <Profile />;
+    return null; // Return empty while redirecting
   }
 
   return (
     <>
       <SigninHead />
       <section className="flex w-full justify-center py-6 md:py-12">
-        <SignInCard />
+        <SignInForm
+          redirectUrl={
+            redirect ? decodeURIComponent(redirect as string) : undefined
+          }
+        />
       </section>
     </>
   );

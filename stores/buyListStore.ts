@@ -33,12 +33,16 @@ export interface IBuylistCart {
 }
 
 type BuyListState = {
-  //Search State Variables & functions
+  //////////////////////////////////////
+  //Search State Variables & functions//
+  //////////////////////////////////////
   searchResults: BuyListQueryCard[] | null;
   currentPage: number;
   numPages: number | null;
   filterOptions?: FilterOption[];
   tcg: Tcg;
+  numResults: number;
+  clearSearchResults: () => void;
   searchTerm: string;
   sortBy: BuylistSortOptions;
   filters: FilterOption[] | null;
@@ -50,14 +54,21 @@ type BuyListState = {
   setFilter: (filterField: string, value: string, selected: boolean) => void;
   clearFilters: () => void;
   applyFilters: () => Promise<void>;
+  ////////////////////////
+  //Cart State Variables//
+  ////////////////////////
+  mode: 'info' | 'search' | 'review' | 'submit';
+  updateMode: (mode: 'info' | 'search' | 'review' | 'submit') => void;
 
-  //Cart State Variables
   currentCartId: number | null;
-  buylistCheckoutBreakdownData: any;
-  selectedStoreForReview: string | null;
   setCurrentCartId: (cartId: number | null) => void;
-  getCheckoutData: (cartId: number) => Promise<void>;
+
+  // review tab data
+  reviewData: any;
+  setReviewData: (cartId: number | null) => Promise<void>;
+  selectedStoreForReview: string | null;
   setSelectedStoreForReview: (storeName: string) => void;
+
   submitBuylist: (
     paymentType: 'Cash' | 'Store Credit'
   ) => Promise<SubmitBuylistResponse>;
@@ -72,10 +83,11 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   searchTerm: '',
   sortBy: 'name-asc',
   filters: null,
-
+  numResults: 0,
   //Cart State Variables
+  mode: 'info',
   currentCartId: null,
-  buylistCheckoutBreakdownData: null,
+  reviewData: null,
   selectedStoreForReview: null,
 
   //////////////////////
@@ -83,10 +95,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   //////////////////////
 
   fetchCards: async () => {
-    if (get().tcg === 'starwars') {
-      toast.error('Star Wars will be available soon!');
-      return;
-    }
     const { filters } = get();
     if (get().searchTerm) {
       const queryParams = new URLSearchParams({
@@ -129,10 +137,12 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
         set({
           searchResults: response.data.results.slice(0, 500),
+          numResults: response.data.pagination.numResults,
           numPages: response.data.pagination.numPages,
           filterOptions: filterOptionsFromResponse,
           filters: filterOptionsFromResponse
         });
+        get().updateMode('search');
       } catch (error) {
         console.error('Search API Error:', error);
         toast.error('Error fetching cards');
@@ -183,9 +193,16 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
   setCurrentCartId: (cartId: number | null) => {
     set({ currentCartId: cartId });
+    if (get().mode === 'review') {
+      get().setReviewData(cartId);
+    }
   },
 
-  getCheckoutData: async (cartId: number) => {
+  setReviewData: async (cartId: number | null) => {
+    if (cartId === null) {
+      set({ reviewData: [] });
+      return;
+    }
     try {
       const response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/checkouts`
@@ -202,7 +219,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
           })
         );
 
-        set({ buylistCheckoutBreakdownData: formattedData });
+        set({ reviewData: formattedData });
       } else {
         toast.error(
           'Error fetching buylist checkout breakdown data: ' +
@@ -263,6 +280,15 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       console.error('Error submitting order:', error);
       return { success: false, message };
     }
+  },
+  updateMode: (mode: 'info' | 'search' | 'review' | 'submit') => {
+    if (mode === 'review' || mode === 'submit') {
+      get().setReviewData(get().currentCartId);
+    }
+    set({ mode });
+  },
+  clearSearchResults: () => {
+    set({ searchResults: null });
   }
 }));
 

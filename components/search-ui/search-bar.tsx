@@ -155,7 +155,7 @@ export default function SearchBar({
   );
 
   return (
-    <div className="relative w-full max-w-2xl md:ml-5 md:mr-3">
+    <div className="relative w-full max-w-2xl ">
       <div className="flex w-full items-center rounded-full border border-border bg-popover p-1">
         <Select
           //onOpenChange={setIsOpen}

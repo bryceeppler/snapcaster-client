@@ -224,7 +224,7 @@ export default function NavSearchBar({
               <HelpCircle className="text-popover-foreground hover:cursor-pointer" />
             </PopoverTrigger>
             <PopoverContent className="p-2">
-              <div className="rounded-md shadow-md">
+              <div className="rounded-md ">
                 <div className="w-full">
                   <div className="space-y-1 text-xs">
                     <div>

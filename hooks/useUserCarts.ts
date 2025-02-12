@@ -2,11 +2,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 import { IBuylistCart } from '@/stores/buyListStore';
 import { toast } from 'sonner';
+import useAuthStore from '@/stores/authStore';
+import useBuyListStore from '@/stores/buyListStore';
 
 const CARTS_QUERY_KEY = ['userCarts'] as const;
 
 export function useUserCarts() {
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuthStore();
+  const { setCurrentCartId } = useBuyListStore();
 
   const {
     data: carts,
@@ -27,7 +31,9 @@ export function useUserCarts() {
         toast.error('Error fetching carts: ' + error.message);
         throw error;
       }
-    }
+    },
+    staleTime: 30000,
+    enabled: isAuthenticated
   });
 
   const createCartMutation = useMutation({
@@ -39,12 +45,24 @@ export function useUserCarts() {
       if (response.status !== 201) {
         throw new Error('Failed to create cart');
       }
-      return response.data;
+      return { ...response.data, cartName };
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data.success) {
         toast.success(data.message);
-        queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
+        await queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
+
+        const response = await axiosInstance.get(
+          `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`
+        );
+
+        const newCart = response.data.carts.find(
+          (cart: IBuylistCart) => cart.name === data.cartName
+        );
+
+        if (newCart) {
+          setCurrentCartId(newCart.id);
+        }
       } else {
         toast.error('Failed to create cart');
       }
@@ -97,4 +115,4 @@ export function useUserCarts() {
     isDeleting: deleteCartMutation.isPending,
     isRenaming: renameCartMutation.isPending
   };
-} 
+}

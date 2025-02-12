@@ -1,1 +1,1 @@
-export type Mode = 'search' | 'cart' | 'checkout' | 'review';
+export type Mode = 'info' | 'search' | 'review' | 'submit';
