@@ -18,7 +18,9 @@ import SearchBar from '../sealed/search-bar';
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
+  SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
 import { Tcg } from '@/types';
@@ -137,6 +139,7 @@ const Navbar: React.FC = () => {
               open={mobileNavSheetOpen}
               onOpenChange={setMobileNavSheetOpen}
             >
+              <SheetTitle className="hidden">Snapcaster</SheetTitle>
               <SheetTrigger className="m-1 inline-flex items-center justify-center p-2">
                 <AlignJustify className="h-6 w-6" />
               </SheetTrigger>
@@ -331,6 +334,10 @@ const Navbar: React.FC = () => {
                 fetchCards={fetchCards}
               />
               <Sheet>
+                <SheetTitle className="hidden">Filters</SheetTitle>
+                <SheetDescription className="hidden">
+                  Filter your search results
+                </SheetDescription>
                 <SheetTrigger>
                   <SlidersHorizontal className="h-6 w-6" />
                 </SheetTrigger>
