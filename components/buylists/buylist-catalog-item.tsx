@@ -108,7 +108,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData, createDialogOpen
             <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
               {cardData.set}
             </div>
-            <h3 className="text-[0.9rem] font-semibold capitalize">
+            <h3 className="text-[0.9rem] font-semibold capitalize overflow-hidden text-ellipsis">
               {cardData.name}
             </h3>
             <p className="text-sm font-semibold capitalize text-muted-foreground">
