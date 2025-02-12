@@ -32,6 +32,7 @@ export function PopularBuyClicks({ searchData, variant }: PopularSearchesProps) 
     lorcana: 'Lorcana',
     starwars: 'Star Wars',
     onepiece: 'One Piece',
+    fleshandblood: 'Flesh and Blood',
   }
   const [selectedTcg, setSelectedTcg] = useState<string>(tcgs[0]);
 

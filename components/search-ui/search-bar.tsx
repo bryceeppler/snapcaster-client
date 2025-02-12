@@ -185,6 +185,7 @@ export default function SearchBar({
               <SelectItem value="pokemon">Pokemon</SelectItem>
               <SelectItem value="yugioh">Yu-Gi-Oh</SelectItem>
               <SelectItem value="starwars">Star Wars</SelectItem>
+              <SelectItem value="fleshandblood">Flesh and Blood</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

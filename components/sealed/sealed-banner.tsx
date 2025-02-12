@@ -2,7 +2,7 @@ import React from 'react';
 import { TypeAnimation } from 'react-type-animation';
 type Props = { prefixText: string };
 
-export default function Homebanner({ prefixText }: Props) {
+export default function SealedBanner({ prefixText }: Props) {
   return (
     <div className="mt-8">
       <img
@@ -12,7 +12,7 @@ export default function Homebanner({ prefixText }: Props) {
       />
 
       <h1 className=" cursor-default font-genos text-3xl font-bold tracking-tighter sm:text-4xl md:text-6xl">
-        Snapcaster
+        Sealed Search
       </h1>
       <TypeAnimation
         preRenderFirstString={true}

@@ -5,3 +5,7 @@ export const DISCOUNT_MAP = {
   'OBSIDIAN+SNAPCASTER5': 0.05,
   'SNAPCASTER-D24': 0.07,
 };
+
+export const SEALED_DISCOUNT_MAP = {
+  'OBSIDIAN+SNAPCASTER5': 0.05,
+};

@@ -13,6 +13,8 @@ import { AlignJustify, Search, SlidersHorizontal, User, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import SearchBar from '../sealed/search-bar';
 import {
   Sheet,
   SheetContent,
@@ -23,13 +25,13 @@ import { Tcg } from '@/types';
 import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import useBuyListStore from '@/stores/buyListStore';
 import globalStore from '@/stores/globalStore';
+import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
+import useBuyListStore from '@/stores/buyListStore';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
-  const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
 
   const {
     initNotificationStatus,
@@ -48,11 +50,45 @@ const Navbar: React.FC = () => {
 
   const singleSearchStore = useSingleSearchStore(); // Unconditionally called
   const buylistStore = useBuyListStore();
-
+  const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
   // Dynamically choose the store based on currentPath
 
   const queryStore =
     currentPath === '/buylists' ? buylistStore : singleSearchStore;
+
+  const {
+    productCategory,
+    searchTerm: sealedSearchTerm,
+    setProductCategory,
+    setSearchTerm: sealedSetSearchTerm,
+    filters,
+    clearFilters: sealedClearFilters,
+    sortBy: sealedSortBy,
+    region
+  } = useSealedSearchStore();
+
+  const { isLoading, refetch } = useSealedSearch(
+    {
+      productCategory,
+      searchTerm: sealedSearchTerm,
+      filters,
+      sortBy: sealedSortBy,
+      region
+    },
+    {
+      enabled: currentPath === '/sealed'
+    }
+  );
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    sealedSetSearchTerm(value);
+  };
+
+  const handleSearch = () => {
+    sealedSetSearchTerm(sealedSearchTerm.trim());
+    refetch();
+  };
 
   // Destructure variables from queryStore or set defaults
   const {
@@ -95,7 +131,7 @@ const Navbar: React.FC = () => {
     <>
       {/* MOBILE NAV */}
       <div className="sticky top-0 z-50 md:hidden">
-        <div className=" flex h-[60px]  justify-between bg-background px-1 shadow-xl">
+        <div className=" flex h-[60px]  justify-between bg-card px-1 shadow-xl">
           <div className=" inset-y-0 left-0 flex items-center">
             <Sheet
               open={mobileNavSheetOpen}
@@ -127,6 +163,14 @@ const Navbar: React.FC = () => {
                         }}
                       >
                         Multi Search
+                      </Button>
+                    </Link>
+                    <Link href="/sealed" as="/sealed">
+                      <Button
+                        variant="ghost"
+                        className="block w-full text-left text-lg"
+                      >
+                        Sealed Search
                       </Button>
                     </Link>
                     <Link
@@ -215,7 +259,27 @@ const Navbar: React.FC = () => {
               </Link>
             </div>
           </div>
-          {(currentPath === '/' || currentPath === '/buylists') && (
+          {currentPath === '/' && (
+            <div
+              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
+              }`}
+            >
+              <NavSearchBar
+                type={'mobile'}
+                toggleMobileSearch={() => {
+                  setMobileSearchIsVisible(!mobileSearchIsVisible);
+                }}
+                searchTerm={searchTerm}
+                tcg={tcg}
+                clearFilters={clearFilters}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                fetchQuery={fetchCards}
+              />
+            </div>
+          )}
+          {currentPath === '/buylists' && isAuthenticated && (
             <div
               className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
                 mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
@@ -236,7 +300,24 @@ const Navbar: React.FC = () => {
             </div>
           )}
         </div>
-        <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>{' '}
+        {currentPath === '/sealed' && (
+          <div className="w-full  bg-card ">
+            <div className="border-t px-2 py-2">
+              <SearchBar
+                type="mobile"
+                productCategory={productCategory}
+                searchTerm={sealedSearchTerm}
+                setProductCategory={setProductCategory}
+                setSearchTerm={sealedSetSearchTerm}
+                handleInputChange={handleInputChange}
+                handleSearch={handleSearch}
+                clearFilters={sealedClearFilters}
+                isLoading={isLoading}
+              />
+            </div>
+          </div>
+        )}
+        <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] "></div>{' '}
         {searchResults &&
           (currentPath == '/' || currentPath == '/buylists') && (
             <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
@@ -271,7 +352,7 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* DESKTOP NAV MD+ */}
-      <div className="sticky top-0 z-50 bg-background  shadow-md">
+      <div className="sticky top-0 z-50 bg-card  shadow-md">
         <div className="hidden h-16 items-stretch justify-between px-6 py-4 md:flex">
           {/* Left Section */}
           <div className="flex items-center">
@@ -297,7 +378,7 @@ const Navbar: React.FC = () => {
 
           {/* Center Section */}
           <div className="flex flex-1 items-center justify-center">
-            {(currentPath === '/' || currentPath === '/buylists') && (
+            {currentPath === '/' && (
               <NavSearchBar
                 type={'desktop'}
                 searchTerm={searchTerm}
@@ -306,6 +387,29 @@ const Navbar: React.FC = () => {
                 setSearchTerm={setSearchTerm}
                 setTcg={setTcg}
                 clearFilters={clearFilters}
+              />
+            )}
+            {currentPath === '/buylists' && isAuthenticated && (
+              <NavSearchBar
+                type={'desktop'}
+                searchTerm={searchTerm}
+                tcg={tcg}
+                fetchQuery={fetchCards}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                clearFilters={clearFilters}
+              />
+            )}
+            {currentPath === '/sealed' && (
+              <SearchBar
+                productCategory={productCategory}
+                searchTerm={sealedSearchTerm}
+                setProductCategory={setProductCategory}
+                setSearchTerm={sealedSetSearchTerm}
+                handleInputChange={handleInputChange}
+                handleSearch={handleSearch}
+                clearFilters={sealedClearFilters}
+                isLoading={isLoading}
               />
             )}
           </div>
@@ -346,6 +450,19 @@ const Navbar: React.FC = () => {
                     }`}
                   >
                     Multi Search
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link legacyBehavior href="/sealed" passHref>
+                  <NavigationMenuLink
+                    className={`${navigationMenuTriggerStyle()} ${
+                      currentPath == '/sealed'
+                        ? 'rounded-b-none border-b-2 border-primary'
+                        : ''
+                    }`}
+                  >
+                    Sealed Search
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
