@@ -2,20 +2,19 @@ import useBuyListStore from '@/stores/buyListStore';
 import BuyListCatalogItem from '@/components/buylists/buylist-catalog-item';
 import { Skeleton } from '@/components/ui/skeleton';
 
+
 const CatalogItemSkeleton = () => (
-  <div className="h-full">
-    <div className="flex h-full flex-col rounded-md bg-popover p-4">
-      <Skeleton className="mx-auto aspect-[745/1040] w-[150px] md:w-[250px]" />
-      <div className="mt-2 flex flex-1 flex-col justify-between">
-        <div>
-          <Skeleton className="h-3 w-20" />
-          <Skeleton className="mt-2 h-4 w-32" />
-          <Skeleton className="mt-1 h-3 w-24" />
-        </div>
-        <Skeleton className="mt-4 h-8 w-full" />
-      </div>
-    </div>
+ <div className="flex h-full flex-col rounded-md bg-popover p-4">
+<Skeleton className="mx-auto max-w-[150px] px-4 md:max-w-[250px] aspect-card w-full" />
+<div className="mt-2 flex flex-1 flex-col justify-between">
+  <div>
+    <Skeleton className="h-3 w-20" />
+    <Skeleton className="mt-2 h-4 w-32" />
+    <Skeleton className="mt-1 h-3 w-24" />
   </div>
+  <Skeleton className="mt-4 h-8 w-full" />
+</div>
+</div>
 );
 
 export default function Search({ createDialogOpen, setCreateDialogOpen }: { createDialogOpen: boolean, setCreateDialogOpen: (open: boolean) => void }) {
@@ -67,15 +66,13 @@ export default function Search({ createDialogOpen, setCreateDialogOpen }: { crea
             </div>
           </div>
         )}
-        <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-1">
+        <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-1 w-full">
           <div className="grid h-min auto-rows-auto grid-cols-2 gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xxl:grid-cols-6">
             {isLoading ? (
-              // Show skeleton loaders during loading
               Array.from({ length: 12 }).map((_, index) => (
                 <CatalogItemSkeleton key={index} />
               ))
             ) : (
-              // Show actual results when not loading
               searchResults?.map((item, index) => (
                 <div key={index} className="h-full">
                   <BuyListCatalogItem 
