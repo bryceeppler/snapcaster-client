@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/select';
 
 import { Input } from '@/components/ui/input';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Loader2 } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
@@ -28,6 +28,8 @@ type Props = {
   clearSearchResults: () => void;
   fetchCards: () => Promise<void>;
   clearFilters: () => void;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
 };
 export default function SearchBar({
   tcg,
@@ -36,7 +38,9 @@ export default function SearchBar({
   setSearchTerm,
   clearSearchResults,
   fetchCards,
-  clearFilters
+  clearFilters,
+  isLoading,
+  setIsLoading
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
@@ -103,13 +107,15 @@ export default function SearchBar({
     setIsAutoCompleteVisible(false);
     handleSearch();
   };
-  const handleSearch = useCallback(() => {
+  const handleSearch = useCallback(async () => {
+    setIsLoading(true);
     clearFilters();
     clearSearchResults();
-    fetchCards();
+    await fetchCards();
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
-  }, [fetchCards, searchTerm, tcg]);
+    setIsLoading(false);
+  }, [fetchCards, searchTerm, tcg, clearFilters, clearSearchResults]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -202,19 +208,23 @@ export default function SearchBar({
           onKeyDown={handleKeyDown}
         />
         <div className="mr-4 text-foreground">
-          <MagnifyingGlassIcon
-            className="h-5 w-5"
-            onClick={() => {
-              clearFilters();
-              handleSearch();
-            }}
-          />
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <MagnifyingGlassIcon
+              className="h-5 w-5 cursor-pointer hover:text-muted-foreground"
+              onClick={() => {
+                clearFilters();
+                handleSearch();
+              }}
+            />
+          )}
         </div>
       </div>
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute z-20 mt-1 w-full rounded-lg bg-popover p-1 text-foreground shadow-lg"
+          className="absolute z-50 mt-1 w-full rounded-lg bg-popover p-1 text-foreground shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div

@@ -25,13 +25,15 @@ const Info: FC = () => {
     clearSearchResults,
     fetchCards,
     clearFilters,
+    isLoading,
+    setIsLoading
   } = useBuyListStore();
 
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-background to-background/80 py-20">
-        <div className="container relative z-10 mx-auto px-4">
+      <section className="relative bg-gradient-to-b from-background to-background/80 py-20">
+        <div className="container relative mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl md:text-6xl">
               Sell Your Cards
@@ -56,16 +58,18 @@ const Info: FC = () => {
               </Button>
             ) : (
               <div className="flex w-full justify-center mt-8">
-                <SearchBar
-                  searchTool="buylists"
-                  tcg={tcg}
-                  searchTerm={searchTerm}
-                  setTcg={setTcg}
-                  setSearchTerm={setSearchTerm}
-                  clearSearchResults={clearSearchResults}
-                  fetchCards={fetchCards}
-                  clearFilters={clearFilters}
-                />
+                  <SearchBar
+                    isLoading={isLoading}
+                    setIsLoading={setIsLoading}
+                    searchTool="buylists"
+                    tcg={tcg}
+                    searchTerm={searchTerm}
+                    setTcg={setTcg}
+                    setSearchTerm={setSearchTerm}
+                    clearSearchResults={clearSearchResults}
+                    fetchCards={fetchCards}
+                    clearFilters={clearFilters}
+                  />
               </div>
             )}
           </div>

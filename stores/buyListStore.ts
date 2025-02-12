@@ -46,6 +46,8 @@ type BuyListState = {
   searchTerm: string;
   sortBy: BuylistSortOptions;
   filters: FilterOption[] | null;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
   setSortBy: (sortBy: BuylistSortOptions) => void;
   setTcg: (tcg: Tcg) => void;
   setCurrentPage: (currentPage: number) => void;
@@ -89,6 +91,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   currentCartId: null,
   reviewData: null,
   selectedStoreForReview: null,
+  isLoading: false,
+  setIsLoading: (loading: boolean) => set({ isLoading: loading }),
 
   //////////////////////
   // Search Functions //

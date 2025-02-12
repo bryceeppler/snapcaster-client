@@ -1,7 +1,7 @@
 import useBuyListStore from '@/stores/buyListStore';
 import BuyListCatalogItem from '@/components/buylists/buylist-catalog-item';
 
-export default function Search() {
+export default function Search({ createDialogOpen, setCreateDialogOpen }: { createDialogOpen: boolean, setCreateDialogOpen: (open: boolean) => void }) {
   const { searchResults } = useBuyListStore();
 
   return (
@@ -54,7 +54,7 @@ export default function Search() {
           <div className="grid h-min auto-rows-auto grid-cols-2 gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xxl:grid-cols-6">
             {searchResults?.map((item, index) => (
               <div key={index} className="h-full">
-                <BuyListCatalogItem cardData={item} />
+                <BuyListCatalogItem cardData={item} createDialogOpen={createDialogOpen} setCreateDialogOpen={setCreateDialogOpen} />
               </div>
             ))}
           </div>

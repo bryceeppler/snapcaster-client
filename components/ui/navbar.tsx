@@ -69,7 +69,7 @@ const Navbar: React.FC = () => {
     region
   } = useSealedSearchStore();
 
-  const { isLoading, refetch } = useSealedSearch(
+  const { isLoading: sealedSearchLoading, refetch } = useSealedSearch(
     {
       productCategory,
       searchTerm: sealedSearchTerm,
@@ -109,7 +109,9 @@ const Navbar: React.FC = () => {
     setTcg,
     clearFilters,
     setCurrentPage,
-    setFilter
+    setFilter,
+    isLoading,
+    setIsLoading
   } = queryStore || {
     tcg: 'mtg' as Tcg,
     searchResults: [],
@@ -126,7 +128,9 @@ const Navbar: React.FC = () => {
     setTcg: () => {},
     setSortBy: () => {},
     fetchCards: async () => {},
-    applyFilters: async () => {}
+    applyFilters: async () => {},
+    isLoading: false,
+    setIsLoading: () => {}
   };
 
   return (
@@ -279,6 +283,8 @@ const Navbar: React.FC = () => {
                 setSearchTerm={setSearchTerm}
                 setTcg={setTcg}
                 fetchQuery={fetchCards}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
               />
             </div>
           )}
@@ -299,6 +305,8 @@ const Navbar: React.FC = () => {
                 setSearchTerm={setSearchTerm}
                 setTcg={setTcg}
                 fetchQuery={fetchCards}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
               />
             </div>
           )}
@@ -315,7 +323,7 @@ const Navbar: React.FC = () => {
                 handleInputChange={handleInputChange}
                 handleSearch={handleSearch}
                 clearFilters={sealedClearFilters}
-                isLoading={isLoading}
+                isLoading={sealedSearchLoading}
               />
             </div>
           </div>
@@ -394,6 +402,8 @@ const Navbar: React.FC = () => {
                 setSearchTerm={setSearchTerm}
                 setTcg={setTcg}
                 clearFilters={clearFilters}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
               />
             )}
             {currentPath === '/buylists' && isAuthenticated && (
@@ -405,6 +415,8 @@ const Navbar: React.FC = () => {
                 setSearchTerm={setSearchTerm}
                 setTcg={setTcg}
                 clearFilters={clearFilters}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
               />
             )}
             {currentPath === '/sealed' && (
@@ -416,7 +428,7 @@ const Navbar: React.FC = () => {
                 handleInputChange={handleInputChange}
                 handleSearch={handleSearch}
                 clearFilters={sealedClearFilters}
-                isLoading={isLoading}
+                isLoading={sealedSearchLoading}
               />
             )}
           </div>

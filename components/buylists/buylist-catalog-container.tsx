@@ -221,7 +221,7 @@ export default function BuylistCatalog() {
             </div>
           </div>
           {mode != 'info' && (
-            <div className="flex flex-row items-center justify-between   py-1">
+            <div className="flex flex-row items-center justify-between py-1">
               <span className="flex items-end ">
                 <Popover open={open} onOpenChange={setOpen}>
                   <div>
@@ -350,6 +350,7 @@ export default function BuylistCatalog() {
                   </Sheet>
                 )}
 
+                {/* Cart Sheet */}
                 <Sheet
                   onOpenChange={(open) => {
                     if (!open && (mode === 'review' || mode === 'submit')) {
@@ -488,9 +489,9 @@ export default function BuylistCatalog() {
         </AlertDialog>
 
         {mode === 'info' ? (
-          <Info setCurrentStep={updateMode} />
+          <Info />
         ) : mode === 'search' ? (
-          <Search />
+          <Search createDialogOpen={createDialogOpen} setCreateDialogOpen={setCreateDialogOpen} />
         ) : mode === 'review' ? (
           <Review setCurrentStep={updateMode} />
         ) : (

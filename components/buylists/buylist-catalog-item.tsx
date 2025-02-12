@@ -22,7 +22,7 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
-type Props = { cardData: any };
+type Props = { cardData: any, createDialogOpen: boolean, setCreateDialogOpen: (open: boolean) => void };
 const conditions = [
   'Near Mint',
   'Lightly Played',
@@ -33,7 +33,7 @@ const conditions = [
 
 const CART_KEY = (cartId: number) => ['cart', cartId] as const;
 
-const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
+const BuyListCatalogItem = memo(function ResultCard({ cardData, createDialogOpen, setCreateDialogOpen }: Props) {
   const { currentCartId } = useBuyListStore();
   const { cartItems, updateCartItem } = useCartItems(
     currentCartId || undefined
@@ -126,6 +126,14 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
                 <Button
                   className="w-full rounded-b-lg font-montserrat text-xs uppercase"
                   variant="outline"
+                  onClick={(e) => {
+                    // If no cart is selected, prevent dialog from opening and show create cart dialog
+                    if (!currentCartId) {
+                      e.preventDefault();
+                      setCreateDialogOpen(true);
+                      return;
+                    }
+                  }}
                 >
                   Add To Cart
                 </Button>

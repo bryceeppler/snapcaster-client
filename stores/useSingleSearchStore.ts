@@ -27,6 +27,8 @@ type SearchState = {
   numResults?: number;
   numPages: number | null;
   region: string;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
   setRegion: (region: string) => void;
   setCurrentPage: (currentPage: number) => void;
   clearFilters: () => void;
@@ -55,6 +57,8 @@ export const useSingleSearchStore = create<SearchState>()(
         currentPage: 1,
         numPages: null,
         region: 'ca',
+        isLoading: false,
+        setIsLoading: (loading: boolean) => set({ isLoading: loading }),
         setRegion: (region: string) => set({ region }),
         setFilter: (filterField: string, value: string, selected: boolean) => {
           const filters = get().filters || [];
