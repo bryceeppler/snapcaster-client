@@ -14,7 +14,7 @@ const LoginRequired = ({ message }: Props) => {
         <p className="text-left text-sm text-muted-foreground">{message}</p>
       </CardHeader>
       <CardContent>
-        <SignInCard noborder={true} />
+        <SignInCard />
       </CardContent>
     </Card>
   );
