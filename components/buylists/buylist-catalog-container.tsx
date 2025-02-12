@@ -111,7 +111,8 @@ export default function BuylistCatalog() {
     applyFilters,
 
     currentPage,
-    numPages
+    numPages,
+    setReviewData
   } = useBuyListStore();
   const { isAuthenticated } = useAuthStore();
   const {
@@ -349,7 +350,13 @@ export default function BuylistCatalog() {
                   </Sheet>
                 )}
 
-                <Sheet>
+                <Sheet
+                  onOpenChange={(open) => {
+                    if (!open && (mode === 'review' || mode === 'submit')) {
+                      setReviewData(currentCartId);
+                    }
+                  }}
+                >
                   <SheetTitle hidden>Cart</SheetTitle>
                   <SheetDescription hidden>View your cart</SheetDescription>
                   <SheetTrigger asChild>
