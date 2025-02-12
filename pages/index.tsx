@@ -16,7 +16,10 @@ const Home: NextPage<Props> = ({}: Props) => {
     setSearchTerm,
     clearSearchResults,
     fetchCards,
-    clearFilters
+    clearFilters,
+    isLoading,
+    setIsLoading,
+    setCurrentPage
   } = useSingleSearchStore();
 
   return (
@@ -36,6 +39,9 @@ const Home: NextPage<Props> = ({}: Props) => {
                 clearSearchResults={clearSearchResults}
                 fetchCards={fetchCards}
                 clearFilters={clearFilters}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                setCurrentPage={setCurrentPage}
               />
             </div>
           </div>

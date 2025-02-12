@@ -13,7 +13,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
-import { ChevronDown, HelpCircle, X } from 'lucide-react';
+import { ChevronDown, HelpCircle, X, Loader2 } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
 import { Tcg } from '@/types';
@@ -26,12 +26,14 @@ interface AutocompleteResult {
 type Props = {
   type: string;
   toggleMobileSearch?: () => void;
-  fetchQuery: () => void;
+  fetchQuery: (page: number) => void;
   setSearchTerm: (term: string) => void;
   searchTerm: string;
   setTcg: (tcg: Tcg) => void;
   tcg: Tcg;
   clearFilters: () => void;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
 };
 export default function NavSearchBar({
   type,
@@ -41,7 +43,9 @@ export default function NavSearchBar({
   searchTerm,
   setTcg,
   tcg,
-  clearFilters
+  clearFilters,
+  isLoading,
+  setIsLoading
 }: Props) {
   const router = useRouter();
   const currentPath = router.pathname;
@@ -111,13 +115,15 @@ export default function NavSearchBar({
     handleSearch(); // Trigger search
   };
 
-  const handleSearch = useCallback(() => {
+  const handleSearch = useCallback(async () => {
+    setIsLoading(true);
     clearFilters();
-    fetchQuery();
+    await fetchQuery(1);
     trackSearch(searchTerm, tcg, 'single');
     setIsAutoCompleteVisible(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [fetchQuery, searchTerm, tcg]);
+    setIsLoading(false);
+  }, [fetchQuery, searchTerm, tcg, clearFilters]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -211,13 +217,17 @@ export default function NavSearchBar({
           onKeyDown={handleKeyDown}
         />
         <div className="mr-1 text-foreground">
-          <MagnifyingGlassIcon
-            className="h-6 w-6 hover:cursor-pointer"
-            onClick={() => {
-              clearFilters();
-              handleSearch();
-            }}
-          />
+          {isLoading ? (
+            <Loader2 className="h-6 w-6 animate-spin" />
+          ) : (
+            <MagnifyingGlassIcon
+              className="h-6 w-6 cursor-pointer hover:text-muted-foreground"
+              onClick={() => {
+                clearFilters();
+                handleSearch();
+              }}
+            />
+          )}
         </div>
         <div>
           <Popover>
@@ -225,7 +235,7 @@ export default function NavSearchBar({
               <HelpCircle className="text-popover-foreground hover:cursor-pointer" />
             </PopoverTrigger>
             <PopoverContent className="p-2">
-              <div className="rounded-md shadow-md">
+              <div className="rounded-md ">
                 <div className="w-full">
                   <div className="space-y-1 text-xs">
                     <div>
@@ -276,7 +286,7 @@ export default function NavSearchBar({
       {isAutoCompleteVisible && (
         <div
           ref={autoCompleteRef}
-          className="absolute z-20 mt-1 w-full rounded-lg bg-popover p-1 text-foreground shadow-lg"
+          className="absolute z-50 mt-1 w-full rounded-lg bg-popover p-1 text-foreground shadow-lg"
         >
           {suggestions.map((suggestion, index) => (
             <div

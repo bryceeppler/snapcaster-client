@@ -15,12 +15,13 @@ import {
   CardDescription,
   CardContent
 } from '@/components/ui/card';
+import router from 'next/router';
 
 type Props = {
   redirectUrl?: string;
 };
 
-const SignInCard = (props: Props) => {
+const SignInForm = (props: Props) => {
   const setTokens = useAuthStore((state) => state.setTokens);
   const {
     register,
@@ -51,6 +52,11 @@ const SignInCard = (props: Props) => {
         const { accessToken, refreshToken } = response.data;
         setTokens(accessToken, refreshToken);
         toast.success('Login successful!');
+        if (props.redirectUrl) {
+          router.push(props.redirectUrl);
+        } else {
+          router.push('/profile');
+        }
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
@@ -120,4 +126,4 @@ const SignInCard = (props: Props) => {
   );
 };
 
-export default SignInCard;
+export default SignInForm;

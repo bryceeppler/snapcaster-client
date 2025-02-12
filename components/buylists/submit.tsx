@@ -12,19 +12,21 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import type { FC } from 'react';
-import { useState } from 'react';
-import PurchasingCardDetails from './checkout/purchasing-card-details';
-import UnpurchasableCardDetails from './checkout/unpurchasable-card-details';
+import { useEffect, useState } from 'react';
+import PurchasingCardDetails from './review/purchasing-card-details';
+import UnpurchasableCardDetails from './review/unpurchasable-card-details';
 
 interface ReviewProps {
-  setCurrentStep: (step: number) => void;
+  setCurrentStep: (step: any) => void;
 }
 
 const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
   const {
-    buylistCheckoutBreakdownData,
+    reviewData,
     selectedStoreForReview,
-    submitBuylist
+    submitBuylist,
+    currentCartId,
+    setReviewData
   } = useBuyListStore();
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
@@ -37,7 +39,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
     message: ''
   });
 
-  const storeData = buylistCheckoutBreakdownData?.find(
+  const storeData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
 
@@ -53,10 +55,14 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
     }
   };
 
+  useEffect(() => {
+    setReviewData(currentCartId);
+  }, [currentCartId]);
+
   if (submissionResult.success) {
     return (
       <div className="container py-12">
-        <Card>
+        <Card className="border-none bg-background">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <CheckCircle2 className="size-12 text-green-500" />
@@ -66,12 +72,21 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
 
               <p className="text-muted-foreground">
                 Your order has been submitted to{' '}
-                {getWebsiteName(selectedStoreForReview || '')}. You will receive
-                an email confirmation shortly with payment instructions.
+                {getWebsiteName(selectedStoreForReview || '')}. If you are
+                shipping your cards, please wait for a confirmation email in 2-3
+                business days to the email you registerd on the{' '}
+                {getWebsiteName(selectedStoreForReview || '')} website.
+                Otherwise you can just drop your cards off in person.
               </p>
 
-              <Button onClick={() => setCurrentStep(0)} className="mt-4">
-                Return to Buylists
+              <Button
+                onClick={() => {
+                  setCurrentStep('info');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="mt-4"
+              >
+                Submit Another Quote
               </Button>
             </div>
           </CardContent>
@@ -82,23 +97,32 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
 
   if (!storeData) {
     return (
-      <div className="container max-w-4xl rounded-lg border bg-popover py-6">
-        <Alert className="bg-background font-medium">
-          <AlertCircle className="size-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription className="text-foreground">
-            No store data found to review. Please select a store from the
-            checkout page.
-          </AlertDescription>
-        </Alert>
-        <div className="mt-4">
+      <div className=" flex flex-col  px-4 py-6">
+        <div className="flex flex-col items-center ">
+          <div
+            className="b aspect-video w-full max-w-[360px] rounded-xl bg-contain bg-center bg-no-repeat"
+            style={{
+              backgroundImage:
+                'url("https://cdn.snapcaster.ca/images/avatar-cards.png")'
+            }}
+          ></div>
+          <div className="flex max-w-[480px] flex-col items-center gap-2">
+            <p className="max-w-[480px] text-center text-lg font-bold leading-tight tracking-[-0.015em] ">
+              No Store Selected
+            </p>
+            <p className="max-w-[480px] text-center text-sm font-normal leading-normal ">
+              Select an eligible store from the review page. You will need to
+              connect your selected LGS store account using the Snapcaster
+              Extension.
+            </p>
+          </div>
           <Button
-            variant="outline"
-            onClick={() => setCurrentStep(2)}
-            className="gap-2"
+            onClick={() => {
+              setCurrentStep('review');
+            }}
+            className="my-6 flex h-10 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl  px-4 text-sm font-bold leading-normal tracking-[0.015em] "
           >
-            <ArrowLeft className="size-4" />
-            Back to Checkout
+            <span className="truncate">Back to Review</span>
           </Button>
         </div>
       </div>
@@ -110,7 +134,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
   );
 
   return (
-    <div className="mb-6 space-y-6 sm:container">
+    <div className="mb-6 space-y-6 ">
       {/* Order Summary Card */}
       <Card>
         <CardHeader>
@@ -236,7 +260,10 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
                 </span>
                 <Button
                   className="mt-4 w-full"
-                  onClick={() => handleSubmit('Cash')}
+                  onClick={() => {
+                    handleSubmit('Cash');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit Cash Order'}
@@ -253,7 +280,10 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
                 </span>
                 <Button
                   className="mt-4 w-full"
-                  onClick={() => handleSubmit('Store Credit')}
+                  onClick={() => {
+                    handleSubmit('Store Credit');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit Credit Order'}

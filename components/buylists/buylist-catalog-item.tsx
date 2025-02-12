@@ -22,7 +22,7 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
-type Props = { cardData: any };
+type Props = { cardData: any, createDialogOpen: boolean, setCreateDialogOpen: (open: boolean) => void };
 const conditions = [
   'Near Mint',
   'Lightly Played',
@@ -33,7 +33,7 @@ const conditions = [
 
 const CART_KEY = (cartId: number) => ['cart', cartId] as const;
 
-const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
+const BuyListCatalogItem = memo(function ResultCard({ cardData, createDialogOpen, setCreateDialogOpen }: Props) {
   const { currentCartId } = useBuyListStore();
   const { cartItems, updateCartItem } = useCartItems(
     currentCartId || undefined
@@ -108,7 +108,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
             <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
               {cardData.set}
             </div>
-            <h3 className="text-[0.9rem] font-semibold capitalize">
+            <h3 className="text-[0.9rem] font-semibold capitalize overflow-hidden text-ellipsis">
               {cardData.name}
             </h3>
             <p className="text-sm font-semibold capitalize text-muted-foreground">
@@ -126,6 +126,14 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
                 <Button
                   className="w-full rounded-b-lg font-montserrat text-xs uppercase"
                   variant="outline"
+                  onClick={(e) => {
+                    // If no cart is selected, prevent dialog from opening and show create cart dialog
+                    if (!currentCartId) {
+                      e.preventDefault();
+                      setCreateDialogOpen(true);
+                      return;
+                    }
+                  }}
                 >
                   Add To Cart
                 </Button>
@@ -177,7 +185,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
                         <div className="flex h-8 items-center rounded-xl border">
                           <Button
                             className="flex h-full w-8 items-center justify-center rounded-l-xl hover:bg-accent"
-                            variant="outline"
+                            variant="ghost"
                             size="icon"
                             onClick={() =>
                               handleUpdateQuantity(conditionName, -1)
@@ -191,7 +199,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData }: Props) {
                           </p>
                           <Button
                             className="flex h-full w-8 items-center justify-center rounded-r-xl hover:bg-accent"
-                            variant="outline"
+                            variant="ghost"
                             size="icon"
                             onClick={() =>
                               handleUpdateQuantity(conditionName, 1)

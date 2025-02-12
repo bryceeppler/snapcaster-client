@@ -13,20 +13,23 @@ type Props = {
   currentPage: number;
   numPages: number | null;
   setCurrentPage: (value: number) => void;
-  fetchCards: () => void;
+  fetchCards: () => Promise<void>;
+  setIsLoading: (loading: boolean) => void;
 };
 
 const SearchPagination = ({
   currentPage,
   numPages,
   setCurrentPage,
-  fetchCards
+  fetchCards,
+  setIsLoading
 }: Props) => {
-  const handlePageChange = (page: number) => {
+  const handlePageChange = async (page: number) => {
+    setIsLoading(true);
     setCurrentPage(page);
-    fetchCards();
+    await fetchCards();
     window.scrollTo(0, 0);
-    return;
+    setIsLoading(false);
   };
 
   // useEffect(() => {

@@ -27,11 +27,13 @@ type SearchState = {
   numResults?: number;
   numPages: number | null;
   region: string;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
   setRegion: (region: string) => void;
   setCurrentPage: (currentPage: number) => void;
   clearFilters: () => void;
   setAutocompleteSuggestions: (suggestions: string[]) => void;
-  fetchCards: () => Promise<void>;
+  fetchCards: (page?: number) => Promise<void>;
   applyFilters: () => Promise<void>;
   clearSearchResults: () => void;
 };
@@ -55,6 +57,8 @@ export const useSingleSearchStore = create<SearchState>()(
         currentPage: 1,
         numPages: null,
         region: 'ca',
+        isLoading: false,
+        setIsLoading: (loading: boolean) => set({ isLoading: loading }),
         setRegion: (region: string) => set({ region }),
         setFilter: (filterField: string, value: string, selected: boolean) => {
           const filters = get().filters || [];
@@ -85,7 +89,7 @@ export const useSingleSearchStore = create<SearchState>()(
         setAutocompleteSuggestions: (suggestions: string[]) =>
           set({ autocompleteSuggestions: suggestions }),
         clearFilters: () => set({ filters: null }),
-        fetchCards: async () => {
+        fetchCards: async (page?: number) => {
           const { tcg, searchTerm, filters, sortBy, region } = get();
           try {
             set({ loadingCardResults: true, loadingFilterResults:true });
@@ -96,7 +100,7 @@ export const useSingleSearchStore = create<SearchState>()(
               // search: 'fuzzy',
               sortBy: `${sortBy}`,
               maxResultsPerPage: '100',
-              pageNumber: get().currentPage.toString()
+              pageNumber: (page ?? get().currentPage).toString()
             });
 
             if (filters) {
@@ -149,7 +153,8 @@ export const useSingleSearchStore = create<SearchState>()(
               filters: filterOptionsFromResponse,
               resultsTcg: tcg,
               numPages: response.data.pagination.numPages,
-              numResults: response.data.pagination.numResults
+              numResults: response.data.pagination.numResults,
+              currentPage: page ?? get().currentPage
             });
           } catch (error: any) {
             console.error('Error fetching cards:', error);

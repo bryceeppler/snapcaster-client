@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Button } from './button';
 import useAuthStore from '@/stores/authStore';
-import { AlignJustify, Search, User, X } from 'lucide-react';
+import { AlignJustify, Search, SlidersHorizontal, User, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
@@ -18,16 +18,18 @@ import SearchBar from '../sealed/search-bar';
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
+  SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 import { Tcg } from '@/types';
 import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import globalStore from '@/stores/globalStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
+import useBuyListStore from '@/stores/buyListStore';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
@@ -49,9 +51,12 @@ const Navbar: React.FC = () => {
   // Dynamically assign zustand states for the following components (single, buylists, sealed) => FilterSection, NavSearchBar, SearchPagination
 
   const singleSearchStore = useSingleSearchStore(); // Unconditionally called
-
+  const buylistStore = useBuyListStore();
+  const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
   // Dynamically choose the store based on currentPath
-  const queryStore = singleSearchStore;
+
+  const queryStore =
+    currentPath === '/buylists' ? buylistStore : singleSearchStore;
 
   const {
     productCategory,
@@ -64,10 +69,7 @@ const Navbar: React.FC = () => {
     region
   } = useSealedSearchStore();
 
-  const {
-    isLoading,
-    refetch
-  } = useSealedSearch(
+  const { isLoading: sealedSearchLoading, refetch } = useSealedSearch(
     {
       productCategory,
       searchTerm: sealedSearchTerm,
@@ -107,7 +109,9 @@ const Navbar: React.FC = () => {
     setTcg,
     clearFilters,
     setCurrentPage,
-    setFilter
+    setFilter,
+    isLoading,
+    setIsLoading
   } = queryStore || {
     tcg: 'mtg' as Tcg,
     searchResults: [],
@@ -124,7 +128,9 @@ const Navbar: React.FC = () => {
     setTcg: () => {},
     setSortBy: () => {},
     fetchCards: async () => {},
-    applyFilters: async () => {}
+    applyFilters: async () => {},
+    isLoading: false,
+    setIsLoading: () => {}
   };
 
   return (
@@ -137,6 +143,7 @@ const Navbar: React.FC = () => {
               open={mobileNavSheetOpen}
               onOpenChange={setMobileNavSheetOpen}
             >
+              <SheetTitle className="hidden">Snapcaster</SheetTitle>
               <SheetTrigger className="m-1 inline-flex items-center justify-center p-2">
                 <AlignJustify className="h-6 w-6" />
               </SheetTrigger>
@@ -244,73 +251,120 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Right Section */}
-            <div className="mx-2 flex items-center">
+            <div className="mx-2 flex items-center ">
+              {(currentPath === '/' || currentPath === '/buylists') && (
+                <button
+                  onClick={() => {
+                    setMobileSearchIsVisible(!mobileSearchIsVisible);
+                  }}
+                >
+                  <Search className="mr-2" />
+                </button>
+              )}
               <Link href={isAuthenticated ? `/profile` : '/signin'}>
                 <User />
               </Link>
             </div>
           </div>
-        </div>
-        
-        {/* Mobile Search Bar Row */}
-        <div className="w-full border-t border-border bg-card px-2 py-2">
           {currentPath === '/' && (
-            <NavSearchBar
-              type={'mobile'}
-              searchTerm={searchTerm}
-              tcg={tcg}
-              clearFilters={clearFilters}
-              setSearchTerm={setSearchTerm}
-              setTcg={setTcg}
-              fetchQuery={fetchCards}
-            />
+            <div
+              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
+              }`}
+            >
+              <NavSearchBar
+                type={'mobile'}
+                toggleMobileSearch={() => {
+                  setMobileSearchIsVisible(!mobileSearchIsVisible);
+                }}
+                searchTerm={searchTerm}
+                tcg={tcg}
+                clearFilters={clearFilters}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                fetchQuery={fetchCards}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            </div>
           )}
-          {currentPath === '/sealed' && (
-            <SearchBar
-              type="mobile"
-              productCategory={productCategory}
-              searchTerm={sealedSearchTerm}
-              setProductCategory={setProductCategory}
-              setSearchTerm={sealedSetSearchTerm}
-              handleInputChange={handleInputChange}
-              handleSearch={handleSearch}
-              clearFilters={sealedClearFilters}
-              isLoading={isLoading}
-            />
+          {currentPath === '/buylists' && isAuthenticated && (
+            <div
+              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
+              }`}
+            >
+              <NavSearchBar
+                type={'mobile'}
+                toggleMobileSearch={() => {
+                  setMobileSearchIsVisible(!mobileSearchIsVisible);
+                }}
+                searchTerm={searchTerm}
+                tcg={tcg}
+                clearFilters={clearFilters}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                fetchQuery={fetchCards}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            </div>
           )}
         </div>
-
-        <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] bg-border"></div>
-        {searchResults && currentPath == '/' && (
-          <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-            <span className="text-center text-sm font-normal text-secondary-foreground ">
-              {numResults} results
-            </span>
-            <SearchPagination
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              numPages={numPages}
-              fetchCards={fetchCards}
-            />
-            <Sheet>
-              <SheetTrigger>
-                <MixerHorizontalIcon className="h-6 w-6" />
-              </SheetTrigger>
-              <SheetContent className="min-w-full">
-                <FilterSection
-                  filterOptions={filterOptions}
-                  sortBy={sortBy}
-                  fetchCards={fetchCards}
-                  clearFilters={clearFilters}
-                  setFilter={setFilter}
-                  setCurrentPage={setCurrentPage}
-                  applyFilters={applyFilters}
-                  setSortBy={setSortBy}
-                />
-              </SheetContent>
-            </Sheet>
+        {currentPath === '/sealed' && (
+          <div className="w-full  bg-card ">
+            <div className="border-t px-2 py-2">
+              <SearchBar
+                type="mobile"
+                productCategory={productCategory}
+                searchTerm={sealedSearchTerm}
+                setProductCategory={setProductCategory}
+                setSearchTerm={sealedSetSearchTerm}
+                handleInputChange={handleInputChange}
+                handleSearch={handleSearch}
+                clearFilters={sealedClearFilters}
+                isLoading={sealedSearchLoading}
+              />
+            </div>
           </div>
         )}
+        <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] "></div>{' '}
+        {searchResults &&
+          (currentPath == '/' || currentPath == '/buylists') && (
+            <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
+              <span className="text-center text-sm font-normal text-secondary-foreground ">
+                {numResults} results
+              </span>
+              <SearchPagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                numPages={numPages}
+                fetchCards={fetchCards}
+                setIsLoading={setIsLoading}
+              />
+              <Sheet>
+                <SheetTitle className="hidden">Filters</SheetTitle>
+                <SheetDescription className="hidden">
+                  Filter your search results
+                </SheetDescription>
+                <SheetTrigger>
+                  <SlidersHorizontal className="h-6 w-6" />
+                </SheetTrigger>
+                <SheetContent className="min-w-full">
+                  <FilterSection
+                    filterOptions={filterOptions}
+                    sortBy={sortBy}
+                    fetchCards={fetchCards}
+                    clearFilters={clearFilters}
+                    setFilter={setFilter}
+                    setCurrentPage={setCurrentPage}
+                    applyFilters={applyFilters}
+                    setSortBy={setSortBy}
+                  />
+                </SheetContent>
+              </Sheet>
+            </div>
+          )}
       </div>
 
       {/* DESKTOP NAV MD+ */}
@@ -349,6 +403,21 @@ const Navbar: React.FC = () => {
                 setSearchTerm={setSearchTerm}
                 setTcg={setTcg}
                 clearFilters={clearFilters}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            )}
+            {currentPath === '/buylists' && isAuthenticated && (
+              <NavSearchBar
+                type={'desktop'}
+                searchTerm={searchTerm}
+                tcg={tcg}
+                fetchQuery={fetchCards}
+                setSearchTerm={setSearchTerm}
+                setTcg={setTcg}
+                clearFilters={clearFilters}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
               />
             )}
             {currentPath === '/sealed' && (
@@ -360,7 +429,7 @@ const Navbar: React.FC = () => {
                 handleInputChange={handleInputChange}
                 handleSearch={handleSearch}
                 clearFilters={sealedClearFilters}
-                isLoading={isLoading}
+                isLoading={sealedSearchLoading}
               />
             )}
           </div>

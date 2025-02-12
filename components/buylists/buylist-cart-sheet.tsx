@@ -2,7 +2,10 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Minus, Plus, Trash2 } from 'lucide-react';
-import useBuyListStore, { IBuylistCartItem, IBuylistCart } from '@/stores/buyListStore';
+import useBuyListStore, {
+  IBuylistCartItem,
+  IBuylistCart
+} from '@/stores/buyListStore';
 import { useCartItems } from '@/hooks/useCartItems';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
@@ -12,7 +15,7 @@ import CardImage from '../ui/card-image';
 const CART_KEY = (cartId: number) => ['cart', cartId] as const;
 
 type Props = {
-  setCurrentStep: (step: number) => void;
+  setCurrentStep: (step: any) => void;
 };
 
 export default function BuylistCartSheet({ setCurrentStep }: Props) {
@@ -20,7 +23,10 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
   const { updateCartItem } = useCartItems(currentCartId || undefined);
 
   // Fetch cart data using React Query
-  const { data: currentCart, isLoading } = useQuery<{ success: boolean; cart: IBuylistCart } | null>({
+  const { data: currentCart, isLoading } = useQuery<{
+    success: boolean;
+    cart: IBuylistCart;
+  } | null>({
     queryKey: CART_KEY(currentCartId || 0),
     queryFn: async () => {
       if (!currentCartId) return null;
@@ -49,7 +55,9 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
   }
 
   // Group items by store
-  const itemsByStore = currentCart.cart.items.reduce<{ [key: string]: IBuylistCartItem[] }>((acc, item) => {
+  const itemsByStore = currentCart.cart.items.reduce<{
+    [key: string]: IBuylistCartItem[];
+  }>((acc, item) => {
     const storeName = item.game;
     if (!acc[storeName]) {
       acc[storeName] = [];
@@ -59,16 +67,21 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
   }, {});
 
   const calculateTotal = () => {
-    return currentCart.cart.items.reduce((acc: number, item: IBuylistCartItem) => acc + item.quantity, 0);
+    return currentCart.cart.items.reduce(
+      (acc: number, item: IBuylistCartItem) => acc + item.quantity,
+      0
+    );
   };
 
   return (
-    <div className="h-full py-4">
+    <div className="flex h-full w-full flex-col py-4">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-medium leading-none">{currentCart.cart.name}</h4>
+        <h4 className="text-sm font-medium leading-none">
+          {currentCart.cart.name}
+        </h4>
       </div>
       <Separator className="my-4" />
-      <ScrollArea className="h-[calc(100vh-200px)]">
+      <ScrollArea className="h-[calc(100vh-200px)] w-full">
         <div className="space-y-6">
           {Object.entries(itemsByStore).map(([storeName, items]) => (
             <div key={storeName} className="space-y-4">
@@ -76,42 +89,80 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
               {items.map((item: IBuylistCartItem) => (
                 <div
                   key={item.id}
-                  className="flex flex-col space-y-2 rounded-lg border p-3"
+                  className="flex min-w-0 flex-col space-y-2 rounded-lg border p-2"
                 >
-                  <div className="flex justify-between">
-                    <div className="flex flex-col">
-                      <div className="flex gap-3">
-                        <div className="w-8 md:w-12 flex-shrink-0">
-                          <CardImage imageUrl={item.image} alt={item.card_name} />
-                        </div>
-                        <div className="flex flex-col min-w-0">
-                          <p className="text-sm font-medium truncate">{item.card_name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {item.set_name}
-                          </p>
-            
-                          
-                        </div>
-                        
+                  <div className="flex min-w-0 items-start gap-1">
+                    <div className="w-14 flex-shrink-0">
+                      <CardImage imageUrl={item.image} alt={item.card_name} />
+                    </div>
+                    <div className="flex min-w-0 flex-1 flex-col px-1">
+                      <div className="flex min-w-0 flex-col">
+                        <p className="break-words text-sm font-medium">
+                          {item.card_name}
+                        </p>
+                        <p className="break-words text-xs text-muted-foreground">
+                          {item.set_name}
+                        </p>
                       </div>
-                      <div className="flex flex-wrap gap-1 items-center mt-1.5">
-                            <Badge variant="outline" className="text-xs">
-                              {item.condition_name}
-                            </Badge>
-                            <Badge variant="outline" className="text-xs capitalize">
-                              {item.rarity}
-                            </Badge>
-                            {item.foil !== 'Normal' && (
-                              <Badge variant="outline" className="text-xs capitalize">
-                                {item.foil}
-                              </Badge>
-                            )}
-                          </div>
+                      <div className="mt-1.5 flex min-w-0 flex-wrap items-center gap-1">
+                        <Badge variant="outline" className="break-all text-xs">
+                          {item.condition_name}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="break-all text-xs capitalize"
+                        >
+                          {item.rarity}
+                        </Badge>
+                        {item.foil !== 'Normal' && (
+                          <Badge
+                            variant="outline"
+                            className="break-all text-xs capitalize"
+                          >
+                            {item.foil}
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="mt-2 flex w-min items-center space-x-1 rounded-lg border">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() =>
+                            currentCartId &&
+                            updateCartItem({
+                              cartId: currentCartId,
+                              item,
+                              quantity: Math.max(0, item.quantity - 1)
+                            })
+                          }
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <span className="w-4 text-center text-sm">
+                          {item.quantity}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() =>
+                            currentCartId &&
+                            updateCartItem({
+                              cartId: currentCartId,
+                              item,
+                              quantity: item.quantity + 1
+                            })
+                          }
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="hidden md:block h-8 w-8"
+                      className="h-7 w-7 flex-shrink-0"
                       onClick={() =>
                         currentCartId &&
                         updateCartItem({
@@ -123,40 +174,6 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() =>
-                          currentCartId &&
-                          updateCartItem({
-                            cartId: currentCartId,
-                            item,
-                            quantity: Math.max(0, item.quantity - 1)
-                          })
-                        }
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
-                      <span className="text-sm">{item.quantity}</span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() =>
-                          currentCartId &&
-                          updateCartItem({
-                            cartId: currentCartId,
-                            item,
-                            quantity: item.quantity + 1
-                          })
-                        }
-                      >
-                        <Plus className="h-3 w-3" />
-                      </Button>
-                    </div>
-                    <p className="text-xs font-medium">Qty: {item.quantity}</p>
                   </div>
                 </div>
               ))}
@@ -170,10 +187,19 @@ export default function BuylistCartSheet({ setCurrentStep }: Props) {
           <span className="text-sm font-medium">Total Items</span>
           <span className="text-sm font-medium">{calculateTotal()}</span>
         </div>
-        <Button className="w-full" onClick={() => setCurrentStep(2)}>
+        <Button
+          className="w-full"
+          onClick={() => {
+            setCurrentStep('review');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.dispatchEvent(
+              new KeyboardEvent('keydown', { key: 'Escape' })
+            );
+          }}
+        >
           Proceed to Checkout
         </Button>
       </div>
     </div>
   );
-} 
+}

@@ -11,13 +11,13 @@ const Buylist: NextPage<Props> = () => {
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/signin');
-    }
-  }, [isAuthenticated, router]);
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     router.push('/signin');
+  //   }
+  // }, [isAuthenticated, router]);
 
-  if (!isAuthenticated) return null;
+  // if (!isAuthenticated) return null;
 
   return (
     <>
