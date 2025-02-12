@@ -94,6 +94,7 @@ const Info: FC = () => {
                 steps={step.steps}
                 imageUrl={step.imageUrl}
                 isReversed={index % 2 !== 0}
+                imageStyle={step.imageStyle}
               />
             ))}
           </div>
@@ -111,8 +112,9 @@ type StepCardProps = {
     header: string;
     description: string;
   }>;
-  imageUrl: string;
+  imageUrl?: string;
   isReversed?: boolean;
+  imageStyle?: "default" | "bordered";
 };
 
 const StepCard = ({
@@ -122,13 +124,14 @@ const StepCard = ({
   steps,
   imageUrl,
   isReversed = false,
+  imageStyle = "default",
 }: StepCardProps) => {
   return (
     <div
       className={cn(
-        "grid items-center gap-12 rounded-2xl border bg-card p-8 shadow-sm",
-        "lg:grid-cols-2",
-        isReversed && "lg:[grid-template-areas:'content_image']"
+        "grid gap-12 rounded-2xl border bg-card p-8 shadow-sm",
+        imageUrl ? "lg:grid-cols-2" : "grid-cols-1",
+        isReversed && imageUrl && "lg:[grid-template-areas:'content_image']"
       )}
     >
       <div className="flex flex-col gap-6">
@@ -164,20 +167,40 @@ const StepCard = ({
         </Accordion>
       </div>
 
-      <div
-        className={cn(
-          "aspect-video w-full overflow-hidden rounded-xl bg-cover bg-center",
-          isReversed && "lg:order-first"
-        )}
-        style={{
-          backgroundImage: `url("${imageUrl}")`,
-        }}
-      />
+      {imageUrl && (
+        <div
+          className={cn(
+            "relative w-full overflow-hidden rounded-xl",
+            isReversed && "lg:order-first"
+          )}
+        >
+          <img
+            src={imageUrl}
+            alt={title}
+            className={cn(
+              "max-h-[400px] w-auto mx-auto",
+              imageStyle === "bordered" && "border-2 border-border shadow-lg rounded-xl"
+            )}
+            loading={step === 1 ? "eager" : "lazy"}
+          />
+        </div>
+      )}
     </div>
   );
 };
 
-const steps = [
+type Step = {
+  title: string;
+  description: string;
+  steps: Array<{
+    header: string;
+    description: string;
+  }>;
+  imageUrl?: string;
+  imageStyle?: "default" | "bordered";
+};
+
+const steps: Step[] = [
   {
     title: "Build Your Sell List",
     description: "Create a list of cards you want to sell",
@@ -191,8 +214,8 @@ const steps = [
         description: "Search for cards across multiple TCGs and add them to your list.",
       },
     ],
-    imageUrl:
-      "https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png",
+    imageUrl: "https://cdn.snapcaster.ca/images/search.png",
+    imageStyle: "bordered"
   },
   {
     title: "Review Your Offers",
@@ -210,7 +233,8 @@ const steps = [
       },
     ],
     imageUrl:
-      "https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png",
+      "https://cdn.snapcaster.ca/images/offers.png",
+    imageStyle: "bordered"
   },
   {
     title: "Snapcaster Chrome Extension",
@@ -240,8 +264,7 @@ const steps = [
 4. Refresh the buylist page on Snapcaster and submit your quote.`,
       },
     ],
-    imageUrl:
-      "https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png",
+
   },
   {
     title: "Submit Your Offer",
@@ -260,7 +283,8 @@ const steps = [
       },
     ],
     imageUrl:
-      "https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png",
+      "https://cdn.snapcaster.ca/images/review.png",
+    imageStyle: "bordered"
   },
   {
     title: "Send Your Cards",
@@ -289,7 +313,7 @@ const steps = [
       },
     ],
     imageUrl:
-      "https://hds.hel.fi/images/foundation/visual-assets/placeholders/image-l@3x.png",
+      "https://cdn.snapcaster.ca/images/catinbox.png",
   },
 ];
 
