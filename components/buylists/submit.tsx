@@ -103,7 +103,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
             className="b aspect-video w-full max-w-[360px] rounded-xl bg-contain bg-center bg-no-repeat"
             style={{
               backgroundImage:
-                'url("https://cdn.prod.website-files.com/603c87adb15be3cb0b3ed9b5/670cd872f1d3a93f227721de_085-min.png")'
+                'url("https://cdn.snapcaster.ca/images/avatar-cards.png")'
             }}
           ></div>
           <div className="flex max-w-[480px] flex-col items-center gap-2">

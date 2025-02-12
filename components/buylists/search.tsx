@@ -30,7 +30,7 @@ export default function Search({ createDialogOpen, setCreateDialogOpen }: { crea
                 className="aspect-video w-full max-w-[360px] rounded-xl bg-contain bg-center bg-no-repeat"
                 style={{
                   backgroundImage:
-                    'url("https://cdn.prod.website-files.com/603c87adb15be3cb0b3ed9b5/670dd5229626ec1b5f619279_006-min.png")'
+                    'url("https://cdn.snapcaster.ca/images/avatar-laptop.png")'
                 }}
               ></div>
               <div className="flex max-w-[480px] flex-col items-center gap-2">
@@ -51,7 +51,7 @@ export default function Search({ createDialogOpen, setCreateDialogOpen }: { crea
                 className="aspect-video w-full max-w-[360px] rounded-xl bg-contain bg-center bg-no-repeat"
                 style={{
                   backgroundImage:
-                    'url("https://cdn.prod.website-files.com/603c87adb15be3cb0b3ed9b5/670dd5229626ec1b5f619279_006-min.png")'
+                    'url("https://cdn.snapcaster.ca/images/avatar-laptop.png")'
                 }}
               ></div>
               <div className="flex max-w-[480px] flex-col items-center gap-2">

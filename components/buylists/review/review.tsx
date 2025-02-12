@@ -79,7 +79,7 @@ export default function Review({ setCurrentStep }: Props) {
                 className="aspect-video w-full max-w-[360px] rounded-xl bg-contain bg-center bg-no-repeat "
                 style={{
                   backgroundImage:
-                    'url("https://cdn.prod.website-files.com/603c87adb15be3cb0b3ed9b5/670dce5f54f8d6e990f04d1a_064-min.png")'
+                    'url("https://cdn.snapcaster.ca/images/shipping.png")'
                 }}
               ></div>
               <div className="flex max-w-[480px] flex-col items-center gap-2 ">
@@ -108,7 +108,7 @@ export default function Review({ setCurrentStep }: Props) {
                 className="aspect-video w-full max-w-[360px] rounded-xl bg-contain bg-center bg-no-repeat "
                 style={{
                   backgroundImage:
-                    'url("https://cdn.prod.website-files.com/603c87adb15be3cb0b3ed9b5/670cd8e80c2d2d95ea0f949f_082-min.png")'
+                    'url("https://cdn.snapcaster.ca/images/catinbox.png")'
                 }}
               ></div>
               <div className="flex max-w-[480px] flex-col items-center gap-2 ">
