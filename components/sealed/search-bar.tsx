@@ -70,7 +70,6 @@ export default function SearchBar({
       const key = event.key;
 
       switch (key) {
-
         case 'Enter':
         case 'ArrowRight':
         
@@ -82,7 +81,7 @@ export default function SearchBar({
           break;
       }
     },
-    [suggestions, selectedIndex]
+    [clearFilters, handleSearch]
   );
 
   return (

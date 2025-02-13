@@ -44,7 +44,8 @@ const fetchSealedProducts = async ({
     keyword: searchTerm.trim(),
     sortBy: sortBy,
     maxResultsPerPage: '24',
-    pageNumber: pageParam.toString()
+    pageNumber: pageParam.toString(),
+    fuzzy: 'max'
   });
 
   if (filters) {
@@ -85,15 +86,18 @@ export const useSealedSearch = (
   searchParams: SearchParams,
   options?: { enabled?: boolean }
 ) => {
-  return useInfiniteQuery({
-    queryKey: ['sealedSearch', searchParams.productCategory, searchParams.searchTerm, searchParams.sortBy, searchParams.filters] as const,
+  const query = useInfiniteQuery({
+    queryKey: ['sealedSearch', searchParams.sortBy],
     queryFn: ({ pageParam = 1 }: { pageParam?: number }) => fetchSealedProducts({ ...searchParams, pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       const nextPage = allPages.length + 1;
       return nextPage <= lastPage.pagination.numPages ? nextPage : undefined;
     },
-    enabled: options?.enabled ?? !!searchParams.searchTerm,
+    enabled: options?.enabled ?? true,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
     select: (data): TransformedSearchResponse => {
       const lastPage = data.pages[data.pages.length - 1];
       const allResults = data.pages.flatMap(page => page.results);
@@ -114,4 +118,9 @@ export const useSealedSearch = (
       };
     }
   });
+
+  return {
+    ...query,
+    isLoading: query.isFetching || query.isLoading
+  };
 }; 

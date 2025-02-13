@@ -83,7 +83,7 @@ export default function SealedCatalogContainer({
             <div className="flex flex-col">
 
               <span className="text-center text-sm font-normal text-secondary-foreground">
-                {numResults} results
+                {searchResults?.length} results
               </span>
             </div>
             <SortBy
@@ -96,7 +96,7 @@ export default function SealedCatalogContainer({
         </div>
 
         {/* Results */}
-        {searchResults && searchResults.length > 0 && (
+        {searchResults && searchResults.length > 0 && !isLoading && (
           <>
             <div className="grid grid-cols-2 gap-1 md:grid-cols-4 lg:grid-cols-5">
               {/* {!hasActiveSubscription && initialAd && (
@@ -126,12 +126,12 @@ export default function SealedCatalogContainer({
           </>
         )}
         {/* Loading Skeleton */}
-        {isLoading && !isFetchingNextPage && (
+        {isLoading && (
           <div className="grid h-min gap-1">
             <div className="grid h-min gap-1">
               {/* Skeleton for Results Grid */}
               <div className="grid grid-cols-2 gap-1 md:grid-cols-4 lg:grid-cols-5">
-                {[...Array(8)].map((_, index) => (
+                {[...Array(24)].map((_, index) => (
                   <div
                     key={index}
                     className="h-48 w-full animate-pulse rounded-lg bg-accent"
