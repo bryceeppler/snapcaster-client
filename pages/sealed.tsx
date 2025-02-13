@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import SealedCatalogContainer from '@/components/sealed/sealed-catalog-container';
-import SearchBar from '@/components/sealed/search-bar';
 type Props = {};
 
 const SealedSearch: NextPage<Props> = ({}: Props) => {
