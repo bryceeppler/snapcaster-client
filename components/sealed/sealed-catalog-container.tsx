@@ -81,7 +81,6 @@ export default function SealedCatalogContainer({
         <div className="z-30 hidden bg-background pt-1 md:block">
           <div className="flex flex-row items-center justify-between rounded-lg bg-popover px-4 py-2">
             <div className="flex flex-col">
-
               <span className="text-center text-sm font-normal text-secondary-foreground">
                 {searchResults?.length} results
               </span>
@@ -95,52 +94,41 @@ export default function SealedCatalogContainer({
           <div className="bg-background pb-1"></div>
         </div>
 
-        {/* Results */}
-        {searchResults && searchResults.length > 0 && !isLoading && (
-          <>
-            <div className="grid grid-cols-2 gap-1 md:grid-cols-4 lg:grid-cols-5">
-              {/* {!hasActiveSubscription && initialAd && (
-                  <AdComponent ad={initialAd} key={`initial-${initialAd.id}`} />
-                )} */}
-              {promotedResults &&
-                !hasActiveSubscription &&
-                promotedResults.map((item, index) => {
-                  return <SealedCatalogItem product={item} key={index} />;
-                })}
-
-              {searchResults.map((item, index) => (
-                <React.Fragment key={index}>
-                  <SealedCatalogItem product={item} />
-                </React.Fragment>
-              ))}
-            </div>
-
-            {/* Infinite Scroll Loading Trigger */}
-            <div ref={loadMoreRef} className="h-10 w-full">
-              {isFetchingNextPage && (
-                <div className="flex items-center justify-center py-4">
-                  <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
-                </div>
-              )}
-            </div>
-          </>
-        )}
-        {/* Loading Skeleton */}
-        {isLoading && (
-          <div className="grid h-min gap-1">
-            <div className="grid h-min gap-1">
-              {/* Skeleton for Results Grid */}
-              <div className="grid grid-cols-2 gap-1 md:grid-cols-4 lg:grid-cols-5">
-                {[...Array(24)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="h-48 w-full animate-pulse rounded-lg bg-accent"
-                  ></div>
-                ))}
-              </div>
-            </div>
+        {/* Initial Loading State */}
+        {isLoading && !searchResults && (
+          <div className="grid grid-cols-2 gap-1 md:grid-cols-4 lg:grid-cols-5">
+            {[...Array(24)].map((_, index) => (
+              <div
+                key={index}
+                className="h-48 w-full animate-pulse rounded-lg bg-accent"
+              ></div>
+            ))}
           </div>
         )}
+
+        {/* Results Grid */}
+        {Array.isArray(searchResults) && searchResults.length > 0 && (
+          <div className="grid grid-cols-2 gap-1 md:grid-cols-4 lg:grid-cols-5">
+            {promotedResults &&
+              !hasActiveSubscription &&
+              promotedResults.map((item, index) => (
+                <SealedCatalogItem product={item} key={index} />
+              ))}
+
+            {searchResults.map((item, index) => (
+              <SealedCatalogItem product={item} key={index} />
+            ))}
+          </div>
+        )}
+
+        {/* Loading Spinner for Infinite Scroll */}
+        <div ref={loadMoreRef} className="h-10 w-full">
+          {(isFetchingNextPage || (isLoading && Array.isArray(searchResults) && searchResults.length > 0)) && (
+            <div className="flex items-center justify-center py-4">
+              <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
+            </div>
+          )}
+        </div>
       </div>
       <BackToTopButton />
     </div>
