@@ -63,9 +63,9 @@ const Navbar: React.FC = () => {
     searchTerm: sealedSearchTerm,
     setProductCategory,
     setSearchTerm: sealedSetSearchTerm,
-    filters,
     clearFilters: sealedClearFilters,
     sortBy: sealedSortBy,
+    selectedFilters,
     region
   } = useSealedSearchStore();
 
@@ -73,8 +73,8 @@ const Navbar: React.FC = () => {
     {
       productCategory,
       searchTerm: sealedSearchTerm,
-      filters,
       sortBy: sealedSortBy,
+      selectedFilters,
       region
     },
     {

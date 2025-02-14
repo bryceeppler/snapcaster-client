@@ -6,8 +6,18 @@ import React, { useEffect, useRef } from 'react';
 import { singleSortByLabel } from '@/types/query';
 import { ProductCategory, SealedProduct } from '@/types';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { SingleSortOptions } from '@/types/query';
-import SortBy from './sort-by';
+import { SingleSortOptions, FilterOption } from '@/types/query';
+import { Button } from '@/components/ui/button';
+import { SlidersHorizontal } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger
+} from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
+import FilterSheet from './filter-sheet';
 
 interface SealedCatalogContainerProps {
   productCategory: ProductCategory;
@@ -20,6 +30,7 @@ interface SealedCatalogContainerProps {
   searchResults?: SealedProduct[];
   promotedResults?: SealedProduct[];
   numResults?: number;
+  filterOptions?: FilterOption[];
   isLoading: boolean;
   hasNextPage: boolean;
   fetchNextPage: () => void;
@@ -42,10 +53,10 @@ export default function SealedCatalogContainer({
   hasNextPage,
   fetchNextPage,
   isFetchingNextPage,
-  refetch
+  refetch,
+  filterOptions
 }: SealedCatalogContainerProps) {
-  const { loadingFilterResults } = useSingleSearchStore();
-  const { sortBy, setSortBy: setStoreSortBy } = useSealedSearchStore();
+  const { sortBy, setSortBy: setStoreSortBy, selectedFilters } = useSealedSearchStore();
 
   const { hasActiveSubscription } = useAuthStore();
 
@@ -78,18 +89,44 @@ export default function SealedCatalogContainer({
       {/* Show results section when not loading */}
       <div className="grid h-min gap-1">
         {/* #2.1 Single Search Top Bar Section (# Results, Pagination, Sort By) */}
-        <div className="z-30 hidden bg-background pt-1 md:block">
+        <div className="z-30 bg-background pt-1">
           <div className="flex flex-row items-center justify-between rounded-lg bg-popover px-4 py-2">
             <div className="flex flex-col">
               <span className="text-center text-sm font-normal text-secondary-foreground">
                 {searchResults?.length} results
               </span>
             </div>
-            <SortBy
-              sortBy={sortBy}
-              sortByLabel={singleSortByLabel}
-              setSortBy={handleSortChange}
-            />
+            <Sheet>
+              <SheetTitle hidden>Filters</SheetTitle>
+              <SheetDescription hidden>
+                Filter and sort the results
+              </SheetDescription>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 gap-2 text-sm font-medium relative"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Filters
+                  {selectedFilters.length > 0 && (
+                    <Badge 
+                      className="absolute -right-2 -top-2 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
+                    >
+                      {selectedFilters.length}
+                    </Badge>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-full max-w-sm">
+                <FilterSheet
+                  sortBy={sortBy}
+                  setSortBy={handleSortChange}
+                  sortByLabel={singleSortByLabel}
+                  clearFilters={clearFilters}
+                />
+              </SheetContent>
+            </Sheet>
           </div>
           <div className="bg-background pb-1"></div>
         </div>

@@ -3,18 +3,19 @@ import Head from 'next/head';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import SealedCatalogContainer from '@/components/sealed/sealed-catalog-container';
+
 type Props = {};
 
-const SealedSearch: NextPage<Props> = ({}: Props) => {
+const SealedSearch: NextPage<Props> = () => {
   const {
     productCategory,
     searchTerm,
-    setProductCategory,
     setSearchTerm,
-    filters,
-    setFilters,
+    selectedFilters,
     sortBy,
-    region
+    region,
+    setProductCategory,
+    clearFilters
   } = useSealedSearchStore();
 
   const {
@@ -28,23 +29,15 @@ const SealedSearch: NextPage<Props> = ({}: Props) => {
     {
       productCategory,
       searchTerm,
-      filters,
+      selectedFilters,
       sortBy,
       region
     },
-    {
-      enabled: true
-    }
+    { enabled: true }
   );
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-  };
-
-  const handleSearch = () => {
-    setSearchTerm(searchTerm.trim());
-    refetch();
+    setSearchTerm(event.target.value);
   };
 
   return (
@@ -52,21 +45,22 @@ const SealedSearch: NextPage<Props> = ({}: Props) => {
       <SealedSearchHead />
       <div className="flex w-full flex-col justify-center text-center">
         <SealedCatalogContainer
-          productCategory={productCategory}
-          searchTerm={searchTerm}
           setProductCategory={setProductCategory}
           setSearchTerm={setSearchTerm}
+          handleSearch={() => {}}
+          refetch={refetch}
+          productCategory={productCategory}
+          searchTerm={searchTerm}
           handleInputChange={handleInputChange}
-          handleSearch={handleSearch}
           isLoading={isLoading}
-          clearFilters={() => setFilters('', '', false)}
+          clearFilters={clearFilters}
           searchResults={data?.searchResults}
           promotedResults={data?.promotedResults}
           numResults={data?.numResults}
+          filterOptions={data?.filterOptions}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}
-          refetch={refetch}
         />
       </div>
     </>
@@ -81,7 +75,7 @@ const SealedSearchHead = () => {
       <title>Sealed Search</title>
       <meta
         name="description"
-        content="Search Magic the Gathering cards across Canada"
+        content="Search Magic the Gathering sealed products across Canada"
       />
       <meta
         property="og:title"

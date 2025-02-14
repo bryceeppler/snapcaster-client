@@ -28,7 +28,7 @@ const Home: NextPage<Props> = ({}: Props) => {
       <div className="flex w-full flex-col justify-center  text-center">
         {!searchResults && (
           <div className="flex flex-col items-center justify-center md:mt-6">
-            <Homebanner prefixText={'Search singles for'} />
+            <Homebanner prefixText={'Search for'} />
             <div className="mx-auto mt-6 flex w-full justify-center">
               <SearchBar
                 searchTool="single"

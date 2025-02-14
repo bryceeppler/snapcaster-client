@@ -3,11 +3,13 @@ import axiosInstance from '@/utils/axiosWrapper';
 import { Product, ProductCategory } from '@/types';
 import { FilterOption, SingleSortOptions } from '@/types/query';
 import { toast } from 'sonner';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import { useEffect } from 'react';
 
 interface SearchParams {
   productCategory: ProductCategory;
   searchTerm: string;
-  filters: FilterOption[] | null;
+  selectedFilters: { field: string; value: string }[];
   sortBy: SingleSortOptions;
   region: string;
 }
@@ -20,6 +22,13 @@ interface SearchResponse {
     numPages: number;
     numResults: number;
   };
+  sorting: {
+    Items: Array<{
+      label: string;
+      value: SingleSortOptions;
+      selected: boolean;
+    }>;
+  };
 }
 
 export interface TransformedSearchResponse {
@@ -29,12 +38,13 @@ export interface TransformedSearchResponse {
   numPages: number;
   numResults: number;
   nextPage: number | undefined;
+  sortOptions: Record<string, string>;
 }
 
 const fetchSealedProducts = async ({
   productCategory,
   searchTerm,
-  filters,
+  selectedFilters,
   sortBy,
   region,
   pageParam = 1
@@ -48,18 +58,9 @@ const fetchSealedProducts = async ({
     fuzzy: 'max'
   });
 
-  if (filters) {
-    Object.entries(filters).forEach(([_, filter]) => {
-      filter.values.forEach((value) => {
-        if (value.selected) {
-          queryParams.append(
-            `filterSelections[${filter.field}][]`,
-            value.value
-          );
-        }
-      });
-    });
-  }
+  selectedFilters.forEach(({ field, value }) => {
+    queryParams.append(`filterSelections[${field}][]`, value);
+  });
 
   try {
     const response = await axiosInstance.get(
@@ -86,9 +87,15 @@ export const useSealedSearch = (
   searchParams: SearchParams,
   options?: { enabled?: boolean }
 ) => {
+  const { setFilterOptions } = useSealedSearchStore();
+
   const query = useInfiniteQuery({
-    queryKey: ['sealedSearch', searchParams.sortBy],
-    queryFn: ({ pageParam = 1 }: { pageParam?: number }) => fetchSealedProducts({ ...searchParams, pageParam }),
+    queryKey: ['sealedSearch', searchParams],
+    queryFn: ({ pageParam = 1 }) =>
+      fetchSealedProducts({
+        ...searchParams,
+        pageParam
+      }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       const nextPage = allPages.length + 1;
@@ -101,26 +108,42 @@ export const useSealedSearch = (
     select: (data): TransformedSearchResponse => {
       const lastPage = data.pages[data.pages.length - 1];
       const allResults = data.pages.flatMap(page => page.results);
-      const allPromotedResults = data.pages[0].promotedResults || []; // Only show promoted results on first page
+      const allPromotedResults = data.pages[0].promotedResults || [];
+
+      const sortOptionsMap = data.pages[0].sorting.Items.reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.value]: item.label
+        }),
+        {} as Record<string, string>
+      );
 
       return {
-        searchResults: allResults.map((item) => ({ ...item, promoted: false })),
-        promotedResults: allPromotedResults.map((item) => ({
+        searchResults: allResults.map(item => ({ ...item, promoted: false })),
+        promotedResults: allPromotedResults.map(item => ({
           ...item,
           promoted: true
         })),
         filterOptions: lastPage.filters || [],
         numPages: lastPage.pagination.numPages,
         numResults: lastPage.pagination.numResults,
-        nextPage: data.pages.length + 1 <= lastPage.pagination.numPages 
-          ? data.pages.length + 1 
-          : undefined
+        nextPage:
+          data.pages.length + 1 <= lastPage.pagination.numPages
+            ? data.pages.length + 1
+            : undefined,
+        sortOptions: sortOptionsMap
       };
     }
   });
 
+  useEffect(() => {
+    if (query.data?.filterOptions) {
+      setFilterOptions(query.data.filterOptions);
+    }
+  }, [query.data?.filterOptions, setFilterOptions]);
+
   return {
     ...query,
-    isLoading: query.isFetching || query.isLoading
+    isLoading: query.isLoading || query.isFetching
   };
 }; 
