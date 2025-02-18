@@ -20,8 +20,9 @@ const DiscountBadge = ({ product }: Props) => {
         <span className="skew-x-12 transform">
           -{' '}
           {Math.floor(
-            SEALED_DISCOUNT_MAP[product.discount_code as keyof typeof SEALED_DISCOUNT_MAP] *
-              100
+            SEALED_DISCOUNT_MAP[
+              product.discount_code as keyof typeof SEALED_DISCOUNT_MAP
+            ] * 100
           )}
           %
         </span>
@@ -35,7 +36,7 @@ const SealedCatalogItem = ({ product }: Props) => {
   const { websites } = useGlobalStore();
   const { theme } = useTheme();
   const { productCategory } = useSealedSearchStore();
-  
+
   const findWebsiteNameByCode = (slug: string) => {
     const website = websites.find((website) => website.slug === slug);
     return website ? website.name : 'Website not found';
@@ -58,8 +59,8 @@ const SealedCatalogItem = ({ product }: Props) => {
       <div
         className={`group flex h-full flex-col rounded-t-lg border border-accent bg-popover p-4`}
       >
-        <div 
-          className="relative bg-white cursor-pointer hover:opacity-90 transition-opacity"
+        <div
+          className="relative cursor-pointer bg-white transition-opacity hover:opacity-90"
           onClick={handleClick}
         >
           {product.promoted && (
@@ -74,17 +75,19 @@ const SealedCatalogItem = ({ product }: Props) => {
 
         <div>
           <div className="mt-3 flex flex-grow flex-col text-center md:text-left">
-            <h3 
+            <h3
               onClick={handleClick}
-              className="overflow-hidden text-ellipsis text-[0.9rem] font-semibold capitalize tracking-tight cursor-pointer"
-            >{product.name}</h3>
-            <div 
-              className="mb-2 mt-1 flex flex-col md:flex-row items-center justify-center w-full md:justify-start gap-1 cursor-pointer hover:opacity-80 transition-opacity"
+              className="cursor-pointer overflow-hidden text-ellipsis text-[0.9rem] font-semibold capitalize tracking-tight"
+            >
+              {product.name}
+            </h3>
+            <div
+              className="mb-2 mt-1 flex w-full cursor-pointer flex-col items-center justify-center gap-1 transition-opacity hover:opacity-80 md:flex-row md:justify-start"
               onClick={handleClick}
             >
-            <div className="md:hidden text-xs">
-              {findWebsiteNameByCode(product.vendor)}
-            </div>
+              <div className="text-xs md:hidden">
+                {findWebsiteNameByCode(product.vendor)}
+              </div>
               {(() => {
                 const matchingWebsite = websites.find(
                   (website) => product.vendor === website.slug
@@ -101,66 +104,75 @@ const SealedCatalogItem = ({ product }: Props) => {
                   />
                 ) : null;
               })()}
-                   <div className="hidden md:block text-xs ml-1">
-              {findWebsiteNameByCode(product.vendor)}
-            </div>
-
+              <div className="ml-1 hidden text-xs md:block">
+                {findWebsiteNameByCode(product.vendor)}
+              </div>
             </div>
             <div className="mt-3">
-              <div 
-                className="flex flex-row items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity justify-center md:justify-start"
+              <div
+                className="flex cursor-pointer flex-row items-center justify-center gap-2 transition-opacity hover:opacity-80 md:justify-start"
                 onClick={handleClick}
               >
-                <h4 className="font-montserrat text-2xl font-semibold flex items-start">
-                  <span className="text-sm mt-1">$</span>{(() => {
+                <h4 className="flex items-start font-montserrat text-2xl font-semibold">
+                  <span className="mt-1 text-sm">$</span>
+                  {(() => {
                     const price = Number(
-                      product.discounted_price && SEALED_DISCOUNT_MAP[product.discount_code as keyof typeof SEALED_DISCOUNT_MAP] 
-                        ? product.discounted_price 
+                      product.discounted_price &&
+                        SEALED_DISCOUNT_MAP[
+                          product.discount_code as keyof typeof SEALED_DISCOUNT_MAP
+                        ]
+                        ? product.discounted_price
                         : product.price
                     ).toFixed(2);
                     const [dollars, cents] = price.split('.');
                     return (
                       <div className="flex items-start">
                         <span className="text-3xl">{dollars}</span>
-                        <span className="text-sm mt-1">{cents}</span>
+                        <span className="mt-1 text-sm">{cents}</span>
                       </div>
                     );
                   })()}
                 </h4>
-                {product.discount_code && SEALED_DISCOUNT_MAP[product.discount_code as keyof typeof SEALED_DISCOUNT_MAP] && (
-                  <DiscountBadge product={product} />
-                )}
+                {product.discount_code &&
+                  SEALED_DISCOUNT_MAP[
+                    product.discount_code as keyof typeof SEALED_DISCOUNT_MAP
+                  ] && <DiscountBadge product={product} />}
               </div>
-              {product.discount_code && SEALED_DISCOUNT_MAP[product.discount_code as keyof typeof SEALED_DISCOUNT_MAP] && (
-                <div
-                  className="-mt-0.5 flex w-full text-[0.8rem]"
-                  key={product.vendor}
-                >
-                  <div className="text-center md:text-left font-montserrat tracking-tighter text-muted-foreground w-full">
-                    With code:<br/>
-                    <span className="font-bold break-all">{product.discount_code}</span>
+              {product.discount_code &&
+                SEALED_DISCOUNT_MAP[
+                  product.discount_code as keyof typeof SEALED_DISCOUNT_MAP
+                ] && (
+                  <div
+                    className="-mt-0.5 flex w-full text-[0.8rem]"
+                    key={product.vendor}
+                  >
+                    <div className="w-full text-center font-montserrat tracking-tighter text-muted-foreground md:text-left">
+                      With code:
+                      <br />
+                      <span className="break-all font-bold">
+                        {product.discount_code}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           </div>
         </div>
         <Link
-        href={product.link}
-        target="_blank"
-        rel="noreferrer"
-        className="sm:hidden w-full mt-4"
-      >
-        <Button
-          className="w-full font-montserrat text-xs uppercase"
-          variant="default"
-          onClick={handleClick}
+          href={product.link}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-4 w-full sm:hidden"
         >
-          Buy
-        </Button>
-      </Link>
+          <Button
+            className="w-full font-montserrat text-xs uppercase"
+            variant="default"
+            onClick={handleClick}
+          >
+            Buy
+          </Button>
+        </Link>
       </div>
-  
     </div>
   );
 };
