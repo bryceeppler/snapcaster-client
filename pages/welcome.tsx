@@ -110,7 +110,7 @@ const Welcome = (props: Props) => {
                       width="672"
                       height="500"
                       style={{ color: 'transparent' }}
-                      src="/search-demo.png"
+                      src="/welcome/search_demo.png"
                       className="object-contain"
                     />
                   </motion.div>
