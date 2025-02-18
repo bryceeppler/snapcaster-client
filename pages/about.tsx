@@ -28,7 +28,7 @@ const About: NextPage<Props> = () => {
     <>
       <AboutHead />
       <section className="w-full">
-        <div className="container px-4 md:px-6 mb-16">
+        <div className="container mb-16 px-4 md:px-6">
           <div className="space-y-8">
             <PageTitle
               title="Our Supporters"
@@ -69,7 +69,7 @@ const About: NextPage<Props> = () => {
                         alt="Exor Games"
                         className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
                         height="200"
-                        src="/exorgames_icon.png"
+                        src="https://cdn.snapcaster.ca/supporters/exorgames_supporter.png"
                         width="400"
                       />
                     </Link>
@@ -87,7 +87,7 @@ const About: NextPage<Props> = () => {
                         alt="Chimera Gaming"
                         className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
                         height="200"
-                        src="/chimera_sponsor.png"
+                        src="https://cdn.snapcaster.ca/supporters/chimera_supporter.png"
                         width="400"
                       />
                     </Link>
@@ -110,7 +110,7 @@ const About: NextPage<Props> = () => {
                         alt="Level Up Games"
                         className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
                         height="150"
-                        src="/levelup_icon.png"
+                        src="https://cdn.snapcaster.ca/supporters/levelup_supporter.png"
                         width="300"
                       />
                     </Link>
@@ -128,7 +128,7 @@ const About: NextPage<Props> = () => {
                         alt="The Mythic Store"
                         className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
                         height="150"
-                        src="/tms_sponsor.webp"
+                        src="https://cdn.snapcaster.ca/supporters/tms_supporter.png"
                         width="300"
                       />
                     </Link>
@@ -146,7 +146,7 @@ const About: NextPage<Props> = () => {
                         alt="House of Cards"
                         className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
                         height="150"
-                        src="/hoc_sponsor.png"
+                        src="https://cdn.snapcaster.ca/supporters/hoc_supporter.png"
                         width="300"
                       />
                     </Link>
@@ -188,22 +188,32 @@ const About: NextPage<Props> = () => {
                   </div>
                 </div>
               </div> */}
-         
-              <div  id="vendors" className="scroll-mt-32">
-                <h3 className="mb-6 text-2xl font-bold">We support {websites.length} stores across Canada!</h3>
+
+              <div id="vendors" className="scroll-mt-32">
+                <h3 className="mb-6 text-2xl font-bold">
+                  We support {websites.length} stores across Canada!
+                </h3>
                 <p className="text-left">
                   {' '}
                   If you're a Local Game Store (LGS) owner and wish to feature
                   your website on Snapcaster, we invite you to join our official
                   Discord server and send us a direct message or send us an
                   email at info@snapcaster.gg. This is an excellent chance to
-                  promote your store's special offers, discount codes, and events.
+                  promote your store's special offers, discount codes, and
+                  events.
                 </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                    {websites.map((website) => (
-                      <a target="_blank" href={website.url} key={website.slug} className="p-2 text-center border rounded-lg hover:bg-popover">{website.name}</a>
-                    ))}
-                  </div>
+                <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {websites.map((website) => (
+                    <a
+                      target="_blank"
+                      href={website.url}
+                      key={website.slug}
+                      className="rounded-lg border p-2 text-center hover:bg-popover"
+                    >
+                      {website.name}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

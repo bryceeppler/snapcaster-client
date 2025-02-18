@@ -10,7 +10,8 @@ const features = [
     description: 'Find the best deals, right here in Canada.',
     href: '/',
     cta: 'Find deals',
-    background: (      <div
+    background: (
+      <div
         className="absolute overflow-hidden opacity-40"
         style={{
           mask: 'radial-gradient(circle at top, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.05) 70%)',
@@ -20,9 +21,10 @@ const features = [
       >
         <img
           className="mx-auto w-full rotate-12 transform object-cover opacity-60"
-          src="/money.png"
+          src="/welcome/money.png"
         />
-      </div>),
+      </div>
+    ),
     className: 'lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3'
   },
   {
@@ -42,7 +44,7 @@ const features = [
       >
         <img
           className="mx-auto w-full rotate-12 transform object-cover opacity-60"
-          src="/popular_cards.png"
+          src="/welcome/popular_cards.png"
         />
       </div>
     ),
@@ -65,7 +67,7 @@ const features = [
       >
         <img
           className="mx-auto w-full -rotate-6 transform object-cover opacity-60"
-          src="/lgs.png"
+          src="/welcome/lgs_background.png"
         />
       </div>
     ),

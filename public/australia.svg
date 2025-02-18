@@ -10,10 +10,10 @@
 </defs>
 <g transform="scale(840)">
 <rect width="12" height="6" fill="#00008b"/>
-<path d="M0,0 6,3M6,0 0,3" stroke="#fff" stroke-width="0.6"/>
-<path d="M0,0 6,3M6,0 0,3" stroke="#f00" stroke-width="0.4" clip-path="url(#c)"/>
+<path d="M0,0 6,3M6,0 0,3" stroke="#fff" strokeWidth="0.6"/>
+<path d="M0,0 6,3M6,0 0,3" stroke="#f00" strokeWidth="0.4" clip-path="url(#c)"/>
 <path d="M3,0V3.5M0,1.5H7" stroke="#fff"/>
-<path d="M3,0V3.5M0,1.5H7" stroke="#f00" stroke-width="0.6"/>
+<path d="M3,0V3.5M0,1.5H7" stroke="#f00" strokeWidth="0.6"/>
 <path d="M0,3H6V0H8V4H0z" fill="#00008b"/>
 </g>
 <g fill="#fff">

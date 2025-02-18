@@ -2,7 +2,10 @@ import React from 'react';
 
 const AustraliaFlag: React.FC<{ className?: string }> = ({ className }) => {
   return (
-    <svg className="w-8 h-auto border-2 rounded bg-background hover:bg-accent hover:text-accent-foreground" viewBox="0 0 9600 4800">
+    <svg
+      className="h-auto w-8 rounded border-2 bg-background hover:bg-accent hover:text-accent-foreground"
+      viewBox="0 0 9600 4800"
+    >
       <defs>
         <clipPath id="c">
           <path d="M0,0V1.5H7V3H6zM6,0H3V3.5H0V3z" />
@@ -19,15 +22,15 @@ const AustraliaFlag: React.FC<{ className?: string }> = ({ className }) => {
       </defs>
       <g transform="scale(840)">
         <rect width="12" height="6" fill="#00008b" />
-        <path d="M0,0 6,3M6,0 0,3" stroke="#fff" stroke-width="0.6" />
+        <path d="M0,0 6,3M6,0 0,3" stroke="#fff" strokeWidth="0.6" />
         <path
           d="M0,0 6,3M6,0 0,3"
           stroke="#f00"
-          stroke-width="0.4"
+          strokeWidth="0.4"
           clip-path="url(#c)"
         />
         <path d="M3,0V3.5M0,1.5H7" stroke="#fff" />
-        <path d="M3,0V3.5M0,1.5H7" stroke="#f00" stroke-width="0.6" />
+        <path d="M3,0V3.5M0,1.5H7" stroke="#f00" strokeWidth="0.6" />
         <path d="M0,3H6V0H8V4H0z" fill="#00008b" />
       </g>
       <g fill="#fff">
