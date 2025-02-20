@@ -2,18 +2,23 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authService } from '@/services/authService';
 import { useRouter } from 'next/router';
 import { toast } from 'sonner';
-import { useState } from 'react';
 import { tokenManager } from '@/utils/axiosWrapper';
 
 export function useAuth() {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [accessToken, setAccessTokenState] = useState<string | null>(tokenManager.accessToken);
+
+  // Use React Query to manage token state
+  const { data: accessToken } = useQuery({
+    queryKey: ['auth-token'],
+    queryFn: () => tokenManager.accessToken,
+    staleTime: Infinity,
+  });
 
   // Helper function to set access token
   const setAccessToken = (token: string | null) => {
     tokenManager.setAccessToken(token);
-    setAccessTokenState(token);
+    queryClient.setQueryData(['auth-token'], token);
   };
 
   // Initial auth check using React Query
@@ -56,8 +61,8 @@ export function useAuth() {
     error: loginError
   } = useMutation({
     mutationFn: authService.login,
-    onSuccess: (accessToken) => {
-      setAccessToken(accessToken);
+    onSuccess: (token) => {
+      setAccessToken(token);
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
       toast.success('Login successful!');
       router.push('/profile');
