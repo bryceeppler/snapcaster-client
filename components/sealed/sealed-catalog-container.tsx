@@ -1,7 +1,7 @@
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import BackToTopButton from '../ui/back-to-top-btn';
 import SealedCatalogItem from './sealed-catalog-item';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import React, { useEffect, useRef } from 'react';
 import { singleSortByLabel } from '@/types/query';
 import { ProductCategory, SealedProduct } from '@/types';
@@ -58,7 +58,7 @@ export default function SealedCatalogContainer({
 }: SealedCatalogContainerProps) {
   const { sortBy, setSortBy: setStoreSortBy, selectedFilters } = useSealedSearchStore();
 
-  const { hasActiveSubscription } = useAuthStore();
+  const { hasActiveSubscription } = useAuth();
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   // Intersection Observer for infinite scroll

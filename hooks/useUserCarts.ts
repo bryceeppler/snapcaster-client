@@ -2,14 +2,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 import { IBuylistCart } from '@/stores/buyListStore';
 import { toast } from 'sonner';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import useBuyListStore from '@/stores/buyListStore';
 
 const CARTS_QUERY_KEY = ['userCarts'] as const;
 
 export function useUserCarts() {
   const queryClient = useQueryClient();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
   const { setCurrentCartId } = useBuyListStore();
 
   const {

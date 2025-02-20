@@ -1,13 +1,9 @@
 import React from 'react';
-import axios from 'axios';
-import useAuthStore from '@/stores/authStore';
-import { toast } from 'sonner';
-import Router from 'next/router';
-import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import Link from 'next/link';
 import {
   Card,
   CardHeader,
@@ -15,58 +11,34 @@ import {
   CardDescription,
   CardContent
 } from '@/components/ui/card';
-import router from 'next/router';
+import { useAuth } from '@/hooks/useAuth';
 
 type Props = {
   redirectUrl?: string;
 };
 
+type SignInFormData = {
+  email: string;
+  password: string;
+};
+
 const SignInForm = (props: Props) => {
-  const setTokens = useAuthStore((state) => state.setTokens);
+  const { login, isLoggingIn } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm({
+  } = useForm<SignInFormData>({
     defaultValues: {
       email: '',
       password: ''
     }
   });
 
-  type Submision = {
-    email: string;
-    password: string;
+  const onSubmit = async (data: SignInFormData) => {
+    login(data);
   };
-  const onSubmit = async (data: Submision) => {
-    const { email, password } = data;
-    const endpoint = process.env.NEXT_PUBLIC_USER_URL + '/login';
 
-    try {
-      const response = await axios.post(endpoint, { email, password });
-
-      if (!response.status) {
-        toast.error('Invalid response from server.');
-        throw new Error('Something went wrong with the login process');
-      } else {
-        const { accessToken, refreshToken } = response.data;
-        setTokens(accessToken, refreshToken);
-        toast.success('Login successful!');
-        if (props.redirectUrl) {
-          router.push(props.redirectUrl);
-        } else {
-          router.push('/profile');
-        }
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        toast.error('Invalid email or password');
-      } else {
-        toast.error('An error occurred during login');
-        console.error(error);
-      }
-    }
-  };
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
@@ -113,7 +85,9 @@ const SignInForm = (props: Props) => {
               <p className="text-red-500">{errors.password.message}</p>
             )}
           </div>
-          <Button type="submit">Sign In</Button>
+          <Button type="submit" disabled={isLoggingIn}>
+            {isLoggingIn ? 'Signing in...' : 'Sign In'}
+          </Button>
         </form>
         <div className="mt-4 text-center text-sm">
           Don't have an account?{' '}

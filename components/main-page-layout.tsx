@@ -7,7 +7,7 @@ import {
   CarouselItem
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import CarouselAd from './carousel-ad';
 import { AdSelector } from '@/utils/adSelector';
 import { Ad, AdWeight } from '@/types/ads';
@@ -22,7 +22,7 @@ export default function MainLayout({
 }: React.PropsWithChildren<Props>) {
   const { ads } = useGlobalStore();
   const { showAds } = useAdContext();
-  const { hasActiveSubscription } = useAuthStore();
+  const { hasActiveSubscription } = useAuth();
   const [hydrated, setHydrated] = useState(false);
 
   const topBannerStoreWeights: AdWeight[] = [

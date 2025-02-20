@@ -3,12 +3,12 @@ import Head from 'next/head';
 import { NextPage } from 'next';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import BuylistCatalog from '@/components/buylists/buylist-catalog-container';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/router';
 
 type Props = {};
 const Buylist: NextPage<Props> = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   // useEffect(() => {

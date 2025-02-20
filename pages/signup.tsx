@@ -1,6 +1,6 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import Profile from './profile';
 import { SignupForm } from '@/components/forms/SignupForm';
 import {
@@ -14,7 +14,7 @@ import {
 
 type Props = {};
 const Signup: NextPage<Props> = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
   if (isAuthenticated) {
     return <Profile />;
   }

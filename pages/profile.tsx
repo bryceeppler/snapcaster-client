@@ -1,12 +1,9 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import axiosInstance from '@/utils/axiosWrapper';
-import useAuthStore from '@/stores/authStore';
 import Signin from './signin';
 import LoadingPage from '@/components/loading-page';
 import { Button } from '@/components/ui/button';
-import axios from 'axios';
 import { createCheckoutSession, createPortalSession } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -21,73 +18,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { DiscordLogoIcon } from '@radix-ui/react-icons';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Loader2 } from 'lucide-react';
 import ModeToggle from '@/components/theme-toggle';
+import { useAuth } from '@/hooks/useAuth';
 
 const Profile: NextPage = () => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const {
-    fetchUser,
-    hasActiveSubscription,
-    email,
-    fullName,
-    emailVerified,
-    discordUsername,
-    setDiscordUsername,
-    clearTokens
-  } = useAuthStore();
-  const handleLogout = () => {
-    clearTokens();
-    toast.success('You have been logged out');
-  };
+  const { 
+    profile,
+    isLoadingProfile,
+    isAuthenticated,
+    logout,
+    connectDiscord,
+    disconnectDiscord,
+    updateProfile
+  } = useAuth();
 
-  const [loading, setLoading] = useState(true);
-
-  const createDiscordAuth = async () => {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_USER_URL}/auth/discord/`
-      );
-      const { url } = response.data;
-      window.location.href = url;
-    } catch (error) {
-      console.error('Error creating discord session:', error);
-    }
-  };
-
-  const disconnectDiscordAuth = async () => {
-    try {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_USER_URL}/auth/discord/disconnect`
-      );
-      if (response.status !== 200) throw new Error('Failed to disconnect');
-      toast.success('Discord account disconnected');
-      setDiscordUsername('');
-    } catch (error) {
-      console.error('Error disconnecting discord account:', error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!isAuthenticated) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        fetchUser();
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [isAuthenticated]);
-
-  if (loading) {
+  if (isLoadingProfile) {
     return <LoadingPage />;
   }
 
@@ -95,22 +41,24 @@ const Profile: NextPage = () => {
     return <Signin />;
   }
 
+  const user = profile?.data?.user;
+
   return (
     <>
       <ProfileHead />
       <section className="flex w-full justify-center py-6 md:py-12">
         <div className="flex w-full flex-col justify-center gap-6">
           <UserSettings
-            email={email}
-            fullName={fullName}
-            discordUsername={discordUsername}
-            hasActiveSubscription={hasActiveSubscription}
-            emailVerified={emailVerified}
+            email={user?.email || ''}
+            fullName={user?.fullName || ''}
+            discordUsername={user?.discordUsername || ''}
+            hasActiveSubscription={user?.subscription === 'active'}
+            emailVerified={user?.emailVerified || false}
             createPortalSession={createPortalSession}
-            disconnectDiscordAuth={disconnectDiscordAuth}
+            disconnectDiscordAuth={disconnectDiscord}
             createCheckoutSession={createCheckoutSession}
-            handleLogout={handleLogout}
-            createDiscordAuth={createDiscordAuth}
+            handleLogout={logout}
+            createDiscordAuth={connectDiscord}
           />
         </div>
       </section>
@@ -143,6 +91,7 @@ const ProfileHead = () => {
     </Head>
   );
 };
+
 const UserSettings = ({
   email,
   fullName,
@@ -165,6 +114,7 @@ const UserSettings = ({
   disconnectDiscordAuth: () => void;
   handleLogout: () => void;
 }) => {
+  const { isDisconnectingDiscord, updateProfile } = useAuth();
   const {
     register,
     handleSubmit,
@@ -180,27 +130,9 @@ const UserSettings = ({
   };
 
   const onSubmit = async (data: Submission) => {
-    const { fullName } = data;
-    const endpoint = process.env.NEXT_PUBLIC_USER_URL + '/update';
-
-    try {
-      const response = await axios.post(endpoint, { fullName });
-
-      if (!response.status) {
-        toast.error('Invalid response from server.');
-        throw new Error('Something went wrong with the update process');
-      } else {
-        toast.success('Username changed successfully!');
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        toast.error('Invalid input');
-      } else {
-        toast.error('An error occurred during login');
-        console.error(error);
-      }
-    }
+    updateProfile(data);
   };
+
   return (
     <Card className="lg mx-auto w-full max-w-lg bg-popover">
       <CardHeader>
@@ -245,15 +177,22 @@ const UserSettings = ({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {' '}
             {discordUsername ? (
               <div className="flex flex-col gap-4">
                 <div className="flex flex-row items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary" />
                   <p className="text-sm">Connected as {discordUsername}</p>
                 </div>
-                <Button variant="outline" onClick={disconnectDiscordAuth}>
-                  Disconnect
+                <Button 
+                  variant="outline" 
+                  onClick={disconnectDiscordAuth}
+                  disabled={isDisconnectingDiscord}
+                >
+                  {isDisconnectingDiscord ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    'Disconnect'
+                  )}
                 </Button>
               </div>
             ) : (
