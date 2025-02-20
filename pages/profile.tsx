@@ -18,10 +18,372 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { DiscordLogoIcon } from '@radix-ui/react-icons';
-import { CheckCircle2, Loader2 } from 'lucide-react';
-import ModeToggle from '@/components/theme-toggle';
+import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
+import ThemeSelector from '@/components/theme-selector';
 import { useAuth } from '@/hooks/useAuth';
 
+// Types
+interface UserProfile {
+  email: string;
+  fullName: string;
+  discordUsername: string;
+  hasActiveSubscription: boolean;
+  emailVerified: boolean;
+}
+
+interface UserSettingsProps {
+  email: string;
+  fullName: string;
+  hasActiveSubscription: boolean;
+  emailVerified: boolean;
+  discordUsername: string;
+  createCheckoutSession: () => void;
+  createPortalSession: () => void;
+  createDiscordAuth: () => void;
+  disconnectDiscordAuth: () => void;
+  handleLogout: () => void;
+  resendVerificationEmail: () => void;
+  isResendingVerification: boolean;
+}
+
+interface ProfileSectionProps {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}
+
+// Reusable Components
+const ProfileSection = ({ title, description, children }: ProfileSectionProps) => (
+  <Card>
+    <CardHeader>
+      <CardTitle className="text-xl font-semibold">{title}</CardTitle>
+      <CardDescription>{description}</CardDescription>
+    </CardHeader>
+    <CardContent>{children}</CardContent>
+  </Card>
+);
+
+const VerificationStatus = ({ 
+  isVerified, 
+  onResend, 
+  isResending 
+}: { 
+  isVerified: boolean; 
+  onResend: () => void; 
+  isResending: boolean;
+}) => (
+  <div>
+    {isVerified ? (
+      <div className="flex items-center gap-2 text-primary">
+        <CheckCircle2 className="h-4 w-4" />
+        <span className="text-sm font-medium">Email verified</span>
+      </div>
+    ) : (
+      <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <XCircle className="h-4 w-4 text-destructive" />
+            <span className="text-sm font-medium text-destructive">Email not verified</span>
+          </div>
+          <p className="text-xs">
+            Please verify your email. Check your inbox for the verification link.
+          </p>
+          <Button 
+            size="sm"
+            onClick={onResend}
+            disabled={isResending}
+            variant="tertiary"
+            className="w-fit"
+          >
+            {isResending ? (
+              <>
+                <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                <span>Sending verification email...</span>
+              </>
+            ) : (
+              <>
+                <span>Resend verification email</span>
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    )}
+  </div>
+);
+
+const ProfileInformationForm = ({ 
+  user,
+  onUpdateProfile,
+  onResendVerification,
+  isResendingVerification
+}: { 
+  user: UserProfile;
+  onUpdateProfile: (data: { fullName: string }) => void;
+  onResendVerification: () => void;
+  isResendingVerification: boolean;
+}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues: {
+      fullName: ''
+    }
+  });
+
+  return (
+    <form onSubmit={handleSubmit(onUpdateProfile)} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="fullName">Name</Label>
+        <Input
+          type="text"
+          id="fullName"
+          disabled={true}
+          placeholder={user.fullName}
+          className="max-w-md"
+        />
+        {errors.fullName && (
+          <p className="text-sm text-destructive">{errors.fullName.message}</p>
+        )}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input 
+          type="text" 
+          id="email"
+          disabled={true} 
+          value={user.email}
+          className="max-w-md"
+        />
+        <VerificationStatus 
+          isVerified={user.emailVerified}
+          onResend={onResendVerification}
+          isResending={isResendingVerification}
+        />
+      </div>
+    </form>
+  );
+};
+
+const DiscordSection = ({
+  username,
+  onConnect,
+  onDisconnect,
+  isDisconnecting
+}: {
+  username: string | null;
+  onConnect: () => void;
+  onDisconnect: () => void;
+  isDisconnecting: boolean;
+}) => (
+  <Card>
+    <CardHeader className="space-y-1">
+      <div className="flex items-center gap-2">
+        <DiscordLogoIcon className="h-5 w-5 text-primary" />
+        <CardTitle className="text-xl font-semibold">Discord Integration</CardTitle>
+      </div>
+      <CardDescription>
+        Pro members gain access to exclusive channels and giveaways after
+        connecting their Discord!
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      {username ? (
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 text-primary">
+            <CheckCircle2 className="h-4 w-4" />
+            <p className="text-sm">Connected as {username}</p>
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={onDisconnect}
+            disabled={isDisconnecting}
+            className="w-full sm:w-auto"
+          >
+            {isDisconnecting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Disconnecting...
+              </>
+            ) : (
+              'Disconnect Discord'
+            )}
+          </Button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <Button 
+            onClick={onConnect}
+            className="w-full sm:w-auto"
+          >
+            Connect Discord
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            By connecting, you agree to our{' '}
+            <a href="/privacy" className="text-primary hover:underline">
+              Privacy Notice
+            </a>{' '}
+            and{' '}
+            <a href="/terms" className="text-primary hover:underline">
+              Terms & Conditions
+            </a>
+            .
+          </p>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+);
+
+const SubscriptionSection = ({
+  isActive,
+  onManage,
+  onSubscribe
+}: {
+  isActive: boolean;
+  onManage: () => void;
+  onSubscribe: () => void;
+}) => (
+  <Card>
+    <CardHeader>
+      <CardTitle className="text-xl font-semibold">Snapcaster Pro</CardTitle>
+      <CardDescription>
+        Subscribe to Snapcaster Pro for access to premium features and giveaways.
+      </CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-6">
+      <div className="flex items-center justify-between">
+        <span className="font-medium">Subscription Status</span>
+        <span className={isActive ? "text-primary" : "text-muted-foreground"}>
+          {isActive ? 'Active' : 'Inactive'}
+        </span>
+      </div>
+      <div className="space-y-2">
+        <FeatureItem text="Multi search up to 100 cards at a time" />
+        <FeatureItem text="Pro exclusive Discord giveaways (Singles, Packs, Merch)" />
+        <FeatureItem text="Reduced Ads (Side Banners, Inline Banners, Promoted Results)" />
+      </div>
+    </CardContent>
+    <CardFooter>
+      {isActive ? (
+        <Button 
+          className="w-full sm:w-auto" 
+          onClick={onManage}
+        >
+          Manage subscription
+        </Button>
+      ) : (
+        <div className="space-y-4 w-full">
+          <Button 
+            onClick={onSubscribe}
+            className="w-full sm:w-auto"
+          >
+            Subscribe Now
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            By subscribing, you agree to our{' '}
+            <a href="/privacy" className="text-primary hover:underline">
+              Privacy Notice
+            </a>{' '}
+            and{' '}
+            <a href="/terms" className="text-primary hover:underline">
+              Terms & Conditions
+            </a>
+            .
+          </p>
+        </div>
+      )}
+    </CardFooter>
+  </Card>
+);
+
+const FeatureItem = ({ text }: { text: string }) => (
+  <div className="flex items-start gap-2">
+    <div className="mt-1 h-2 w-2 rounded-full bg-primary" />
+    <span className="text-sm">{text}</span>
+  </div>
+);
+
+const AccountActions = ({ onLogout }: { onLogout: () => void }) => (
+  <ProfileSection
+    title="Account Actions"
+    description="Manage your account access."
+  >
+    <Button 
+      variant="destructive" 
+      onClick={onLogout}
+      className="w-full sm:w-auto"
+    >
+      Sign Out
+    </Button>
+  </ProfileSection>
+);
+
+const UserSettings = ({
+  email,
+  fullName,
+  hasActiveSubscription,
+  discordUsername,
+  emailVerified,
+  createCheckoutSession,
+  createPortalSession,
+  createDiscordAuth,
+  disconnectDiscordAuth,
+  handleLogout,
+  resendVerificationEmail,
+  isResendingVerification
+}: UserSettingsProps) => {
+  const { isDisconnectingDiscord, updateProfile } = useAuth();
+  const user: UserProfile = {
+    email,
+    fullName,
+    discordUsername,
+    hasActiveSubscription,
+    emailVerified
+  };
+
+  return (
+    <div className="grid gap-6">
+      <ProfileSection
+        title="Profile Information"
+        description="Update your personal information."
+      >
+        <ProfileInformationForm 
+          user={user}
+          onUpdateProfile={updateProfile}
+          onResendVerification={resendVerificationEmail}
+          isResendingVerification={isResendingVerification}
+        />
+      </ProfileSection>
+
+      <ProfileSection
+        title="Appearance"
+        description="Customize how Snapcaster looks on your device."
+      >
+        <ThemeSelector />
+      </ProfileSection>
+
+      <DiscordSection
+        username={discordUsername || null}
+        onConnect={createDiscordAuth}
+        onDisconnect={disconnectDiscordAuth}
+        isDisconnecting={isDisconnectingDiscord}
+      />
+
+      <SubscriptionSection
+        isActive={hasActiveSubscription}
+        onManage={createPortalSession}
+        onSubscribe={createCheckoutSession}
+      />
+
+      <AccountActions onLogout={handleLogout} />
+    </div>
+  );
+};
+
+// Main Profile Page Component
 const Profile: NextPage = () => {
   const { 
     profile,
@@ -30,7 +392,9 @@ const Profile: NextPage = () => {
     logout,
     connectDiscord,
     disconnectDiscord,
-    updateProfile
+    updateProfile,
+    resendVerificationEmail,
+    isResendingVerification
   } = useAuth();
 
   if (isLoadingProfile) {
@@ -46,22 +410,34 @@ const Profile: NextPage = () => {
   return (
     <>
       <ProfileHead />
-      <section className="flex w-full justify-center py-6 md:py-12">
-        <div className="flex w-full flex-col justify-center gap-6">
-          <UserSettings
-            email={user?.email || ''}
-            fullName={user?.fullName || ''}
-            discordUsername={user?.discordUsername || ''}
-            hasActiveSubscription={user?.subscription === 'active'}
-            emailVerified={user?.emailVerified || false}
-            createPortalSession={createPortalSession}
-            disconnectDiscordAuth={disconnectDiscord}
-            createCheckoutSession={createCheckoutSession}
-            handleLogout={logout}
-            createDiscordAuth={connectDiscord}
-          />
+      <div className="min-h-screen bg-background">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Account Settings</h1>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Manage your account settings and preferences.
+              </p>
+            </div>
+            <div className="grid gap-6">
+              <UserSettings
+                email={user?.email || ''}
+                fullName={user?.fullName || ''}
+                discordUsername={user?.discordUsername || ''}
+                hasActiveSubscription={user?.subscription === 'active'}
+                emailVerified={user?.emailVerified || false}
+                createPortalSession={createPortalSession}
+                disconnectDiscordAuth={disconnectDiscord}
+                createCheckoutSession={createCheckoutSession}
+                handleLogout={logout}
+                createDiscordAuth={connectDiscord}
+                resendVerificationEmail={resendVerificationEmail}
+                isResendingVerification={isResendingVerification}
+              />
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
     </>
   );
 };
@@ -89,207 +465,5 @@ const ProfileHead = () => {
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
-  );
-};
-
-const UserSettings = ({
-  email,
-  fullName,
-  hasActiveSubscription,
-  discordUsername,
-  createCheckoutSession,
-  createPortalSession,
-  createDiscordAuth,
-  disconnectDiscordAuth,
-  handleLogout
-}: {
-  email: string;
-  fullName: string;
-  hasActiveSubscription: boolean;
-  emailVerified: boolean;
-  discordUsername: string;
-  createCheckoutSession: () => void;
-  createPortalSession: () => void;
-  createDiscordAuth: () => void;
-  disconnectDiscordAuth: () => void;
-  handleLogout: () => void;
-}) => {
-  const { isDisconnectingDiscord, updateProfile } = useAuth();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    defaultValues: {
-      fullName: ''
-    }
-  });
-
-  type Submission = {
-    fullName: string;
-  };
-
-  const onSubmit = async (data: Submission) => {
-    updateProfile(data);
-  };
-
-  return (
-    <Card className="lg mx-auto w-full max-w-lg bg-popover">
-      <CardHeader>
-        <CardTitle className="text-2xl">Settings</CardTitle>
-        <CardDescription>Adjust your account settings.</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4 md:gap-4">
-        <form className="grid gap-4 md:gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Name</Label>
-            <Input
-              {...register('fullName', {
-                required: 'Name is required'
-              })}
-              type="text"
-              disabled={true}
-              placeholder={fullName}
-            />
-            {errors.fullName && (
-              <p className="text-red-500">{errors.fullName.message}</p>
-            )}
-            {errors.fullName?.type === 'pattern' && (
-              <p className="text-red-500">Invalid name</p>
-            )}
-          </div>
-        </form>
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input type="text" disabled={true} value={email} />
-        </div>
-        {/* dark mode */}
-        <ModeToggle />
-
-        {/* discord */}
-        <Card>
-          <CardHeader>
-            <DiscordLogoIcon className="h-6 w-6 text-primary" />
-            <CardTitle className="text-md">Discord</CardTitle>
-            <CardDescription>
-              Pro members gain access to exlcusive channels and giveaways after
-              connecting their Discord!
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {discordUsername ? (
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-row items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                  <p className="text-sm">Connected as {discordUsername}</p>
-                </div>
-                <Button 
-                  variant="outline" 
-                  onClick={disconnectDiscordAuth}
-                  disabled={isDisconnectingDiscord}
-                >
-                  {isDisconnectingDiscord ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    'Disconnect'
-                  )}
-                </Button>
-              </div>
-            ) : (
-              <div>
-                <Button onClick={createDiscordAuth}>Connect</Button>
-                <p className="py-2 text-xs ">
-                  By clicking connect, you confirm that you have read,
-                  understood, and consent to the{' '}
-                  <a
-                    href="/privacy"
-                    className="text-primary underline hover:opacity-70"
-                  >
-                    Privacy Notice
-                  </a>{' '}
-                  and{' '}
-                  <a
-                    href="/terms"
-                    className="text-primary underline hover:opacity-70"
-                  >
-                    Terms & Conditions
-                  </a>
-                  .
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-md">Snapcaster Pro</CardTitle>
-            <CardDescription>
-              Subscribe to Snapcaster Pro for access to premium features and
-              giveaways.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-row justify-between">
-              <p className="text-sm">Snapcaster Pro</p>
-              {hasActiveSubscription ? (
-                <p className="text-sm">Active</p>
-              ) : (
-                <p className="text-sm text-zinc-400">Inactive</p>
-              )}
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-              <p className="text-sm font-semibold text-zinc-400">
-                Multi search up to 100 cards at a time
-              </p>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-              <p className="text-sm font-semibold text-zinc-400">
-                Pro exclusive Discord giveaways (Singles, Packs, Merch)
-              </p>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-              <div className="aspect-square h-2 w-2 rounded-full bg-primary"></div>
-              <p className="text-sm font-semibold text-zinc-400">
-                Reduced Ads (Side Banners, Inline Banners, Promoted Results)
-              </p>
-            </div>
-          </CardContent>
-          <CardFooter>
-            {hasActiveSubscription ? (
-              <Button className="w-full" onClick={createPortalSession}>
-                Manage subscription
-              </Button>
-            ) : (
-              <div>
-                <Button onClick={createCheckoutSession}>Subscribe</Button>
-                <p className="py-2 text-xs ">
-                  By clicking subscribe, you confirm that you have read,
-                  understood, and consent to the{' '}
-                  <a
-                    href="/privacy"
-                    className="text-primary underline hover:opacity-70"
-                  >
-                    Privacy Notice
-                  </a>{' '}
-                  and{' '}
-                  <a
-                    href="/terms"
-                    className="text-primary underline hover:opacity-70"
-                  >
-                    Terms & Conditions
-                  </a>
-                  .
-                </p>
-              </div>
-            )}
-          </CardFooter>
-        </Card>
-      </CardContent>
-      <CardFooter className="justify-end">
-        <Button onClick={handleLogout}>Logout</Button>
-      </CardFooter>
-    </Card>
   );
 };

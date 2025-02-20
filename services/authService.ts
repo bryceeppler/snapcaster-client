@@ -98,11 +98,11 @@ export class AuthService {
   }
 
   async forgotPassword(email: string): Promise<void> {
-    await axios.post(`${BASE_URL}/api/v1/auth/forgot-password`, { email });
+    await axios.post(`${BASE_URL}/api/v1/auth/password/forgot`, { email });
   }
 
-  async resetPassword(token: string, newPassword: string): Promise<void> {
-    await axios.post(`${BASE_URL}/api/v1/auth/reset-password`, { token, newPassword });
+  async resetPassword(token: string, password: string): Promise<void> {
+    await axios.post(`${BASE_URL}/api/v1/auth/password/reset/${token}`, { password });
   }
 
   async connectDiscord(): Promise<ConnectDiscordResponse> {
@@ -124,6 +124,12 @@ export class AuthService {
 
   async logout(): Promise<void> {
     await axios.post(`${BASE_URL}/api/v1/auth/logout`, {}, {
+      withCredentials: true
+    });
+  }
+
+  async resendVerificationEmail(): Promise<void> {
+    await axiosInstance.post(`${BASE_URL}/api/v1/auth/email/verification/resend`, {}, {
       withCredentials: true
     });
   }

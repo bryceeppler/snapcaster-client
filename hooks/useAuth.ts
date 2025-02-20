@@ -186,6 +186,22 @@ export function useAuth() {
     }
   });
 
+  // Resend verification email mutation
+  const {
+    mutate: resendVerificationEmail,
+    isPending: isResendingVerification,
+    error: resendVerificationError
+  } = useMutation({
+    mutationFn: authService.resendVerificationEmail,
+    onSuccess: () => {
+      toast.success('Verification email sent! Please check your inbox.');
+    },
+    onError: (error) => {
+      toast.error('Error sending verification email');
+      console.error('Resend verification error:', error);
+    }
+  });
+
   const {
     mutate: disconnectDiscord,
     isPending: isDisconnectingDiscord,
@@ -249,5 +265,9 @@ export function useAuth() {
     disconnectDiscord,
     isDisconnectingDiscord,
     disconnectDiscordError,
+
+    resendVerificationEmail,
+    isResendingVerification,
+    resendVerificationError,
   };
 } 
