@@ -278,7 +278,7 @@ const SubscriptionSection = ({
             onClick={onSubscribe}
             className="w-full sm:w-auto"
           >
-            Subscribe Now
+            Subscribe Now!
           </Button>
           <p className="text-xs text-muted-foreground">
             By subscribing, you agree to our{' '}
