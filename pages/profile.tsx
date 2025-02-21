@@ -460,6 +460,7 @@ const Profile: NextPage = () => {
     profile,
     isLoadingProfile,
     isAuthenticated,
+    isInitializing,
     logout,
     connectDiscord,
     disconnectDiscord,
@@ -468,52 +469,45 @@ const Profile: NextPage = () => {
     isResendingVerification
   } = useAuth();
 
-  if (isLoadingProfile) {
-    return (
-      <>
-        <ProfileHead />
-        <ProfileSkeleton />
-      </>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Signin />;
-  }
-
-  const user = profile?.data?.user;
+  const pageContent = isInitializing || isLoadingProfile || typeof isAuthenticated === 'undefined' ? (
+    <ProfileSkeleton />
+  ) : !isAuthenticated ? (
+    <Signin />
+  ) : (
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Account Settings</h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Manage your account settings and preferences.
+            </p>
+          </div>
+          <div className="grid gap-6">
+            <UserSettings
+              email={profile?.data?.user?.email || ''}
+              fullName={profile?.data?.user?.fullName || ''}
+              discordUsername={profile?.data?.user?.discordUsername || ''}
+              hasActiveSubscription={profile?.data?.user?.subscription === 'active'}
+              emailVerified={profile?.data?.user?.emailVerified || false}
+              createPortalSession={createPortalSession}
+              disconnectDiscordAuth={disconnectDiscord}
+              createCheckoutSession={createCheckoutSession}
+              handleLogout={logout}
+              createDiscordAuth={connectDiscord}
+              resendVerificationEmail={resendVerificationEmail}
+              isResendingVerification={isResendingVerification}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <>
       <ProfileHead />
-      <div className="min-h-screen bg-background">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">Account Settings</h1>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Manage your account settings and preferences.
-              </p>
-            </div>
-            <div className="grid gap-6">
-              <UserSettings
-                email={user?.email || ''}
-                fullName={user?.fullName || ''}
-                discordUsername={user?.discordUsername || ''}
-                hasActiveSubscription={user?.subscription === 'active'}
-                emailVerified={user?.emailVerified || false}
-                createPortalSession={createPortalSession}
-                disconnectDiscordAuth={disconnectDiscord}
-                createCheckoutSession={createCheckoutSession}
-                handleLogout={logout}
-                createDiscordAuth={connectDiscord}
-                resendVerificationEmail={resendVerificationEmail}
-                isResendingVerification={isResendingVerification}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      {pageContent}
     </>
   );
 };
