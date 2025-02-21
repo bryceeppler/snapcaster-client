@@ -36,8 +36,8 @@ const CarouselAd: React.FC<AdProps> = ({ ad, forceMobile }) => {
       {
         forceMobile ? (<img src={ad.mobile_image} className="rounded-lg overflow-hidden border border-1 border-border" alt="ad" />) : (
           <>
-          <img src={ad.mobile_image} className="flex h-full w-full object-cover md:hidden rounded-lg overflow-hidden border border-1 border-border" alt="ad" />
-          <img src={ad.desktop_image} className="hidden w-full md:flex" alt="ad" />
+          <img src={ad.mobile_image} className="flex h-full w-full object-cover sm:hidden rounded-lg overflow-hidden border border-1 border-border" alt="ad" />
+          <img src={ad.desktop_image} className="hidden w-full sm:flex" alt="ad" />
           </>
         )
       }

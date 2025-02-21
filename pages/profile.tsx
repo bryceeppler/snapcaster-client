@@ -2,7 +2,6 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import Signin from './signin';
-import LoadingPage from '@/components/loading-page';
 import { Button } from '@/components/ui/button';
 import { createCheckoutSession, createPortalSession } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -21,6 +20,7 @@ import { DiscordLogoIcon } from '@radix-ui/react-icons';
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 import ThemeSelector from '@/components/theme-selector';
 import { useAuth } from '@/hooks/useAuth';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Types
 interface UserProfile {
@@ -129,7 +129,8 @@ const ProfileInformationForm = ({
     formState: { errors }
   } = useForm({
     defaultValues: {
-      fullName: ''
+      fullName: user.fullName,
+      email: user.email
     }
   });
 
@@ -141,12 +142,9 @@ const ProfileInformationForm = ({
           type="text"
           id="fullName"
           disabled={true}
-          placeholder={user.fullName}
+          value={user.fullName}
           className="max-w-md"
         />
-        {errors.fullName && (
-          <p className="text-sm text-destructive">{errors.fullName.message}</p>
-        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
@@ -383,6 +381,79 @@ const UserSettings = ({
   );
 };
 
+const ProfileSectionSkeleton = () => (
+  <Card>
+    <CardHeader>
+      <Skeleton className="h-6 w-48" />
+      <Skeleton className="h-4 w-72 mt-2" />
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <Skeleton className="h-10 w-full max-w-md" />
+      <Skeleton className="h-10 w-full max-w-md" />
+    </CardContent>
+  </Card>
+);
+
+const DiscordSectionSkeleton = () => (
+  <Card>
+    <CardHeader className="space-y-1">
+      <div className="flex items-center gap-2">
+        <Skeleton className="h-5 w-5" />
+        <Skeleton className="h-6 w-48" />
+      </div>
+      <Skeleton className="h-4 w-72 mt-2" />
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        <Skeleton className="h-10 w-32" />
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const SubscriptionSectionSkeleton = () => (
+  <Card>
+    <CardHeader>
+      <Skeleton className="h-6 w-48" />
+      <Skeleton className="h-4 w-72 mt-2" />
+    </CardHeader>
+    <CardContent className="space-y-6">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-4 w-32" />
+        <Skeleton className="h-4 w-16" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+      </div>
+    </CardContent>
+    <CardFooter>
+      <Skeleton className="h-10 w-32" />
+    </CardFooter>
+  </Card>
+);
+
+const ProfileSkeleton = () => (
+  <div className="min-h-screen bg-background">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="space-y-6">
+        <div>
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-72 mt-2" />
+        </div>
+        <div className="grid gap-6">
+          <ProfileSectionSkeleton />
+          <ProfileSectionSkeleton />
+          <DiscordSectionSkeleton />
+          <SubscriptionSectionSkeleton />
+          <ProfileSectionSkeleton />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 // Main Profile Page Component
 const Profile: NextPage = () => {
   const { 
@@ -398,7 +469,12 @@ const Profile: NextPage = () => {
   } = useAuth();
 
   if (isLoadingProfile) {
-    return <LoadingPage />;
+    return (
+      <>
+        <ProfileHead />
+        <ProfileSkeleton />
+      </>
+    );
   }
 
   if (!isAuthenticated) {
