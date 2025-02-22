@@ -2,7 +2,7 @@ import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import BackToTopButton from '../ui/back-to-top-btn';
 import SingleCatalogItem from './single-catalog-item';
 import FilterSection from '@/components/search-ui/search-filter-container';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import useGlobalStore from '@/stores/globalStore';
 import AdComponent from '../ad';
 import type { Ad, AdWeight } from '@/types/ads';
@@ -33,7 +33,7 @@ export default function SingleCatalog() {
     applyFilters
   } = useSingleSearchStore();
 
-  const { hasActiveSubscription } = useAuthStore();
+  const { hasActiveSubscription } = useAuth();
   const { getFeedAds } = useGlobalStore();
 
   const [ads, setAds] = useState<Ad[]>([]);

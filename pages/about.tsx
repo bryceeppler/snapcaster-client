@@ -4,9 +4,9 @@ import Link from 'next/link';
 import PageTitle from '@/components/ui/page-title';
 import { trackAdClick } from '@/utils/analytics';
 import useGlobalStore from '@/stores/globalStore';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 
 type Props = {};
 
@@ -15,7 +15,6 @@ const About: NextPage<Props> = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if there's a hash in the URL
     if (router.asPath.includes('#vendors')) {
       const element = document.getElementById('vendors');
       if (element) {
@@ -27,183 +26,116 @@ const About: NextPage<Props> = () => {
   return (
     <>
       <AboutHead />
-      <section className="w-full">
-        <div className="container px-4 md:px-6 mb-16">
-          <div className="space-y-8">
+      <section className="w-full min-h-screen bg-gradient-to-b from-background to-background/80">
+        <div className="container max-w-7xl mx-auto px-4 md:px-8 py-16 mb-16">
+          <div className="space-y-16">
             <PageTitle
               title="Our Supporters"
               subtitle="We're grateful for the support of these amazing companies."
             />
-            <div className="space-y-12 text-center">
-              <div>
-                <h3 className="mb-6 text-2xl font-bold">Tier 1 Sponsors</h3>
-                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                  {/* OBSIDIAN */}
-                  <div className="flex items-center justify-center bg-zinc-800 p-4">
-                    <Link
-                      href="https://obsidiangames.ca"
-                      target="_blank"
-                      data-position-id="6" // hardcoded for t1 supporter logo
-                      data-ad-id="13" // hardcoded for the obsidian support logo ad
-                      onClick={() => trackAdClick('13')}
-                    >
-                      <img
-                        alt="Obsidian Games Vernon"
-                        className="aspect-[2/1] overflow-hidden rounded-lg bg-zinc-800 object-contain object-center px-5"
-                        height="200"
-                        src="https://cdn.snapcaster.ca/obsidian_supporter.png"
-                        width="400"
-                      />
-                    </Link>
-                  </div>
-                  {/* EXOR */}
-                  <div className="flex items-center justify-center bg-zinc-800 p-4">
-                    <Link
-                      href="https://exorgames.com"
-                      target="_blank"
-                      data-position-id="6" // hardcoded for t1 supporter logo
-                      data-ad-id="44" // hardcoded for the exor support logo ad
-                      onClick={() => trackAdClick('44')}
-                    >
-                      <img
-                        alt="Exor Games"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="200"
-                        src="/exorgames_icon.png"
-                        width="400"
-                      />
-                    </Link>
-                  </div>
-                  {/* CHIMERA */}
-                  <div className="flex items-center justify-center bg-zinc-800 p-4">
-                    <Link
-                      href="https://chimeragamingonline.com/"
-                      target="_blank"
-                      data-position-id="6" // hardcoded for t1 supporter logo
-                      data-ad-id="43" // hardcoded for the obsidian support logo ad
-                      onClick={() => trackAdClick('43')}
-                    >
-                      <img
-                        alt="Chimera Gaming"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="200"
-                        src="/chimera_sponsor.png"
-                        width="400"
-                      />
-                    </Link>
-                  </div>
-                </div>
+            {/* Tier 1 Sponsors */}
+            <div className="space-y-8">
+              <div className="flex flex-col items-center">
+                <h3 className="text-3xl font-bold text-center">
+                  Tier 1 Sponsors
+                </h3>
+                <div className="mt-2 rounded-full h-2 w-16 bg-primary/40 mx-auto"></div>
               </div>
-              <div>
-                <h3 className="mb-6 text-2xl font-bold">Tier 2 Sponsors</h3>
-                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                  {/* LEVEL UP */}
-                  <div className="flex items-center justify-center bg-zinc-800 p-4">
-                    <Link
-                      href="https://levelupgames.ca"
-                      target="_blank"
-                      data-position-id="8" // hardcoded for t2 supporter logo
-                      data-ad-id="42" // hardcoded for the levelup support logo ad
-                      onClick={() => trackAdClick('42')}
-                    >
-                      <img
-                        alt="Level Up Games"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="150"
-                        src="/levelup_icon.png"
-                        width="300"
-                      />
-                    </Link>
-                  </div>
-                  {/* The Mythic Store */}
-                  <div className="flex items-center justify-center bg-zinc-800 p-4">
-                    <Link
-                      href="https://themythicstore.com"
-                      target="_blank"
-                      data-position-id="8"
-                      data-ad-id="55"
-                      onClick={() => trackAdClick('55')}
-                    >
-                      <img
-                        alt="The Mythic Store"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="150"
-                        src="/tms_sponsor.webp"
-                        width="300"
-                      />
-                    </Link>
-                  </div>
-                  {/* House of Cards */}
-                  <div className="flex items-center justify-center bg-zinc-800 p-4">
-                    <Link
-                      href="https://houseofcards.ca"
-                      target="_blank"
-                      data-position-id="8"
-                      data-ad-id="56"
-                      onClick={() => trackAdClick('56')}
-                    >
-                      <img
-                        alt="House of Cards"
-                        className="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center"
-                        height="150"
-                        src="/hoc_sponsor.png"
-                        width="300"
-                      />
-                    </Link>
-                  </div>
-                </div>
+              <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+                {/* OBSIDIAN */}
+                <SponsorCard
+                  href="https://obsidiangames.ca"
+                  imgSrc="https://cdn.snapcaster.ca/obsidian_supporter.png"
+                  alt="Obsidian Games Vernon"
+                  positionId="6"
+                  adId="13"
+                />
+                {/* EXOR */}
+                <SponsorCard
+                  href="https://exorgames.com"
+                  imgSrc="/exorgames_icon.png"
+                  alt="Exor Games"
+                  positionId="6"
+                  adId="44"
+                />
+                {/* CHIMERA */}
+                <SponsorCard
+                  href="https://chimeragamingonline.com/"
+                  imgSrc="/chimera_sponsor.png"
+                  alt="Chimera Gaming"
+                  positionId="6"
+                  adId="43"
+                />
               </div>
-              {/* <div>
-                <h3 className="mb-6 text-2xl font-bold">Tier 3 Sponsors</h3>
-                <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                  <div className="flex items-center justify-center">
-                    <Link
-                      href="/contact"
-                      className=" aspect-video w-32 rounded-lg border bg-popover"
-                    ></Link>
-                  </div>
-                  <div className="flex items-center justify-center">
-                    <Link
-                      href="/contact"
-                      className=" aspect-video w-32 rounded-lg border bg-popover"
-                    ></Link>
-                  </div>{' '}
-                  <div className="flex items-center justify-center">
-                    <Link
-                      href="/contact"
-                      className=" aspect-video w-32 rounded-lg border bg-popover"
-                    ></Link>
-                  </div>{' '}
-                  <div className="flex items-center justify-center">
-                    <Link
-                      href="/contact"
-                      className=" aspect-video w-32 rounded-lg border bg-popover"
-                    ></Link>
-                  </div>{' '}
-                  <div className="flex items-center justify-center">
-                    <Link
-                      href="/contact"
-                      className=" aspect-video w-32 rounded-lg border bg-popover"
-                    ></Link>
-                  </div>
-                </div>
-              </div> */}
-         
-              <div  id="vendors" className="scroll-mt-32">
-                <h3 className="mb-6 text-2xl font-bold">We support {websites.length} stores across Canada!</h3>
-                <p className="text-left">
-                  {' '}
+            </div>
+
+            {/* Tier 2 Sponsors */}
+            <div className="space-y-8">
+            <div className="flex flex-col items-center">
+                <h3 className="text-3xl font-bold text-center">
+                  Tier 2 Sponsors
+                </h3>
+                <div className="mt-2 rounded-full h-2 w-16 bg-primary/40 mx-auto"></div>
+              </div>
+              <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+                {/* LEVEL UP */}
+                <SponsorCard
+                  href="https://levelupgames.ca"
+                  imgSrc="/levelup_icon.png"
+                  alt="Level Up Games"
+                  positionId="8"
+                  adId="42"
+                />
+                {/* The Mythic Store */}
+                <SponsorCard
+                  href="https://themythicstore.com"
+                  imgSrc="/tms_sponsor.webp"
+                  alt="The Mythic Store"
+                  positionId="8"
+                  adId="55"
+                />
+                {/* House of Cards */}
+                <SponsorCard
+                  href="https://houseofcards.ca"
+                  imgSrc="/hoc_sponsor.png"
+                  alt="House of Cards"
+                  positionId="8"
+                  adId="56"
+                />
+              </div>
+            </div>
+
+            {/* Vendors Section */}
+            <div id="vendors" className="scroll-mt-32 space-y-8">
+              <div className="text-center space-y-4">
+                <h3 className="text-3xl font-bold">
+                  We support {websites.length} stores across Canada!
+                </h3>
+                <p className="max-w-3xl mx-auto text-muted-foreground leading-relaxed">
                   If you're a Local Game Store (LGS) owner and wish to feature
                   your website on Snapcaster, we invite you to join our official
                   Discord server and send us a direct message or send us an
-                  email at info@snapcaster.gg. This is an excellent chance to
-                  promote your store's special offers, discount codes, and events.
+                  email at{' '}
+                  <a href="mailto:info@snapcaster.gg" className="text-primary hover:text-primary/80 transition-colors">
+                    info@snapcaster.gg
+                  </a>
+                  . This is an excellent chance to promote your store's special offers,
+                  discount codes, and events.
                 </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                    {websites.map((website) => (
-                      <a target="_blank" href={website.url} key={website.slug} className="p-2 text-center border rounded-lg hover:bg-popover">{website.name}</a>
-                    ))}
-                  </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {websites.map((website) => (
+                  <motion.a
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    target="_blank"
+                    href={website.url}
+                    key={website.slug}
+                    className="p-4 text-center border rounded-xl bg-popover hover:bg-accent/50 transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm"
+                  >
+                    {website.name}
+                  </motion.a>
+                ))}
               </div>
             </div>
           </div>
@@ -212,6 +144,42 @@ const About: NextPage<Props> = () => {
     </>
   );
 };
+
+interface SponsorCardProps {
+  href: string;
+  imgSrc: string;
+  alt: string;
+  positionId: string;
+  adId: string;
+}
+
+const SponsorCard = ({ href, imgSrc, alt, positionId, adId }: SponsorCardProps) => (
+  <motion.div
+    whileHover={{ 
+      scale: 1.02,
+      boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
+    }}
+    whileTap={{ scale: 0.98 }}
+    className="group relative rounded-xl shadow-lg transition-all duration-300 hover:z-10 bg-zinc-800/50 backdrop-blur-sm overflow-visible hover:border-primary/20 border border-transparent"
+  >
+    <Link
+      href={href}
+      target="_blank"
+      data-position-id={positionId}
+      data-ad-id={adId}
+      onClick={() => trackAdClick(adId)}
+      className="block p-8 overflow-visible"
+    >
+      <div className="relative aspect-[2/1] rounded-lg overflow-visible">
+        <img
+          alt={alt}
+          className="absolute w-full h-full object-contain transform transition-transform duration-300 origin-center group-hover:scale-110 group-hover:brightness-110"
+          src={imgSrc}
+        />
+      </div>
+    </Link>
+  </motion.div>
+);
 
 export default About;
 

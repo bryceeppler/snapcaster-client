@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import useBuyListStore, {
   IBuylistCart,
   IBuylistCartItem
@@ -115,7 +115,7 @@ export default function BuylistCatalog() {
     setReviewData,
     setIsLoading
   } = useBuyListStore();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
   const {
     carts,
     isLoading,

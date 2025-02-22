@@ -2,10 +2,8 @@ import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import axios from 'axios';
-import { toast } from 'sonner';
-import Router from 'next/router';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
 
 type SignupFormData = {
   email: string;
@@ -25,42 +23,26 @@ type SignupFormProps = {
   callToAction?: string;
 };
 
-export function SignupForm({ onSuccess, showSignInLink = true, disableToast = false, inputClassName = '', labels = 'explicit', confirmPassword = true, callToAction = 'Sign Up' }: SignupFormProps) {
+export function SignupForm({ 
+  showSignInLink = true, 
+  inputClassName = '', 
+  labels = 'explicit', 
+  confirmPassword = true, 
+  callToAction = 'Sign Up' 
+}: SignupFormProps) {
+  const { register, isRegistering } = useAuth();
   const {
-    register,
+    register: registerField,
     handleSubmit,
     formState: { errors },
     watch
   } = useForm<SignupFormData>();
 
-  const router = Router;
   const password = watch('password');
 
   const onSubmit = async (data: SignupFormData) => {
-    const { email, password, fullName, newsletter } = data;
-    const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/register`;
-
-    try {
-      const response = await axios.post(endpoint, {
-        email,
-        password,
-        fullName,
-        newsletter
-      });
-      if (response.status !== 200) {
-        throw new Error('Something went wrong with the registration process');
-      }
-      if (!disableToast) {
-        toast.success('Registration successful! You can now sign in.');
-      }
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        router.push('/signin');
-      }
-    } catch (error: any) {
-      toast.error('Could not register user');
-    }
+    const { email, password, fullName } = data;
+    register({ email, password, fullName });
   };
 
   return (
@@ -69,7 +51,7 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
         {labels === 'explicit' && <Label htmlFor="fullName">Name</Label>}
         <Input
           type="text"
-          {...register('fullName', {
+          {...registerField('fullName', {
             required: 'A name is required'
           })}
           className={`${errors.fullName ? 'border-red-500' : ''} ${inputClassName}`}
@@ -84,7 +66,7 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
         {labels === 'explicit' && <Label htmlFor="email">Email</Label>}
         <Input
           type="email"
-          {...register('email', {
+          {...registerField('email', {
             required: 'An email is required',
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -103,7 +85,7 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
         {labels === 'explicit' && <Label htmlFor="password">Password</Label>}
         <Input
           type="password"
-          {...register('password', {
+          {...registerField('password', {
             required: 'A password is required',
             minLength: {
               value: 8,
@@ -122,17 +104,17 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
         <div className="grid gap-2">
           {labels === 'explicit' && <Label htmlFor="confirmPassword">Confirm Password</Label>}
           <Input
-          type="password"
-          {...register('confirmPassword', {
-            required: 'Please confirm your password',
-            validate: value =>
-              value === password || 'The passwords do not match'
-          })}
-          className={`${errors.confirmPassword ? 'border-red-500' : ''} ${inputClassName}`}
-          placeholder={labels === 'implicit' ? 'Confirm Password' : ''}
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500">{errors.confirmPassword.message}</p>
+            type="password"
+            {...registerField('confirmPassword', {
+              required: 'Please confirm your password',
+              validate: value =>
+                value === password || 'The passwords do not match'
+            })}
+            className={`${errors.confirmPassword ? 'border-red-500' : ''} ${inputClassName}`}
+            placeholder={labels === 'implicit' ? 'Confirm Password' : ''}
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500">{errors.confirmPassword.message}</p>
           )}
         </div>
       )}
@@ -142,7 +124,7 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
           type="checkbox"
           id="newsletter"
           defaultChecked={true}
-          {...register('newsletter')}
+          {...registerField('newsletter')}
           className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
         />
         <Label htmlFor="newsletter" className="text-sm text-muted-foreground">
@@ -150,7 +132,10 @@ export function SignupForm({ onSuccess, showSignInLink = true, disableToast = fa
         </Label>
       </div>
 
-      <Button type="submit">{callToAction}</Button>
+      <Button type="submit" disabled={isRegistering}>
+        {isRegistering ? 'Creating account...' : callToAction}
+      </Button>
+      
       {showSignInLink && (
         <div className="mt-4 text-center text-sm">
           Already have an account?{' '}

@@ -1,24 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import { NextPage } from 'next';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import BuylistCatalog from '@/components/buylists/buylist-catalog-container';
-import useAuthStore from '@/stores/authStore';
-import { useRouter } from 'next/router';
 
 type Props = {};
 const Buylist: NextPage<Props> = () => {
-  const { isAuthenticated } = useAuthStore();
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     router.push('/signin');
-  //   }
-  // }, [isAuthenticated, router]);
-
-  // if (!isAuthenticated) return null;
-
   return (
     <>
       <BuylistHead />

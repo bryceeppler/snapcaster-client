@@ -52,6 +52,21 @@ export default function SearchBar({
   const inputRef = useRef<HTMLInputElement>(null);
   const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
 
+  const useMediaQuery = (width: number): boolean => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+      const handleResize = () => setIsMobile(window.innerWidth <= width);
+      window.addEventListener('resize', handleResize);
+      handleResize(); // Call once to set the initial value
+
+      return () => window.removeEventListener('resize', handleResize);
+    }, [width]);
+
+    return isMobile;
+  };
+  const isMobile = useMediaQuery(768);
+
   const fetchAutocomplete = useCallback(
     (value: string) => {
       const url = `${autoCompleteUrl}/cards?tcg=${tcg}&query=${encodeURIComponent(
@@ -202,7 +217,7 @@ export default function SearchBar({
           ref={inputRef}
           type="text"
           placeholder={
-            window.innerWidth >= 768 ? 'Search for a card...' : 'Search...'
+            isMobile ? 'Search...' : 'Search for a card...'
           }
           className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
           value={searchTerm}

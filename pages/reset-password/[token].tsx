@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/hooks/useAuth';
 import { Label } from '@/components/ui/label';
 import {
   Card,
@@ -18,6 +19,7 @@ import {
 type Props = {};
 
 const ResetPassword: NextPage<Props> = () => {
+  const { resetPassword } = useAuth();
   const router = useRouter();
   const { token } = router.query;
   const {
@@ -39,27 +41,7 @@ const ResetPassword: NextPage<Props> = () => {
   };
   const onSubmit = async (data: Submision) => {
     const { password } = data;
-    const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/reset-password`;
-
-    try {
-      const response = await axios.post(endpoint, { token, password });
-
-      if (!response.status) {
-        toast.error('Invalid response from server.');
-        throw new Error('Something went wrong with the password reset process');
-      } else {
-        if (response.status !== 200) {
-          throw new Error(
-            'Something went wrong with the password reset process'
-          );
-        }
-        toast.success('Your password has been reset! You can now sign in.');
-        router.push('/signin');
-      }
-    } catch (error) {
-      toast.error('An error occurred during password reset');
-      console.error(error);
-    }
+    resetPassword({ token: token as string, newPassword: password });
   };
 
   return (

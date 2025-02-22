@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { Loader2, ShoppingCart } from 'lucide-react';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import { createCheckoutSession } from '@/lib/utils';
 import {
   Select,
@@ -116,7 +116,7 @@ const SearchView = ({
   setMinimumAcceptableCondition: (value: Condition) => void;
 }) => {
   const { loading } = useMultiSearchStore();
-  const { hasActiveSubscription, isAuthenticated } = useAuthStore();
+  const { hasActiveSubscription, isAuthenticated } = useAuth();
   const { adsEnabled } = useGlobalStore();
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;

@@ -1,15 +1,14 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import Profile from './profile';
-import SignInCard from '@/components/signin';
 import { useRouter } from 'next/router';
 import React from 'react';
 import SignInForm from '@/components/forms/SigninForm';
 
 type Props = {};
 const Signin: NextPage<Props> = () => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { redirect } = router.query;
 

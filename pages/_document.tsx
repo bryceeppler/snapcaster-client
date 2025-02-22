@@ -1,5 +1,4 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document';
-// import FacebookPixel from '@/components/facebook-pixel';
 class MyDocument extends Document {
   render() {
     return (

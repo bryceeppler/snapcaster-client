@@ -19,7 +19,7 @@ import 'styles/main.css';
 import 'styles/chrome-bug.css';
 import { useWindowSize } from 'usehooks-ts';
 import { Inter } from 'next/font/google';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -47,7 +47,7 @@ interface AdProviderProps {
 
 const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
   const [showAds, setShowAds] = useState(true);
-  const { hasActiveSubscription } = useAuthStore();
+  const { hasActiveSubscription } = useAuth();
 
   useEffect(() => {
     if (hasActiveSubscription) {

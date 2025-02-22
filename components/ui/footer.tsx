@@ -2,11 +2,11 @@ import { DiscordLogoIcon, GitHubLogoIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import PoweredBy from '../powered-by';
 import useGlobalStore from '@/stores/globalStore';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Footer() {
   const { adsEnabled } = useGlobalStore();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
   return (
     <footer className="bg-popover py-12">
       <div className="container grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">

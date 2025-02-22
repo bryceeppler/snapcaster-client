@@ -8,7 +8,7 @@ import {
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
 import { Button } from './button';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import { AlignJustify, Search, SlidersHorizontal, User, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import ModeToggle from '../theme-toggle';
@@ -32,7 +32,7 @@ import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/buyListStore';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
 
   const {
