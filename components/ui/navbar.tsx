@@ -540,6 +540,13 @@ const Navbar: React.FC = () => {
           </button>
         </div>
       )}
+      {/* Maintenance Notification */}
+      <div className="flex w-full items-center bg-destructive px-1 text-secondary">
+        <p className="flex-1 text-center text-xs font-medium md:text-base">
+          Snapcaster is currently undergoing maintenance. We apologize for the
+          inconvenience.
+        </p>
+      </div>
     </>
   );
 };
