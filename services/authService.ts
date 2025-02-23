@@ -12,13 +12,6 @@ interface RegisterCredentials extends LoginCredentials {
   fullName: string;
 }
 
-interface UpdateProfileData {
-  fullName?: string;
-  email?: string;
-  currentPassword?: string;
-  newPassword?: string;
-}
-
 interface RegisterResponse {
   status: string;
   data: {
@@ -89,12 +82,6 @@ export class AuthService {
       withCredentials: true
     });
     return response.data;
-  }
-
-  async updateProfile(data: UpdateProfileData): Promise<void> {
-    await axiosInstance.post(`${BASE_URL}/update`, data, {
-      withCredentials: true
-    });
   }
 
   async forgotPassword(email: string): Promise<void> {
