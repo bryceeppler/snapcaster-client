@@ -23,7 +23,9 @@ export function useAuth() {
 
   // Initial auth check using React Query
   const {
-    isLoading: isInitializing
+    isLoading: isInitializing,
+    isSuccess: isInitialized,
+    error: initError
   } = useQuery({
     queryKey: ['auth-init'],
     queryFn: async () => {
@@ -50,7 +52,7 @@ export function useAuth() {
   } = useQuery({
     queryKey: ['user-profile'],
     queryFn: () => authService.getProfile(),
-    enabled: !!accessToken,
+    enabled: !!accessToken && isInitialized,
     retry: false
   });
 
