@@ -155,23 +155,6 @@ export function useAuth() {
     }
   });
 
-  // Update profile mutation
-  const {
-    mutate: updateProfile,
-    isPending: isUpdatingProfile,
-    error: updateProfileError
-  } = useMutation({
-    mutationFn: authService.updateProfile,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('Profile updated successfully');
-    },
-    onError: (error) => {
-      toast.error('Error updating profile');
-      console.error('Update profile error:', error);
-    }
-  });
-
   // Discord connection mutations
   const {
     mutate: connectDiscord,
@@ -253,11 +236,6 @@ export function useAuth() {
     resetPassword,
     isResettingPassword,
     resetPasswordError,
-
-    // Profile management
-    updateProfile,
-    isUpdatingProfile,
-    updateProfileError,
 
     // Discord integration
     connectDiscord,

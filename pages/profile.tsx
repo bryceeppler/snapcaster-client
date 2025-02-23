@@ -114,12 +114,10 @@ const VerificationStatus = ({
 
 const ProfileInformationForm = ({ 
   user,
-  onUpdateProfile,
   onResendVerification,
   isResendingVerification
 }: { 
   user: UserProfile;
-  onUpdateProfile: (data: { fullName: string }) => void;
   onResendVerification: () => void;
   isResendingVerification: boolean;
 }) => {
@@ -135,7 +133,7 @@ const ProfileInformationForm = ({
   });
 
   return (
-    <form onSubmit={handleSubmit(onUpdateProfile)} className="space-y-4">
+    <form onSubmit={handleSubmit(() => {})} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="fullName">Name</Label>
         <Input
@@ -333,7 +331,7 @@ const UserSettings = ({
   resendVerificationEmail,
   isResendingVerification
 }: UserSettingsProps) => {
-  const { isDisconnectingDiscord, updateProfile } = useAuth();
+  const { isDisconnectingDiscord } = useAuth();
   const user: UserProfile = {
     email,
     fullName,
@@ -350,7 +348,6 @@ const UserSettings = ({
       >
         <ProfileInformationForm 
           user={user}
-          onUpdateProfile={updateProfile}
           onResendVerification={resendVerificationEmail}
           isResendingVerification={isResendingVerification}
         />
@@ -464,7 +461,6 @@ const Profile: NextPage = () => {
     logout,
     connectDiscord,
     disconnectDiscord,
-    updateProfile,
     resendVerificationEmail,
     isResendingVerification
   } = useAuth();
