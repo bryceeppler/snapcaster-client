@@ -162,15 +162,8 @@ function AnalyticsMetrics() {
 function ChartSection() {
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <Card>
-        <CardHeader>
-          <CardTitle>Traffic Overview</CardTitle>
-          <CardDescription>Visitor trends over the past 30 days</CardDescription>
-        </CardHeader>
-        <CardContent>
+
           <TrafficChart />
-        </CardContent>
-      </Card>
       <Card>
         <CardHeader>
           <CardTitle>Top Vendors</CardTitle>
