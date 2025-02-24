@@ -64,6 +64,14 @@ export class GA4Client {
           },
         },
       }),
+      orderBys: [
+        {
+          dimension: {
+            dimensionName: "date",
+          },
+          desc: false,
+        },
+      ],
     });
 
     return response;
@@ -114,6 +122,106 @@ export class GA4Client {
         count: parseInt(row.metricValues?.[0].value || "0", 10),
       })) || [];
     return data;
+  }
+
+  public async getUniqueUsers(startDate: Date, endDate: Date = new Date(), includePreviousPeriod: boolean = false) {
+    // Calculate the length of the period in milliseconds
+    const periodLength = endDate.getTime() - startDate.getTime();
+    
+    // Calculate previous period dates if needed
+    const previousStartDate = includePreviousPeriod ? new Date(startDate.getTime() - periodLength) : null;
+    const previousEndDate = includePreviousPeriod ? new Date(endDate.getTime() - periodLength) : null;
+
+    // Current period data
+    const [response] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dateRanges: [
+        {
+          startDate: format(startDate, "yyyy-MM-dd"),
+          endDate: format(endDate, "yyyy-MM-dd"),
+        },
+      ],
+      metrics: [
+        {
+          name: "totalUsers"
+        }
+      ],
+      dimensions: [
+        {
+          name: "date"
+        }
+      ],
+      orderBys: [
+        {
+          dimension: {
+            dimensionName: "date"
+          },
+          desc: false
+        }
+      ]
+    });
+
+    // Get daily breakdown
+    const dailyData = response.rows?.map((row: any) => ({
+      date: row.dimensionValues?.[0].value || "",
+      count: parseInt(row.metricValues?.[0].value || "0", 10),
+    })) || [];
+
+    // Get total unique users for the current period
+    const [totalResponse] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dateRanges: [
+        {
+          startDate: format(startDate, "yyyy-MM-dd"),
+          endDate: format(endDate, "yyyy-MM-dd"),
+        },
+      ],
+      metrics: [
+        {
+          name: "totalUsers"
+        }
+      ]
+    });
+
+    const totalUniqueUsers = parseInt(totalResponse.rows?.[0]?.metricValues?.[0]?.value || "0", 10);
+
+    // If we don't need previous period data, return early
+    if (!includePreviousPeriod || !previousStartDate || !previousEndDate) {
+      return {
+        data: dailyData,
+        totalUniqueUsers
+      };
+    }
+
+    // Get total unique users for the previous period
+    const [previousTotalResponse] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dateRanges: [
+        {
+          startDate: format(previousStartDate, "yyyy-MM-dd"),
+          endDate: format(previousEndDate, "yyyy-MM-dd"),
+        },
+      ],
+      metrics: [
+        {
+          name: "totalUsers"
+        }
+      ]
+    });
+
+    const previousTotalUniqueUsers = parseInt(previousTotalResponse.rows?.[0]?.metricValues?.[0]?.value || "0", 10);
+
+    // Calculate percentage change
+    const percentageChange = previousTotalUniqueUsers > 0 
+      ? ((totalUniqueUsers - previousTotalUniqueUsers) / previousTotalUniqueUsers) * 100
+      : 0;
+
+    return {
+      data: dailyData,
+      totalUniqueUsers,
+      previousPeriodUniqueUsers: previousTotalUniqueUsers,
+      percentageChange: Math.round(percentageChange * 10) / 10 // Round to 1 decimal place
+    };
   }
 
   public async getActiveUsersLast30Min() {
@@ -397,6 +505,124 @@ export class GA4Client {
       console.error('Error fetching popular searched cards:', error);
       throw error;
     }
+  }
+
+  public async getSearchQueries(startDate: Date, endDate: Date = new Date(), includePreviousPeriod: boolean = false) {
+    // Calculate the length of the period in milliseconds
+    const periodLength = endDate.getTime() - startDate.getTime();
+    
+    // Calculate previous period dates if needed
+    const previousStartDate = includePreviousPeriod ? new Date(startDate.getTime() - periodLength) : null;
+    const previousEndDate = includePreviousPeriod ? new Date(endDate.getTime() - periodLength) : null;
+
+    // Current period data
+    const response = await this.runReport(
+      ["eventCount"],
+      startDate,
+      endDate,
+      "search_query"
+    );
+
+    // Get daily breakdown
+    const dailyData = response.rows?.map((row: any) => ({
+      date: row.dimensionValues?.[0].value || "",
+      count: parseInt(row.metricValues?.[0].value || "0", 10),
+    })) || [];
+
+    // Get total searches for the current period
+    const totalSearches = dailyData.reduce((sum, day) => sum + day.count, 0);
+
+    // If we don't need previous period data, return early
+    if (!includePreviousPeriod || !previousStartDate || !previousEndDate) {
+      return {
+        data: dailyData,
+        totalSearches
+      };
+    }
+
+    // Get total searches for the previous period
+    const previousResponse = await this.runReport(
+      ["eventCount"],
+      previousStartDate,
+      previousEndDate,
+      "search_query"
+    );
+
+    const previousTotalSearches = previousResponse.rows?.reduce(
+      (sum, row) => sum + parseInt(row.metricValues?.[0].value || "0", 10),
+      0
+    ) || 0;
+
+    // Calculate percentage change
+    const percentageChange = previousTotalSearches > 0 
+      ? ((totalSearches - previousTotalSearches) / previousTotalSearches) * 100
+      : 0;
+
+    return {
+      data: dailyData,
+      totalSearches,
+      previousPeriodSearches: previousTotalSearches,
+      percentageChange: Math.round(percentageChange * 10) / 10 // Round to 1 decimal place
+    };
+  }
+
+  public async getBuyClicks(startDate: Date, endDate: Date = new Date(), includePreviousPeriod: boolean = false) {
+    // Calculate the length of the period in milliseconds
+    const periodLength = endDate.getTime() - startDate.getTime();
+    
+    // Calculate previous period dates if needed
+    const previousStartDate = includePreviousPeriod ? new Date(startDate.getTime() - periodLength) : null;
+    const previousEndDate = includePreviousPeriod ? new Date(endDate.getTime() - periodLength) : null;
+
+    // Current period data
+    const response = await this.runReport(
+      ["eventCount"],
+      startDate,
+      endDate,
+      "buy_button_click"
+    );
+
+    // Get daily breakdown
+    const dailyData = response.rows?.map((row: any) => ({
+      date: row.dimensionValues?.[0].value || "",
+      count: parseInt(row.metricValues?.[0].value || "0", 10),
+    })) || [];
+
+    // Get total clicks for the current period
+    const totalClicks = dailyData.reduce((sum, day) => sum + day.count, 0);
+
+    // If we don't need previous period data, return early
+    if (!includePreviousPeriod || !previousStartDate || !previousEndDate) {
+      return {
+        data: dailyData,
+        totalClicks
+      };
+    }
+
+    // Get total clicks for the previous period
+    const previousResponse = await this.runReport(
+      ["eventCount"],
+      previousStartDate,
+      previousEndDate,
+      "buy_button_click"
+    );
+
+    const previousTotalClicks = previousResponse.rows?.reduce(
+      (sum, row) => sum + parseInt(row.metricValues?.[0].value || "0", 10),
+      0
+    ) || 0;
+
+    // Calculate percentage change
+    const percentageChange = previousTotalClicks > 0 
+      ? ((totalClicks - previousTotalClicks) / previousTotalClicks) * 100
+      : 0;
+
+    return {
+      data: dailyData,
+      totalClicks,
+      previousPeriodClicks: previousTotalClicks,
+      percentageChange: Math.round(percentageChange * 10) / 10 // Round to 1 decimal place
+    };
   }
 }
 

@@ -32,7 +32,7 @@ import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/buyListStore';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isVendor } = useAuth();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
 
   const {
@@ -526,11 +526,20 @@ const Navbar: React.FC = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
+              {isVendor && (
+                <NavigationMenuItem
+                  className={navigationMenuTriggerStyle()}
+                >
+                  <Link legacyBehavior href="/vendors/dashboard" passHref>
+                    Analytics
+                  </Link>
+                </NavigationMenuItem>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
       </div>
-      {notificationStatus == true && (
+      {/* {notificationStatus == true && (
         <div className="flex w-full items-center bg-primary px-1 text-secondary">
           <p className="flex-1 text-center text-xs font-medium md:text-base">
             Snapcaster now supports Star Wars: Unlimited! Try it out now!
@@ -539,14 +548,7 @@ const Navbar: React.FC = () => {
             <X />
           </button>
         </div>
-      )}
-      {/* Maintenance Notification */}
-      <div className="flex w-full items-center bg-destructive px-1 text-secondary">
-        <p className="flex-1 text-center text-xs font-medium md:text-base">
-          Snapcaster is currently undergoing maintenance. We apologize for the
-          inconvenience.
-        </p>
-      </div>
+      )} */}
     </>
   );
 };

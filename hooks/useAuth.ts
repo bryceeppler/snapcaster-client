@@ -214,6 +214,8 @@ export function useAuth() {
     isLoadingProfile,
     profileError,
     hasActiveSubscription: profile?.data?.user?.subscription === 'active',
+    isAdmin: profile?.data?.user?.role === 'ADMIN',
+    isVendor: profile?.data?.user?.role === 'VENDOR',
 
     // Auth methods
     login,

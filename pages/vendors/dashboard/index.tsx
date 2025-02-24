@@ -1,0 +1,231 @@
+"use client"
+
+import { ArrowRight, BarChart3, LineChart, Users, LucideIcon } from "lucide-react"
+import Link from "next/link"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { SourcesChart } from "@/components/vendors/dashboard/sources-chart"
+import { TrafficChart } from "@/components/vendors/dashboard/traffic-chart"
+import { AnalyticsCardSkeleton } from "@/components/vendors/dashboard/analytics-card-skeleton"
+import DashboardLayout from "./layout"
+import { 
+  useUniqueUsers, 
+  useSearchQueries, 
+  useBuyClicks,
+  type AnalyticsError
+} from "@/lib/hooks/useAnalytics"
+
+const formatPercentageChange = (change: number | undefined) => {
+  if (change === undefined) return '';
+  const sign = change >= 0 ? '+' : '';
+  return `${sign}${change}% from last month`;
+};
+
+interface AnalyticsErrorMessageProps {
+  message: string;
+  status?: number;
+}
+
+function AnalyticsErrorMessage({ message, status }: AnalyticsErrorMessageProps) {
+  return (
+    <div className="flex flex-col items-center justify-center p-4">
+      <p className="text-sm text-red-500">{message}</p>
+      {status && <p className="text-xs text-red-400">Status: {status}</p>}
+    </div>
+  );
+}
+
+interface MetricCardProps {
+  title: string;
+  Icon: LucideIcon;
+  value: number;
+  percentageChange?: number;
+  isLoading: boolean;
+  error: AnalyticsError | null | undefined;
+  description?: string;
+}
+
+function MetricCard({ 
+  title, 
+  Icon, 
+  value, 
+  percentageChange, 
+  isLoading, 
+  error,
+  description = "Last 30 days" 
+}: MetricCardProps) {
+  if (isLoading) return <AnalyticsCardSkeleton />;
+
+  const isPositiveChange = percentageChange !== undefined && percentageChange >= 0;
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div className="space-y-1">
+          <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+          <CardDescription className="text-xs">{description}</CardDescription>
+        </div>
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        {error ? (
+          <AnalyticsErrorMessage message={error.message} status={error.status} />
+        ) : (
+          <div className="space-y-2">
+            <div className="text-2xl font-bold">
+              {value.toLocaleString()}
+            </div>
+            {percentageChange !== undefined && (
+              <div className={`flex items-center text-sm ${
+                isPositiveChange ? 'text-green-600' : 'text-red-600'
+              }`}>
+                <span className="flex items-center">
+                  {isPositiveChange ? '↑' : '↓'} {Math.abs(percentageChange)}%
+                </span>
+                <span className="ml-1 text-muted-foreground text-xs">vs. previous period</span>
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+interface QuickLinkCardProps {
+  href: string;
+  title: string;
+  description: string;
+}
+
+function QuickLinkCard({ href, title, description }: QuickLinkCardProps) {
+  return (
+    <Link href={href}>
+      <Card className="hover:bg-muted/50 transition-colors">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">{title}</CardTitle>
+            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+      </Card>
+    </Link>
+  );
+}
+
+function AnalyticsMetrics() {
+  const uniqueUsers = useUniqueUsers(30);
+  const searchQueries = useSearchQueries(30);
+  const buyClicks = useBuyClicks(30);
+
+  const metrics = [
+    {
+      title: "Unique Users",
+      Icon: Users,
+      value: uniqueUsers.data?.totalUniqueUsers ?? 0,
+      percentageChange: uniqueUsers.data?.percentageChange,
+      isLoading: uniqueUsers.isLoading,
+      error: uniqueUsers.error,
+      description: "Unique visitors in the last 30 days"
+    },
+    {
+      title: "Total Searches",
+      Icon: BarChart3,
+      value: searchQueries.data?.totalSearches ?? 0,
+      percentageChange: searchQueries.data?.percentageChange,
+      isLoading: searchQueries.isLoading,
+      error: searchQueries.error,
+      description: "Card searches in the last 30 days"
+    },
+    {
+      title: "Buy Clicks",
+      Icon: LineChart,
+      value: buyClicks.data?.totalClicks ?? 0,
+      percentageChange: buyClicks.data?.percentageChange,
+      isLoading: buyClicks.isLoading,
+      error: buyClicks.error,
+      description: "Purchase clicks in the last 30 days"
+    },
+  ];
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {metrics.map((metric) => (
+        <MetricCard key={metric.title} {...metric} />
+      ))}
+    </div>
+  );
+}
+
+function ChartSection() {
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      <Card>
+        <CardHeader>
+          <CardTitle>Traffic Overview</CardTitle>
+          <CardDescription>Visitor trends over the past 30 days</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <TrafficChart />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Top Vendors</CardTitle>
+          <CardDescription>Main traffic sources by channel</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SourcesChart />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function QuickLinks() {
+  const links = [
+    {
+      href: "/vendors/dashboard/visitors",
+      title: "Visitor Analytics",
+      description: "Detailed visitor behavior and demographics",
+    },
+    {
+      href: "/vendors/dashboard/tcgs",
+      title: "TCG Metrics",
+      description: "Page load times and core web vitals",
+    },
+    {
+      href: "/vendors/dashboard/conversions",
+      title: "Conversion Analytics",
+      description: "Conversion funnels and goals tracking",
+    },
+  ];
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {links.map((link) => (
+        <QuickLinkCard key={link.href} {...link} />
+      ))}
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <DashboardLayout>
+      <div className="flex min-h-screen flex-col">
+        <div className="flex-1 space-y-4 p-8 pt-6">
+          <div className="flex items-center justify-between space-y-2">
+            <h2 className="text-3xl font-bold tracking-tight">Analytics Overview</h2>
+          </div>
+          <AnalyticsMetrics />
+          <ChartSection />
+          <QuickLinks />
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+}
+
