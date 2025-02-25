@@ -1,11 +1,7 @@
-"use client"
-
 import { ArrowRight, BarChart3, LineChart, Users, LucideIcon } from "lucide-react"
 import Link from "next/link"
 
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { SourcesChart } from "@/components/vendors/dashboard/sources-chart"
 import { TrafficChart } from "@/components/vendors/dashboard/traffic-chart"
 import { AnalyticsCardSkeleton } from "@/components/vendors/dashboard/analytics-card-skeleton"
 import DashboardLayout from "./layout"
