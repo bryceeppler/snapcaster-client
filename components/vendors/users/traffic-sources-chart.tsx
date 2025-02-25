@@ -17,7 +17,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 import { useTrafficSources } from '@/lib/hooks/useAnalytics';
 import {
   ChartContainer,
@@ -77,20 +77,7 @@ export function TrafficSourcesChart({ dateRange }: TrafficSourcesChartProps) {
   );
 
   if (isLoading) {
-    return (
-      <Card className="h-full flex flex-col">
-        <CardHeader>
-          <CardTitle>Traffic Sources</CardTitle>
-          <CardDescription>
-            {format(dateRange.from, 'LLL dd, y')} -{' '}
-            {format(dateRange.to, 'LLL dd, y')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-1 items-center justify-center">
-          <LoadingSpinner size={40} />
-        </CardContent>
-      </Card>
-    );
+    return <ChartSkeleton title="Traffic Sources" dateRange={dateRange} height={400} />;
   }
 
   if (error || !data) {

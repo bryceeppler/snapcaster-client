@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useUserRetention } from "@/lib/hooks/useAnalytics"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface RetentionDataPoint {
   month: number;
@@ -30,23 +31,65 @@ interface UserRetentionChartProps {
   };
 }
 
+function CohortTableSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>User Retention</CardTitle>
+        <CardDescription>
+          Monthly cohort analysis showing how many users return after their first visit
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[600px]">
+            <thead>
+              <tr>
+                <th className="whitespace-nowrap px-4 py-2 text-left text-sm font-medium">
+                  <Skeleton className="h-5 w-16" />
+                </th>
+                <th className="whitespace-nowrap px-4 py-2 text-left text-sm font-medium">
+                  <Skeleton className="h-5 w-16" />
+                </th>
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <th key={i} className="whitespace-nowrap px-4 py-2 text-left text-sm font-medium">
+                    <Skeleton className="h-5 w-16" />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <tr key={i} className="group">
+                  <td className="whitespace-nowrap px-4 py-2 text-sm font-medium">
+                    <Skeleton className="h-5 w-20" />
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-2 text-sm">
+                    <Skeleton className="h-5 w-16" />
+                  </td>
+                  {Array.from({ length: 12 }).map((_, j) => (
+                    <td key={j} className="whitespace-nowrap px-4 py-2 text-sm">
+                      <Skeleton className="h-5 w-16" />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-4 text-xs">
+          <Skeleton className="h-4 w-full" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function UserRetentionChart({ dateRange }: UserRetentionChartProps) {
   const { data, isLoading, error } = useUserRetention(dateRange.from, dateRange.to);
 
   if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>User Retention</CardTitle>
-          <CardDescription>
-            Monthly cohort analysis showing how many users return after their first visit
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex h-[300px] items-center justify-center">
-          <LoadingSpinner size={40} />
-        </CardContent>
-      </Card>
-    );
+    return <CohortTableSkeleton />;
   }
 
   if (error || !data) {

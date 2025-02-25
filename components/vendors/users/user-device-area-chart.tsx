@@ -19,6 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { ChartSkeleton } from "@/components/vendors/dashboard/chart-skeleton"
 
 // Mock data - in a real implementation, this would come from an API
 const generateMockData = (startDate: Date, endDate: Date) => {
@@ -69,9 +70,16 @@ interface UserDeviceAreaChartProps {
 
 export function UserDeviceAreaChart({ dateRange }: UserDeviceAreaChartProps) {
   // In a real implementation, this would be a data fetching hook
+  const [isLoading, setIsLoading] = React.useState(true);
   const chartData = React.useMemo(() => {
+    // Simulate loading
+    setTimeout(() => setIsLoading(false), 1000);
     return generateMockData(dateRange.from, dateRange.to);
   }, [dateRange.from, dateRange.to]);
+
+  if (isLoading) {
+    return <ChartSkeleton title="Device Usage Over Time" dateRange={dateRange} height={250} />;
+  }
 
   return (
     <Card>

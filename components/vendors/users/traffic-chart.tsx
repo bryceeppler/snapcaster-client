@@ -23,7 +23,7 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 import { useUniqueUsersByDate } from '@/lib/hooks/useAnalytics';
 
 function formatDate(dateString: string) {
@@ -55,19 +55,7 @@ export function TrafficChart({ dateRange }: TrafficChartProps) {
   );
 
   if (isLoading) {
-    return (
-      <Card>
-        <CardHeader className="items-center pb-0">
-          <CardTitle>Traffic Overview</CardTitle>
-          <CardDescription>
-            {format(dateRange.from, 'LLL dd, y')} - {format(dateRange.to, 'LLL dd, y')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex h-[300px] items-center justify-center">
-          <LoadingSpinner size={40} />
-        </CardContent>
-      </Card>
-    );
+    return <ChartSkeleton title="Traffic Overview" dateRange={dateRange} height={250} />;
   }
 
   if (error) {

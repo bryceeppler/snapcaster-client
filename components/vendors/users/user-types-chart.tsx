@@ -21,6 +21,7 @@ import {
   ChartLegend,
   ChartLegendContent
 } from "@/components/ui/chart"
+import { PieChartSkeleton } from "@/components/vendors/dashboard/chart-skeleton"
 
 interface UserTypesChartProps {
   dateRange: {
@@ -98,19 +99,7 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
   }, [data]);
 
   if (isLoading) {
-    return (
-      <Card>
-        <CardHeader className="items-center pb-0">
-          <CardTitle>User Types</CardTitle>
-          <CardDescription>
-            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex h-[300px] items-center justify-center">
-          <LoadingSpinner size={40} />
-        </CardContent>
-      </Card>
-    );
+    return <PieChartSkeleton title="User Types" dateRange={dateRange} />;
   }
 
   if (error || !data) {

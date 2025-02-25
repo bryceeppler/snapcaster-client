@@ -22,7 +22,6 @@ import { UserDeviceAreaChart } from '@/components/vendors/users/user-device-area
 import { CityAnalyticsTable } from '@/components/vendors/users/city-analytics-table';
 import { UserTypesChart } from '@/components/vendors/users/user-types-chart';
 import { TrafficSourcesChart } from '@/components/vendors/users/traffic-sources-chart';
-import { AnalyticsCardSkeleton } from '@/components/vendors/dashboard/analytics-card-skeleton';
 import DashboardLayout from './layout';
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -38,6 +37,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { UserRetentionChart } from '@/components/vendors/users/user-retention-chart';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface AnalyticsErrorMessageProps {
   message: string;
@@ -75,8 +75,6 @@ function MetricCard({
   description = 'Last 30 days',
   formatter = (value: number) => value.toLocaleString()
 }: MetricCardProps) {
-  if (isLoading) return <AnalyticsCardSkeleton />;
-
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -89,7 +87,9 @@ function MetricCard({
         <Icon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        {error ? (
+        {isLoading ? (
+          <Skeleton className="h-8 w-[120px]" />
+        ) : error ? (
           <AnalyticsErrorMessage
             message={error.message}
             status={error.status}

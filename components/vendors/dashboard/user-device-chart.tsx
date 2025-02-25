@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/chart';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useUsersByDevice } from '@/lib/hooks/useAnalytics';
+import { PieChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 
 const chartConfig = {
   visitors: {
@@ -83,20 +84,7 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
   }, [data]);
 
   if (isLoading) {
-    return (
-      <Card>
-        <CardHeader className="items-center pb-0">
-          <CardTitle>Device Distribution</CardTitle>
-          <CardDescription>
-            {format(dateRange.from, 'LLL dd, y')} -{' '}
-            {format(dateRange.to, 'LLL dd, y')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex h-[300px] items-center justify-center">
-          <LoadingSpinner size={40} />
-        </CardContent>
-      </Card>
-    );
+    return <PieChartSkeleton title="Device Distribution" dateRange={dateRange} />;
   }
 
   if (error || !data) {
