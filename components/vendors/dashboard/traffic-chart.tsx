@@ -115,7 +115,7 @@ export function TrafficChart() {
         <CardDescription>Visitor trends over the past 30 days</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
           <AreaChart
             data={chartData}
             margin={{ top: 20, right: 30, left: 40, bottom: 20 }}

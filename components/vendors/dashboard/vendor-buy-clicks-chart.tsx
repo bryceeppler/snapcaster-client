@@ -1,16 +1,23 @@
-"use client"
+'use client';
 
-import { format, parseISO } from "date-fns"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useVendorBuyClicks } from "@/lib/hooks/useAnalytics"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { format, parseISO } from 'date-fns';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import { useVendorBuyClicks } from '@/lib/hooks/useAnalytics';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-} from "@/components/ui/chart"
-import useGlobalStore from "@/stores/globalStore"
+  ChartTooltip
+} from '@/components/ui/chart';
+import useGlobalStore from '@/stores/globalStore';
 const TCG_ORDER = [
   'mtg',
   'pokemon',
@@ -18,39 +25,39 @@ const TCG_ORDER = [
   'onepiece',
   'lorcana',
   'starwars',
-  'fleshandblood',
+  'fleshandblood'
 ] as const;
 
 const chartConfig = {
   mtg: {
-    label: "Magic: The Gathering",
-    color: "hsl(var(--chart-1))",
+    label: 'Magic: The Gathering',
+    color: 'hsl(var(--chart-1))'
   },
   pokemon: {
-    label: "Pokémon",
-    color: "hsl(var(--chart-2))",
+    label: 'Pokémon',
+    color: 'hsl(var(--chart-2))'
   },
   yugioh: {
-    label: "Yu-Gi-Oh!",
-    color: "hsl(var(--chart-3))",
+    label: 'Yu-Gi-Oh!',
+    color: 'hsl(var(--chart-3))'
   },
   onepiece: {
-    label: "One Piece",
-    color: "hsl(var(--chart-4))",
+    label: 'One Piece',
+    color: 'hsl(var(--chart-4))'
   },
   lorcana: {
-    label: "Lorcana",
-    color: "hsl(var(--chart-5))",
+    label: 'Lorcana',
+    color: 'hsl(var(--chart-5))'
   },
   starwars: {
-    label: "Star Wars",
-    color: "hsl(var(--chart-6))",
+    label: 'Star Wars',
+    color: 'hsl(var(--chart-6))'
   },
   fleshandblood: {
-    label: "Flesh and Blood",
-    color: "hsl(var(--chart-7))",
-  },
-} satisfies ChartConfig
+    label: 'Flesh and Blood',
+    color: 'hsl(var(--chart-7))'
+  }
+} satisfies ChartConfig;
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -65,11 +72,12 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   const totalClicks = data.total;
 
   // Sort TCGs by number of clicks
-  const tcgData = TCG_ORDER.map(tcg => ({
+  const tcgData = TCG_ORDER.map((tcg) => ({
     tcg,
     clicks: data[tcg],
     percentage: (data[tcg] / totalClicks) * 100
-  })).filter(item => item.clicks > 0)
+  }))
+    .filter((item) => item.clicks > 0)
     .sort((a, b) => b.clicks - a.clicks);
 
   return (
@@ -102,7 +110,8 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 
 function normalizeWebsiteUrl(url: string): string {
   // Remove common prefixes and suffixes
-  let hostname = url.toLowerCase()
+  let hostname = url
+    .toLowerCase()
     .replace(/^(https?:\/\/)?(www\.)?/, '') // Remove http://, https://, www.
     .replace(/\.(com|ca|net|org|io).*$/, ''); // Remove .com, .ca, etc and anything after
 
@@ -126,7 +135,7 @@ const CustomXAxisTick = ({ x, y, payload }: CustomXAxisTickProps) => {
   const words = payload.value.split(' ');
   const maxWordsPerLine = 2;
   const lines: string[] = [];
-  
+
   for (let i = 0; i < words.length; i += maxWordsPerLine) {
     lines.push(words.slice(i, i + maxWordsPerLine).join(' '));
   }
@@ -149,13 +158,15 @@ const CustomXAxisTick = ({ x, y, payload }: CustomXAxisTickProps) => {
       ))}
     </g>
   );
-}
+};
 
 interface VendorBuyClicksChartProps {
   numberOfDays?: number;
 }
 
-export function VendorBuyClicksChart({ numberOfDays = 30 }: VendorBuyClicksChartProps) {
+export function VendorBuyClicksChart({
+  numberOfDays = 30
+}: VendorBuyClicksChartProps) {
   const { data, isLoading, error } = useVendorBuyClicks(numberOfDays);
   const { websites } = useGlobalStore();
 
@@ -187,17 +198,23 @@ export function VendorBuyClicksChart({ numberOfDays = 30 }: VendorBuyClicksChart
     );
   }
 
-  const startDate = data?.startDate ? format(parseISO(data.startDate), 'MMM d, yyyy') : '';
-  const endDate = data?.endDate ? format(parseISO(data.endDate), 'MMM d, yyyy') : '';
+  const startDate = data?.startDate
+    ? format(parseISO(data.startDate), 'MMM d, yyyy')
+    : '';
+  const endDate = data?.endDate
+    ? format(parseISO(data.endDate), 'MMM d, yyyy')
+    : '';
 
   // Process the data to use proper website names
-  const processedData = data?.data.map(item => {
+  const processedData = data?.data.map((item) => {
     const normalizedUrl = normalizeWebsiteUrl(item.website);
-    const website = websites.find(w => normalizeWebsiteUrl(w.url) === normalizedUrl);
+    const website = websites.find(
+      (w) => normalizeWebsiteUrl(w.url) === normalizedUrl
+    );
     return {
       ...item,
       website: website?.name || normalizedUrl, // Fallback to normalized URL if website not found
-      originalUrl: item.website, // Keep original URL for tooltip
+      originalUrl: item.website // Keep original URL for tooltip
     };
   });
 
@@ -208,8 +225,8 @@ export function VendorBuyClicksChart({ numberOfDays = 30 }: VendorBuyClicksChart
         <CardDescription>Buy clicks by TCG across vendors</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart 
+        <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
+          <BarChart
             data={processedData}
             margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
           >
@@ -218,7 +235,9 @@ export function VendorBuyClicksChart({ numberOfDays = 30 }: VendorBuyClicksChart
               dataKey="website"
               tickLine={false}
               axisLine={false}
-              tick={(props: CustomXAxisTickProps) => <CustomXAxisTick {...props} />}
+              tick={(props: CustomXAxisTickProps) => (
+                <CustomXAxisTick {...props} />
+              )}
               interval={0}
             />
             <YAxis
@@ -230,11 +249,7 @@ export function VendorBuyClicksChart({ numberOfDays = 30 }: VendorBuyClicksChart
               tickFormatter={(value) => value.toLocaleString()}
             />
             <ChartTooltip content={<CustomTooltip />} />
-            <Bar
-              dataKey="total"
-              fill="hsl(var(--primary) / 0.8)"
-              radius={4}
-            />
+            <Bar dataKey="total" fill="hsl(var(--primary) / 0.8)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -249,4 +264,4 @@ export function VendorBuyClicksChart({ numberOfDays = 30 }: VendorBuyClicksChart
       </CardFooter>
     </Card>
   );
-} 
+}
