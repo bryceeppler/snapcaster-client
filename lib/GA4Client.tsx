@@ -24,6 +24,25 @@ export interface PopularBuyClicksByTCG {
   [key: string]: { cardName: string; count: number }[];
 }
 
+export interface VendorBuyClickData {
+  website: string;
+  mtg: number;
+  pokemon: number;
+  yugioh: number;
+  onepiece: number;
+  lorcana: number;
+  fleshandblood: number;
+  starwars: number;
+  total: number;
+  rank: number;
+}
+
+export interface VendorBuyClicksResponse {
+  data: VendorBuyClickData[];
+  startDate: string;
+  endDate: string;
+}
+
 export class GA4Client {
   private client: BetaAnalyticsDataClient;
 
@@ -622,6 +641,134 @@ export class GA4Client {
       totalClicks,
       previousPeriodClicks: previousTotalClicks,
       percentageChange: Math.round(percentageChange * 10) / 10 // Round to 1 decimal place
+    };
+  }
+
+  public async getVendorBuyClicks(startDate: Date, endDate: Date): Promise<VendorBuyClicksResponse> {
+    const [response] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dateRanges: [
+        {
+          startDate: format(startDate, "yyyy-MM-dd"),
+          endDate: format(endDate, "yyyy-MM-dd"),
+        },
+      ],
+      dimensions: [
+        {
+          name: "eventName",
+        },
+        {
+          name: "customEvent:website",
+        },
+        {
+          name: "customEvent:tcg",
+        },
+      ],
+      metrics: [
+        {
+          name: "eventCount",
+        },
+      ],
+      dimensionFilter: {
+        andGroup: {
+          expressions: [
+            {
+              filter: {
+                fieldName: "eventName",
+                stringFilter: {
+                  matchType: "EXACT",
+                  value: "buy_button_click",
+                },
+              },
+            },
+            {
+              notExpression: {
+                filter: {
+                  fieldName: "customEvent:website",
+                  stringFilter: {
+                    matchType: "EXACT",
+                    value: "(not set)",
+                  },
+                },
+              },
+            },
+            {
+              notExpression: {
+                filter: {
+                  fieldName: "customEvent:website",
+                  stringFilter: {
+                    matchType: "EXACT",
+                    value: "snapcaster.ca",
+                  },
+                },
+              },
+            },
+            {
+              notExpression: {
+                filter: {
+                  fieldName: "customEvent:tcg",
+                  stringFilter: {
+                    matchType: "EXACT",
+                    value: "(not set)",
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+      orderBys: [
+        {
+          metric: {
+            metricName: "eventCount",
+          },
+          desc: true,
+        },
+      ],
+    });
+
+    const buyClickData = response.rows?.map((row) => ({
+      website: row.dimensionValues?.[1].value || "",
+      tcg: row.dimensionValues?.[2].value?.toLowerCase() || "",
+      count: parseInt(row.metricValues?.[0].value || "0", 10),
+    })) || [];
+
+    const groupedData: { [key: string]: Omit<VendorBuyClickData, "rank"> } = {};
+
+    buyClickData.forEach(({ website, tcg, count }) => {
+      if (!groupedData[website]) {
+        groupedData[website] = {
+          website,
+          mtg: 0,
+          pokemon: 0,
+          yugioh: 0,
+          onepiece: 0,
+          lorcana: 0,
+          fleshandblood: 0,
+          starwars: 0,
+          total: 0,
+        };
+      }
+
+      if (tcg in groupedData[website]) {
+        (groupedData[website][tcg as keyof typeof groupedData[string]] as number) += count;
+      }
+
+      groupedData[website].total += count;
+    });
+
+    const sortedData = Object.values(groupedData)
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 5)
+      .map((data, index) => ({
+        ...data,
+        rank: index + 1,
+      }));
+
+    return {
+      data: sortedData,
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd"),
     };
   }
 }

@@ -28,6 +28,25 @@ interface BuyClicksResponse extends BaseAnalyticsResponse {
   percentageChange?: number;
 }
 
+export interface VendorBuyClickData {
+  website: string;
+  mtg: number;
+  pokemon: number;
+  yugioh: number;
+  onepiece: number;
+  lorcana: number;
+  fleshandblood: number;
+  starwars: number;
+  total: number;
+  rank: number;
+}
+
+export interface VendorBuyClicksResponse {
+  data: VendorBuyClickData[];
+  startDate: string;
+  endDate: string;
+}
+
 // Error type
 interface AnalyticsError {
   message: string;
@@ -103,6 +122,23 @@ export function useBuyClicks(numberOfDays: number = 30) {
       sum: 'true'
     }),
     ...defaultQueryConfig,
+  });
+}
+
+export function useVendorBuyClicks(numberOfDays: number = 30) {
+  return useQuery<VendorBuyClicksResponse, AnalyticsError>({
+    queryKey: ['vendorBuyClicks', numberOfDays],
+    queryFn: async () => {
+      const response = await fetch(`/api/analytics/vendor-buy-clicks?numberOfDays=${numberOfDays}`);
+      if (!response.ok) {
+        throw {
+          message: 'Failed to fetch vendor buy clicks',
+          status: response.status,
+        };
+      }
+      return response.json();
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

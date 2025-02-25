@@ -15,6 +15,7 @@ import {
   useBuyClicks,
   type AnalyticsError
 } from "@/lib/hooks/useAnalytics"
+import { VendorBuyClicksChart } from "@/components/vendors/dashboard/vendor-buy-clicks-chart"
 
 const formatPercentageChange = (change: number | undefined) => {
   if (change === undefined) return '';
@@ -151,7 +152,7 @@ function AnalyticsMetrics() {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 lg:grid-cols-3">
       {metrics.map((metric) => (
         <MetricCard key={metric.title} {...metric} />
       ))}
@@ -161,18 +162,9 @@ function AnalyticsMetrics() {
 
 function ChartSection() {
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-
-          <TrafficChart />
-      <Card>
-        <CardHeader>
-          <CardTitle>Top Vendors</CardTitle>
-          <CardDescription>Main traffic sources by channel</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SourcesChart />
-        </CardContent>
-      </Card>
+    <div className="grid gap-4 lg:grid-cols-2">
+      <TrafficChart />
+      <VendorBuyClicksChart />
     </div>
   );
 }
@@ -197,7 +189,7 @@ function QuickLinks() {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 lg:grid-cols-3">
       {links.map((link) => (
         <QuickLinkCard key={link.href} {...link} />
       ))}

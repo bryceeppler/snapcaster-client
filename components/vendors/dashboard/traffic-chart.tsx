@@ -116,50 +116,57 @@ export function TrafficChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <ResponsiveContainer width="100%" height={200}>
-            <AreaChart
-              data={chartData}
-              margin={{
-                top: 5,
-                right: 10,
-                bottom: 0,
-                left: 10,
-              }}
-            >
-              <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="10 10" />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                fontSize={12}
-                stroke="hsl(var(--muted-foreground))"
-                tickFormatter={(value) => value}
-                interval={"preserveStartEnd"}
-                minTickGap={50}
-              />
-              <YAxis 
-                tickLine={false} 
-                axisLine={false} 
-                tickMargin={8} 
-                fontSize={12} 
-                stroke="hsl(var(--muted-foreground))"
-                tickFormatter={(value) => value.toLocaleString()}
-              />
-              <ChartTooltip
-                content={<CustomTooltip />}
-                cursor={false}
-              />
-              <Area
-                type="monotone"
-                dataKey="users"
-                stroke="var(--color-users)"
-                fill="var(--color-users)"
-                fillOpacity={0.2}
-                strokeWidth={2}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <AreaChart
+            data={chartData}
+            margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
+          >
+            <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="10 10" />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              fontSize={12}
+              stroke="hsl(var(--muted-foreground))"
+              tickFormatter={(value) => value}
+              interval={"preserveStartEnd"}
+              minTickGap={50}
+            />
+            <YAxis 
+              tickLine={false} 
+              axisLine={false} 
+              tickMargin={8} 
+              fontSize={12} 
+              stroke="hsl(var(--muted-foreground))"
+              tickFormatter={(value) => value.toLocaleString()}
+            />
+            <ChartTooltip
+              content={<CustomTooltip />}
+              cursor={false}
+            />
+            <defs>
+              <linearGradient id="fillUsers" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-users)"
+                  stopOpacity={0.3}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-users)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+            </defs>
+            <Area
+              type="monotone"
+              dataKey="users"
+              stroke="var(--color-users)"
+              strokeWidth={2}
+              fill="url(#fillUsers)"
+              fillOpacity={1}
+            />
+          </AreaChart>
         </ChartContainer>
       </CardContent>
       <CardFooter>

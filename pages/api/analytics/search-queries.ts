@@ -26,7 +26,7 @@ export default async function handler(
           .json({ message: 'numberOfDays must be a positive number' })
       }
       end = subDays(new Date(), 1) // yesterday
-      start = subDays(end, days - 1) // subtract (days-1) to make it inclusive
+      start = subDays(end, days)
     } else {
       // Otherwise use startDate and endDate
       if (!startDate) {
