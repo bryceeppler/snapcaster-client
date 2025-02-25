@@ -40,10 +40,10 @@ export default function DashboardLayout({
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={router.pathname === "/vendors/dashboard/visitors"}>
-                      <Link href="/vendors/dashboard/visitors" className="py-6">
+                    <SidebarMenuButton asChild isActive={router.pathname === "/vendors/dashboard/users"}>
+                      <Link href="/vendors/dashboard/users" className="py-6">
                         <Users className="h-4 w-4" />
-                        <span>Visitors</span>
+                        <span>Users</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -392,10 +392,7 @@ export class GA4Client {
     return parseInt(searchCount, 10);
   }
 
-  public async getUsersByDevice(numberOfDays: number): Promise<UsersByDeviceData> {
-    const endDate = new Date();
-    const startDate = subDays(endDate, numberOfDays);
-
+  public async getUsersByDevice(startDate: Date, endDate: Date = new Date()): Promise<UsersByDeviceData> {
     try {
       const [response] = await this.client.runReport({
         property: `properties/${GA4_PROPERTY_ID}`,
@@ -407,7 +404,7 @@ export class GA4Client {
         ],
         metrics: [
           {
-            name: 'activeUsers',
+            name: 'totalUsers',
           },
         ],
         dimensions: [
@@ -769,6 +766,362 @@ export class GA4Client {
       data: sortedData,
       startDate: format(startDate, "yyyy-MM-dd"),
       endDate: format(endDate, "yyyy-MM-dd"),
+    };
+  }
+
+  public async getEngagementTime(startDate: Date, endDate: Date = new Date(), includePreviousPeriod: boolean = false) {
+    // Calculate the length of the period in milliseconds
+    const periodLength = endDate.getTime() - startDate.getTime();
+    
+    // Calculate previous period dates if needed
+    const previousStartDate = includePreviousPeriod ? new Date(startDate.getTime() - periodLength) : null;
+    const previousEndDate = includePreviousPeriod ? new Date(endDate.getTime() - periodLength) : null;
+
+    // Current period data
+    const [response] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dateRanges: [
+        {
+          startDate: format(startDate, "yyyy-MM-dd"),
+          endDate: format(endDate, "yyyy-MM-dd"),
+        },
+      ],
+      metrics: [
+        {
+          name: "averageSessionDuration"
+        }
+      ]
+    });
+
+    const averageEngagementTime = parseFloat(response.rows?.[0]?.metricValues?.[0]?.value || "0");
+
+    // If we don't need previous period data, return early
+    if (!includePreviousPeriod || !previousStartDate || !previousEndDate) {
+      return {
+        averageEngagementTime
+      };
+    }
+
+    // Get data for the previous period
+    const [previousResponse] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dateRanges: [
+        {
+          startDate: format(previousStartDate, "yyyy-MM-dd"),
+          endDate: format(previousEndDate, "yyyy-MM-dd"),
+        },
+      ],
+      metrics: [
+        {
+          name: "averageSessionDuration"
+        }
+      ]
+    });
+
+    const previousAverageEngagementTime = parseFloat(previousResponse.rows?.[0]?.metricValues?.[0]?.value || "0");
+
+    // Calculate percentage change
+    const percentageChange = previousAverageEngagementTime > 0 
+      ? ((averageEngagementTime - previousAverageEngagementTime) / previousAverageEngagementTime) * 100
+      : 0;
+
+    return {
+      averageEngagementTime,
+      previousPeriodAverageEngagementTime: previousAverageEngagementTime,
+      percentageChange: Math.round(percentageChange * 10) / 10 // Round to 1 decimal place
+    };
+  }
+
+  public async getCityAnalytics(startDate: Date, endDate: Date = new Date()) {
+    const [response] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dateRanges: [
+        {
+          startDate: format(startDate, "yyyy-MM-dd"),
+          endDate: format(endDate, "yyyy-MM-dd"),
+        },
+      ],
+      dimensions: [
+        {
+          name: "city"
+        }
+      ],
+      metrics: [
+        {
+          name: "totalUsers"
+        }
+      ],
+      orderBys: [
+        {
+          metric: {
+            metricName: "totalUsers"
+          },
+          desc: true
+        }
+      ]
+    });
+
+    const totalUsers = response.rows?.reduce(
+      (sum: number, row) => sum + parseInt(row.metricValues?.[0].value || "0", 10),
+      0
+    ) || 0;
+
+    const data = response.rows?.map(row => {
+      const users = parseInt(row.metricValues?.[0].value || "0", 10);
+      return {
+        city: row.dimensionValues?.[0].value || "Unknown",
+        users,
+        percentage: Math.round((users / totalUsers) * 1000) / 10 // Round to 1 decimal
+      };
+    }) || [];
+
+    return {
+      data,
+      totalUsers
+    };
+  }
+
+  public async getTrafficSources(startDate: Date, endDate: Date = new Date()) {
+    const [response] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dateRanges: [
+        {
+          startDate: format(startDate, "yyyy-MM-dd"),
+          endDate: format(endDate, "yyyy-MM-dd"),
+        },
+      ],
+      dimensions: [
+        {
+          name: "sessionSource"
+        }
+      ],
+      metrics: [
+        {
+          name: "totalUsers"
+        }
+      ],
+      orderBys: [
+        {
+          metric: {
+            metricName: "totalUsers"
+          },
+          desc: true
+        }
+      ]
+    });
+
+    const totalUsers = response.rows?.reduce(
+      (sum, row) => sum + parseInt(row.metricValues?.[0].value || "0", 10),
+      0
+    ) || 0;
+
+    const data = response.rows?.map(row => {
+      const users = parseInt(row.metricValues?.[0].value || "0", 10);
+      const source = row.dimensionValues?.[0].value || "(direct)";
+      
+      // Normalize source names
+      let normalizedSource = source;
+      if (source === "(direct)" || source === "(none)" || source === "(not set)") {
+        normalizedSource = source === "(not set)" ? "Unknown" : "Direct";
+      } else if (source.includes("google")) {
+        normalizedSource = "Google";
+      } else if (source.includes("facebook") || source.includes("instagram") || source.includes("twitter")) {
+        normalizedSource = "Social";
+      } else if (source === "github.com") {
+        normalizedSource = "GitHub";
+      }
+
+      return {
+        source: normalizedSource,
+        users,
+        percentage: Math.round((users / totalUsers) * 1000) / 10 // Round to 1 decimal
+      };
+    }) || [];
+
+    // Aggregate data by normalized source
+    const aggregatedData = data.reduce((acc, item) => {
+      const existing = acc.find(x => x.source === item.source);
+      if (existing) {
+        existing.users += item.users;
+        existing.percentage += item.percentage;
+      } else {
+        acc.push(item);
+      }
+      return acc;
+    }, [] as typeof data);
+
+    // Recalculate percentages after aggregation
+    aggregatedData.forEach(item => {
+      item.percentage = Math.round((item.users / totalUsers) * 1000) / 10;
+    });
+
+    // Sort by users count and get top 8 sources
+    const topSources = aggregatedData
+      .sort((a, b) => b.users - a.users)
+      .slice(0, 8);
+
+    return {
+      data: topSources,
+      totalUsers
+    };
+  }
+
+  public async getUserTypes(startDate: Date, endDate: Date = new Date()) {
+    const [response] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dateRanges: [
+        {
+          startDate: format(startDate, "yyyy-MM-dd"),
+          endDate: format(endDate, "yyyy-MM-dd"),
+        },
+      ],
+      dimensions: [
+        {
+          name: "newVsReturning"
+        }
+      ],
+      metrics: [
+        {
+          name: "totalUsers"
+        }
+      ]
+    });
+
+    const data = response.rows?.reduce((acc, row) => {
+      const type = row.dimensionValues?.[0].value || "unknown";
+      const users = parseInt(row.metricValues?.[0].value || "0", 10);
+      
+      if (type === "new") {
+        acc.newUsers = users;
+      } else if (type === "returning") {
+        acc.returningUsers = users;
+      }
+      
+      return acc;
+    }, { newUsers: 0, returningUsers: 0 });
+
+    const total = (data?.newUsers || 0) + (data?.returningUsers || 0);
+    
+    return {
+      data: [
+        {
+          type: "New",
+          users: data?.newUsers || 0,
+          percentage: total > 0 ? Math.round((data?.newUsers || 0) / total * 1000) / 10 : 0
+        },
+        {
+          type: "Returning",
+          users: data?.returningUsers || 0,
+          percentage: total > 0 ? Math.round((data?.returningUsers || 0) / total * 1000) / 10 : 0
+        }
+      ],
+      total
+    };
+  }
+
+  public async getUserRetention() {
+    // Calculate date range for the last year
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setFullYear(startDate.getFullYear() - 1);
+
+    // Create monthly cohorts for the last year
+    const cohorts = Array.from({ length: 12 }, (_, i) => {
+      const cohortDate = new Date();
+      cohortDate.setMonth(cohortDate.getMonth() - i);
+      return {
+        dimension: "firstSessionDate",
+        dateRange: {
+          startDate: format(new Date(cohortDate.getFullYear(), cohortDate.getMonth(), 1), "yyyy-MM-dd"),
+          endDate: format(new Date(cohortDate.getFullYear(), cohortDate.getMonth() + 1, 0), "yyyy-MM-dd"),
+        }
+      };
+    });
+
+    const [response] = await this.client.runReport({
+      property: `properties/${GA4_PROPERTY_ID}`,
+      dimensions: [
+        {
+          name: "cohort"
+        },
+        {
+          name: "cohortNthMonth"
+        }
+      ],
+      metrics: [
+        {
+          name: "totalUsers"
+        }
+      ],
+      cohortSpec: {
+        cohorts,
+        cohortsRange: {
+          granularity: "MONTHLY",
+          startOffset: 0,
+          endOffset: 12
+        }
+      },
+      orderBys: [
+        {
+          dimension: {
+            dimensionName: "cohort"
+          },
+          desc: true
+        }
+      ]
+    });
+
+    // Process the cohort data
+    const cohortData: { [key: string]: { data: { [key: string]: number } } } = {};
+    let maxUsers = 0;
+
+    response.rows?.forEach((row: any) => {
+      const cohortId = row.dimensionValues?.[0].value || "";
+      const month = parseInt(row.dimensionValues?.[1].value || "0", 10);
+      const users = parseInt(row.metricValues?.[0].value || "0", 10);
+
+      if (!cohortData[cohortId]) {
+        cohortData[cohortId] = { data: {} };
+      }
+
+      cohortData[cohortId].data[month] = users;
+      maxUsers = Math.max(maxUsers, users);
+    });
+
+    // Transform the data for visualization
+    const retentionData = Object.entries(cohortData).map(([cohortId, { data }]) => {
+      const initialUsers = data[0] || 0;
+      const monthlyRetention = Object.entries(data).map(([month, users]) => ({
+        month: parseInt(month, 10),
+        users,
+        percentage: initialUsers > 0 ? Math.round((users / initialUsers) * 100) : 0
+      }));
+
+      // Get the cohort date from our original cohorts array
+      const cohortIndex = parseInt(cohortId.replace('cohort_', ''), 10);
+      const cohortDate = new Date();
+      cohortDate.setMonth(cohortDate.getMonth() - cohortIndex);
+      
+      return {
+        cohort: format(new Date(cohortDate.getFullYear(), cohortDate.getMonth(), 1), "MMM yyyy"),
+        initialUsers,
+        retention: monthlyRetention.sort((a, b) => a.month - b.month),
+        parsedDate: new Date(cohortDate.getFullYear(), cohortDate.getMonth(), 1)
+      };
+    });
+
+    // Filter out invalid dates and sort by cohort date
+    const validData = retentionData
+      .sort((a, b) => b.parsedDate.getTime() - a.parsedDate.getTime())
+      .map(({ cohort, initialUsers, retention }) => ({
+        cohort,
+        initialUsers,
+        retention
+      }));
+
+    return {
+      data: validData,
+      maxUsers
     };
   }
 }

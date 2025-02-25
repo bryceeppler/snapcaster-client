@@ -168,9 +168,9 @@ function ChartSection() {
 function QuickLinks() {
   const links = [
     {
-      href: "/vendors/dashboard/visitors",
-      title: "Visitor Analytics",
-      description: "Detailed visitor behavior and demographics",
+      href: "/vendors/dashboard/users",
+      title: "User Analytics",
+      description: "Detailed user behavior and demographics",
     },
     {
       href: "/vendors/dashboard/tcgs",
