@@ -116,26 +116,33 @@ interface AnalyticsError {
   status?: number;
 }
 
+// Helper function to normalize date to midnight UTC
+const normalizeDateForCache = (date: Date): string => {
+  const normalizedDate = new Date(date);
+  normalizedDate.setUTCHours(0, 0, 0, 0);
+  return normalizedDate.toISOString();
+};
+
 // Query keys
 const analyticsKeys = {
   all: ['analytics'] as const,
   uniqueUsers: (days: number) => [...analyticsKeys.all, 'uniqueUsers', days] as const,
   uniqueUsersByDate: (startDate: Date, endDate: Date) => 
-    [...analyticsKeys.all, 'uniqueUsers', startDate.toISOString(), endDate.toISOString()] as const,
+    [...analyticsKeys.all, 'uniqueUsers', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   searchQueries: (days: number) => [...analyticsKeys.all, 'searchQueries', days] as const,
   buyClicks: (days: number) => [...analyticsKeys.all, 'buyClicks', days] as const,
   usersByDevice: (startDate: Date, endDate: Date) =>
-    [...analyticsKeys.all, 'usersByDevice', startDate.toISOString(), endDate.toISOString()] as const,
+    [...analyticsKeys.all, 'usersByDevice', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   engagementTime: (startDate: Date, endDate: Date) =>
-    [...analyticsKeys.all, 'engagementTime', startDate.toISOString(), endDate.toISOString()] as const,
+    [...analyticsKeys.all, 'engagementTime', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   cityAnalytics: (startDate: Date, endDate: Date) =>
-    [...analyticsKeys.all, 'cityAnalytics', startDate.toISOString(), endDate.toISOString()] as const,
+    [...analyticsKeys.all, 'cityAnalytics', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   userTypes: (startDate: Date, endDate: Date) =>
-    [...analyticsKeys.all, 'userTypes', startDate.toISOString(), endDate.toISOString()] as const,
+    [...analyticsKeys.all, 'userTypes', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   trafficSources: (startDate: Date, endDate: Date) =>
-    [...analyticsKeys.all, 'trafficSources', startDate.toISOString(), endDate.toISOString()] as const,
+    [...analyticsKeys.all, 'trafficSources', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   userRetention: (startDate: Date, endDate: Date) =>
-    [...analyticsKeys.all, 'userRetention', startDate.toISOString(), endDate.toISOString()] as const,
+    [...analyticsKeys.all, 'userRetention', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
 };
 
 // Fetch function
