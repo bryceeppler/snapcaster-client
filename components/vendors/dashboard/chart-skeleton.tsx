@@ -2,6 +2,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
@@ -10,17 +11,21 @@ import { format } from "date-fns";
 
 interface ChartSkeletonProps {
   title: string;
-  dateRange: {
+  dateRange?: {
     from: Date;
     to: Date;
   };
   height?: number;
+  description?: string;
+  footer?: boolean;
 }
 
 export function ChartSkeleton({ 
   title, 
   dateRange, 
-  height = 250 
+  height = 250,
+  description,
+  footer = false
 }: ChartSkeletonProps) {
   return (
     <Card>
@@ -28,7 +33,7 @@ export function ChartSkeleton({
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>{title}</CardTitle>
           <CardDescription>
-            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+            {description ? description : dateRange ? `${format(dateRange.from, "LLL dd, y")} - ${format(dateRange.to, "LLL dd, y")}` : ''}
           </CardDescription>
         </div>
       </CardHeader>
@@ -37,6 +42,12 @@ export function ChartSkeleton({
           <Skeleton style={{ height: `${height}px` }} className="w-full" />
         </div>
       </CardContent>
+      {footer && (
+        <CardFooter className="flex-col gap-2 text-sm pt-2">
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-[14px] w-1/3" />
+        </CardFooter>
+      )}
     </Card>
   );
 }
@@ -44,7 +55,8 @@ export function ChartSkeleton({
 export function TableSkeleton({ 
   title, 
   dateRange, 
-  height = 400 
+  height = 400,
+  description
 }: ChartSkeletonProps) {
   return (
     <Card>
@@ -52,7 +64,7 @@ export function TableSkeleton({
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>{title}</CardTitle>
           <CardDescription>
-            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+            {dateRange ? `${format(dateRange.from, "LLL dd, y")} - ${format(dateRange.to, "LLL dd, y")}` : description}
           </CardDescription>
         </div>
       </CardHeader>
@@ -82,15 +94,15 @@ export function TableSkeleton({
 export function PieChartSkeleton({ 
   title, 
   dateRange, 
-  height = 250 
+  height = 250,
+  description
 }: ChartSkeletonProps) {
   return (
     <Card>
       <CardHeader className="items-center pb-0">
         <CardTitle>{title}</CardTitle>
         <CardDescription>
-          {format(dateRange.from, 'LLL dd, y')} -{' '}
-          {format(dateRange.to, 'LLL dd, y')}
+          {dateRange ? `${format(dateRange.from, 'LLL dd, y')} - ${format(dateRange.to, 'LLL dd, y')}` : description}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center px-2 pt-4 sm:px-6 sm:pt-6">

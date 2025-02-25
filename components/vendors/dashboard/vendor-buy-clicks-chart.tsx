@@ -19,6 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
+import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 import useGlobalStore from '@/stores/globalStore';
 import { formatChartDate } from '@/lib/utils';
 
@@ -182,17 +183,7 @@ export function VendorBuyClicksChart({
   const heightClass = typeof chartHeight === 'number' ? `h-[${chartHeight}px]` : chartHeight;
 
   if (isLoading) {
-    return (
-      <Card className={className}>
-        <CardHeader className="items-center pb-0">
-          <CardTitle>Top Vendors</CardTitle>
-          <CardDescription>Buy clicks by TCG across vendors</CardDescription>
-        </CardHeader>
-        <CardContent className={`flex items-center justify-center ${heightClass}`}>
-          <LoadingSpinner size={40} />
-        </CardContent>
-      </Card>
-    );
+    return <ChartSkeleton title="Top Vendors" height={chartHeight as number} description="Buy clicks by TCG across vendors" footer={true} />;
   }
 
   if (error) {

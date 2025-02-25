@@ -19,6 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from "@/components/ui/chart"
+import { ChartSkeleton } from "@/components/vendors/dashboard/chart-skeleton"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useUniqueUsers } from "@/lib/hooks/useAnalytics"
 import { formatChartDate } from "@/lib/utils"
@@ -48,15 +49,7 @@ export function TrafficChart({
 
   if (isLoading) {
     return (
-      <Card className={className}>
-        <CardHeader className="items-center pb-0">
-          <CardTitle>Traffic Overview</CardTitle>
-          <CardDescription>Visitor trends over the past 30 days</CardDescription>
-        </CardHeader>
-        <CardContent className={`flex items-center justify-center ${heightClass}`}>
-          <LoadingSpinner size={40} />
-        </CardContent>
-      </Card>
+      <ChartSkeleton title="Traffic Overview" height={chartHeight as number} description="Visitor trends over the past 30 days" footer={true} />
     );
   }
 
