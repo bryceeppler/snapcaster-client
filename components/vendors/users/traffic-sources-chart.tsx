@@ -22,7 +22,8 @@ import { useTrafficSources } from '@/lib/hooks/useAnalytics';
 import {
   ChartContainer,
   ChartConfig,
-  ChartTooltip
+  ChartTooltip,
+  ChartTooltipContent
 } from '@/components/ui/chart';
 
 interface TrafficSourcesChartProps {
@@ -77,7 +78,7 @@ export function TrafficSourcesChart({ dateRange }: TrafficSourcesChartProps) {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="h-full flex flex-col">
         <CardHeader>
           <CardTitle>Traffic Sources</CardTitle>
           <CardDescription>
@@ -85,7 +86,7 @@ export function TrafficSourcesChart({ dateRange }: TrafficSourcesChartProps) {
             {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex h-[300px] items-center justify-center">
+        <CardContent className="flex flex-1 items-center justify-center">
           <LoadingSpinner size={40} />
         </CardContent>
       </Card>
@@ -94,7 +95,7 @@ export function TrafficSourcesChart({ dateRange }: TrafficSourcesChartProps) {
 
   if (error || !data) {
     return (
-      <Card>
+      <Card className="h-full flex flex-col">
         <CardHeader>
           <CardTitle>Traffic Sources</CardTitle>
           <CardDescription>
@@ -102,7 +103,7 @@ export function TrafficSourcesChart({ dateRange }: TrafficSourcesChartProps) {
             {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex h-[300px] items-center justify-center">
+        <CardContent className="flex flex-1 items-center justify-center">
           <p className="text-sm text-red-500">
             Failed to load traffic source data
           </p>
@@ -127,54 +128,32 @@ export function TrafficSourcesChart({ dateRange }: TrafficSourcesChartProps) {
     });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Traffic Sources</CardTitle>
-        <CardDescription>
-          {format(dateRange.from, 'LLL dd, y')} -{' '}
-          {format(dateRange.to, 'LLL dd, y')}
-        </CardDescription>
+    <Card className="h-full flex flex-col">
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <div className="grid flex-1 gap-1 text-center sm:text-left">
+          <CardTitle>Traffic Sources</CardTitle>
+          <CardDescription>
+            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
-          <BarChart
-            data={chartData}
-            margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
-          >
-            <CartesianGrid vertical={false} stroke="hsl(var(--border))" />
-            <XAxis dataKey="source" tick={{ fontSize: 12 }} interval={0} />
-            <YAxis
-              tickFormatter={(value) => value.toLocaleString()}
-              tick={{ fontSize: 12 }}
-            />
-            <Tooltip
-              content={({ active, payload }) => {
-                if (!active || !payload?.length) return null;
-                const data = payload[0].payload;
-                return (
-                  <div className="rounded-lg border bg-background p-2 shadow-sm">
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="flex flex-col">
-                        <span className="text-[0.70rem] uppercase text-muted-foreground">
-                          Source
-                        </span>
-                        <span className="font-bold">{data.source}</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[0.70rem] uppercase text-muted-foreground">
-                          Users
-                        </span>
-                        <span className="font-bold">
-                          {data.users.toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
-            />
-            <Bar dataKey="users" fill="var(--primary / 0.8)" radius={4} />
-          </BarChart>
+      <CardContent className="flex-1 flex flex-col">
+        <ChartContainer config={chartConfig} className="h-full w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
+            >
+              <CartesianGrid vertical={false} stroke="hsl(var(--border))" />
+              <XAxis dataKey="source" tick={{ fontSize: 12 }} interval={0} />
+              <YAxis
+                tickFormatter={(value) => value.toLocaleString()}
+                tick={{ fontSize: 12 }}
+              />
+              <Tooltip content={<ChartTooltipContent />} />
+              <Bar dataKey="users" fill="var(--primary / 0.8)" radius={4} />
+            </BarChart>
+          </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
     </Card>

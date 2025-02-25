@@ -157,10 +157,20 @@ function AnalyticsMetrics() {
 }
 
 function ChartSection() {
+  // Define consistent chart dimensions
+  const chartHeight = 250;
+  const chartClassName = "h-full"; // Make cards take full height of grid cell
+
   return (
     <div className="grid gap-4 lg:grid-cols-2">
-      <TrafficChart />
-      <VendorBuyClicksChart />
+      <TrafficChart 
+        chartHeight={chartHeight} 
+        className={chartClassName}
+      />
+      <VendorBuyClicksChart 
+        chartHeight={chartHeight} 
+        className={chartClassName}
+      />
     </div>
   );
 }

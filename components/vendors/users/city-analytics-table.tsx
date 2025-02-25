@@ -63,11 +63,13 @@ export function CityAnalyticsTable({ dateRange }: CityAnalyticsTableProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>City Distribution</CardTitle>
-        <CardDescription>
-          {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
-        </CardDescription>
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <div className="grid flex-1 gap-1 text-center sm:text-left">
+          <CardTitle>City Distribution</CardTitle>
+          <CardDescription>
+            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+          </CardDescription>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="relative max-h-[400px] overflow-auto">

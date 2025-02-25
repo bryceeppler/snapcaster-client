@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { format, parseISO } from 'date-fns';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
@@ -15,9 +16,12 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip
+  ChartTooltip,
+  ChartTooltipContent
 } from '@/components/ui/chart';
 import useGlobalStore from '@/stores/globalStore';
+import { formatChartDate } from '@/lib/utils';
+
 const TCG_ORDER = [
   'mtg',
   'pokemon',
@@ -162,22 +166,29 @@ const CustomXAxisTick = ({ x, y, payload }: CustomXAxisTickProps) => {
 
 interface VendorBuyClicksChartProps {
   numberOfDays?: number;
+  chartHeight?: number | string;
+  className?: string;
 }
 
 export function VendorBuyClicksChart({
-  numberOfDays = 30
+  numberOfDays = 30,
+  chartHeight = 250,
+  className
 }: VendorBuyClicksChartProps) {
   const { data, isLoading, error } = useVendorBuyClicks(numberOfDays);
   const { websites } = useGlobalStore();
 
+  // Convert chartHeight to a string with 'px' if it's a number
+  const heightClass = typeof chartHeight === 'number' ? `h-[${chartHeight}px]` : chartHeight;
+
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className={className}>
+        <CardHeader className="items-center pb-0">
           <CardTitle>Top Vendors</CardTitle>
           <CardDescription>Buy clicks by TCG across vendors</CardDescription>
         </CardHeader>
-        <CardContent className="flex h-[350px] items-center justify-center">
+        <CardContent className={`flex items-center justify-center ${heightClass}`}>
           <LoadingSpinner size={40} />
         </CardContent>
       </Card>
@@ -186,12 +197,12 @@ export function VendorBuyClicksChart({
 
   if (error) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className={className}>
+        <CardHeader className="items-center pb-0">
           <CardTitle>Top Vendors</CardTitle>
           <CardDescription>Buy clicks by TCG across vendors</CardDescription>
         </CardHeader>
-        <CardContent className="flex h-[350px] items-center justify-center">
+        <CardContent className={`flex items-center justify-center ${heightClass}`}>
           <p className="text-sm text-red-500">Failed to load vendor data</p>
         </CardContent>
       </Card>
@@ -199,10 +210,10 @@ export function VendorBuyClicksChart({
   }
 
   const startDate = data?.startDate
-    ? format(parseISO(data.startDate), 'MMM d, yyyy')
+    ? formatChartDate(data.startDate)
     : '';
   const endDate = data?.endDate
-    ? format(parseISO(data.endDate), 'MMM d, yyyy')
+    ? formatChartDate(data.endDate)
     : '';
 
   // Process the data to use proper website names
@@ -219,18 +230,20 @@ export function VendorBuyClicksChart({
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Top Vendors</CardTitle>
-        <CardDescription>Buy clicks by TCG across vendors</CardDescription>
+    <Card className={className}>
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <div className="grid flex-1 gap-1 text-center sm:text-left">
+          <CardTitle>Top Vendors</CardTitle>
+          <CardDescription>Buy clicks by TCG across vendors</CardDescription>
+        </div>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+        <ChartContainer config={chartConfig} className={`aspect-auto ${heightClass} w-full`}>
           <BarChart
             data={processedData}
-            margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
+            margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
           >
-            <CartesianGrid vertical={false} stroke="hsl(var(--border))" />
+            <CartesianGrid vertical={false} />
             <XAxis
               dataKey="website"
               tickLine={false}
@@ -249,17 +262,17 @@ export function VendorBuyClicksChart({
               tickFormatter={(value) => value.toLocaleString()}
             />
             <ChartTooltip content={<CustomTooltip />} />
-            <Bar dataKey="total" fill="hsl(var(--primary) / 0.8)" radius={4} />
+            <Bar dataKey="total" fill="hsl(var(--primary))" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              {startDate} - {endDate}
-            </div>
-          </div>
+      <CardFooter className="flex-col gap-2 text-sm pt-2">
+        <div className="opacity-0 h-[16px] leading-none">
+          {/* This invisible element maintains the same height as the trend indicator in TrafficChart */}
+          Placeholder for alignment
+        </div>
+        <div className="leading-none text-muted-foreground">
+          {startDate} - {endDate}
         </div>
       </CardFooter>
     </Card>

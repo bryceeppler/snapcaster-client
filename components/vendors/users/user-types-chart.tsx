@@ -1,17 +1,26 @@
 "use client"
 
+import * as React from "react"
 import { format } from "date-fns"
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Label } from "recharts"
+import { PieChart, Pie, Cell, Legend, Label } from "recharts"
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useUserTypes } from "@/lib/hooks/useAnalytics"
-import { ChartContainer, ChartConfig } from "@/components/ui/chart"
+import { 
+  ChartContainer, 
+  ChartConfig, 
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent
+} from "@/components/ui/chart"
 
 interface UserTypesChartProps {
   dateRange: {
@@ -21,6 +30,10 @@ interface UserTypesChartProps {
 }
 
 const chartConfig = {
+  "users": {
+    label: "Users",
+    color: "hsl(var(--chart-0))"
+  },
   "New": {
     label: "New Users",
     color: "hsl(var(--chart-1))"
@@ -31,15 +44,63 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
+// Custom tooltip component
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+}
+
+function CustomTooltip({ active, payload }: CustomTooltipProps) {
+  if (!active || !payload?.length) return null;
+  console.log(payload[0]);
+  const entry = payload[0];
+  const value = entry.value;
+  const name = entry.name;
+
+  return (
+    <div className="grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
+      <div className="grid gap-1.5">
+        <div className="flex w-full items-center gap-2">
+          <div
+            className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
+            style={{ backgroundColor: entry.payload.fill }}
+          />
+          <div className="flex flex-1 items-center justify-between gap-8">
+            <span className="text-muted-foreground">{name}</span>
+            <span className="font-mono font-medium tabular-nums text-foreground">
+              {value.toLocaleString()}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function UserTypesChart({ dateRange }: UserTypesChartProps) {
   const { data, isLoading, error } = useUserTypes(dateRange.from, dateRange.to);
 
-  const returningUsers = data?.data.filter((user) => user.type === "Returning").reduce((acc, user) => acc + user.users, 0);
+  const returningUsers = React.useMemo(() => {
+    if (!data?.data) return 0;
+    return data.data.filter((user) => user.type === "Returning").reduce((acc, user) => acc + user.users, 0);
+  }, [data]);
+
+  const chartData = React.useMemo(() => {
+    if (!data?.data) return [];
+    
+    const total = data.data.reduce((acc, user) => acc + user.users, 0);
+    
+    return data.data.map(user => ({
+      ...user,
+      percentage: Math.round((user.users / total) * 100)
+    }));
+  }, [data]);
 
   if (isLoading) {
     return (
       <Card>
-        <CardHeader>
+        <CardHeader className="items-center pb-0">
           <CardTitle>User Types</CardTitle>
           <CardDescription>
             {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
@@ -55,7 +116,7 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
   if (error || !data) {
     return (
       <Card>
-        <CardHeader>
+        <CardHeader className="items-center pb-0">
           <CardTitle>User Types</CardTitle>
           <CardDescription>
             {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
@@ -70,30 +131,32 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
 
   return (
     <Card className="flex flex-col">
-      <CardHeader>
+      <CardHeader className="items-center pb-0">
         <CardTitle>User Types</CardTitle>
         <CardDescription>
           {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-          <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
-            <PieChart>
-              <Pie
-                data={data.data}
-                dataKey="users"
-                nameKey="type"
-                innerRadius={70}
-                strokeWidth={5}
-              >
+      <CardContent className="flex-1 pb-0">
+        <ChartContainer 
+          config={chartConfig} 
+          className="mx-auto aspect-square max-h-[250px]"
+        >
+          <PieChart>
+            <ChartTooltip
+              cursor={false}
+              content={<CustomTooltip />}
+            />
+            <Pie
+              data={chartData}
+              dataKey="users"
+              nameKey="type"
+              innerRadius={60}
+              strokeWidth={5}
+            >
               <Label
-                content={({ viewBox }) => {
-                  if (
-                    viewBox &&
-                    'cx' in viewBox &&
-                    'cy' in viewBox &&
-                    viewBox.cy !== undefined
-                  ) {
+                content={({ viewBox }: { viewBox?: any }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
                       <text
                         x={viewBox.cx}
@@ -103,15 +166,15 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
                       >
                         <tspan
                           x={viewBox.cx}
-                          y={viewBox.cy - 12}
+                          y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {returningUsers}
+                          {returningUsers.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
-                          y={viewBox.cy + 12}
-                          className="fill-muted-foreground text-sm capitalize"
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
                         >
                           Returning Users
                         </tspan>
@@ -121,43 +184,28 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
                   return null;
                 }}
               />
-                {data.data.map((entry) => (
-                  <Cell 
-                    key={entry.type} 
-                    fill={chartConfig[entry.type as keyof typeof chartConfig]?.color} 
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (!active || !payload?.length) return null;
-                  const data = payload[0].payload;
-                  return (
-                    <div className="rounded-lg border bg-background p-2 shadow-sm">
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="flex flex-col">
-                          <span className="text-[0.70rem] uppercase text-muted-foreground">
-                            Type
-                          </span>
-                          <span className="font-bold">{data.type}</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-[0.70rem] uppercase text-muted-foreground">
-                            Users
-                          </span>
-                          <span className="font-bold">
-                            {data.users.toLocaleString()} ({data.percentage}%)
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }}
-              />
-              <Legend />
-            </PieChart>
-          </ChartContainer>
+              {chartData.map((entry) => (
+                <Cell 
+                  key={entry.type} 
+                  fill={chartConfig[entry.type as keyof typeof chartConfig]?.color} 
+                />
+              ))}
+            </Pie>
+            <ChartLegend 
+              verticalAlign="bottom" 
+              height={36} 
+              content={<ChartLegendContent />} 
+            />
+          </PieChart>
+        </ChartContainer>
       </CardContent>
+      {chartData.length > 0 && (
+        <CardFooter className="flex-col gap-2 text-sm pt-6">
+          <div className="leading-none text-muted-foreground">
+            Showing user type data for selected date range
+          </div>
+        </CardFooter>
+      )}
     </Card>
   );
 } 

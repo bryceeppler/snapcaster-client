@@ -32,8 +32,10 @@ import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/buyListStore';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated, isVendor } = useAuth();
+  const { isAuthenticated, isVendor, isAdmin } = useAuth();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
+
+  const canViewAnalytics = isAdmin || isVendor;
 
   const {
     initNotificationStatus,
@@ -526,9 +528,12 @@ const Navbar: React.FC = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-              {isVendor && (
+              {canViewAnalytics && (
                 <NavigationMenuItem
-                  className={navigationMenuTriggerStyle()}
+                  className={`${navigationMenuTriggerStyle()} ${
+                    currentPath.startsWith('/vendors') &&
+                    'rounded-b-none border-b-2 border-primary'
+                  }`}
                 >
                   <Link legacyBehavior href="/vendors/dashboard" passHref>
                     Analytics

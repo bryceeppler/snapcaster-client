@@ -1,5 +1,7 @@
+"use client"
+
 import * as React from 'react';
-import { Label, Pie, PieChart } from 'recharts';
+import { Pie, PieChart, Label, Cell } from 'recharts';
 import { format } from 'date-fns';
 
 import {
@@ -14,14 +16,17 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent
 } from '@/components/ui/chart';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useUsersByDevice } from '@/lib/hooks/useAnalytics';
 
 const chartConfig = {
   visitors: {
-    label: 'Visitors'
+    label: 'Visitors',
+    color: 'hsl(var(--chart-0))'
   },
   desktop: {
     label: 'Desktop',
@@ -50,6 +55,33 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
     dateRange.to
   );
 
+  const dominantDevice = React.useMemo(() => {
+    if (!data) return { device: '', percentage: 0 };
+    
+    const total = data.desktop + data.mobile + data.tablet;
+    const devices = [
+      {
+        device: 'desktop',
+        visitors: data.desktop,
+        percentage: Math.round((data.desktop / total) * 100)
+      },
+      {
+        device: 'mobile',
+        visitors: data.mobile,
+        percentage: Math.round((data.mobile / total) * 100)
+      },
+      {
+        device: 'tablet',
+        visitors: data.tablet,
+        percentage: Math.round((data.tablet / total) * 100)
+      }
+    ];
+    
+    return devices.reduce((prev, current) =>
+      current.percentage > prev.percentage ? current : prev
+    );
+  }, [data]);
+
   if (isLoading) {
     return (
       <Card>
@@ -60,7 +92,7 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
             {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex h-[250px] items-center justify-center">
+        <CardContent className="flex h-[300px] items-center justify-center">
           <LoadingSpinner size={40} />
         </CardContent>
       </Card>
@@ -77,7 +109,7 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
             {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex h-[250px] items-center justify-center">
+        <CardContent className="flex h-[300px] items-center justify-center">
           <p className="text-sm text-red-500">Failed to load device data</p>
         </CardContent>
       </Card>
@@ -89,86 +121,55 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
     {
       device: 'desktop',
       visitors: data.desktop,
-      percentage: Math.round((data.desktop / total) * 100),
-      fill: chartConfig.desktop.color
+      percentage: Math.round((data.desktop / total) * 100)
     },
     {
       device: 'mobile',
       visitors: data.mobile,
-      percentage: Math.round((data.mobile / total) * 100),
-      fill: chartConfig.mobile.color
+      percentage: Math.round((data.mobile / total) * 100)
     },
     {
       device: 'tablet',
       visitors: data.tablet,
-      percentage: Math.round((data.tablet / total) * 100),
-      fill: chartConfig.tablet.color
+      percentage: Math.round((data.tablet / total) * 100)
     }
   ];
 
-  // Find the dominant device type
-  const dominantDevice = chartData.reduce((prev, current) =>
-    current.percentage > prev.percentage ? current : prev
-  );
-
   return (
     <Card className="flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle>Device Distribution</CardTitle>
-          <CardDescription>
-            {format(dateRange.from, 'LLL dd, y')} -{' '}
-            {format(dateRange.to, 'LLL dd, y')}
-          </CardDescription>
-        </div>
+      <CardHeader className="items-center pb-0">
+        <CardTitle>Device Distribution</CardTitle>
+        <CardDescription>
+          {format(dateRange.from, 'LLL dd, y')} -{' '}
+          {format(dateRange.to, 'LLL dd, y')}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer config={chartConfig} className="max-h-[400px] w-full">
+        <ChartContainer 
+          config={chartConfig} 
+          className="mx-auto aspect-square max-h-[250px]"
+        >
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={({ active, payload }) => {
-                if (!active || !payload?.length) return null;
-                const data = payload[0].payload;
-                return (
-                  <div className="rounded-lg border bg-background p-2 shadow-sm">
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="flex flex-col">
-                        <span className="text-[0.70rem] uppercase text-muted-foreground">
-                          Device
-                        </span>
-                        <span className="font-bold capitalize">
-                          {data.device}
-                        </span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[0.70rem] uppercase text-muted-foreground">
-                          Users
-                        </span>
-                        <span className="font-bold">
-                          {data.visitors.toLocaleString()} ({data.percentage}%)
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
+              content={<ChartTooltipContent hideLabel />}
             />
             <Pie
               data={chartData}
               dataKey="visitors"
               nameKey="device"
-              innerRadius={70}
+              innerRadius={60}
               strokeWidth={5}
             >
+              {chartData.map((entry) => (
+                <Cell 
+                  key={entry.device} 
+                  fill={chartConfig[entry.device as keyof typeof chartConfig]?.color} 
+                />
+              ))}
               <Label
-                content={({ viewBox }) => {
-                  if (
-                    viewBox &&
-                    'cx' in viewBox &&
-                    'cy' in viewBox &&
-                    viewBox.cy !== undefined
-                  ) {
+                content={({ viewBox }: { viewBox?: any }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
                       <text
                         x={viewBox.cx}
@@ -178,15 +179,15 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
                       >
                         <tspan
                           x={viewBox.cx}
-                          y={viewBox.cy - 12}
+                          y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
                           {dominantDevice.percentage}%
                         </tspan>
                         <tspan
                           x={viewBox.cx}
-                          y={viewBox.cy + 12}
-                          className="fill-muted-foreground text-sm capitalize"
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
                         >
                           {dominantDevice.device}
                         </tspan>
@@ -197,14 +198,21 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
                 }}
               />
             </Pie>
+            <ChartLegend 
+              verticalAlign="bottom" 
+              height={36} 
+              content={<ChartLegendContent />} 
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="leading-none text-muted-foreground">
-          Distribution of users by device type
-        </div>
-      </CardFooter>
+      {chartData.length > 0 && (
+        <CardFooter className="flex-col gap-2 text-sm pt-6">
+          <div className="leading-none text-muted-foreground">
+            Showing device distribution for selected date range
+          </div>
+        </CardFooter>
+      )}
     </Card>
   );
 }
