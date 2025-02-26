@@ -195,14 +195,14 @@ export default function TCGAnalyticsPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 p-8 pt-6">
-          <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight">TCG Analytics</h2>
+        <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+          <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">TCG Analytics</h2>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="ml-auto h-8 justify-start text-left font-normal"
+                  className="w-full md:w-auto h-8 justify-start text-left font-normal"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {format(dateRange.from, 'LLL dd, y')} -{' '}
@@ -216,54 +216,75 @@ export default function TCGAnalyticsPage() {
                   defaultMonth={dateRange.from}
                   selected={{ from: dateRange.from, to: dateRange.to }}
                   onSelect={handleDateRangeChange}
+                  numberOfMonths={1}
+                  className="md:hidden"
+                />
+                <Calendar
+                  initialFocus
+                  mode="range"
+                  defaultMonth={dateRange.from}
+                  selected={{ from: dateRange.from, to: dateRange.to }}
+                  onSelect={handleDateRangeChange}
                   numberOfMonths={2}
+                  className="hidden md:block"
                 />
               </PopoverContent>
             </Popover>
           </div>
           <AnalyticsMetrics dateRange={dateRange} />
-          <div className="grid gap-4 xl:grid-cols-2">
-            <SearchChart
-              dateRange={dateRange}
-              tcgFilter={['mtg']}
-              title="Magic: The Gathering Search Trends"
-            />
-            <BuyClicksChart
-              dateRange={dateRange}
-              tcgFilter={['mtg']}
-              title="Magic: The Gathering Buy Clicks"
-            />
+          <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
+            <div className="overflow-x-auto">
+              <SearchChart
+                dateRange={dateRange}
+                tcgFilter={['mtg']}
+                title="Magic: The Gathering Search Trends"
+              />
+            </div>
+            <div className="overflow-x-auto">
+              <BuyClicksChart
+                dateRange={dateRange}
+                tcgFilter={['mtg']}
+                title="Magic: The Gathering Buy Clicks"
+              />
+            </div>
           </div>
-          <div className="grid gap-4 xl:grid-cols-2">
-            <SearchChart
-              dateRange={dateRange}
-              tcgFilter={[
-                'pokemon',
-                'yugioh',
-                'onepiece',
-                'lorcana',
-                'starwars',
-                'fleshandblood'
-              ]}
-              title="Other TCG Search Trends"
-            />
-
-            <BuyClicksChart
-              dateRange={dateRange}
-              tcgFilter={[
-                'pokemon',
-                'yugioh',
-                'onepiece',
-                'lorcana',
-                'starwars',
-                'fleshandblood'
-              ]}
-              title="Other TCG Buy Clicks"
-            />
+          <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
+            <div className="overflow-x-auto">
+              <SearchChart
+                dateRange={dateRange}
+                tcgFilter={[
+                  'pokemon',
+                  'yugioh',
+                  'onepiece',
+                  'lorcana',
+                  'starwars',
+                  'fleshandblood'
+                ]}
+                title="Other TCG Search Trends"
+              />
+            </div>
+            <div className="overflow-x-auto">
+              <BuyClicksChart
+                dateRange={dateRange}
+                tcgFilter={[
+                  'pokemon',
+                  'yugioh',
+                  'onepiece',
+                  'lorcana',
+                  'starwars',
+                  'fleshandblood'
+                ]}
+                title="Other TCG Buy Clicks"
+              />
+            </div>
           </div>
-          <div className="grid gap-4 xl:grid-cols-2">
-            <PopularClickedCards dateRange={dateRange} />
-            <PopularClickedSets dateRange={dateRange} />
+          <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
+            <div className="overflow-x-auto">
+              <PopularClickedCards dateRange={dateRange} />
+            </div>
+            <div className="overflow-x-auto">
+              <PopularClickedSets dateRange={dateRange} />
+            </div>
           </div>
         </div>
       </div>

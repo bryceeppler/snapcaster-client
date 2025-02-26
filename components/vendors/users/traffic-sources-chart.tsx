@@ -126,7 +126,6 @@ export function TrafficSourcesChart({ dateRange }: TrafficSourcesChartProps) {
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
         <ChartContainer config={chartConfig} className="h-full w-full">
-          <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}
               margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
@@ -140,7 +139,6 @@ export function TrafficSourcesChart({ dateRange }: TrafficSourcesChartProps) {
               <Tooltip content={<ChartTooltipContent />} />
               <Bar dataKey="users" fill="var(--primary / 0.8)" radius={4} />
             </BarChart>
-          </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
     </Card>

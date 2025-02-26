@@ -187,16 +187,16 @@ export default function UserAnalyticsPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 p-8 pt-6">
-          <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight">
+        <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+          <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
               User Analytics
             </h2>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="ml-auto h-8 justify-start text-left font-normal"
+                  className="w-full md:w-auto h-8 justify-start text-left font-normal"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {format(dateRange.from, 'LLL dd, y')} -{' '}
@@ -210,26 +210,46 @@ export default function UserAnalyticsPage() {
                   defaultMonth={dateRange.from}
                   selected={{ from: dateRange.from, to: dateRange.to }}
                   onSelect={handleDateRangeChange}
+                  numberOfMonths={1}
+                  className="md:hidden"
+                />
+                <Calendar
+                  initialFocus
+                  mode="range"
+                  defaultMonth={dateRange.from}
+                  selected={{ from: dateRange.from, to: dateRange.to }}
+                  onSelect={handleDateRangeChange}
                   numberOfMonths={2}
+                  className="hidden md:block"
                 />
               </PopoverContent>
             </Popover>
           </div>
           <AnalyticsMetrics dateRange={dateRange} />
-          <TrafficChart dateRange={dateRange} />
+          <div className="overflow-x-auto">
+            <TrafficChart dateRange={dateRange} />
+          </div>
 
-          <div className="grid gap-4 xl:grid-cols-4">
+          <div className="grid gap-4 grid-cols-1 xl:grid-cols-4">
             <div className="xl:col-span-2">
               <UserDeviceAreaChart dateRange={dateRange} />
             </div>
-            <UserDeviceChart dateRange={dateRange} />
-            <UserTypesChart dateRange={dateRange} />
+            <div className="xl:col-span-1">
+              <UserDeviceChart dateRange={dateRange} />
+            </div>
+            <div className="xl:col-span-1">
+              <UserTypesChart dateRange={dateRange} />
+            </div>
           </div>
-          <div className="grid gap-4 xl:grid-cols-2">
+          <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
             <CityAnalyticsTable dateRange={dateRange} />
             <TrafficSourcesChart dateRange={dateRange} />
           </div>
-          {isAdmin && <UserRetentionChart dateRange={dateRange} />}
+          {isAdmin && (
+            <div className="overflow-x-auto">
+              <UserRetentionChart dateRange={dateRange} />
+            </div>
+          )}
         </div>
       </div>
     </DashboardLayout>

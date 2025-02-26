@@ -218,6 +218,19 @@ const Navbar: React.FC = () => {
                         About
                       </Button>
                     </Link>
+                    {canViewAnalytics && (
+                      <Link href="/vendors/dashboard" as="/vendors/dashboard">
+                        <Button
+                          variant="ghost"
+                          className="block w-full text-left text-lg"
+                          onClick={() => {
+                            setMobileNavSheetOpen(false);
+                          }}
+                        >
+                          Analytics
+                        </Button>
+                      </Link>
+                    )}
 
                     <Link href={isAuthenticated ? `/profile` : '/signin'}>
                       <Button
