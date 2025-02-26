@@ -118,7 +118,7 @@ export function UserRetentionChart({ dateRange }: UserRetentionChartProps) {
       </CardHeader>
       <CardContent>
         <div className=" overflow-x-auto">
-          <table className="w-full min-w-[600px]">
+          <table className="w-full min-w-[200px]">
             <thead>
               <tr>
                 <th className="whitespace-nowrap px-4 py-2 text-left text-sm font-medium">Cohort</th>

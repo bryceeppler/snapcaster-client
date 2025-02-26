@@ -15,7 +15,6 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { TrafficChart } from '@/components/vendors/dashboard/traffic-chart';
-import { AnalyticsCardSkeleton } from '@/components/vendors/dashboard/analytics-card-skeleton';
 import DashboardLayout from './layout';
 import {
   useUniqueUsers,
@@ -224,10 +223,9 @@ export default function DashboardPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 p-8 pt-6">
-          <div className="flex items-center justify-between space-y-2 h-10">
-            <h2 className="text-3xl font-bold tracking-tight">
-              Analytics Overview
+        <div className="flex-1 space-y-4 md:p-8 pt-6">
+        <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+             Analytics Overview
             </h2>
           </div>
           <AnalyticsMetrics />
