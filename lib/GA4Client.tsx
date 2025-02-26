@@ -25,7 +25,7 @@ export interface PopularSearchedCardsByTCG {
 }
 
 export interface PopularClickedCardsByTCG {
-  [key: string]: { cardName: string; count: number }[];
+  [key: string]: { cardName: string; count: number; averagePrice: number }[];
 }
 
 export interface PopularClickedSetsByTCG {
@@ -1467,6 +1467,9 @@ export class GA4Client {
           },
           {
             name: 'customEvent:tcg',
+          },
+          {
+            name: 'customEvent:card_price',
           },
         ],
         metrics: [

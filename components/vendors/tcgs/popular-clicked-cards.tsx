@@ -43,6 +43,7 @@ interface PopularClickedCardsProps {
 interface CardData {
   cardName: string;
   count: number;
+  averagePrice: number;
 }
 
 export function PopularClickedCards({ dateRange }: PopularClickedCardsProps) {
@@ -117,6 +118,7 @@ export function PopularClickedCards({ dateRange }: PopularClickedCardsProps) {
               <TableRow>
                 <TableHead>Card Name</TableHead>
                 <TableHead className="text-right">Buy Clicks</TableHead>
+                <TableHead className="text-right">Avg. Price</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -124,6 +126,7 @@ export function PopularClickedCards({ dateRange }: PopularClickedCardsProps) {
                 <TableRow key={`${card.cardName}-${index}`}>
                   <TableCell>{card.cardName}</TableCell>
                   <TableCell className="text-right">{card.count.toLocaleString()}</TableCell>
+                  <TableCell className="text-right">${card.averagePrice.toFixed(2)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
