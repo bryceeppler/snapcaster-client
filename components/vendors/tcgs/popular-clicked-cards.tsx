@@ -40,12 +40,6 @@ interface PopularClickedCardsProps {
   };
 }
 
-interface CardData {
-  cardName: string;
-  count: number;
-  averagePrice: number;
-}
-
 export function PopularClickedCards({ dateRange }: PopularClickedCardsProps) {
   const { data, isLoading, error } = usePopularClickedCards(dateRange.from, dateRange.to, 50);
   const [selectedTcg, setSelectedTcg] = useState<string>("");
@@ -122,7 +116,7 @@ export function PopularClickedCards({ dateRange }: PopularClickedCardsProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {tcgData[selectedTcg]?.map((card: CardData, index: number) => (
+              {tcgData[selectedTcg]?.map((card, index) => (
                 <TableRow key={`${card.cardName}-${index}`}>
                   <TableCell>{card.cardName}</TableCell>
                   <TableCell className="text-right">{card.count.toLocaleString()}</TableCell>

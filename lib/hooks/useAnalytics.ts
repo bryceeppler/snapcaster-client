@@ -30,7 +30,7 @@ interface PopularClickedCardsDataPoint extends AnalyticsDataPoint {
 }
 
 interface PopularClickedCardsResponse {
-  [key: string]: { cardName: string; count: number }[];
+  [key: string]: { cardName: string; count: number; averagePrice: number }[];
 }
 
 interface PopularClickedSetsDataPoint extends AnalyticsDataPoint {
