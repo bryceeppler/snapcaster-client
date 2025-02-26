@@ -245,11 +245,11 @@ export default function UserAnalyticsPage() {
             <CityAnalyticsTable dateRange={dateRange} />
             <TrafficSourcesChart dateRange={dateRange} />
           </div>
-          {isAdmin && (
-            <div className="overflow-x-auto">
+          {/* {isAdmin && (
+            <div className="overflow-x-auto max-w-full">
               <UserRetentionChart dateRange={dateRange} />
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </DashboardLayout>

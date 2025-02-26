@@ -109,7 +109,7 @@ export function UserRetentionChart({ dateRange }: UserRetentionChartProps) {
   }
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>User Retention</CardTitle>
         <CardDescription>
