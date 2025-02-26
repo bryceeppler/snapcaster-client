@@ -18,8 +18,8 @@ module.exports = {
   		lg: '976px',
   		xl: '1440px',
   		xxl: '1545px',
-		smlaptop: '1280px',
-		below1550:'1550px'
+  		smlaptop: '1280px',
+  		below1550: '1550px'
   	},
   	extend: {
   		backgroundImage: {
@@ -69,7 +69,7 @@ module.exports = {
   			foreground: 'hsl(var(--foreground))',
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))',
+  				foreground: 'hsl(var(--primary-foreground))'
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
@@ -94,33 +94,56 @@ module.exports = {
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
+  			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
-		  borderRadius: {
-			xl: 'calc(var(--radius) + 4px)',
-			lg: 'var(--radius)',
-			md: 'calc(var(--radius) - 2px)',
-			sm: 'calc(var(--radius) - 4px)',
-		  },
+  		borderRadius: {
+  			xl: 'calc(var(--radius) + 4px)',
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
+  		},
   		fontFamily: {
-  			sans: ['var(--font-geist-sans)', ...fontFamily.sans],
-  			serif: ['Poppins', 'sans-serif'],
-			genos: ['Genos'],
-			montserrat: ['Montserrat'],
-			inter: ['Inter', 'sans-serif'],
+  			sans: [
+  				'var(--font-geist-sans)',
+                    ...fontFamily.sans
+                ],
+  			serif: [
+  				'Poppins',
+  				'sans-serif'
+  			],
+  			genos: [
+  				'Genos'
+  			],
+  			montserrat: [
+  				'Montserrat'
+  			],
+  			inter: [
+  				'Inter',
+  				'sans-serif'
+  			]
   		},
   		keyframes: {
-			shine: {
-				"0%": {
-				  "background-position": "0% 0%",
-				},
-				"50%": {
-				  "background-position": "100% 100%",
-				},
-				to: {
-				  "background-position": "0% 0%",
-				},
-			  },
+  			shine: {
+  				'0%': {
+  					'background-position': '0% 0%'
+  				},
+  				'50%': {
+  					'background-position': '100% 100%'
+  				},
+  				to: {
+  					'background-position': '0% 0%'
+  				}
+  			},
   			'accordion-down': {
   				from: {
   					height: '0'
@@ -160,7 +183,7 @@ module.exports = {
   				to: {
   					transform: 'translateY(calc(-100% - var(--gap)))'
   				}
-  			},
+  			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
@@ -168,7 +191,7 @@ module.exports = {
   			'caret-blink': 'caret-blink 1.25s ease-out infinite',
   			marquee: 'marquee var(--duration) infinite linear',
   			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
-			shine: "shine var(--duration) infinite linear",
+  			shine: 'shine var(--duration) infinite linear'
   		}
   	}
   },

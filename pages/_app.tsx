@@ -64,6 +64,7 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
 
 function MyApp({ Component, pageProps, router }: MyAppProps) {
   const { width = 0 } = useWindowSize();
+  const isVendorPage = router.pathname.startsWith('/vendors/dashboard');
   const usesMainNav =
     router.pathname !== '/welcome' && router.pathname !== '/vendors/tier3';
   const [queryClient] = useState(
@@ -101,13 +102,21 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
         forcedTheme={!usesMainNav ? 'light' : undefined}
         disableTransitionOnChange
       >
-        {!usesMainNav ? (
+        {!usesMainNav && (
           <>
             <Toaster
               position={width > 640 ? 'bottom-center' : 'bottom-right'}
             />
             <Component {...pageProps} />
           </>
+        )}
+        {isVendorPage ? (
+          <Layout>
+            <Toaster
+              position={width > 640 ? 'bottom-center' : 'bottom-right'}
+            />
+            <Component {...pageProps} />
+          </Layout>
         ) : (
           <Layout>
             <AdProvider>
