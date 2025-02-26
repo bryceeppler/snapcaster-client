@@ -20,6 +20,18 @@ export interface PopularSearchedCard {
   count: number;
 }
 
+export interface PopularSearchedCardsByTCG {
+  [key: string]: { cardName: string; count: number }[];
+}
+
+export interface PopularClickedCardsByTCG {
+  [key: string]: { cardName: string; count: number }[];
+}
+
+export interface PopularClickedSetsByTCG {
+  [key: string]: { setName: string; count: number }[];
+}
+
 export interface PopularBuyClicksByTCG {
   [key: string]: { cardName: string; count: number }[];
 }
@@ -582,6 +594,189 @@ export class GA4Client {
     };
   }
 
+  public async getSearchQueriesWithParams(startDate: Date, endDate: Date = new Date(), includePreviousPeriod: boolean = false) {
+    // Calculate the length of the period in milliseconds
+    const periodLength = endDate.getTime() - startDate.getTime();
+    const numberOfDays = Math.ceil(periodLength / (1000 * 60 * 60 * 24));
+    
+    // Calculate previous period dates if needed
+    const previousStartDate = includePreviousPeriod ? new Date(startDate.getTime() - periodLength) : null;
+    const previousEndDate = includePreviousPeriod ? new Date(endDate.getTime() - periodLength) : null;
+
+    // Get daily search counts
+    const response = await this.runReport(
+      ["eventCount"],
+      startDate,
+      endDate,
+      "search_query"
+    );
+
+    // Get daily breakdown
+    const dailyData = response.rows?.map((row: any) => ({
+      date: row.dimensionValues?.[0].value || "",
+      count: parseInt(row.metricValues?.[0].value || "0", 10),
+    })) || [];
+
+    // Process the initial data to ensure we have the dates
+    const searchToolByDate: { [date: string]: { [tool: string]: number } } = {};
+    const tcgByDate: { [date: string]: { [tcg: string]: number } } = {};
+    
+    // Initialize the data structures for each date
+    dailyData.forEach(day => {
+      searchToolByDate[day.date] = {};
+      tcgByDate[day.date] = {};
+    });
+
+    // Get search_tool breakdown using a separate query
+    try {
+      // Run a separate report for each parameter
+      const [searchToolParamResponse] = await this.client.runReport({
+        property: `properties/${GA4_PROPERTY_ID}`,
+        dateRanges: [
+          {
+            startDate: format(startDate, "yyyy-MM-dd"),
+            endDate: format(endDate, "yyyy-MM-dd"),
+          },
+        ],
+        dimensions: [
+          {
+            name: "date",
+          },
+          {
+            name: "customEvent:search_tool",
+          },
+        ],
+        metrics: [
+          {
+            name: "eventCount",
+          },
+        ],
+        dimensionFilter: {
+          filter: {
+            fieldName: "eventName",
+            stringFilter: {
+              value: "search_query",
+              matchType: "EXACT",
+            },
+          },
+        },
+      });
+
+      // Process search_tool data
+      searchToolParamResponse?.rows?.forEach((row: any) => {
+        const date = row.dimensionValues?.[0]?.value || "";
+        const searchTool = row.dimensionValues?.[1]?.value || "unknown";
+        const count = parseInt(row.metricValues?.[0]?.value || "0", 10);
+        
+        if (!searchToolByDate[date]) {
+          searchToolByDate[date] = {};
+        }
+        
+        searchToolByDate[date][searchTool] = count;
+      });
+    } catch (error) {
+      console.error("Error fetching search_tool parameter data:", error);
+      // If there's an error, we'll continue with empty data for this parameter
+    }
+
+    // Get tcg breakdown using a separate query
+    try {
+      const [tcgParamResponse] = await this.client.runReport({
+        property: `properties/${GA4_PROPERTY_ID}`,
+        dateRanges: [
+          {
+            startDate: format(startDate, "yyyy-MM-dd"),
+            endDate: format(endDate, "yyyy-MM-dd"),
+          },
+        ],
+        dimensions: [
+          {
+            name: "date",
+          },
+          {
+            name: "customEvent:tcg",
+          },
+        ],
+        metrics: [
+          {
+            name: "eventCount",
+          },
+        ],
+        dimensionFilter: {
+          filter: {
+            fieldName: "eventName",
+            stringFilter: {
+              value: "search_query",
+              matchType: "EXACT",
+            },
+          },
+        },
+      });
+
+      // Process tcg data
+      tcgParamResponse?.rows?.forEach((row: any) => {
+        const date = row.dimensionValues?.[0]?.value || "";
+        const tcg = row.dimensionValues?.[1]?.value || "unknown";
+        const count = parseInt(row.metricValues?.[0]?.value || "0", 10);
+        
+        if (!tcgByDate[date]) {
+          tcgByDate[date] = {};
+        }
+        
+        tcgByDate[date][tcg] = count;
+      });
+    } catch (error) {
+      console.error("Error fetching tcg parameter data:", error);
+      // If there's an error, we'll continue with empty data for this parameter
+    }
+
+    // Combine all data
+    const enrichedDailyData = dailyData.map(dayData => ({
+      ...dayData,
+      search_tools: searchToolByDate[dayData.date] || {},
+      tcgs: tcgByDate[dayData.date] || {}
+    }));
+
+    // Calculate total searches and average
+    const totalSearches = dailyData.reduce((sum, day) => sum + day.count, 0);
+    const averageDailySearches = Math.round((totalSearches / numberOfDays));
+
+    // If we don't need previous period data, return early
+    if (!includePreviousPeriod || !previousStartDate || !previousEndDate) {
+      return {
+        data: enrichedDailyData,
+        totalSearches,
+        averageDailySearches
+      };
+    }
+
+    // Get total searches for the previous period
+    const previousResponse = await this.runReport(
+      ["eventCount"],
+      previousStartDate,
+      previousEndDate,
+      "search_query"
+    );
+
+    const previousTotalSearches = previousResponse.rows?.reduce(
+      (sum, row) => sum + parseInt(row.metricValues?.[0].value || "0", 10),
+      0
+    ) || 0;
+
+    // Calculate percentage change
+    const percentageChange = previousTotalSearches > 0 
+      ? ((totalSearches - previousTotalSearches) / previousTotalSearches) * 100
+      : 0;
+
+    return {
+      data: enrichedDailyData,
+      totalSearches,
+      previousPeriodSearches: previousTotalSearches,
+      percentageChange: Math.round(percentageChange * 10) / 10, // Round to 1 decimal place
+      averageDailySearches
+    };
+  }
+
   public async getBuyClicks(startDate: Date, endDate: Date = new Date(), includePreviousPeriod: boolean = false) {
     // Calculate the length of the period in milliseconds
     const periodLength = endDate.getTime() - startDate.getTime();
@@ -638,6 +833,134 @@ export class GA4Client {
       totalClicks,
       previousPeriodClicks: previousTotalClicks,
       percentageChange: Math.round(percentageChange * 10) / 10 // Round to 1 decimal place
+    };
+  }
+
+  public async getBuyClicksWithParams(startDate: Date, endDate: Date = new Date(), includePreviousPeriod: boolean = false) {
+    // Calculate the length of the period in milliseconds
+    const periodLength = endDate.getTime() - startDate.getTime();
+    const numberOfDays = Math.ceil(periodLength / (1000 * 60 * 60 * 24));
+    
+    // Calculate previous period dates if needed
+    const previousStartDate = includePreviousPeriod ? new Date(startDate.getTime() - periodLength) : null;
+    const previousEndDate = includePreviousPeriod ? new Date(endDate.getTime() - periodLength) : null;
+
+    // Get daily buy click counts
+    const response = await this.runReport(
+      ["eventCount"],
+      startDate,
+      endDate,
+      "buy_button_click"
+    );
+
+    // Get daily breakdown
+    const dailyData = response.rows?.map((row: any) => ({
+      date: row.dimensionValues?.[0].value || "",
+      count: parseInt(row.metricValues?.[0].value || "0", 10),
+    })) || [];
+
+    // Process the initial data to ensure we have the dates
+    const tcgByDate: { [date: string]: { [tcg: string]: number } } = {};
+    
+    // Initialize the data structures for each date
+    dailyData.forEach(day => {
+      tcgByDate[day.date] = {};
+    });
+
+    // Get tcg breakdown using a separate query
+    try {
+      const [tcgParamResponse] = await this.client.runReport({
+        property: `properties/${GA4_PROPERTY_ID}`,
+        dateRanges: [
+          {
+            startDate: format(startDate, "yyyy-MM-dd"),
+            endDate: format(endDate, "yyyy-MM-dd"),
+          },
+        ],
+        dimensions: [
+          {
+            name: "date",
+          },
+          {
+            name: "customEvent:tcg",
+          },
+        ],
+        metrics: [
+          {
+            name: "eventCount",
+          },
+        ],
+        dimensionFilter: {
+          filter: {
+            fieldName: "eventName",
+            stringFilter: {
+              value: "buy_button_click",
+              matchType: "EXACT",
+            },
+          },
+        },
+      });
+
+      // Process tcg data
+      tcgParamResponse?.rows?.forEach((row: any) => {
+        const date = row.dimensionValues?.[0]?.value || "";
+        const tcg = row.dimensionValues?.[1]?.value || "unknown";
+        const count = parseInt(row.metricValues?.[0]?.value || "0", 10);
+        
+        if (!tcgByDate[date]) {
+          tcgByDate[date] = {};
+        }
+        
+        tcgByDate[date][tcg] = count;
+      });
+    } catch (error) {
+      console.error("Error fetching tcg parameter data:", error);
+      // If there's an error, we'll continue with empty data for this parameter
+    }
+
+    // Combine all data
+    const enrichedDailyData = dailyData.map(dayData => ({
+      ...dayData,
+      tcgs: tcgByDate[dayData.date] || {}
+    }));
+
+    // Calculate total buy clicks and average
+    const totalBuyClicks = dailyData.reduce((sum, day) => sum + day.count, 0);
+    const averageDailyBuyClicks = Math.round((totalBuyClicks / numberOfDays) * 10) / 10;
+
+    // If we don't need previous period data, return early
+    if (!includePreviousPeriod || !previousStartDate || !previousEndDate) {
+      return {
+        data: enrichedDailyData,
+        totalBuyClicks,
+        averageDailyBuyClicks
+      };
+    }
+
+    // Get total buy clicks for the previous period
+    const previousResponse = await this.runReport(
+      ["eventCount"],
+      previousStartDate,
+      previousEndDate,
+      "buy_button_click"
+    );
+
+    const previousTotalBuyClicks = previousResponse.rows?.reduce(
+      (sum, row) => sum + parseInt(row.metricValues?.[0].value || "0", 10),
+      0
+    ) || 0;
+
+    // Calculate percentage change
+    const percentageChange = previousTotalBuyClicks > 0 
+      ? ((totalBuyClicks - previousTotalBuyClicks) / previousTotalBuyClicks) * 100
+      : 0;
+
+    return {
+      data: enrichedDailyData,
+      totalBuyClicks,
+      previousPeriodBuyClicks: previousTotalBuyClicks,
+      percentageChange: Math.round(percentageChange * 10) / 10, // Round to 1 decimal place
+      averageDailyBuyClicks
     };
   }
 
@@ -1123,6 +1446,166 @@ export class GA4Client {
       data: validData,
       maxUsers
     };
+  }
+
+  public async getPopularClickedCards(startDate: Date, endDate: Date = new Date()) {
+    try {
+      const [response] = await this.client.runReport({
+        property: `properties/${GA4_PROPERTY_ID}`,
+        dateRanges: [
+          {
+            startDate: format(startDate, 'yyyy-MM-dd'),
+            endDate: format(endDate, 'yyyy-MM-dd'),
+          },
+        ],
+        dimensions: [
+          {
+            name: 'eventName',
+          },
+          {
+            name: 'customEvent:card_name',
+          },
+          {
+            name: 'customEvent:tcg',
+          },
+        ],
+        metrics: [
+          {
+            name: 'eventCount',
+          },
+        ],
+        dimensionFilter: {
+          andGroup: {
+            expressions: [
+              {
+                filter: {
+                  fieldName: 'eventName',
+                  stringFilter: {
+                    matchType: 'EXACT',
+                    value: 'buy_button_click',
+                  },
+                },
+              },
+              {
+                notExpression: {
+                  filter: {
+                    fieldName: 'customEvent:card_name',
+                    stringFilter: {
+                      matchType: 'EXACT',
+                      value: '(not set)',
+                    },
+                  },
+                },
+              },
+              {
+                notExpression: {
+                  filter: {
+                    fieldName: 'customEvent:tcg',
+                    stringFilter: {
+                      matchType: 'EXACT',
+                      value: '(not set)',
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+        orderBys: [
+          {
+            metric: {
+              metricName: 'eventCount',
+            },
+            desc: true,
+          },
+        ],
+      });
+
+      return response;
+    } catch (error) {
+      console.error('Error fetching popular searched cards:', error);
+      throw error;
+    }
+  }
+
+  public async getPopularClickedSets(startDate: Date, endDate: Date = new Date()) {
+    try {
+      const [response] = await this.client.runReport({
+        property: `properties/${GA4_PROPERTY_ID}`,
+        dateRanges: [
+          {
+            startDate: format(startDate, 'yyyy-MM-dd'),
+            endDate: format(endDate, 'yyyy-MM-dd'),
+          },
+        ],
+        dimensions: [
+          {
+            name: 'eventName',
+          },
+          {
+            name: 'customEvent:set_name',
+          },
+          {
+            name: 'customEvent:tcg',
+          },
+        ],
+        metrics: [
+          {
+            name: 'eventCount',
+          },
+        ],
+        dimensionFilter: {
+          andGroup: {
+            expressions: [
+              {
+                filter: {
+                  fieldName: 'eventName',
+                  stringFilter: {
+                    matchType: 'EXACT',
+                    value: 'buy_button_click',
+                  },
+                },
+              },
+              {
+                notExpression: {
+                  filter: {
+                    fieldName: 'customEvent:set_name',
+                    stringFilter: {
+                      matchType: 'EXACT',
+                      value: '(not set)',
+                    },
+                  },
+                },
+              },
+              {
+                notExpression: {
+                  filter: {
+                    fieldName: 'customEvent:tcg',
+                    stringFilter: {
+                      matchType: 'EXACT',
+                      value: '(not set)',
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+        orderBys: [
+          {
+            metric: {
+              metricName: 'eventCount',
+            },
+            desc: true,
+          },
+        ],
+      });
+
+      return response;
+    } catch (error) {
+      console.error('Error fetching popular clicked sets:', error);
+      throw error;
+    }
   }
 }
 

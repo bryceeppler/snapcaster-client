@@ -48,6 +48,16 @@ export default function DashboardLayout({
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={router.pathname === "/vendors/dashboard/tcgs"}>
+                      <Link href="/vendors/dashboard/tcgs" className="py-6">
+                      <div className="flex justify-center items-center h-4 w-4">
+                        <div className="h-4 w-3 border border-foreground rounded-sm bg-muted" />
+                        </div>
+                        <span>TCGs</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
                     <SidebarMenuButton asChild isActive={router.pathname === "/vendors/dashboard/settings"}>
                       <Link href="/vendors/dashboard/settings" className="py-6">
                         <Settings className="h-4 w-4" />

@@ -10,6 +10,51 @@ interface BaseAnalyticsResponse {
   data: AnalyticsDataPoint[];
 }
 
+interface SearchQueriesWithParamsDataPoint extends AnalyticsDataPoint {
+  search_tools: { [key: string]: number };
+  tcgs: { [key: string]: number };
+}
+
+interface SearchQueriesWithParamsResponse {
+  data: SearchQueriesWithParamsDataPoint[];
+  totalSearches: number;
+  previousPeriodSearches?: number;
+  percentageChange?: number;
+  averageDailySearches: number;
+}
+
+interface PopularClickedCardsDataPoint extends AnalyticsDataPoint {
+  cardName: string;
+  tcg: string;
+  count: number;
+}
+
+interface PopularClickedCardsResponse {
+  [key: string]: { cardName: string; count: number }[];
+}
+
+interface PopularClickedSetsDataPoint extends AnalyticsDataPoint {
+  setName: string;
+  tcg: string;
+  count: number;
+}
+
+interface PopularClickedSetsResponse {
+  [key: string]: { setName: string; count: number }[];
+}
+
+interface BuyClicksWithParamsDataPoint extends AnalyticsDataPoint {
+  tcgs: { [key: string]: number };
+}
+
+interface BuyClicksWithParamsResponse {
+  data: BuyClicksWithParamsDataPoint[];
+  totalBuyClicks: number;
+  previousPeriodBuyClicks?: number;
+  percentageChange?: number;
+  averageDailyBuyClicks: number;
+}
+
 interface UniqueUsersResponse extends BaseAnalyticsResponse {
   totalUniqueUsers: number;
   previousPeriodUniqueUsers?: number;
@@ -130,7 +175,11 @@ const analyticsKeys = {
   uniqueUsersByDate: (startDate: Date, endDate: Date) => 
     [...analyticsKeys.all, 'uniqueUsers', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   searchQueries: (days: number) => [...analyticsKeys.all, 'searchQueries', days] as const,
+  searchQueriesWithParams: (startDate: Date, endDate: Date) =>
+    [...analyticsKeys.all, 'searchQueriesWithParams', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   buyClicks: (days: number) => [...analyticsKeys.all, 'buyClicks', days] as const,
+  buyClicksWithParams: (startDate: Date, endDate: Date) =>
+    [...analyticsKeys.all, 'buyClicksWithParams', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   usersByDevice: (startDate: Date, endDate: Date) =>
     [...analyticsKeys.all, 'usersByDevice', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   engagementTime: (startDate: Date, endDate: Date) =>
@@ -143,6 +192,10 @@ const analyticsKeys = {
     [...analyticsKeys.all, 'trafficSources', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
   userRetention: (startDate: Date, endDate: Date) =>
     [...analyticsKeys.all, 'userRetention', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
+  popularClickedCards: (startDate: Date, endDate: Date) =>
+    [...analyticsKeys.all, 'popularClickedCards', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
+  popularClickedSets: (startDate: Date, endDate: Date) =>
+    [...analyticsKeys.all, 'popularClickedSets', normalizeDateForCache(startDate), normalizeDateForCache(endDate)] as const,
 };
 
 // Fetch function
@@ -175,6 +228,10 @@ const defaultQueryConfig = {
 export type UniqueUsersQueryResult = ReturnType<typeof useUniqueUsers>;
 export type SearchQueriesQueryResult = ReturnType<typeof useSearchQueries>;
 export type BuyClicksQueryResult = ReturnType<typeof useBuyClicks>;
+export type SearchQueriesWithParamsQueryResult = ReturnType<typeof useSearchQueriesWithParams>;
+export type BuyClicksWithParamsQueryResult = ReturnType<typeof useBuyClicksWithParams>;
+export type PopularClickedCardsQueryResult = ReturnType<typeof usePopularClickedCards>;
+export type PopularClickedSetsQueryResult = ReturnType<typeof usePopularClickedSets>;
 
 export function useUniqueUsers(numberOfDays: number = 30) {
   return useQuery<UniqueUsersResponse, AnalyticsError>({
@@ -204,6 +261,17 @@ export function useBuyClicks(numberOfDays: number = 30) {
     queryFn: () => fetchAnalytics<BuyClicksResponse>('buy-clicks', {
       numberOfDays: numberOfDays.toString(),
       sum: 'true'
+    }),
+    ...defaultQueryConfig,
+  });
+}
+
+export function useBuyClicksWithParams(startDate: Date, endDate: Date) {
+  return useQuery<BuyClicksWithParamsResponse, AnalyticsError>({
+    queryKey: analyticsKeys.buyClicksWithParams(startDate, endDate),
+    queryFn: () => fetchAnalytics<BuyClicksWithParamsResponse>('buy-clicks-with-params', {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
     }),
     ...defaultQueryConfig,
   });
@@ -303,4 +371,41 @@ export function useUserRetention(startDate: Date, endDate: Date) {
   });
 }
 
-export type { AnalyticsError, UniqueUsersResponse, SearchQueriesResponse, BuyClicksResponse, EngagementTimeResponse, CityAnalyticsResponse, CityAnalytics, UserTypesResponse, UserType, TrafficSourcesResponse, TrafficSource, UserRetentionResponse, CohortData, RetentionDataPoint }; 
+export function useSearchQueriesWithParams(startDate: Date, endDate: Date) {
+  return useQuery<SearchQueriesWithParamsResponse, AnalyticsError>({
+    queryKey: analyticsKeys.searchQueriesWithParams(startDate, endDate),
+    queryFn: () => fetchAnalytics<SearchQueriesWithParamsResponse>('search-queries-with-params', {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    }),
+    ...defaultQueryConfig,
+  });
+}
+
+export function usePopularClickedCards(startDate: Date, endDate: Date, limit: number = 10) {
+  return useQuery<PopularClickedCardsResponse, AnalyticsError>({
+    queryKey: analyticsKeys.popularClickedCards(startDate, endDate),
+    queryFn: () => fetchAnalytics<PopularClickedCardsResponse>('popular-clicked-cards', {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      limit: limit.toString(),
+    }),
+    ...defaultQueryConfig,
+  });
+}
+
+export function usePopularClickedSets(startDate: Date, endDate: Date, limit: number = 10) {
+  return useQuery<PopularClickedSetsResponse, AnalyticsError>({
+    queryKey: analyticsKeys.popularClickedSets(startDate, endDate),
+    queryFn: () => fetchAnalytics<PopularClickedSetsResponse>('popular-clicked-sets', {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      limit: limit.toString(),
+    }),
+    ...defaultQueryConfig,
+  });
+}
+
+
+
+export type { AnalyticsError, UniqueUsersResponse, SearchQueriesResponse, SearchQueriesWithParamsResponse, BuyClicksResponse, EngagementTimeResponse, CityAnalyticsResponse, CityAnalytics, UserTypesResponse, UserType, TrafficSourcesResponse, TrafficSource, UserRetentionResponse, CohortData, RetentionDataPoint, PopularClickedCardsResponse, PopularClickedCardsDataPoint, PopularClickedSetsResponse, PopularClickedSetsDataPoint };

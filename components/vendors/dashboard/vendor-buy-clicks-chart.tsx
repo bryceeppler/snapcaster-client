@@ -249,6 +249,7 @@ export function VendorBuyClicksChart({
               axisLine={false}
               tickMargin={8}
               fontSize={12}
+              minTickGap={40}
               stroke="hsl(var(--muted-foreground))"
               tickFormatter={(value) => value.toLocaleString()}
             />

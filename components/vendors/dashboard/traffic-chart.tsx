@@ -110,13 +110,13 @@ export function TrafficChart({
                 />
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid />
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              minTickGap={32}
+              minTickGap={64}
               fontSize={12}
               stroke="hsl(var(--muted-foreground))"
             />
@@ -124,6 +124,7 @@ export function TrafficChart({
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              minTickGap={40}
               fontSize={12}
               stroke="hsl(var(--muted-foreground))"
               tickFormatter={(value) => value.toLocaleString()}

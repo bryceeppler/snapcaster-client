@@ -34,13 +34,13 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.3rem;
-    --chart-1: 221 83% 53%;
+    --chart-1: 221 76% 62%;
     --chart-2: 212 94% 68%;
-    --chart-3: 216 92% 60%;
-    --chart-4: 211 98% 78%;
-    --chart-5: 211 97% 87%;
-    --chart-6: 235 83% 53%;
-    --chart-7: 235 85% 39%;
+    --chart-3: 16 90% 50%;   /* Vibrant orange */
+    --chart-4: 291 70% 50%;  /* Rich purple */
+    --chart-5: 142 76% 36%;  /* Forest green */
+    --chart-6: 355 78% 56%;  /* Bright red */
+    --chart-7: 45 93% 47%;   /* Golden yellow */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -71,13 +71,13 @@
     --border: 240 5.2% 33.9%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
-    --chart-1: 221 83% 53%;
+    --chart-1: 221 76% 62%;
     --chart-2: 212 94% 68%;
-    --chart-3: 216 92% 60%;
-    --chart-4: 211 98% 78%;
-    --chart-5: 211 97% 87%;
-    --chart-6: 235 83% 53%;
-    --chart-7: 235 85% 39%;
+    --chart-3: 16 90% 50%;   /* Vibrant orange */
+    --chart-4: 291 70% 50%;  /* Rich purple */
+    --chart-5: 142 76% 36%;  /* Forest green */
+    --chart-6: 355 78% 56%;  /* Bright red */
+    --chart-7: 45 93% 47%;   /* Golden yellow */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
