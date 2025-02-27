@@ -1,39 +1,10 @@
 import {
-    BarChart3,
-    LineChart,
-    Users,
-    LucideIcon,
     Calendar as CalendarIcon
   } from 'lucide-react';
   import { useState } from 'react';
   import { type SelectRangeEventHandler } from 'react-day-picker';
   import { subDays, format } from 'date-fns';
-  
-  import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
-  } from '@/components/ui/card';
-  import { TrafficChart } from '@/components/vendors/users/traffic-chart';
-  import { SearchChart } from '@/components/vendors/tcgs/search-chart';
-  import { BuyClicksChart } from '@/components/vendors/tcgs/buy-clicks-chart';
-  import { UserDeviceChart } from '@/components/vendors/dashboard/user-device-chart';
-  import { UserDeviceAreaChart } from '@/components/vendors/users/user-device-area-chart';
-  import { CityAnalyticsTable } from '@/components/vendors/users/city-analytics-table';
-  import { UserTypesChart } from '@/components/vendors/users/user-types-chart';
-  import { TrafficSourcesChart } from '@/components/vendors/users/traffic-sources-chart';
   import DashboardLayout from './layout';
-  import { useAuth } from '@/hooks/useAuth';
-  import {
-    type AnalyticsError,
-    useUniqueUsersByDate,
-    useEngagementTime,
-    useSearchQueries,
-    useSearchQueriesWithParams,
-    useBuyClicksWithParams
-  } from '@/lib/hooks/useAnalytics';
   import { Button } from '@/components/ui/button';
   import { Calendar } from '@/components/ui/calendar';
   import {
@@ -41,82 +12,14 @@ import {
     PopoverContent,
     PopoverTrigger
   } from '@/components/ui/popover';
-  import { Skeleton } from '@/components/ui/skeleton';
-  import { PopularClickedCards } from '@/components/vendors/tcgs/popular-clicked-cards';
-  import { PopularClickedSets } from '@/components/vendors/tcgs/popular-clicked-sets';
   import { VendorLeaderboard } from '@/components/vendors/vendors/vendor-leaderboard';
-  interface AnalyticsErrorMessageProps {
-    message: string;
-    status?: number;
-  }
   
-  function AnalyticsErrorMessage({
-    message,
-    status
-  }: AnalyticsErrorMessageProps) {
-    return (
-      <div className="flex flex-col items-center justify-center p-4">
-        <p className="text-sm text-red-500">{message}</p>
-        {status && <p className="text-xs text-red-400">Status: {status}</p>}
-      </div>
-    );
-  }
-  
-  interface MetricCardProps {
-    title: string;
-    Icon: LucideIcon;
-    value: number;
-    isLoading: boolean;
-    error: AnalyticsError | null | undefined;
-    description?: string;
-    formatter?: (value: number) => string;
-  }
-  
-  function MetricCard({
-    title,
-    Icon,
-    value,
-    isLoading,
-    error,
-    description = 'Last 30 days',
-    formatter = (value: number) => value.toLocaleString()
-  }: MetricCardProps) {
-    return (
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <div className="space-y-1">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              {title}
-            </CardTitle>
-            <CardDescription className="text-xs">{description}</CardDescription>
-          </div>
-          <Icon className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <Skeleton className="h-8 w-[120px]" />
-          ) : error ? (
-            <AnalyticsErrorMessage
-              message={error.message}
-              status={error.status}
-            />
-          ) : (
-            <div className="space-y-2">
-              <div className="text-2xl font-bold">{formatter(value)}</div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    );
-  }
   
   export default function VendorsAnalyticsPage() {
     const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
       from: subDays(new Date(), 30),
       to: new Date()
     });
-  
-    const { isAdmin } = useAuth();
   
     const handleDateRangeChange: SelectRangeEventHandler = (range) => {
       if (!range) {
@@ -168,12 +71,7 @@ import {
               </Popover>
             </div>
               <div className="overflow-x-auto">
-                 <VendorLeaderboard />
-              </div>
-              
-              <div className="overflow-x-auto">
-                 {/* TODO: Add inventory table  */}
-                 <div className="h-[300px] w-full bg-muted rounded-md" />
+                 <VendorLeaderboard dateRange={dateRange} chartHeight={500} />
               </div>
           </div>
         </div>

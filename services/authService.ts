@@ -41,6 +41,7 @@ interface ConnectDiscordResponse {
 
 interface VendorData {
   vendorId: number;
+  vendorSlug: string;
 }
 
 type UserRole = 'ADMIN' | 'VENDOR' | 'USER';

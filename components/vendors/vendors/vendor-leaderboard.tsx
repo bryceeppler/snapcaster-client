@@ -18,11 +18,12 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { useVendorBuyClicks } from '@/lib/hooks/useAnalytics';
+import { useVendorLeaderboard } from '@/lib/hooks/useAnalytics';
 import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 import useGlobalStore from '@/stores/globalStore';
 import { formatChartDate } from '@/lib/utils';
-
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useAuth } from '@/hooks/useAuth';
 const TCG_ORDER = [
   'mtg',
   'pokemon',
@@ -34,7 +35,7 @@ const TCG_ORDER = [
 ] as const;
 
 const tcgLabels = {
-  mtg: 'Magic: The Gathering',
+  mtg: 'MTG',
   pokemon: 'Pokémon',
   yugioh: 'Yu-Gi-Oh!',
   onepiece: 'One Piece',
@@ -68,13 +69,14 @@ interface VendorLeaderboardProps {
 }
 
 export function VendorLeaderboard({
-  numberOfDays = 30,
+  numberOfDays,
   dateRange,
   chartHeight = 250,
   className
 }: VendorLeaderboardProps) {
   // Use either dateRange or numberOfDays
-  const { data, isLoading, error } = useVendorBuyClicks(
+  const { profile } = useAuth();
+  const { data, isLoading, error } = useVendorLeaderboard(
     dateRange ? dateRange.from : numberOfDays,
     dateRange ? dateRange.to : undefined,
     0
@@ -118,7 +120,8 @@ export function VendorLeaderboard({
     return {
       ...item,
       website: website?.name || normalizedUrl, // Fallback to normalized URL if website not found
-      originalUrl: item.website // Keep original URL for tooltip
+      originalUrl: item.website, // Keep original URL for tooltip
+      slug: website?.slug
     };
   });
 
@@ -130,44 +133,49 @@ export function VendorLeaderboard({
           <CardDescription>Buy clicks by TCG across vendors</CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <div className={`relative overflow-auto ${heightClass}`}>
-          <Table>
-            <TableHeader className="sticky top-0 bg-background">
-              <TableRow>
-                <TableHead>Vendor</TableHead>
-                <TableHead className="text-right">Total Clicks</TableHead>
-                {TCG_ORDER.map((tcg) => (
-                  <TableHead key={tcg} className="text-right">
-                    {tcgLabels[tcg]}
-                  </TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {processedData?.map((vendor) => (
-                <TableRow key={vendor.website}>
-                  <TableCell className="font-medium">{vendor.website}</TableCell>
-                  <TableCell className="text-right">{vendor.total.toLocaleString()}</TableCell>
-                  {TCG_ORDER.map((tcg) => (
-                    <TableCell key={tcg} className="text-right">
-                      {vendor[tcg] ? (
-                        <div className="flex flex-col">
-                          <span>{vendor[tcg].toLocaleString()}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {((vendor[tcg] / vendor.total) * 100).toFixed(1)}%
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground">-</span>
-                      )}
-                    </TableCell>
+      <CardContent className="flex">
+          <ScrollArea className={`${heightClass} w-1 flex-1`}>
+            <div className="min-w-max">
+              <Table className="w-full">
+                <TableHeader className="sticky top-0 bg-background">
+                  <TableRow>
+                    <TableHead className="w-[30px] whitespace-nowrap">Rank</TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap">Vendor</TableHead>
+                    <TableHead className="w-[120px] text-right whitespace-nowrap">Total Clicks</TableHead>
+                    {TCG_ORDER.map((tcg) => (
+                      <TableHead key={tcg} className="w-[120px] text-right whitespace-nowrap">
+                        {tcgLabels[tcg]}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {processedData?.map((vendor, index) => (
+                    <TableRow key={vendor.website} className={profile?.data.user.vendorData?.vendorSlug === vendor.slug ? 'bg-primary/50' : ''}>
+                      <TableCell className="w-[30px] whitespace-nowrap">{index + 1}</TableCell>
+                      <TableCell className="font-medium max-w-[120px]" title={vendor.website}>{vendor.website}</TableCell>
+                      <TableCell className="text-right w-[120px]">{vendor.total.toLocaleString()}</TableCell>
+                      {TCG_ORDER.map((tcg) => (
+                        <TableCell key={tcg} className="text-right w-[120px]">
+                          {vendor[tcg] ? (
+                            <div className="flex flex-col">
+                              <span>{vendor[tcg].toLocaleString()}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {((vendor[tcg] / vendor.total) * 100).toFixed(1)}%
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground">-</span>
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
                   ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                </TableBody>
+              </Table>
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm pt-2">
         <div className="opacity-0 h-[16px] leading-none">
