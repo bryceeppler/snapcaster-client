@@ -8,7 +8,7 @@ import {
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
 import { Button } from './button';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import { AlignJustify, Search, SlidersHorizontal, User, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import ModeToggle from '../theme-toggle';
@@ -32,8 +32,10 @@ import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/buyListStore';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, isVendor, isAdmin } = useAuth();
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
+
+  const canViewAnalytics = isAdmin || isVendor;
 
   const {
     initNotificationStatus,
@@ -216,6 +218,19 @@ const Navbar: React.FC = () => {
                         About
                       </Button>
                     </Link>
+                    {canViewAnalytics && (
+                      <Link href="/vendors/dashboard" as="/vendors/dashboard">
+                        <Button
+                          variant="ghost"
+                          className="block w-full text-left text-lg"
+                          onClick={() => {
+                            setMobileNavSheetOpen(false);
+                          }}
+                        >
+                          Analytics
+                        </Button>
+                      </Link>
+                    )}
 
                     <Link href={isAuthenticated ? `/profile` : '/signin'}>
                       <Button
@@ -526,11 +541,23 @@ const Navbar: React.FC = () => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
+              {canViewAnalytics && (
+                <NavigationMenuItem
+                  className={`${navigationMenuTriggerStyle()} ${
+                    currentPath.startsWith('/vendors') &&
+                    'rounded-b-none border-b-2 border-primary'
+                  }`}
+                >
+                  <Link legacyBehavior href="/vendors/dashboard" passHref>
+                    Analytics
+                  </Link>
+                </NavigationMenuItem>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
       </div>
-      {notificationStatus == true && (
+      {/* {notificationStatus == true && (
         <div className="flex w-full items-center bg-primary px-1 text-secondary">
           <p className="flex-1 text-center text-xs font-medium md:text-base">
             Snapcaster now supports Star Wars: Unlimited! Try it out now!
@@ -539,7 +566,7 @@ const Navbar: React.FC = () => {
             <X />
           </button>
         </div>
-      )}
+      )} */}
     </>
   );
 };

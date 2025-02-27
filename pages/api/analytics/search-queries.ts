@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { GA4Client } from '@/lib/GA4Client'
+import { subDays } from 'date-fns'
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,15 +11,65 @@ export default async function handler(
   }
 
   try {
-    const { days } = req.query
-    const numberOfDays = parseInt(days as string) || 120
+    console.log('Received request for search-queries:', req.query)
+    const { startDate, endDate, numberOfDays, sum, includeParams } = req.query
 
     const ga4Client = new GA4Client()
-    const data = await ga4Client.getSearchQueriesByDay(numberOfDays)
+    let start: Date
+    let end: Date
 
-    return res.status(200).json(data)
-  } catch (error) {
+    if (numberOfDays) {
+      // If numberOfDays is provided, calculate date range from yesterday
+      const days = parseInt(numberOfDays as string)
+      if (isNaN(days) || days <= 0) {
+        return res
+          .status(400)
+          .json({ message: 'numberOfDays must be a positive number' })
+      }
+      end = subDays(new Date(), 1) // yesterday
+      start = subDays(end, days)
+    } else {
+      // Otherwise use startDate and endDate
+      if (!startDate) {
+        return res
+          .status(400)
+          .json({ message: 'Either startDate or numberOfDays is required' })
+      }
+      start = new Date(startDate as string)
+      end = endDate ? new Date(endDate as string) : new Date()
+    }
+
+    const includePreviousPeriod = sum === 'true'
+    
+    console.log(`Fetching search queries from ${start.toISOString()} to ${end.toISOString()}, includePreviousPeriod: ${includePreviousPeriod}, includeParams: ${includeParams}`)
+    
+    let result;
+    
+    if (includeParams === 'true') {
+      // Use the new method with parameters
+      result = await ga4Client.getSearchQueriesWithParams(start, end, includePreviousPeriod)
+      console.log('Successfully retrieved search queries with params')
+    } else {
+      // Use the original method without parameters
+      result = await ga4Client.getSearchQueries(start, end, includePreviousPeriod)
+      console.log('Successfully retrieved search queries without params')
+    }
+    
+    // Set caching headers
+    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
+    
+    return res.status(200).json(result)
+  } catch (error: any) {
     console.error('Error fetching search queries:', error)
-    return res.status(500).json({ message: 'Internal server error' })
+    
+    // Provide more detailed error information
+    const errorDetails = {
+      message: 'Internal server error',
+      details: error.message || 'Unknown error',
+      code: error.code || 'UNKNOWN',
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }
+    
+    return res.status(500).json(errorDetails)
   }
 } 

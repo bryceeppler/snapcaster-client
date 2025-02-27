@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/hooks/useAuth';
 import {
   Card,
   CardHeader,
@@ -15,10 +16,15 @@ import {
   CardContent,
   CardFooter
 } from '@/components/ui/card';
+import { useState } from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { CheckCircle } from 'lucide-react';
 
 type Props = {};
 
 const ForgotPassword: NextPage<Props> = () => {
+  const { forgotPassword } = useAuth();
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const {
     register,
     handleSubmit,
@@ -34,23 +40,11 @@ const ForgotPassword: NextPage<Props> = () => {
   };
   const onSubmit = async (data: Submision) => {
     const { email } = data;
-    const endpoint = process.env.NEXT_PUBLIC_USER_URL + '/forgot-password';
-
     try {
-      const response = await axios.post(endpoint, { email });
-
-      if (!response.status) {
-        toast.error('Invalid response from server.');
-        throw new Error('Something went wrong with the login process');
-      } else {
-        if (response.status !== 200) {
-          throw new Error('Something went wrong with the login process');
-        }
-        toast.success('Check your email for a password reset link');
-      }
+      await forgotPassword(email);
+      setIsSubmitted(true);
     } catch (error) {
-      toast.error('An error occurred during login');
-      console.error(error);
+      toast.error('Failed to send reset email. Please try again.');
     }
   };
 
@@ -66,6 +60,7 @@ const ForgotPassword: NextPage<Props> = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+
             <form
               className="grid gap-4 md:gap-4"
               onSubmit={handleSubmit(onSubmit)}
@@ -78,6 +73,7 @@ const ForgotPassword: NextPage<Props> = () => {
                 })}
                 type="text"
                 placeholder="m@example.com"
+                disabled={isSubmitted}
               />
               {errors.email && (
                 <p className="text-red-500">{errors.email.message}</p>
@@ -85,10 +81,18 @@ const ForgotPassword: NextPage<Props> = () => {
               {errors.email?.type === 'pattern' && (
                 <p className="text-red-500">Invalid email</p>
               )}
-              <Button type="submit" className="w-full">
-                Send reset link
+              <Button type="submit" className="w-full" disabled={isSubmitted}>
+                {isSubmitted ? 'Email Sent' : 'Send reset link'}
               </Button>
             </form>
+            {isSubmitted && (
+              <Alert className="mt-4" variant="success">
+                <CheckCircle className="size-4" />
+                <AlertDescription>
+                  If an account exists with this email, you will receive a password reset link shortly.
+                </AlertDescription>
+              </Alert>
+            )}
             <div className="mt-4 text-center text-sm">
               Know your password?{' '}
               <Link href="/signin" className="underline">

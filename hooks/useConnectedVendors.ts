@@ -1,14 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
+import { userService } from '@/services/userService';
 
 export function useConnectedVendors() {
   return useQuery<number[]>({
     queryKey: ['connectedVendors'],
-    queryFn: async () => {
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_USER_URL}/connections`
-      );
-      return response.data.connectedVendors;
-    }
+    queryFn: () => userService.getConnectedVendors()
   });
 } 

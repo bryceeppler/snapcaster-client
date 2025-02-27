@@ -1,13 +1,13 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
-import { Product, ProductCategory } from '@/types';
+import { Product, Tcg } from '@/types';
 import { FilterOption, SingleSortOptions } from '@/types/query';
 import { toast } from 'sonner';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useEffect } from 'react';
 
 interface SearchParams {
-  productCategory: ProductCategory;
+  productCategory: Tcg;
   searchTerm: string;
   selectedFilters: { field: string; value: string }[];
   sortBy: SingleSortOptions;
@@ -50,12 +50,14 @@ const fetchSealedProducts = async ({
   pageParam = 1
 }: SearchParams & { pageParam?: number }): Promise<SearchResponse> => {
   const queryParams = new URLSearchParams({
-    index: `ca_${productCategory}_prod*`,
+    region: region,
+    tcg: productCategory,
+    mode: 'sealed',
     keyword: searchTerm.trim(),
     sortBy: sortBy,
     maxResultsPerPage: '24',
-    pageNumber: pageParam.toString(),
-    fuzzy: 'max'
+    pageNumber: pageParam.toString()
+    // fuzzy: 'max'
   });
 
   selectedFilters.forEach(({ field, value }) => {
@@ -64,14 +66,16 @@ const fetchSealedProducts = async ({
 
   try {
     const response = await axiosInstance.get(
-      `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/search?${queryParams.toString()}`
+      `${
+        process.env.NEXT_PUBLIC_CATALOG_URL
+      }/api/v1/search?${queryParams.toString()}`
     );
 
     if (response.status !== 200) {
       throw new Error(`Error: ${response.status} - ${response.statusText}`);
     }
 
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error('Error fetching cards:', error);
     if (error instanceof Error) {
@@ -107,7 +111,7 @@ export const useSealedSearch = (
     staleTime: Infinity,
     select: (data): TransformedSearchResponse => {
       const lastPage = data.pages[data.pages.length - 1];
-      const allResults = data.pages.flatMap(page => page.results);
+      const allResults = data.pages.flatMap((page) => page.results);
       const allPromotedResults = data.pages[0].promotedResults || [];
 
       const sortOptionsMap = data.pages[0].sorting.Items.reduce(
@@ -119,8 +123,8 @@ export const useSealedSearch = (
       );
 
       return {
-        searchResults: allResults.map(item => ({ ...item, promoted: false })),
-        promotedResults: allPromotedResults.map(item => ({
+        searchResults: allResults.map((item) => ({ ...item, promoted: false })),
+        promotedResults: allPromotedResults.map((item) => ({
           ...item,
           promoted: true
         })),
@@ -146,4 +150,4 @@ export const useSealedSearch = (
     ...query,
     isLoading: query.isLoading || query.isFetching
   };
-}; 
+};

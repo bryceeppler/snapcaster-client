@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import useGlobalStore from '@/stores/globalStore';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import { createCheckoutSession } from '@/lib/utils';
 import {
   FilterOption,
@@ -41,7 +41,7 @@ const FilterSection: React.FC<Prop> = memo(
     applyFilters,
     setSortBy
   }) => {
-    const { isAuthenticated, hasActiveSubscription } = useAuthStore();
+    const { isAuthenticated, hasActiveSubscription } = useAuth();
     const handleClearFilters = () => {
       clearFilters();
       fetchCards();

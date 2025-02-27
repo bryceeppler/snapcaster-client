@@ -1,10 +1,10 @@
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import BackToTopButton from '../ui/back-to-top-btn';
 import SealedCatalogItem from './sealed-catalog-item';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import React, { useEffect, useRef } from 'react';
 import { singleSortByLabel } from '@/types/query';
-import { ProductCategory, SealedProduct } from '@/types';
+import { Tcg, SealedProduct } from '@/types';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { SingleSortOptions, FilterOption } from '@/types/query';
 import { Button } from '@/components/ui/button';
@@ -20,9 +20,9 @@ import { Badge } from '@/components/ui/badge';
 import FilterSheet from './filter-sheet';
 
 interface SealedCatalogContainerProps {
-  productCategory: ProductCategory;
+  productCategory: Tcg;
   searchTerm: string;
-  setProductCategory: (productCategory: ProductCategory) => void;
+  setProductCategory: (productCategory: Tcg) => void;
   setSearchTerm: (searchTerm: string) => void;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSearch: () => void;
@@ -56,9 +56,13 @@ export default function SealedCatalogContainer({
   refetch,
   filterOptions
 }: SealedCatalogContainerProps) {
-  const { sortBy, setSortBy: setStoreSortBy, selectedFilters } = useSealedSearchStore();
+  const {
+    sortBy,
+    setSortBy: setStoreSortBy,
+    selectedFilters
+  } = useSealedSearchStore();
 
-  const { hasActiveSubscription } = useAuthStore();
+  const { hasActiveSubscription } = useAuth();
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   // Intersection Observer for infinite scroll
@@ -105,14 +109,12 @@ export default function SealedCatalogContainer({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9 gap-2 text-sm font-medium relative"
+                  className="relative h-9 gap-2 text-sm font-medium"
                 >
                   <SlidersHorizontal className="h-4 w-4" />
                   Filters
                   {selectedFilters.length > 0 && (
-                    <Badge 
-                      className="absolute -right-2 -top-2 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
-                    >
+                    <Badge className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs">
                       {selectedFilters.length}
                     </Badge>
                   )}
@@ -160,7 +162,10 @@ export default function SealedCatalogContainer({
 
         {/* Loading Spinner for Infinite Scroll */}
         <div ref={loadMoreRef} className="h-10 w-full">
-          {(isFetchingNextPage || (isLoading && Array.isArray(searchResults) && searchResults.length > 0)) && (
+          {(isFetchingNextPage ||
+            (isLoading &&
+              Array.isArray(searchResults) &&
+              searchResults.length > 0)) && (
             <div className="flex items-center justify-center py-4">
               <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
             </div>

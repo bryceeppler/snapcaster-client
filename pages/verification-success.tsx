@@ -1,32 +1,34 @@
+import { Button } from "@/components/ui/button";
+import { CheckCircle } from "lucide-react";
+import Link from "next/link";
+import Head from "next/head";
+
 export default function Component() {
   return (
-    <section className="flex h-screen w-full flex-col items-center space-y-8 px-4 text-center">
-      <svg
-        className=" mt-20 h-24 w-24 text-green-500 dark:text-green-300"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-        <polyline points="22 4 12 14.01 9 11.01" />
-      </svg>
-      <h2 className="text-4xl font-semibold text-gray-300 dark:text-white">
-        Your email is verified!
-      </h2>
-      <p className="text-xl text-gray-400 dark:text-gray-300">
-        Your email verification was successful.
-      </p>
-      {/* <Button variant="slim">
-          <Link className="" href="/">
-            Return to Homepage
-          </Link>
-        </Button> */}
-    </section>
+    <>
+      <Head>
+        <title>Email Verified - Snapcaster</title>
+      </Head>
+      <main className="flex flex-col items-center justify-center bg-background p-4 mt-16">
+        <div className="mx-auto w-full max-w-md text-center">
+          <div className="rounded-full bg-primary/10 p-3 text-primary w-fit mx-auto">
+            <CheckCircle className="h-6 w-6" />
+          </div>
+          <h1 className="mt-6 text-2xl font-semibold tracking-tight">
+            Email verified successfully
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Your email has been verified. You can now access all features of your account.
+          </p>
+          <div className="mt-6">
+            <Button asChild className="w-full sm:w-auto">
+              <Link href="/profile">
+                Return to Profile
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </main>
+    </>
   );
 }

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import type { FC } from "react";
-import useAuthStore from "@/stores/authStore";
+import { useAuth } from "@/hooks/useAuth";
 import SearchBar from "../search-ui/search-bar";
 import { Badge } from "../ui/badge";
 import { useRouter } from "next/router";
@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 const Info: FC = () => {
   const router = useRouter();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
   const {
     tcg,
     searchTerm,

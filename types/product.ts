@@ -1,5 +1,11 @@
-export type Tcg = 'yugioh' | 'pokemon' | 'lorcana' | 'mtg' | 'onepiece' | 'starwars' | 'fleshandblood';
-export type ProductCategory = 'sealed_yugioh' | 'sealed_pokemon' | 'sealed_lorcana' | 'sealed_mtg' | 'sealed_onepiece' | 'sealed_starwars' | 'sealed_fleshandblood';
+export type Tcg =
+  | 'yugioh'
+  | 'pokemon'
+  | 'lorcana'
+  | 'mtg'
+  | 'onepiece'
+  | 'starwars'
+  | 'fleshandblood';
 export type Condition = 'nm' | 'lp' | 'mp' | 'hp' | 'dmg';
 
 export type Product = {
@@ -31,7 +37,7 @@ export interface SingleCatalogCard extends Product {
 
 export interface BuyListQueryCard {
   name: string;
-  filters:any;
+  filters: any;
   image: string;
   conditions?: {
     [key in Condition]?: BuyListCardPricing;
@@ -54,17 +60,16 @@ export interface BuyListCardPricing {
 }
 
 export interface BuyListCartStoreData {
-  [storeName: string]:BuyListCartCardData[];
+  [storeName: string]: BuyListCartCardData[];
 }
 
 export interface BuyListCartCardData {
-  name:string;
-  condition:string;
-  quantity:number;
-  rarity:string;
-  set:string;
-  foil:string;
-  cashPrice:number;
-  creditPrice:number;
+  name: string;
+  condition: string;
+  quantity: number;
+  rarity: string;
+  set: string;
+  foil: string;
+  cashPrice: number;
+  creditPrice: number;
 }
-

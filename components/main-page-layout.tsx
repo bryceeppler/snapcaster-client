@@ -7,22 +7,177 @@ import {
   CarouselItem
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
-import useAuthStore from '@/stores/authStore';
+import { useAuth } from '@/hooks/useAuth';
 import CarouselAd from './carousel-ad';
 import { AdSelector } from '@/utils/adSelector';
 import { Ad, AdWeight } from '@/types/ads';
 import VerticalCarousel from './vertical-carousel';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 type Props = {
   width?: 'md' | 'xl';
 };
+
+// Constants for ad dimensions and layout
+const AD_DIMENSIONS = {
+  topBanner: {
+    mobile: {
+      width: 382,
+      height: 160,
+      aspectRatio: '382/160'
+    },
+    desktop: {
+      width: 1008,
+      height: 160,
+      aspectRatio: '1008/160'
+    }
+  },
+  sideBanner: {
+    width: 160,
+    height: 480,
+    aspectRatio: '160/480'
+  }
+} as const;
+
+// Improved skeleton components with consistent dimensions
+const TopBannerSkeleton = () => (
+  <div className="w-full overflow-hidden rounded-lg">
+    <div className="relative mx-auto w-full flex justify-center">
+      {/* Mobile Banner */}
+      <div className="block sm:hidden w-full">
+        <div 
+          className="relative w-full"
+          style={{ 
+            aspectRatio: '382/160'
+          }}
+        >
+          <Skeleton className="absolute inset-0" />
+        </div>
+      </div>
+      {/* Desktop Banner */}
+      <div className="hidden sm:block w-full">
+        <div 
+          className="relative mx-auto"
+          style={{ 
+            width: '100%',
+            maxWidth: AD_DIMENSIONS.topBanner.desktop.width,
+            height: AD_DIMENSIONS.topBanner.desktop.height,
+            aspectRatio: AD_DIMENSIONS.topBanner.desktop.aspectRatio
+          }}
+        >
+          <Skeleton className="absolute inset-0" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const SideBannerSkeleton = () => (
+  <div 
+    className="overflow-hidden rounded-lg"
+    style={{ 
+      width: AD_DIMENSIONS.sideBanner.width,
+      height: AD_DIMENSIONS.sideBanner.height,
+      aspectRatio: AD_DIMENSIONS.sideBanner.aspectRatio
+    }}
+  >
+    <Skeleton className="h-full w-full" />
+  </div>
+);
+
+// Simplified ad container with better layout stability
+const AdContainer = ({ 
+  isLoading,
+  children,
+  className,
+  skeleton
+}: { 
+  isLoading: boolean;
+  children: React.ReactNode;
+  className?: string;
+  skeleton: React.ReactNode;
+}) => {
+  const [isTransitioning, setIsTransitioning] = useState(true);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => setIsTransitioning(false), 500);
+      return () => clearTimeout(timer);
+    }
+    setIsTransitioning(true);
+  }, [isLoading]);
+
+  return (
+    <div className={cn("relative", className)}>
+      <div 
+        className={cn(
+          "absolute inset-0 z-10 transition-opacity duration-500",
+          (!isLoading && !isTransitioning) && "opacity-0"
+        )}
+      >
+        {skeleton}
+      </div>
+      <div 
+        className={cn(
+          "transition-opacity duration-500",
+          (isLoading || isTransitioning) ? "opacity-0" : "opacity-100"
+        )}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+
+// Simplified preloader with better error handling
+const useAdPreloader = (ads: Ad[]) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!ads.length) {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    let mounted = true;
+
+    const imagePromises = ads.map(ad => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = ad.mobile_image;
+      });
+    });
+
+    Promise.all(imagePromises)
+      .then(() => {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [ads]);
+
+  return isLoading;
+};
+
 export default function MainLayout({
   children,
-  width = 'md'
 }: React.PropsWithChildren<Props>) {
   const { ads } = useGlobalStore();
   const { showAds } = useAdContext();
-  const { hasActiveSubscription } = useAuthStore();
+  const { hasActiveSubscription } = useAuth();
   const [hydrated, setHydrated] = useState(false);
 
   const topBannerStoreWeights: AdWeight[] = [
@@ -75,6 +230,11 @@ export default function MainLayout({
   const [leftCarouselAds, setLeftCarouselAds] = useState<Ad[]>([]);
   const [rightCarouselAds, setRightCarouselAds] = useState<Ad[]>([]);
 
+  // Simplified loading states
+  const isTopBannerLoading = useAdPreloader(topBannerAds);
+  const isLeftCarouselLoading = useAdPreloader(leftCarouselAds);
+  const isRightCarouselLoading = useAdPreloader(rightCarouselAds);
+
   useEffect(() => {
     setHydrated(true);
   }, []);
@@ -82,7 +242,7 @@ export default function MainLayout({
   useEffect(() => {
     if (!ads.position || Object.keys(ads.position).length === 0) return;
 
-    // Initialize AdSelectors for each position
+    // Initialize AdSelectors and set ads (existing code)
     const topSelector = new AdSelector(
       ads.position['1']?.ads || [],
       topBannerStoreWeights
@@ -96,7 +256,6 @@ export default function MainLayout({
       rightCarouselStoreWeights
     );
 
-    // Get all ads for each position using the selector
     const getPositionAds = (selector: AdSelector, count: number) => {
       const selectedAds: Ad[] = [];
       for (let i = 0; i < count; i++) {
@@ -121,46 +280,116 @@ export default function MainLayout({
   }, [ads.position]);
 
   if (!ads.position || Object.keys(ads.position).length === 0 || !hydrated) {
-    return null;
+    return <div className={`mt-4`}>{children}</div>;
   }
 
+  const shouldShowAds = showAds && !hasActiveSubscription && hydrated;
+
   return (
-    <div
-      className={`container w-full max-w-4xl flex-1 flex-col items-center justify-center px-0  md:mt-4 below1550:max-w-6xl`}
-    >
-      <>
-        {/* Header : position 1 */}
-        {showAds && !hasActiveSubscription && topBannerAds.length > 0 && (
-          <Carousel
-            className="w-full overflow-hidden rounded-lg "
-            plugins={[topAutoPlayPlugin.current]}
-          >
-            <CarouselContent>
-              {topBannerAds.map((ad, index) => (
-                <CarouselItem key={index}>
-                  <CarouselAd ad={ad} forceMobile={false} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        )}
+    <div className="container relative w-full max-w-4xl flex-1 flex-col items-center justify-center p-4 below1550:max-w-6xl">
+      {shouldShowAds && (
+        <>
+          {/* Top Banner */}
+          {topBannerAds.length > 0 && (
+            <AdContainer
+              isLoading={isTopBannerLoading}
+              skeleton={<TopBannerSkeleton />}
+              className="mb-4 w-full"
+            >
+              <Carousel
+                className="w-full overflow-hidden rounded-lg"
+                plugins={[topAutoPlayPlugin.current]}
+              >
+                <CarouselContent>
+                  {topBannerAds.map((ad, index) => (
+                    <CarouselItem key={index} className="flex justify-center">
+                      {/* Mobile Banner */}
+                      <div className="block sm:hidden w-full">
+                        <div 
+                          className="relative w-full"
+                          style={{ 
+                            aspectRatio: AD_DIMENSIONS.topBanner.mobile.aspectRatio
+                          }}
+                        >
+                          <div className="absolute inset-0">
+                            <CarouselAd ad={ad} forceMobile={false} />
+                          </div>
+                        </div>
+                      </div>
+                      {/* Desktop Banner */}
+                      <div className="hidden sm:block w-full">
+                        <div 
+                          className="relative mx-auto"
+                          style={{ 
+                            width: '100%',
+                            maxWidth: AD_DIMENSIONS.topBanner.desktop.width,
+                            aspectRatio: AD_DIMENSIONS.topBanner.desktop.aspectRatio
+                          }}
+                        >
+                          <div className="absolute inset-0">
+                            <CarouselAd ad={ad} forceMobile={false} />
+                          </div>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </AdContainer>
+          )}
 
-        {/* Left ad : position 2 */}
-        {showAds && !hasActiveSubscription && leftCarouselAds.length > 0 && (
-          <div className="fixed left-5 top-1/3 hidden max-h-[480px] max-w-[160px] items-center justify-center overflow-hidden rounded-lg smlaptop:flex smlaptop:flex-col">
-            <VerticalCarousel ads={leftCarouselAds} />
+          {/* Side Banners */}
+          <div className="hidden smlaptop:block">
+            {/* Left Banner */}
+            {leftCarouselAds.length > 0 && (
+              <div className="fixed left-4 top-1/3">
+                <AdContainer
+                  isLoading={isLeftCarouselLoading}
+                  skeleton={<SideBannerSkeleton />}
+                >
+                  <div 
+                    className="relative overflow-hidden rounded-lg"
+                    style={{ 
+                      width: AD_DIMENSIONS.sideBanner.width,
+                      height: AD_DIMENSIONS.sideBanner.height
+                    }}
+                  >
+                    <div className="absolute inset-0">
+                      <VerticalCarousel ads={leftCarouselAds} />
+                    </div>
+                  </div>
+                </AdContainer>
+              </div>
+            )}
+
+            {/* Right Banner */}
+            {rightCarouselAds.length > 0 && (
+              <div className="fixed right-4 top-1/3">
+                <AdContainer
+                  isLoading={isRightCarouselLoading}
+                  skeleton={<SideBannerSkeleton />}
+                >
+                  <div 
+                    className="relative overflow-hidden rounded-lg"
+                    style={{ 
+                      width: AD_DIMENSIONS.sideBanner.width,
+                      height: AD_DIMENSIONS.sideBanner.height
+                    }}
+                  >
+                    <div className="absolute inset-0">
+                      <VerticalCarousel ads={rightCarouselAds} />
+                    </div>
+                  </div>
+                </AdContainer>
+              </div>
+            )}
           </div>
-        )}
+        </>
+      )}
 
-        {/* Right ad : position 3 */}
-        {showAds && !hasActiveSubscription && rightCarouselAds.length > 0 && (
-          <div className="fixed right-5 top-1/3 hidden max-h-[480px] max-w-[160px] items-center justify-center overflow-hidden rounded-lg smlaptop:flex smlaptop:flex-col">
-            <VerticalCarousel ads={rightCarouselAds} />
-          </div>
-        )}
-      </>
-
-      <div className={`mt-4`}>{children}</div>
+      <main className="relative z-10">
+        {children}
+      </main>
     </div>
   );
 }

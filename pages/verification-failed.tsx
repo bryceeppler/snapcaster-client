@@ -1,33 +1,37 @@
+import { Button } from "@/components/ui/button";
+import { XCircle } from "lucide-react";
+import Link from "next/link";
+import Head from "next/head";
+
 export default function Component() {
   return (
-    <section className="flex h-screen w-full flex-col items-center space-y-8 px-4 text-center">
-      <svg
-        className=" mt-20 h-24 w-24 text-red-500 dark:text-red-400"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <path d="m15 9-6 6" />
-        <path d="m9 9 6 6" />
-      </svg>
-      <h2 className="text-4xl font-semibold text-gray-300 dark:text-white">
-        Your email could not be verified.
-      </h2>
-      <p className="text-xl text-gray-400 dark:text-gray-300">
-        Your email verification was not successful.
-      </p>
-      {/* <Button variant="slim">
-          <Link className="" href="/">
-            Return to Homepage
-          </Link>
-        </Button> */}
-    </section>
+    <>
+      <Head>
+        <title>Verification Failed - Snapcaster</title>
+      </Head>
+      <main className="flex flex-col items-center justify-center bg-background p-4 mt-16">
+        <div className="mx-auto w-full max-w-md text-center">
+          <div className="rounded-full bg-destructive/10 p-3 text-destructive w-fit mx-auto">
+            <XCircle className="h-6 w-6" />
+          </div>
+          <h1 className="mt-6 text-2xl font-semibold tracking-tight">
+            Verification failed
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            We couldn't verify your email. The verification link may have expired or is invalid.
+          </p>
+          <div className="mt-6 space-y-4">
+            <Button asChild variant="default" className="w-full sm:w-auto">
+              <Link href="/profile">
+                Return to Profile
+              </Link>
+            </Button>
+            <div className="text-sm text-muted-foreground">
+              Need help? <Link href="/contact" className="text-primary hover:underline">Contact Support</Link>
+            </div>
+          </div>
+        </div>
+      </main>
+    </>
   );
 }

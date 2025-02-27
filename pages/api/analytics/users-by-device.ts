@@ -10,12 +10,25 @@ export default async function handler(
   }
 
   try {
-    const days = parseInt(req.query.days as string) || 30;
-    const client = new GA4Client();
-    const data = await client.getUsersByDevice(days);
-    res.status(200).json(data);
+    const { startDate, endDate } = req.query;
+
+    if (!startDate) {
+      return res.status(400).json({ message: 'startDate is required' });
+    }
+
+    const ga4Client = new GA4Client();
+    const data = await ga4Client.getUsersByDevice(
+      new Date(startDate as string),
+      endDate ? new Date(endDate as string) : new Date()
+    );
+
+    // Set caching headers
+    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
+    
+    console.log(data);
+    return res.status(200).json(data);
   } catch (error) {
-    console.error('Error in users-by-device API:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error fetching users by device:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 } 
