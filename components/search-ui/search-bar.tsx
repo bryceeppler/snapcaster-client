@@ -216,9 +216,7 @@ export default function SearchBar({
         <Input
           ref={inputRef}
           type="text"
-          placeholder={
-            isMobile ? 'Search...' : 'Search for a card...'
-          }
+          placeholder={isMobile ? 'Search...' : 'Search for a card...'}
           className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
           value={searchTerm}
           onChange={handleInputChange}

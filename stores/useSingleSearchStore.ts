@@ -3,9 +3,11 @@ import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
-import { FilterOption, FilterOptionValues, SingleSortOptions } from '@/types/query';
-
-
+import {
+  FilterOption,
+  FilterOptionValues,
+  SingleSortOptions
+} from '@/types/query';
 
 type SearchState = {
   searchTerm: string;
@@ -38,7 +40,6 @@ type SearchState = {
   clearSearchResults: () => void;
 };
 
-
 export const useSingleSearchStore = create<SearchState>()(
   // @ts-ignore
   devtools(
@@ -50,7 +51,7 @@ export const useSingleSearchStore = create<SearchState>()(
         filters: null,
         sortBy: 'price-asc',
         loadingCardResults: false,
-        loadingFilterResults:false,
+        loadingFilterResults: false,
         searchResults: null,
         promotedResults: null,
         autocompleteSuggestions: [],
@@ -92,10 +93,13 @@ export const useSingleSearchStore = create<SearchState>()(
         fetchCards: async (page?: number) => {
           const { tcg, searchTerm, filters, sortBy, region } = get();
           try {
-            set({ loadingCardResults: true, loadingFilterResults:true });
+            set({ loadingCardResults: true, loadingFilterResults: true });
 
             const queryParams = new URLSearchParams({
-              index: `ca_singles_${tcg}_prod*`,
+              mode: 'singles',
+              tcg: `${tcg}`,
+              region: 'ca',
+              // index: `ca_singles_${tcg}_prod*`,
               keyword: searchTerm.trim(),
               // search: 'fuzzy',
               sortBy: `${sortBy}`,
@@ -160,14 +164,16 @@ export const useSingleSearchStore = create<SearchState>()(
             console.error('Error fetching cards:', error);
             toast.error('Unable to fetch cards: ' + error.message);
           } finally {
-            set({ loadingCardResults: false, loadingFilterResults:false });
+            set({ loadingCardResults: false, loadingFilterResults: false });
           }
         },
         applyFilters: async () => {
           const { tcg, searchTerm, filters, sortBy, region } = get();
           try {
             const queryParams = new URLSearchParams({
-              index: `ca_singles_${tcg}_prod*`,
+              region: region,
+              mode: 'singles',
+              tcg: tcg,
               keyword: searchTerm.trim(),
               // search: 'fuzzy',
               sortBy: `${sortBy}`,

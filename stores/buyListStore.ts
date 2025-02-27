@@ -102,9 +102,11 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     const { filters } = get();
     if (get().searchTerm) {
       const queryParams = new URLSearchParams({
+        mode: 'buylists',
+        tcg: `${get().tcg}`,
+        region: '',
         keyword: get().searchTerm,
-        tcg: get().tcg,
-        index: `buylists_${get().tcg}_prod`,
+        // index: `buylists_${get().tcg}_prod*`,
         sortBy: get().sortBy,
         pageNumber: (page ?? get().currentPage).toString(),
         maxResultsPerPage: '100'
@@ -126,8 +128,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       try {
         const response = await axios.get(
           `${
-            process.env.NEXT_PUBLIC_BUYLISTS_URL
-          }/v2/search?${queryParams.toString()}`
+            process.env.NEXT_PUBLIC_CATALOG_URL
+          }/api/v1/search?${queryParams.toString()}`
         );
 
         if (response.status !== 200) {

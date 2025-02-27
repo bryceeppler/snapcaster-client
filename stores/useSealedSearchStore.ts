@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 import { FilterOption, SingleSortOptions } from '@/types/query';
-import { ProductCategory } from '@/types';
+import { Tcg } from '@/types';
 
 interface FilterSelection {
   field: string;
@@ -12,8 +12,8 @@ type SearchState = {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 
-  productCategory: ProductCategory;
-  setProductCategory: (productCategory: ProductCategory) => void;
+  productCategory: Tcg;
+  setProductCategory: (productCategory: Tcg) => void;
 
   // Filter options from API
   filterOptions: FilterOption[] | null;
@@ -36,7 +36,7 @@ export const useSealedSearchStore = create<SearchState>()(
     persist(
       (set, get) => ({
         searchTerm: '',
-        productCategory: 'sealed_mtg',
+        productCategory: 'mtg',
         filterOptions: null,
         selectedFilters: [],
         sortBy: 'price-asc',
@@ -44,7 +44,7 @@ export const useSealedSearchStore = create<SearchState>()(
 
         setSearchTerm: (term: string) => set({ searchTerm: term }),
 
-        setProductCategory: (productCategory: ProductCategory) => {
+        setProductCategory: (productCategory: Tcg) => {
           if (typeof window !== 'undefined') {
             localStorage.setItem('productCategory', productCategory);
           }
@@ -58,16 +58,16 @@ export const useSealedSearchStore = create<SearchState>()(
         toggleFilter: (field: string, value: string) => {
           const currentSelections = get().selectedFilters;
           const selectionKey = `${field}:${value}`;
-          
+
           const exists = currentSelections.some(
-            f => f.field === field && f.value === value
+            (f) => f.field === field && f.value === value
           );
 
           if (exists) {
             // Remove the selection
             set({
               selectedFilters: currentSelections.filter(
-                f => !(f.field === field && f.value === value)
+                (f) => !(f.field === field && f.value === value)
               )
             });
           } else {

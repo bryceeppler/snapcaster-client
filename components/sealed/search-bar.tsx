@@ -12,7 +12,7 @@ import { ChevronDown } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { Loader2 } from 'lucide-react';
 import { useDebounceCallback } from 'usehooks-ts';
-import { Tcg, ProductCategory } from '@/types';
+import { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
 import { X } from 'lucide-react';
 
@@ -20,9 +20,9 @@ interface AutocompleteResult {
   name: string;
 }
 type Props = {
-  productCategory: ProductCategory;
+  productCategory: Tcg;
   searchTerm: string;
-  setProductCategory: (productCategory: ProductCategory) => void;
+  setProductCategory: (productCategory: Tcg) => void;
   setSearchTerm: (searchBoxValue: string) => void;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isLoading: boolean;
@@ -72,7 +72,6 @@ export default function SearchBar({
       switch (key) {
         case 'Enter':
         case 'ArrowRight':
-        
           clearFilters();
           handleSearch();
           break;
@@ -85,11 +84,17 @@ export default function SearchBar({
   );
 
   return (
-    <div className={`relative w-full ${type === 'desktop' ? 'max-w-2xl md:ml-4 md:mr-4' : ''}`}>
-      <div className={`flex h-min w-full items-center rounded border border-border`}>
+    <div
+      className={`relative w-full ${
+        type === 'desktop' ? 'max-w-2xl md:ml-4 md:mr-4' : ''
+      }`}
+    >
+      <div
+        className={`flex h-min w-full items-center rounded border border-border`}
+      >
         <Select
           value={productCategory}
-          onValueChange={(value: ProductCategory) => {
+          onValueChange={(value: Tcg) => {
             setProductCategory(value);
             setSearchTerm('');
             setSuggestions([]);
@@ -97,20 +102,20 @@ export default function SearchBar({
             setSelectedIndex(-1);
           }}
         >
-          <SelectTrigger className="w-fit max-w-[100px] sm:max-w-fit border-none bg-accent rounded-l-md rounded-r-none h-[42px] p-2 text-accent-foreground focus:ring-0 focus:ring-offset-0 text-xs">
+          <SelectTrigger className="h-[42px] w-fit max-w-[100px] rounded-l-md rounded-r-none border-none bg-accent p-2 text-xs text-accent-foreground focus:ring-0 focus:ring-offset-0 sm:max-w-fit">
             <SelectValue placeholder="TCG" />
             <ChevronDown className="ml-1 h-3 w-3 shrink-0 transition-transform duration-200" />
           </SelectTrigger>
 
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="sealed_mtg">MTG</SelectItem>
-              <SelectItem value="sealed_lorcana">Lorcana</SelectItem>
-              <SelectItem value="sealed_onepiece">One Piece</SelectItem>
-              <SelectItem value="sealed_pokemon">Pokemon</SelectItem>
-              <SelectItem value="sealed_yugioh">Yu-Gi-Oh</SelectItem>
-              <SelectItem value="sealed_starwars">Star Wars</SelectItem>
-              <SelectItem value="sealed_fleshandblood">Flesh and Blood</SelectItem>
+              <SelectItem value="mtg">MTG</SelectItem>
+              <SelectItem value="lorcana">Lorcana</SelectItem>
+              <SelectItem value="onepiece">One Piece</SelectItem>
+              <SelectItem value="pokemon">Pokemon</SelectItem>
+              <SelectItem value="yugioh">Yu-Gi-Oh</SelectItem>
+              <SelectItem value="starwars">Star Wars</SelectItem>
+              <SelectItem value="fleshandblood">Flesh and Blood</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
