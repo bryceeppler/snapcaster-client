@@ -57,35 +57,39 @@ export function Integrations({ className }: { className?: string }) {
         <div className="flex flex-col justify-center gap-2">
           <Circle ref={div0Ref} className="w-32">
             <img
-              src="/ftf_wide_icon.svg"
+              src="https://cdn.snapcaster.ca/icons/ftf_wide_icon.png"
               alt="Face to Face Games"
               className="max-h-8 max-w-20"
             />
           </Circle>
           <Circle ref={div1Ref} className="w-32">
             <img
-              src="/obsidian_welcome.png"
-              alt="House of Cards"
+              src="https://cdn.snapcaster.ca/icons/obsidian-icon.png"
+              alt="Obsidian Games"
               className="max-h-8 max-w-20"
             />
           </Circle>
           <Circle ref={div2Ref} className="w-32">
             <img
-              src="/chimera_icon.png"
-              alt="Obsidian Games"
+              src="https://cdn.snapcaster.ca/icons/chimera-icon.png"
+              alt="Chimera Gaming"
               className="max-h-8 max-w-20"
             />
           </Circle>
 
           <Circle ref={div4Ref} className="w-32">
             <img
-              src="/exorgames_icon.png"
+              src="https://cdn.snapcaster.ca/icons/exorgames-icon.png"
               alt="Exor Games"
               className="max-h-8 max-w-20"
             />
           </Circle>
           <Circle ref={div5Ref} className="w-32 p-2">
-            <img src="/401_icon.png" alt="House of Cards" className="h-full" />
+            <img
+              src="https://cdn.snapcaster.ca/icons/401_wide_icon.png"
+              alt="401 Games"
+              className="h-full"
+            />
           </Circle>
         </div>
       </div>

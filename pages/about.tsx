@@ -53,7 +53,7 @@ const About: NextPage<Props> = () => {
                 {/* EXOR */}
                 <SponsorCard
                   href="https://exorgames.com"
-                  imgSrc="/exorgames_icon.png"
+                  imgSrc="https://cdn.snapcaster.ca/supporters/exorgames_supporter.png"
                   alt="Exor Games"
                   positionId="6"
                   adId="44"
@@ -61,7 +61,7 @@ const About: NextPage<Props> = () => {
                 {/* CHIMERA */}
                 <SponsorCard
                   href="https://chimeragamingonline.com/"
-                  imgSrc="/chimera_sponsor.png"
+                  imgSrc="https://cdn.snapcaster.ca/supporters/chimera_supporter.png"
                   alt="Chimera Gaming"
                   positionId="6"
                   adId="43"
@@ -81,7 +81,7 @@ const About: NextPage<Props> = () => {
                 {/* LEVEL UP */}
                 <SponsorCard
                   href="https://levelupgames.ca"
-                  imgSrc="/levelup_icon.png"
+                  imgSrc="https://cdn.snapcaster.ca/supporters/levelup_supporter.png"
                   alt="Level Up Games"
                   positionId="8"
                   adId="42"
@@ -89,7 +89,7 @@ const About: NextPage<Props> = () => {
                 {/* The Mythic Store */}
                 <SponsorCard
                   href="https://themythicstore.com"
-                  imgSrc="/tms_sponsor.webp"
+                  imgSrc="https://cdn.snapcaster.ca/supporters/tms_supporter.png"
                   alt="The Mythic Store"
                   positionId="8"
                   adId="55"
@@ -97,7 +97,7 @@ const About: NextPage<Props> = () => {
                 {/* House of Cards */}
                 <SponsorCard
                   href="https://houseofcards.ca"
-                  imgSrc="/hoc_sponsor.png"
+                  imgSrc="https://cdn.snapcaster.ca/supporters/hoc_supporter.png"
                   alt="House of Cards"
                   positionId="8"
                   adId="56"
