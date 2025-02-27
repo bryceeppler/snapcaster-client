@@ -97,9 +97,9 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
     <main className={cn('antialiased', inter.className)}>
       <ThemeProvider
         attribute="class"
-        defaultTheme={!usesMainNav ? 'light' : 'system'}
-        enableSystem={usesMainNav}
-        forcedTheme={!usesMainNav ? 'light' : undefined}
+        defaultTheme={!isLandingPage ? 'light' : 'system'}
+        enableSystem={isLandingPage}
+        forcedTheme={!isLandingPage ? 'light' : undefined}
         disableTransitionOnChange
       >
         {isLandingPage && (
