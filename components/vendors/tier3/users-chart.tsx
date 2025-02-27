@@ -81,11 +81,8 @@ export function UsersChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const startDate = subDays(new Date(), 120)
-        const endDate = subDays(new Date(), 2)
-        
         const response = await fetch(
-          `/api/analytics/active-users?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
+          `/api/analytics/active-users?numberOfDays=120`
         )
         
         if (!response.ok) {

@@ -17,18 +17,18 @@ export default async function handler(
     }
 
     const ga4Client = new GA4Client();
-    const data = await ga4Client.getUsersByDevice(
+    const data = await ga4Client.getEngagementTime(
       new Date(startDate as string),
-      endDate ? new Date(endDate as string) : new Date()
+      endDate ? new Date(endDate as string) : new Date(),
+      true // Include previous period for comparison
     );
 
     // Set caching headers
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
     
-    console.log(data);
     return res.status(200).json(data);
   } catch (error) {
-    console.error('Error fetching users by device:', error);
+    console.error('Error fetching engagement time:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 } 

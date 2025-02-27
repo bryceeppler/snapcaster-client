@@ -8,7 +8,7 @@ export class UserService {
     const response = await axiosInstance.get(`${BASE_URL}/api/v1/user/shopify/connections`, {
       withCredentials: true
     });
-    return response.data.connectedVendors;
+    return response.data.data.connectedVendors;
   }
 }
 

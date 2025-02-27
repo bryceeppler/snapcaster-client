@@ -39,6 +39,13 @@ interface ConnectDiscordResponse {
   };
 }
 
+interface VendorData {
+  vendorId: number;
+  vendorSlug: string;
+}
+
+type UserRole = 'ADMIN' | 'VENDOR' | 'USER';
+
 interface UserProfile {
   user: {
     id: string;
@@ -51,6 +58,8 @@ interface UserProfile {
     subscription: string;
     createdAt: string;
     updatedAt: string;
+    role: UserRole;
+    vendorData?: VendorData;
   }
 }
 

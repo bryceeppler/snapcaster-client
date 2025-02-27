@@ -83,7 +83,7 @@ export function SearchQueriesChart() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `/api/analytics/search-queries?days=90`
+          `/api/analytics/search-queries?numberOfDays=90`
         )
         
         if (!response.ok) {
@@ -93,7 +93,7 @@ export function SearchQueriesChart() {
         const data = await response.json()
         
         // Transform daily data
-        const dailyData = data.map((item: { date: string; count: number }) => {
+        const dailyData = data.data.map((item: { date: string; count: number }) => {
           const year = item.date.substring(0, 4)
           const month = item.date.substring(4, 6)
           const day = item.date.substring(6, 8)
@@ -193,29 +193,6 @@ export function SearchQueriesChart() {
           }
         }
       },
-      annotation: {
-        annotations: {
-          strike: {
-            type: 'box' as const,
-            xMin: '2024-11-15',
-            xMax: '2024-12-17',
-            backgroundColor: 'rgba(255, 99, 132, 0.1)',
-            borderColor: 'rgba(255, 99, 132, 0.25)',
-                    label: {
-              display: true,
-              content: 'Canada Post Strike',
-              position: 'center' as const,
-              yAdjust: -80,
-              color: 'rgba(255, 99, 132, 1)',
-              font: {
-                weight: 'bold' as const,
-                size: 10
-              },
-              padding: 6,
-            }
-          },
-        }
-      }
     },
     scales: {
       x: {

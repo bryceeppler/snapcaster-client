@@ -8,7 +8,7 @@ export default function Footer() {
   const { adsEnabled } = useGlobalStore();
   const { isAuthenticated } = useAuth();
   return (
-    <footer className="bg-popover py-12">
+    <footer className="bg-popover py-12 z-30">
       <div className="container grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
         <div className="grid gap-4">
           <h3 className="text-lg font-semibold">Pages</h3>

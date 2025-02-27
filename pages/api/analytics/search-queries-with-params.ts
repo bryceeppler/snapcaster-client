@@ -11,8 +11,8 @@ export default async function handler(
   }
 
   try {
-    console.log('Received request for search-queries:', req.query)
-    const { startDate, endDate, numberOfDays, sum, includeParams } = req.query
+    console.log('Received request for search-queries-with-params:', req.query)
+    const { startDate, endDate, numberOfDays, sum } = req.query
 
     const ga4Client = new GA4Client()
     let start: Date
@@ -41,26 +41,17 @@ export default async function handler(
 
     const includePreviousPeriod = sum === 'true'
     
-    console.log(`Fetching search queries from ${start.toISOString()} to ${end.toISOString()}, includePreviousPeriod: ${includePreviousPeriod}, includeParams: ${includeParams}`)
+    console.log(`Fetching search queries with params from ${start.toISOString()} to ${end.toISOString()}, includePreviousPeriod: ${includePreviousPeriod}`)
     
-    let result;
-    
-    if (includeParams === 'true') {
-      // Use the new method with parameters
-      result = await ga4Client.getSearchQueriesWithParams(start, end, includePreviousPeriod)
-      console.log('Successfully retrieved search queries with params')
-    } else {
-      // Use the original method without parameters
-      result = await ga4Client.getSearchQueries(start, end, includePreviousPeriod)
-      console.log('Successfully retrieved search queries without params')
-    }
+    const result = await ga4Client.getSearchQueriesWithParams(start, end, includePreviousPeriod)
+    console.log('Successfully retrieved search queries with params')
     
     // Set caching headers
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
     
     return res.status(200).json(result)
   } catch (error: any) {
-    console.error('Error fetching search queries:', error)
+    console.error('Error fetching search queries with parameters:', error)
     
     // Provide more detailed error information
     const errorDetails = {
