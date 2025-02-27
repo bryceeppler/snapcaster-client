@@ -117,7 +117,7 @@ export function PopularClickedSets({ dateRange }: PopularClickedSetsProps) {
             <TableBody>
               {tcgData[selectedTcg]?.map((set: SetData, index: number) => (
                 <TableRow key={`${set.setName}-${index}`}>
-                  <TableCell>{set.setName}</TableCell>
+                  <TableCell className="capitalize">{set.setName}</TableCell>
                   <TableCell className="text-right">{set.count.toLocaleString()}</TableCell>
                 </TableRow>
               ))}

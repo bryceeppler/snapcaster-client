@@ -1,5 +1,5 @@
 import type React from "react"
-import { Frame, LineChart, Lock, Settings, Users } from "lucide-react"
+import { Frame, LineChart, Lock, Settings, Store, Users } from "lucide-react"
 import Link from "next/link"
 
 import {
@@ -66,6 +66,14 @@ export default function DashboardLayout({
                         <div className="h-4 w-3 border border-foreground rounded-sm bg-muted" />
                         </div>
                         <span>TCGs</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={router.pathname === "/vendors/dashboard/vendors"}>
+                      <Link href="/vendors/dashboard/vendors" className="py-6">
+                        <Store className="h-4 w-4" />
+                        <span>Vendors</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

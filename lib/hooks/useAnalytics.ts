@@ -277,11 +277,34 @@ export function useBuyClicksWithParams(startDate: Date, endDate: Date) {
   });
 }
 
-export function useVendorBuyClicks(numberOfDays: number = 30) {
+export function useVendorBuyClicks(
+  numberOfDaysOrStartDate: number | Date = 30,
+  endDate?: Date,
+  limit?: number
+) {
+  const isDateRange = typeof numberOfDaysOrStartDate !== 'number';
+  const numberOfDays = isDateRange ? undefined : numberOfDaysOrStartDate;
+  const startDate = isDateRange ? numberOfDaysOrStartDate : undefined;
+
   return useQuery<VendorBuyClicksResponse, AnalyticsError>({
-    queryKey: ['vendorBuyClicks', numberOfDays],
+    queryKey: isDateRange 
+      ? ['vendorBuyClicks', 'dateRange', startDate?.toISOString(), endDate?.toISOString()]
+      : ['vendorBuyClicks', 'days', numberOfDays],
     queryFn: async () => {
-      const response = await fetch(`/api/analytics/vendor-buy-clicks?numberOfDays=${numberOfDays}`);
+      let url = '/api/analytics/vendor-buy-clicks';
+      const params = new URLSearchParams();
+      
+      if (isDateRange && startDate && endDate) {
+        params.append('startDate', startDate.toISOString());
+        params.append('endDate', endDate.toISOString());
+      } else if (numberOfDays) {
+        params.append('numberOfDays', numberOfDays.toString());
+      }
+      
+      // Add parameter to not limit results
+      params.append('limit', limit?.toString() || '5'); // 0 means no limit
+      
+      const response = await fetch(`${url}?${params.toString()}`);
       if (!response.ok) {
         throw {
           message: 'Failed to fetch vendor buy clicks',
@@ -405,7 +428,5 @@ export function usePopularClickedSets(startDate: Date, endDate: Date, limit: num
     ...defaultQueryConfig,
   });
 }
-
-
 
 export type { AnalyticsError, UniqueUsersResponse, SearchQueriesResponse, SearchQueriesWithParamsResponse, BuyClicksResponse, EngagementTimeResponse, CityAnalyticsResponse, CityAnalytics, UserTypesResponse, UserType, TrafficSourcesResponse, TrafficSource, UserRetentionResponse, CohortData, RetentionDataPoint, PopularClickedCardsResponse, PopularClickedCardsDataPoint, PopularClickedSetsResponse, PopularClickedSetsDataPoint };

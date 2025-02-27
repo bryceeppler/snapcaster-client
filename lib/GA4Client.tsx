@@ -964,7 +964,7 @@ export class GA4Client {
     };
   }
 
-  public async getVendorBuyClicks(startDate: Date, endDate: Date): Promise<VendorBuyClicksResponse> {
+  public async getVendorBuyClicks(startDate: Date, endDate: Date, limit: number = 5): Promise<VendorBuyClicksResponse> {
     const [response] = await this.client.runReport({
       property: `properties/${GA4_PROPERTY_ID}`,
       dateRanges: [
@@ -1079,7 +1079,7 @@ export class GA4Client {
 
     const sortedData = Object.values(groupedData)
       .sort((a, b) => b.total - a.total)
-      .slice(0, 5)
+      .slice(0, limit > 0 ? limit : undefined)
       .map((data, index) => ({
         ...data,
         rank: index + 1,
@@ -1611,6 +1611,7 @@ export class GA4Client {
     }
   }
 }
+
 
 export interface UsersByDeviceData {
   desktop: number;

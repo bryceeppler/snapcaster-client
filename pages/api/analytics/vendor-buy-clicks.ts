@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { GA4Client } from '@/lib/GA4Client';
-import { subDays } from 'date-fns';
+import { subDays, parseISO } from 'date-fns';
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,19 +11,40 @@ export default async function handler(
   }
 
   try {
-    const { numberOfDays } = req.query;
-    const days = numberOfDays ? parseInt(numberOfDays as string) : 30;
-    let startDate: Date;
-    let endDate: Date;
-    if (isNaN(days) || days <= 0) {
-      return res.status(400).json({ message: 'numberOfDays must be a positive number' });
+    const { numberOfDays, startDate, endDate, limit } = req.query;
+    let start: Date;
+    let end: Date;
+    
+    // Handle date range or numberOfDays
+    if (startDate && endDate) {
+      // Use date range
+      start = parseISO(startDate as string);
+      end = parseISO(endDate as string);
+      
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        return res.status(400).json({ message: 'Invalid date format' });
+      }
+      
+      if (start > end) {
+        return res.status(400).json({ message: 'startDate must be before endDate' });
+      }
+    } else {
+      // Use numberOfDays
+      const days = numberOfDays ? parseInt(numberOfDays as string) : 30;
+      
+      if (isNaN(days) || days <= 0) {
+        return res.status(400).json({ message: 'numberOfDays must be a positive number' });
+      }
+      
+      end = subDays(new Date(), 1);
+      start = subDays(end, days);
     }
-
-    endDate = subDays(new Date(), 1);
-    startDate = subDays(endDate, days);
-
+    
+    // Parse limit parameter
+    const vendorLimit = limit ? parseInt(limit as string) : 5;
+    
     const ga4Client = new GA4Client();
-    const response = await ga4Client.getVendorBuyClicks(startDate, endDate);
+    const response = await ga4Client.getVendorBuyClicks(start, end, vendorLimit);
     
     // Set caching headers
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
