@@ -3,6 +3,8 @@ import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 import { FilterOption, SingleSortOptions } from '@/types/query';
 import { Tcg } from '@/types';
 
+const SEALED_LOCAL_STORAGE_VERSION = 1;
+
 interface FilterSelection {
   field: string;
   value: string;
@@ -45,9 +47,6 @@ export const useSealedSearchStore = create<SearchState>()(
         setSearchTerm: (term: string) => set({ searchTerm: term }),
 
         setProductCategory: (productCategory: Tcg) => {
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('productCategory', productCategory);
-          }
           set({ productCategory });
         },
 
@@ -85,7 +84,38 @@ export const useSealedSearchStore = create<SearchState>()(
       }),
       {
         name: 'sealed-search-store',
-        storage: createJSONStorage(() => localStorage),
+        storage: createJSONStorage(() => ({
+          setItem: (key: string, value: string) => {
+            const parsedValue = JSON.parse(value);
+            localStorage.setItem(
+              key,
+              JSON.stringify({
+                state: parsedValue.state,
+                version: SEALED_LOCAL_STORAGE_VERSION
+              })
+            );
+          },
+          getItem: (key: string) => {
+            const item = localStorage.getItem(key);
+            if (!item) return null;
+
+            try {
+              const stored = JSON.parse(item);
+              if (
+                !stored.version ||
+                stored.version !== SEALED_LOCAL_STORAGE_VERSION
+              ) {
+                localStorage.removeItem(key);
+                return null;
+              }
+              return JSON.stringify({ state: stored.state });
+            } catch {
+              localStorage.removeItem(key);
+              return null;
+            }
+          },
+          removeItem: (key: string) => localStorage.removeItem(key)
+        })),
         partialize: (state) => ({
           productCategory: state.productCategory,
           region: state.region,
