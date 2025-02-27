@@ -54,78 +54,80 @@ const SingleCatalogItem = ({ product }: Props) => {
           )}
         </div>
 
-          <div>
-        <div className="mt-3">
-          <div className="flex flex-row items-center gap-2">
-            <h4 className="font-montserrat text-2xl font-semibold">
-              ${Number(product.discounted_price || product.price).toFixed(2)}
-            </h4>
-            <DiscountBadge product={product} />
+        <div>
+          <div className="mt-3">
+            <div className="flex flex-row items-center gap-2">
+              <h4 className="font-montserrat text-2xl font-semibold">
+                ${Number(product.discounted_price || product.price).toFixed(2)}
+              </h4>
+              <DiscountBadge product={product} />
+            </div>
+            {product.discount_code && (
+              <div
+                className="-mt-0.5 flex w-full text-[0.65rem]"
+                key={product.vendor}
+              >
+                <div className="text-left font-montserrat tracking-tighter text-muted-foreground">
+                  With code:{' '}
+                  <span className="break-all font-bold">
+                    {product.discount_code}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
-          {product.discount_code && (
-            <div
-              className="-mt-0.5 flex w-full text-[0.65rem]"
-              key={product.vendor}
-            >
-              <div className="text-left font-montserrat tracking-tighter text-muted-foreground">
-                With code:{' '}
-                <span className="font-bold">{product.discount_code}</span>
+          <div className="mt-3 flex flex-grow flex-col text-left">
+            <div className="text-primary-light font-montserrat text-[0.65rem]  font-semibold uppercase">
+              {product.set}
+            </div>
+
+            <h3 className="overflow-hidden text-ellipsis text-[0.9rem] font-semibold capitalize tracking-tight">{`${
+              product.name
+            } ${
+              product.collector_number ? `(${product.collector_number})` : ''
+            }`}</h3>
+
+            <h4 className="text-[0.65rem]   uppercase tracking-tighter text-muted-foreground">{` ${
+              product.frame ? product.frame : ''
+            }  ${
+              product.finish !== 'foil' && product.finish != null
+                ? product.finish
+                : ''
+            } ${product.showcase ? product.showcase : ''} ${
+              product.alternate_art ? product.alternate_art : ''
+            } ${product.promo ? product.promo : ''} ${
+              product.art_series ? product.art_series : ''
+            }`}</h4>
+            <div className=" mb-2 mt-3 flex flex-row gap-1">
+              {(() => {
+                const matchingWebsite = websites.find(
+                  (website) => product.vendor === website.slug
+                );
+                return matchingWebsite?.meta?.branding?.icons ? (
+                  <img
+                    src={
+                      theme === 'dark'
+                        ? matchingWebsite.meta.branding.icons.dark
+                        : matchingWebsite.meta.branding.icons.light
+                    }
+                    alt="Website"
+                    className="h-4 w-4"
+                  />
+                ) : null;
+              })()}
+
+              <div className="text-xs">
+                {findWebsiteNameByCode(product.vendor)}
               </div>
             </div>
-          )}
-        </div>
-        <div className="mt-3 flex flex-grow flex-col text-left">
-          <div className="font-montserrat text-[0.65rem] font-semibold  uppercase text-primary-light">
-            {product.set}
+            <Badge
+              className={` mt-2 w-min border-2 border-muted-foreground text-white ${
+                product.finish ? 'bg-foil bg-cover bg-center' : 'bg-slate-700'
+              }`}
+            >
+              {product.condition}
+            </Badge>
           </div>
-
-          <h3 className="overflow-hidden text-ellipsis text-[0.9rem] font-semibold capitalize tracking-tight">{`${
-            product.name
-          } ${
-            product.collector_number ? `(${product.collector_number})` : ''
-          }`}</h3>
-
-          <h4 className="text-[0.65rem]   uppercase tracking-tighter text-muted-foreground">{` ${
-            product.frame ? product.frame : ''
-          }  ${
-            product.finish !== 'foil' && product.finish != null
-              ? product.finish
-              : ''
-          } ${product.showcase ? product.showcase : ''} ${
-            product.alternate_art ? product.alternate_art : ''
-          } ${product.promo ? product.promo : ''} ${
-            product.art_series ? product.art_series : ''
-          }`}</h4>
-          <div className=" mb-2 mt-3 flex flex-row gap-1">
-            {(() => {
-              const matchingWebsite = websites.find(
-                (website) => product.vendor === website.slug
-              );
-              return matchingWebsite?.meta?.branding?.icons ? (
-                <img
-                  src={
-                    theme === 'dark'
-                      ? matchingWebsite.meta.branding.icons.dark
-                      : matchingWebsite.meta.branding.icons.light
-                  }
-                  alt="Website"
-                  className="h-4 w-4"
-                />
-              ) : null;
-            })()}
-
-            <div className="text-xs">
-              {findWebsiteNameByCode(product.vendor)}
-            </div>
-          </div>
-          <Badge
-            className={` mt-2 w-min border-2 border-muted-foreground text-white ${
-              product.finish ? 'bg-foil bg-cover bg-center' : 'bg-slate-700'
-            }`}
-          >
-            {product.condition}
-          </Badge>
-        </div>
         </div>
       </div>
       <Link
