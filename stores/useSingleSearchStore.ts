@@ -132,14 +132,14 @@ export const useSingleSearchStore = create<SearchState>()(
               );
             }
 
-            const updatedSearchResults = response.data.results.map(
+            const updatedSearchResults = response.data.data.results.map(
               (item: Product) => ({
                 ...item,
                 promoted: false
               })
             );
 
-            const promotedResults = response.data.promotedResults || [];
+            const promotedResults = response.data.data.promotedResults || [];
             const updatedPromotedResults = promotedResults.map(
               (item: Product) => ({
                 ...item,
@@ -148,7 +148,7 @@ export const useSingleSearchStore = create<SearchState>()(
             );
 
             const filterOptionsFromResponse: FilterOption[] =
-              response.data.filters || [];
+              response.data.data.filters || [];
 
             set({
               searchResults: updatedSearchResults,
@@ -156,8 +156,8 @@ export const useSingleSearchStore = create<SearchState>()(
               filterOptions: filterOptionsFromResponse,
               filters: filterOptionsFromResponse,
               resultsTcg: tcg,
-              numPages: response.data.pagination.numPages,
-              numResults: response.data.pagination.numResults,
+              numPages: response.data.data.pagination.numPages,
+              numResults: response.data.data.pagination.numResults,
               currentPage: page ?? get().currentPage
             });
           } catch (error: any) {
@@ -209,14 +209,14 @@ export const useSingleSearchStore = create<SearchState>()(
               );
             }
 
-            const updatedSearchResults = response.data.results.map(
+            const updatedSearchResults = response.data.data.results.map(
               (item: Product) => ({
                 ...item,
                 promoted: false
               })
             );
 
-            const promotedResults = response.data.promotedResults || [];
+            const promotedResults = response.data.data.promotedResults || [];
             const updatedPromotedResults = promotedResults.map(
               (item: Product) => ({
                 ...item,
@@ -225,7 +225,7 @@ export const useSingleSearchStore = create<SearchState>()(
             );
 
             const filterOptionsFromResponse: FilterOption[] =
-              response.data.filters || [];
+              response.data.data.filters || [];
 
             set({
               searchResults: updatedSearchResults,
@@ -233,8 +233,8 @@ export const useSingleSearchStore = create<SearchState>()(
               filterOptions: filterOptionsFromResponse,
               filters: filterOptionsFromResponse,
               resultsTcg: tcg,
-              numPages: response.data.pagination.numPages,
-              numResults: response.data.pagination.numResults,
+              numPages: response.data.data.pagination.numPages,
+              numResults: response.data.data.pagination.numResults,
               loadingCardResults: false
             });
           } catch (error: any) {

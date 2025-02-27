@@ -139,12 +139,12 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         }
 
         const filterOptionsFromResponse: FilterOption[] =
-          response.data.filters || [];
+          response.data.data.filters || [];
 
         set({
-          searchResults: response.data.results.slice(0, 500),
-          numResults: response.data.pagination.numResults,
-          numPages: response.data.pagination.numPages,
+          searchResults: response.data.data.results.slice(0, 500),
+          numResults: response.data.data.pagination.numResults,
+          numPages: response.data.data.pagination.numPages,
           filterOptions: filterOptionsFromResponse,
           filters: filterOptionsFromResponse,
           currentPage: page ?? get().currentPage

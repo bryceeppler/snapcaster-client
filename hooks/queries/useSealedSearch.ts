@@ -75,7 +75,7 @@ const fetchSealedProducts = async ({
       throw new Error(`Error: ${response.status} - ${response.statusText}`);
     }
 
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error('Error fetching cards:', error);
     if (error instanceof Error) {
