@@ -98,8 +98,8 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
       <ThemeProvider
         attribute="class"
         defaultTheme={!isLandingPage ? 'light' : 'system'}
-        enableSystem={isLandingPage}
-        forcedTheme={!isLandingPage ? 'light' : undefined}
+        enableSystem={!isLandingPage}
+        forcedTheme={isLandingPage ? 'light' : undefined}
         disableTransitionOnChange
       >
         {isLandingPage && (
