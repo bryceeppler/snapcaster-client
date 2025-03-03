@@ -17,7 +17,7 @@ export default function Unsubscribe() {
 
     const unsubscribeUser = async (email: string) => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/email/${email}/unsubscribe`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/email/${email}/unsubscribe`, {
           method: 'GET',
         });
 
