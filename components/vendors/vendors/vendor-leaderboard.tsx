@@ -151,7 +151,7 @@ export function VendorLeaderboard({
                 </TableHeader>
                 <TableBody>
                   {processedData?.map((vendor, index) => (
-                    <TableRow key={vendor.website} className={profile?.data.user.vendorData?.vendorSlug === vendor.slug ? 'bg-primary/50' : ''}>
+                    <TableRow key={vendor.website} className={(profile?.data.user.vendorData?.vendorSlug === vendor.slug && vendor.slug) ? 'bg-primary/50' : ''}>
                       <TableCell className="w-[30px] whitespace-nowrap">{index + 1}</TableCell>
                       <TableCell className="font-medium max-w-[120px]" title={vendor.website}>{vendor.website}</TableCell>
                       <TableCell className="text-right w-[120px]">{vendor.total.toLocaleString()}</TableCell>
