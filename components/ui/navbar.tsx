@@ -182,20 +182,6 @@ const Navbar: React.FC = () => {
                         Sealed Search
                       </Button>
                     </Link>
-                    <Link
-                      href="https://discord.gg/EnKKHxSq75"
-                      as="https://discord.gg/EnKKHxSq75"
-                    >
-                      <Button
-                        variant="ghost"
-                        className="block w-full text-left text-lg"
-                        onClick={() => {
-                          setMobileNavSheetOpen(false);
-                        }}
-                      >
-                        Discord
-                      </Button>
-                    </Link>
                     <Link href="/buylists" as="/buylists">
                       <Button
                         variant="ghost"
@@ -218,6 +204,21 @@ const Navbar: React.FC = () => {
                         About
                       </Button>
                     </Link>
+                    <Link
+                      href="https://discord.gg/EnKKHxSq75"
+                      as="https://discord.gg/EnKKHxSq75"
+                    >
+                      <Button
+                        variant="ghost"
+                        className="block w-full text-left text-lg"
+                        onClick={() => {
+                          setMobileNavSheetOpen(false);
+                        }}
+                      >
+                        Discord
+                      </Button>
+                    </Link>
+
                     {canViewAnalytics && (
                       <Link href="/vendors/dashboard" as="/vendors/dashboard">
                         <Button
