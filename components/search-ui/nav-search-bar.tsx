@@ -24,7 +24,7 @@ interface AutocompleteResult {
   name: string;
 }
 type Props = {
-  type: string;
+  deviceType: string;
   toggleMobileSearch?: () => void;
   fetchQuery: (page: number) => void;
   setSearchTerm: (term: string) => void;
@@ -36,7 +36,7 @@ type Props = {
   setIsLoading: (loading: boolean) => void;
 };
 export default function NavSearchBar({
-  type,
+  deviceType,
   toggleMobileSearch,
   fetchQuery,
   setSearchTerm,
@@ -171,12 +171,12 @@ export default function NavSearchBar({
   return (
     <div
       className={`relative w-full  bg-transparent md:ml-4 md:mr-4 ${
-        type == 'desktop' ? 'max-w-2xl' : ''
+        deviceType == 'desktop' ? 'max-w-2xl' : ''
       }`}
     >
       <div
         className={`flex h-min w-full items-center rounded ${
-          type == 'desktop' ? 'border border-border' : ''
+          deviceType == 'desktop' ? 'border border-border' : ''
         }`}
       >
         <Select
@@ -274,7 +274,7 @@ export default function NavSearchBar({
           </Popover>
         </div>
 
-        {type == 'mobile' ? (
+        {deviceType == 'mobile' ? (
           <div className="mr-2 text-foreground">
             <X
               className="h-6  hover:cursor-pointer"

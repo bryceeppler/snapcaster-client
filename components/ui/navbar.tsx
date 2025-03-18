@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import SearchBar from '../sealed/search-bar';
+import SealedSearchBar from '../sealed/sealed-nav-search-bar';
 import {
   Sheet,
   SheetContent,
@@ -23,7 +23,6 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { Tcg } from '@/types';
 import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
@@ -32,108 +31,22 @@ import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/buyListStore';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated, isVendor, isAdmin } = useAuth();
-  const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
-
-  const canViewAnalytics = isAdmin || isVendor;
-
-  const {
-    initNotificationStatus,
-    setNotificationStatusFalse,
-    notificationStatus
-  } = globalStore();
-
-  useEffect(() => {
-    initNotificationStatus();
-  }, []);
-
   const router = useRouter();
   const currentPath = router.pathname;
-
-  // Dynamically assign zustand states for the following components (single, buylists, sealed) => FilterSection, NavSearchBar, SearchPagination
-
-  const singleSearchStore = useSingleSearchStore(); // Unconditionally called
-  const buylistStore = useBuyListStore();
+  const { isAuthenticated, isVendor, isAdmin } = useAuth();
+  const canViewAnalytics = isAdmin || isVendor;
+  const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
   const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
-  // Dynamically choose the store based on currentPath
 
-  const queryStore =
-    currentPath === '/buylists' ? buylistStore : singleSearchStore;
-
-  const {
-    productCategory,
-    searchTerm: sealedSearchTerm,
-    setProductCategory,
-    setSearchTerm: sealedSetSearchTerm,
-    clearFilters: sealedClearFilters,
-    sortBy: sealedSortBy,
-    selectedFilters,
-    region
-  } = useSealedSearchStore();
-
-  const { isLoading: sealedSearchLoading, refetch } = useSealedSearch(
-    {
-      productCategory,
-      searchTerm: sealedSearchTerm,
-      sortBy: sealedSortBy,
-      selectedFilters,
-      region
-    },
-    {
-      enabled: currentPath === '/sealed'
-    }
-  );
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    sealedSetSearchTerm(value);
-  };
-
-  const handleSearch = () => {
-    sealedSetSearchTerm(sealedSearchTerm.trim());
-    refetch();
-  };
-
-  // Destructure variables from queryStore or set defaults
-  const {
-    searchTerm,
-    tcg,
-    searchResults,
-    currentPage,
-    numPages,
-    filterOptions,
-    numResults,
-    sortBy,
-    setSortBy,
-    fetchCards,
-    applyFilters,
-    setSearchTerm,
-    setTcg,
-    clearFilters,
-    setCurrentPage,
-    setFilter,
-    isLoading,
-    setIsLoading
-  } = queryStore || {
-    tcg: 'mtg' as Tcg,
-    searchResults: [],
-    searchTerm: '',
-    numPages: null,
-    filterOptions: [],
-    numResults: null,
-    sortBy: '',
-    currentPage: 1,
-    clearFilters: () => {},
-    setCurrentPage: () => {},
-    setFilter: () => {},
-    setSearchTerm: () => {},
-    setTcg: () => {},
-    setSortBy: () => {},
-    fetchCards: async () => {},
-    applyFilters: async () => {},
-    isLoading: false,
-    setIsLoading: () => {}
-  };
+  // Uncomment this to enable notifications
+  // const {
+  //   initNotificationStatus,
+  //   setNotificationStatusFalse,
+  //   notificationStatus
+  // } = globalStore();
+  // useEffect(() => {
+  //   initNotificationStatus();
+  // }, []);
 
   return (
     <>
@@ -282,26 +195,28 @@ const Navbar: React.FC = () => {
               </Link>
             </div>
           </div>
+
+          {/* Nav Search Bars (Sealed, Singles, Buylists)*/}
+          {currentPath === '/sealed' && (
+            <div className="w-full  bg-card ">
+              <div className="border-t px-2 py-2">
+                {NavSearchBarFactory('sealed', {
+                  deviceType: 'mobile'
+                })}
+              </div>
+            </div>
+          )}
           {currentPath === '/' && (
             <div
               className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
                 mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
               }`}
             >
-              <NavSearchBar
-                type={'mobile'}
-                toggleMobileSearch={() => {
-                  setMobileSearchIsVisible(!mobileSearchIsVisible);
-                }}
-                searchTerm={searchTerm}
-                tcg={tcg}
-                clearFilters={clearFilters}
-                setSearchTerm={setSearchTerm}
-                setTcg={setTcg}
-                fetchQuery={fetchCards}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-              />
+              {NavSearchBarFactory('singles', {
+                deviceType: 'mobile',
+                toggleMobileSearch: () =>
+                  setMobileSearchIsVisible(!mobileSearchIsVisible)
+              })}
             </div>
           )}
           {currentPath === '/buylists' && isAuthenticated && (
@@ -310,83 +225,23 @@ const Navbar: React.FC = () => {
                 mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
               }`}
             >
-              <NavSearchBar
-                type={'mobile'}
-                toggleMobileSearch={() => {
-                  setMobileSearchIsVisible(!mobileSearchIsVisible);
-                }}
-                searchTerm={searchTerm}
-                tcg={tcg}
-                clearFilters={clearFilters}
-                setSearchTerm={setSearchTerm}
-                setTcg={setTcg}
-                fetchQuery={fetchCards}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-              />
+              {NavSearchBarFactory('buylists', {
+                deviceType: 'mobile',
+                toggleMobileSearch: () =>
+                  setMobileSearchIsVisible(!mobileSearchIsVisible)
+              })}
             </div>
           )}
         </div>
-        {currentPath === '/sealed' && (
-          <div className="w-full  bg-card ">
-            <div className="border-t px-2 py-2">
-              <SearchBar
-                type="mobile"
-                productCategory={productCategory}
-                searchTerm={sealedSearchTerm}
-                setProductCategory={setProductCategory}
-                setSearchTerm={sealedSetSearchTerm}
-                handleInputChange={handleInputChange}
-                handleSearch={handleSearch}
-                clearFilters={sealedClearFilters}
-                isLoading={sealedSearchLoading}
-              />
-            </div>
-          </div>
-        )}
-        <div className="mx-5 h-[0.5px] w-[calc(100%-40px)] "></div>{' '}
-        {searchResults &&
-          (currentPath == '/' || currentPath == '/buylists') && (
-            <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-              <span className="text-center text-sm font-normal text-secondary-foreground ">
-                {numResults} results
-              </span>
-              <SearchPagination
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                numPages={numPages}
-                fetchCards={fetchCards}
-                setIsLoading={setIsLoading}
-              />
-              <Sheet>
-                <SheetTitle className="hidden">Filters</SheetTitle>
-                <SheetDescription className="hidden">
-                  Filter your search results
-                </SheetDescription>
-                <SheetTrigger>
-                  <SlidersHorizontal className="h-6 w-6" />
-                </SheetTrigger>
-                <SheetContent className="min-w-full">
-                  <FilterSection
-                    filterOptions={filterOptions}
-                    sortBy={sortBy}
-                    fetchCards={fetchCards}
-                    clearFilters={clearFilters}
-                    setFilter={setFilter}
-                    setCurrentPage={setCurrentPage}
-                    applyFilters={applyFilters}
-                    setSortBy={setSortBy}
-                  />
-                </SheetContent>
-              </Sheet>
-            </div>
-          )}
+        {/* ResultsToolbarFactory (Singles, Buylists) */}
+        {currentPath === '/' && ResultsToolbarFactory('singles')}
+        {currentPath === '/buylists' && ResultsToolbarFactory('buylists')}
       </div>
 
       {/* DESKTOP NAV MD+ */}
       <div className="sticky top-0 z-50 bg-card  shadow-md">
         <div className="hidden h-16 items-stretch justify-between px-6 py-4 md:flex">
-          {/* Left Section */}
+          {/* 1. Left Section: Snapcaster Logo */}
           <div className="flex items-center">
             <NavigationMenu>
               <NavigationMenuList>
@@ -408,49 +263,18 @@ const Navbar: React.FC = () => {
             </NavigationMenu>
           </div>
 
-          {/* Center Section */}
+          {/* 2. Middle Section: Nav Search Bar (Singles, Buylists, Sealed) */}
           <div className="flex flex-1 items-center justify-center">
-            {currentPath === '/' && (
-              <NavSearchBar
-                type={'desktop'}
-                searchTerm={searchTerm}
-                tcg={tcg}
-                fetchQuery={fetchCards}
-                setSearchTerm={setSearchTerm}
-                setTcg={setTcg}
-                clearFilters={clearFilters}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-              />
-            )}
-            {currentPath === '/buylists' && isAuthenticated && (
-              <NavSearchBar
-                type={'desktop'}
-                searchTerm={searchTerm}
-                tcg={tcg}
-                fetchQuery={fetchCards}
-                setSearchTerm={setSearchTerm}
-                setTcg={setTcg}
-                clearFilters={clearFilters}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-              />
-            )}
-            {currentPath === '/sealed' && (
-              <SearchBar
-                productCategory={productCategory}
-                searchTerm={sealedSearchTerm}
-                setProductCategory={setProductCategory}
-                setSearchTerm={sealedSetSearchTerm}
-                handleInputChange={handleInputChange}
-                handleSearch={handleSearch}
-                clearFilters={sealedClearFilters}
-                isLoading={sealedSearchLoading}
-              />
-            )}
+            {currentPath === '/' &&
+              NavSearchBarFactory('singles', { deviceType: 'desktop' })}
+            {currentPath === '/buylists' &&
+              isAuthenticated &&
+              NavSearchBarFactory('buylists', { deviceType: 'desktop' })}
+            {currentPath === '/sealed' &&
+              NavSearchBarFactory('sealed', { deviceType: 'desktop' })}
           </div>
 
-          {/* Right Section */}
+          {/* 3. Right Section: Theme Toggle, Account Button) */}
           <div className="flex items-center gap-2">
             <ModeToggle />
             <Link href={isAuthenticated ? `/profile` : '/signin'}>
@@ -461,6 +285,7 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
+        {/* 4. Nav Links (Home, Multi Search, Sealed Search, Buylists, About, Discord, Analytics) */}
         <div className=" mx-3 hidden items-center justify-between md:flex">
           <NavigationMenu className="my-1">
             <NavigationMenuList>
@@ -568,6 +393,266 @@ const Navbar: React.FC = () => {
           </button>
         </div>
       )} */}
+    </>
+  );
+};
+
+////////////////////////////
+// NAV SEARCH BAR FACTORY //
+////////////////////////////
+type NavSearchMode = 'singles' | 'sealed' | 'buylists';
+type DeviceOptions = 'mobile' | 'desktop';
+interface NavSearchBarProps {
+  deviceType: DeviceOptions;
+  toggleMobileSearch?: () => void;
+}
+
+const NavSearchBarFactory = (
+  searchMode: NavSearchMode,
+  props: NavSearchBarProps
+): JSX.Element | null => {
+  switch (searchMode) {
+    case 'singles':
+      return <SingleNavSearchBar {...props} />;
+    case 'buylists':
+      return <BuylistsNavSearchBar {...props} />;
+    case 'sealed':
+      return <SealedNavSearchBar {...props} />;
+    default:
+      return null;
+  }
+};
+
+const SingleNavSearchBar = ({
+  deviceType,
+  toggleMobileSearch
+}: NavSearchBarProps) => {
+  const {
+    searchTerm,
+    tcg,
+    isLoading,
+    fetchCards,
+    setSearchTerm,
+    setTcg,
+    clearFilters,
+    setIsLoading
+  } = useSingleSearchStore();
+  return (
+    <>
+      <NavSearchBar
+        deviceType={deviceType}
+        toggleMobileSearch={toggleMobileSearch}
+        searchTerm={searchTerm}
+        tcg={tcg}
+        clearFilters={clearFilters}
+        setSearchTerm={setSearchTerm}
+        setTcg={setTcg}
+        fetchQuery={fetchCards}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+      />
+    </>
+  );
+};
+
+const BuylistsNavSearchBar = ({
+  deviceType,
+  toggleMobileSearch
+}: NavSearchBarProps) => {
+  const {
+    searchTerm,
+    tcg,
+    isLoading,
+    fetchCards,
+    setSearchTerm,
+    setTcg,
+    clearFilters,
+    setIsLoading
+  } = useBuyListStore();
+  return (
+    <>
+      <NavSearchBar
+        deviceType={deviceType}
+        toggleMobileSearch={toggleMobileSearch}
+        searchTerm={searchTerm}
+        tcg={tcg}
+        clearFilters={clearFilters}
+        setSearchTerm={setSearchTerm}
+        setTcg={setTcg}
+        fetchQuery={fetchCards}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+      />
+    </>
+  );
+};
+
+const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
+  const {
+    productCategory,
+    searchTerm: sealedSearchTerm,
+    setProductCategory,
+    setSearchTerm: sealedSetSearchTerm,
+    clearFilters: sealedClearFilters,
+    sortBy: sealedSortBy,
+    selectedFilters,
+    region
+  } = useSealedSearchStore();
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    sealedSetSearchTerm(value);
+  };
+  const { isLoading: sealedSearchLoading, refetch } = useSealedSearch({
+    productCategory,
+    searchTerm: sealedSearchTerm,
+    sortBy: sealedSortBy,
+    selectedFilters,
+    region
+  });
+
+  const handleSearch = () => {
+    sealedSetSearchTerm(sealedSearchTerm.trim());
+    refetch();
+  };
+  return (
+    <>
+      <SealedSearchBar
+        deviceType={deviceType}
+        productCategory={productCategory}
+        searchTerm={sealedSearchTerm}
+        setProductCategory={setProductCategory}
+        setSearchTerm={sealedSetSearchTerm}
+        handleInputChange={handleInputChange}
+        handleSearch={handleSearch}
+        clearFilters={sealedClearFilters}
+        isLoading={sealedSearchLoading}
+      />
+    </>
+  );
+};
+
+////////////////////////////
+// ResultsToolbar Factory //
+////////////////////////////
+/* The bar bewlow the nav for mobile single/buylist search which contains the reuslts, pagination, and filters on a query */
+const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
+  switch (searchMode) {
+    case 'singles':
+      return <SingleResultsToolbar />;
+    case 'buylists':
+      return <BuylistsResultsToolbar />;
+  }
+};
+
+const SingleResultsToolbar = () => {
+  const {
+    searchResults,
+    numResults,
+    currentPage,
+    setCurrentPage,
+    numPages,
+    fetchCards,
+    setIsLoading,
+    filterOptions,
+    sortBy,
+    clearFilters,
+    setFilter,
+    applyFilters,
+    setSortBy
+  } = useSingleSearchStore();
+  return (
+    <>
+      {searchResults && (
+        <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
+          <span className="text-center text-sm font-normal text-secondary-foreground ">
+            {numResults} results
+          </span>
+          <SearchPagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            numPages={numPages}
+            fetchCards={fetchCards}
+            setIsLoading={setIsLoading}
+          />
+          <Sheet>
+            <SheetTitle className="hidden">Filters</SheetTitle>
+            <SheetDescription className="hidden">
+              Filter your search results
+            </SheetDescription>
+            <SheetTrigger>
+              <SlidersHorizontal className="h-6 w-6" />
+            </SheetTrigger>
+            <SheetContent className="min-w-full">
+              <FilterSection
+                filterOptions={filterOptions}
+                sortBy={sortBy}
+                fetchCards={fetchCards}
+                clearFilters={clearFilters}
+                setFilter={setFilter}
+                setCurrentPage={setCurrentPage}
+                applyFilters={applyFilters}
+                setSortBy={setSortBy}
+              />
+            </SheetContent>
+          </Sheet>
+        </div>
+      )}
+    </>
+  );
+};
+const BuylistsResultsToolbar = () => {
+  const {
+    searchResults,
+    numResults,
+    currentPage,
+    setCurrentPage,
+    numPages,
+    fetchCards,
+    setIsLoading,
+    filterOptions,
+    sortBy,
+    clearFilters,
+    setFilter,
+    applyFilters,
+    setSortBy
+  } = useBuyListStore();
+  return (
+    <>
+      {searchResults && (
+        <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
+          <span className="text-center text-sm font-normal text-secondary-foreground ">
+            {numResults} results
+          </span>
+          <SearchPagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            numPages={numPages}
+            fetchCards={fetchCards}
+            setIsLoading={setIsLoading}
+          />
+          <Sheet>
+            <SheetTitle className="hidden">Filters</SheetTitle>
+            <SheetDescription className="hidden">
+              Filter your search results
+            </SheetDescription>
+            <SheetTrigger>
+              <SlidersHorizontal className="h-6 w-6" />
+            </SheetTrigger>
+            <SheetContent className="min-w-full">
+              <FilterSection
+                filterOptions={filterOptions}
+                sortBy={sortBy}
+                fetchCards={fetchCards}
+                clearFilters={clearFilters}
+                setFilter={setFilter}
+                setCurrentPage={setCurrentPage}
+                applyFilters={applyFilters}
+                setSortBy={setSortBy}
+              />
+            </SheetContent>
+          </Sheet>
+        </div>
+      )}
     </>
   );
 };
