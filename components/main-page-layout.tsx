@@ -289,28 +289,30 @@ export default function MainLayout({
     <div className="flex min-h-svh">
       {/* Left Banner */}
       <div className="container hidden w-full max-w-4xl flex-1 p-4 smlaptop:block">
-        <div className="sticky top-1/3 hidden smlaptop:block">
-          {leftCarouselAds.length > 0 && (
-            <div className=" ">
-              <AdContainer
-                isLoading={isLeftCarouselLoading}
-                skeleton={<SideBannerSkeleton />}
-              >
-                <div
-                  className="relative overflow-hidden rounded-lg"
-                  style={{
-                    width: AD_DIMENSIONS.sideBanner.width,
-                    height: AD_DIMENSIONS.sideBanner.height
-                  }}
+        {shouldShowAds && (
+          <div className="sticky top-1/3 hidden smlaptop:block">
+            {leftCarouselAds.length > 0 && (
+              <div className=" ">
+                <AdContainer
+                  isLoading={isLeftCarouselLoading}
+                  skeleton={<SideBannerSkeleton />}
                 >
-                  <div className="inset-0">
-                    <VerticalCarousel ads={leftCarouselAds} />
+                  <div
+                    className="relative overflow-hidden rounded-lg"
+                    style={{
+                      width: AD_DIMENSIONS.sideBanner.width,
+                      height: AD_DIMENSIONS.sideBanner.height
+                    }}
+                  >
+                    <div className="inset-0">
+                      <VerticalCarousel ads={leftCarouselAds} />
+                    </div>
                   </div>
-                </div>
-              </AdContainer>
-            </div>
-          )}
-        </div>
+                </AdContainer>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       {/* Top Banner & Content*/}
       <div className="mx-auto w-full max-w-4xl items-center p-4 below1550:max-w-6xl">
@@ -373,28 +375,30 @@ export default function MainLayout({
 
       {/* Right Banner */}
       <div className="container hidden w-full max-w-4xl flex-1 p-4 smlaptop:block">
-        <div className="sticky top-1/3 hidden smlaptop:block">
-          {rightCarouselAds.length > 0 && (
-            <div className="flex w-full justify-end">
-              <AdContainer
-                isLoading={isRightCarouselLoading}
-                skeleton={<SideBannerSkeleton />}
-              >
-                <div
-                  className="relative overflow-hidden rounded-lg"
-                  style={{
-                    width: AD_DIMENSIONS.sideBanner.width,
-                    height: AD_DIMENSIONS.sideBanner.height
-                  }}
+        {shouldShowAds && (
+          <div className="sticky top-1/3 hidden smlaptop:block">
+            {rightCarouselAds.length > 0 && (
+              <div className="flex w-full justify-end">
+                <AdContainer
+                  isLoading={isRightCarouselLoading}
+                  skeleton={<SideBannerSkeleton />}
                 >
-                  <div className="inset-0">
-                    <VerticalCarousel ads={rightCarouselAds} />
+                  <div
+                    className="relative overflow-hidden rounded-lg"
+                    style={{
+                      width: AD_DIMENSIONS.sideBanner.width,
+                      height: AD_DIMENSIONS.sideBanner.height
+                    }}
+                  >
+                    <div className="inset-0">
+                      <VerticalCarousel ads={rightCarouselAds} />
+                    </div>
                   </div>
-                </div>
-              </AdContainer>
-            </div>
-          )}
-        </div>
+                </AdContainer>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
