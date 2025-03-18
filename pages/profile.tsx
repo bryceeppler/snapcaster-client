@@ -53,7 +53,11 @@ interface ProfileSectionProps {
 }
 
 // Reusable Components
-const ProfileSection = ({ title, description, children }: ProfileSectionProps) => (
+const ProfileSection = ({
+  title,
+  description,
+  children
+}: ProfileSectionProps) => (
   <Card>
     <CardHeader>
       <CardTitle className="text-xl font-semibold">{title}</CardTitle>
@@ -63,13 +67,13 @@ const ProfileSection = ({ title, description, children }: ProfileSectionProps) =
   </Card>
 );
 
-const VerificationStatus = ({ 
-  isVerified, 
-  onResend, 
-  isResending 
-}: { 
-  isVerified: boolean; 
-  onResend: () => void; 
+const VerificationStatus = ({
+  isVerified,
+  onResend,
+  isResending
+}: {
+  isVerified: boolean;
+  onResend: () => void;
   isResending: boolean;
 }) => (
   <div>
@@ -83,12 +87,15 @@ const VerificationStatus = ({
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <XCircle className="h-4 w-4 text-destructive" />
-            <span className="text-sm font-medium text-destructive">Email not verified</span>
+            <span className="text-sm font-medium text-destructive">
+              Email not verified
+            </span>
           </div>
           <p className="text-xs">
-            Please verify your email. Check your inbox for the verification link.
+            Please verify your email. Check your inbox for the verification
+            link.
           </p>
-          <Button 
+          <Button
             size="sm"
             onClick={onResend}
             disabled={isResending}
@@ -112,11 +119,11 @@ const VerificationStatus = ({
   </div>
 );
 
-const ProfileInformationForm = ({ 
+const ProfileInformationForm = ({
   user,
   onResendVerification,
   isResendingVerification
-}: { 
+}: {
   user: UserProfile;
   onResendVerification: () => void;
   isResendingVerification: boolean;
@@ -141,19 +148,19 @@ const ProfileInformationForm = ({
           id="fullName"
           disabled={true}
           value={user.fullName}
-          className="max-w-md"
+          className="w-full"
         />
       </div>
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
-        <Input 
-          type="text" 
+        <Input
+          type="text"
           id="email"
-          disabled={true} 
+          disabled={true}
           value={user.email}
-          className="max-w-md"
+          className="w-full"
         />
-        <VerificationStatus 
+        <VerificationStatus
           isVerified={user.emailVerified}
           onResend={onResendVerification}
           isResending={isResendingVerification}
@@ -178,7 +185,9 @@ const DiscordSection = ({
     <CardHeader className="space-y-1">
       <div className="flex items-center gap-2">
         <DiscordLogoIcon className="h-5 w-5 text-primary" />
-        <CardTitle className="text-xl font-semibold">Discord Integration</CardTitle>
+        <CardTitle className="text-xl font-semibold">
+          Discord Integration
+        </CardTitle>
       </div>
       <CardDescription>
         Pro members gain access to exclusive channels and giveaways after
@@ -192,8 +201,8 @@ const DiscordSection = ({
             <CheckCircle2 className="h-4 w-4" />
             <p className="text-sm">Connected as {username}</p>
           </div>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={onDisconnect}
             disabled={isDisconnecting}
             className="w-full sm:w-auto"
@@ -210,10 +219,7 @@ const DiscordSection = ({
         </div>
       ) : (
         <div className="space-y-4">
-          <Button 
-            onClick={onConnect}
-            className="w-full sm:w-auto"
-          >
+          <Button onClick={onConnect} className="w-full sm:w-auto">
             Connect Discord
           </Button>
           <p className="text-xs text-muted-foreground">
@@ -246,13 +252,14 @@ const SubscriptionSection = ({
     <CardHeader>
       <CardTitle className="text-xl font-semibold">Snapcaster Pro</CardTitle>
       <CardDescription>
-        Subscribe to Snapcaster Pro for access to premium features and giveaways.
+        Subscribe to Snapcaster Pro for access to premium features and
+        giveaways.
       </CardDescription>
     </CardHeader>
     <CardContent className="space-y-6">
       <div className="flex items-center justify-between">
         <span className="font-medium">Subscription Status</span>
-        <span className={isActive ? "text-primary" : "text-muted-foreground"}>
+        <span className={isActive ? 'text-primary' : 'text-muted-foreground'}>
           {isActive ? 'Active' : 'Inactive'}
         </span>
       </div>
@@ -264,18 +271,12 @@ const SubscriptionSection = ({
     </CardContent>
     <CardFooter>
       {isActive ? (
-        <Button 
-          className="w-full sm:w-auto" 
-          onClick={onManage}
-        >
+        <Button className="w-full sm:w-auto" onClick={onManage}>
           Manage subscription
         </Button>
       ) : (
-        <div className="space-y-4 w-full">
-          <Button 
-            onClick={onSubscribe}
-            className="w-full sm:w-auto"
-          >
+        <div className="w-full space-y-4">
+          <Button onClick={onSubscribe} className="w-full sm:w-auto">
             Subscribe Now!
           </Button>
           <p className="text-xs text-muted-foreground">
@@ -307,8 +308,8 @@ const AccountActions = ({ onLogout }: { onLogout: () => void }) => (
     title="Account Actions"
     description="Manage your account access."
   >
-    <Button 
-      variant="destructive" 
+    <Button
+      variant="destructive"
       onClick={onLogout}
       className="w-full sm:w-auto"
     >
@@ -346,7 +347,7 @@ const UserSettings = ({
         title="Profile Information"
         description="Update your personal information."
       >
-        <ProfileInformationForm 
+        <ProfileInformationForm
           user={user}
           onResendVerification={resendVerificationEmail}
           isResendingVerification={isResendingVerification}
@@ -382,7 +383,7 @@ const ProfileSectionSkeleton = () => (
   <Card>
     <CardHeader>
       <Skeleton className="h-6 w-48" />
-      <Skeleton className="h-4 w-72 mt-2" />
+      <Skeleton className="mt-2 h-4 w-72" />
     </CardHeader>
     <CardContent className="space-y-4">
       <Skeleton className="h-10 w-full max-w-md" />
@@ -398,7 +399,7 @@ const DiscordSectionSkeleton = () => (
         <Skeleton className="h-5 w-5" />
         <Skeleton className="h-6 w-48" />
       </div>
-      <Skeleton className="h-4 w-72 mt-2" />
+      <Skeleton className="mt-2 h-4 w-72" />
     </CardHeader>
     <CardContent>
       <div className="space-y-4">
@@ -412,7 +413,7 @@ const SubscriptionSectionSkeleton = () => (
   <Card>
     <CardHeader>
       <Skeleton className="h-6 w-48" />
-      <Skeleton className="h-4 w-72 mt-2" />
+      <Skeleton className="mt-2 h-4 w-72" />
     </CardHeader>
     <CardContent className="space-y-6">
       <div className="flex items-center justify-between">
@@ -437,7 +438,7 @@ const ProfileSkeleton = () => (
       <div className="space-y-6">
         <div>
           <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-72 mt-2" />
+          <Skeleton className="mt-2 h-4 w-72" />
         </div>
         <div className="grid gap-6">
           <ProfileSectionSkeleton />
@@ -453,7 +454,7 @@ const ProfileSkeleton = () => (
 
 // Main Profile Page Component
 const Profile: NextPage = () => {
-  const { 
+  const {
     profile,
     isLoadingProfile,
     isAuthenticated,
@@ -465,40 +466,47 @@ const Profile: NextPage = () => {
     isResendingVerification
   } = useAuth();
 
-  const pageContent = isInitializing || isLoadingProfile || typeof isAuthenticated === 'undefined' ? (
-    <ProfileSkeleton />
-  ) : !isAuthenticated ? (
-    <Signin />
-  ) : (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Account Settings</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Manage your account settings and preferences.
-            </p>
-          </div>
-          <div className="grid gap-6">
-            <UserSettings
-              email={profile?.data?.user?.email || ''}
-              fullName={profile?.data?.user?.fullName || ''}
-              discordUsername={profile?.data?.user?.discordUsername || ''}
-              hasActiveSubscription={profile?.data?.user?.subscription === 'active'}
-              emailVerified={profile?.data?.user?.emailVerified || false}
-              createPortalSession={createPortalSession}
-              disconnectDiscordAuth={disconnectDiscord}
-              createCheckoutSession={createCheckoutSession}
-              handleLogout={logout}
-              createDiscordAuth={connectDiscord}
-              resendVerificationEmail={resendVerificationEmail}
-              isResendingVerification={isResendingVerification}
-            />
+  const pageContent =
+    isInitializing ||
+    isLoadingProfile ||
+    typeof isAuthenticated === 'undefined' ? (
+      <ProfileSkeleton />
+    ) : !isAuthenticated ? (
+      <Signin />
+    ) : (
+      <div className="min-h-screen bg-background">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">
+                Account Settings
+              </h1>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Manage your account settings and preferences.
+              </p>
+            </div>
+            <div className="grid gap-6">
+              <UserSettings
+                email={profile?.data?.user?.email || ''}
+                fullName={profile?.data?.user?.fullName || ''}
+                discordUsername={profile?.data?.user?.discordUsername || ''}
+                hasActiveSubscription={
+                  profile?.data?.user?.subscription === 'active'
+                }
+                emailVerified={profile?.data?.user?.emailVerified || false}
+                createPortalSession={createPortalSession}
+                disconnectDiscordAuth={disconnectDiscord}
+                createCheckoutSession={createCheckoutSession}
+                handleLogout={logout}
+                createDiscordAuth={connectDiscord}
+                resendVerificationEmail={resendVerificationEmail}
+                isResendingVerification={isResendingVerification}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
 
   return (
     <>

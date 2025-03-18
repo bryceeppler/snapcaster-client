@@ -28,9 +28,9 @@ type Props = {
   isLoading: boolean;
   handleSearch: () => void;
   clearFilters: () => void;
-  type?: 'mobile' | 'desktop';
+  deviceType?: 'mobile' | 'desktop';
 };
-export default function SearchBar({
+export default function SealedSearchBar({
   productCategory,
   searchTerm,
   setProductCategory,
@@ -39,7 +39,7 @@ export default function SearchBar({
   handleInputChange,
   handleSearch,
   isLoading,
-  type = 'desktop'
+  deviceType = 'desktop'
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
@@ -86,7 +86,7 @@ export default function SearchBar({
   return (
     <div
       className={`relative w-full ${
-        type === 'desktop' ? 'max-w-2xl md:ml-4 md:mr-4' : ''
+        deviceType === 'desktop' ? 'max-w-2xl md:ml-4 md:mr-4' : ''
       }`}
     >
       <div
