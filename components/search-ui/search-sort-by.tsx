@@ -13,21 +13,23 @@ type Props = {
   setSortBy: (sortBy: any) => void;
   fetchCards: () => Promise<void>;
   setCurrentPage: (currentPage: number) => void;
-  sortByLabel: Record<string, string>; // Dynamically pass the label object
+
+  sortByOptions: any;
 };
 export default function SearchSortBy({
   sortBy,
   setSortBy,
   fetchCards,
   setCurrentPage,
-  sortByLabel = {}
+
+  sortByOptions
 }: Props) {
   const handleSortByChange = (value: any) => {
     setSortBy(value);
     setCurrentPage(1);
     fetchCards();
   };
-
+  console.log('search sort by:', sortByOptions);
   return (
     <>
       <DropdownMenu>
@@ -38,10 +40,10 @@ export default function SearchSortBy({
         >
           <Button
             variant="outline"
-            className="flex h-min  w-full shrink-0 items-center justify-center bg-transparent md:w-min"
+            className="flex h-min  w-full shrink-0 items-center justify-center bg-transparent"
           >
             <div className="flex items-center">
-              <span className="text-sm">{sortByLabel[sortBy]}</span>
+              <span className="text-sm">{sortByOptions?.[sortBy]}</span>
               <ChevronDown className="ml-2 h-4 w-4" />
             </div>
           </Button>
@@ -54,11 +56,12 @@ export default function SearchSortBy({
             value={sortBy}
             onValueChange={(value) => handleSortByChange(value as any)}
           >
-            {Object.entries(sortByLabel).map(([key, label]) => (
-              <DropdownMenuRadioItem key={key} value={key}>
-                {label}
-              </DropdownMenuRadioItem>
-            ))}
+            {sortByOptions &&
+              Object.entries(sortByOptions).map(([key, label]) => (
+                <DropdownMenuRadioItem key={key} value={key}>
+                  {label as string}
+                </DropdownMenuRadioItem>
+              ))}
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
