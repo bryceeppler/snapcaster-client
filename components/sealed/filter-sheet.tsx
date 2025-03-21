@@ -1,11 +1,7 @@
 import { Button } from '@/components/ui/button';
-import {
-  RadioGroup,
-  RadioGroupItem
-} from '@/components/ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { SingleSortOptions, FilterOption } from '@/types/query';
 import { Label } from '@/components/ui/label';
 import {
   Accordion,
@@ -18,8 +14,8 @@ import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useMemo } from 'react';
 
 interface FilterSheetProps {
-  sortBy: SingleSortOptions;
-  setSortBy: (sortBy: SingleSortOptions) => void;
+  sortBy: string | null;
+  setSortBy: (sortBy: string | null) => void;
   sortByLabel: Record<string, string>;
   clearFilters: () => void;
 }
@@ -31,12 +27,13 @@ export default function FilterSheet({
   clearFilters
 }: FilterSheetProps) {
   const { getWebsiteName } = useGlobalStore();
-  const { selectedFilters, toggleFilter, filterOptions } = useSealedSearchStore();
+  const { selectedFilters, toggleFilter, filterOptions } =
+    useSealedSearchStore();
 
   // Memoize the isSelected function to prevent unnecessary recalculations
   const isSelected = useMemo(() => {
-    return (field: string, value: string) => 
-      selectedFilters.some(f => f.field === field && f.value === value);
+    return (field: string, value: string) =>
+      selectedFilters.some((f) => f.field === field && f.value === value);
   }, [selectedFilters]);
 
   return (
@@ -54,8 +51,8 @@ export default function FilterSheet({
           <div className="space-y-4">
             <h4 className="text-sm font-medium leading-none">Sort By</h4>
             <RadioGroup
-              value={sortBy}
-              onValueChange={(value) => setSortBy(value as SingleSortOptions)}
+              value={sortBy ?? ''}
+              onValueChange={(value) => setSortBy(value as string | null)}
               className="grid gap-3"
             >
               {Object.entries(sortByLabel).map(([key, label]) => (
@@ -68,11 +65,14 @@ export default function FilterSheet({
           </div>
 
           <Separator />
-          
+
           {/* Filters */}
           <Accordion type="multiple" className="w-full">
             {filterOptions?.map((filterOption) => (
-              <AccordionItem value={filterOption.field} key={filterOption.field}>
+              <AccordionItem
+                value={filterOption.field}
+                key={filterOption.field}
+              >
                 <AccordionTrigger className="text-sm font-medium">
                   {filterOption.name}
                 </AccordionTrigger>
@@ -84,7 +84,9 @@ export default function FilterSheet({
                           type="checkbox"
                           id={`${filterOption.field}-${fValue.value}`}
                           checked={isSelected(filterOption.field, fValue.value)}
-                          onChange={() => toggleFilter(filterOption.field, fValue.value)}
+                          onChange={() =>
+                            toggleFilter(filterOption.field, fValue.value)
+                          }
                           className="mr-2 mt-1"
                         />
                         <label
@@ -107,4 +109,4 @@ export default function FilterSheet({
       </ScrollArea>
     </div>
   );
-} 
+}

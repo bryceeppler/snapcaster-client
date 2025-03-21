@@ -1,18 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import {
-  BuylistSortOptions,
-  FilterOption,
-  FilterOptionValues
-} from '@/types/query';
+import { FilterOption, FilterOptionValues } from '@/types/query';
 
 interface BuylistFilterSectionProps {
   filterOptions: FilterOption[] | undefined;
   sortBy: string;
-  setSortBy: (sortBy: BuylistSortOptions) => void;
+  setSortBy: (sortBy: string | null) => void;
   fetchCards: () => Promise<void>;
   clearFilters: () => void;
   setFilter: (filterField: string, value: string, selected: boolean) => void;
@@ -22,16 +17,12 @@ interface BuylistFilterSectionProps {
 
 export default function BuylistFilterSection({
   filterOptions,
-  sortBy,
-  setSortBy,
   fetchCards,
   clearFilters,
   setFilter,
   setCurrentPage,
   applyFilters
 }: BuylistFilterSectionProps) {
-  // if (!filterOptions) return null;
-
   return (
     <div className="h-full py-4">
       <div className="flex items-center justify-between">

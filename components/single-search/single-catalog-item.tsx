@@ -41,9 +41,9 @@ const SingleCatalogItem = ({ product }: Props) => {
   };
 
   return (
-    <div className="flex flex-col bg-popover font-montserrat">
+    <div className="flex flex-col rounded-lg bg-popover font-montserrat">
       <div
-        className={`group flex h-full flex-col rounded-t-lg border border-accent bg-popover p-4`}
+        className={`group flex h-full flex-col rounded-lg border border-accent bg-popover p-4`}
       >
         <div className="relative mx-auto h-min max-w-[150px] md:max-w-[250px]">
           <CardImage imageUrl={product.image} alt={product.name} />

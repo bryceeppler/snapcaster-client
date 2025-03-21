@@ -103,6 +103,7 @@ export default function BuylistCatalog() {
     updateMode,
     filterOptions,
     sortBy,
+    sortByOptions,
     setSortBy,
     fetchCards,
     clearFilters,
@@ -347,6 +348,7 @@ export default function BuylistCatalog() {
                         setCurrentPage={setCurrentPage}
                         applyFilters={applyFilters}
                         setSortBy={setSortBy}
+                        sortByOptions={sortByOptions}
                       />
                     </SheetContent>
                   </Sheet>
@@ -493,7 +495,10 @@ export default function BuylistCatalog() {
         {mode === 'info' ? (
           <Info />
         ) : mode === 'search' ? (
-          <Search createDialogOpen={createDialogOpen} setCreateDialogOpen={setCreateDialogOpen} />
+          <Search
+            createDialogOpen={createDialogOpen}
+            setCreateDialogOpen={setCreateDialogOpen}
+          />
         ) : mode === 'review' ? (
           <Review setCurrentStep={updateMode} />
         ) : (

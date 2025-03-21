@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 import { Product, Tcg } from '@/types';
-import { FilterOption, SingleSortOptions } from '@/types/query';
+import { FilterOption, SealedSortOptions } from '@/types/query';
 import { toast } from 'sonner';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useEffect } from 'react';
@@ -10,7 +10,7 @@ interface SearchParams {
   productCategory: Tcg;
   searchTerm: string;
   selectedFilters: { field: string; value: string }[];
-  sortBy: SingleSortOptions;
+  sortBy: SealedSortOptions;
   region: string;
 }
 
@@ -25,7 +25,7 @@ interface SearchResponse {
   sorting: {
     Items: Array<{
       label: string;
-      value: SingleSortOptions;
+      value: SealedSortOptions;
       selected: boolean;
     }>;
   };

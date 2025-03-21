@@ -2,11 +2,7 @@ import React, { memo } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import { useAuth } from '@/hooks/useAuth';
 import { createCheckoutSession } from '@/lib/utils';
-import {
-  FilterOption,
-  FilterOptionValues,
-  singleSortByLabel
-} from '@/types/query';
+import { FilterOption, FilterOptionValues } from '@/types/query';
 
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
@@ -28,6 +24,7 @@ type Prop = {
   setCurrentPage: (currentPage: number) => void;
   applyFilters: () => Promise<void>;
   setSortBy: (sortBy: any) => void;
+  sortByOptions: Record<string, string>;
 };
 
 const FilterSection: React.FC<Prop> = memo(
@@ -39,25 +36,30 @@ const FilterSection: React.FC<Prop> = memo(
     setFilter,
     setCurrentPage,
     applyFilters,
-    setSortBy
+    setSortBy,
+    sortByOptions
   }) => {
     const { isAuthenticated, hasActiveSubscription } = useAuth();
     const handleClearFilters = () => {
       clearFilters();
       fetchCards();
     };
-
+    console.log('xxx sortByOptions in filter section:', sortByOptions);
+    // console.log('test in filter section:', test);
     return (
       <ScrollArea className="flex max-h-[95svh] flex-col overflow-y-auto rounded">
         <div className="sticky top-5 mx-auto h-1/4 w-full rounded-lg  px-3 py-2 text-left shadow-md md:max-w-sm">
-          <div className=" border-b md:hidden">
-            <SearchSortBy
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-              fetchCards={fetchCards}
-              setCurrentPage={setCurrentPage}
-              sortByLabel={singleSortByLabel}
-            />
+          <div className=" border-b ">
+            {/* {sortByOptions && <p>its here</p>} */}
+            <div className="flex w-full justify-center">
+              <SearchSortBy
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                fetchCards={fetchCards}
+                setCurrentPage={setCurrentPage}
+                sortByOptions={sortByOptions}
+              />
+            </div>
           </div>
           <Accordion type="multiple" className="w-full  ">
             {filterOptions &&

@@ -1,12 +1,11 @@
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import BackToTopButton from '../ui/back-to-top-btn';
 import SealedCatalogItem from './sealed-catalog-item';
 import { useAuth } from '@/hooks/useAuth';
 import React, { useEffect, useRef } from 'react';
-import { singleSortByLabel } from '@/types/query';
+import { sealedSortByLabel } from '@/types/query';
 import { Tcg, SealedProduct } from '@/types';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { SingleSortOptions, FilterOption } from '@/types/query';
+import { SealedSortOptions, FilterOption } from '@/types/query';
 import { Button } from '@/components/ui/button';
 import { SlidersHorizontal } from 'lucide-react';
 import {
@@ -83,7 +82,7 @@ export default function SealedCatalogContainer({
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleSortChange = async (newSortBy: SingleSortOptions) => {
+  const handleSortChange = async (newSortBy: SealedSortOptions) => {
     setStoreSortBy(newSortBy);
     await refetch();
   };
@@ -122,9 +121,11 @@ export default function SealedCatalogContainer({
               </SheetTrigger>
               <SheetContent side="right" className="w-full max-w-sm">
                 <FilterSheet
-                  sortBy={sortBy}
-                  setSortBy={handleSortChange}
-                  sortByLabel={singleSortByLabel}
+                  sortBy={sortBy as string}
+                  setSortBy={(sortBy: string | null) => {
+                    if (sortBy) handleSortChange(sortBy as SealedSortOptions);
+                  }}
+                  sortByLabel={sealedSortByLabel}
                   clearFilters={clearFilters}
                 />
               </SheetContent>

@@ -8,7 +8,6 @@ import AdComponent from '../ad';
 import type { Ad, AdWeight } from '@/types/ads';
 import React, { useState, useEffect } from 'react';
 import { AdSelector } from '@/utils/adSelector';
-import { singleSortByLabel } from '@/types/query';
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
 
@@ -30,7 +29,8 @@ export default function SingleCatalog() {
     setSortBy,
     clearFilters,
     setFilter,
-    applyFilters
+    applyFilters,
+    sortByOptions
   } = useSingleSearchStore();
 
   const { hasActiveSubscription } = useAuth();
@@ -69,6 +69,7 @@ export default function SingleCatalog() {
   return (
     <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-[240px_1fr]">
       {/* #1 Single Search Filter Section */}
+
       <div className="flex flex-col gap-1 ">
         <div className="grid h-full gap-1">
           {loadingFilterResults && (
@@ -76,9 +77,20 @@ export default function SingleCatalog() {
           )}
           {!loadingFilterResults && filters && (
             <div className="relative  hidden w-full flex-col gap-1 md:flex">
-              <div className="child-2 md:hidden">{/* <SingleSortBy /> */}</div>
               <div className="child-1 mt-1 w-full md:sticky md:top-[118px]">
                 <div className="rounded-lg bg-popover px-3 py-2 text-left shadow-md md:max-w-sm">
+                  <div className="mx-auto w-full bg-red-200">
+                    <div className="sm:hidden">
+                      <SearchSortBy
+                        sortBy={sortBy}
+                        sortByOptions={sortByOptions}
+                        setSortBy={setSortBy}
+                        fetchCards={fetchCards}
+                        setCurrentPage={setCurrentPage}
+                      />
+                    </div>
+                  </div>
+
                   <FilterSection
                     filterOptions={filterOptions}
                     sortBy={sortBy}
@@ -88,6 +100,7 @@ export default function SingleCatalog() {
                     setFilter={setFilter}
                     setCurrentPage={setCurrentPage}
                     applyFilters={applyFilters}
+                    sortByOptions={sortByOptions}
                   />
                 </div>
               </div>
@@ -118,11 +131,12 @@ export default function SingleCatalog() {
         <div className="grid h-min gap-1">
           {/* #2.1 Single Search Top Bar Section (# Results, Pagination, Sort By) */}
           <div className="z-30 hidden bg-background pt-1 md:sticky md:top-[114px] md:block">
-            <div className="  flex flex-row items-center justify-between rounded-lg bg-popover px-4 py-2 ">
-              <span className="text-center text-sm font-normal text-secondary-foreground ">
-                {numResults} results
-              </span>
-              <div>
+            <div className="flex items-center justify-between rounded-lg bg-popover px-4 py-2">
+              {/* Empty div to balance the flex space */}
+              <div className="w-24" />
+
+              {/* Centered pagination that takes remaining space */}
+              <div className="flex flex-1 justify-center">
                 <SearchPagination
                   currentPage={currentPage}
                   numPages={numPages}
@@ -131,13 +145,13 @@ export default function SingleCatalog() {
                   setIsLoading={setIsLoading}
                 />
               </div>
-              <SearchSortBy
-                sortBy={sortBy}
-                sortByLabel={singleSortByLabel}
-                setSortBy={setSortBy}
-                fetchCards={fetchCards}
-                setCurrentPage={setCurrentPage}
-              />
+
+              {/* Results count with minimum width */}
+              <div className="w-24 text-right">
+                <span className="whitespace-nowrap text-sm font-normal text-secondary-foreground">
+                  {numResults} results
+                </span>
+              </div>
             </div>
             <div className="bg-background pb-1"></div>
           </div>

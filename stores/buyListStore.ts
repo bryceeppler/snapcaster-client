@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Tcg, BuyListQueryCard } from '@/types/product';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
-import { BuylistSortOptions, FilterOption } from '@/types/query';
+import { FilterOption } from '@/types/query';
 
 type SubmitBuylistResponse = {
   success: boolean;
@@ -44,11 +44,12 @@ type BuyListState = {
   numResults: number;
   clearSearchResults: () => void;
   searchTerm: string;
-  sortBy: BuylistSortOptions;
+  sortBy: string | null;
+  sortByOptions: Record<string, string>;
   filters: FilterOption[] | null;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
-  setSortBy: (sortBy: BuylistSortOptions) => void;
+  setSortBy: (sortBy: string | null) => void;
   setTcg: (tcg: Tcg) => void;
   setCurrentPage: (currentPage: number) => void;
   setSearchTerm: (searchBoxValue: string) => void;
@@ -56,21 +57,21 @@ type BuyListState = {
   setFilter: (filterField: string, value: string, selected: boolean) => void;
   clearFilters: () => void;
   applyFilters: () => Promise<void>;
-  ////////////////////////
-  //Cart State Variables//
-  ////////////////////////
+  ////////////////////////////////////
+  //Cart State Variables & functions//
+  ////////////////////////////////////
   mode: 'info' | 'search' | 'review' | 'submit';
   updateMode: (mode: 'info' | 'search' | 'review' | 'submit') => void;
-
   currentCartId: number | null;
   setCurrentCartId: (cartId: number | null) => void;
 
-  // review tab data
+  //////////////////////////////////////////
+  //review tab state variables & functions//
+  //////////////////////////////////////////
   reviewData: any;
   setReviewData: (cartId: number | null) => Promise<void>;
   selectedStoreForReview: string | null;
   setSelectedStoreForReview: (storeName: string) => void;
-
   submitBuylist: (
     paymentType: 'Cash' | 'Store Credit'
   ) => Promise<SubmitBuylistResponse>;
@@ -83,7 +84,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   numPages: 0,
   tcg: 'mtg',
   searchTerm: '',
-  sortBy: 'name-asc',
+  sortBy: null,
+  sortByOptions: {},
   filters: null,
   numResults: 0,
   //Cart State Variables
@@ -97,7 +99,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   //////////////////////
   // Search Functions //
   //////////////////////
-
   fetchCards: async (page?: number) => {
     const { filters } = get();
     if (get().searchTerm) {
@@ -106,11 +107,12 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         tcg: `${get().tcg}`,
         region: '',
         keyword: get().searchTerm,
-        // index: `buylists_${get().tcg}_prod*`,
-        sortBy: get().sortBy,
         pageNumber: (page ?? get().currentPage).toString(),
         maxResultsPerPage: '100'
       });
+      if (get().sortBy) {
+        queryParams.set('sortBy', `${get().sortBy}`);
+      }
 
       if (filters) {
         filters.forEach((filter) => {
@@ -140,6 +142,14 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
         const filterOptionsFromResponse: FilterOption[] =
           response.data.data.filters || [];
+        const transformedSortByOptions =
+          response.data.data.sorting.Items.reduce(
+            (acc: any, item: any) => ({
+              ...acc,
+              [item.value]: item.label
+            }),
+            {}
+          );
 
         set({
           searchResults: response.data.data.results.slice(0, 500),
@@ -147,7 +157,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
           numPages: response.data.data.pagination.numPages,
           filterOptions: filterOptionsFromResponse,
           filters: filterOptionsFromResponse,
-          currentPage: page ?? get().currentPage
+          currentPage: page ?? get().currentPage,
+          sortBy: get().sortBy ?? response.data.data.sorting.defaultSort,
+          sortByOptions: transformedSortByOptions
         });
         get().updateMode('search');
       } catch (error) {
@@ -191,7 +203,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     }
     set({ tcg });
   },
-  setSortBy: (sortBy: BuylistSortOptions) => set({ sortBy }),
+  setSortBy: (sortBy: string | null) => set({ sortBy }),
   clearFilters: () => set({ filters: null }),
 
   ////////////////////
