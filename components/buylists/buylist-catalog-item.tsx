@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
-import useBuyListStore, { IBuylistCart } from '@/stores/buyListStore';
+import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
 import { useCartItems } from '@/hooks/useCartItems';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
@@ -22,7 +22,11 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
-type Props = { cardData: any, createDialogOpen: boolean, setCreateDialogOpen: (open: boolean) => void };
+type Props = {
+  cardData: any;
+  createDialogOpen: boolean;
+  setCreateDialogOpen: (open: boolean) => void;
+};
 const conditions = [
   'Near Mint',
   'Lightly Played',
@@ -33,7 +37,11 @@ const conditions = [
 
 const CART_KEY = (cartId: number) => ['cart', cartId] as const;
 
-const BuyListCatalogItem = memo(function ResultCard({ cardData, createDialogOpen, setCreateDialogOpen }: Props) {
+const BuyListCatalogItem = memo(function ResultCard({
+  cardData,
+  createDialogOpen,
+  setCreateDialogOpen
+}: Props) {
   const { currentCartId } = useBuyListStore();
   const { cartItems, updateCartItem } = useCartItems(
     currentCartId || undefined
@@ -108,7 +116,7 @@ const BuyListCatalogItem = memo(function ResultCard({ cardData, createDialogOpen
             <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
               {cardData.set}
             </div>
-            <h3 className="text-[0.9rem] font-semibold capitalize overflow-hidden text-ellipsis">
+            <h3 className="overflow-hidden text-ellipsis text-[0.9rem] font-semibold capitalize">
               {cardData.name}
             </h3>
             <p className="text-sm font-semibold capitalize text-muted-foreground">

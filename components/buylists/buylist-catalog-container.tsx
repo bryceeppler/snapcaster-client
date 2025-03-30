@@ -1,56 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 
-import { useAuth } from '@/hooks/useAuth';
-import useBuyListStore, {
-  IBuylistCart,
-  IBuylistCartItem
-} from '@/stores/buyListStore';
-import { useUserCarts } from '@/hooks/useUserCarts';
-
-import Info from './info';
-import Search from './search';
-import Review from './review/review';
-import Submit from './submit';
-import BuylistCartSheet from './buylist-cart-sheet';
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList
-} from '@/components/ui/command';
+import FilterSection from '../search-ui/search-filter-container';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogDescription
 } from '../ui/dialog';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from '@/components/ui/alert-dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
 import {
   Sheet,
   SheetContent,
@@ -59,452 +18,316 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet';
 import { Button } from '../ui/button';
-import { toast } from 'sonner';
 import {
-  ChevronDown,
-  MoreVertical,
+  MixerHorizontalIcon,
+  QuestionMarkCircledIcon,
   PlusIcon,
-  ShoppingCartIcon,
-  SlidersHorizontal
-} from 'lucide-react';
-import { Input } from '../ui/input';
-import { Mode } from '@/types/buylists';
-import FilterSection from '../search-ui/search-filter-container';
-import SearchPagination from '../search-ui/search-pagination';
-
-const steps = [
-  { label: 'Info', mode: 'info' },
-  { label: 'Search', mode: 'search' },
-  { label: 'Review', mode: 'review' },
-  { label: 'Submit', mode: 'submit' }
-];
-
-const modeToStep = (mode: Mode) => {
-  switch (mode) {
-    case 'info':
-      return 0;
-    case 'search':
-      return 1;
-    case 'review':
-      return 2;
-    case 'submit':
-      return 3;
-    default:
-      return 0;
-  }
-};
+  MinusIcon
+} from '@radix-ui/react-icons';
+import CardImage from '../ui/card-image';
+import { Card } from '../ui/card';
+import { ScrollArea } from '../ui/scroll-area';
+import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
+import useBuyListStore from '@/stores/useBuylistStore';
 
 export default function BuylistCatalog() {
-  // Zustand Stores
   const {
-    currentCartId,
-    setCurrentCartId,
-    mode,
-    updateMode,
-    filterOptions,
+    tcg,
+    searchTerm,
+    setSearchTerm,
+    filters,
     sortBy,
-    sortByOptions,
-    setSortBy,
-    fetchCards,
-    clearFilters,
+    filterOptions,
     setFilter,
-    setCurrentPage,
-    applyFilters,
-
-    currentPage,
-    numPages,
-    setReviewData,
-    setIsLoading
+    setCurrentPage
+    // setProductCategory,
+    // clearFilters
   } = useBuyListStore();
-  const { isAuthenticated } = useAuth();
   const {
-    carts,
+    data,
     isLoading,
-    createCart,
-    deleteCart,
-    renameCart,
-    isCreating,
-    isDeleting,
-    isRenaming
-  } = useUserCarts();
-
-  //Dialogs
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [activeDialogId, setActiveDialogId] = useState<number | null>(null);
-  const [newCartName, setNewCartName] = useState('');
-  const [cartToDelete, setCartToDelete] = useState<any>(null);
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
-
-  //Update Current Cart
-  const CART_KEY = (cartId: number) => ['cart', cartId] as const;
-  const { data: currentCart } = useQuery<{
-    success: boolean;
-    cart: IBuylistCart;
-  } | null>({
-    queryKey: CART_KEY(currentCartId || 0),
-    queryFn: async () => {
-      if (!currentCartId) return null;
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
-      );
-      return response.data;
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch
+  } = useBuylistSearch(
+    {
+      tcg,
+      searchTerm,
+      filters: filters || [],
+      sortBy
     },
-    enabled: !!currentCartId
-  });
-  const cartItemCount =
-    currentCart?.cart?.items?.reduce(
-      (total: number, item: IBuylistCartItem) => total + item.quantity,
-      0
-    ) || 0;
+    { enabled: false }
+  );
 
   useEffect(() => {
-    if (carts?.length && !value) {
-      setValue(carts[0].name);
-      setCurrentCartId(carts[0].id);
-    } else {
-      const selectedCart = carts?.find((cart) => cart.name === value);
-      setCurrentCartId(selectedCart?.id ?? null);
+    refetch();
+  }, [filters]);
+
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
     }
-  }, [value, carts]);
 
-  // Step Animations
-  const [animateToStep, setAnimateToStep] = useState(0);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAnimateToStep(modeToStep(mode));
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [mode]);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  useEffect(() => {
-    if (currentCartId && carts?.length) {
-      const currentCart = carts.find((cart) => cart.id === currentCartId);
-      if (currentCart) {
-        setValue(currentCart.name);
-      }
-    }
-  }, [currentCartId, carts]);
+  const handleSortChange = async (newSortBy: any) => {
+    // setStoreSortBy(newSortBy);
+    await refetch();
+  };
 
   return (
-    <>
-      <div className=" min-h-[80svh] rounded-lg ">
-        <div className=" my-1 flex  flex-col  rounded-t-lg  pt-2">
-          <div className="mx-auto  w-full ">
-            <div className="flex items-center justify-between">
-              <div className=" flex flex-grow items-center justify-between">
-                {steps.map((step, index) => (
-                  <div key={index} className="w-full">
-                    <div className="w-full ">
-                      <button
-                        onClick={() => {
-                          isAuthenticated
-                            ? updateMode(step.mode as Mode)
-                            : (updateMode('info'),
-                              toast.error('Please sign in to continue'));
-                        }}
-                        className="flex h-7 w-full items-center justify-center font-montserrat text-sm font-medium transition-colors md:text-base"
-                      >
-                        {step.label}
-                      </button>
-                      <div className="relative h-0.5 bg-gray-500">
-                        <div
-                          className="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-500 ease-in-out"
-                          style={{
-                            width: index <= animateToStep ? '100%' : '0%'
-                          }}
-                        />
-                      </div>
-                    </div>
-                    {index < steps.length - 1 && <div className="hidden w-4" />}
-                  </div>
-                ))}
-              </div>
+    <div className="flex flex-col gap-1">
+      {/* Header */}
+      <div className="mx-auto flex w-full items-center justify-between rounded-lg border bg-card px-2 py-0.5 ">
+        <div className="flex w-24 items-center justify-start gap-1">
+          <Sheet>
+            <SheetTitle hidden>Filters</SheetTitle>
+            <SheetDescription hidden>
+              Filter your search results
+            </SheetDescription>
+            <SheetTrigger asChild className="hidden md:block">
+              <MixerHorizontalIcon className="h-6 w-6" />
+            </SheetTrigger>
+            <SheetContent side="left">
+              <FilterSection
+                filterOptions={filterOptions}
+                sortBy={'name-asc'}
+                fetchCards={async () => {
+                  refetch();
+                }}
+                clearFilters={() => {}}
+                setFilter={setFilter}
+                // setFilter={() => {}}
+                setCurrentPage={setCurrentPage}
+                applyFilters={async () => {
+                  // console.log('applyFilters in buylist-catalog-container');
+                  // console.log('filters in buylist-catalog-container', filters);
+                  // refetch();
+                }}
+                setSortBy={() => {}}
+                sortByOptions={{
+                  'name-asc': 'Name (A-Z)',
+                  'name-desc': 'Name (Z-A)'
+                }}
+              />
+            </SheetContent>
+          </Sheet>
+        </div>
+        <div className="space-y-1">
+          <div>
+            <p className="text-sm">{data?.numResults} Search Results</p>
+          </div>
+          <div className="mx-auto flex w-min gap-2">
+            <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-primary"></div>
+            <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-background"></div>
+            <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-background"></div>
+          </div>
+        </div>
+        <div
+          className="flex w-24 items-center justify-end gap-1"
+          onClick={() => {
+            // console.log('FAQ button clicked');
+            refetch();
+          }}
+        >
+          <p className="text-sm">FAQ</p>
+          <QuestionMarkCircledIcon className="h-5 w-5" />
+        </div>
+      </div>
+      {/* Body */}
+      <div className="flex gap-1">
+        {/* Left Sidebar */}
+        <div className="col-span-1 flex h-[75vh] w-[480px] flex-col space-y-1 rounded-lg border bg-card">
+          <div className="flex justify-between border-b px-1">
+            <div className="flex h-10 w-12 items-center justify-start gap-1">
+              <p className="text-xs underline">My Lists</p>
+            </div>
+            <div className="flex items-center gap-1">
+              <p className="text-sm">Cart 1</p>
+            </div>
+            <div className="flex w-12 items-center justify-end gap-1 ">
+              {/* <PlusIcon className="h-6 w-6" /> */}
             </div>
           </div>
-          {mode != 'info' && (
-            <div className="flex flex-row items-center justify-between py-1">
-              <span className="flex items-end ">
-                <Popover open={open} onOpenChange={setOpen}>
-                  <div>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-[170px] justify-between border px-2"
-                      >
-                        <span className="truncate">
-                          {value
-                            ? carts?.find((cart) => cart.name === value)
-                                ?.name ?? 'Select list...'
-                            : 'Select list...'}
-                        </span>
-                        <ChevronDown className="ml-2 h-4 w-4 flex-shrink-0" />
-                      </Button>
-                    </PopoverTrigger>
-                  </div>
-
-                  <PopoverContent className="w-[170px] p-0">
-                    <Command>
-                      <CommandList>
-                        <CommandEmpty>No lists found.</CommandEmpty>
-                        <CommandGroup>
-                          {carts?.map((cart) => (
-                            <CommandItem
-                              className="flex flex-row items-center justify-between px-0 pl-2"
-                              key={cart.id}
-                              value={cart.name}
-                              onSelect={(currentValue) => {
-                                setValue(currentValue);
-                                setOpen(false);
-                              }}
-                            >
-                              <span className="flex-1 truncate pr-2">
-                                {cart.name}
-                              </span>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger
-                                  asChild
-                                  className="w-min flex-shrink-0 bg-transparent"
-                                  variant={'noOutline'}
-                                >
-                                  <MoreVertical className="h-8 w-8 cursor-pointer" />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-min">
-                                  <DropdownMenuGroup>
-                                    <DropdownMenuItem
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setCurrentCartId(cart.id);
-                                        setActiveDialogId(cart.id);
-                                      }}
-                                    >
-                                      <p>Rename</p>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setCartToDelete(cart);
-                                      }}
-                                    >
-                                      <p className="text-red-500">Delete</p>
-                                    </DropdownMenuItem>
-                                  </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-
-                <Button
-                  className="item w-fit  px-2"
-                  onClick={() => setCreateDialogOpen(true)}
-                  disabled={isCreating}
-                  variant="ghost"
-                >
-                  <PlusIcon className=" h-5 w-5 cursor-pointer" />
-                </Button>
-              </span>
-
-              {mode === 'search' && (
-                <div className="hidden md:block">
-                  <SearchPagination
-                    currentPage={currentPage}
-                    numPages={numPages}
-                    fetchCards={fetchCards}
-                    setCurrentPage={setCurrentPage}
-                    setIsLoading={setIsLoading}
-                  />
-                </div>
-              )}
-              <div className="flex flex-row gap-1">
-                {mode === 'search' && (
-                  <Sheet>
-                    <SheetTitle hidden>Filters</SheetTitle>
-                    <SheetDescription hidden>
-                      Filter your search results
-                    </SheetDescription>
-                    <SheetTrigger asChild className="hidden md:block">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-9 gap-2 text-sm font-medium"
-                      >
-                        <SlidersHorizontal className="h-4 w-4" />
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left">
-                      <FilterSection
-                        filterOptions={filterOptions}
-                        sortBy={sortBy}
-                        fetchCards={fetchCards}
-                        clearFilters={clearFilters}
-                        setFilter={setFilter}
-                        setCurrentPage={setCurrentPage}
-                        applyFilters={applyFilters}
-                        setSortBy={setSortBy}
-                        sortByOptions={sortByOptions}
-                      />
-                    </SheetContent>
-                  </Sheet>
-                )}
-
-                {/* Cart Sheet */}
-                <Sheet
-                  onOpenChange={(open) => {
-                    if (!open && (mode === 'review' || mode === 'submit')) {
-                      setReviewData(currentCartId);
-                    }
-                  }}
-                >
-                  <SheetTitle hidden>Cart</SheetTitle>
-                  <SheetDescription hidden>View your cart</SheetDescription>
-                  <SheetTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="relative mr-2 h-9"
-                    >
-                      <ShoppingCartIcon className=" h-4 w-4" />
-                      {cartItemCount > 0 && (
-                        <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-                          {cartItemCount}
-                        </span>
-                      )}
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent
-                    side="right"
-                    className="w-[1740px] max-w-[100vw] sm:max-w-[480px]"
-                  >
-                    <BuylistCartSheet setCurrentStep={updateMode} />
-                  </SheetContent>
-                </Sheet>
+          <div className="flex-1 overflow-hidden">
+            <ScrollArea className="h-full" type="always">
+              <div className="mr-1.5 space-y-1 px-1 ">
+                <CartItem />
+                <CartItem />
+                <CartItem />
               </div>
-            </div>
-          )}
+            </ScrollArea>
+          </div>
+          <div className=" ">
+            <Button className="w-full">View Offers</Button>
+          </div>
         </div>
 
-        {/* Create Cart Dialog */}
-        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Buylist</DialogTitle>
-              <DialogDescription>
-                Enter a name for your new buylist.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col gap-4">
-              <Input
-                placeholder="Enter buylist name"
-                value={newCartName}
-                onChange={(e) => setNewCartName(e.target.value)}
-                maxLength={40}
-              />
-              <Button
-                onClick={() => {
-                  createCart(newCartName);
-                  setCreateDialogOpen(false);
-                  setNewCartName('');
-                }}
-                disabled={isCreating || !newCartName.trim()}
-              >
-                {isCreating ? 'Creating...' : 'Create'}
-              </Button>
+        {/* Content */}
+        <div className="h-[75vh] w-full overflow-hidden rounded-lg">
+          <ScrollArea className="h-full" type="always">
+            <div className="grid grid-cols-2 gap-1 pr-2.5 sm:grid-cols-3 md:grid-cols-4">
+              {data?.searchResults?.map((card) => (
+                <div className="">
+                  <BuylistCatalogItem cardData={card} />
+                </div>
+              ))}
             </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Rename Cart Dialog */}
-        <Dialog
-          open={!!activeDialogId}
-          onOpenChange={(open) => !open && setActiveDialogId(null)}
-        >
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Rename Buylist</DialogTitle>
-              <DialogDescription>
-                Enter a new name for your buylist.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col gap-4">
-              <Input
-                placeholder="Enter new buylist name"
-                value={newCartName}
-                onChange={(e) => setNewCartName(e.target.value)}
-                maxLength={40}
-              />
-              <Button
-                onClick={() => {
-                  if (activeDialogId) {
-                    renameCart({
-                      id: activeDialogId,
-                      name: newCartName,
-                      items: []
-                    });
-                    setActiveDialogId(null);
-                    setNewCartName('');
-                  }
-                }}
-                disabled={isRenaming || !newCartName.trim()}
-              >
-                {isRenaming ? 'Renaming...' : 'Rename'}
-              </Button>
+            <div ref={loadMoreRef} className="h-10 w-full">
+              {(isFetchingNextPage ||
+                (isLoading &&
+                  Array.isArray(data?.searchResults) &&
+                  data?.searchResults.length > 0)) && (
+                <div className="flex items-center justify-center py-4">
+                  <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
+                </div>
+              )}
             </div>
-          </DialogContent>
-        </Dialog>
+          </ScrollArea>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-        {/* Delete Cart Dialog */}
-        <AlertDialog
-          open={!!cartToDelete}
-          onOpenChange={(open: boolean) => !open && setCartToDelete(null)}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently delete your buylist "{cartToDelete?.name}
-                ". This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  if (cartToDelete) {
-                    deleteCart(cartToDelete.id);
-                    if (currentCartId === cartToDelete.id) {
-                      setCurrentCartId(null);
-                    }
-                    setCartToDelete(null);
-                  }
-                }}
-                disabled={isDeleting}
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        {mode === 'info' ? (
-          <Info />
-        ) : mode === 'search' ? (
-          <Search
-            createDialogOpen={createDialogOpen}
-            setCreateDialogOpen={setCreateDialogOpen}
+const CartItem = () => {
+  return (
+    <>
+      <div className="flex items-center rounded-lg border px-1 py-1 ">
+        <div className="">
+          <img
+            className="w-20 object-contain"
+            src="https://cdn.shopify.com/s/files/1/0235/2457/3231/files/70cd7a67-9f40-5227-8c12-5fb1a4750035.png?v=1736540822"
+            alt="card_image"
           />
-        ) : mode === 'review' ? (
-          <Review setCurrentStep={updateMode} />
-        ) : (
-          mode === 'submit' && <Submit setCurrentStep={updateMode} />
-        )}
+        </div>
+        <div className="flex w-full flex-col gap-1 space-y-0.5 px-0.5">
+          <p className="text-[0.55rem] text-xs font-semibold uppercase   leading-none text-muted-foreground">
+            commander masters sss sss sss sss sssss ssss
+          </p>
+
+          <p className="text-[0.70rem] text-xs font-semibold leading-none">
+            Counterspell
+          </p>
+
+          <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.55rem]">
+              <p> Near Mint</p>
+            </span>
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.55rem]">
+              <p> Foil</p>
+            </span>
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.55rem]">
+              <p> Foilssssss</p>
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-1">
+          <div>
+            <PlusIcon className="h-5 w-5 stroke-[3]"></PlusIcon>
+          </div>
+          <div>
+            <p className="text-xs">99</p>
+          </div>
+          <div>
+            <MinusIcon className="h-5 w-5"></MinusIcon>
+          </div>
+        </div>
       </div>
     </>
   );
-}
+};
+
+type BuylistCatalogItemProps = {
+  cardData: any;
+};
+
+const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
+  return (
+    <>
+      <Card className="h-full">
+        <div className="flex h-full flex-col gap-2 rounded-md bg-popover px-1 py-2">
+          <div className="mx-auto max-w-[150px] px-4 md:max-w-[250px]">
+            <CardImage imageUrl={cardData.image} alt={cardData.name} />
+          </div>
+
+          <div className=" flex flex-1 flex-col justify-between">
+            <div className="flex w-full flex-col gap-1 space-y-0.5 px-0.5">
+              <p className="overflow-hidden text-ellipsis text-[0.7rem] text-xs  font-semibold uppercase leading-none text-muted-foreground ">
+                {cardData.set}
+              </p>
+              <p className="overflow-hidden text-ellipsis text-[0.80rem] font-semibold leading-none ">
+                {cardData.name}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-1 text-[0.70rem] font-medium text-primary">
+                <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.7rem]">
+                  <p> {cardData.foil}</p>
+                </span>
+                <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.7rem]">
+                  <p> {cardData.rarity}</p>
+                </span>
+              </div>
+            </div>
+
+            {/* <Dialog>
+              <DialogTitle hidden>Add To Cart</DialogTitle>
+              <DialogDescription hidden>
+                Add this card to your cart
+              </DialogDescription>
+
+              <DialogContent className="w-min px-16">
+                <div className="mx-auto w-[250px] px-4">
+                  <CardImage
+                    imageUrl="https://cdn.shopify.com/s/files/1/0235/2457/3231/files/70cd7a67-9f40-5227-8c12-5fb1a4750035.png?v=1736540822"
+                    alt="Counterspell"
+                  />
+                </div>
+
+                <div className="mt-2">
+                  <p className="text-[0.9rem] font-semibold capitalize">
+                    Counterspell
+                  </p>
+                  <p className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
+                    Modern Masters
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+                    <span className="rounded bg-primary/10 px-1.5 py-0.5">
+                      <p> Foil</p>
+                    </span>
+                    <span className="rounded bg-primary/10 px-1.5 py-0.5">
+                      <p> Foilssssss</p>
+                    </span>
+                    <span className="rounded bg-primary/10 px-1.5 py-0.5">
+                      <p> Foilssssss</p>
+                    </span>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog> */}
+          </div>
+          <Button
+            className="h-8 w-full  font-montserrat font-semibold "
+            variant="outline"
+          >
+            <p className="text-[0.65rem]">Add To Cart</p>
+          </Button>
+        </div>
+      </Card>
+    </>
+  );
+};

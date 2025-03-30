@@ -17,38 +17,31 @@ import { ChevronDown, HelpCircle, X, Loader2 } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
 import { Tcg } from '@/types';
-import { trackSearch } from '@/utils/analytics';
-import buyListStore from '@/stores/useBuylistStore';
-import { useRouter } from 'next/router';
+import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
+import useBuylistStore from '@/stores/useBuylistStore';
+
 interface AutocompleteResult {
   name: string;
 }
 type Props = {
   deviceType: string;
   toggleMobileSearch?: () => void;
-  fetchQuery: (page: number) => void;
   setSearchTerm: (term: string) => void;
   searchTerm: string;
   setTcg: (tcg: Tcg) => void;
   tcg: Tcg;
-  clearFilters: () => void;
-  isLoading: boolean;
-  setIsLoading: (loading: boolean) => void;
+  //   isLoading: boolean;
 };
-export default function NavSearchBar({
+export default function BuylistNavSearchBar({
   deviceType,
   toggleMobileSearch,
-  fetchQuery,
+
   setSearchTerm,
   searchTerm,
   setTcg,
-  tcg,
-  clearFilters,
-  isLoading,
-  setIsLoading
-}: Props) {
-  const router = useRouter();
-  const currentPath = router.pathname;
+  tcg
+}: //   isLoading
+Props) {
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -112,18 +105,7 @@ export default function NavSearchBar({
   const handleSuggestionClick = (suggestion: AutocompleteResult) => {
     setSearchTerm(suggestion.name);
     setIsAutoCompleteVisible(false);
-    handleSearch(); // Trigger search
   };
-
-  const handleSearch = useCallback(async () => {
-    setIsLoading(true);
-    clearFilters();
-    await fetchQuery(1);
-    trackSearch(searchTerm, tcg, 'single');
-    setIsAutoCompleteVisible(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setIsLoading(false);
-  }, [fetchQuery, searchTerm, tcg, clearFilters]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -153,8 +135,6 @@ export default function NavSearchBar({
               handleSuggestionClick(item);
             }
           } else {
-            clearFilters();
-            handleSearch();
           }
           break;
         case 'Escape':
@@ -167,6 +147,20 @@ export default function NavSearchBar({
     },
     [suggestions, selectedIndex]
   );
+
+  const { filters, sortBy } = useBuylistStore();
+  const { isLoading, refetch } = useBuylistSearch(
+    {
+      tcg,
+      searchTerm,
+      filters: filters ?? [],
+      sortBy
+    },
+    { enabled: false }
+  );
+  useEffect(() => {
+    refetch();
+  }, [tcg]);
 
   return (
     <div
@@ -223,8 +217,7 @@ export default function NavSearchBar({
             <MagnifyingGlassIcon
               className="h-6 w-6 cursor-pointer hover:text-muted-foreground"
               onClick={() => {
-                clearFilters();
-                handleSearch();
+                refetch();
               }}
             />
           )}

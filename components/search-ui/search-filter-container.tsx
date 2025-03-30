@@ -44,7 +44,6 @@ const FilterSection: React.FC<Prop> = memo(
       clearFilters();
       fetchCards();
     };
-    console.log('xxx sortByOptions in filter section:', sortByOptions);
     // console.log('test in filter section:', test);
     return (
       <ScrollArea className="flex max-h-[95svh] flex-col overflow-y-auto rounded">
@@ -172,7 +171,10 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
       ...prev,
       [option.value]: newSelected
     }));
+    console.log('setFilter !option.selected:', option.selected);
     setFilter(filter.field, option.value, !option.selected);
+
+    // console.log('setFilter !option.selected:', !option.selected);
     setCurrentPage(1);
     applyFilters();
   };
@@ -187,7 +189,10 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
               type="checkbox"
               id={option.value}
               checked={localSelections[option.value] ?? option.selected}
-              onChange={(e) => handleOptionChange(filterOption, option)}
+              onChange={(e) => {
+                // console.log('onChange option.value:', option);
+                handleOptionChange(filterOption, option);
+              }}
               className="mr-2 mt-1"
             />
             <label htmlFor={option.value} className="text-sm leading-5">

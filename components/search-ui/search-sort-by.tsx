@@ -29,7 +29,6 @@ export default function SearchSortBy({
     setCurrentPage(1);
     fetchCards();
   };
-  console.log('search sort by:', sortByOptions);
   return (
     <>
       <DropdownMenu>

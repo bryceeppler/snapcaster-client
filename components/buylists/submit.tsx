@@ -1,5 +1,5 @@
 import useGlobalStore from '@/stores/globalStore';
-import useBuyListStore from '@/stores/buyListStore';
+import useBuyListStore from '@/stores/useBuylistStore';
 import { useTheme } from 'next-themes';
 import { AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';

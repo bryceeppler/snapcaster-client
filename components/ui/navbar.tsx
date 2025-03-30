@@ -15,6 +15,7 @@ import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import SealedSearchBar from '../sealed/sealed-nav-search-bar';
+import BuylistNavSearchBar from '../buylists/buylist-nav-search-bar';
 import {
   Sheet,
   SheetContent,
@@ -27,7 +28,7 @@ import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
-import useBuyListStore from '@/stores/buyListStore';
+import useBuyListStore from '@/stores/useBuylistStore';
 
 const Navbar: React.FC = () => {
   const router = useRouter();
@@ -462,25 +463,25 @@ const BuylistsNavSearchBar = ({
     searchTerm,
     tcg,
     isLoading,
-    fetchCards,
+    // fetchCards,
     setSearchTerm,
-    setTcg,
-    clearFilters,
-    setIsLoading
+    setTcg
+    // clearFilters,
+    // setIsLoading
   } = useBuyListStore();
   return (
     <>
-      <NavSearchBar
+      <BuylistNavSearchBar
         deviceType={deviceType}
         toggleMobileSearch={toggleMobileSearch}
         searchTerm={searchTerm}
         tcg={tcg}
-        clearFilters={clearFilters}
+        // clearFilters={clearFilters}
         setSearchTerm={setSearchTerm}
         setTcg={setTcg}
-        fetchQuery={fetchCards}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
+        // fetchQuery={fetchCards}
+        // isLoading={isLoading}
+        // setIsLoading={setIsLoading}
       />
     </>
   );
@@ -539,7 +540,8 @@ const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
     case 'singles':
       return <SingleResultsToolbar />;
     case 'buylists':
-      return <BuylistsResultsToolbar />;
+      // return <BuylistsResultsToolbar />;
+      return <div>BuylistsResultsToolbar</div>;
   }
 };
 
@@ -601,62 +603,62 @@ const SingleResultsToolbar = () => {
     </>
   );
 };
-const BuylistsResultsToolbar = () => {
-  const {
-    searchResults,
-    numResults,
-    currentPage,
-    setCurrentPage,
-    numPages,
-    fetchCards,
-    setIsLoading,
-    filterOptions,
-    sortBy,
-    clearFilters,
-    setFilter,
-    applyFilters,
-    setSortBy,
-    sortByOptions
-  } = useBuyListStore();
-  return (
-    <>
-      {searchResults && (
-        <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-          <span className="text-center text-sm font-normal text-secondary-foreground ">
-            {numResults} results
-          </span>
-          <SearchPagination
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            numPages={numPages}
-            fetchCards={fetchCards}
-            setIsLoading={setIsLoading}
-          />
-          <Sheet>
-            <SheetTitle className="hidden">Filters</SheetTitle>
-            <SheetDescription className="hidden">
-              Filter your search results
-            </SheetDescription>
-            <SheetTrigger>
-              <SlidersHorizontal className="h-6 w-6" />
-            </SheetTrigger>
-            <SheetContent className="min-w-full">
-              <FilterSection
-                filterOptions={filterOptions}
-                sortBy={sortBy}
-                fetchCards={fetchCards}
-                clearFilters={clearFilters}
-                setFilter={setFilter}
-                setCurrentPage={setCurrentPage}
-                applyFilters={applyFilters}
-                setSortBy={setSortBy}
-                sortByOptions={sortByOptions}
-              />
-            </SheetContent>
-          </Sheet>
-        </div>
-      )}
-    </>
-  );
-};
+// const BuylistsResultsToolbar = () => {
+//   const {
+//     searchResults,
+//     numResults,
+//     currentPage,
+//     setCurrentPage,
+//     numPages,
+//     fetchCards,
+//     setIsLoading,
+//     filterOptions,
+//     sortBy,
+//     clearFilters,
+//     setFilter,
+//     applyFilters,
+//     setSortBy,
+//     sortByOptions
+//   } = useBuyListStore();
+//   return (
+//     <>
+//       {searchResults && (
+//         <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
+//           <span className="text-center text-sm font-normal text-secondary-foreground ">
+//             {numResults} results
+//           </span>
+//           <SearchPagination
+//             currentPage={currentPage}
+//             setCurrentPage={setCurrentPage}
+//             numPages={numPages}
+//             fetchCards={fetchCards}
+//             setIsLoading={setIsLoading}
+//           />
+//           <Sheet>
+//             <SheetTitle className="hidden">Filters</SheetTitle>
+//             <SheetDescription className="hidden">
+//               Filter your search results
+//             </SheetDescription>
+//             <SheetTrigger>
+//               <SlidersHorizontal className="h-6 w-6" />
+//             </SheetTrigger>
+//             <SheetContent className="min-w-full">
+//               <FilterSection
+//                 filterOptions={filterOptions}
+//                 sortBy={sortBy}
+//                 fetchCards={fetchCards}
+//                 clearFilters={clearFilters}
+//                 setFilter={setFilter}
+//                 setCurrentPage={setCurrentPage}
+//                 applyFilters={applyFilters}
+//                 setSortBy={setSortBy}
+//                 sortByOptions={sortByOptions}
+//               />
+//             </SheetContent>
+//           </Sheet>
+//         </div>
+//       )}
+//     </>
+//   );
+// };
 export default Navbar;

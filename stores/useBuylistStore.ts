@@ -39,14 +39,14 @@ type BuyListState = {
   searchResults: BuyListQueryCard[] | null;
   currentPage: number;
   numPages: number | null;
-  filterOptions?: FilterOption[];
+
   tcg: Tcg;
   numResults: number;
   clearSearchResults: () => void;
   searchTerm: string;
   sortBy: string | null;
   sortByOptions: Record<string, string>;
-  filters: FilterOption[] | null;
+
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
   setSortBy: (sortBy: string | null) => void;
@@ -54,9 +54,15 @@ type BuyListState = {
   setCurrentPage: (currentPage: number) => void;
   setSearchTerm: (searchBoxValue: string) => void;
   fetchCards: (page?: number) => Promise<void>;
-  setFilter: (filterField: string, value: string, selected: boolean) => void;
+
   clearFilters: () => void;
   applyFilters: () => Promise<void>;
+
+  filters: FilterOption[] | null;
+  setFilter: (filterField: string, value: string, selected: boolean) => void;
+  filterOptions?: FilterOption[];
+  setFilterOptions: (filters: FilterOption[]) => void;
+
   ////////////////////////////////////
   //Cart State Variables & functions//
   ////////////////////////////////////
@@ -176,23 +182,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     set({ currentPage: currentPage });
   },
 
-  setFilter: (filterField: string, value: string, selected: boolean) => {
-    const filters = get().filters || [];
-    const updatedFilters = filters.map((filter) => {
-      if (filter.field === filterField) {
-        const updatedValues = filter.values.map((option) => {
-          if (option.value === value) {
-            return { ...option, selected };
-          }
-          return option;
-        });
-        return { ...filter, values: updatedValues };
-      }
-      return filter;
-    });
-    set({ filters: updatedFilters });
-  },
-
   applyFilters: async () => {
     await get().fetchCards();
   },
@@ -308,6 +297,49 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   clearSearchResults: () => {
     set({ searchResults: null });
+  },
+  setFilterOptions: (filters: FilterOption[]) => {
+    set({ filterOptions: filters });
+  },
+  setFilter: (filterField: string, value: string, selected: boolean) => {
+    console.log('filterField', filterField);
+    console.log('value', value);
+    console.log('selected', selected);
+    const currentFilters = get().filters || [];
+    const filterExists = currentFilters.some(
+      (filter) =>
+        filter.field === filterField &&
+        filter.values.some((v) => v.value === value)
+    );
+
+    if (!filterExists && selected) {
+      // Add new filter if it doesn't exist and selected is true
+      set({
+        filters: [
+          ...currentFilters,
+          {
+            field: filterField,
+            values: [{ value, selected: true }]
+          } as FilterOption
+        ]
+      });
+    } else {
+      // Update existing filter with the selected value
+      set({
+        filters: currentFilters.map((filter) => {
+          if (filter.field === filterField) {
+            return {
+              ...filter,
+              values: filter.values.map((v) =>
+                v.value === value ? { ...v, selected } : v
+              )
+            };
+          }
+          return filter;
+        })
+      });
+    }
+    console.log('Updated filters:', get().filters);
   }
 }));
 

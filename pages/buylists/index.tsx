@@ -9,7 +9,7 @@ const Buylist: NextPage<Props> = () => {
   return (
     <>
       <BuylistHead />
-      <div className="min-h-svh">
+      <div className="min-h-vh">
         <BuylistCatalog />
         <BackToTopButton />
       </div>

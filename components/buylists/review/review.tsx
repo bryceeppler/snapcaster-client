@@ -1,7 +1,7 @@
 import useBuyListStore, {
   IBuylistCart,
   IBuylistCartItem
-} from '@/stores/buyListStore';
+} from '@/stores/useBuylistStore';
 import useGlobalStore from '@/stores/globalStore';
 import { useTheme } from 'next-themes';
 import { AlertCircle, Ban, Circle, XCircle, ExternalLink } from 'lucide-react';

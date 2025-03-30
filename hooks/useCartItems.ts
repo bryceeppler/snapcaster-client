@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
-import { IBuylistCartItem, IBuylistCart } from '@/stores/buyListStore';
+import { IBuylistCartItem, IBuylistCart } from '@/stores/useBuylistStore';
 import { toast } from 'sonner';
 
 const CART_ITEMS_KEY = (cartId: number) => ['cartItems', cartId] as const;
@@ -61,9 +61,10 @@ export function useCartItems(cartId: number | undefined) {
         CART_ITEMS_KEY(cartId)
       );
       const previousCarts = queryClient.getQueryData(USER_CARTS_KEY);
-      const previousCart = queryClient.getQueryData<{ success: boolean; cart: IBuylistCart }>(
-        CART_KEY(cartId)
-      );
+      const previousCart = queryClient.getQueryData<{
+        success: boolean;
+        cart: IBuylistCart;
+      }>(CART_KEY(cartId));
 
       // Optimistically update the cart items
       queryClient.setQueryData<IBuylistCartItem[]>(
@@ -133,7 +134,7 @@ export function useCartItems(cartId: number | undefined) {
         if (!old) return old;
         return old.map((cart: any) => {
           if (cart.id !== cartId) return cart;
-          
+
           // Update the total quantity for the cart
           let updatedItems = cart.items.map((cartItem: IBuylistCartItem) => {
             if (
@@ -164,7 +165,10 @@ export function useCartItems(cartId: number | undefined) {
           return {
             ...cart,
             items: updatedItems,
-            total_quantity: updatedItems.reduce((acc: number, item: IBuylistCartItem) => acc + item.quantity, 0)
+            total_quantity: updatedItems.reduce(
+              (acc: number, item: IBuylistCartItem) => acc + item.quantity,
+              0
+            )
           };
         });
       });
@@ -199,4 +203,4 @@ export function useCartItems(cartId: number | undefined) {
     updateCartItem: updateCartItemMutation.mutate,
     isUpdating: updateCartItemMutation.isPending
   };
-} 
+}

@@ -5,7 +5,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react';
 import useBuyListStore, {
   IBuylistCartItem,
   IBuylistCart
-} from '@/stores/buyListStore';
+} from '@/stores/useBuylistStore';
 import { useCartItems } from '@/hooks/useCartItems';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
