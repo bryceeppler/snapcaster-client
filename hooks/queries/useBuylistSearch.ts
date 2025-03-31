@@ -55,11 +55,6 @@ const fetchBuylistProducts = async ({
     });
   }
 
-  //   console.log('Query parameters:');
-  //   queryParams.forEach((value, key) => {
-  //     console.log(`${key}: ${value}`);
-  //   });
-
   try {
     const response = await axiosInstance.get(
       `${
@@ -87,7 +82,13 @@ export const useBuylistSearch = (
   searchParams: SearchParams,
   options?: { enabled?: boolean }
 ) => {
-  const { setFilterOptions, filterOptions } = useBuylistStore();
+  const {
+    setFilterOptions,
+    filterOptions,
+    setSortByOptions,
+    setSortBy,
+    sortBy
+  } = useBuylistStore();
 
   const query = useInfiniteQuery({
     queryKey: ['buylistSearch'],
@@ -108,7 +109,18 @@ export const useBuylistSearch = (
     select: (data): TransformedSearchResponse => {
       const lastPage = data.pages[data.pages.length - 1];
       const allResults = data.pages.flatMap((page) => page.results);
-      //   console.log('lastPage in usebuylistsearch filters', lastPage.filters);
+      const defaultSortBy = data.pages[0].sorting.defaultSort;
+      const sortOptionsMap = data.pages[0].sorting.Items.reduce(
+        (acc: Record<string, string>, item: any) => ({
+          ...acc,
+          [item.value]: item.label
+        }),
+        {} as Record<string, string>
+      );
+
+      if (!sortBy) {
+        setSortBy(defaultSortBy);
+      }
       return {
         searchResults: allResults.map((item) => ({ ...item, promoted: false })),
         filterOptions: lastPage.filters || [],
@@ -118,7 +130,7 @@ export const useBuylistSearch = (
           data.pages.length + 1 <= lastPage.pagination.numPages
             ? data.pages.length + 1
             : undefined,
-        sortOptions: {}
+        sortOptions: sortOptionsMap
       };
     }
   });
@@ -132,6 +144,11 @@ export const useBuylistSearch = (
       setFilterOptions(query.data.filterOptions);
     }
   }, [query.data?.filterOptions, setFilterOptions]);
+  useEffect(() => {
+    if (query.data?.sortOptions) {
+      setSortByOptions(query.data.sortOptions);
+    }
+  }, [query.data?.sortOptions, setSortByOptions]);
   return {
     ...query,
     refetch: refetchWithParams,

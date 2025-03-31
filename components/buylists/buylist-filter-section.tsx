@@ -13,6 +13,7 @@ interface BuylistFilterSectionProps {
   setFilter: (filterField: string, value: string, selected: boolean) => void;
   setCurrentPage: (page: number) => void;
   applyFilters: () => Promise<void>;
+  sortByOptions: Record<string, string>;
 }
 
 export default function BuylistFilterSection({
@@ -21,7 +22,8 @@ export default function BuylistFilterSection({
   clearFilters,
   setFilter,
   setCurrentPage,
-  applyFilters
+  applyFilters,
+  sortByOptions
 }: BuylistFilterSectionProps) {
   return (
     <div className="h-full py-4">
@@ -61,8 +63,8 @@ export default function BuylistFilterSection({
                         checked={option.selected}
                         onChange={() => {
                           setFilter(
-                            filter.field,
                             option.value,
+                            option.label,
                             !option.selected
                           );
                           setCurrentPage(1);

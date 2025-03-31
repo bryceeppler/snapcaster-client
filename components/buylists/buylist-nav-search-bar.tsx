@@ -148,7 +148,7 @@ Props) {
     [suggestions, selectedIndex]
   );
 
-  const { filters, sortBy } = useBuylistStore();
+  const { filters, sortBy, clearFilters } = useBuylistStore();
   const { isLoading, refetch } = useBuylistSearch(
     {
       tcg,
@@ -176,6 +176,7 @@ Props) {
         <Select
           value={tcg}
           onValueChange={(value: Tcg) => {
+            clearFilters();
             setTcg(value);
             setSearchTerm('');
             setSuggestions([]);
@@ -217,6 +218,7 @@ Props) {
             <MagnifyingGlassIcon
               className="h-6 w-6 cursor-pointer hover:text-muted-foreground"
               onClick={() => {
+                clearFilters();
                 refetch();
               }}
             />

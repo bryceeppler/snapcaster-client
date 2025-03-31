@@ -6,7 +6,7 @@ import {
   DropdownMenuRadioItem
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, SortDesc } from 'lucide-react';
 
 type Props = {
   sortBy: any;
@@ -39,9 +39,9 @@ export default function SearchSortBy({
         >
           <Button
             variant="outline"
-            className="flex h-min  w-full shrink-0 items-center justify-center bg-transparent"
+            className="flex h-min  w-full shrink-0 items-center justify-center bg-transparent hover:bg-transparent"
           >
-            <div className="flex items-center">
+            <div className="flex w-full items-center justify-between ">
               <span className="text-sm">{sortByOptions?.[sortBy]}</span>
               <ChevronDown className="ml-2 h-4 w-4" />
             </div>

@@ -36,33 +36,28 @@ type BuyListState = {
   //////////////////////////////////////
   //Search State Variables & functions//
   //////////////////////////////////////
-  searchResults: BuyListQueryCard[] | null;
-  currentPage: number;
-  numPages: number | null;
-
   tcg: Tcg;
-  numResults: number;
-  clearSearchResults: () => void;
+  setTcg: (tcg: Tcg) => void;
+
   searchTerm: string;
+  setSearchTerm: (searchBoxValue: string) => void;
+
   sortBy: string | null;
+  setSortBy: (sortBy: string | null) => void;
+
   sortByOptions: Record<string, string>;
+  setSortByOptions: (sortOptions: Record<string, string>) => void;
 
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
-  setSortBy: (sortBy: string | null) => void;
-  setTcg: (tcg: Tcg) => void;
-  setCurrentPage: (currentPage: number) => void;
-  setSearchTerm: (searchBoxValue: string) => void;
-  fetchCards: (page?: number) => Promise<void>;
-
-  clearFilters: () => void;
-  applyFilters: () => Promise<void>;
 
   filters: FilterOption[] | null;
   setFilter: (filterField: string, value: string, selected: boolean) => void;
+
   filterOptions?: FilterOption[];
   setFilterOptions: (filters: FilterOption[]) => void;
 
+  clearFilters: () => void;
   ////////////////////////////////////
   //Cart State Variables & functions//
   ////////////////////////////////////
@@ -85,105 +80,26 @@ type BuyListState = {
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
   //Search State Variables
-  searchResults: null,
-  currentPage: 1,
-  numPages: 0,
-  tcg: 'mtg',
   searchTerm: '',
+  tcg: 'mtg',
   sortBy: null,
   sortByOptions: {},
   filters: null,
-  numResults: 0,
+
   //Cart State Variables
   mode: 'info',
   currentCartId: null,
   reviewData: null,
   selectedStoreForReview: null,
   isLoading: false,
-  setIsLoading: (loading: boolean) => set({ isLoading: loading }),
 
   //////////////////////
   // Search Functions //
   //////////////////////
-  fetchCards: async (page?: number) => {
-    const { filters } = get();
-    if (get().searchTerm) {
-      const queryParams = new URLSearchParams({
-        mode: 'buylists',
-        tcg: `${get().tcg}`,
-        region: '',
-        keyword: get().searchTerm,
-        pageNumber: (page ?? get().currentPage).toString(),
-        maxResultsPerPage: '100'
-      });
-      if (get().sortBy) {
-        queryParams.set('sortBy', `${get().sortBy}`);
-      }
-
-      if (filters) {
-        filters.forEach((filter) => {
-          filter.values.forEach((value) => {
-            if (value.selected) {
-              queryParams.append(
-                `filterSelections[${filter.field}][]`,
-                value.value
-              );
-            }
-          });
-        });
-      }
-
-      try {
-        const response = await axios.get(
-          `${
-            process.env.NEXT_PUBLIC_CATALOG_URL
-          }/api/v1/search?${queryParams.toString()}`
-        );
-
-        if (response.status !== 200) {
-          console.error('Search API Error:');
-          toast.error('Error fetching cards');
-          return;
-        }
-
-        const filterOptionsFromResponse: FilterOption[] =
-          response.data.data.filters || [];
-        const transformedSortByOptions =
-          response.data.data.sorting.Items.reduce(
-            (acc: any, item: any) => ({
-              ...acc,
-              [item.value]: item.label
-            }),
-            {}
-          );
-
-        set({
-          searchResults: response.data.data.results.slice(0, 500),
-          numResults: response.data.data.pagination.numResults,
-          numPages: response.data.data.pagination.numPages,
-          filterOptions: filterOptionsFromResponse,
-          filters: filterOptionsFromResponse,
-          currentPage: page ?? get().currentPage,
-          sortBy: get().sortBy ?? response.data.data.sorting.defaultSort,
-          sortByOptions: transformedSortByOptions
-        });
-        get().updateMode('search');
-      } catch (error) {
-        console.error('Search API Error:', error);
-        toast.error('Error fetching cards');
-      }
-    }
-  },
+  setIsLoading: (loading: boolean) => set({ isLoading: loading }),
 
   setSearchTerm(searchBoxValue: string) {
     set({ searchTerm: searchBoxValue });
-  },
-  setCurrentPage(currentPage: number) {
-    set({ currentPage: currentPage });
-  },
-
-  applyFilters: async () => {
-    await get().fetchCards();
   },
 
   setTcg: (tcg: Tcg) => {
@@ -192,13 +108,60 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
     }
     set({ tcg });
   },
-  setSortBy: (sortBy: string | null) => set({ sortBy }),
+
+  setSortBy: (sortBy: string | null) => {
+    set({ sortBy: sortBy });
+  },
+
+  setFilterOptions: (filters: FilterOption[]) => {
+    set({ filterOptions: filters });
+  },
+
+  setFilter: (filterField: string, value: string, selected: boolean) => {
+    const currentFilters = get().filters || [];
+    const filterExists = currentFilters.some(
+      (filter) =>
+        filter.field === filterField &&
+        filter.values.some((v) => v.value === value)
+    );
+
+    if (!filterExists && selected) {
+      // Add new filter if it doesn't exist and selected is true
+      set({
+        filters: [
+          ...currentFilters,
+          {
+            field: filterField,
+            values: [{ value, selected: true }]
+          } as FilterOption
+        ]
+      });
+    } else {
+      // Update existing filter with the selected value
+      set({
+        filters: currentFilters.map((filter) => {
+          if (filter.field === filterField) {
+            return {
+              ...filter,
+              values: filter.values.map((v) =>
+                v.value === value ? { ...v, selected } : v
+              )
+            };
+          }
+          return filter;
+        })
+      });
+    }
+  },
+  setSortByOptions: (sortByOptions: Record<string, string>) => {
+    set({ sortByOptions: sortByOptions });
+  },
+
   clearFilters: () => set({ filters: null }),
 
   ////////////////////
   // Cart Functions //
   ////////////////////
-
   setCurrentCartId: (cartId: number | null) => {
     set({ currentCartId: cartId });
     if (get().mode === 'review') {
@@ -233,16 +196,11 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
           'Error fetching buylist checkout breakdown data: ' +
             response.statusText
         );
-        console.error(
-          'Error fetching buylist checkout breakdown data:',
-          response
-        );
       }
     } catch (error: any) {
       toast.error(
         'Error fetching buylist checkout breakdown data: ' + error.message
       );
-      console.error('Error fetching buylist checkout breakdown data:', error);
     }
   },
 
@@ -285,7 +243,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
         error.message ||
         'Error submitting order';
       toast.error(message);
-      console.error('Error submitting order:', error);
       return { success: false, message };
     }
   },
@@ -294,52 +251,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       get().setReviewData(get().currentCartId);
     }
     set({ mode });
-  },
-  clearSearchResults: () => {
-    set({ searchResults: null });
-  },
-  setFilterOptions: (filters: FilterOption[]) => {
-    set({ filterOptions: filters });
-  },
-  setFilter: (filterField: string, value: string, selected: boolean) => {
-    console.log('filterField', filterField);
-    console.log('value', value);
-    console.log('selected', selected);
-    const currentFilters = get().filters || [];
-    const filterExists = currentFilters.some(
-      (filter) =>
-        filter.field === filterField &&
-        filter.values.some((v) => v.value === value)
-    );
-
-    if (!filterExists && selected) {
-      // Add new filter if it doesn't exist and selected is true
-      set({
-        filters: [
-          ...currentFilters,
-          {
-            field: filterField,
-            values: [{ value, selected: true }]
-          } as FilterOption
-        ]
-      });
-    } else {
-      // Update existing filter with the selected value
-      set({
-        filters: currentFilters.map((filter) => {
-          if (filter.field === filterField) {
-            return {
-              ...filter,
-              values: filter.values.map((v) =>
-                v.value === value ? { ...v, selected } : v
-              )
-            };
-          }
-          return filter;
-        })
-      });
-    }
-    console.log('Updated filters:', get().filters);
   }
 }));
 

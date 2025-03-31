@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 
 import FilterSection from '../search-ui/search-filter-container';
+import BuylistFilterSection from './buylist-filter-section';
 import {
   Dialog,
   DialogContent,
@@ -34,12 +35,15 @@ export default function BuylistCatalog() {
   const {
     tcg,
     searchTerm,
-    setSearchTerm,
+    // setSearchTerm,
     filters,
     sortBy,
     filterOptions,
     setFilter,
-    setCurrentPage
+    // setCurrentPage,
+    clearFilters,
+    sortByOptions,
+    setSortBy
     // setProductCategory,
     // clearFilters
   } = useBuyListStore();
@@ -63,7 +67,9 @@ export default function BuylistCatalog() {
   useEffect(() => {
     refetch();
   }, [filters]);
-
+  useEffect(() => {
+    refetch();
+  }, [sortBy]);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -83,11 +89,6 @@ export default function BuylistCatalog() {
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleSortChange = async (newSortBy: any) => {
-    // setStoreSortBy(newSortBy);
-    await refetch();
-  };
-
   return (
     <div className="flex flex-col gap-1">
       {/* Header */}
@@ -99,29 +100,21 @@ export default function BuylistCatalog() {
               Filter your search results
             </SheetDescription>
             <SheetTrigger asChild className="hidden md:block">
-              <MixerHorizontalIcon className="h-6 w-6" />
+              <MixerHorizontalIcon className="h-6 w-6 cursor-pointer" />
             </SheetTrigger>
             <SheetContent side="left">
               <FilterSection
                 filterOptions={filterOptions}
-                sortBy={'name-asc'}
+                sortBy={sortBy}
                 fetchCards={async () => {
                   refetch();
                 }}
-                clearFilters={() => {}}
+                clearFilters={clearFilters}
                 setFilter={setFilter}
-                // setFilter={() => {}}
-                setCurrentPage={setCurrentPage}
-                applyFilters={async () => {
-                  // console.log('applyFilters in buylist-catalog-container');
-                  // console.log('filters in buylist-catalog-container', filters);
-                  // refetch();
-                }}
-                setSortBy={() => {}}
-                sortByOptions={{
-                  'name-asc': 'Name (A-Z)',
-                  'name-desc': 'Name (Z-A)'
-                }}
+                setCurrentPage={() => {}}
+                applyFilters={async () => {}}
+                setSortBy={setSortBy}
+                sortByOptions={sortByOptions}
               />
             </SheetContent>
           </Sheet>
@@ -136,13 +129,7 @@ export default function BuylistCatalog() {
             <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-background"></div>
           </div>
         </div>
-        <div
-          className="flex w-24 items-center justify-end gap-1"
-          onClick={() => {
-            // console.log('FAQ button clicked');
-            refetch();
-          }}
-        >
+        <div className="flex w-24 items-center justify-end gap-1">
           <p className="text-sm">FAQ</p>
           <QuestionMarkCircledIcon className="h-5 w-5" />
         </div>
@@ -168,11 +155,17 @@ export default function BuylistCatalog() {
                 <CartItem />
                 <CartItem />
                 <CartItem />
+                <CartItem />
+                <CartItem />
+                <CartItem />
+                <CartItem />
+                <CartItem />
+                <CartItem />
               </div>
             </ScrollArea>
           </div>
           <div className=" ">
-            <Button className="w-full">View Offers</Button>
+            <Button className="w-full rounded-t-none">View Offers</Button>
           </div>
         </div>
 
@@ -180,8 +173,8 @@ export default function BuylistCatalog() {
         <div className="h-[75vh] w-full overflow-hidden rounded-lg">
           <ScrollArea className="h-full" type="always">
             <div className="grid grid-cols-2 gap-1 pr-2.5 sm:grid-cols-3 md:grid-cols-4">
-              {data?.searchResults?.map((card) => (
-                <div className="">
+              {data?.searchResults?.map((card, index) => (
+                <div className="" key={index}>
                   <BuylistCatalogItem cardData={card} />
                 </div>
               ))}
@@ -214,9 +207,9 @@ const CartItem = () => {
             alt="card_image"
           />
         </div>
-        <div className="flex w-full flex-col gap-1 space-y-0.5 px-0.5">
-          <p className="text-[0.55rem] text-xs font-semibold uppercase   leading-none text-muted-foreground">
-            commander masters sss sss sss sss sssss ssss
+        <div className="flex w-full flex-col gap-0.5  px-0.5">
+          <p className="text-[0.6rem] text-xs font-semibold uppercase   leading-none text-muted-foreground">
+            commander masters
           </p>
 
           <p className="text-[0.70rem] text-xs font-semibold leading-none">
@@ -224,14 +217,11 @@ const CartItem = () => {
           </p>
 
           <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.55rem]">
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
               <p> Near Mint</p>
             </span>
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.55rem]">
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
               <p> Foil</p>
-            </span>
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.55rem]">
-              <p> Foilssssss</p>
             </span>
           </div>
         </div>
@@ -273,7 +263,7 @@ const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
                 {cardData.name}
               </p>
 
-              <div className="flex flex-wrap items-center gap-1 text-[0.70rem] font-medium text-primary">
+              <div className="flex flex-wrap items-center gap-1 text-[0.70rem] font-medium capitalize text-primary">
                 <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.7rem]">
                   <p> {cardData.foil}</p>
                 </span>
