@@ -9,26 +9,30 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, SortDesc } from 'lucide-react';
 
 type Props = {
+  defaultSortBy?: any;
   sortBy: any;
   setSortBy: (sortBy: any) => void;
   fetchCards: () => Promise<void>;
   setCurrentPage: (currentPage: number) => void;
+  handleSortByChange: (value: any) => void;
 
   sortByOptions: any;
 };
 export default function SearchSortBy({
+  defaultSortBy,
   sortBy,
   setSortBy,
   fetchCards,
+  handleSortByChange,
   setCurrentPage,
 
   sortByOptions
 }: Props) {
-  const handleSortByChange = (value: any) => {
-    setSortBy(value);
-    setCurrentPage(1);
-    fetchCards();
-  };
+  // const handleSortByChange = (value: any) => {
+  //   setSortBy(value);
+  //   setCurrentPage(1);
+  //   fetchCards();
+  // };
   return (
     <>
       <DropdownMenu>
@@ -42,7 +46,12 @@ export default function SearchSortBy({
             className="flex h-min  w-full shrink-0 items-center justify-center bg-transparent hover:bg-transparent"
           >
             <div className="flex w-full items-center justify-between ">
-              <span className="text-sm">{sortByOptions?.[sortBy]}</span>
+              <span className="text-sm">
+                {/* {sortByOptions?.[sortBy]} */}
+                {!sortBy
+                  ? sortByOptions?.[defaultSortBy]
+                  : sortByOptions?.[sortBy]}
+              </span>
               <ChevronDown className="ml-2 h-4 w-4" />
             </div>
           </Button>
@@ -53,7 +62,10 @@ export default function SearchSortBy({
         >
           <DropdownMenuRadioGroup
             value={sortBy}
-            onValueChange={(value) => handleSortByChange(value as any)}
+            onValueChange={(value) => {
+              console.log('value changed in sort component', value);
+              handleSortByChange(value as any);
+            }}
           >
             {sortByOptions &&
               Object.entries(sortByOptions).map(([key, label]) => (

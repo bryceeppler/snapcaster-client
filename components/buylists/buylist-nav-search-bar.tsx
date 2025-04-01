@@ -158,9 +158,9 @@ Props) {
     },
     { enabled: false }
   );
-  useEffect(() => {
-    refetch();
-  }, [tcg]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [tcg]);
 
   return (
     <div

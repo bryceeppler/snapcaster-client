@@ -17,6 +17,7 @@ import SearchSortBy from './search-sort-by';
 
 type Prop = {
   filterOptions: any;
+  defaultSortBy?: any;
   sortBy: any;
   fetchCards: () => Promise<void>;
   clearFilters: () => void;
@@ -24,12 +25,14 @@ type Prop = {
   setCurrentPage: (currentPage: number) => void;
   applyFilters: () => Promise<void>;
   setSortBy: (sortBy: any) => void;
+  handleSortByChange: (value: any) => void;
   sortByOptions: Record<string, string>;
 };
 
 const FilterSection: React.FC<Prop> = memo(
   ({
     filterOptions,
+    defaultSortBy,
     sortBy,
     fetchCards,
     clearFilters,
@@ -37,6 +40,7 @@ const FilterSection: React.FC<Prop> = memo(
     setCurrentPage,
     applyFilters,
     setSortBy,
+    handleSortByChange,
     sortByOptions
   }) => {
     const { isAuthenticated, hasActiveSubscription } = useAuth();
@@ -51,11 +55,13 @@ const FilterSection: React.FC<Prop> = memo(
             {/* {sortByOptions && <p>its here</p>} */}
             <div className="flex w-full justify-center">
               <SearchSortBy
+                defaultSortBy={defaultSortBy}
                 sortBy={sortBy}
                 setSortBy={setSortBy}
                 fetchCards={fetchCards}
                 setCurrentPage={setCurrentPage}
                 sortByOptions={sortByOptions}
+                handleSortByChange={handleSortByChange}
               />
             </div>
           </div>

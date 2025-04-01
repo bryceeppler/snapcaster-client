@@ -592,6 +592,11 @@ const SingleResultsToolbar = () => {
                 clearFilters={clearFilters}
                 setFilter={setFilter}
                 setCurrentPage={setCurrentPage}
+                handleSortByChange={(value: any) => {
+                  setSortBy(value);
+                  setCurrentPage(1);
+                  fetchCards();
+                }}
                 applyFilters={applyFilters}
                 setSortBy={setSortBy}
                 sortByOptions={sortByOptions}

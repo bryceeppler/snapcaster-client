@@ -14,6 +14,7 @@ interface SearchParams {
 
 export interface TransformedSearchResponse {
   searchResults: any[];
+  defaultSortBy: string | null;
   filterOptions: any[];
   numPages: number;
   numResults: number;
@@ -118,11 +119,12 @@ export const useBuylistSearch = (
         {} as Record<string, string>
       );
 
-      if (!sortBy) {
-        setSortBy(defaultSortBy);
-      }
+      //   if (!sortBy) {
+      //     setSortBy(defaultSortBy);
+      //   }
       return {
         searchResults: allResults.map((item) => ({ ...item, promoted: false })),
+        defaultSortBy: defaultSortBy,
         filterOptions: lastPage.filters || [],
         numPages: lastPage.pagination.numPages,
         numResults: lastPage.pagination.numResults,

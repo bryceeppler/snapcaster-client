@@ -4,6 +4,17 @@ import { Tcg, BuyListQueryCard } from '@/types/product';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { FilterOption } from '@/types/query';
+import { log } from 'console';
+
+export type LeftUIState =
+  | 'leftCartListSelection'
+  | 'leftCartEditWithViewOffers'
+  | 'leftCartEdit'
+  | 'leftSubmitOffer';
+export type RightUIState =
+  | 'rightSearchResults'
+  | 'rightOfferOverview'
+  | 'rightStoreOfferBreakdown';
 
 type SubmitBuylistResponse = {
   success: boolean;
@@ -33,15 +44,16 @@ export interface IBuylistCart {
 }
 
 type BuyListState = {
-  //////////////////////////////////////
-  //Search State Variables & functions//
-  //////////////////////////////////////
+  /////////////////////////////////////////
+  //1. Search State Variables & functions//
+  /////////////////////////////////////////
   tcg: Tcg;
   setTcg: (tcg: Tcg) => void;
 
   searchTerm: string;
   setSearchTerm: (searchBoxValue: string) => void;
 
+  defaultSortBy: string | null;
   sortBy: string | null;
   setSortBy: (sortBy: string | null) => void;
 
@@ -58,19 +70,28 @@ type BuyListState = {
   setFilterOptions: (filters: FilterOption[]) => void;
 
   clearFilters: () => void;
-  ////////////////////////////////////
-  //Cart State Variables & functions//
-  ////////////////////////////////////
+  ////////////////////////////////////////////////////
+  //2. Left Side Content State Variables & functions//
+  ////////////////////////////////////////////////////
+  // used to display the left sidebar on desktop for the the cart selection, card editing, and offer submission conponents/logic (keep in mind that this logic is used for mobile too but will be a bit trickier to use as a result - Refer to the Figma)
   mode: 'info' | 'search' | 'review' | 'submit';
-  updateMode: (mode: 'info' | 'search' | 'review' | 'submit') => void;
+  leftUIState: LeftUIState;
+
+  setLeftUIState: (sideBarMode: LeftUIState) => void;
   currentCartId: number | null;
   setCurrentCartId: (cartId: number | null) => void;
+  reviewData: any;
+  setAllCartsData: (cartId: number | null) => Promise<void>;
+
+  /////////////////////////////////////////////////////
+  //3. Right Side Content State Variables & functions//
+  /////////////////////////////////////////////////////
+  // used to display the main content on desktop (right side) for the the search results, view all store offers, and offer breakdown conponents/logic (keep in mind that this logic is used for mobile too but will be a bit trickier to use as a result - Refer to the Figma)
 
   //////////////////////////////////////////
   //review tab state variables & functions//
   //////////////////////////////////////////
-  reviewData: any;
-  setReviewData: (cartId: number | null) => Promise<void>;
+
   selectedStoreForReview: string | null;
   setSelectedStoreForReview: (storeName: string) => void;
   submitBuylist: (
@@ -82,6 +103,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   //Search State Variables
   searchTerm: '',
   tcg: 'mtg',
+  defaultSortBy: null,
   sortBy: null,
   sortByOptions: {},
   filters: null,
@@ -92,6 +114,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   reviewData: null,
   selectedStoreForReview: null,
   isLoading: false,
+
+  leftUIState: 'leftCartEditWithViewOffers',
 
   //////////////////////
   // Search Functions //
@@ -110,7 +134,14 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
 
   setSortBy: (sortBy: string | null) => {
+    // if (get().defaultSortBy === null) {
+    //   console.log('defaultSortBy set one time', get().defaultSortBy);
+    //   set({ defaultSortBy: sortBy });
+    // } else {
+    //   set({ sortBy: sortBy });
+    // }
     set({ sortBy: sortBy });
+    console.log('sortBy', get().sortBy);
   },
 
   setFilterOptions: (filters: FilterOption[]) => {
@@ -159,17 +190,17 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
   clearFilters: () => set({ filters: null }),
 
-  ////////////////////
-  // Cart Functions //
-  ////////////////////
+  /////////////////////////
+  // Left Side Functions //
+  /////////////////////////
   setCurrentCartId: (cartId: number | null) => {
     set({ currentCartId: cartId });
     if (get().mode === 'review') {
-      get().setReviewData(cartId);
+      get().setAllCartsData(cartId);
     }
   },
 
-  setReviewData: async (cartId: number | null) => {
+  setAllCartsData: async (cartId: number | null) => {
     if (cartId === null) {
       set({ reviewData: [] });
       return;
@@ -246,11 +277,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       return { success: false, message };
     }
   },
-  updateMode: (mode: 'info' | 'search' | 'review' | 'submit') => {
-    if (mode === 'review' || mode === 'submit') {
-      get().setReviewData(get().currentCartId);
-    }
-    set({ mode });
+  setLeftUIState: (leftUIState: LeftUIState) => {
+    set({ leftUIState: leftUIState });
   }
 }));
 

@@ -30,22 +30,22 @@ import { Card } from '../ui/card';
 import { ScrollArea } from '../ui/scroll-area';
 import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
 import useBuyListStore from '@/stores/useBuylistStore';
-
+import BuylistLeftSideBodyFactory from './buylist-left-side-body';
 export default function BuylistCatalog() {
   const {
-    tcg,
     searchTerm,
-    // setSearchTerm,
-    filters,
-    sortBy,
+    tcg,
     filterOptions,
+    filters,
     setFilter,
-    // setCurrentPage,
-    clearFilters,
+    defaultSortBy,
+
+    sortBy,
+    setSortBy,
     sortByOptions,
-    setSortBy
-    // setProductCategory,
-    // clearFilters
+    clearFilters,
+
+    leftUIState
   } = useBuyListStore();
   const {
     data,
@@ -64,14 +64,15 @@ export default function BuylistCatalog() {
     { enabled: false }
   );
 
-  useEffect(() => {
-    refetch();
-  }, [filters]);
+  // refetch search results when filters or sortBy changes
+  // useEffect(() => {
+  //   refetch();
+  // }, [filters, sortBy, tcg]);
   useEffect(() => {
     refetch();
   }, [sortBy]);
-  const loadMoreRef = useRef<HTMLDivElement>(null);
   // Intersection Observer for infinite scroll
+  const loadMoreRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -105,7 +106,8 @@ export default function BuylistCatalog() {
             <SheetContent side="left">
               <FilterSection
                 filterOptions={filterOptions}
-                sortBy={sortBy}
+                // defaultSortBy={defaultSortBy}
+                sortBy={sortBy ? sortBy : data?.defaultSortBy}
                 fetchCards={async () => {
                   refetch();
                 }}
@@ -114,6 +116,9 @@ export default function BuylistCatalog() {
                 setCurrentPage={() => {}}
                 applyFilters={async () => {}}
                 setSortBy={setSortBy}
+                handleSortByChange={(value: any) => {
+                  setSortBy(value);
+                }}
                 sortByOptions={sortByOptions}
               />
             </SheetContent>
@@ -137,7 +142,8 @@ export default function BuylistCatalog() {
       {/* Body */}
       <div className="flex gap-1">
         {/* Left Sidebar */}
-        <div className="col-span-1 flex h-[75vh] w-[480px] flex-col space-y-1 rounded-lg border bg-card">
+        <BuylistLeftSideBodyFactory leftUIState={leftUIState} />
+        {/* <div className="col-span-1 flex h-[75vh] w-[480px] flex-col space-y-1 rounded-lg border bg-card">
           <div className="flex justify-between border-b px-1">
             <div className="flex h-10 w-12 items-center justify-start gap-1">
               <p className="text-xs underline">My Lists</p>
@@ -146,7 +152,7 @@ export default function BuylistCatalog() {
               <p className="text-sm">Cart 1</p>
             </div>
             <div className="flex w-12 items-center justify-end gap-1 ">
-              {/* <PlusIcon className="h-6 w-6" /> */}
+   
             </div>
           </div>
           <div className="flex-1 overflow-hidden">
@@ -167,7 +173,7 @@ export default function BuylistCatalog() {
           <div className=" ">
             <Button className="w-full rounded-t-none">View Offers</Button>
           </div>
-        </div>
+        </div> */}
 
         {/* Content */}
         <div className="h-[75vh] w-full overflow-hidden rounded-lg">
@@ -196,50 +202,50 @@ export default function BuylistCatalog() {
   );
 }
 
-const CartItem = () => {
-  return (
-    <>
-      <div className="flex items-center rounded-lg border px-1 py-1 ">
-        <div className="">
-          <img
-            className="w-20 object-contain"
-            src="https://cdn.shopify.com/s/files/1/0235/2457/3231/files/70cd7a67-9f40-5227-8c12-5fb1a4750035.png?v=1736540822"
-            alt="card_image"
-          />
-        </div>
-        <div className="flex w-full flex-col gap-0.5  px-0.5">
-          <p className="text-[0.6rem] text-xs font-semibold uppercase   leading-none text-muted-foreground">
-            commander masters
-          </p>
+// const CartItem = () => {
+//   return (
+//     <>
+//       <div className="flex items-center rounded-lg border px-1 py-1 ">
+//         <div className="">
+//           <img
+//             className="w-20 object-contain"
+//             src="https://cdn.shopify.com/s/files/1/0235/2457/3231/files/70cd7a67-9f40-5227-8c12-5fb1a4750035.png?v=1736540822"
+//             alt="card_image"
+//           />
+//         </div>
+//         <div className="flex w-full flex-col gap-0.5  px-0.5">
+//           <p className="text-[0.6rem] text-xs font-semibold uppercase   leading-none text-muted-foreground">
+//             commander masters
+//           </p>
 
-          <p className="text-[0.70rem] text-xs font-semibold leading-none">
-            Counterspell
-          </p>
+//           <p className="text-[0.70rem] text-xs font-semibold leading-none">
+//             Counterspell
+//           </p>
 
-          <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
-              <p> Near Mint</p>
-            </span>
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
-              <p> Foil</p>
-            </span>
-          </div>
-        </div>
-        <div className="flex flex-col items-center justify-center gap-1">
-          <div>
-            <PlusIcon className="h-5 w-5 stroke-[3]"></PlusIcon>
-          </div>
-          <div>
-            <p className="text-xs">99</p>
-          </div>
-          <div>
-            <MinusIcon className="h-5 w-5"></MinusIcon>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
+//           <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+//             <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
+//               <p> Near Mint</p>
+//             </span>
+//             <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
+//               <p> Foil</p>
+//             </span>
+//           </div>
+//         </div>
+//         <div className="flex flex-col items-center justify-center gap-1">
+//           <div>
+//             <PlusIcon className="h-5 w-5 stroke-[3]"></PlusIcon>
+//           </div>
+//           <div>
+//             <p className="text-xs">99</p>
+//           </div>
+//           <div>
+//             <MinusIcon className="h-5 w-5"></MinusIcon>
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
 
 type BuylistCatalogItemProps = {
   cardData: any;
