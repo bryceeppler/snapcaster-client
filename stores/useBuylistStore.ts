@@ -115,7 +115,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   selectedStoreForReview: null,
   isLoading: false,
 
-  leftUIState: 'leftCartEditWithViewOffers',
+  leftUIState: 'leftCartListSelection',
 
   //////////////////////
   // Search Functions //
@@ -134,14 +134,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
 
   setSortBy: (sortBy: string | null) => {
-    // if (get().defaultSortBy === null) {
-    //   console.log('defaultSortBy set one time', get().defaultSortBy);
-    //   set({ defaultSortBy: sortBy });
-    // } else {
-    //   set({ sortBy: sortBy });
-    // }
     set({ sortBy: sortBy });
-    console.log('sortBy', get().sortBy);
   },
 
   setFilterOptions: (filters: FilterOption[]) => {
@@ -195,9 +188,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   /////////////////////////
   setCurrentCartId: (cartId: number | null) => {
     set({ currentCartId: cartId });
-    if (get().mode === 'review') {
-      get().setAllCartsData(cartId);
-    }
   },
 
   setAllCartsData: async (cartId: number | null) => {

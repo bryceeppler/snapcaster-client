@@ -93,11 +93,12 @@ export function useUserCarts() {
         `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${id}`,
         { cartName: name.trim() }
       );
-      return response.data.message;
+      return { message: response.data.message, id };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Cart renamed successfully');
       queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ['cart', data.id] });
     },
     onError: (error: any) => {
       toast.error('Error renaming cart: ' + error.response.data.message);

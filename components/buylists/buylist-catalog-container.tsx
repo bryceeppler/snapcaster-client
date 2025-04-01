@@ -140,40 +140,11 @@ export default function BuylistCatalog() {
         </div>
       </div>
       {/* Body */}
-      <div className="flex gap-1">
+      <div className=" flex">
         {/* Left Sidebar */}
-        <BuylistLeftSideBodyFactory leftUIState={leftUIState} />
-        {/* <div className="col-span-1 flex h-[75vh] w-[480px] flex-col space-y-1 rounded-lg border bg-card">
-          <div className="flex justify-between border-b px-1">
-            <div className="flex h-10 w-12 items-center justify-start gap-1">
-              <p className="text-xs underline">My Lists</p>
-            </div>
-            <div className="flex items-center gap-1">
-              <p className="text-sm">Cart 1</p>
-            </div>
-            <div className="flex w-12 items-center justify-end gap-1 ">
-   
-            </div>
-          </div>
-          <div className="flex-1 overflow-hidden">
-            <ScrollArea className="h-full" type="always">
-              <div className="mr-1.5 space-y-1 px-1 ">
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-                <CartItem />
-              </div>
-            </ScrollArea>
-          </div>
-          <div className=" ">
-            <Button className="w-full rounded-t-none">View Offers</Button>
-          </div>
-        </div> */}
+        <div className="">
+          <BuylistLeftSideBodyFactory leftUIState={leftUIState} />
+        </div>
 
         {/* Content */}
         <div className="h-[75vh] w-full overflow-hidden rounded-lg">

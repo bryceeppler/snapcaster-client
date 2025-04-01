@@ -62,32 +62,45 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from '../ui/dialog';
+import { Label } from '../ui/label';
+
+// Define a props interface
+interface BuylistLeftSideBodyProps {
+  leftUIState: LeftUIState;
+}
+
+// Update the component to use props
+const BuylistLeftSideBodyFactory = ({
+  leftUIState
+}: BuylistLeftSideBodyProps) => {
+  switch (leftUIState) {
+    case 'leftCartListSelection':
+      return <LeftCartListSelection />;
+    case 'leftCartEditWithViewOffers':
+      return <LeftCartEditWithViewOffers />;
+    case 'leftCartEdit':
+      return <LeftCartEditWithViewOffers />;
+    case 'leftSubmitOffer':
+      return <LeftSubmitOffer />;
+    default:
+      return null; // Add a default case
+  }
+};
+
 const LeftCartListSelection = () => {
   const { setLeftUIState, currentCartId, setCurrentCartId } = useBuyListStore();
 
   ///////////////////////////////////////////////////////////////////////////////////
 
-  const {
-    carts,
-    isLoading,
-    createCart,
-    deleteCart,
-    renameCart,
-    isCreating,
-    isDeleting,
-    isRenaming
-  } = useUserCarts();
+  const { carts } = useUserCarts();
 
   //Dialogs
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [activeDialogId, setActiveDialogId] = useState<number | null>(null);
-  const [newCartName, setNewCartName] = useState('');
-  const [cartToDelete, setCartToDelete] = useState<any>(null);
-  const [open, setOpen] = React.useState(false);
+
   const [value, setValue] = React.useState('');
 
   //Update Current Cart
@@ -131,14 +144,8 @@ const LeftCartListSelection = () => {
   }, [currentCartId, carts]);
   ///////////////////////////////////////////////////////////////////////////////////
 
-  useEffect(() => {
-    console.log('currentCart', currentCart);
-  }, [currentCart]);
-  useEffect(() => {
-    console.log('carts', carts);
-  }, [carts]);
   return (
-    <div className="col-span-1 flex h-[75vh] w-[480px] flex-col space-y-1 rounded-lg border bg-card">
+    <div className="col-span-1 flex h-[75vh] w-80 flex-col space-y-1 rounded-lg border bg-card">
       <div className="flex justify-between border-b px-1">
         <div className="flex h-10 w-16 items-center justify-start gap-1"></div>
         <div className="flex items-center gap-1">
@@ -168,8 +175,29 @@ const LeftCartListSelection = () => {
 
 const LeftCartEditWithViewOffers = () => {
   const { setLeftUIState, leftUIState } = useBuyListStore();
+  const { currentCartId } = useBuyListStore();
+  const { carts } = useUserCarts();
+  //Update Current Cart
+  const CART_KEY = (cartId: number) => ['cart', cartId] as const;
+  const { data: currentCart } = useQuery<{
+    success: boolean;
+    cart: IBuylistCart;
+  } | null>({
+    queryKey: CART_KEY(currentCartId || 0),
+    queryFn: async () => {
+      if (!currentCartId) return null;
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
+      );
+      return response.data;
+    },
+    enabled: !!currentCartId
+  });
+  useEffect(() => {
+    console.log(currentCart);
+  }, [currentCart]);
   return (
-    <div className="col-span-1 flex h-[75vh] w-[480px] flex-col space-y-1 rounded-lg border bg-card">
+    <div className="col-span-1 flex h-[75vh] w-80 flex-col space-y-1 rounded-lg border bg-card">
       <div className="flex justify-between  px-1">
         <div className="flex h-10 w-16 items-center justify-start gap-1">
           {leftUIState === 'leftCartEdit' ? (
@@ -193,23 +221,21 @@ const LeftCartEditWithViewOffers = () => {
             </span>
           )}
         </div>
-        <div className="flex items-center gap-1">
-          <p className="text-sm font-semibold">Cart 1</p>
+        <div className="flex w-full flex-1 items-center gap-1 overflow-hidden text-center">
+          <p className="w-full truncate text-sm font-semibold">
+            {currentCart?.cart?.name}
+          </p>
         </div>
         <div className="flex w-16 items-center justify-end gap-1 "></div>
       </div>
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full" type="always">
           <div className="mr-1.5 space-y-1 px-1 ">
-            <CartItem />
-            <CartItem />
-            <CartItem />
-            <CartItem />
-            <CartItem />
-            <CartItem />
-            <CartItem />
-            <CartItem />
-            <CartItem />
+            {currentCart?.cart?.items?.map((item, index) => (
+              <div key={index}>
+                <CartItem item={item} />
+              </div>
+            ))}
           </div>
         </ScrollArea>
       </div>
@@ -237,29 +263,6 @@ const LeftSubmitOffer = () => {
   return <div>LeftSubmitOffer</div>;
 };
 
-// Define a props interface
-interface BuylistLeftSideBodyProps {
-  leftUIState: LeftUIState;
-}
-
-// Update the component to use props
-const BuylistLeftSideBodyFactory = ({
-  leftUIState
-}: BuylistLeftSideBodyProps) => {
-  switch (leftUIState) {
-    case 'leftCartListSelection':
-      return <LeftCartListSelection />;
-    case 'leftCartEditWithViewOffers':
-      return <LeftCartEditWithViewOffers />;
-    case 'leftCartEdit':
-      return <LeftCartEditWithViewOffers />;
-    case 'leftSubmitOffer':
-      return <LeftSubmitOffer />;
-    default:
-      return null; // Add a default case
-  }
-};
-
 export default BuylistLeftSideBodyFactory;
 
 const ListItem = ({ cart }: { cart: IBuylistCart }) => {
@@ -267,7 +270,6 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   const [cartToDelete, setCartToDelete] = useState<any>(null);
   const [activeDialogId, setActiveDialogId] = useState<number | null>(null);
   const [newCartName, setNewCartName] = useState('');
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const {
     createCart,
     deleteCart,
@@ -276,11 +278,22 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
     isDeleting,
     isRenaming
   } = useUserCarts();
+
+  // Add this state to track if a dialog was just closed
+  const [dialogJustClosed, setDialogJustClosed] = useState(false);
+
+  // Add state to control dropdown open state
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   return (
     <div
       className=" cursor-pointer space-y-2 rounded-lg border bg-background px-1 py-1"
       onClick={() => {
-        setLeftUIState('leftCartEditWithViewOffers');
+        // Only navigate if no dialog was just closed
+        if (!dialogJustClosed) {
+          setLeftUIState('leftCartEditWithViewOffers');
+          setCurrentCartId(cart.id);
+        }
       }}
     >
       <div className="flex justify-between">
@@ -289,23 +302,28 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
       </div>
       <div className="flex justify-between">
         {/* Rename Cart Dialog */}
-        <DropdownMenu>
+        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger
             asChild
             className="w-min flex-shrink-0 bg-transparent"
             variant={null}
+            onClick={(e) => e.stopPropagation()}
           >
-            <p className="text-xs  font-semibold text-zinc-400 underline hover:text-primary">
+            <p className="text-xs font-semibold text-zinc-400 underline hover:text-primary">
               Edit
             </p>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-min">
+          <DropdownMenuContent
+            className="w-min"
+            onClick={(e) => e.stopPropagation()}
+          >
             <DropdownMenuGroup>
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
-                  setCurrentCartId(cart.id);
+                  e.preventDefault();
                   setActiveDialogId(cart.id);
+                  setDropdownOpen(false); // Close the dropdown
                 }}
               >
                 <p>Rename</p>
@@ -314,6 +332,7 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   setCartToDelete(cart);
+                  setDropdownOpen(false); // Close the dropdown
                 }}
               >
                 <p className="text-red-500">Delete</p>
@@ -327,42 +346,22 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
         </p>
       </div>
 
-      {/* Create Cart Dialog */}
-      <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create New Buylist</DialogTitle>
-            <DialogDescription>
-              Enter a name for your new buylist.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-4">
-            <Input
-              placeholder="Enter buylist name"
-              value={newCartName}
-              onChange={(e) => setNewCartName(e.target.value)}
-              maxLength={40}
-            />
-            <Button
-              onClick={() => {
-                createCart(newCartName);
-                setCreateDialogOpen(false);
-                setNewCartName('');
-              }}
-              disabled={isCreating || !newCartName.trim()}
-            >
-              {isCreating ? 'Creating...' : 'Create'}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Rename Cart Dialog */}
+      {/* Move the Dialog outside the DropdownMenu */}
       <Dialog
-        open={!!activeDialogId}
-        onOpenChange={(open) => !open && setActiveDialogId(null)}
+        open={activeDialogId === cart.id}
+        onOpenChange={(open) => {
+          if (!open) {
+            setActiveDialogId(null);
+            // Set this flag when dialog closes
+            setDialogJustClosed(true);
+            // Reset the flag after a short delay
+            setTimeout(() => {
+              setDialogJustClosed(false);
+            }, 100);
+          }
+        }}
       >
-        <DialogContent>
+        <DialogContent onClick={(e) => e.stopPropagation()}>
           <DialogHeader>
             <DialogTitle>Rename Buylist</DialogTitle>
             <DialogDescription>
@@ -374,18 +373,21 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
               placeholder="Enter new buylist name"
               value={newCartName}
               onChange={(e) => setNewCartName(e.target.value)}
-              maxLength={40}
+              onKeyDown={(e) => e.stopPropagation()} // Needed to capture typing due to the dialog component being nexted in the drop down component
+              maxLength={20}
             />
             <Button
               onClick={() => {
                 if (activeDialogId) {
                   renameCart({
-                    id: activeDialogId,
+                    id: cart.id,
                     name: newCartName,
                     items: []
                   });
-                  setActiveDialogId(null);
                   setNewCartName('');
+                  setActiveDialogId(null);
+                  setLeftUIState('leftCartEditWithViewOffers');
+                  setCurrentCartId(cart.id);
                 }
               }}
               disabled={isRenaming || !newCartName.trim()}
@@ -432,43 +434,74 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   );
 };
 
-const CartItem = () => {
+const CartItem = ({ item }: { item: IBuylistCartItem }) => {
+  const { currentCartId } = useBuyListStore();
+  const { updateCartItem } = useCartItems(currentCartId || undefined);
   return (
     <div className="flex items-center rounded-lg border px-1 py-1 ">
       <div>
         <img
           className="w-20 object-contain"
-          src="https://cdn.shopify.com/s/files/1/0235/2457/3231/files/70cd7a67-9f40-5227-8c12-5fb1a4750035.png?v=1736540822"
+          src={item.image}
           alt="card_image"
         />
       </div>
       <div className="flex w-full flex-col gap-0.5  space-y-1 px-0.5">
         <p className="text-[0.6rem] text-xs font-semibold uppercase   leading-none text-muted-foreground">
-          commander masters
+          {item.set_name}
         </p>
 
         <p className="text-[0.70rem] text-xs font-semibold leading-none">
-          Counterspell
+          {item.card_name}
         </p>
 
         <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
           <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
-            <p> Near Mint</p>
+            <p> {item.condition_name}</p>
           </span>
           <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
-            <p> Foil</p>
+            <p> {item.foil ? 'Foil' : 'Non-Foil'}</p>
           </span>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center gap-1">
         <div>
-          <PlusIcon className="h-5 w-5 cursor-pointer"></PlusIcon>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            onClick={() =>
+              currentCartId &&
+              updateCartItem({
+                cartId: currentCartId,
+                item,
+                quantity: item.quantity + 1
+              })
+            }
+          >
+            <Plus className="h-5 w-5" />
+          </Button>
+          {/* <PlusIcon className="h-5 w-5 cursor-pointer"></PlusIcon> */}
         </div>
         <div>
-          <p className="text-xs">99</p>
+          <p className="text-xs">{item.quantity}</p>
         </div>
         <div>
-          <MinusIcon className="h-5 w-5 cursor-pointer"></MinusIcon>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            onClick={() =>
+              currentCartId &&
+              updateCartItem({
+                cartId: currentCartId,
+                item,
+                quantity: Math.max(0, item.quantity - 1)
+              })
+            }
+          >
+            <MinusIcon className="h-5 w-5"></MinusIcon>
+          </Button>
         </div>
       </div>
     </div>
