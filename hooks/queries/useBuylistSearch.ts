@@ -88,7 +88,9 @@ export const useBuylistSearch = (
     filterOptions,
     setSortByOptions,
     setSortBy,
-    sortBy
+    sortBy,
+    leftUIState,
+    setLeftUIState
   } = useBuylistStore();
 
   const query = useInfiniteQuery({
@@ -119,9 +121,6 @@ export const useBuylistSearch = (
         {} as Record<string, string>
       );
 
-      //   if (!sortBy) {
-      //     setSortBy(defaultSortBy);
-      //   }
       return {
         searchResults: allResults.map((item) => ({ ...item, promoted: false })),
         defaultSortBy: defaultSortBy,

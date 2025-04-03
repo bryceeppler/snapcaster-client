@@ -5,12 +5,14 @@ import useBuyListStore, {
 } from '@/stores/useBuylistStore';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
+
 import {
   MixerHorizontalIcon,
   QuestionMarkCircledIcon,
   PlusIcon,
   MinusIcon
 } from '@radix-ui/react-icons';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   ArrowLeftIcon,
   CheckCircle,
@@ -48,7 +50,8 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
+  AlertDialogTitle,
+  AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import {
   DropdownMenu,
@@ -97,8 +100,14 @@ const LeftCartListSelection = () => {
 
   ///////////////////////////////////////////////////////////////////////////////////
 
-  const { carts } = useUserCarts();
+  const {
+    carts,
 
+    createCart,
+
+    isCreating
+  } = useUserCarts();
+  const [newCartName, setNewCartName] = useState('');
   //Dialogs
 
   const [value, setValue] = React.useState('');
@@ -124,15 +133,15 @@ const LeftCartListSelection = () => {
       (total: number, item: IBuylistCartItem) => total + item.quantity,
       0
     ) || 0;
-  useEffect(() => {
-    if (carts?.length && !value) {
-      setValue(carts[0].name);
-      setCurrentCartId(carts[0].id);
-    } else {
-      const selectedCart = carts?.find((cart) => cart.name === value);
-      setCurrentCartId(selectedCart?.id ?? null);
-    }
-  }, [value, carts]);
+  //   useEffect(() => {
+  //     if (carts?.length && !value) {
+  //       setValue(carts[0].name);
+  //       setCurrentCartId(carts[0].id);
+  //     } else {
+  //       const selectedCart = carts?.find((cart) => cart.name === value);
+  //       setCurrentCartId(selectedCart?.id ?? null);
+  //     }
+  //   }, [value, carts]);
 
   useEffect(() => {
     if (currentCartId && carts?.length) {
@@ -143,7 +152,7 @@ const LeftCartListSelection = () => {
     }
   }, [currentCartId, carts]);
   ///////////////////////////////////////////////////////////////////////////////////
-
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
   return (
     <div className="col-span-1 flex h-[75vh] w-80 flex-col space-y-1 rounded-lg border bg-card">
       <div className="flex justify-between border-b px-1">
@@ -152,13 +161,44 @@ const LeftCartListSelection = () => {
           <p className="truncate text-sm font-semibold">List Selection</p>
         </div>
         <div className="flex w-16 items-center justify-end gap-1 ">
-          <PlusIcon className="h-6 w-6 cursor-pointer" />
+          <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+            <DialogTrigger asChild onClick={() => setCreateDialogOpen(true)}>
+              <PlusIcon className="h-6 w-6 cursor-pointer" />
+            </DialogTrigger>
+            <DialogContent onClick={(e) => e.stopPropagation()}>
+              <DialogHeader>
+                <DialogTitle>Create New Buylist</DialogTitle>
+                <DialogDescription>
+                  Enter a name for your new buylist.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col gap-4">
+                <Input
+                  placeholder="Enter buylist name"
+                  value={newCartName}
+                  onChange={(e) => setNewCartName(e.target.value)}
+                  maxLength={20}
+                />
+
+                <Button
+                  onClick={() => {
+                    createCart(newCartName);
+                    setNewCartName('');
+                    setCreateDialogOpen(false); // Close the dialog
+                  }}
+                  disabled={isCreating || !newCartName.trim()}
+                >
+                  {isCreating ? 'Creating...' : 'Create'}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
-      <div className="flex-1 overflow-hidden">
+      <div className="overflow-hidden ">
         <ScrollArea className="h-full" type="always">
-          <div className="mr-1.5 space-y-2 px-1 ">
-            <div className="space-y-6">
+          <div className="mr-1.5 px-1 ">
+            <div>
               {carts?.map((cart, index) => (
                 // <p key={index}>{cart.name}</p>
                 <span key={index}>
@@ -174,7 +214,7 @@ const LeftCartListSelection = () => {
 };
 
 const LeftCartEditWithViewOffers = () => {
-  const { setLeftUIState, leftUIState } = useBuyListStore();
+  const { setLeftUIState, leftUIState, setCurrentCartId } = useBuyListStore();
   const { currentCartId } = useBuyListStore();
   const { carts } = useUserCarts();
   //Update Current Cart
@@ -193,33 +233,20 @@ const LeftCartEditWithViewOffers = () => {
     },
     enabled: !!currentCartId
   });
-  useEffect(() => {
-    console.log(currentCart);
-  }, [currentCart]);
+
   return (
     <div className="col-span-1 flex h-[75vh] w-80 flex-col space-y-1 rounded-lg border bg-card">
-      <div className="flex justify-between  px-1">
+      <div className="flex justify-between px-1">
         <div className="flex h-10 w-16 items-center justify-start gap-1">
-          {leftUIState === 'leftCartEdit' ? (
-            <span
-              className="flex cursor-pointer gap-0.5 rounded-lg  bg-background px-1 py-1 font-medium hover:bg-background/50"
-              onClick={() => {
-                setLeftUIState('leftCartListSelection');
-              }}
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-              <p className="text-xs ">Back</p>
-            </span>
-          ) : (
-            <span
-              className="cursor-pointer"
-              onClick={() => {
-                setLeftUIState('leftCartListSelection');
-              }}
-            >
-              <p className="text-xs font-medium underline">View Lists</p>
-            </span>
-          )}
+          <span
+            className="cursor-pointer"
+            onClick={() => {
+              setLeftUIState('leftCartListSelection');
+              setCurrentCartId(null);
+            }}
+          >
+            <p className="text-xs font-medium underline">View Lists</p>
+          </span>
         </div>
         <div className="flex w-full flex-1 items-center gap-1 overflow-hidden text-center">
           <p className="w-full truncate text-sm font-semibold">
@@ -228,9 +255,9 @@ const LeftCartEditWithViewOffers = () => {
         </div>
         <div className="flex w-16 items-center justify-end gap-1 "></div>
       </div>
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden ">
         <ScrollArea className="h-full" type="always">
-          <div className="mr-1.5 space-y-1 px-1 ">
+          <div className="mr-1.5 space-y-1  px-1 ">
             {currentCart?.cart?.items?.map((item, index) => (
               <div key={index}>
                 <CartItem item={item} />
@@ -255,39 +282,114 @@ const LeftCartEditWithViewOffers = () => {
   );
 };
 
-const LeftCartEdit = () => {
-  return <div>LeftCartEdit</div>;
-};
-
 const LeftSubmitOffer = () => {
-  return <div>LeftSubmitOffer</div>;
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  return (
+    <div className="col-span-1 flex h-[75vh] w-80 flex-col justify-between space-y-1 rounded-lg border bg-card px-1 py-1">
+      <div className="col-span-1 space-y-2  ">
+        <div className="flex items-end gap-1">
+          <div>
+            <img
+              src="https://cdn.snapcaster.ca/icons/exorgames-icon.png"
+              alt="Website"
+              className="size-8"
+            />
+          </div>
+          <div className="leading-none">
+            <p>Expr Games</p>
+
+            <div className="flex items-center gap-1">
+              <div
+                className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
+              ></div>
+              <p className="text-sm leading-none text-muted-foreground">
+                Connected
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="leading-none">
+          <p>Summary</p>
+        </div>
+        <div className="storeData.items.length space-y-1 text-sm font-normal leading-none">
+          <div className="flex justify-between">
+            <p>Cash</p>
+            <p>$20</p>
+          </div>
+          <div className="flex justify-between">
+            <p>Credit</p>
+            <p>$20</p>
+          </div>{' '}
+          <div className="flex justify-between">
+            <p>Buying</p>
+            <p>4/8</p>
+          </div>
+        </div>
+      </div>
+      <div className="">
+        <div className="flex  space-x-2 ">
+          <div>
+            <Checkbox
+              id="terms"
+              checked={termsAccepted}
+              onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+            />
+          </div>
+
+          <div className="flex flex-col space-y-1">
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium  peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              I have read and understood{' '}
+              <a href="#" className="text-primary ">
+                right of cancellation
+              </a>
+              .
+            </label>
+            <p className=" text-xs text-muted-foreground">
+              Please wait for a final adjusted email offer from Obsidian Games.
+              If you are not dropping off your cards in person, we recommend
+              recommend purchasing shipping insurance.
+            </p>
+            <p className=" text-xs text-muted-foreground">
+              Your offer may be adjusted due to market fluctuations, misgraded
+              conditions, or other discrepancies.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex justify-between space-x-2 ">
+          <Button className="h-9 w-full" disabled={!termsAccepted}>
+            Request Cash
+          </Button>
+          <Button className="h-9 w-full" disabled={!termsAccepted}>
+            Request Credit
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default BuylistLeftSideBodyFactory;
 
 const ListItem = ({ cart }: { cart: IBuylistCart }) => {
-  const { setLeftUIState, setCurrentCartId, currentCartId } = useBuyListStore();
-  const [cartToDelete, setCartToDelete] = useState<any>(null);
+  const { setLeftUIState, leftUIState, currentCartId, setCurrentCartId } =
+    useBuyListStore();
+  const { deleteCart, renameCart, isDeleting, isRenaming } = useUserCarts();
+  const [cartToDelete, setCartToDelete] = useState<IBuylistCart | null>(null);
+  const [dialogJustClosed, setDialogJustClosed] = useState(false);
   const [activeDialogId, setActiveDialogId] = useState<number | null>(null);
   const [newCartName, setNewCartName] = useState('');
-  const {
-    createCart,
-    deleteCart,
-    renameCart,
-    isCreating,
-    isDeleting,
-    isRenaming
-  } = useUserCarts();
-
-  // Add this state to track if a dialog was just closed
-  const [dialogJustClosed, setDialogJustClosed] = useState(false);
+  const { createCart, isCreating } = useUserCarts();
 
   // Add state to control dropdown open state
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <div
-      className=" cursor-pointer space-y-2 rounded-lg border bg-background px-1 py-1"
+      className=" mb-1 cursor-pointer space-y-2 rounded-lg border bg-background px-1 py-1"
       onClick={() => {
         // Only navigate if no dialog was just closed
         if (!dialogJustClosed) {
@@ -331,6 +433,7 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
+                  e.preventDefault();
                   setCartToDelete(cart);
                   setDropdownOpen(false); // Close the dropdown
                 }}
@@ -397,28 +500,48 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
           </div>
         </DialogContent>
       </Dialog>
-
       {/* Delete Cart Dialog */}
-      <AlertDialog
+      <Dialog
         open={!!cartToDelete}
-        onOpenChange={(open: boolean) => !open && setCartToDelete(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setCartToDelete(null);
+            // Set this flag when dialog closes
+            setDialogJustClosed(true);
+            // Reset the flag after a short delay
+            setTimeout(() => {
+              setDialogJustClosed(false);
+            }, 100);
+          }
+        }}
       >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
+        <DialogContent onClick={(e) => e.stopPropagation()}>
+          <DialogHeader>
+            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogDescription>
               This will permanently delete your buylist "{cartToDelete?.name}
               ". This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={(e) => {
+                e.stopPropagation();
+                setCartToDelete(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={(e) => {
+                e.stopPropagation();
                 if (cartToDelete) {
                   deleteCart(cartToDelete.id);
                   if (currentCartId === cartToDelete.id) {
                     setCurrentCartId(null);
+                    setLeftUIState('leftCartListSelection');
                   }
                   setCartToDelete(null);
                 }
@@ -426,16 +549,17 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
               disabled={isDeleting}
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 const CartItem = ({ item }: { item: IBuylistCartItem }) => {
-  const { currentCartId } = useBuyListStore();
+  const { currentCartId, leftUIState } = useBuyListStore();
+  const { setAllCartsData } = useBuyListStore();
   const { updateCartItem } = useCartItems(currentCartId || undefined);
   return (
     <div className="flex items-center rounded-lg border px-1 py-1 ">
@@ -460,7 +584,7 @@ const CartItem = ({ item }: { item: IBuylistCartItem }) => {
             <p> {item.condition_name}</p>
           </span>
           <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
-            <p> {item.foil ? 'Foil' : 'Non-Foil'}</p>
+            <p> {item.foil}</p>
           </span>
         </div>
       </div>
@@ -470,14 +594,17 @@ const CartItem = ({ item }: { item: IBuylistCartItem }) => {
             variant="ghost"
             size="icon"
             className="h-6 w-6"
-            onClick={() =>
+            onClick={() => {
               currentCartId &&
-              updateCartItem({
-                cartId: currentCartId,
-                item,
-                quantity: item.quantity + 1
-              })
-            }
+                updateCartItem({
+                  cartId: currentCartId,
+                  item,
+                  quantity: item.quantity + 1
+                });
+              if (leftUIState === 'leftCartEdit') {
+                setAllCartsData(currentCartId);
+              }
+            }}
           >
             <Plus className="h-5 w-5" />
           </Button>
@@ -491,14 +618,17 @@ const CartItem = ({ item }: { item: IBuylistCartItem }) => {
             variant="ghost"
             size="icon"
             className="h-6 w-6"
-            onClick={() =>
+            onClick={() => {
               currentCartId &&
-              updateCartItem({
-                cartId: currentCartId,
-                item,
-                quantity: Math.max(0, item.quantity - 1)
-              })
-            }
+                updateCartItem({
+                  cartId: currentCartId,
+                  item,
+                  quantity: Math.max(0, item.quantity - 1)
+                });
+              if (leftUIState === 'leftCartEdit') {
+                setAllCartsData(currentCartId);
+              }
+            }}
           >
             <MinusIcon className="h-5 w-5"></MinusIcon>
           </Button>

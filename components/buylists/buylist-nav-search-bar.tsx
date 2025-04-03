@@ -148,7 +148,8 @@ Props) {
     [suggestions, selectedIndex]
   );
 
-  const { filters, sortBy, clearFilters } = useBuylistStore();
+  const { filters, sortBy, clearFilters, leftUIState, setLeftUIState } =
+    useBuylistStore();
   const { isLoading, refetch } = useBuylistSearch(
     {
       tcg,
@@ -220,6 +221,12 @@ Props) {
               onClick={() => {
                 clearFilters();
                 refetch();
+                if (
+                  leftUIState === 'leftCartEdit' ||
+                  leftUIState === 'leftSubmitOffer'
+                ) {
+                  setLeftUIState('leftCartEditWithViewOffers');
+                }
               }}
             />
           )}

@@ -6,4 +6,4 @@ export function useConnectedVendors() {
     queryKey: ['connectedVendors'],
     queryFn: () => userService.getConnectedVendors()
   });
-} 
+}

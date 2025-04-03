@@ -2,14 +2,20 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import FilterSection from '../search-ui/search-filter-container';
 import BuylistFilterSection from './buylist-filter-section';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogDescription
+  DialogDescription,
+  DialogTrigger
 } from '../ui/dialog';
 import {
   Sheet,
@@ -23,14 +29,22 @@ import {
   MixerHorizontalIcon,
   QuestionMarkCircledIcon,
   PlusIcon,
-  MinusIcon
+  MinusIcon,
+  ExclamationTriangleIcon
 } from '@radix-ui/react-icons';
 import CardImage from '../ui/card-image';
 import { Card } from '../ui/card';
 import { ScrollArea } from '../ui/scroll-area';
 import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
-import useBuyListStore from '@/stores/useBuylistStore';
+import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
 import BuylistLeftSideBodyFactory from './buylist-left-side-body';
+import { toast } from 'sonner';
+import { useCartItems } from '@/hooks/useCartItems';
+import { ArrowLeftIcon, ExternalLink } from 'lucide-react';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import useGlobalStore from '@/stores/globalStore';
+import { useTheme } from 'next-themes';
+import { Separator } from '../ui/separator';
 export default function BuylistCatalog() {
   const {
     searchTerm,
@@ -39,13 +53,14 @@ export default function BuylistCatalog() {
     filters,
     setFilter,
     defaultSortBy,
-
+    reviewData,
     sortBy,
     setSortBy,
     sortByOptions,
     clearFilters,
-
-    leftUIState
+    setLeftUIState,
+    leftUIState,
+    setCurrentCartId
   } = useBuyListStore();
   const {
     data,
@@ -65,12 +80,9 @@ export default function BuylistCatalog() {
   );
 
   // refetch search results when filters or sortBy changes
-  // useEffect(() => {
-  //   refetch();
-  // }, [filters, sortBy, tcg]);
   useEffect(() => {
     refetch();
-  }, [sortBy]);
+  }, [sortBy, filters]);
   // Intersection Observer for infinite scroll
   const loadMoreRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -95,43 +107,90 @@ export default function BuylistCatalog() {
       {/* Header */}
       <div className="mx-auto flex w-full items-center justify-between rounded-lg border bg-card px-2 py-0.5 ">
         <div className="flex w-24 items-center justify-start gap-1">
-          <Sheet>
-            <SheetTitle hidden>Filters</SheetTitle>
-            <SheetDescription hidden>
-              Filter your search results
-            </SheetDescription>
-            <SheetTrigger asChild className="hidden md:block">
-              <MixerHorizontalIcon className="h-6 w-6 cursor-pointer" />
-            </SheetTrigger>
-            <SheetContent side="left">
-              <FilterSection
-                filterOptions={filterOptions}
-                // defaultSortBy={defaultSortBy}
-                sortBy={sortBy ? sortBy : data?.defaultSortBy}
-                fetchCards={async () => {
-                  refetch();
-                }}
-                clearFilters={clearFilters}
-                setFilter={setFilter}
-                setCurrentPage={() => {}}
-                applyFilters={async () => {}}
-                setSortBy={setSortBy}
-                handleSortByChange={(value: any) => {
-                  setSortBy(value);
-                }}
-                sortByOptions={sortByOptions}
-              />
-            </SheetContent>
-          </Sheet>
+          {leftUIState === 'leftCartListSelection' ||
+          leftUIState === 'leftCartEditWithViewOffers' ? (
+            <Sheet>
+              <SheetTitle hidden>Filters</SheetTitle>
+              <SheetDescription hidden>
+                Filter your search results
+              </SheetDescription>
+              <SheetTrigger asChild className="hidden md:block">
+                <MixerHorizontalIcon className="h-6 w-6 cursor-pointer" />
+              </SheetTrigger>
+              <SheetContent side="left">
+                <FilterSection
+                  filterOptions={filterOptions}
+                  // defaultSortBy={defaultSortBy}
+                  sortBy={sortBy ? sortBy : data?.defaultSortBy}
+                  fetchCards={async () => {
+                    refetch();
+                  }}
+                  clearFilters={clearFilters}
+                  setFilter={setFilter}
+                  setCurrentPage={() => {}}
+                  applyFilters={async () => {}}
+                  setSortBy={setSortBy}
+                  handleSortByChange={(value: any) => {
+                    setSortBy(value);
+                  }}
+                  sortByOptions={sortByOptions}
+                />
+              </SheetContent>
+            </Sheet>
+          ) : leftUIState === 'leftCartEdit' ? (
+            <span
+              className="flex cursor-pointer gap-0.5 rounded-lg bg-background px-1 py-1 font-medium hover:bg-background/50"
+              onClick={() => {
+                setLeftUIState('leftCartListSelection');
+              }}
+            >
+              <ArrowLeftIcon className="h-4 w-4" />
+              <p className="text-xs">Back</p>
+            </span>
+          ) : (
+            <span
+              className="flex cursor-pointer gap-0.5 rounded-lg bg-background px-1 py-1 font-medium hover:bg-background/50"
+              onClick={() => {
+                setLeftUIState('leftCartEdit');
+              }}
+            >
+              <ArrowLeftIcon className="h-4 w-4" />
+              <p className="text-xs">Back</p>
+            </span>
+          )}
         </div>
         <div className="space-y-1">
           <div>
-            <p className="text-sm">{data?.numResults} Search Results</p>
+            {leftUIState === 'leftCartListSelection' ||
+              (leftUIState === 'leftCartEditWithViewOffers' && (
+                <p className="text-sm">{data?.numResults} Search Results</p>
+              ))}
+            {leftUIState === 'leftCartEdit' && (
+              <p className="text-sm">{reviewData?.length} Store Offers</p>
+            )}
+            {leftUIState === 'leftSubmitOffer' && (
+              <p className="text-sm">Submit Offer</p>
+            )}
           </div>
           <div className="mx-auto flex w-min gap-2">
-            <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-primary"></div>
-            <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-background"></div>
-            <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-background"></div>
+            <div
+              className={`h-[0.6rem] w-[0.6rem] rounded-full bg-primary`}
+            ></div>
+            <div
+              className={`h-[0.6rem] w-[0.6rem] rounded-full ${
+                leftUIState === 'leftCartEdit' ||
+                leftUIState === 'leftSubmitOffer'
+                  ? 'bg-primary'
+                  : 'bg-background'
+              }`}
+            ></div>
+            <div
+              className={`h-[0.6rem] w-[0.6rem] rounded-full ${
+                leftUIState === 'leftSubmitOffer'
+                  ? 'bg-primary'
+                  : 'bg-background'
+              }`}
+            ></div>
           </div>
         </div>
         <div className="flex w-24 items-center justify-end gap-1">
@@ -140,7 +199,7 @@ export default function BuylistCatalog() {
         </div>
       </div>
       {/* Body */}
-      <div className=" flex">
+      <div className=" flex gap-1">
         {/* Left Sidebar */}
         <div className="">
           <BuylistLeftSideBodyFactory leftUIState={leftUIState} />
@@ -149,23 +208,46 @@ export default function BuylistCatalog() {
         {/* Content */}
         <div className="h-[75vh] w-full overflow-hidden rounded-lg">
           <ScrollArea className="h-full" type="always">
-            <div className="grid grid-cols-2 gap-1 pr-2.5 sm:grid-cols-3 md:grid-cols-4">
-              {data?.searchResults?.map((card, index) => (
-                <div className="" key={index}>
-                  <BuylistCatalogItem cardData={card} />
+            {(leftUIState === 'leftCartListSelection' ||
+              leftUIState === 'leftCartEditWithViewOffers') && (
+              <>
+                <div className="grid grid-cols-2 gap-1 pr-2.5 sm:grid-cols-3 md:grid-cols-4">
+                  {data?.searchResults?.map((card, index) => (
+                    <div className="" key={index}>
+                      <BuylistCatalogItem cardData={card} />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div ref={loadMoreRef} className="h-10 w-full">
-              {(isFetchingNextPage ||
-                (isLoading &&
-                  Array.isArray(data?.searchResults) &&
-                  data?.searchResults.length > 0)) && (
-                <div className="flex items-center justify-center py-4">
-                  <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
+                <div ref={loadMoreRef} className="h-10 w-full">
+                  {(isFetchingNextPage ||
+                    (isLoading &&
+                      Array.isArray(data?.searchResults) &&
+                      data?.searchResults.length > 0)) && (
+                    <div className="flex items-center justify-center py-4">
+                      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            )}
+            {leftUIState === 'leftCartEdit' && <BuylistStoreOffers />}
+            {leftUIState === 'leftSubmitOffer' && (
+              <div className="col-span-1 flex h-[75vh] flex-col  space-y-1 rounded-lg border bg-card px-1 py-1">
+                <div className="text flex w-full items-center justify-center gap-2 whitespace-nowrap font-semibold">
+                  <Separator className="my-4 w-full" />
+                  <p className="shrink-0 text-muted-foreground">Purchasing</p>
+                  <Separator className="my-4 w-full" />
+                </div>
+
+                <div className="text flex w-full items-center justify-center gap-2 whitespace-nowrap font-semibold">
+                  <Separator className="my-4 w-full" />
+                  <p className="shrink-0 text-muted-foreground">
+                    Not Purchasing
+                  </p>
+                  <Separator className="my-4 w-full" />
+                </div>
+              </div>
+            )}
           </ScrollArea>
         </div>
       </div>
@@ -173,56 +255,63 @@ export default function BuylistCatalog() {
   );
 }
 
-// const CartItem = () => {
-//   return (
-//     <>
-//       <div className="flex items-center rounded-lg border px-1 py-1 ">
-//         <div className="">
-//           <img
-//             className="w-20 object-contain"
-//             src="https://cdn.shopify.com/s/files/1/0235/2457/3231/files/70cd7a67-9f40-5227-8c12-5fb1a4750035.png?v=1736540822"
-//             alt="card_image"
-//           />
-//         </div>
-//         <div className="flex w-full flex-col gap-0.5  px-0.5">
-//           <p className="text-[0.6rem] text-xs font-semibold uppercase   leading-none text-muted-foreground">
-//             commander masters
-//           </p>
-
-//           <p className="text-[0.70rem] text-xs font-semibold leading-none">
-//             Counterspell
-//           </p>
-
-//           <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
-//             <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
-//               <p> Near Mint</p>
-//             </span>
-//             <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
-//               <p> Foil</p>
-//             </span>
-//           </div>
-//         </div>
-//         <div className="flex flex-col items-center justify-center gap-1">
-//           <div>
-//             <PlusIcon className="h-5 w-5 stroke-[3]"></PlusIcon>
-//           </div>
-//           <div>
-//             <p className="text-xs">99</p>
-//           </div>
-//           <div>
-//             <MinusIcon className="h-5 w-5"></MinusIcon>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
 type BuylistCatalogItemProps = {
   cardData: any;
 };
 
 const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
+  const { currentCartId } = useBuyListStore();
+  const { cartItems, updateCartItem } = useCartItems(
+    currentCartId || undefined
+  );
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const conditions = [
+    'Near Mint',
+    'Lightly Played',
+    'Moderately Played',
+    'Heavily Played',
+    'Damaged'
+  ];
+  const getQuantityForCondition = (conditionName: string) => {
+    if (!cartItems) return 0;
+    return (
+      cartItems.find(
+        (item) =>
+          item.card_name === cardData.name &&
+          item.set_name === cardData.set &&
+          item.condition_name === conditionName &&
+          item.foil === cardData.foil &&
+          item.rarity === cardData.rarity
+      )?.quantity || 0
+    );
+  };
+
+  const handleUpdateQuantity = (conditionName: string, delta: number) => {
+    if (!currentCartId) return;
+
+    const currentQuantity = getQuantityForCondition(conditionName);
+    const newQuantity = currentQuantity + delta;
+    if (newQuantity > 99) {
+      toast.error('Max Quantity 99');
+      return;
+    }
+    const cartItem = {
+      base_card_id: cardData.baseCardId,
+      card_name: cardData.name,
+      set_name: cardData.set,
+      game: cardData.game,
+      rarity: cardData.rarity,
+      condition_name: conditionName,
+      foil: cardData.foil,
+      image: cardData.image
+    };
+
+    updateCartItem({
+      cartId: currentCartId,
+      item: cartItem,
+      quantity: newQuantity
+    });
+  };
   return (
     <>
       <Card className="h-full">
@@ -249,52 +338,253 @@ const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
                 </span>
               </div>
             </div>
-
-            {/* <Dialog>
-              <DialogTitle hidden>Add To Cart</DialogTitle>
-              <DialogDescription hidden>
-                Add this card to your cart
-              </DialogDescription>
-
-              <DialogContent className="w-min px-16">
-                <div className="mx-auto w-[250px] px-4">
-                  <CardImage
-                    imageUrl="https://cdn.shopify.com/s/files/1/0235/2457/3231/files/70cd7a67-9f40-5227-8c12-5fb1a4750035.png?v=1736540822"
-                    alt="Counterspell"
-                  />
-                </div>
-
-                <div className="mt-2">
-                  <p className="text-[0.9rem] font-semibold capitalize">
-                    Counterspell
-                  </p>
-                  <p className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
-                    Modern Masters
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
-                    <span className="rounded bg-primary/10 px-1.5 py-0.5">
-                      <p> Foil</p>
-                    </span>
-                    <span className="rounded bg-primary/10 px-1.5 py-0.5">
-                      <p> Foilssssss</p>
-                    </span>
-                    <span className="rounded bg-primary/10 px-1.5 py-0.5">
-                      <p> Foilssssss</p>
-                    </span>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog> */}
           </div>
-          <Button
-            className="h-8 w-full  font-montserrat font-semibold "
-            variant="outline"
-          >
-            <p className="text-[0.65rem]">Add To Cart</p>
-          </Button>
+
+          <Dialog>
+            <DialogTitle hidden>Add To Cart</DialogTitle>
+            <DialogDescription hidden>
+              Add this card to your cart
+            </DialogDescription>
+            {Object.keys(cardData.conditions) && (
+              <DialogTrigger asChild>
+                <Button
+                  className="border-input-none w-full rounded-b-lg font-montserrat text-xs font-semibold"
+                  variant="outline"
+                  onClick={(e) => {
+                    // If no cart is selected, prevent dialog from opening and show create cart dialog
+                    if (!currentCartId) {
+                      e.preventDefault();
+                      toast.error('No list selected');
+                      // setCreateDialogOpen(true);
+                      return;
+                    }
+                  }}
+                >
+                  Add To Cart
+                </Button>
+              </DialogTrigger>
+            )}
+
+            <DialogContent className="w-min px-16">
+              <div className="mx-auto w-[250px] px-4">
+                <CardImage imageUrl={cardData.image} alt={cardData.name} />
+              </div>
+
+              <div className="mt-2">
+                <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
+                  {cardData.set}
+                </div>
+                <h3 className="text-[0.9rem] font-semibold capitalize">
+                  {cardData.name}
+                </h3>
+                <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem] capitalize">
+                    <p> {cardData.rarity}</p>
+                  </span>
+                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem]">
+                    <p> {cardData.foil}</p>
+                  </span>
+                </div>
+
+                {conditions.map((conditionName) => {
+                  const isAvailable = Object.keys(cardData.conditions).includes(
+                    conditionName
+                  );
+                  const quantity = getQuantityForCondition(conditionName);
+
+                  return (
+                    <div key={conditionName} className="mt-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {!isAvailable && (
+                            <TooltipProvider>
+                              <Tooltip delayDuration={100}>
+                                <TooltipTrigger asChild className="cursor-help">
+                                  <ExclamationTriangleIcon className="size-4 text-red-500" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>No stores are purchasing this card</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                          <p className="text-base font-medium">
+                            {conditionName}
+                          </p>
+                        </div>
+                        <div className="flex h-8 items-center rounded-xl border">
+                          <Button
+                            className="flex h-full w-8 items-center justify-center rounded-l-xl hover:bg-accent"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() =>
+                              handleUpdateQuantity(conditionName, -1)
+                            }
+                            disabled={quantity === 0}
+                          >
+                            <MinusIcon className="h-4 w-4" />
+                          </Button>
+                          <p className="w-8 bg-background text-center font-semibold">
+                            {quantity}
+                          </p>
+                          <Button
+                            className="flex h-full w-8 items-center justify-center rounded-r-xl hover:bg-accent"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() =>
+                              handleUpdateQuantity(conditionName, 1)
+                            }
+                          >
+                            <PlusIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </Card>
     </>
+  );
+};
+
+const BuylistStoreOffers = () => {
+  const CART_KEY = (cartId: number) => ['cart', cartId] as const;
+  const {
+    reviewData,
+    setSelectedStoreForReview,
+    currentCartId,
+    setAllCartsData,
+    setLeftUIState
+  } = useBuyListStore();
+  const { getWebsiteName, websites } = useGlobalStore();
+  const { theme } = useTheme();
+  const { data: connectedVendors, isLoading: isLoadingConnections } =
+    useConnectedVendors();
+
+  // Fetch current cart data
+  const { data: currentCart } = useQuery<{
+    success: boolean;
+    cart: IBuylistCart;
+  } | null>({
+    queryKey: CART_KEY(currentCartId || 0),
+    queryFn: async () => {
+      if (!currentCartId) return null;
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
+      );
+      return response.data;
+    },
+    enabled: !!currentCartId
+  });
+
+  const isVendorConnected = (vendorSlug: string) => {
+    if (isLoadingConnections || !connectedVendors) return false;
+    const matchingWebsite = websites.find(
+      (website) => website.slug === vendorSlug
+    );
+    return matchingWebsite
+      ? connectedVendors.includes(matchingWebsite.id)
+      : false;
+  };
+
+  const cartItems = currentCart?.cart?.items || [];
+  const breakdownData = reviewData || [];
+
+  useEffect(() => {
+    setAllCartsData(currentCartId);
+  }, []);
+
+  return (
+    <div className=" mr-2.5 grid grid-cols-2 gap-1 rounded-lg ">
+      {breakdownData.map((storeData: any, index: number) => {
+        const isConnected = isVendorConnected(storeData.storeName);
+        console.log(storeData.storeName, isConnected);
+        return (
+          <div
+            className="col-span-1 space-y-2 rounded-lg border bg-card px-1 py-1 "
+            key={index}
+          >
+            <div className="flex items-end gap-1">
+              <div>
+                {(() => {
+                  const matchingWebsite = websites.find(
+                    (website) => storeData.storeName === website.slug
+                  );
+                  return matchingWebsite?.meta?.branding?.icons ? (
+                    <img
+                      src={
+                        theme === 'dark'
+                          ? matchingWebsite.meta.branding.icons.dark
+                          : matchingWebsite.meta.branding.icons.light
+                      }
+                      alt="Website"
+                      className="size-8"
+                    />
+                  ) : null;
+                })()}
+              </div>
+              <div className="leading-none">
+                <p>{getWebsiteName(storeData.storeName)}</p>
+
+                {isConnected ? (
+                  <div className="flex items-center gap-1">
+                    <div
+                      className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
+                    ></div>
+                    <p className="text-sm leading-none text-muted-foreground">
+                      Connected
+                    </p>
+                  </div>
+                ) : (
+                  <div className=" flex items-center gap-1 text-muted-foreground hover:cursor-pointer hover:text-primary">
+                    <div
+                      className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
+                    ></div>
+                    <p className="text-sm leading-none">Extension Required</p>
+                    <ExternalLink className="size-4  " />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="leading-none">
+              <p>Summary</p>
+            </div>
+            <div className="storeData.items.length space-y-1 text-sm font-normal leading-none">
+              <div className="flex justify-between">
+                <p>Cash</p>
+                <p>${storeData.cashSubtotal}</p>
+              </div>
+              <div className="flex justify-between">
+                <p>Credit</p>
+                <p>${storeData.creditSubtotal}</p>
+              </div>{' '}
+              <div className="flex justify-between">
+                <p>Buying</p>
+                <p>
+                  {storeData.items.length}/
+                  {storeData.items.length +
+                    storeData.unableToPurchaseItems.length}
+                </p>
+              </div>
+            </div>
+            <div>
+              <Button
+                className="h-9 w-full"
+                disabled={!isConnected}
+                onClick={() => {
+                  setLeftUIState('leftSubmitOffer');
+                }}
+              >
+                Submit Offer
+              </Button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 };
