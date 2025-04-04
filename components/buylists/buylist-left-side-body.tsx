@@ -71,6 +71,7 @@ import {
   DialogTrigger
 } from '../ui/dialog';
 import { Label } from '../ui/label';
+import useGlobalStore from '@/stores/globalStore';
 
 // Define a props interface
 interface BuylistLeftSideBodyProps {
@@ -155,10 +156,10 @@ const LeftCartListSelection = () => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   return (
     <div className="col-span-1 flex h-[75vh] w-80 flex-col space-y-1 rounded-lg border bg-card">
-      <div className="flex justify-between border-b px-1">
+      <div className="flex justify-between  px-1">
         <div className="flex h-10 w-16 items-center justify-start gap-1"></div>
         <div className="flex items-center gap-1">
-          <p className="truncate text-sm font-semibold">List Selection</p>
+          <p className="truncate text-sm font-semibold"> Saved Lists</p>
         </div>
         <div className="flex w-16 items-center justify-end gap-1 ">
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
@@ -238,7 +239,7 @@ const LeftCartEditWithViewOffers = () => {
     <div className="col-span-1 flex h-[75vh] w-80 flex-col space-y-1 rounded-lg border bg-card">
       <div className="flex justify-between px-1">
         <div className="flex h-10 w-16 items-center justify-start gap-1">
-          <span
+          {/* <span
             className="cursor-pointer"
             onClick={() => {
               setLeftUIState('leftCartListSelection');
@@ -246,6 +247,16 @@ const LeftCartEditWithViewOffers = () => {
             }}
           >
             <p className="text-xs font-medium underline">View Lists</p>
+          </span> */}
+          <span
+            className="flex cursor-pointer gap-0.5 rounded-lg bg-background px-1 py-1 font-medium hover:bg-background/50"
+            onClick={() => {
+              setLeftUIState('leftCartListSelection');
+              setCurrentCartId(null);
+            }}
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+            <p className="text-xs">Lists</p>
           </span>
         </div>
         <div className="flex w-full flex-1 items-center gap-1 overflow-hidden text-center">
@@ -284,6 +295,13 @@ const LeftCartEditWithViewOffers = () => {
 
 const LeftSubmitOffer = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const { reviewData, selectedStoreForReview } = useBuyListStore();
+  const breakdownData = reviewData || [];
+  const submitData = reviewData?.find(
+    (store: any) => store.storeName === selectedStoreForReview
+  );
+  console.log('submitData', submitData);
+  const { getWebsiteName } = useGlobalStore();
   return (
     <div className="col-span-1 flex h-[75vh] w-80 flex-col justify-between space-y-1 rounded-lg border bg-card px-1 py-1">
       <div className="col-span-1 space-y-2  ">
@@ -296,7 +314,7 @@ const LeftSubmitOffer = () => {
             />
           </div>
           <div className="leading-none">
-            <p>Expr Games</p>
+            <p>{getWebsiteName(submitData?.storeName)}</p>
 
             <div className="flex items-center gap-1">
               <div
@@ -308,21 +326,25 @@ const LeftSubmitOffer = () => {
             </div>
           </div>
         </div>
-        <div className="leading-none">
+        <div className="font-semibold leading-none">
           <p>Summary</p>
         </div>
         <div className="storeData.items.length space-y-1 text-sm font-normal leading-none">
           <div className="flex justify-between">
             <p>Cash</p>
-            <p>$20</p>
+            <p>${submitData?.cashSubtotal}</p>
           </div>
           <div className="flex justify-between">
             <p>Credit</p>
-            <p>$20</p>
+            <p>${submitData?.creditSubtotal}</p>
           </div>{' '}
           <div className="flex justify-between">
             <p>Buying</p>
-            <p>4/8</p>
+            <p>
+              {submitData?.items.length}/
+              {submitData?.items.length +
+                submitData?.unableToPurchaseItems.length}
+            </p>
           </div>
         </div>
       </div>
@@ -389,7 +411,7 @@ const ListItem = ({ cart }: { cart: IBuylistCart }) => {
 
   return (
     <div
-      className=" mb-1 cursor-pointer space-y-2 rounded-lg border bg-background px-1 py-1"
+      className=" mb-1 cursor-pointer space-y-2 rounded-lg border bg-accent px-1  py-1"
       onClick={() => {
         // Only navigate if no dialog was just closed
         if (!dialogJustClosed) {
@@ -579,12 +601,15 @@ const CartItem = ({ item }: { item: IBuylistCartItem }) => {
           {item.card_name}
         </p>
 
-        <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+        <div className="flex flex-wrap items-center gap-1 text-xs font-medium capitalize text-primary">
           <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
             <p> {item.condition_name}</p>
           </span>
           <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem]">
             <p> {item.foil}</p>
+          </span>
+          <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.65rem] ">
+            <p> {item.rarity}</p>
           </span>
         </div>
       </div>
@@ -594,15 +619,26 @@ const CartItem = ({ item }: { item: IBuylistCartItem }) => {
             variant="ghost"
             size="icon"
             className="h-6 w-6"
-            onClick={() => {
-              currentCartId &&
-                updateCartItem({
-                  cartId: currentCartId,
-                  item,
-                  quantity: item.quantity + 1
-                });
-              if (leftUIState === 'leftCartEdit') {
-                setAllCartsData(currentCartId);
+            onClick={async () => {
+              if (currentCartId) {
+                try {
+                  // First update the cart item
+                  await updateCartItem({
+                    cartId: currentCartId,
+                    item,
+                    quantity: item.quantity + 1
+                  });
+
+                  // Wait a moment to ensure the update is processed
+                  await new Promise((resolve) => setTimeout(resolve, 200));
+
+                  // Then fetch the updated checkout data
+                  if (leftUIState === 'leftCartEdit') {
+                    await setAllCartsData(currentCartId);
+                  }
+                } catch (error) {
+                  console.error('Failed to update cart:', error);
+                }
               }
             }}
           >

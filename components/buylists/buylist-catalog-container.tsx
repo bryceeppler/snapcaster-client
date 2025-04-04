@@ -8,6 +8,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
+
 import FilterSection from '../search-ui/search-filter-container';
 import BuylistFilterSection from './buylist-filter-section';
 import {
@@ -40,7 +41,7 @@ import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
 import BuylistLeftSideBodyFactory from './buylist-left-side-body';
 import { toast } from 'sonner';
 import { useCartItems } from '@/hooks/useCartItems';
-import { ArrowLeftIcon, ExternalLink } from 'lucide-react';
+import { ArrowLeftIcon, BadgeDollarSign, ExternalLink } from 'lucide-react';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import useGlobalStore from '@/stores/globalStore';
 import { useTheme } from 'next-themes';
@@ -83,29 +84,66 @@ export default function BuylistCatalog() {
   useEffect(() => {
     refetch();
   }, [sortBy, filters]);
+
+  // Add this state to track if we need to reinitialize the observer
+  const [shouldReinitObserver, setShouldReinitObserver] = useState(false);
+
+  // Watch for UI state changes
+  useEffect(() => {
+    // When UI state changes to a state that shows search results
+    if (
+      leftUIState === 'leftCartListSelection' ||
+      leftUIState === 'leftCartEditWithViewOffers'
+    ) {
+      // Set flag to reinitialize observer
+      setShouldReinitObserver(true);
+    }
+  }, [leftUIState]);
+
+  // Separate effect to handle the observer
+  useEffect(() => {
+    // Only run if we should reinitialize or if data changes
+    if (
+      (shouldReinitObserver || data?.searchResults) &&
+      loadMoreRef.current &&
+      hasNextPage
+    ) {
+      // Reset the flag
+      setShouldReinitObserver(false);
+
+      // Create and attach the observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        },
+        { threshold: 0.1 }
+      );
+
+      observer.observe(loadMoreRef.current);
+
+      return () => {
+        if (loadMoreRef.current) {
+          observer.unobserve(loadMoreRef.current);
+        }
+      };
+    }
+  }, [
+    shouldReinitObserver,
+    data?.searchResults,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  ]);
+
   // Intersection Observer for infinite scroll
   const loadMoreRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div className="flex flex-col gap-1">
       {/* Header */}
-      <div className="mx-auto flex w-full items-center justify-between rounded-lg border bg-card px-2 py-0.5 ">
+      <div className="mx-auto flex w-full items-center justify-between rounded-lg border bg-card px-1 py-0.5 ">
         <div className="flex w-24 items-center justify-start gap-1">
           {leftUIState === 'leftCartListSelection' ||
           leftUIState === 'leftCartEditWithViewOffers' ? (
@@ -142,6 +180,7 @@ export default function BuylistCatalog() {
               className="flex cursor-pointer gap-0.5 rounded-lg bg-background px-1 py-1 font-medium hover:bg-background/50"
               onClick={() => {
                 setLeftUIState('leftCartListSelection');
+                setCurrentCartId(null);
               }}
             >
               <ArrowLeftIcon className="h-4 w-4" />
@@ -161,10 +200,10 @@ export default function BuylistCatalog() {
         </div>
         <div className="space-y-1">
           <div>
-            {leftUIState === 'leftCartListSelection' ||
-              (leftUIState === 'leftCartEditWithViewOffers' && (
-                <p className="text-sm">{data?.numResults} Search Results</p>
-              ))}
+            {(leftUIState === 'leftCartListSelection' ||
+              leftUIState === 'leftCartEditWithViewOffers') && (
+              <p className="text-sm">{data?.numResults} Search Results</p>
+            )}
             {leftUIState === 'leftCartEdit' && (
               <p className="text-sm">{reviewData?.length} Store Offers</p>
             )}
@@ -206,8 +245,8 @@ export default function BuylistCatalog() {
         </div>
 
         {/* Content */}
-        <div className="h-[75vh] w-full overflow-hidden rounded-lg">
-          <ScrollArea className="h-full" type="always">
+        <div className="h-[75vh] w-full overflow-hidden rounded-lg border bg-card py-1">
+          <ScrollArea className="h-full">
             {(leftUIState === 'leftCartListSelection' ||
               leftUIState === 'leftCartEditWithViewOffers') && (
               <>
@@ -218,7 +257,14 @@ export default function BuylistCatalog() {
                     </div>
                   ))}
                 </div>
-                <div ref={loadMoreRef} className="h-10 w-full">
+                <div
+                  ref={loadMoreRef}
+                  className="h-10 w-full"
+                  onClick={() => {
+                    // Force reinitialize on click (as a fallback)
+                    setShouldReinitObserver(true);
+                  }}
+                >
                   {(isFetchingNextPage ||
                     (isLoading &&
                       Array.isArray(data?.searchResults) &&
@@ -232,21 +278,7 @@ export default function BuylistCatalog() {
             )}
             {leftUIState === 'leftCartEdit' && <BuylistStoreOffers />}
             {leftUIState === 'leftSubmitOffer' && (
-              <div className="col-span-1 flex h-[75vh] flex-col  space-y-1 rounded-lg border bg-card px-1 py-1">
-                <div className="text flex w-full items-center justify-center gap-2 whitespace-nowrap font-semibold">
-                  <Separator className="my-4 w-full" />
-                  <p className="shrink-0 text-muted-foreground">Purchasing</p>
-                  <Separator className="my-4 w-full" />
-                </div>
-
-                <div className="text flex w-full items-center justify-center gap-2 whitespace-nowrap font-semibold">
-                  <Separator className="my-4 w-full" />
-                  <p className="shrink-0 text-muted-foreground">
-                    Not Purchasing
-                  </p>
-                  <Separator className="my-4 w-full" />
-                </div>
-              </div>
+              <BuylistStoreOfferBreakdown />
             )}
           </ScrollArea>
         </div>
@@ -315,7 +347,7 @@ const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
   return (
     <>
       <Card className="h-full">
-        <div className="flex h-full flex-col gap-2 rounded-md bg-popover px-1 py-2">
+        <div className="flex h-full flex-col gap-2 rounded-md bg-accent px-1 py-2">
           <div className="mx-auto max-w-[150px] px-4 md:max-w-[250px]">
             <CardImage imageUrl={cardData.image} alt={cardData.name} />
           </div>
@@ -378,6 +410,9 @@ const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
                   {cardData.name}
                 </h3>
                 <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+                  {/* <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem] capitalize">
+                    <p> {cardData.conditions}</p>
+                  </span> */}
                   <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem] capitalize">
                     <p> {cardData.rarity}</p>
                   </span>
@@ -458,8 +493,11 @@ const BuylistStoreOffers = () => {
     setSelectedStoreForReview,
     currentCartId,
     setAllCartsData,
-    setLeftUIState
+    setLeftUIState,
+    selectedStoreForReview,
+    submitBuylist
   } = useBuyListStore();
+
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
   const { data: connectedVendors, isLoading: isLoadingConnections } =
@@ -493,19 +531,23 @@ const BuylistStoreOffers = () => {
 
   const cartItems = currentCart?.cart?.items || [];
   const breakdownData = reviewData || [];
+  const { updateCartItem } = useCartItems(currentCartId || undefined);
+  useEffect(() => {
+    console.log('updated qauntity test', updateCartItem);
+    setAllCartsData(currentCartId);
+  }, [updateCartItem]);
 
   useEffect(() => {
-    setAllCartsData(currentCartId);
-  }, []);
-
+    console.log('breakdownData main update', breakdownData);
+  }, [reviewData]);
   return (
     <div className=" mr-2.5 grid grid-cols-2 gap-1 rounded-lg ">
       {breakdownData.map((storeData: any, index: number) => {
         const isConnected = isVendorConnected(storeData.storeName);
-        console.log(storeData.storeName, isConnected);
+
         return (
           <div
-            className="col-span-1 space-y-2 rounded-lg border bg-card px-1 py-1 "
+            className="col-span-1 space-y-2 rounded-lg border bg-accent px-1 py-1 "
             key={index}
           >
             <div className="flex items-end gap-1">
@@ -544,7 +586,15 @@ const BuylistStoreOffers = () => {
                     <div
                       className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
                     ></div>
-                    <p className="text-sm leading-none">Extension Required</p>
+                    <a
+                      href={
+                        'https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en'
+                      }
+                      target="_blank"
+                      className="text-sm leading-none"
+                    >
+                      Extension Required
+                    </a>
                     <ExternalLink className="size-4  " />
                   </div>
                 )}
@@ -555,13 +605,14 @@ const BuylistStoreOffers = () => {
             </div>
             <div className="storeData.items.length space-y-1 text-sm font-normal leading-none">
               <div className="flex justify-between">
+                <p>Credit</p>
+                <p>${storeData.creditSubtotal}</p>
+              </div>
+              <div className="flex justify-between">
                 <p>Cash</p>
                 <p>${storeData.cashSubtotal}</p>
               </div>
-              <div className="flex justify-between">
-                <p>Credit</p>
-                <p>${storeData.creditSubtotal}</p>
-              </div>{' '}
+
               <div className="flex justify-between">
                 <p>Buying</p>
                 <p>
@@ -577,6 +628,7 @@ const BuylistStoreOffers = () => {
                 disabled={!isConnected}
                 onClick={() => {
                   setLeftUIState('leftSubmitOffer');
+                  setSelectedStoreForReview(storeData.storeName);
                 }}
               >
                 Submit Offer
@@ -585,6 +637,232 @@ const BuylistStoreOffers = () => {
           </div>
         );
       })}
+    </div>
+  );
+};
+
+const BuylistStoreOfferBreakdown = () => {
+  const { reviewData, selectedStoreForReview } = useBuyListStore();
+  const breakdownData = reviewData?.find(
+    (store: any) => store.storeName === selectedStoreForReview
+  );
+  useEffect(() => {
+    console.log('breakdown data', breakdownData);
+    // console.log('selected store for review', selectedStoreForReview);
+  }, [breakdownData, selectedStoreForReview]);
+  return (
+    <div className="col-span-1 flex h-[75vh] flex-col rounded-lg   ">
+      <ScrollArea className="h-full" type="always">
+        <div className="mr-2.5 flex flex-col space-y-2">
+          <div className="text flex w-full items-center justify-center gap-0.5 whitespace-nowrap font-semibold ">
+            <Separator className="my-4 h-0.5 w-full" />
+            <p className="shrink-0 text-muted-foreground">Purchasing</p>
+            <Separator className="my-4 h-0.5 w-full" />
+          </div>
+          {breakdownData.items.map((cardData: any, index: number) => (
+            <span key={index}>
+              <PurchasingCardSubmitDetails cardData={cardData} />
+            </span>
+          ))}
+        </div>
+
+        <div className="mr-2.5 flex flex-col space-y-2 ">
+          <div className="text flex w-full items-center justify-center gap-0.5 whitespace-nowrap font-semibold ">
+            <Separator className="my-4 h-0.5 w-full" />
+            <p className="shrink-0 text-muted-foreground">Not Purchasing</p>
+            <Separator className="my-4 h-0.5 w-full" />
+          </div>
+          {breakdownData.unableToPurchaseItems.map(
+            (cardData: any, index: number) => (
+              <span key={index}>
+                <NotPurchasingCardSubmitDetails cardData={cardData} />
+              </span>
+            )
+          )}
+        </div>
+      </ScrollArea>
+    </div>
+  );
+};
+
+type SubmitCardDetailsProps = {
+  cardData: any;
+};
+const PurchasingCardSubmitDetails = ({ cardData }: SubmitCardDetailsProps) => {
+  return (
+    <div className="flex w-full items-stretch space-x-1 rounded-lg border bg-accent p-1">
+      <div className="shrink-0 self-center">
+        <img
+          className="w-20 object-contain"
+          src={cardData.image}
+          alt={cardData.name}
+        />
+      </div>
+
+      <div className="flex w-full flex-col justify-between py-1">
+        <div className="space-y-0.5">
+          <p className="text-sm font-semibold leading-none">
+            {cardData.cardName}
+          </p>
+          <p className="text-sm font-medium leading-none text-muted-foreground">
+            {cardData.setName}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
+              <p> {cardData.condition}</p>
+            </span>
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
+              <p> {cardData.rarity}</p>
+            </span>
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs">
+              <p> {cardData.foil}</p>
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex justify-between">
+            <div className="flex items-center gap-0.5">
+              <p className="text-xs font-semibold leading-none text-muted-foreground">
+                Credit
+              </p>
+              {cardData.bestCreditOffer && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <BadgeDollarSign className="size-3.5 text-primary hover:cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Top Credit Unit Price</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
+            <div className="flex space-x-1">
+              <p className="text-xs font-medium leading-none text-muted-foreground">
+                {`${cardData.cashPrice} ea -`}
+              </p>
+              <p className="text-xs font-semibold leading-none ">
+                ${cardData.cashPrice * cardData.purchaseQuantity}
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div className="flex items-center gap-0.5">
+              <p className="text-xs font-semibold leading-none text-muted-foreground">
+                Cash
+              </p>
+              {cardData.bestCreditOffer && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <BadgeDollarSign className="size-3.5 text-primary hover:cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Top Cash Unit Price</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
+            <div className="flex space-x-1">
+              <p className="text-xs font-medium leading-none text-muted-foreground">
+                {`${cardData.creditPrice} ea -`}
+              </p>
+              <p className="text-xs font-semibold leading-none ">
+                ${cardData.creditPrice * cardData.purchaseQuantity}
+              </p>
+            </div>
+          </div>{' '}
+          <div className="flex justify-between">
+            <div className="flex items-center gap-0.5">
+              <p className="text-xs font-semibold leading-none text-muted-foreground">
+                Quantity
+              </p>
+            </div>
+            <div className="flex space-x-1">
+              <p className="text-xs font-semibold leading-none">
+                x{cardData.purchaseQuantity}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+const NotPurchasingCardSubmitDetails = ({
+  cardData
+}: SubmitCardDetailsProps) => {
+  return (
+    <div className="flex w-full items-stretch space-x-1 rounded-lg border bg-accent p-1">
+      <div className="shrink-0 self-center">
+        <img
+          className="w-20 object-contain"
+          src={cardData.image}
+          alt={cardData.name}
+        />
+      </div>
+
+      <div className="flex w-full flex-col justify-between py-1">
+        <div className="space-y-0.5">
+          <p className="text-sm font-semibold leading-none">
+            {cardData.cardName}
+          </p>
+          <p className="text-sm font-medium leading-none text-muted-foreground">
+            {cardData.setName}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
+              <p> {cardData.condition}</p>
+            </span>
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
+              <p> {cardData.rarity}</p>
+            </span>
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs">
+              <p> {cardData.foil}</p>
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex justify-between">
+            <div className="flex items-center gap-0.5">
+              <p className="text-xs font-semibold leading-none text-muted-foreground">
+                Credit
+              </p>
+            </div>
+            <div className="flex space-x-1">
+              <p className="text-xs font-semibold leading-none">N/A</p>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div className="flex items-center gap-0.5">
+              <p className="text-xs font-semibold leading-none text-muted-foreground">
+                Cash
+              </p>
+            </div>
+            <div className="flex space-x-1">
+              <p className="text-xs font-semibold leading-none">N/A</p>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div className="flex items-center gap-0.5">
+              <p className="text-xs font-semibold leading-none text-muted-foreground">
+                Quantity
+              </p>
+            </div>
+            <div className="flex space-x-1">
+              <p className="text-xs font-semibold leading-none">
+                x{cardData.unableToPurchaseQuantity}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
