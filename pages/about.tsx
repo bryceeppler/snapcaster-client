@@ -104,6 +104,23 @@ const About: NextPage<Props> = () => {
                 />
               </div>
             </div>
+            <div className="space-y-8">
+            <div className="flex flex-col items-center">
+                <h3 className="text-3xl font-bold text-center">
+                  Tier 3 Sponsors
+                </h3>
+                <div className="mt-2 rounded-full h-2 w-16 bg-primary/40 mx-auto"></div>
+              </div>
+              <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+                {/* VORTEX */}
+                <SponsorCard
+                  href="https://vortexgames.ca"
+                  imgSrc="https://cdn.snapcaster.ca/supporters/vortex_supporter.png"
+                  alt="Vortex Games"
+                />
+
+              </div>
+            </div>
 
             {/* Vendors Section */}
             <div id="vendors" className="scroll-mt-32 space-y-8">
@@ -148,9 +165,9 @@ const About: NextPage<Props> = () => {
 interface SponsorCardProps {
   href: string;
   imgSrc: string;
-  alt: string;
-  positionId: string;
-  adId: string;
+  alt?: string;
+  positionId?: string;
+  adId?: string;
 }
 
 const SponsorCard = ({ href, imgSrc, alt, positionId, adId }: SponsorCardProps) => (
@@ -167,7 +184,7 @@ const SponsorCard = ({ href, imgSrc, alt, positionId, adId }: SponsorCardProps) 
       target="_blank"
       data-position-id={positionId}
       data-ad-id={adId}
-      onClick={() => trackAdClick(adId)}
+      onClick={() => adId && trackAdClick(adId)}
       className="block p-8 overflow-visible"
     >
       <div className="relative aspect-[2/1] rounded-lg overflow-visible">
