@@ -46,7 +46,8 @@ export const RecommendedStores = () => {
     'chimera',
     'exorgames',
     'mythicstore',
-    'houseofcards'
+    'houseofcards',
+    'vortexgames'
   ];
   const [selectedTopStore, setSelectedTopStore] = useState('');
 

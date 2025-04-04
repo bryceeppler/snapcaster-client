@@ -32,7 +32,8 @@ export const Cart = () => {
     'chimera',
     'exorgames',
     'mythicstore',
-    'houseofcards'
+    'houseofcards',
+    'vortexgames'
   ];
 
   const handleCheckout = (products: Product[]) => {
