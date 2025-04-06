@@ -1,16 +1,15 @@
 import { create } from 'zustand';
-import axios from 'axios';
-import { Tcg, BuyListQueryCard } from '@/types/product';
+import { Tcg } from '@/types/product';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { FilterOption } from '@/types/query';
-import { log } from 'console';
 
 export type LeftUIState =
   | 'leftCartListSelection'
   | 'leftCartEditWithViewOffers'
   | 'leftCartEdit'
   | 'leftSubmitOffer';
+
 export type RightUIState =
   | 'rightSearchResults'
   | 'rightOfferOverview'
@@ -53,7 +52,12 @@ type BuyListState = {
   searchTerm: string;
   setSearchTerm: (searchBoxValue: string) => void;
 
+  searchResultCount: number;
+  setSearchResultCount: (count: number) => void;
+
   defaultSortBy: string | null;
+  setDefaultSortBy: (sortBy: string | null) => void;
+
   sortBy: string | null;
   setSortBy: (sortBy: string | null) => void;
 
@@ -74,7 +78,6 @@ type BuyListState = {
   //2. Left Side Content State Variables & functions//
   ////////////////////////////////////////////////////
   // used to display the left sidebar on desktop for the the cart selection, card editing, and offer submission conponents/logic (keep in mind that this logic is used for mobile too but will be a bit trickier to use as a result - Refer to the Figma)
-  mode: 'info' | 'search' | 'review' | 'submit';
   leftUIState: LeftUIState;
 
   setLeftUIState: (sideBarMode: LeftUIState) => void;
@@ -102,6 +105,7 @@ type BuyListState = {
 const useBuyListStore = create<BuyListState>((set, get) => ({
   //Search State Variables
   searchTerm: '',
+  searchResultCount: 0,
   tcg: 'mtg',
   defaultSortBy: null,
   sortBy: null,
@@ -109,7 +113,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   filters: null,
 
   //Cart State Variables
-  mode: 'info',
   currentCartId: null,
   reviewData: null,
   selectedStoreForReview: null,
@@ -121,6 +124,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   // Search Functions //
   //////////////////////
   setIsLoading: (loading: boolean) => set({ isLoading: loading }),
+
+  setSearchResultCount: (count: number) => set({ searchResultCount: count }),
 
   setSearchTerm(searchBoxValue: string) {
     set({ searchTerm: searchBoxValue });
@@ -272,6 +277,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   setLeftUIState: (leftUIState: LeftUIState) => {
     set({ leftUIState: leftUIState });
+  },
+  setDefaultSortBy: (sortBy: string | null) => {
+    set({ defaultSortBy: sortBy });
   }
 }));
 

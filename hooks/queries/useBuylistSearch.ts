@@ -83,15 +83,7 @@ export const useBuylistSearch = (
   searchParams: SearchParams,
   options?: { enabled?: boolean }
 ) => {
-  const {
-    setFilterOptions,
-    filterOptions,
-    setSortByOptions,
-    setSortBy,
-    sortBy,
-    leftUIState,
-    setLeftUIState
-  } = useBuylistStore();
+  const { setFilterOptions, setSortByOptions } = useBuylistStore();
 
   const query = useInfiniteQuery({
     queryKey: ['buylistSearch'],
@@ -109,6 +101,7 @@ export const useBuylistSearch = (
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+
     select: (data): TransformedSearchResponse => {
       const lastPage = data.pages[data.pages.length - 1];
       const allResults = data.pages.flatMap((page) => page.results);
@@ -120,7 +113,7 @@ export const useBuylistSearch = (
         }),
         {} as Record<string, string>
       );
-
+      // console.log(lastPage.pagination.numResults);
       return {
         searchResults: allResults.map((item) => ({ ...item, promoted: false })),
         defaultSortBy: defaultSortBy,

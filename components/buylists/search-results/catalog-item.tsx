@@ -1,7 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import CardImage from '../ui/card-image';
-import { Button } from '../ui/button';
-import React, { memo } from 'react';
+import CardImage from '@/components/ui/card-image';
 import {
   Dialog,
   DialogContent,
@@ -9,60 +8,37 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { MinusIcon, PlusIcon } from 'lucide-react';
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
-import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
-import { useCartItems } from '@/hooks/useCartItems';
-import { useQuery } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
+import { useCartItems } from '@/hooks/useCartItems';
+import useBuyListStore from '@/stores/useBuylistStore';
+import {
+  ExclamationTriangleIcon,
+  MinusIcon,
+  PlusIcon
+} from '@radix-ui/react-icons';
 import { toast } from 'sonner';
-type Props = {
+
+type BuylistCatalogItemProps = {
   cardData: any;
-  createDialogOpen: boolean;
-  setCreateDialogOpen: (open: boolean) => void;
 };
-const conditions = [
-  'Near Mint',
-  'Lightly Played',
-  'Moderately Played',
-  'Heavily Played',
-  'Damaged'
-];
 
-const CART_KEY = (cartId: number) => ['cart', cartId] as const;
-
-const BuyListCatalogItem = memo(function ResultCard({
-  cardData,
-  createDialogOpen,
-  setCreateDialogOpen
-}: Props) {
+export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
   const { currentCartId } = useBuyListStore();
   const { cartItems, updateCartItem } = useCartItems(
     currentCartId || undefined
   );
-
-  // Fetch cart data using React Query
-  const { data: currentCart } = useQuery<{
-    success: boolean;
-    cart: IBuylistCart;
-  } | null>({
-    queryKey: CART_KEY(currentCartId || 0),
-    queryFn: async () => {
-      if (!currentCartId) return null;
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
-      );
-      return response.data;
-    },
-    enabled: !!currentCartId
-  });
-
+  const conditions = [
+    'Near Mint',
+    'Lightly Played',
+    'Moderately Played',
+    'Heavily Played',
+    'Damaged'
+  ];
   const getQuantityForCondition = (conditionName: string) => {
     if (!cartItems) return 0;
     return (
@@ -103,25 +79,32 @@ const BuyListCatalogItem = memo(function ResultCard({
       quantity: newQuantity
     });
   };
-
   return (
-    <Card className="h-full">
-      <div className="flex h-full flex-col rounded-md bg-popover p-4">
-        <div className="mx-auto max-w-[150px] px-4 md:max-w-[250px]">
-          <CardImage imageUrl={cardData.image} alt={cardData.name} />
-        </div>
+    <>
+      <Card className="h-full">
+        <div className="flex h-full flex-col gap-2 rounded-md bg-accent px-1 py-2">
+          <div className="mx-auto max-w-[150px] px-4 md:max-w-[250px]">
+            <CardImage imageUrl={cardData.image} alt={cardData.name} />
+          </div>
 
-        <div className="mt-2 flex flex-1 flex-col justify-between">
-          <div>
-            <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
-              {cardData.set}
+          <div className=" flex flex-1 flex-col justify-between">
+            <div className="flex w-full flex-col gap-1 space-y-0.5 px-0.5">
+              <p className="overflow-hidden text-ellipsis text-[0.7rem] text-xs  font-semibold  leading-none text-muted-foreground ">
+                {cardData.set}
+              </p>
+              <p className="overflow-hidden text-ellipsis text-[0.80rem] font-semibold leading-none ">
+                {cardData.name}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-1 text-[0.70rem] font-medium capitalize text-primary">
+                <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.7rem]">
+                  <p> {cardData.foil}</p>
+                </span>
+                <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.7rem]">
+                  <p> {cardData.rarity}</p>
+                </span>
+              </div>
             </div>
-            <h3 className="overflow-hidden text-ellipsis text-[0.9rem] font-semibold capitalize">
-              {cardData.name}
-            </h3>
-            <p className="text-sm font-semibold capitalize text-muted-foreground">
-              {cardData.rarity} - {cardData.foil}
-            </p>
           </div>
 
           <Dialog>
@@ -132,13 +115,12 @@ const BuyListCatalogItem = memo(function ResultCard({
             {Object.keys(cardData.conditions) && (
               <DialogTrigger asChild>
                 <Button
-                  className="w-full rounded-b-lg font-montserrat text-xs uppercase"
+                  className="border-input-none w-full rounded-b-lg font-montserrat text-xs font-semibold"
                   variant="outline"
                   onClick={(e) => {
-                    // If no cart is selected, prevent dialog from opening and show create cart dialog
                     if (!currentCartId) {
                       e.preventDefault();
-                      setCreateDialogOpen(true);
+                      toast.error('No list selected');
                       return;
                     }
                   }}
@@ -160,9 +142,14 @@ const BuyListCatalogItem = memo(function ResultCard({
                 <h3 className="text-[0.9rem] font-semibold capitalize">
                   {cardData.name}
                 </h3>
-                <p className="text-sm font-semibold capitalize text-muted-foreground">
-                  {cardData.rarity} - {cardData.foil}
-                </p>
+                <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem] capitalize">
+                    <p> {cardData.rarity}</p>
+                  </span>
+                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem]">
+                    <p> {cardData.foil}</p>
+                  </span>
+                </div>
 
                 {conditions.map((conditionName) => {
                   const isAvailable = Object.keys(cardData.conditions).includes(
@@ -224,9 +211,7 @@ const BuyListCatalogItem = memo(function ResultCard({
             </DialogContent>
           </Dialog>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </>
   );
-});
-
-export default BuyListCatalogItem;
+};

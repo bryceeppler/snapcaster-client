@@ -459,16 +459,7 @@ const BuylistsNavSearchBar = ({
   deviceType,
   toggleMobileSearch
 }: NavSearchBarProps) => {
-  const {
-    searchTerm,
-    tcg,
-    isLoading,
-    // fetchCards,
-    setSearchTerm,
-    setTcg
-    // clearFilters,
-    // setIsLoading
-  } = useBuyListStore();
+  const { searchTerm, tcg, setSearchTerm, setTcg } = useBuyListStore();
   return (
     <>
       <BuylistNavSearchBar
@@ -476,12 +467,8 @@ const BuylistsNavSearchBar = ({
         toggleMobileSearch={toggleMobileSearch}
         searchTerm={searchTerm}
         tcg={tcg}
-        // clearFilters={clearFilters}
         setSearchTerm={setSearchTerm}
         setTcg={setTcg}
-        // fetchQuery={fetchCards}
-        // isLoading={isLoading}
-        // setIsLoading={setIsLoading}
       />
     </>
   );

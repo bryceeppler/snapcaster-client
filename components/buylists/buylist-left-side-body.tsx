@@ -72,31 +72,32 @@ import {
 } from '../ui/dialog';
 import { Label } from '../ui/label';
 import useGlobalStore from '@/stores/globalStore';
+import { useTheme } from 'next-themes';
 
-// Define a props interface
-interface BuylistLeftSideBodyProps {
-  leftUIState: LeftUIState;
-}
+// // Define a props interface
+// interface BuylistLeftSideBodyProps {
+//   leftUIState: LeftUIState;
+// }
 
-// Update the component to use props
-const BuylistLeftSideBodyFactory = ({
-  leftUIState
-}: BuylistLeftSideBodyProps) => {
-  switch (leftUIState) {
-    case 'leftCartListSelection':
-      return <LeftCartListSelection />;
-    case 'leftCartEditWithViewOffers':
-      return <LeftCartEditWithViewOffers />;
-    case 'leftCartEdit':
-      return <LeftCartEditWithViewOffers />;
-    case 'leftSubmitOffer':
-      return <LeftSubmitOffer />;
-    default:
-      return null; // Add a default case
-  }
-};
+// // Update the component to use props
+// const BuylistLeftSideBodyFactory = ({
+//   leftUIState
+// }: BuylistLeftSideBodyProps) => {
+//   switch (leftUIState) {
+//     case 'leftCartListSelection':
+//       return <LeftCartListSelection />;
+//     case 'leftCartEditWithViewOffers':
+//       return <LeftCartEditWithViewOffers />;
+//     case 'leftCartEdit':
+//       return <LeftCartEditWithViewOffers />;
+//     case 'leftSubmitOffer':
+//       return <LeftSubmitOffer />;
+//     default:
+//       return null; // Add a default case
+//   }
+// };
 
-const LeftCartListSelection = () => {
+export const LeftCartListSelection = () => {
   const { setLeftUIState, currentCartId, setCurrentCartId } = useBuyListStore();
 
   ///////////////////////////////////////////////////////////////////////////////////
@@ -214,7 +215,7 @@ const LeftCartListSelection = () => {
   );
 };
 
-const LeftCartEditWithViewOffers = () => {
+export const LeftCartEditWithViewOffers = () => {
   const { setLeftUIState, leftUIState, setCurrentCartId } = useBuyListStore();
   const { currentCartId } = useBuyListStore();
   const { carts } = useUserCarts();
@@ -293,25 +294,57 @@ const LeftCartEditWithViewOffers = () => {
   );
 };
 
-const LeftSubmitOffer = () => {
+export const LeftSubmitOffer = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const { reviewData, selectedStoreForReview } = useBuyListStore();
-  const breakdownData = reviewData || [];
+  const { reviewData, selectedStoreForReview, submitBuylist, setLeftUIState } =
+    useBuyListStore();
   const submitData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
+  const { getWebsiteName, websites } = useGlobalStore();
+  const { theme } = useTheme();
+  const [submissionResult, setSubmissionResult] = useState<{
+    success: boolean;
+    message: string;
+  }>({
+    success: false,
+    message: ''
+  });
+  const handleSubmit = async (paymentType: 'Cash' | 'Store Credit') => {
+    const result = await submitBuylist(paymentType);
+
+    if (result.success) {
+      setSubmissionResult({
+        success: true,
+        message: result.message
+      });
+      setLeftUIState('leftCartListSelection');
+    }
+  };
+
   console.log('submitData', submitData);
-  const { getWebsiteName } = useGlobalStore();
+
   return (
     <div className="col-span-1 flex h-[75vh] w-80 flex-col justify-between space-y-1 rounded-lg border bg-card px-1 py-1">
       <div className="col-span-1 space-y-2  ">
         <div className="flex items-end gap-1">
           <div>
-            <img
-              src="https://cdn.snapcaster.ca/icons/exorgames-icon.png"
-              alt="Website"
-              className="size-8"
-            />
+            {(() => {
+              const matchingWebsite = websites.find(
+                (website) => submitData.storeName === website.slug
+              );
+              return matchingWebsite?.meta?.branding?.icons ? (
+                <img
+                  src={
+                    theme === 'dark'
+                      ? matchingWebsite.meta.branding.icons.dark
+                      : matchingWebsite.meta.branding.icons.light
+                  }
+                  alt="Website"
+                  className="size-8"
+                />
+              ) : null;
+            })()}
           </div>
           <div className="leading-none">
             <p>{getWebsiteName(submitData?.storeName)}</p>
@@ -382,10 +415,18 @@ const LeftSubmitOffer = () => {
         </div>
 
         <div className="flex justify-between space-x-2 ">
-          <Button className="h-9 w-full" disabled={!termsAccepted}>
+          <Button
+            className="h-9 w-full"
+            disabled={!termsAccepted}
+            onClick={() => handleSubmit('Cash')}
+          >
             Request Cash
           </Button>
-          <Button className="h-9 w-full" disabled={!termsAccepted}>
+          <Button
+            className="h-9 w-full"
+            disabled={!termsAccepted}
+            onClick={() => handleSubmit('Store Credit')}
+          >
             Request Credit
           </Button>
         </div>
@@ -394,7 +435,7 @@ const LeftSubmitOffer = () => {
   );
 };
 
-export default BuylistLeftSideBodyFactory;
+// export default BuylistLeftSideBodyFactory;
 
 const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   const { setLeftUIState, leftUIState, currentCartId, setCurrentCartId } =
@@ -584,7 +625,7 @@ const CartItem = ({ item }: { item: IBuylistCartItem }) => {
   const { setAllCartsData } = useBuyListStore();
   const { updateCartItem } = useCartItems(currentCartId || undefined);
   return (
-    <div className="flex items-center rounded-lg border px-1 py-1 ">
+    <div className="flex items-center rounded-lg border bg-accent px-1 py-1 ">
       <div>
         <img
           className="w-20 object-contain"
@@ -593,11 +634,11 @@ const CartItem = ({ item }: { item: IBuylistCartItem }) => {
         />
       </div>
       <div className="flex w-full flex-col gap-0.5  space-y-1 px-0.5">
-        <p className="text-[0.6rem] text-xs font-semibold uppercase   leading-none text-muted-foreground">
+        <p className="text-[0.6rem] text-xs font-semibold    leading-none text-muted-foreground">
           {item.set_name}
         </p>
 
-        <p className="text-[0.70rem] text-xs font-semibold leading-none">
+        <p className="text-[0.7rem] text-xs font-semibold leading-none">
           {item.card_name}
         </p>
 
