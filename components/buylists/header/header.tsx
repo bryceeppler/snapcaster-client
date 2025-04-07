@@ -116,8 +116,12 @@ export const BuylistHeader = () => {
         </div>
       </div>
       <div className="flex w-24 items-center justify-end gap-1">
-        <p className="text-sm">FAQ</p>
-        <QuestionMarkCircledIcon className="h-5 w-5" />
+        <a href="/faq#buylists" target="_blank">
+          <span className="flex cursor-pointer items-center gap-1">
+            <p className="text-sm">FAQ</p>
+            <QuestionMarkCircledIcon className="h-5 w-5" />
+          </span>
+        </a>
       </div>
     </div>
   );

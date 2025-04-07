@@ -109,7 +109,11 @@ export const LeftSubmitOffer = () => {
               className="text-sm font-medium  peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I have read and understood{' '}
-              <a href="#" className="text-primary ">
+              <a
+                href="/faq#right-of-cancellation"
+                target="_blank"
+                className="text-primary "
+              >
                 right of cancellation
               </a>
               .
