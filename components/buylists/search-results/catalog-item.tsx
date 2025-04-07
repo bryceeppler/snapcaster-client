@@ -1,3 +1,8 @@
+//hooks and store states
+import useBuyListStore from '@/stores/useBuylistStore';
+import { useCartItems } from '@/hooks/useCartItems';
+//components
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import CardImage from '@/components/ui/card-image';
@@ -14,31 +19,29 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { useCartItems } from '@/hooks/useCartItems';
-import useBuyListStore from '@/stores/useBuylistStore';
+//icons
 import {
   ExclamationTriangleIcon,
   MinusIcon,
   PlusIcon
 } from '@radix-ui/react-icons';
-import { toast } from 'sonner';
-
+//other
 type BuylistCatalogItemProps = {
   cardData: any;
 };
-
+const conditions = [
+  'Near Mint',
+  'Lightly Played',
+  'Moderately Played',
+  'Heavily Played',
+  'Damaged'
+];
 export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
   const { currentCartId } = useBuyListStore();
   const { cartItems, updateCartItem } = useCartItems(
     currentCartId || undefined
   );
-  const conditions = [
-    'Near Mint',
-    'Lightly Played',
-    'Moderately Played',
-    'Heavily Played',
-    'Damaged'
-  ];
+
   const getQuantityForCondition = (conditionName: string) => {
     if (!cartItems) return 0;
     return (
@@ -55,7 +58,6 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
 
   const handleUpdateQuantity = (conditionName: string, delta: number) => {
     if (!currentCartId) return;
-
     const currentQuantity = getQuantityForCondition(conditionName);
     const newQuantity = currentQuantity + delta;
     if (newQuantity > 99) {
@@ -72,7 +74,6 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
       foil: cardData.foil,
       image: cardData.image
     };
-
     updateCartItem({
       cartId: currentCartId,
       item: cartItem,

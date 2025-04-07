@@ -1,11 +1,13 @@
+//hooks and store states
+import { useEffect, useRef, useState } from 'react';
+import useBuyListStore from '@/stores/useBuylistStore';
 import {
   TransformedSearchResponse,
   useBuylistSearch
 } from '@/hooks/queries/useBuylistSearch';
+//components
 import { BuylistCatalogItem } from './catalog-item';
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useEffect, useRef, useState } from 'react';
-
+//other
 interface BuylistSearchResultsProps {
   data: TransformedSearchResponse | undefined;
   isFetchingNextPage: boolean;
@@ -18,15 +20,8 @@ export const BuylistSearchResults = () => {
   const {
     searchTerm,
     tcg,
-    filterOptions,
     filters,
-    setFilter,
-    reviewData,
     sortBy,
-    setSortBy,
-    sortByOptions,
-    clearFilters,
-    setLeftUIState,
     leftUIState,
     setSearchResultCount,
     setDefaultSortBy,
@@ -50,17 +45,9 @@ export const BuylistSearchResults = () => {
   );
 
   // Refetch Search Results: When the sortBy or selected filters change, refetch the search results
-  //   useEffect(() => {
-  //     refetch();
-  //   }, [sortBy, filters]);
-
   useEffect(() => {
     refetch();
-  }, [filters]);
-
-  useEffect(() => {
-    refetch();
-  }, [sortBy]);
+  }, [filters, sortBy]);
 
   useEffect(() => {
     console.log(data?.numResults);
@@ -74,8 +61,6 @@ export const BuylistSearchResults = () => {
     }
   }, [data?.defaultSortBy]);
 
-  // sortBy={sortBy ? sortBy : data?.defaultSortBy}
-
   // Infinite Scroll Obsesrver: This useState is needed to reinitialize the observer when the UI state changes off the search results state
   const [shouldReinitObserver, setShouldReinitObserver] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -87,7 +72,6 @@ export const BuylistSearchResults = () => {
       setShouldReinitObserver(true);
     }
   }, [leftUIState]);
-
   // Infinite Scroll Observer: Fetch more results when the user scrolls to the bottom of the page
   useEffect(() => {
     if (

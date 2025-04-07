@@ -1,14 +1,12 @@
-import useBuyListStore, { LeftUIState } from '@/stores/useBuylistStore';
-
+//hooks and store states
+import { LeftUIState } from '@/stores/useBuylistStore';
+//components
 import { BuylistSearchResults } from '../search-results/search-results';
 import { BuylistStoreOffers } from '../store-offers/store-offers';
 import { BuylistStoreOfferBreakdown } from '../store-offers/store-offers-submission-details';
-// // Define a props interface
+//other
 interface BuylistRightSideBodyProps {
   leftUIState: LeftUIState;
-}
-
-{
 }
 
 const BuylistRightSideBodyFactory = ({

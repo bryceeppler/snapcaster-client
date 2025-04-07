@@ -1,16 +1,14 @@
-import useBuyListStore, { LeftUIState } from '@/stores/useBuylistStore';
-import {
-  LeftCartEditWithViewOffers,
-  LeftCartListSelection,
-  LeftSubmitOffer
-} from '../buylist-left-side-body';
-
-// Define a props interface
+//hooks and store states
+import { LeftUIState } from '@/stores/useBuylistStore';
+//components
+import { LeftCartListSelection } from '../saved-lists/saved-lists';
+import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
+import { LeftSubmitOffer } from '../store-offers/submit-offer-container';
+//other
 interface BuylistLeftSideBodyProps {
   leftUIState: LeftUIState;
 }
 
-// Update the component to use props
 const BuylistLeftSideBodyFactory = ({
   leftUIState
 }: BuylistLeftSideBodyProps) => {
@@ -23,8 +21,7 @@ const BuylistLeftSideBodyFactory = ({
       return <LeftCartEditWithViewOffers />;
     case 'leftSubmitOffer':
       return <LeftSubmitOffer />;
-    default:
-      return null; // Add a default case
   }
 };
+
 export default BuylistLeftSideBodyFactory;

@@ -1,9 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
-import { IBuylistCart } from '@/stores/useBuylistStore';
-import { toast } from 'sonner';
-import { useAuth } from '@/hooks/useAuth';
+//hooks and store states
 import useBuyListStore from '@/stores/useBuylistStore';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { IBuylistCart } from '@/stores/useBuylistStore';
+import { useAuth } from '@/hooks/useAuth';
+//other
+import axiosInstance from '@/utils/axiosWrapper';
+import { toast } from 'sonner';
 
 const CARTS_QUERY_KEY = ['userCarts'] as const;
 
@@ -93,15 +95,19 @@ export function useUserCarts() {
         `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${id}`,
         { cartName: name.trim() }
       );
-      return { message: response.data.message, id };
+      return { success: true, message: response.data.message, id };
     },
     onSuccess: (data) => {
       toast.success('Cart renamed successfully');
       queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: ['cart', data.id] });
+      return true;
     },
     onError: (error: any) => {
-      toast.error('Error renaming cart: ' + error.response.data.message);
+      toast.error(
+        'Error renaming cart: ' + error.response?.data?.message || error.message
+      );
+      return false;
     }
   });
 
@@ -111,7 +117,7 @@ export function useUserCarts() {
     error,
     createCart: createCartMutation.mutate,
     deleteCart: deleteCartMutation.mutate,
-    renameCart: renameCartMutation.mutate,
+    renameCartMutation,
     isCreating: createCartMutation.isPending,
     isDeleting: deleteCartMutation.isPending,
     isRenaming: renameCartMutation.isPending

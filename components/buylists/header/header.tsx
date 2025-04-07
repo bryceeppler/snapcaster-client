@@ -1,3 +1,7 @@
+//hooks and store states
+import useBuyListStore from '@/stores/useBuylistStore';
+//components
+import FilterSection from '@/components/search-ui/search-filter-container';
 import {
   Sheet,
   SheetContent,
@@ -5,21 +9,16 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
+//icons
 import {
   ArrowLeftIcon,
   MixerHorizontalIcon,
   QuestionMarkCircledIcon
 } from '@radix-ui/react-icons';
-import FilterSection from '@/components/search-ui/search-filter-container';
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
 
 export const BuylistHeader = () => {
   const {
-    searchTerm,
-    tcg,
     filterOptions,
-    filters,
     setFilter,
     reviewData,
     defaultSortBy,
@@ -49,9 +48,7 @@ export const BuylistHeader = () => {
               <FilterSection
                 filterOptions={filterOptions}
                 sortBy={sortBy ? sortBy : defaultSortBy}
-                fetchCards={async () => {
-                  //   refetch();
-                }}
+                fetchCards={async () => {}}
                 clearFilters={clearFilters}
                 setFilter={setFilter}
                 setCurrentPage={() => {}}

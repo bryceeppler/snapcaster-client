@@ -1,11 +1,15 @@
-import { Button } from '@/components/ui/button';
-import { useCartItems } from '@/hooks/useCartItems';
-import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+//hooks and store states
+import { useEffect, useRef } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/useBuylistStore';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import { useCartItems } from '@/hooks/useCartItems';
+//components
+import { Button } from '@/components/ui/button';
+//icons
 import { ExternalLink } from 'lucide-react';
+//other
 import { useTheme } from 'next-themes';
-import { useEffect, useRef } from 'react';
 
 export const BuylistStoreOffers = () => {
   const {

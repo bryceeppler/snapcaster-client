@@ -1,3 +1,7 @@
+//hooks and store states
+import { useEffect } from 'react';
+import useBuyListStore from '@/stores/useBuylistStore';
+//components
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -6,9 +10,8 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import useBuyListStore from '@/stores/useBuylistStore';
+//icons
 import { BadgeDollarSign } from 'lucide-react';
-import { useEffect } from 'react';
 
 export const BuylistStoreOfferBreakdown = () => {
   const { reviewData, selectedStoreForReview } = useBuyListStore();
@@ -236,7 +239,7 @@ const NotPurchasingCardSubmitDetails = ({
               </p>
             </div>
             <div className="flex space-x-1">
-              <p className="text-xs font-semibold leading-none">N/A</p>
+              <p className="text-xs font-semibold leading-none">-</p>
             </div>
           </div>
           <div className="flex justify-between">
@@ -246,7 +249,7 @@ const NotPurchasingCardSubmitDetails = ({
               </p>
             </div>
             <div className="flex space-x-1">
-              <p className="text-xs font-semibold leading-none">N/A</p>
+              <p className="text-xs font-semibold leading-none">-</p>
             </div>
           </div>
           {/* <div className="flex justify-between">

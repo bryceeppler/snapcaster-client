@@ -1,3 +1,4 @@
+//hooks and store states
 import {
   useState,
   useEffect,
@@ -6,6 +7,9 @@ import {
   useCallback,
   useMemo
 } from 'react';
+import useBuylistStore from '@/stores/useBuylistStore';
+import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
+//components
 import {
   Select,
   SelectContent,
@@ -20,12 +24,12 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
+//icons
 import { ChevronDown, HelpCircle, X, Loader2 } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+//other
 import { useDebounceCallback } from 'usehooks-ts';
 import { Tcg } from '@/types';
-import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
-import useBuylistStore from '@/stores/useBuylistStore';
 
 interface AutocompleteResult {
   name: string;
@@ -48,6 +52,10 @@ export default function BuylistNavSearchBar({
   setTcg,
   tcg
 }: Props) {
+  // Store
+  const { filters, sortBy, clearFilters, leftUIState, setLeftUIState } =
+    useBuylistStore();
+
   // State
   const [inputValue, setInputValue] = useState(searchTerm);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
@@ -63,11 +71,7 @@ export default function BuylistNavSearchBar({
   // Constants
   const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
   const MIN_SEARCH_LENGTH = 3;
-  const DEBOUNCE_MS = 300; // Increased from 100ms to 300ms
-
-  // Store
-  const { filters, sortBy, clearFilters, leftUIState, setLeftUIState } =
-    useBuylistStore();
+  const DEBOUNCE_MS = 300;
 
   // Queries
   const { isLoading, refetch } = useBuylistSearch(
@@ -149,7 +153,6 @@ export default function BuylistNavSearchBar({
     [setSearchTerm]
   );
 
-  // Optimize keyboard navigation
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       // Skip navigation if no suggestions or typing
@@ -172,6 +175,17 @@ export default function BuylistNavSearchBar({
           break;
 
         case 'Enter':
+          clearFilters();
+          refetch();
+          if (
+            leftUIState === 'leftCartEdit' ||
+            leftUIState === 'leftSubmitOffer'
+          ) {
+            setLeftUIState('leftCartEditWithViewOffers');
+          }
+          setIsAutoCompleteVisible(false);
+          break;
+
         case 'ArrowRight':
           if (selectedIndex >= 0 && selectedIndex < totalResults) {
             event.preventDefault();
@@ -219,7 +233,6 @@ export default function BuylistNavSearchBar({
     setInputValue(searchTerm);
   }, [searchTerm]);
 
-  // Memoize the search help content
   const searchHelpContent = useMemo(
     () => (
       <div className="rounded-md">
