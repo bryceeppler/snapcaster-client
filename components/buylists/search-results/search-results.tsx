@@ -50,12 +50,10 @@ export const BuylistSearchResults = () => {
   }, [filters, sortBy]);
 
   useEffect(() => {
-    console.log(data?.numResults);
     setSearchResultCount(data?.numResults || 0);
   }, [data?.numResults]);
 
   useEffect(() => {
-    console.log(data?.defaultSortBy);
     if (defaultSortBy === null && data?.defaultSortBy) {
       setDefaultSortBy(data?.defaultSortBy);
     }

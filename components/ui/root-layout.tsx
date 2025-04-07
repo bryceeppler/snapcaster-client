@@ -5,7 +5,6 @@ import Footer from '@/components/ui/footer';
 type Props = {};
 
 export default function Layout({ children }: React.PropsWithChildren<Props>) {
-  // console.log('root layout rendered');
   return (
     <div className="flex flex-col bg-background">
       <div className="min-h-screen">

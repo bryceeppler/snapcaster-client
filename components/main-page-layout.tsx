@@ -279,8 +279,6 @@ export default function MainLayout({
     );
   }, [ads.position]);
 
-  // console.log('main layout rendered');
-
   if (!ads.position || Object.keys(ads.position).length === 0 || !hydrated) {
     return <div className={`mt-4`}>{children}</div>;
   }

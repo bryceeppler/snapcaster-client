@@ -63,7 +63,6 @@ export default function SearchSortBy({
           <DropdownMenuRadioGroup
             value={sortBy}
             onValueChange={(value) => {
-              console.log('value changed in sort component', value);
               handleSortByChange(value as any);
             }}
           >

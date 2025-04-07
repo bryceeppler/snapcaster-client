@@ -1,5 +1,5 @@
 //hooks and store states
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/useBuylistStore';
 //components
@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 //other
 import { useTheme } from 'next-themes';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import { ExternalLink } from 'lucide-react';
 
 export const LeftSubmitOffer = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -35,6 +37,19 @@ export const LeftSubmitOffer = () => {
       setLeftUIState('leftCartListSelection');
     }
   };
+  const { data: connectedVendors, isLoading: isLoadingConnections } =
+    useConnectedVendors();
+  const [isVendorConnected, setIsVendorConnected] = useState(false);
+
+  useEffect(() => {
+    if (isLoadingConnections || !connectedVendors) return;
+    const matchingWebsite = websites.find(
+      (website) => website.slug === submitData?.storeName
+    );
+    if (matchingWebsite) {
+      setIsVendorConnected(connectedVendors.includes(matchingWebsite.id));
+    }
+  }, [connectedVendors, isLoadingConnections, submitData?.storeName]);
 
   return (
     <div className="col-span-1 flex h-[75vh] w-80 flex-col justify-between space-y-1 rounded-lg border bg-card px-1 py-1">
@@ -62,12 +77,38 @@ export const LeftSubmitOffer = () => {
             <p>{getWebsiteName(submitData?.storeName)}</p>
 
             <div className="flex items-center gap-1">
-              <div
+              {/* <div
                 className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
               ></div>
               <p className="text-sm leading-none text-muted-foreground">
                 Connected
-              </p>
+              </p> */}
+              {isVendorConnected ? (
+                <div className="flex items-center gap-1">
+                  <div
+                    className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
+                  ></div>
+                  <p className="text-sm leading-none text-muted-foreground">
+                    Connected
+                  </p>
+                </div>
+              ) : (
+                <div className=" flex items-center gap-1 text-muted-foreground hover:cursor-pointer hover:text-primary">
+                  <div
+                    className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
+                  ></div>
+                  <a
+                    href={
+                      'https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en'
+                    }
+                    target="_blank"
+                    className="text-sm leading-none"
+                  >
+                    Extension Required
+                  </a>
+                  <ExternalLink className="size-4  " />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -133,14 +174,14 @@ export const LeftSubmitOffer = () => {
         <div className="flex justify-between space-x-2 ">
           <Button
             className="h-9 w-full"
-            disabled={!termsAccepted}
+            disabled={!termsAccepted || !isVendorConnected}
             onClick={() => handleSubmit('Cash')}
           >
             Request Cash
           </Button>
           <Button
             className="h-9 w-full"
-            disabled={!termsAccepted}
+            disabled={!termsAccepted || !isVendorConnected}
             onClick={() => handleSubmit('Store Credit')}
           >
             Request Credit

@@ -131,7 +131,7 @@ export const BuylistStoreOffers = () => {
             <div>
               <Button
                 className="h-9 w-full"
-                disabled={!isConnected}
+                // disabled={!isConnected}
                 onClick={() => {
                   setLeftUIState('leftSubmitOffer');
                   setSelectedStoreForReview(storeOfferData.storeName);

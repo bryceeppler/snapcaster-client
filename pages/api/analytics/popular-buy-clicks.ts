@@ -14,15 +14,13 @@ export default async function handler(
     const limit = parseInt(req.query.limit as string) || 10;
     const client = new GA4Client();
     const response = await client.getPopularBuyClicks(days);
-    console.log(response);
     // Process the raw GA4 data
-    const buyClickData = response.rows?.map((row) => ({
-      cardName: row.dimensionValues?.[1].value || '',
-      tcg: row.dimensionValues?.[2].value || '',
-      count: parseInt(row.metricValues?.[0].value || '0', 10),
-    })) || [];
-
-
+    const buyClickData =
+      response.rows?.map((row) => ({
+        cardName: row.dimensionValues?.[1].value || '',
+        tcg: row.dimensionValues?.[2].value || '',
+        count: parseInt(row.metricValues?.[0].value || '0', 10)
+      })) || [];
 
     // Group by TCG and limit to top 100 per TCG
     const tcgData: PopularBuyClicksByTCG = {};
@@ -41,4 +39,4 @@ export default async function handler(
     console.error('Error in popular-searches API:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-} 
+}

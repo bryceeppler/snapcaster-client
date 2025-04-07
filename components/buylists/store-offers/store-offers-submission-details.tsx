@@ -18,10 +18,7 @@ export const BuylistStoreOfferBreakdown = () => {
   const breakdownData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
-  useEffect(() => {
-    console.log('breakdown data', breakdownData);
-    // console.log('selected store for review', selectedStoreForReview);
-  }, [breakdownData, selectedStoreForReview]);
+
   return (
     <div className="col-span-1 flex h-[75vh] flex-col rounded-lg   ">
       <ScrollArea className="h-full" type="always">

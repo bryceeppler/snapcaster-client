@@ -113,7 +113,6 @@ export const useBuylistSearch = (
         }),
         {} as Record<string, string>
       );
-      // console.log(lastPage.pagination.numResults);
       return {
         searchResults: allResults.map((item) => ({ ...item, promoted: false })),
         defaultSortBy: defaultSortBy,

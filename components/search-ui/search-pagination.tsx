@@ -32,12 +32,6 @@ const SearchPagination = ({
     setIsLoading(false);
   };
 
-  // useEffect(() => {
-  //   console.log('Props inside search pagination useEffect:', {
-  //     setCurrentPage
-  //   });
-  // }, [setCurrentPage]);
-
   return (
     <Pagination className="w-min">
       <PaginationContent>
