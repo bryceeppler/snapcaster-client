@@ -28,7 +28,7 @@ export default function Component() {
               <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
                 Snapcaster is Canada's premier search engine for collectible TCG
                 cards, including Pokémon, Magic: The Gathering, Yu-Gi-Oh and
-                more. Our platform allows you to search across more than 80
+                more. Our platform allows you to search across more than 90
                 Canadian online retailers to find the best deals and build the
                 decks of your dreams.
               </AccordionContent>
@@ -40,9 +40,8 @@ export default function Component() {
               <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
                 Snapcaster works by aggregating listings from various Canadian
                 online retailers into one easy-to-use platform. When you search
-                for a card, Snapcaster scans its extensive database and displays
-                the available options, helping you find the best prices and
-                deals.
+                for a card, Snapcaster quickly scans its vast database to show
+                you the best prices and deals available.
               </AccordionContent>
             </AccordionItem>
 
@@ -83,8 +82,7 @@ export default function Component() {
               <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
                 <div>
                   <p>
-                    Absolutely! If you have an LGS that you would like to see on
-                    Snapcaster, please have the LGS owners fill our{' '}
+                    Absolutely! please have your LGS owners fill our{' '}
                     <a
                       href="https://docs.google.com/forms/d/161NAY_EZrQ64CKiMmU4LnxTrj37mfiA8hoDkB_pZdok/edit"
                       target="_none"
@@ -99,10 +97,11 @@ export default function Component() {
             </AccordionItem>
             <AccordionItem value="advertising">
               <AccordionTrigger className="flex items-center justify-between  rounded-lg border border-border bg-background px-4 py-3 text-center text-sm font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover md:text-base">
-                How do I advertise on Snapcaster?
+                What advertising, analytics, and exclusive features are
+                available?
               </AccordionTrigger>
               <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
-                You can learn more about our tier 3 advertising program{' '}
+                You can learn more about our tier 3 packages{' '}
                 <a
                   href="/vendors/tier3"
                   className="text-blue-500"
@@ -129,15 +128,15 @@ export default function Component() {
               <Accordion type="single" collapsible className="grid gap-4">
                 <AccordionItem value="how-buylists-work">
                   <AccordionTrigger className="flex items-center justify-between rounded-lg border border-border bg-background  px-4 py-3 text-sm font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover md:text-base">
-                    How does Snapcaster Buylists Work?
+                    How does Snapcaster buylists work?
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
                     <div>
                       <p>
-                        Create a list of cards you wish to sell for cash or
-                        credit and submit your offer to one of our partnered
-                        game stores directly from Snapcaster. A Snapcaster
-                        account is required.
+                        Login into your account and create a list of cards you
+                        wish to sell for cash or credit and submit your offer to
+                        one of our partnered game stores directly from
+                        Snapcaster.
                       </p>
                     </div>
                   </AccordionContent>
@@ -147,10 +146,13 @@ export default function Component() {
                     How many stores are supported?
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
-                    We currently support 7 stores in our Snapcaster Buylists
-                    program including: Exor Games, Obsidian Games, Chimera
-                    Gaming, House of Cards, The Mythic Store, Level Up Games,
-                    and Vortex Games.
+                    Snapcaster's aggregated buylist program currently supports
+                    vendors that are tier 3 sponsors and above. You can view the
+                    full list{' '}
+                    <a href="/about" target="_none" className="text-blue-500">
+                      here
+                    </a>{' '}
+                    .
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="what-games-are-supported">
@@ -169,9 +171,9 @@ export default function Component() {
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
                     We update LGS cash/credit and purchase limits daily. Store
-                    buylist prices are auto-adjusted based on TCG Player
-                    pricing, which may cause a minor discrepancy in your final
-                    offer, received within a few business days.
+                    buylist prices are auto-adjusted based on TCG Player pricing
+                    which may cause a minor discrepancy in your final offer,
+                    received within a few business days.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem
@@ -180,7 +182,7 @@ export default function Component() {
                   className="scroll-mt-16 md:scroll-mt-32"
                 >
                   <AccordionTrigger className="flex items-center justify-between  rounded-lg border border-border bg-background px-4 py-3 text-center text-sm font-medium transition-colors hover:bg-popover data-[state=open]:bg-popover md:text-base">
-                    Your Right of Cancellation
+                    Your right of cancellation
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
                     Submissions are simply offer requests. You are not obligated

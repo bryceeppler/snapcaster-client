@@ -29,6 +29,12 @@ import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/useBuylistStore';
+import {
+  BuylistHeader,
+  CartHeader,
+  SearchResultsHeader
+} from '../buylists/header/header';
+import { ListSelectionHeader } from '../buylists/saved-lists/saved-lists';
 
 const Navbar: React.FC = () => {
   const router = useRouter();
@@ -52,7 +58,7 @@ const Navbar: React.FC = () => {
     <>
       {/* MOBILE NAV */}
       <div className="sticky top-0 z-50 md:hidden">
-        <div className=" flex h-[60px]  justify-between bg-card px-1 shadow-xl">
+        <div className=" flex   justify-between bg-card px-1 shadow-xl">
           <div className=" inset-y-0 left-0 flex items-center">
             <Sheet
               open={mobileNavSheetOpen}
@@ -199,7 +205,7 @@ const Navbar: React.FC = () => {
           {/* Nav Search Bars (Sealed, Singles, Buylists)*/}
           {currentPath === '/sealed' && (
             <div className="w-full  bg-card ">
-              <div className="border-t px-2 py-2">
+              <div className=" px-2 py-2">
                 {NavSearchBarFactory('sealed', {
                   deviceType: 'mobile'
                 })}
@@ -523,12 +529,33 @@ const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
 ///////////////////////////////////
 /* The bar bewlow the nav for mobile single/buylist search which contains the reuslts, pagination, and filters on a query */
 const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
+  const { leftUIState } = useBuyListStore();
   switch (searchMode) {
     case 'singles':
       return <SingleResultsToolbar />;
     case 'buylists':
-      // return <BuylistsResultsToolbar />;
-      return <div>BuylistsResultsToolbar</div>;
+      return (
+        <>
+          {/* {leftUIState === 'leftCartListSelection' && (
+            <span className="block md:hidden">
+              <ListSelectionHeader />
+            </span>
+          )}
+          {leftUIState === 'leftCartEditWithViewOffers' && (
+            <span className="block md:hidden">
+              <SearchResultsHeader />
+            </span>
+          )}
+          {leftUIState === 'cart' && (
+            <span className="block md:hidden">
+              <CartHeader />
+            </span>
+          )} */}
+          <BuylistHeader />
+        </>
+      );
+    // return <BuylistsResultsToolbar />;
+    // return <div>BuylistsResultsToolbar</div>;
   }
 };
 

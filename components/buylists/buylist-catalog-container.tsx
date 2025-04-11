@@ -13,19 +13,28 @@ export default function BuylistCatalog() {
   return (
     <div className="flex flex-col gap-1">
       {/* Header */}
-      <BuylistHeader />
+      <span className="hidden md:block">
+        <BuylistHeader />
+      </span>
+
       {/* Body */}
-      <div className="flex gap-1">
+      <div className="flex md:gap-1">
+        {/* <div className="flex"> */}
         {/* Body - Left Sidebar */}
-        <div>
+        {/* <div>
           <BuylistLeftSideBodyFactory leftUIState={leftUIState} />
-        </div>
+        </div> */}
         {/* Body - Content */}
-        <div className="h-[75vh] w-full overflow-hidden rounded-lg border bg-card p-0.5">
+        {/* <div className="h-[75vh] w-full overflow-hidden rounded-lg border bg-card p-0.5">
           <ScrollArea className="h-full" type="scroll">
             <BuylistRightSideBodyFactory leftUIState={leftUIState} />
           </ScrollArea>
-        </div>
+        </div> */}
+        {/* <div className="h-[75vh] w-full overflow-hidden rounded-lg border bg-card p-0.5"> */}
+        {/* <ScrollArea className="h-full" type="scroll"> */}
+        <BuylistRightSideBodyFactory leftUIState={leftUIState} />
+        {/* </ScrollArea> */}
+        {/* </div> */}
       </div>
     </div>
   );

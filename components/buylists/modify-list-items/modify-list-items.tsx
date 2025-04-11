@@ -10,11 +10,22 @@ import { ArrowLeftIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 
-export const LeftCartEditWithViewOffers = () => {
+interface LeftCartEditWithViewOffersProps {
+  closeMobileCartDialog?: () => void;
+}
+
+export const LeftCartEditWithViewOffers = ({
+  closeMobileCartDialog
+}: LeftCartEditWithViewOffersProps) => {
   const CART_KEY = (cartId: number) => ['cart', cartId] as const;
 
-  const { leftUIState, setLeftUIState, currentCartId, setCurrentCartId } =
-    useBuyListStore();
+  const {
+    leftUIState,
+    setLeftUIState,
+    currentCartId,
+    setCurrentCartId,
+    setCurrentCart
+  } = useBuyListStore();
 
   const { data: currentCart } = useQuery<{
     success: boolean;
@@ -32,23 +43,23 @@ export const LeftCartEditWithViewOffers = () => {
   });
 
   return (
-    <div className="col-span-1 flex h-[75vh] w-80 flex-col space-y-1 rounded-lg border bg-card">
-      <div className="flex justify-between px-1">
+    <div className="col-span-1 flex h-[75vh] w-full flex-col space-y-1 rounded-lg border bg-card  md:w-80">
+      <div className="hidden justify-between  px-1 md:flex">
         <div className="flex h-10 w-16 items-center justify-start gap-1">
           <span
-            className="flex cursor-pointer gap-0.5 rounded-lg bg-background px-1 py-1 font-medium hover:bg-background/50"
+            className="flex cursor-pointer gap-0.5 rounded-lg  px-1 py-1 font-medium underline"
             onClick={() => {
               setLeftUIState('leftCartListSelection');
               setCurrentCartId(null);
+              setCurrentCart(null);
             }}
           >
-            <ArrowLeftIcon className="h-4 w-4" />
-            <p className="text-xs">Lists</p>
+            <p className="text-xs">My Lists</p>
           </span>
         </div>
         <div className="flex w-full flex-1 items-center gap-1 overflow-hidden text-center">
           <p className="w-full truncate text-sm font-semibold">
-            {currentCart?.cart?.name}
+            {currentCart?.cart?.name} ss
           </p>
         </div>
         <div className="flex w-16 items-center justify-end gap-1 "></div>
@@ -64,18 +75,18 @@ export const LeftCartEditWithViewOffers = () => {
           </div>
         </ScrollArea>
       </div>
-      {leftUIState === 'leftCartEditWithViewOffers' && (
-        <div className=" ">
-          <Button
-            className="w-full rounded-t-none"
-            onClick={() => {
-              setLeftUIState('leftCartEdit');
-            }}
-          >
-            View Offers
-          </Button>
-        </div>
-      )}
+
+      <div className=" ">
+        <Button
+          className="w-full rounded-t-none"
+          onClick={() => {
+            setLeftUIState('leftCartEdit');
+            closeMobileCartDialog?.();
+          }}
+        >
+          View Offers
+        </Button>
+      </div>
     </div>
   );
 };

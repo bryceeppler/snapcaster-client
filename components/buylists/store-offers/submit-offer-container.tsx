@@ -52,9 +52,9 @@ export const LeftSubmitOffer = () => {
   }, [connectedVendors, isLoadingConnections, submitData?.storeName]);
 
   return (
-    <div className="col-span-1 flex h-[75vh] w-80 flex-col justify-between space-y-1 rounded-lg border bg-card px-1 py-1">
+    <div className="col-span-1  flex flex-col  space-y-1 rounded-lg p-2  md:mr-0 md:border md:bg-accent">
       <div className="col-span-1 space-y-2  ">
-        <div className="flex items-end gap-1">
+        <div className="hidden items-end gap-1 md:flex ">
           <div>
             {(() => {
               const matchingWebsite = websites.find(
@@ -77,12 +77,6 @@ export const LeftSubmitOffer = () => {
             <p>{getWebsiteName(submitData?.storeName)}</p>
 
             <div className="flex items-center gap-1">
-              {/* <div
-                className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
-              ></div>
-              <p className="text-sm leading-none text-muted-foreground">
-                Connected
-              </p> */}
               {isVendorConnected ? (
                 <div className="flex items-center gap-1">
                   <div
@@ -112,81 +106,114 @@ export const LeftSubmitOffer = () => {
             </div>
           </div>
         </div>
-        <div className="font-semibold leading-none">
-          <p>Summary</p>
-        </div>
-        <div className="storeData.items.length space-y-1 text-sm font-normal leading-none">
-          <div className="flex justify-between">
-            <p>Cash</p>
-            <p>${submitData?.cashSubtotal}</p>
+
+        <div className="mt-2 space-y-2 ">
+          <div className="font-semibold leading-none">
+            <p>Offer Summary</p>
           </div>
-          <div className="flex justify-between">
-            <p>Credit</p>
-            <p>${submitData?.creditSubtotal}</p>
-          </div>{' '}
-          <div className="flex justify-between">
-            <p>Buying</p>
-            <p>
-              {submitData?.items.length}/
-              {submitData?.items.length +
-                submitData?.unableToPurchaseItems.length}
-            </p>
+          <div className="storeData.items.length space-y-1 text-sm font-normal leading-none">
+            <div className="flex justify-between">
+              <p>Cash</p>
+              <p>${submitData?.cashSubtotal}</p>
+            </div>
+            <div className="flex justify-between">
+              <p>Credit</p>
+              <p>${submitData?.creditSubtotal}</p>
+            </div>{' '}
+            <div className="flex justify-between">
+              <p>Purchasing</p>
+              <p>
+                {submitData?.items.length}/
+                {submitData?.items.length +
+                  submitData?.unableToPurchaseItems.length}
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="">
-        <div className="flex  space-x-2 ">
+          <p className=" text-xs text-muted-foreground">
+            Please wait for a final adjusted email offer from Obsidian Games. If
+            you are not dropping off your cards in person, we recommend
+            recommend purchasing shipping insurance.
+          </p>
           <div>
-            <Checkbox
-              id="terms"
-              checked={termsAccepted}
-              onCheckedChange={(checked) => setTermsAccepted(checked === true)}
-            />
-          </div>
+            <div className="flex  space-x-2 ">
+              <div>
+                <Checkbox
+                  id="terms"
+                  checked={termsAccepted}
+                  onCheckedChange={(checked) =>
+                    setTermsAccepted(checked === true)
+                  }
+                />
+              </div>
 
-          <div className="flex flex-col space-y-1">
-            <label
-              htmlFor="terms"
-              className="text-sm font-medium  peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              I have read and understood{' '}
-              <a
-                href="/faq#right-of-cancellation"
-                target="_blank"
-                className="text-primary "
+              <div className="flex flex-col ">
+                <label
+                  htmlFor="terms"
+                  className="text-sm   peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  I have read and understood my{' '}
+                  <a
+                    href="/faq#right-of-cancellation"
+                    target="_blank"
+                    className="text-primary hover:underline "
+                  >
+                    right of cancellation
+                  </a>
+                  .
+                </label>
+                {/* <p className=" text-xs text-muted-foreground">
+                  Please wait for a final adjusted email offer from Obsidian
+                  Games. If you are not dropping off your cards in person, we
+                  recommend recommend purchasing shipping insurance.
+                </p> */}
+              </div>
+            </div>
+
+            {/* <div className="flex justify-between space-x-2 ">
+              <Button
+                className="h-9 w-full"
+                disabled={!termsAccepted || !isVendorConnected}
+                onClick={() => handleSubmit('Cash')}
               >
-                right of cancellation
-              </a>
-              .
-            </label>
-            <p className=" text-xs text-muted-foreground">
-              Please wait for a final adjusted email offer from Obsidian Games.
-              If you are not dropping off your cards in person, we recommend
-              recommend purchasing shipping insurance.
-            </p>
-            <p className=" text-xs text-muted-foreground">
-              Your offer may be adjusted due to market fluctuations, misgraded
-              conditions, or other discrepancies.
-            </p>
+                Request Cash
+              </Button>
+              <Button
+                className="h-9 w-full"
+                disabled={!termsAccepted || !isVendorConnected}
+                onClick={() => handleSubmit('Store Credit')}
+              >
+                Request Credit
+              </Button>
+            </div> */}
+          </div>
+          <div className="flex justify-between space-x-2 ">
+            <Button
+              className="h-9 w-full"
+              disabled={!termsAccepted || !isVendorConnected}
+              onClick={() => handleSubmit('Cash')}
+            >
+              Request Cash
+            </Button>
+            <Button
+              className="h-9 w-full"
+              disabled={!termsAccepted || !isVendorConnected}
+              onClick={() => handleSubmit('Store Credit')}
+            >
+              Request Credit
+            </Button>
           </div>
         </div>
-
-        <div className="flex justify-between space-x-2 ">
-          <Button
-            className="h-9 w-full"
-            disabled={!termsAccepted || !isVendorConnected}
-            onClick={() => handleSubmit('Cash')}
-          >
-            Request Cash
-          </Button>
-          <Button
-            className="h-9 w-full"
-            disabled={!termsAccepted || !isVendorConnected}
-            onClick={() => handleSubmit('Store Credit')}
-          >
-            Request Credit
-          </Button>
-        </div>
+        <p className="text-xs text-muted-foreground">
+          By clicking "Request Cash/Credit", you agree to our{' '}
+          <a href="/terms" target="_none" className="text-primary">
+            Terms of Service
+          </a>{' '}
+          and that you have read our{' '}
+          <a href="/privacy" target="_none" className="text-primary">
+            Privacy Policy
+          </a>
+          .
+        </p>
       </div>
     </div>
   );

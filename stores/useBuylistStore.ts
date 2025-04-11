@@ -5,15 +5,19 @@ import { toast } from 'sonner';
 import { FilterOption } from '@/types/query';
 
 export type LeftUIState =
-  | 'leftCartListSelection'
-  | 'leftCartEditWithViewOffers'
-  | 'leftCartEdit'
-  | 'leftSubmitOffer';
+  | 'leftCartListSelection' // listSelection | searchResults
+  | 'leftCartEditWithViewOffers' // cart | searchResults
+  | 'leftCartEdit' // cart | viewOffers
+  | 'leftSubmitOffer' // purchasingBreakdown | submission
+  | 'cart';
 
-export type RightUIState =
-  | 'rightSearchResults'
-  | 'rightOfferOverview'
-  | 'rightStoreOfferBreakdown';
+// export type BuylistState =
+//   | 'listSelection'
+//   | 'searchResults'
+//   | 'cart'
+//   | 'viewOffers'
+//   | 'purchasingBreakdown'
+//   | 'submission';
 
 type SubmitBuylistResponse = {
   success: boolean;
@@ -79,10 +83,14 @@ type BuyListState = {
   ////////////////////////////////////////////////////
   // used to display the left sidebar on desktop for the the cart selection, card editing, and offer submission conponents/logic (keep in mind that this logic is used for mobile too but will be a bit trickier to use as a result - Refer to the Figma)
   leftUIState: LeftUIState;
-
   setLeftUIState: (sideBarMode: LeftUIState) => void;
+
   currentCartId: number | null;
   setCurrentCartId: (cartId: number | null) => void;
+
+  currentCart: IBuylistCart | null;
+  setCurrentCart: (cart: IBuylistCart | null) => void;
+
   reviewData: any;
   setAllCartsData: (cartId: number | null) => Promise<void>;
 
@@ -114,6 +122,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
   //Cart State Variables
   currentCartId: null,
+  currentCart: null,
   reviewData: null,
   selectedStoreForReview: null,
   isLoading: false,
@@ -280,6 +289,9 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   },
   setDefaultSortBy: (sortBy: string | null) => {
     set({ defaultSortBy: sortBy });
+  },
+  setCurrentCart: (cart: IBuylistCart | null) => {
+    set({ currentCart: cart });
   }
 }));
 

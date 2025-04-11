@@ -23,7 +23,8 @@ import { Input } from '@/components/ui/input';
 import { CheckCircle } from 'lucide-react';
 
 export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
-  const { setLeftUIState, currentCartId, setCurrentCartId } = useBuyListStore();
+  const { setLeftUIState, currentCartId, setCurrentCartId, setCurrentCart } =
+    useBuyListStore();
   const { deleteCart, renameCartMutation, isDeleting, isRenaming } =
     useUserCarts();
   const [newCartName, setNewCartName] = useState('');
@@ -41,6 +42,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
         if (!dialogJustClosed) {
           setLeftUIState('leftCartEditWithViewOffers');
           setCurrentCartId(cart.id);
+          setCurrentCart(cart);
         }
       }}
     >
@@ -138,6 +140,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
                     setActiveDialogId(null);
                     setLeftUIState('leftCartEditWithViewOffers');
                     setCurrentCartId(cart.id);
+                    setCurrentCart(cart);
                   } catch (error) {
                     setNewCartName('');
                     setActiveDialogId(null);
@@ -192,6 +195,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
                   deleteCart(cartToDelete.id);
                   if (currentCartId === cartToDelete.id) {
                     setCurrentCartId(null);
+                    setCurrentCart(null);
                     setLeftUIState('leftCartListSelection');
                   }
                   setCartToDelete(null);

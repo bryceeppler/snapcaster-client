@@ -12,7 +12,7 @@ const CARTS_QUERY_KEY = ['userCarts'] as const;
 export function useUserCarts() {
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
-  const { setCurrentCartId } = useBuyListStore();
+  const { setCurrentCartId, setCurrentCart } = useBuyListStore();
 
   const {
     data: carts,
@@ -64,6 +64,7 @@ export function useUserCarts() {
 
         if (newCart) {
           setCurrentCartId(newCart.id);
+          setCurrentCart(newCart);
         }
       } else {
         toast.error('Failed to create cart');

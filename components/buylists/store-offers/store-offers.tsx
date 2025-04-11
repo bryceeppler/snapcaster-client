@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
 //other
 import { useTheme } from 'next-themes';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
 
 export const BuylistStoreOffers = () => {
   const {
@@ -47,102 +49,117 @@ export const BuylistStoreOffers = () => {
   }, [currentCartId]);
 
   return (
-    <div className=" mr-2.5 grid grid-cols-2 gap-1 rounded-lg ">
-      {storeOffersData.map((storeOfferData: any, index: number) => {
-        const isConnected = isVendorConnected(storeOfferData.storeName);
+    <div className="flex w-full">
+      <span className="hidden md:block">
+        <LeftCartEditWithViewOffers />
+      </span>
 
-        return (
-          <div
-            className="col-span-1 space-y-2 rounded-lg border bg-accent px-1 py-1 "
-            key={index}
-          >
-            <div className="flex items-end gap-1">
-              <div>
-                {(() => {
-                  const matchingWebsite = websites.find(
-                    (website) => storeOfferData.storeName === website.slug
-                  );
-                  return matchingWebsite?.meta?.branding?.icons ? (
-                    <img
-                      src={
-                        theme === 'dark'
-                          ? matchingWebsite.meta.branding.icons.dark
-                          : matchingWebsite.meta.branding.icons.light
-                      }
-                      alt="Website"
-                      className="size-8"
-                    />
-                  ) : null;
-                })()}
-              </div>
-              <div className="leading-none">
-                <p>{getWebsiteName(storeOfferData.storeName)}</p>
+      {/* <div className=" w-full"> */}
+      <div className="h-[75vh] w-full   rounded-lg border bg-card p-0.5">
+        <ScrollArea className="h-full" type="always">
+          <div className="mr-2.5">
+            <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
+              {storeOffersData.map((storeOfferData: any, index: number) => {
+                const isConnected = isVendorConnected(storeOfferData.storeName);
 
-                {isConnected ? (
-                  <div className="flex items-center gap-1">
-                    <div
-                      className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
-                    ></div>
-                    <p className="text-sm leading-none text-muted-foreground">
-                      Connected
-                    </p>
+                return (
+                  <div
+                    className="col-span-1 space-y-2 rounded-lg border bg-accent px-1 py-1 "
+                    key={index}
+                  >
+                    <div className="flex items-end gap-1">
+                      <div>
+                        {(() => {
+                          const matchingWebsite = websites.find(
+                            (website) =>
+                              storeOfferData.storeName === website.slug
+                          );
+                          return matchingWebsite?.meta?.branding?.icons ? (
+                            <img
+                              src={
+                                theme === 'dark'
+                                  ? matchingWebsite.meta.branding.icons.dark
+                                  : matchingWebsite.meta.branding.icons.light
+                              }
+                              alt="Website"
+                              className="size-8"
+                            />
+                          ) : null;
+                        })()}
+                      </div>
+                      <div className="leading-none">
+                        <p>{getWebsiteName(storeOfferData.storeName)}</p>
+
+                        {isConnected ? (
+                          <div className="flex items-center gap-1">
+                            <div
+                              className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
+                            ></div>
+                            <p className="text-sm leading-none text-muted-foreground">
+                              Connected
+                            </p>
+                          </div>
+                        ) : (
+                          <div className=" flex items-center gap-1 text-muted-foreground hover:cursor-pointer hover:text-primary">
+                            <div
+                              className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
+                            ></div>
+                            <a
+                              href={
+                                'https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en'
+                              }
+                              target="_blank"
+                              className="text-sm leading-none"
+                            >
+                              Extension Required
+                            </a>
+                            <ExternalLink className="size-4  " />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="leading-none">
+                      <p>Summary</p>
+                    </div>
+                    <div className="storeData.items.length space-y-1 text-sm font-normal leading-none">
+                      <div className="flex justify-between">
+                        <p>Credit</p>
+                        <p>${storeOfferData.creditSubtotal}</p>
+                      </div>
+                      <div className="flex justify-between">
+                        <p>Cash</p>
+                        <p>${storeOfferData.cashSubtotal}</p>
+                      </div>
+
+                      <div className="flex justify-between">
+                        <p>Buying</p>
+                        <p>
+                          {storeOfferData.items.length}/
+                          {storeOfferData.items.length +
+                            storeOfferData.unableToPurchaseItems.length}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <Button
+                        className="h-9 w-full"
+                        // disabled={!isConnected}
+                        onClick={() => {
+                          setLeftUIState('leftSubmitOffer');
+                          setSelectedStoreForReview(storeOfferData.storeName);
+                        }}
+                      >
+                        Submit Offer
+                      </Button>
+                    </div>
                   </div>
-                ) : (
-                  <div className=" flex items-center gap-1 text-muted-foreground hover:cursor-pointer hover:text-primary">
-                    <div
-                      className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
-                    ></div>
-                    <a
-                      href={
-                        'https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en'
-                      }
-                      target="_blank"
-                      className="text-sm leading-none"
-                    >
-                      Extension Required
-                    </a>
-                    <ExternalLink className="size-4  " />
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="leading-none">
-              <p>Summary</p>
-            </div>
-            <div className="storeData.items.length space-y-1 text-sm font-normal leading-none">
-              <div className="flex justify-between">
-                <p>Credit</p>
-                <p>${storeOfferData.creditSubtotal}</p>
-              </div>
-              <div className="flex justify-between">
-                <p>Cash</p>
-                <p>${storeOfferData.cashSubtotal}</p>
-              </div>
-
-              <div className="flex justify-between">
-                <p>Buying</p>
-                <p>
-                  {storeOfferData.items.length}/
-                  {storeOfferData.items.length +
-                    storeOfferData.unableToPurchaseItems.length}
-                </p>
-              </div>
-            </div>
-            <div>
-              <Button
-                className="h-9 w-full"
-                // disabled={!isConnected}
-                onClick={() => {
-                  setLeftUIState('leftSubmitOffer');
-                  setSelectedStoreForReview(storeOfferData.storeName);
-                }}
-              >
-                Submit Offer
-              </Button>
+                );
+              })}
             </div>
           </div>
-        );
-      })}
+        </ScrollArea>
+        {/* </div> */}
+      </div>
     </div>
   );
 };

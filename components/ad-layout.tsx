@@ -258,7 +258,7 @@ const AdLayout = function AdLayout({
       </div>
 
       {/* Top Banner & Content */}
-      <div className="mx-auto w-full max-w-4xl items-center p-4 below1550:max-w-6xl">
+      <div className="mx-auto w-full max-w-4xl items-center p-2 below1550:max-w-6xl">
         {shouldShowAdLayout && (
           <div className="relative mb-4 w-full">
             <div className="relative w-full">

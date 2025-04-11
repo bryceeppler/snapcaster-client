@@ -17,10 +17,10 @@ const BuylistLeftSideBodyFactory = ({
       return <LeftCartListSelection />;
     case 'leftCartEditWithViewOffers':
       return <LeftCartEditWithViewOffers />;
-    case 'leftCartEdit':
-      return <LeftCartEditWithViewOffers />;
-    case 'leftSubmitOffer':
-      return <LeftSubmitOffer />;
+    // case 'leftCartEdit':
+    //   return <LeftCartEditWithViewOffers />;
+    // case 'leftSubmitOffer':
+    //   return <LeftSubmitOffer />;
   }
 };
 
