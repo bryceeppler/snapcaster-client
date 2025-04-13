@@ -4,20 +4,11 @@ import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { FilterOption } from '@/types/query';
 
-export type LeftUIState =
-  | 'leftCartListSelection' // listSelection | searchResults
-  | 'leftCartEditWithViewOffers' // cart | searchResults
-  | 'leftCartEdit' // cart | viewOffers
-  | 'leftSubmitOffer' // purchasingBreakdown | submission
-  | 'cart';
-
-// export type BuylistState =
-//   | 'listSelection'
-//   | 'searchResults'
-//   | 'cart'
-//   | 'viewOffers'
-//   | 'purchasingBreakdown'
-//   | 'submission';
+export type BuylistUIState =
+  | 'listSelectionState' // listSelection | searchResults
+  | 'searchResultsState' // cart | searchResults
+  | 'viewAllOffersState' // cart | viewOffers
+  | 'finalSubmissionState'; // purchasingBreakdown | submission;
 
 type SubmitBuylistResponse = {
   success: boolean;
@@ -78,12 +69,11 @@ type BuyListState = {
   setFilterOptions: (filters: FilterOption[]) => void;
 
   clearFilters: () => void;
-  ////////////////////////////////////////////////////
-  //2. Left Side Content State Variables & functions//
-  ////////////////////////////////////////////////////
-  // used to display the left sidebar on desktop for the the cart selection, card editing, and offer submission conponents/logic (keep in mind that this logic is used for mobile too but will be a bit trickier to use as a result - Refer to the Figma)
-  leftUIState: LeftUIState;
-  setLeftUIState: (sideBarMode: LeftUIState) => void;
+  ////////////////////////////////////////////////////////
+  //2. Step, current Cart, and offers states & functions//
+  ///////////////////////////////////////////////////////
+  buylistUIState: BuylistUIState;
+  setBuylistUIState: (sideBarMode: BuylistUIState) => void;
 
   currentCartId: number | null;
   setCurrentCartId: (cartId: number | null) => void;
@@ -94,15 +84,6 @@ type BuyListState = {
   reviewData: any;
   setAllCartsData: (cartId: number | null) => Promise<void>;
 
-  /////////////////////////////////////////////////////
-  //3. Right Side Content State Variables & functions//
-  /////////////////////////////////////////////////////
-  // used to display the main content on desktop (right side) for the the search results, view all store offers, and offer breakdown conponents/logic (keep in mind that this logic is used for mobile too but will be a bit trickier to use as a result - Refer to the Figma)
-
-  //////////////////////////////////////////
-  //review tab state variables & functions//
-  //////////////////////////////////////////
-
   selectedStoreForReview: string | null;
   setSelectedStoreForReview: (storeName: string) => void;
   submitBuylist: (
@@ -111,6 +92,7 @@ type BuyListState = {
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
+  buylistUIState: 'searchResultsState',
   //Search State Variables
   searchTerm: '',
   searchResultCount: 0,
@@ -119,15 +101,13 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
   sortBy: null,
   sortByOptions: {},
   filters: null,
-
+  isLoading: false,
   //Cart State Variables
   currentCartId: null,
   currentCart: null,
+  //Review State Variables
   reviewData: null,
   selectedStoreForReview: null,
-  isLoading: false,
-
-  leftUIState: 'leftCartListSelection',
 
   //////////////////////
   // Search Functions //
@@ -197,9 +177,6 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
   clearFilters: () => set({ filters: null }),
 
-  /////////////////////////
-  // Left Side Functions //
-  /////////////////////////
   setCurrentCartId: (cartId: number | null) => {
     set({ currentCartId: cartId });
   },
@@ -284,8 +261,8 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       return { success: false, message };
     }
   },
-  setLeftUIState: (leftUIState: LeftUIState) => {
-    set({ leftUIState: leftUIState });
+  setBuylistUIState: (buylistUIState: BuylistUIState) => {
+    set({ buylistUIState: buylistUIState });
   },
   setDefaultSortBy: (sortBy: string | null) => {
     set({ defaultSortBy: sortBy });

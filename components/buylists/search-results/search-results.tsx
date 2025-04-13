@@ -1,6 +1,6 @@
 //hooks and store states
 import { useEffect, useRef, useState } from 'react';
-import useBuyListStore from '@/stores/useBuylistStore';
+import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
 import {
   TransformedSearchResponse,
   useBuylistSearch
@@ -10,6 +10,19 @@ import { BuylistCatalogItem } from './catalog-item';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LeftCartListSelection } from '../saved-lists/saved-lists';
 import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { ShoppingCart } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '@/utils/axiosWrapper';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
 
 //other
 interface BuylistSearchResultsProps {
@@ -26,7 +39,7 @@ export const BuylistSearchResults = () => {
     tcg,
     filters,
     sortBy,
-    leftUIState,
+    buylistUIState,
     setSearchResultCount,
     setDefaultSortBy,
     defaultSortBy
@@ -68,12 +81,12 @@ export const BuylistSearchResults = () => {
   const loadMoreRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (
-      leftUIState === 'leftCartListSelection' ||
-      leftUIState === 'leftCartEditWithViewOffers'
+      buylistUIState === 'listSelectionState' ||
+      buylistUIState === 'searchResultsState'
     ) {
       setShouldReinitObserver(true);
     }
-  }, [leftUIState]);
+  }, [buylistUIState]);
   // Infinite Scroll Observer: Fetch more results when the user scrolls to the bottom of the page
   useEffect(() => {
     if (
@@ -105,26 +118,28 @@ export const BuylistSearchResults = () => {
     isFetchingNextPage
   ]);
 
+  const {} = useBuyListStore();
+
   return (
     <>
-      {leftUIState === 'leftCartListSelection' && (
+      {buylistUIState === 'listSelectionState' && (
         <div className="w-full md:w-80">
           <LeftCartListSelection />
         </div>
       )}
-      {leftUIState === 'leftCartEditWithViewOffers' && (
+      {buylistUIState === 'searchResultsState' && (
         <div className="hidden md:block">
           <LeftCartEditWithViewOffers />
         </div>
       )}
 
       <div
-        className={`h-[75vh] w-full overflow-hidden rounded-lg border bg-card  ${
-          leftUIState === 'leftCartListSelection' ? 'hidden md:block' : ''
+        className={`h-[75vh] w-full  overflow-hidden rounded-lg  bg-card pt-1  ${
+          buylistUIState === 'listSelectionState' ? 'hidden md:block' : ''
         }`}
       >
-        <ScrollArea className="h-full" type="always">
-          <div className="grid grid-cols-2 gap-1 pr-2.5 sm:grid-cols-3 md:grid-cols-3">
+        <ScrollArea className="h-full px-1" type="always">
+          <div className=" grid grid-cols-2 gap-1  pr-1.5 sm:grid-cols-2 below1550:grid-cols-3">
             {data?.searchResults?.map((card, index) => (
               <div className="" key={index}>
                 <BuylistCatalogItem cardData={card} />

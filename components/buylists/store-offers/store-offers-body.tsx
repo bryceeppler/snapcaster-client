@@ -19,7 +19,7 @@ export const BuylistStoreOffers = () => {
     setSelectedStoreForReview,
     currentCartId,
     setAllCartsData,
-    setLeftUIState
+    setBuylistUIState
   } = useBuyListStore();
   const { getWebsiteName, websites } = useGlobalStore();
   const { theme } = useTheme();
@@ -37,7 +37,7 @@ export const BuylistStoreOffers = () => {
   };
 
   const storeOffersData = reviewData || [];
-  const { updateCartItem } = useCartItems(currentCartId || undefined);
+
   // Add a ref to track if we've already called setAllCartsData
   const hasCalledSetAllCartsData = useRef(false);
 
@@ -49,14 +49,14 @@ export const BuylistStoreOffers = () => {
   }, [currentCartId]);
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full md:gap-1">
       <span className="hidden md:block">
         <LeftCartEditWithViewOffers />
       </span>
 
       {/* <div className=" w-full"> */}
-      <div className="h-[75vh] w-full   rounded-lg border bg-card p-0.5">
-        <ScrollArea className="h-full" type="always">
+      <div className="h-[75vh] w-full  rounded-lg  bg-card py-1">
+        <ScrollArea className="h-full px-1 " type="always">
           <div className="mr-2.5">
             <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
               {storeOffersData.map((storeOfferData: any, index: number) => {
@@ -64,7 +64,7 @@ export const BuylistStoreOffers = () => {
 
                 return (
                   <div
-                    className="col-span-1 space-y-2 rounded-lg border bg-accent px-1 py-1 "
+                    className="col-span-1 space-y-2 rounded-lg border px-3 py-3 shadow-md "
                     key={index}
                   >
                     <div className="flex items-end gap-1">
@@ -111,7 +111,7 @@ export const BuylistStoreOffers = () => {
                               target="_blank"
                               className="text-sm leading-none"
                             >
-                              Extension Required
+                              Connect Via Extension
                             </a>
                             <ExternalLink className="size-4  " />
                           </div>
@@ -145,7 +145,7 @@ export const BuylistStoreOffers = () => {
                         className="h-9 w-full"
                         // disabled={!isConnected}
                         onClick={() => {
-                          setLeftUIState('leftSubmitOffer');
+                          setBuylistUIState('finalSubmissionState');
                           setSelectedStoreForReview(storeOfferData.storeName);
                         }}
                       >

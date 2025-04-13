@@ -29,11 +29,7 @@ import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/useBuylistStore';
-import {
-  BuylistHeader,
-  CartHeader,
-  SearchResultsHeader
-} from '../buylists/header/header';
+import { SearchResultsHeader } from '../buylists/header/header';
 import { ListSelectionHeader } from '../buylists/saved-lists/saved-lists';
 
 const Navbar: React.FC = () => {
@@ -214,7 +210,7 @@ const Navbar: React.FC = () => {
           )}
           {currentPath === '/' && (
             <div
-              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
                 mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
               }`}
             >
@@ -227,7 +223,7 @@ const Navbar: React.FC = () => {
           )}
           {currentPath === '/buylists' && isAuthenticated && (
             <div
-              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white transition-transform duration-500 md:px-2 ${
                 mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
               }`}
             >
@@ -529,29 +525,30 @@ const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
 ///////////////////////////////////
 /* The bar bewlow the nav for mobile single/buylist search which contains the reuslts, pagination, and filters on a query */
 const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
-  const { leftUIState } = useBuyListStore();
+  const { buylistUIState } = useBuyListStore();
   switch (searchMode) {
     case 'singles':
       return <SingleResultsToolbar />;
     case 'buylists':
       return (
         <>
-          {/* {leftUIState === 'leftCartListSelection' && (
+          {/* {buylistUIState === 'listSelectionState' && (
             <span className="block md:hidden">
               <ListSelectionHeader />
             </span>
           )}
-          {leftUIState === 'leftCartEditWithViewOffers' && (
+          {buylistUIState === 'searchResultsState' && (
             <span className="block md:hidden">
               <SearchResultsHeader />
             </span>
           )}
-          {leftUIState === 'cart' && (
+          {buylistUIState === 'cart' && (
             <span className="block md:hidden">
               <CartHeader />
             </span>
           )} */}
-          <BuylistHeader />
+
+          {buylistUIState === 'searchResultsState' && <SearchResultsHeader />}
         </>
       );
     // return <BuylistsResultsToolbar />;

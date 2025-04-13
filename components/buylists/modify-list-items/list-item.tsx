@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { MinusIcon, Plus } from 'lucide-react';
 
 export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
-  const { currentCartId, leftUIState, setAllCartsData } = useBuyListStore();
+  const { currentCartId, buylistUIState, setAllCartsData } = useBuyListStore();
 
   const { updateCartItem } = useCartItems(currentCartId || undefined);
   return (
-    <div className="flex items-center rounded-lg border bg-accent px-1 py-1 ">
+    <div className="flex  rounded-lg  px-1 py-1 ">
       <div>
         <img
           className="w-20 object-contain"
@@ -18,7 +18,7 @@ export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
           alt="card_image"
         />
       </div>
-      <div className="flex w-full flex-col gap-0.5  space-y-1 px-0.5">
+      <div className="flex w-full flex-col gap-0.5  space-y-1 px-1">
         <p className="text-[0.6rem] text-xs font-semibold    leading-none text-muted-foreground">
           {item.set_name}
         </p>
@@ -59,7 +59,7 @@ export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
                   await new Promise((resolve) => setTimeout(resolve, 200));
 
                   // Then fetch the updated checkout data
-                  if (leftUIState === 'leftCartEdit') {
+                  if (buylistUIState === 'viewAllOffersState') {
                     await setAllCartsData(currentCartId);
                   }
                 } catch (error) {
@@ -86,7 +86,7 @@ export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
                   item,
                   quantity: Math.max(0, item.quantity - 1)
                 });
-              if (leftUIState === 'leftCartEdit') {
+              if (buylistUIState === 'viewAllOffersState') {
                 setAllCartsData(currentCartId);
               }
             }}

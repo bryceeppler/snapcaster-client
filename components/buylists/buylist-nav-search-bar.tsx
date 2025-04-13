@@ -53,7 +53,7 @@ export default function BuylistNavSearchBar({
   tcg
 }: Props) {
   // Store
-  const { filters, sortBy, clearFilters, leftUIState, setLeftUIState } =
+  const { filters, sortBy, clearFilters, buylistUIState, setBuylistUIState } =
     useBuylistStore();
 
   // State
@@ -178,10 +178,10 @@ export default function BuylistNavSearchBar({
           clearFilters();
           refetch();
           if (
-            leftUIState === 'leftCartEdit' ||
-            leftUIState === 'leftSubmitOffer'
+            buylistUIState === 'viewAllOffersState' ||
+            buylistUIState === 'finalSubmissionState'
           ) {
-            setLeftUIState('leftCartEditWithViewOffers');
+            setBuylistUIState('searchResultsState');
           }
           setIsAutoCompleteVisible(false);
           break;
@@ -332,10 +332,10 @@ export default function BuylistNavSearchBar({
                 clearFilters();
                 refetch();
                 if (
-                  leftUIState === 'leftCartEdit' ||
-                  leftUIState === 'leftSubmitOffer'
+                  buylistUIState === 'viewAllOffersState' ||
+                  buylistUIState === 'finalSubmissionState'
                 ) {
-                  setLeftUIState('leftCartEditWithViewOffers');
+                  setBuylistUIState('searchResultsState');
                 }
               }}
             />

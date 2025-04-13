@@ -83,8 +83,8 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
   return (
     <>
       <Card className="h-full">
-        <div className="flex h-full flex-col gap-2 rounded-md bg-accent px-1 py-2">
-          <div className="mx-auto max-w-[150px] px-4 md:max-w-[250px]">
+        <div className="flex h-full flex-col gap-2 rounded-md  p-4 ">
+          <div className="mx-auto max-w-[150px]  md:max-w-[160px]">
             <CardImage imageUrl={cardData.image} alt={cardData.name} />
           </div>
 
@@ -116,7 +116,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
             {Object.keys(cardData.conditions) && (
               <DialogTrigger asChild>
                 <Button
-                  className="border-input-none w-full rounded-b-lg font-montserrat text-xs font-semibold"
+                  className="border-input-none w-full rounded-b-lg bg-card font-montserrat text-xs font-semibold"
                   variant="outline"
                   onClick={(e) => {
                     if (!currentCartId) {

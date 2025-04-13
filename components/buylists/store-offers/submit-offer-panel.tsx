@@ -10,10 +10,14 @@ import { useTheme } from 'next-themes';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import { ExternalLink } from 'lucide-react';
 
-export const LeftSubmitOffer = () => {
+export const SubmitOfferPanel = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const { reviewData, selectedStoreForReview, submitBuylist, setLeftUIState } =
-    useBuyListStore();
+  const {
+    reviewData,
+    selectedStoreForReview,
+    submitBuylist,
+    setBuylistUIState
+  } = useBuyListStore();
   const submitData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
@@ -34,7 +38,7 @@ export const LeftSubmitOffer = () => {
         success: true,
         message: result.message
       });
-      setLeftUIState('leftCartListSelection');
+      setBuylistUIState('listSelectionState');
     }
   };
   const { data: connectedVendors, isLoading: isLoadingConnections } =
@@ -52,7 +56,7 @@ export const LeftSubmitOffer = () => {
   }, [connectedVendors, isLoadingConnections, submitData?.storeName]);
 
   return (
-    <div className="col-span-1  flex flex-col  space-y-1 rounded-lg p-2  md:mr-0 md:border md:bg-accent">
+    <div className="col-span-1  flex flex-col  space-y-1 rounded-lg md:mr-0  md:bg-accent  md:p-2">
       <div className="col-span-1 space-y-2  ">
         <div className="hidden items-end gap-1 md:flex ">
           <div>
@@ -98,7 +102,7 @@ export const LeftSubmitOffer = () => {
                     target="_blank"
                     className="text-sm leading-none"
                   >
-                    Extension Required
+                    Connect Via Extension
                   </a>
                   <ExternalLink className="size-4  " />
                 </div>
@@ -161,30 +165,8 @@ export const LeftSubmitOffer = () => {
                   </a>
                   .
                 </label>
-                {/* <p className=" text-xs text-muted-foreground">
-                  Please wait for a final adjusted email offer from Obsidian
-                  Games. If you are not dropping off your cards in person, we
-                  recommend recommend purchasing shipping insurance.
-                </p> */}
               </div>
             </div>
-
-            {/* <div className="flex justify-between space-x-2 ">
-              <Button
-                className="h-9 w-full"
-                disabled={!termsAccepted || !isVendorConnected}
-                onClick={() => handleSubmit('Cash')}
-              >
-                Request Cash
-              </Button>
-              <Button
-                className="h-9 w-full"
-                disabled={!termsAccepted || !isVendorConnected}
-                onClick={() => handleSubmit('Store Credit')}
-              >
-                Request Credit
-              </Button>
-            </div> */}
           </div>
           <div className="flex justify-between space-x-2 ">
             <Button
@@ -205,11 +187,19 @@ export const LeftSubmitOffer = () => {
         </div>
         <p className="text-xs text-muted-foreground">
           By clicking "Request Cash/Credit", you agree to our{' '}
-          <a href="/terms" target="_none" className="text-primary">
+          <a
+            href="/terms"
+            target="_none"
+            className="text-primary hover:underline"
+          >
             Terms of Service
           </a>{' '}
           and that you have read our{' '}
-          <a href="/privacy" target="_none" className="text-primary">
+          <a
+            href="/privacy"
+            target="_none"
+            className="text-primary hover:underline"
+          >
             Privacy Policy
           </a>
           .

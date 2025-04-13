@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { CheckCircle } from 'lucide-react';
 
 export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
-  const { setLeftUIState, currentCartId, setCurrentCartId, setCurrentCart } =
+  const { setBuylistUIState, currentCartId, setCurrentCartId, setCurrentCart } =
     useBuyListStore();
   const { deleteCart, renameCartMutation, isDeleting, isRenaming } =
     useUserCarts();
@@ -37,21 +37,23 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
 
   return (
     <div
-      className=" mb-1 cursor-pointer space-y-2 rounded-lg border bg-accent px-1  py-1"
+      className=" mb-1 flex h-14 cursor-pointer flex-col  justify-between rounded-lg border bg-accent px-1 py-1 shadow-sm hover:bg-accent/50"
       onClick={() => {
         if (!dialogJustClosed) {
-          setLeftUIState('leftCartEditWithViewOffers');
+          setBuylistUIState('searchResultsState');
           setCurrentCartId(cart.id);
           setCurrentCart(cart);
         }
       }}
     >
       <div className="flex justify-between">
-        <p className="text-sm font-semibold ">{cart.name}</p>
-        <CheckCircle className="h-4 w-4 text-zinc-400" />
+        <p className="text-sm font-normal ">{cart.name}</p>
       </div>
       <div className="flex justify-between">
         {/* Rename Cart Dialog */}
+        <p className="text-xs font-semibold text-zinc-400">
+          {cart.items.length} items
+        </p>
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger
             asChild
@@ -59,7 +61,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
             variant={null}
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="text-xs font-semibold text-zinc-400 underline hover:text-primary">
+            <p className="text-xs font-semibold  text-zinc-400 underline hover:text-primary">
               Edit
             </p>
           </DropdownMenuTrigger>
@@ -91,13 +93,8 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-
-        <p className="text-xs font-semibold text-zinc-400">
-          {cart.items.length} items
-        </p>
       </div>
-
-      {/* Move the Dialog outside the DropdownMenu */}
+      {/* Rename List Dialog */}
       <Dialog
         open={activeDialogId === cart.id}
         onOpenChange={(open) => {
@@ -125,7 +122,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
               value={newCartName}
               onChange={(e) => setNewCartName(e.target.value)}
               onKeyDown={(e) => e.stopPropagation()} // Needed to capture typing due to the dialog component being nexted in the drop down component
-              maxLength={20}
+              maxLength={25}
             />
             <Button
               onClick={async () => {
@@ -138,7 +135,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
                     });
                     setNewCartName('');
                     setActiveDialogId(null);
-                    setLeftUIState('leftCartEditWithViewOffers');
+                    setBuylistUIState('searchResultsState');
                     setCurrentCartId(cart.id);
                     setCurrentCart(cart);
                   } catch (error) {
@@ -196,7 +193,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
                   if (currentCartId === cartToDelete.id) {
                     setCurrentCartId(null);
                     setCurrentCart(null);
-                    setLeftUIState('leftCartListSelection');
+                    setBuylistUIState('listSelectionState');
                   }
                   setCartToDelete(null);
                 }

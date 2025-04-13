@@ -2,13 +2,13 @@
 import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
 //components
 import { CartItem } from './list-item';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 //icons
-import { ArrowLeftIcon } from 'lucide-react';
 //other
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
+import { Separator } from '@/components/ui/separator';
+import { CurrentListHeader } from '../header/header';
 
 interface LeftCartEditWithViewOffersProps {
   closeMobileCartDialog?: () => void;
@@ -18,15 +18,7 @@ export const LeftCartEditWithViewOffers = ({
   closeMobileCartDialog
 }: LeftCartEditWithViewOffersProps) => {
   const CART_KEY = (cartId: number) => ['cart', cartId] as const;
-
-  const {
-    leftUIState,
-    setLeftUIState,
-    currentCartId,
-    setCurrentCartId,
-    setCurrentCart
-  } = useBuyListStore();
-
+  const { currentCartId } = useBuyListStore();
   const { data: currentCart } = useQuery<{
     success: boolean;
     cart: IBuylistCart;
@@ -43,49 +35,26 @@ export const LeftCartEditWithViewOffers = ({
   });
 
   return (
-    <div className="col-span-1 flex h-[75vh] w-full flex-col space-y-1 rounded-lg border bg-card  md:w-80">
-      <div className="hidden justify-between  px-1 md:flex">
-        <div className="flex h-10 w-16 items-center justify-start gap-1">
-          <span
-            className="flex cursor-pointer gap-0.5 rounded-lg  px-1 py-1 font-medium underline"
-            onClick={() => {
-              setLeftUIState('leftCartListSelection');
-              setCurrentCartId(null);
-              setCurrentCart(null);
-            }}
-          >
-            <p className="text-xs">My Lists</p>
-          </span>
-        </div>
-        <div className="flex w-full flex-1 items-center gap-1 overflow-hidden text-center">
-          <p className="w-full truncate text-sm font-semibold">
-            {currentCart?.cart?.name} ss
-          </p>
-        </div>
-        <div className="flex w-16 items-center justify-end gap-1 "></div>
+    <div className="col-span-1 flex h-[75vh] w-full flex-col space-y-1 rounded-lg bg-card  md:w-80">
+      <div>
+        <CurrentListHeader />
+        <Separator className=" bg-background" />
       </div>
-      <div className="flex-1 overflow-hidden ">
+
+      <div className="flex-1 overflow-hidden rounded-lg bg-card">
         <ScrollArea className="h-full" type="always">
           <div className="mr-1.5 space-y-1  px-1 ">
+            {currentCart?.cart?.items && currentCart.cart.items.length > 0 && (
+              <Separator className="mb-2" />
+            )}
             {currentCart?.cart?.items?.map((item, index) => (
               <div key={index}>
                 <CartItem item={item} />
+                <Separator className="mb-2" />
               </div>
             ))}
           </div>
         </ScrollArea>
-      </div>
-
-      <div className=" ">
-        <Button
-          className="w-full rounded-t-none"
-          onClick={() => {
-            setLeftUIState('leftCartEdit');
-            closeMobileCartDialog?.();
-          }}
-        >
-          View Offers
-        </Button>
       </div>
     </div>
   );

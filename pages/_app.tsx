@@ -98,7 +98,7 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
   const usesMainNav = !isVendorDashboardPage && !isLandingPage;
 
   // Create a stable toaster
-  const ToasterComponent = useRef(<Toaster position="bottom-right" />).current;
+  const ToasterComponent = useRef(<Toaster position="bottom-center" />).current;
 
   useEffect(() => {
     document.body.classList?.remove('loading');
