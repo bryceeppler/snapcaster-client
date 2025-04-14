@@ -9,9 +9,22 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useTheme } from 'next-themes';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import { ExternalLink } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 
 export const SubmitOfferPanel = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
+  type PaymentMethod = 'Cash' | 'Store Credit';
+  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | ''>(
+    ''
+  );
   const {
     reviewData,
     selectedStoreForReview,
@@ -133,6 +146,7 @@ export const SubmitOfferPanel = () => {
               </p>
             </div>
           </div>
+
           <p className=" text-xs text-muted-foreground">
             Please wait for a final adjusted email offer from Obsidian Games. If
             you are not dropping off your cards in person, we recommend
@@ -168,7 +182,7 @@ export const SubmitOfferPanel = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-between space-x-2 ">
+          {/* <div className="flex justify-between space-x-2 ">
             <Button
               className="h-9 w-full"
               disabled={!termsAccepted || !isVendorConnected}
@@ -183,10 +197,51 @@ export const SubmitOfferPanel = () => {
             >
               Request Credit
             </Button>
+          </div> */}
+          {/* <Select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a fruit" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Fruits</SelectLabel>
+                <SelectItem value="apple">Apple</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="blueberry">Blueberry</SelectItem>
+                <SelectItem value="grapes">Grapes</SelectItem>
+                <SelectItem value="pineapple">Pineapple</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select> */}
+          <Select
+            onValueChange={(value: PaymentMethod) => setSelectedPayment(value)}
+            value={selectedPayment}
+          >
+            <SelectTrigger className="w-full focus:ring-0 focus:ring-offset-0">
+              <SelectValue placeholder="Select a Payment Method" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Payment Options</SelectLabel>
+                <SelectItem value="Cash">Cash</SelectItem>
+                <SelectItem value="Store Credit">Store Credit</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <div className="flex justify-between space-x-2 ">
+            <Button
+              className="h-9 w-full"
+              disabled={
+                !termsAccepted || !isVendorConnected || !selectedPayment
+              }
+              onClick={() => handleSubmit(selectedPayment as PaymentMethod)}
+            >
+              Submit Offer
+            </Button>
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          By clicking "Request Cash/Credit", you agree to our{' '}
+          By clicking "Submit Offer", you agree to our{' '}
           <a
             href="/terms"
             target="_none"

@@ -30,7 +30,6 @@ import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/useBuylistStore';
 import { SearchResultsHeader } from '../buylists/header/header';
-import { ListSelectionHeader } from '../buylists/saved-lists/saved-lists';
 
 const Navbar: React.FC = () => {
   const router = useRouter();
@@ -525,32 +524,12 @@ const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
 ///////////////////////////////////
 /* The bar bewlow the nav for mobile single/buylist search which contains the reuslts, pagination, and filters on a query */
 const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
-  const { buylistUIState } = useBuyListStore();
+  // const { buylistUIState } = useBuyListStore();
   switch (searchMode) {
     case 'singles':
       return <SingleResultsToolbar />;
     case 'buylists':
-      return (
-        <>
-          {/* {buylistUIState === 'listSelectionState' && (
-            <span className="block md:hidden">
-              <ListSelectionHeader />
-            </span>
-          )}
-          {buylistUIState === 'searchResultsState' && (
-            <span className="block md:hidden">
-              <SearchResultsHeader />
-            </span>
-          )}
-          {buylistUIState === 'cart' && (
-            <span className="block md:hidden">
-              <CartHeader />
-            </span>
-          )} */}
-
-          {buylistUIState === 'searchResultsState' && <SearchResultsHeader />}
-        </>
-      );
+      return <SearchResultsHeader isMobile={true} />;
     // return <BuylistsResultsToolbar />;
     // return <div>BuylistsResultsToolbar</div>;
   }

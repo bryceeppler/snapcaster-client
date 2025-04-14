@@ -92,7 +92,7 @@ type BuyListState = {
 };
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
-  buylistUIState: 'searchResultsState',
+  buylistUIState: 'listSelectionState',
   //Search State Variables
   searchTerm: '',
   searchResultCount: 0,

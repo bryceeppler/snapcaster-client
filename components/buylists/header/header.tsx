@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 
 import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axiosInstance from '@/utils/axiosWrapper';
 import { useQuery } from '@tanstack/react-query';
 import { useUserCarts } from '@/hooks/useUserCarts';
@@ -183,7 +183,11 @@ export const CurrentListHeader = () => {
   );
 };
 
-export const SearchResultsHeader = () => {
+interface SearchResultsHeaderProps {
+  isMobile?: true;
+}
+
+export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
   const {
     filterOptions,
     setFilter,
@@ -192,69 +196,72 @@ export const SearchResultsHeader = () => {
     setSortBy,
     sortByOptions,
     clearFilters,
-    searchResultCount
+    searchResultCount,
+    buylistUIState
   } = useBuyListStore();
   return (
-    <div>
-      <div className="mx-auto flex  w-full items-center justify-between bg-card p-1 md:rounded-lg">
-        {/* LEFT SECTION */}
-        <div className="flex w-24 items-center justify-start gap-1">
-          <Sheet>
-            <SheetTitle hidden>Filters</SheetTitle>
-            <SheetDescription hidden>
-              Filter your search results
-            </SheetDescription>
-            <SheetTrigger asChild className="">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative h-9 text-sm font-medium"
-              >
-                <span className="flex items-center gap-2">
-                  <SlidersHorizontal className="h-5 w-5" />
-                  <p className="hidden md:block">Filters</p>
-                </span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left">
-              <FilterSection
-                filterOptions={filterOptions}
-                sortBy={sortBy ? sortBy : defaultSortBy}
-                fetchCards={async () => {}}
-                clearFilters={clearFilters}
-                setFilter={setFilter}
-                setCurrentPage={() => {}}
-                applyFilters={async () => {}}
-                setSortBy={setSortBy}
-                handleSortByChange={(value: any) => {
-                  setSortBy(value);
-                }}
-                sortByOptions={sortByOptions}
-              />
-            </SheetContent>
-          </Sheet>
-        </div>
-
-        {/* MIDDLE SECTION */}
-        <div className=" overflow-hidden">
-          <p className="truncate text-sm">{searchResultCount} Results</p>
-        </div>
-
-        {/* RIGHT SECTION */}
-        <div className="flex w-24 items-center justify-end gap-1">
-          <a href="/faq#buylists" target="_blank">
+    <div
+      className={`mx-auto w-full items-center justify-between bg-card p-1 md:rounded-lg ${
+        isMobile && buylistUIState === 'searchResultsState'
+          ? 'flex md:hidden' // Show on mobile, hide on desktop when in search state
+          : 'hidden md:flex' // Hide on mobile, show on desktop otherwise
+      }`}
+    >
+      {/* LEFT SECTION */}
+      <div className="flex w-24 items-center justify-start gap-1">
+        <Sheet>
+          <SheetTitle hidden>Filters</SheetTitle>
+          <SheetDescription hidden>Filter your search results</SheetDescription>
+          <SheetTrigger asChild className="">
             <Button
               variant="ghost"
               size="sm"
               className="relative h-9 text-sm font-medium"
             >
-              <span className="flex items-center gap-1">
-                <QuestionMarkCircledIcon className="h-6 w-6" />
-                <p className="hidden md:block">Help</p>
+              <span className="flex items-center gap-2">
+                <SlidersHorizontal className="h-5 w-5" />
+                <p className="hidden md:block">Filters</p>
               </span>
             </Button>
-          </a>
-        </div>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <FilterSection
+              filterOptions={filterOptions}
+              sortBy={sortBy ? sortBy : defaultSortBy}
+              fetchCards={async () => {}}
+              clearFilters={clearFilters}
+              setFilter={setFilter}
+              setCurrentPage={() => {}}
+              applyFilters={async () => {}}
+              setSortBy={setSortBy}
+              handleSortByChange={(value: any) => {
+                setSortBy(value);
+              }}
+              sortByOptions={sortByOptions}
+            />
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* MIDDLE SECTION */}
+      <div className="overflow-hidden">
+        <p className="truncate text-sm">{searchResultCount} Results</p>
+      </div>
+
+      {/* RIGHT SECTION */}
+      <div className="flex w-24 items-center justify-end gap-1">
+        <a href="/faq#buylists" target="_blank">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="relative h-9 text-sm font-medium"
+          >
+            <span className="flex items-center gap-1">
+              <QuestionMarkCircledIcon className="h-6 w-6" />
+              <p className="hidden md:block">Help</p>
+            </span>
+          </Button>
+        </a>
       </div>
     </div>
   );

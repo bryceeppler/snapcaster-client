@@ -103,7 +103,13 @@ export const BuylistStoreOfferBreakdown = () => {
 
             <div className=" w-full items-center gap-0.5 whitespace-nowrap text-xl font-semibold ">
               <div className="flex w-full items-center justify-between gap-0.5 whitespace-nowrap text-base font-medium ">
-                <p className="shrink-0">Purchasing</p>
+                <div className="flex h-5 items-center space-x-2 leading-none">
+                  <Separator
+                    orientation="vertical"
+                    className="w-[2px] bg-primary"
+                  />
+                  <p className="shrink-0"> Purchasing</p>
+                </div>
                 <p className="shrink-0 text-sm font-extralight">
                   {breakdownData.items.length} items
                 </p>
@@ -124,7 +130,14 @@ export const BuylistStoreOfferBreakdown = () => {
             {breakdownData.unableToPurchaseItems.length > 0 && (
               <>
                 <div className="flex w-full items-center justify-between gap-0.5 whitespace-nowrap text-base font-medium ">
-                  <p className="shrink-0">Not Purchasing</p>
+                  <div className="flex h-5 items-center space-x-2 leading-none">
+                    <Separator
+                      orientation="vertical"
+                      className="w-[2px] bg-red-500"
+                    />
+                    <p className="shrink-0"> Not Purchasing</p>
+                  </div>
+
                   <p className="shrink-0 text-sm font-extralight">
                     {breakdownData.unableToPurchaseItems.length} items
                   </p>
