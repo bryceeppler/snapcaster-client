@@ -10,14 +10,14 @@ import {
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  PopoverTrigger
+} from '@/components/ui/popover';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 import React, { useState } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
@@ -25,20 +25,23 @@ import { Product } from '@/types';
 import { Card, CardTitle, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DialogClose } from '@radix-ui/react-dialog';
-import { groupProductsByHost, buildCartUpdateUrls } from '@/utils/cartUrlBuilder';
+import {
+  groupProductsByHost,
+  buildCartUpdateUrls
+} from '@/utils/cartUrlBuilder';
 import { ExternalLink, AlertCircle, AlertTriangle } from 'lucide-react';
 import { useTheme } from 'next-themes';
-
+import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
 export const RecommendedStores = () => {
   const { results, addToCart, isInCart, notFound } = useMultiSearchStore();
-  const { getWebsiteName, websites } = useGlobalStore();
+  const { getVendorNameBySlug, vendors } = useGlobalStore();
   const { theme } = useTheme();
-  
+
   // Filter out null values and then get unique card names
-  const allCardNames = new Set(results
-    .filter(group => group && group[0])
-    .map(group => group[0].name));
-  
+  const allCardNames = new Set(
+    results.filter((group) => group && group[0]).map((group) => group[0].name)
+  );
+
   const totalRequested = allCardNames.size;
   const reccomendedWebsites = [
     'obsidian',
@@ -56,7 +59,7 @@ export const RecommendedStores = () => {
     const websiteNotFound: { [vendor: string]: Set<string> } = {};
 
     // Initialize not found sets for each recommended website
-    reccomendedWebsites.forEach(vendor => {
+    reccomendedWebsites.forEach((vendor) => {
       websiteNotFound[vendor] = new Set();
     });
 
@@ -64,7 +67,7 @@ export const RecommendedStores = () => {
     results.forEach((resultGroup) => {
       if (!resultGroup || resultGroup.length === 0) return;
       const cardName = resultGroup[0].name; // Get the card name from the first result
-      
+
       resultGroup.forEach((product) => {
         if (!reccomendedWebsites.includes(product.vendor)) return;
 
@@ -73,15 +76,17 @@ export const RecommendedStores = () => {
         }
 
         // If we already have this product, only update if the new one is cheaper
-        const existingProduct = websiteProducts[product.vendor].get(product.name);
+        const existingProduct = websiteProducts[product.vendor].get(
+          product.name
+        );
         if (!existingProduct || product.price < existingProduct.price) {
           websiteProducts[product.vendor].set(product.name, product);
         }
       });
 
       // For each recommended store, if they don't have this card, add it to not found
-      reccomendedWebsites.forEach(vendor => {
-        const vendorProducts = resultGroup.filter(p => p.vendor === vendor);
+      reccomendedWebsites.forEach((vendor) => {
+        const vendorProducts = resultGroup.filter((p) => p.vendor === vendor);
         if (vendorProducts.length === 0) {
           websiteNotFound[vendor].add(cardName);
         }
@@ -132,43 +137,54 @@ export const RecommendedStores = () => {
 
   return (
     <Dialog>
-      <Card className="col-span-12 flex flex-col gap-2 bg-popover pb-4 text-xs recommended-stores">
+      <Card className="recommended-stores col-span-12 flex flex-col gap-2 bg-popover pb-4 text-xs">
         <CardHeader className="text-left">
           <CardTitle className="text-lg">Recommended Stores</CardTitle>
         </CardHeader>
         <div className="grid grid-cols-2 gap-2 overflow-clip rounded-lg px-4">
-          {getTopWebsites(results).map((websiteInfo, i) => {
-            const matchingWebsite = websites.find(
-              (website) => websiteInfo.vendor === website.slug
+          {getTopWebsites(results).map((vendorInfo, i) => {
+            const matchingVendor = vendors.find(
+              (vendor) => vendorInfo.vendor === vendor.slug
+            );
+            const matchingVendorIcon = matchingVendor?.assets.find(
+              (asset) =>
+                asset.asset_type === VendorAssetType.ICON &&
+                (asset.theme === theme ||
+                  asset.theme === VendorAssetTheme.UNIVERSAL)
             );
             return (
-              <div key={i} className="col-span-2 sm:col-span-1 text-left border-1 rounded-lg border border-border px-4 py-3">
-                <div className="flex justify-between items-center">
+              <div
+                key={i}
+                className="border-1 col-span-2 rounded-lg border border-border px-4 py-3 text-left sm:col-span-1"
+              >
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    {matchingWebsite?.meta?.branding?.icons && (
+                    {matchingVendorIcon && (
                       <img
-                        src={theme === 'dark' ? matchingWebsite.meta.branding.icons.dark : matchingWebsite.meta.branding.icons.light}
-                        alt="Website"
+                        src={matchingVendorIcon.url}
+                        alt={getVendorNameBySlug(vendorInfo.vendor)}
                         className="h-5 w-5"
                       />
                     )}
                     <div className="text-sm font-semibold">
-                      {getWebsiteName(websiteInfo.vendor)}
+                      {getVendorNameBySlug(vendorInfo.vendor)}
                     </div>
                   </div>
                 </div>
-                <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
-                  {websiteInfo.notFound.length > 0 && (
+                <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                  {vendorInfo.notFound.length > 0 && (
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
                           <AlertTriangle className="h-4 w-4 text-destructive" />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-[300px]">
-                          <p className="font-semibold mb-1">Not in stock:</p>
-                          <ul className="list-disc pl-4 space-y-1">
-                            {websiteInfo.notFound.map((card, index) => (
-                              <li key={index} className="text-xs">{card}</li>
+                          <p className="mb-1 font-semibold">Not in stock:</p>
+                          <ul className="list-disc space-y-1 pl-4">
+                            {vendorInfo.notFound.map((card, index) => (
+                              <li key={index} className="text-xs">
+                                {card}
+                              </li>
                             ))}
                           </ul>
                         </TooltipContent>
@@ -177,35 +193,51 @@ export const RecommendedStores = () => {
                   )}
                   <Dialog>
                     <DialogTrigger asChild>
-                      <button className="hover:underline store-availability">
-                        {websiteInfo.count}/{allCardNames.size} results in stock
+                      <button className="store-availability hover:underline">
+                        {vendorInfo.count}/{allCardNames.size} results in stock
                       </button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Available at {getWebsiteName(websiteInfo.vendor)}</DialogTitle>
+                        <DialogTitle>
+                          Available at {getVendorNameBySlug(vendorInfo.vendor)}
+                        </DialogTitle>
                         <DialogDescription>
-                          {websiteInfo.count} out of {allCardNames.size} cards are available at this store
+                          {vendorInfo.count} out of {allCardNames.size} cards
+                          are available at this store
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4">
                         <div>
-                          <h4 className="font-medium mb-2">Available Cards</h4>
+                          <h4 className="mb-2 font-medium">Available Cards</h4>
                           <div className="max-h-[40vh] overflow-y-auto rounded-md border">
                             <table className="w-full">
                               <thead className="sticky top-0 bg-background">
                                 <tr className="border-b">
-                                  <th className="text-left py-2 px-4">Card</th>
-                                  <th className="text-right py-2 px-4">Price</th>
-                                  <th className="text-right py-2 px-4">Condition</th>
+                                  <th className="px-4 py-2 text-left">Card</th>
+                                  <th className="px-4 py-2 text-right">
+                                    Price
+                                  </th>
+                                  <th className="px-4 py-2 text-right">
+                                    Condition
+                                  </th>
                                 </tr>
                               </thead>
                               <tbody>
-                                {websiteInfo.products.map((product, index) => (
-                                  <tr key={index} className="border-b border-border/50">
-                                    <td className="py-2 px-4">{product.name}</td>
-                                    <td className="text-right py-2 px-4">${product.price.toFixed(2)}</td>
-                                    <td className="text-right py-2 px-4">{product.condition}</td>
+                                {vendorInfo.products.map((product, index) => (
+                                  <tr
+                                    key={index}
+                                    className="border-b border-border/50"
+                                  >
+                                    <td className="px-4 py-2">
+                                      {product.name}
+                                    </td>
+                                    <td className="px-4 py-2 text-right">
+                                      ${product.price.toFixed(2)}
+                                    </td>
+                                    <td className="px-4 py-2 text-right">
+                                      {product.condition}
+                                    </td>
                                   </tr>
                                 ))}
                               </tbody>
@@ -213,18 +245,21 @@ export const RecommendedStores = () => {
                           </div>
                         </div>
 
-                        {websiteInfo.notFound.length > 0 && (
+                        {vendorInfo.notFound.length > 0 && (
                           <div>
-                            <h4 className="font-medium mb-2 flex items-center gap-2">
+                            <h4 className="mb-2 flex items-center gap-2 font-medium">
                               Not Available
                               <span className="text-xs text-muted-foreground">
-                                ({websiteInfo.notFound.length} cards)
+                                ({vendorInfo.notFound.length} cards)
                               </span>
                             </h4>
                             <div className="max-h-[20vh] overflow-y-auto rounded-md border">
-                              <div className="p-4 grid grid-cols-2 gap-2">
-                                {websiteInfo.notFound.map((card, index) => (
-                                  <div key={index} className="text-sm text-muted-foreground">
+                              <div className="grid grid-cols-2 gap-2 p-4">
+                                {vendorInfo.notFound.map((card, index) => (
+                                  <div
+                                    key={index}
+                                    className="text-sm text-muted-foreground"
+                                  >
                                     {card}
                                   </div>
                                 ))}
@@ -234,23 +269,25 @@ export const RecommendedStores = () => {
                         )}
                       </div>
                       <DialogFooter>
-                        <Button onClick={() => handleCheckout(websiteInfo.products)}>
-                          Checkout (${websiteInfo.totalCost.toFixed(2)})
+                        <Button
+                          onClick={() => handleCheckout(vendorInfo.products)}
+                        >
+                          Checkout (${vendorInfo.totalCost.toFixed(2)})
                         </Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
                 </div>
-                <div className="text-foreground text-lg font-bold mt-1">
-                  ${websiteInfo.totalCost.toFixed(2)}
+                <div className="mt-1 text-lg font-bold text-foreground">
+                  ${vendorInfo.totalCost.toFixed(2)}
                 </div>
 
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="outline"
-                      className="h-7 mt-2 w-full store-checkout"
+                      className="store-checkout mt-2 h-7 w-full"
                     >
                       Buy Now! <ExternalLink className="ml-2 h-3 w-3" />
                     </Button>
@@ -258,12 +295,18 @@ export const RecommendedStores = () => {
                   <PopoverContent className="w-80">
                     <div className="grid gap-4">
                       <div className="space-y-2">
-                        <h4 className="font-medium leading-none">Checkout at {getWebsiteName(websiteInfo.vendor)}</h4>
+                        <h4 className="font-medium leading-none">
+                          Checkout at {getVendorNameBySlug(vendorInfo.vendor)}
+                        </h4>
                         <p className="text-sm text-muted-foreground">
-                          You will be redirected to {getWebsiteName(websiteInfo.vendor)} to complete your purchase of {websiteInfo.count} card(s).
+                          You will be redirected to{' '}
+                          {getVendorNameBySlug(vendorInfo.vendor)} to complete
+                          your purchase of {vendorInfo.count} card(s).
                         </p>
                       </div>
-                      <Button onClick={() => handleCheckout(websiteInfo.products)}>
+                      <Button
+                        onClick={() => handleCheckout(vendorInfo.products)}
+                      >
                         Proceed to Checkout
                       </Button>
                     </div>

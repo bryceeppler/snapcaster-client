@@ -1,30 +1,33 @@
-import React from "react";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Trash2, ExternalLink } from "lucide-react";
-import useGlobalStore from "@/stores/globalStore";
-import useMultiSearchStore from "@/stores/multiSearchStore";
-import { Product } from "@/types";
+import React from 'react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Trash2, ExternalLink } from 'lucide-react';
+import useGlobalStore from '@/stores/globalStore';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import { Product } from '@/types';
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { groupProductsByHost, buildCartUpdateUrls } from '@/utils/cartUrlBuilder';
+  TableRow
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import {
+  groupProductsByHost,
+  buildCartUpdateUrls
+} from '@/utils/cartUrlBuilder';
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  PopoverTrigger
+} from '@/components/ui/popover';
 
 export const Cart = () => {
   const { cart, removeFromCart } = useMultiSearchStore();
-  const { getWebsiteName } = useGlobalStore();
+  const { getVendorNameBySlug } = useGlobalStore();
 
   const recommendedStores = [
     'obsidian',
@@ -46,20 +49,20 @@ export const Cart = () => {
   };
 
   const storeSummary = cart.reduce((acc, product) => {
-    const websiteName = getWebsiteName(product.vendor);
-    if (!acc[websiteName]) {
-      acc[websiteName] = {
+    const vendorName = getVendorNameBySlug(product.vendor);
+    if (!acc[vendorName]) {
+      acc[vendorName] = {
         count: 0,
         subtotal: 0,
         products: [],
-        vendor: product.vendor,
+        vendor: product.vendor
       };
     }
-    acc[websiteName].count += 1;
-    acc[websiteName].subtotal += product.price;
-    acc[websiteName].products.push(product);
+    acc[vendorName].count += 1;
+    acc[vendorName].subtotal += product.price;
+    acc[vendorName].products.push(product);
     return acc;
-  }, {} as { [website: string]: { count: number; subtotal: number; products: Product[]; vendor: string } });
+  }, {} as { [vendor: string]: { count: number; subtotal: number; products: Product[]; vendor: string } });
 
   if (cart.length === 0) {
     return (
@@ -85,9 +88,13 @@ export const Cart = () => {
               <TableRow key={i}>
                 <TableCell className="py-2 text-left">
                   <div className="flex flex-col gap-1">
-                    <span className="font-bold text-sm">{product.name}</span>
-                    <span className="uppercase font-medium text-xs text-muted-foreground">{product.set}</span>
-                    <span className="text-xs text-muted-foreground">{getWebsiteName(product.vendor)}</span>
+                    <span className="text-sm font-bold">{product.name}</span>
+                    <span className="text-xs font-medium uppercase text-muted-foreground">
+                      {product.set}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {getVendorNameBySlug(product.vendor)}
+                    </span>
                   </div>
                 </TableCell>
                 <TableCell className="py-2 text-right">
@@ -129,9 +136,9 @@ export const Cart = () => {
                     {recommendedStores.includes(summary.vendor) && (
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button 
-                            size="sm" 
-                            className="w-full h-5 store-checkout text-xs max-w-[100px]"
+                          <Button
+                            size="sm"
+                            className="store-checkout h-5 w-full max-w-[100px] text-xs"
                           >
                             Buy Now! <ExternalLink className="ml-2 h-3 w-3" />
                           </Button>
@@ -139,12 +146,17 @@ export const Cart = () => {
                         <PopoverContent className="w-80">
                           <div className="grid gap-4">
                             <div className="space-y-2">
-                              <h4 className="font-medium leading-none">Checkout at {store}</h4>
+                              <h4 className="font-medium leading-none">
+                                Checkout at {store}
+                              </h4>
                               <p className="text-sm text-muted-foreground">
-                                You will be redirected to {store} to complete your purchase of {summary.count} card(s).
+                                You will be redirected to {store} to complete
+                                your purchase of {summary.count} card(s).
                               </p>
                             </div>
-                            <Button onClick={() => handleCheckout(summary.products)}>
+                            <Button
+                              onClick={() => handleCheckout(summary.products)}
+                            >
                               Proceed to Checkout
                             </Button>
                           </div>
@@ -154,7 +166,9 @@ export const Cart = () => {
                   </div>
                 </TableCell>
                 <TableCell className="text-right">{summary.count}</TableCell>
-                <TableCell className="text-right">${summary.subtotal.toFixed(2)}</TableCell>
+                <TableCell className="text-right">
+                  ${summary.subtotal.toFixed(2)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -162,7 +176,7 @@ export const Cart = () => {
         <ScrollBar orientation="vertical" />
       </ScrollArea>
 
-      <div className="flex w-full justify-between px-2 pt-2 border-t border-border">
+      <div className="flex w-full justify-between border-t border-border px-2 pt-2">
         <span className="font-bold">Total</span>
         <span>
           ${cart.reduce((acc, product) => acc + product.price, 0).toFixed(2)}

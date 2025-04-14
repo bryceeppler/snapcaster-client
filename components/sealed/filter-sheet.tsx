@@ -1,8 +1,5 @@
 import { Button } from '@/components/ui/button';
-import {
-  RadioGroup,
-  RadioGroupItem
-} from '@/components/ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { SingleSortOptions, FilterOption } from '@/types/query';
@@ -30,13 +27,14 @@ export default function FilterSheet({
   sortByLabel,
   clearFilters
 }: FilterSheetProps) {
-  const { getWebsiteName } = useGlobalStore();
-  const { selectedFilters, toggleFilter, filterOptions } = useSealedSearchStore();
+  const { getVendorNameBySlug } = useGlobalStore();
+  const { selectedFilters, toggleFilter, filterOptions } =
+    useSealedSearchStore();
 
   // Memoize the isSelected function to prevent unnecessary recalculations
   const isSelected = useMemo(() => {
-    return (field: string, value: string) => 
-      selectedFilters.some(f => f.field === field && f.value === value);
+    return (field: string, value: string) =>
+      selectedFilters.some((f) => f.field === field && f.value === value);
   }, [selectedFilters]);
 
   return (
@@ -68,11 +66,14 @@ export default function FilterSheet({
           </div>
 
           <Separator />
-          
+
           {/* Filters */}
           <Accordion type="multiple" className="w-full">
             {filterOptions?.map((filterOption) => (
-              <AccordionItem value={filterOption.field} key={filterOption.field}>
+              <AccordionItem
+                value={filterOption.field}
+                key={filterOption.field}
+              >
                 <AccordionTrigger className="text-sm font-medium">
                   {filterOption.name}
                 </AccordionTrigger>
@@ -84,7 +85,9 @@ export default function FilterSheet({
                           type="checkbox"
                           id={`${filterOption.field}-${fValue.value}`}
                           checked={isSelected(filterOption.field, fValue.value)}
-                          onChange={() => toggleFilter(filterOption.field, fValue.value)}
+                          onChange={() =>
+                            toggleFilter(filterOption.field, fValue.value)
+                          }
                           className="mr-2 mt-1"
                         />
                         <label
@@ -92,7 +95,7 @@ export default function FilterSheet({
                           className="text-sm leading-5"
                         >
                           {filterOption.field === 'vendor'
-                            ? getWebsiteName(fValue.value)
+                            ? getVendorNameBySlug(fValue.value)
                             : fValue.label}{' '}
                           ({fValue.count})
                         </label>
@@ -107,4 +110,4 @@ export default function FilterSheet({
       </ScrollArea>
     </div>
   );
-} 
+}

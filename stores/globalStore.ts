@@ -10,6 +10,7 @@ type GlobalState = {
   adsEnabled: boolean;
   ads: AdsResponse;
   notificationStatus: boolean;
+  getVendorBySlug: (slug: string) => Vendor | undefined;
   getVendorNameBySlug: (slug: string) => string;
   initNotificationStatus: () => void;
   setNotificationStatusFalse: () => void;
@@ -46,6 +47,9 @@ const useGlobalStore = create<GlobalState>()(
       notificationStatus: false,
       adsEnabled: true,
       ads: { position: {} },
+      getVendorBySlug: (slug: string) => {
+        return get().vendors.find((vendor) => vendor.slug === slug);
+      },
       getVendorNameBySlug: (slug: string) => {
         const vendor = get().vendors.find((vendor) => vendor.slug === slug);
         return vendor ? vendor.name : 'Vendor not found';

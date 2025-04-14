@@ -8,6 +8,8 @@ import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { Button } from '../ui/button';
+import { VendorAssetTheme } from '@/services/vendorService';
+import { VendorAssetType } from '@/services/vendorService';
 
 type Props = {
   product: SealedProduct;
@@ -33,14 +35,9 @@ const DiscountBadge = ({ product }: Props) => {
 };
 
 const SealedCatalogItem = ({ product }: Props) => {
-  const { websites } = useGlobalStore();
+  const { getVendorNameBySlug, getVendorBySlug } = useGlobalStore();
   const { theme } = useTheme();
   const { productCategory } = useSealedSearchStore();
-
-  const findWebsiteNameByCode = (slug: string) => {
-    const website = websites.find((website) => website.slug === slug);
-    return website ? website.name : 'Website not found';
-  };
 
   const handleClick = () => {
     handleBuyClick(
@@ -86,26 +83,26 @@ const SealedCatalogItem = ({ product }: Props) => {
               onClick={handleClick}
             >
               <div className="text-xs md:hidden">
-                {findWebsiteNameByCode(product.vendor)}
+                {getVendorNameBySlug(product.vendor)}
               </div>
               {(() => {
-                const matchingWebsite = websites.find(
-                  (website) => product.vendor === website.slug
+                const matchingVendor = getVendorBySlug(product.vendor);
+                const matchingVendorIcon = matchingVendor?.assets.find(
+                  (asset) =>
+                    asset.asset_type === VendorAssetType.ICON &&
+                    (asset.theme === theme ||
+                      asset.theme === VendorAssetTheme.UNIVERSAL)
                 );
-                return matchingWebsite?.meta?.branding?.icons ? (
+                return matchingVendorIcon ? (
                   <img
-                    src={
-                      theme === 'dark'
-                        ? matchingWebsite.meta.branding.icons.dark
-                        : matchingWebsite.meta.branding.icons.light
-                    }
-                    alt="Website"
+                    src={matchingVendorIcon.url}
+                    alt={getVendorNameBySlug(product.vendor)}
                     className="h-4 w-4"
                   />
                 ) : null;
               })()}
               <div className="ml-1 hidden text-xs md:block">
-                {findWebsiteNameByCode(product.vendor)}
+                {getVendorNameBySlug(product.vendor)}
               </div>
             </div>
             <div className="mt-3">

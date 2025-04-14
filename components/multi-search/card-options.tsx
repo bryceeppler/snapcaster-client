@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const CardOption = ({ product }: { product: Product }) => {
-  const { getWebsiteName } = useGlobalStore();
+  const { getVendorNameBySlug } = useGlobalStore();
   const useMediaQuery = (width: number): boolean => {
     const [isMobile, setIsMobile] = useState(false);
 
@@ -33,7 +33,7 @@ const CardOption = ({ product }: { product: Product }) => {
       <img src={product.image} alt={product.name} className="h-auto w-16" />
       <div className="ml-2 flex flex-col text-left">
         <div className="text-sm font-bold">
-          {getWebsiteName(product.vendor)}
+          {getVendorNameBySlug(product.vendor)}
         </div>
         <div className="text-sm font-bold capitalize text-muted-foreground">
           {product.set}
