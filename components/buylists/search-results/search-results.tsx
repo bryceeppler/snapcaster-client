@@ -66,10 +66,12 @@ export const BuylistSearchResults = () => {
     refetch();
   }, [filters, sortBy]);
 
+  // Set the number of search results
   useEffect(() => {
     setSearchResultCount(data?.numResults || 0);
   }, [data?.numResults]);
 
+  // Set the default sort by
   useEffect(() => {
     if (defaultSortBy === null && data?.defaultSortBy) {
       setDefaultSortBy(data?.defaultSortBy);

@@ -25,6 +25,7 @@ import {
   MinusIcon,
   PlusIcon
 } from '@radix-ui/react-icons';
+import { useAuth } from '@/hooks/useAuth';
 //other
 type BuylistCatalogItemProps = {
   cardData: any;
@@ -38,6 +39,7 @@ const conditions = [
 ];
 export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
   const { currentCartId } = useBuyListStore();
+  const { isAuthenticated } = useAuth();
   const { cartItems, updateCartItem } = useCartItems(
     currentCartId || undefined
   );
@@ -119,6 +121,11 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
                   className="border-input-none w-full rounded-b-lg bg-card font-montserrat text-xs font-semibold"
                   variant="outline"
                   onClick={(e) => {
+                    if (!isAuthenticated) {
+                      e.preventDefault();
+                      toast.error('Please login before adding to your cart');
+                      return;
+                    }
                     if (!currentCartId) {
                       e.preventDefault();
                       toast.error('No list selected');

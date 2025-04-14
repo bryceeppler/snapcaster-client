@@ -35,6 +35,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useUserCarts } from '@/hooks/useUserCarts';
 import { Input } from '@/components/ui/input';
 import { VerifyListContainer } from '../modify-list-items/verify-list-container';
+import { useAuth } from '@/hooks/useAuth';
 
 /////////////////////////////////////////////////////////////////////////////////////
 // This File Contains All the Header Components for each step in the buylist stage //
@@ -43,6 +44,7 @@ import { VerifyListContainer } from '../modify-list-items/verify-list-container'
 export const ListSelectionHeader = () => {
   const { setBuylistUIState } = useBuyListStore();
   const { createCart, isCreating } = useUserCarts();
+  const { isAuthenticated } = useAuth();
   const [newCartName, setNewCartName] = useState('');
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   return (
@@ -58,6 +60,7 @@ export const ListSelectionHeader = () => {
               variant="ghost"
               size="sm"
               className="relative h-9 px-2 text-sm font-medium"
+              disabled={!isAuthenticated}
             >
               <PlusIcon className="h-6 w-6 cursor-pointer" />
             </Button>
@@ -159,12 +162,8 @@ export const CurrentListHeader = () => {
                   Make sure your buylist is correct before submitting.
                 </DialogDescription>
               </DialogHeader>
-              <div className="flex-1 overflow-hidden">
-                <VerifyListContainer
-                  closeMobileCartDialog={() => {
-                    setCartDialogOpen(false);
-                  }}
-                />
+              <div className="flex-1 overflow-hidden p-6">
+                <VerifyListContainer />
               </div>
               <div className="sticky bottom-0 border-t bg-background p-4">
                 <Button

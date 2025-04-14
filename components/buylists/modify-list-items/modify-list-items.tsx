@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
 import { Separator } from '@/components/ui/separator';
 import { CurrentListHeader } from '../header/header';
+import { AlertCircle } from 'lucide-react';
 
 interface LeftCartEditWithViewOffersProps {
   closeMobileCartDialog?: () => void;
@@ -43,16 +44,36 @@ export const LeftCartEditWithViewOffers = ({
 
       <div className="flex-1 overflow-hidden rounded-lg bg-card">
         <ScrollArea className="h-full" type="always">
-          <div className="mr-1.5 space-y-1  px-1 ">
-            {currentCart?.cart?.items && currentCart.cart.items.length > 0 && (
-              <Separator className="mb-2" />
-            )}
-            {currentCart?.cart?.items?.map((item, index) => (
-              <div key={index}>
-                <CartItem item={item} />
-                <Separator className="mb-2" />
-              </div>
-            ))}
+          <div
+            className={`flex h-[calc(75vh-4rem)] flex-col items-center ${
+              currentCart?.cart?.items && currentCart.cart.items.length > 0
+                ? ''
+                : 'pt-[calc(25vh-2rem)]'
+            }`}
+          >
+            <div className="w-full px-1">
+              {currentCart?.cart?.items && currentCart.cart.items.length > 0 ? (
+                <>
+                  <Separator className="mb-2" />
+                  {currentCart.cart.items.map((item, index) => (
+                    <div key={index}>
+                      <CartItem item={item} />
+                      <Separator className="mb-2" />
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <AlertCircle></AlertCircle>
+                  <div className="flex flex-col items-center justify-center">
+                    <p className="text-lg font-semibold">No Items</p>
+                    <p className="text-sm text-muted-foreground">
+                      Add items to your list to see them here
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </ScrollArea>
       </div>
