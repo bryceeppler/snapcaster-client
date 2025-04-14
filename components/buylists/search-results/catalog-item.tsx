@@ -131,13 +131,13 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
               </DialogTrigger>
             )}
 
-            <DialogContent className="w-min px-16">
-              <div className="mx-auto w-[250px] px-4">
+            <DialogContent className="w-[95vw] max-w-[400px] rounded-lg px-4 sm:px-6">
+              <div className="mx-auto w-[200px] sm:w-[250px]">
                 <CardImage imageUrl={cardData.image} alt={cardData.name} />
               </div>
 
-              <div className="mt-2">
-                <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase">
+              <div className="mt-2 space-y-2">
+                <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase text-muted-foreground">
                   {cardData.set}
                 </div>
                 <h3 className="text-[0.9rem] font-semibold capitalize">
@@ -159,7 +159,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
                   const quantity = getQuantityForCondition(conditionName);
 
                   return (
-                    <div key={conditionName} className="mt-4">
+                    <div key={conditionName} className="mt-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           {!isAvailable && (
@@ -174,9 +174,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
                               </Tooltip>
                             </TooltipProvider>
                           )}
-                          <p className="text-base font-medium">
-                            {conditionName}
-                          </p>
+                          <p className="text-sm font-medium">{conditionName}</p>
                         </div>
                         <div className="flex h-8 items-center rounded-xl border">
                           <Button
@@ -190,7 +188,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
                           >
                             <MinusIcon className="h-4 w-4" />
                           </Button>
-                          <p className="w-8 bg-background text-center font-semibold">
+                          <p className="w-8 bg-background text-center ">
                             {quantity}
                           </p>
                           <Button

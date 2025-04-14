@@ -124,16 +124,20 @@ export const BuylistStoreOffers = () => {
                     <div className="storeData.items.length space-y-1 text-sm font-normal leading-none">
                       <div className="flex justify-between">
                         <p>Credit</p>
-                        <p>${storeOfferData.creditSubtotal}</p>
+                        <p className="font-light">
+                          ${storeOfferData.creditSubtotal}
+                        </p>
                       </div>
                       <div className="flex justify-between">
                         <p>Cash</p>
-                        <p>${storeOfferData.cashSubtotal}</p>
+                        <p className="font-light">
+                          ${storeOfferData.cashSubtotal}
+                        </p>
                       </div>
 
                       <div className="flex justify-between">
                         <p>Buying</p>
-                        <p>
+                        <p className="font-light">
                           {storeOfferData.items.length}/
                           {storeOfferData.items.length +
                             storeOfferData.unableToPurchaseItems.length}

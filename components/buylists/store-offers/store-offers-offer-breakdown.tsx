@@ -180,13 +180,14 @@ const PurchasingCardSubmitDetails = ({ cardData }: SubmitCardDetailsProps) => {
         />
       </div>
 
-      <div className="flex w-full flex-col justify-between py-1">
+      <div className="flex w-full flex-col justify-between space-y-0.5 py-1">
         <div className="space-y-0.5">
-          <p className="text-sm font-medium leading-none">
-            {cardData.cardName}
-          </p>
+          {' '}
           <p className="text-xs  leading-none text-muted-foreground">
             {cardData.setName}
+          </p>
+          <p className="text-sm font-medium leading-none">
+            {cardData.cardName}
           </p>
           <div className="font-0 flex flex-wrap items-center gap-1 text-xs text-primary">
             <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
@@ -201,11 +202,11 @@ const PurchasingCardSubmitDetails = ({ cardData }: SubmitCardDetailsProps) => {
           </div>
         </div>
 
-        <div>
-          <div className="flex justify-between">
+        <div className="flex flex-col space-y-0.5">
+          <div className="flex justify-between ">
             <div className="flex items-center gap-0.5">
-              <p className="text-xs  leading-none text-muted-foreground">
-                Purchasing (Limit {cardData.maxPurchaseQuantity})
+              <p className="text-xs  leading-none text-muted-foreground ">
+                Purchasing - Limit {cardData.maxPurchaseQuantity}
               </p>
             </div>
             <div className="flex space-x-1">
@@ -288,11 +289,11 @@ const NotPurchasingCardSubmitDetails = ({
 
       <div className="flex w-full flex-col justify-between py-1">
         <div className="space-y-0.5">
-          <p className="text-sm font-medium leading-none">
-            {cardData.cardName}
-          </p>
           <p className="text-xs  leading-none text-muted-foreground">
             {cardData.setName}
+          </p>
+          <p className="text-sm font-medium leading-none">
+            {cardData.cardName}
           </p>
           <div className="font-0 flex flex-wrap items-center gap-1 text-xs text-primary">
             <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
@@ -307,7 +308,7 @@ const NotPurchasingCardSubmitDetails = ({
           </div>
         </div>
 
-        <div>
+        <div className="flex flex-col space-y-0.5">
           <div className="flex justify-between">
             <div className="flex items-center gap-0.5">
               <p className="text-xs leading-none text-muted-foreground">

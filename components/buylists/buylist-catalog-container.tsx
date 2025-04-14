@@ -15,7 +15,7 @@ export default function BuylistCatalog() {
   const { buylistUIState } = useBuyListStore();
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 ">
       {/* Desktop Header */}
       {(buylistUIState === 'searchResultsState' ||
         buylistUIState === 'listSelectionState') && (

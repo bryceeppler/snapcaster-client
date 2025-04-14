@@ -34,6 +34,7 @@ import axiosInstance from '@/utils/axiosWrapper';
 import { useQuery } from '@tanstack/react-query';
 import { useUserCarts } from '@/hooks/useUserCarts';
 import { Input } from '@/components/ui/input';
+import { VerifyListContainer } from '../modify-list-items/verify-list-container';
 
 /////////////////////////////////////////////////////////////////////////////////////
 // This File Contains All the Header Components for each step in the buylist stage //
@@ -77,7 +78,8 @@ export const ListSelectionHeader = () => {
               />
               <Button
                 onClick={() => {
-                  createCart(newCartName);
+                  const response = createCart(newCartName);
+                  console.log(response);
                   setNewCartName('');
                   setCreateDialogOpen(false);
                   setBuylistUIState('searchResultsState');
@@ -150,18 +152,31 @@ export const CurrentListHeader = () => {
                 <ShoppingCart className="h-5 w-5 cursor-pointer" />
               </Button>
             </DialogTrigger>
-            <DialogContent className="flex h-screen w-screen max-w-none flex-col gap-0 space-y-3  ">
-              <DialogHeader className="mt-4 h-min space-y-1.5">
+            <DialogContent className="flex h-[100dvh] max-w-none flex-col overflow-hidden p-0">
+              <DialogHeader className="p-6 pb-0">
                 <DialogTitle>Confirm Your Buylist</DialogTitle>
                 <DialogDescription>
                   Make sure your buylist is correct before submitting.
                 </DialogDescription>
               </DialogHeader>
-              <LeftCartEditWithViewOffers
-                closeMobileCartDialog={() => {
-                  setCartDialogOpen(false);
-                }}
-              />
+              <div className="flex-1 overflow-hidden">
+                <VerifyListContainer
+                  closeMobileCartDialog={() => {
+                    setCartDialogOpen(false);
+                  }}
+                />
+              </div>
+              <div className="sticky bottom-0 border-t bg-background p-4">
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    setCartDialogOpen(false);
+                    setBuylistUIState('viewAllOffersState');
+                  }}
+                >
+                  View Offers
+                </Button>
+              </div>
             </DialogContent>
           </Dialog>
         </div>
@@ -224,7 +239,10 @@ export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
               </span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left">
+          <SheetContent
+            side="left"
+            className="w-[100vw] p-0 px-3 py-6 sm:w-[400px]"
+          >
             <FilterSection
               filterOptions={filterOptions}
               sortBy={sortBy ? sortBy : defaultSortBy}
@@ -271,7 +289,7 @@ export const ViewAllOffersHeader = () => {
   const { reviewData, setBuylistUIState, buylistUIState } = useBuyListStore();
   return (
     <div>
-      <div className="mx-auto flex  w-full items-center justify-between bg-card p-1 md:rounded-lg">
+      <div className="mx-auto flex  w-full items-center justify-between rounded-lg bg-card p-1">
         <div className="flex w-24 items-center justify-start gap-1">
           {buylistUIState === 'viewAllOffersState' && (
             <Button

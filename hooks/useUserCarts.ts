@@ -82,7 +82,7 @@ export function useUserCarts() {
       );
     },
     onSuccess: () => {
-      toast.success('Cart deleted successfully');
+      toast.success('List deleted successfully');
       queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
     },
     onError: (error: any) => {
