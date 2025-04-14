@@ -3,14 +3,18 @@ import BackToTopButton from '../ui/back-to-top-btn';
 import SingleCatalogItem from './single-catalog-item';
 import FilterSection from '@/components/search-ui/search-filter-container';
 import { useAuth } from '@/hooks/useAuth';
-import useGlobalStore from '@/stores/globalStore';
 import AdComponent from '../ad';
-import type { Ad, AdWeight } from '@/types/ads';
+import type {
+  AdvertisementWithImages,
+  AdvertisementWeight
+} from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 import React, { useState, useEffect } from 'react';
 import { AdSelector } from '@/utils/adSelector';
 import { singleSortByLabel } from '@/types/query';
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 
 export default function SingleCatalog() {
   const {
@@ -34,26 +38,28 @@ export default function SingleCatalog() {
   } = useSingleSearchStore();
 
   const { hasActiveSubscription } = useAuth();
-  const { getFeedAds } = useGlobalStore();
+  const { getFeedAds } = useAdvertisements();
 
-  const [ads, setAds] = useState<Ad[]>([]);
-  const [initialAd, setInitialAd] = useState<Ad | null>(null);
+  const [ads, setAds] = useState<AdvertisementWithImages[]>([]);
+  const [initialAd, setInitialAd] = useState<AdvertisementWithImages | null>(
+    null
+  );
 
   // Note these store_ids come from the ads database
-  const storeWeights: AdWeight[] = [
-    { store_id: 2, weight: 1 }, // obsidian
-    { store_id: 5, weight: 1 }, // exorgames
-    { store_id: 4, weight: 1 }, // chimera
-    { store_id: 3, weight: 1 }, // levelup
-    { store_id: 8, weight: 1 }, // houseofcards
-    { store_id: 9, weight: 1 } // mythicstore
+  const storeWeights: AdvertisementWeight[] = [
+    { vendor_id: 2, position: AdvertisementPosition.FEED, weight: 1 }, // obsidian
+    { vendor_id: 5, position: AdvertisementPosition.FEED, weight: 1 }, // exorgames
+    { vendor_id: 4, position: AdvertisementPosition.FEED, weight: 1 }, // chimera
+    { vendor_id: 3, position: AdvertisementPosition.FEED, weight: 1 }, // levelup
+    { vendor_id: 8, position: AdvertisementPosition.FEED, weight: 1 }, // houseofcards
+    { vendor_id: 9, position: AdvertisementPosition.FEED, weight: 1 } // mythicstore
   ];
 
   useEffect(() => {
     if (!hasActiveSubscription && searchResults) {
-      const ads = getFeedAds();
-      if (ads?.length) {
-        const selector = new AdSelector(ads, storeWeights);
+      const feedAds = getFeedAds();
+      if (feedAds?.length) {
+        const selector = new AdSelector(feedAds, storeWeights);
         setInitialAd(selector.getNextAd());
 
         const adCount = Math.floor(searchResults.length / 11);
@@ -64,7 +70,7 @@ export default function SingleCatalog() {
         setAds(selectedAds);
       }
     }
-  }, [searchResults, hasActiveSubscription]);
+  }, [searchResults, hasActiveSubscription, getFeedAds]);
 
   return (
     <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-[240px_1fr]">

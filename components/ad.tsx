@@ -2,11 +2,14 @@
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import { trackAdClick, trackAdVisible } from '@/utils/analytics';
-import { Ad } from '@/types/ads';
+import {
+  AdvertisementWithImages,
+  AdvertisementImageType
+} from '@/types/advertisements';
 import Link from 'next/link';
 
 type AdComponentProps = {
-  ad: Ad;
+  ad: AdvertisementWithImages;
 };
 
 const AdComponent: React.FC<AdComponentProps> = ({ ad }) => {
@@ -38,7 +41,7 @@ const AdComponent: React.FC<AdComponentProps> = ({ ad }) => {
 
   return (
     <Link
-      href={ad.url}
+      href={ad.target_url}
       ref={ref}
       target="_blank"
       data-position-id="4"
@@ -57,20 +60,28 @@ const AdComponent: React.FC<AdComponentProps> = ({ ad }) => {
           </div>
 
           <img
-            src={ad.desktop_image}
+            src={
+              ad.images.find(
+                (image) => image.image_type === AdvertisementImageType.DESKTOP
+              )?.image_url || ''
+            }
             alt={`ad-${ad.id}`}
             onError={handleError}
             onLoad={handleLoad}
-            className={`hidden w-full sm:flex object-cover transition-opacity duration-500 ${
+            className={`hidden w-full object-cover transition-opacity duration-500 sm:flex ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
           />
           <img
-            src={ad.mobile_image}
+            src={
+              ad.images.find(
+                (image) => image.image_type === AdvertisementImageType.MOBILE
+              )?.image_url || ''
+            }
             alt={`ad-${ad.id}`}
             onError={handleError}
             onLoad={handleLoad}
-            className={`w-full flex sm:hidden object-cover transition-opacity duration-500 ${
+            className={`flex w-full object-cover transition-opacity duration-500 sm:hidden ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
           />

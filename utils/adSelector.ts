@@ -1,8 +1,15 @@
-import { Ad, AdWeight, WeightedAd } from '../types/ads';
+import {
+  AdvertisementWithImages,
+  AdvertisementWeight
+} from '../types/advertisements';
+
+type WeightedAdvertisement = AdvertisementWithImages & {
+  currentWeight: number;
+};
 
 export class AdSelector {
-  private weightedAds: WeightedAd[];
-  private storeWeights: AdWeight[];
+  private weightedAds: WeightedAdvertisement[];
+  private storeWeights: AdvertisementWeight[];
 
   private shuffle<T>(array: T[]): T[] {
     const shuffled = [...array];
@@ -13,38 +20,44 @@ export class AdSelector {
     return shuffled;
   }
 
-  constructor(ads: Ad[], storeWeights: AdWeight[] = []) {
+  constructor(
+    ads: AdvertisementWithImages[],
+    storeWeights: AdvertisementWeight[] = []
+  ) {
     this.storeWeights = storeWeights;
-    this.weightedAds = this.shuffle(ads).map(ad => ({
+    this.weightedAds = this.shuffle(ads).map((ad) => ({
       ...ad,
-      currentWeight: this.getInitialWeight(ad.store_id)
+      currentWeight: this.getInitialWeight(ad.vendor_id)
     }));
   }
 
-  private getInitialWeight(storeId: number): number {
-    const storeWeight = this.storeWeights.find(sw => sw.store_id === storeId);
-    return storeWeight?.weight || 1; // default weight is 1 
+  private getInitialWeight(vendorId: number): number {
+    const storeWeight = this.storeWeights.find(
+      (sw) => sw.vendor_id === vendorId
+    );
+    return storeWeight?.weight || 1; // default weight is 1
   }
 
-  public getNextAd(): Ad {
+  public getNextAd(): AdvertisementWithImages {
     if (this.weightedAds.length === 0) {
       throw new Error('No ads available');
     }
 
     // Find ad with the highest current weight
-    const selectedAd = this.weightedAds.reduce((prev, current) => 
+    const selectedAd = this.weightedAds.reduce((prev, current) =>
       current.currentWeight > prev.currentWeight ? current : prev
     );
 
     // Update weights
-    this.weightedAds = this.weightedAds.map(ad => ({
+    this.weightedAds = this.weightedAds.map((ad) => ({
       ...ad,
-      currentWeight: ad.id === selectedAd.id 
-        ? this.getInitialWeight(ad.store_id) // Reset selected ad's weight
-        : ad.currentWeight + this.getInitialWeight(ad.store_id) // Increment others
+      currentWeight:
+        ad.id === selectedAd.id
+          ? this.getInitialWeight(ad.vendor_id) // Reset selected ad's weight
+          : ad.currentWeight + this.getInitialWeight(ad.vendor_id) // Increment others
     }));
 
     const { currentWeight, ...adWithoutWeight } = selectedAd;
     return adWithoutWeight;
   }
-} 
+}
