@@ -175,7 +175,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
     applyFilters();
   };
 
-  const { getWebsiteName } = useGlobalStore();
+  const { getVendorNameBySlug } = useGlobalStore();
   return (
     <div className="space-y-3 py-2">
       {filterOption &&
@@ -190,7 +190,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
             />
             <label htmlFor={option.value} className="text-sm leading-5">
               {filterOption.field === 'vendor'
-                ? getWebsiteName(option.value)
+                ? getVendorNameBySlug(option.value)
                 : option.label}{' '}
               ({option.count})
             </label>
