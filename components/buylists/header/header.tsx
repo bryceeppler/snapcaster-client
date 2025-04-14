@@ -1,6 +1,11 @@
 //hooks and store states
 import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
+import { useAuth } from '@/hooks/useAuth';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useUserCarts } from '@/hooks/useUserCarts';
 //components
+import { VerifyListContainer } from '../modify-list-items/verify-list-container';
 import FilterSection from '@/components/search-ui/search-filter-container';
 import {
   Sheet,
@@ -18,6 +23,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 //icons
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import {
@@ -27,15 +33,8 @@ import {
   ShoppingCart,
   SlidersHorizontal
 } from 'lucide-react';
-
-import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
-import { useEffect, useState } from 'react';
+//other
 import axiosInstance from '@/utils/axiosWrapper';
-import { useQuery } from '@tanstack/react-query';
-import { useUserCarts } from '@/hooks/useUserCarts';
-import { Input } from '@/components/ui/input';
-import { VerifyListContainer } from '../modify-list-items/verify-list-container';
-import { useAuth } from '@/hooks/useAuth';
 
 /////////////////////////////////////////////////////////////////////////////////////
 // This File Contains All the Header Components for each step in the buylist stage //
@@ -81,8 +80,7 @@ export const ListSelectionHeader = () => {
               />
               <Button
                 onClick={() => {
-                  const response = createCart(newCartName);
-                  console.log(response);
+                  createCart(newCartName);
                   setNewCartName('');
                   setCreateDialogOpen(false);
                   setBuylistUIState('searchResultsState');
@@ -151,7 +149,6 @@ export const CurrentListHeader = () => {
                 size="sm"
                 className="relative h-9 px-2 text-sm font-medium"
               >
-                {' '}
                 <ShoppingCart className="h-5 w-5 cursor-pointer" />
               </Button>
             </DialogTrigger>
@@ -289,26 +286,27 @@ export const ViewAllOffersHeader = () => {
   return (
     <div>
       <div className="mx-auto flex  w-full items-center justify-between rounded-lg bg-card p-1">
+        {/* LEFT SECTION */}
         <div className="flex w-24 items-center justify-start gap-1">
-          {buylistUIState === 'viewAllOffersState' && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="relative h-9 px-2 text-sm font-medium"
-              onClick={() => {
-                setBuylistUIState('searchResultsState');
-              }}
-            >
-              <span className="flex cursor-pointer items-center gap-0.5  rounded-lg font-medium">
-                <ChevronLeft className="h-5 w-5" />
-                <p className="text-sm">Back</p>
-              </span>
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="relative h-9 px-2 text-sm font-medium"
+            onClick={() => {
+              setBuylistUIState('searchResultsState');
+            }}
+          >
+            <span className="flex cursor-pointer items-center gap-0.5  rounded-lg font-medium">
+              <ChevronLeft className="h-5 w-5" />
+              <p className="text-sm">Back</p>
+            </span>
+          </Button>
         </div>
 
+        {/* MIDDLE SECTION */}
         <p className="truncate text-sm">{reviewData?.length} Store Offers</p>
 
+        {/* RIGHT SECTION */}
         <div className="flex w-24 items-center justify-end gap-1">
           <a href="/faq#buylists" target="_blank">
             <Button
@@ -359,9 +357,7 @@ export const FinalSubmissionHeader = () => {
         {/* MIDDLE SECTION */}
         <div className="my-0.25">
           <div className="max-w-full overflow-hidden">
-            {buylistUIState === 'finalSubmissionState' && (
-              <p className="truncate text-sm">Submit Offer</p>
-            )}
+            <p className="truncate text-sm">Submit Offer</p>
           </div>
         </div>
         {/* RIGHT SECTION */}

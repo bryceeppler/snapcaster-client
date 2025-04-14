@@ -9,6 +9,7 @@ import {
 } from 'react';
 import useBuylistStore from '@/stores/useBuylistStore';
 import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
+import { useDebounceCallback } from 'usehooks-ts';
 //components
 import {
   Select,
@@ -28,7 +29,7 @@ import { Input } from '@/components/ui/input';
 import { ChevronDown, HelpCircle, X, Loader2 } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 //other
-import { useDebounceCallback } from 'usehooks-ts';
+
 import { Tcg } from '@/types';
 
 interface AutocompleteResult {

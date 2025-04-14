@@ -1,6 +1,7 @@
 //hooks and store states
 import useBuyListStore from '@/stores/useBuylistStore';
 import { useCartItems } from '@/hooks/useCartItems';
+import { useAuth } from '@/hooks/useAuth';
 //components
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -25,8 +26,7 @@ import {
   MinusIcon,
   PlusIcon
 } from '@radix-ui/react-icons';
-import { useAuth } from '@/hooks/useAuth';
-//other
+
 type BuylistCatalogItemProps = {
   cardData: any;
 };
@@ -37,6 +37,7 @@ const conditions = [
   'Heavily Played',
   'Damaged'
 ];
+
 export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
   const { currentCartId } = useBuyListStore();
   const { isAuthenticated } = useAuth();

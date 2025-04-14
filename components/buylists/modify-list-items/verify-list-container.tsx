@@ -1,10 +1,14 @@
+//hooks and store states
 import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
-import { CartItem } from './list-item';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { AlertCircle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
+//components
+import { CartItem } from './list-item';
 import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
+//icons
+import { AlertCircle } from 'lucide-react';
+//other
+import axiosInstance from '@/utils/axiosWrapper';
 
 export const VerifyListContainer = () => {
   const CART_KEY = (cartId: number) => ['cart', cartId] as const;
@@ -46,7 +50,7 @@ export const VerifyListContainer = () => {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-2">
-                <AlertCircle></AlertCircle>
+                <AlertCircle />
                 <div className="flex flex-col items-center justify-center">
                   <p className="text-lg font-semibold">No Items</p>
                   <p className="text-sm text-muted-foreground">

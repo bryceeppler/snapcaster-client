@@ -5,10 +5,10 @@ import { toast } from 'sonner';
 import { FilterOption } from '@/types/query';
 
 export type BuylistUIState =
-  | 'listSelectionState' // listSelection | searchResults
-  | 'searchResultsState' // cart | searchResults
-  | 'viewAllOffersState' // cart | viewOffers
-  | 'finalSubmissionState'; // purchasingBreakdown | submission;
+  | 'listSelectionState'
+  | 'searchResultsState'
+  | 'viewAllOffersState'
+  | 'finalSubmissionState';
 
 type SubmitBuylistResponse = {
   success: boolean;

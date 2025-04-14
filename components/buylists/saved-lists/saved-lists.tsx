@@ -1,18 +1,15 @@
 //hooks and store states
 import React from 'react';
-
+import { useAuth } from '@/hooks/useAuth';
 import { useUserCarts } from '@/hooks/useUserCarts';
 //components
 import { ListItem } from './saved-list-item';
-
-import { ScrollArea } from '@/components/ui/scroll-area';
-//icons
-
 import { SelectSeparator } from '@/components/ui/select';
 import { ListSelectionHeader } from '../header/header';
-import { useAuth } from '@/hooks/useAuth';
-import { AlertCircle } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
+//icons
+import { AlertCircle } from 'lucide-react';
 
 export const LeftCartListSelection = () => {
   const { carts } = useUserCarts();

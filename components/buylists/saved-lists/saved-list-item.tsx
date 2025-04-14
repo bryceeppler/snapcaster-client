@@ -19,8 +19,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-//icons
-import { CheckCircle } from 'lucide-react';
 
 export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   const { setBuylistUIState, currentCartId, setCurrentCartId, setCurrentCart } =

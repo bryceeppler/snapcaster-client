@@ -2,13 +2,11 @@
 import { useEffect, useState } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/useBuylistStore';
+import { useTheme } from 'next-themes';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 //components
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-//other
-import { useTheme } from 'next-themes';
-import { useConnectedVendors } from '@/hooks/useConnectedVendors';
-import { ExternalLink } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -18,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+//icons
+import { ExternalLink } from 'lucide-react';
 
 export const SubmitOfferPanel = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -182,37 +182,6 @@ export const SubmitOfferPanel = () => {
               </div>
             </div>
           </div>
-          {/* <div className="flex justify-between space-x-2 ">
-            <Button
-              className="h-9 w-full"
-              disabled={!termsAccepted || !isVendorConnected}
-              onClick={() => handleSubmit('Cash')}
-            >
-              Request Cash
-            </Button>
-            <Button
-              className="h-9 w-full"
-              disabled={!termsAccepted || !isVendorConnected}
-              onClick={() => handleSubmit('Store Credit')}
-            >
-              Request Credit
-            </Button>
-          </div> */}
-          {/* <Select>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a fruit" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select> */}
           <Select
             onValueChange={(value: PaymentMethod) => setSelectedPayment(value)}
             value={selectedPayment}

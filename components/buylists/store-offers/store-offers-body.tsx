@@ -3,15 +3,13 @@ import { useEffect, useRef } from 'react';
 import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/useBuylistStore';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
-import { useCartItems } from '@/hooks/useCartItems';
+import { useTheme } from 'next-themes';
 //components
 import { Button } from '@/components/ui/button';
-//icons
-import { ExternalLink } from 'lucide-react';
-//other
-import { useTheme } from 'next-themes';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
+//icons
+import { ExternalLink } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
 
 export const BuylistStoreOffers = () => {
@@ -177,7 +175,7 @@ export const BuylistStoreOffers = () => {
                   <div className="flex flex-col items-center justify-center">
                     <p className="text-lg font-semibold">No Offers</p>
                     <p className="text-sm text-muted-foreground">
-                      No stores are currently offering any cards from your list
+                      No stores are offering cash or credit from your buylist
                     </p>
                   </div>
                 </div>

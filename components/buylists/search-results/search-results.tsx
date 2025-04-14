@@ -1,37 +1,12 @@
 //hooks and store states
 import { useEffect, useRef, useState } from 'react';
-import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
-import {
-  TransformedSearchResponse,
-  useBuylistSearch
-} from '@/hooks/queries/useBuylistSearch';
+import useBuyListStore from '@/stores/useBuylistStore';
+import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
 //components
 import { BuylistCatalogItem } from './catalog-item';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LeftCartListSelection } from '../saved-lists/saved-lists';
 import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { ShoppingCart } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog';
-
-//other
-interface BuylistSearchResultsProps {
-  data: TransformedSearchResponse | undefined;
-  isFetchingNextPage: boolean;
-  isLoading: boolean;
-  loadMoreRef: React.RefObject<HTMLDivElement>;
-  setShouldReinitObserver: (value: boolean) => void;
-}
 
 export const BuylistSearchResults = () => {
   const {

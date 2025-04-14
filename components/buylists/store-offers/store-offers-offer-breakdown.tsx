@@ -1,6 +1,9 @@
 //hooks and store states
 import { useEffect, useState } from 'react';
 import useBuyListStore from '@/stores/useBuylistStore';
+import useGlobalStore from '@/stores/globalStore';
+import { useTheme } from 'next-themes';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 //components
 import { SubmitOfferPanel } from './submit-offer-panel';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -13,9 +16,6 @@ import {
 } from '@/components/ui/tooltip';
 //icons
 import { BadgeDollarSign, ExternalLink } from 'lucide-react';
-import { useConnectedVendors } from '@/hooks/useConnectedVendors';
-import useGlobalStore from '@/stores/globalStore';
-import { useTheme } from 'next-themes';
 
 export const BuylistStoreOfferBreakdown = () => {
   const { reviewData, selectedStoreForReview } = useBuyListStore();
@@ -182,7 +182,6 @@ const PurchasingCardSubmitDetails = ({ cardData }: SubmitCardDetailsProps) => {
 
       <div className="flex w-full flex-col justify-between space-y-0.5 py-1">
         <div className="space-y-0.5">
-          {' '}
           <p className="text-xs  leading-none text-muted-foreground">
             {cardData.setName}
           </p>

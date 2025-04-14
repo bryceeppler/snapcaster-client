@@ -3,6 +3,7 @@ import { useCartItems } from '@/hooks/useCartItems';
 import useBuyListStore, { IBuylistCartItem } from '@/stores/useBuylistStore';
 //components
 import { Button } from '@/components/ui/button';
+//icons
 import { MinusIcon, Plus } from 'lucide-react';
 
 export const CartItem = ({ item }: { item: IBuylistCartItem }) => {

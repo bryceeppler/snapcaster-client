@@ -1,23 +1,17 @@
 //hooks and store states
 import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
+import { useQuery } from '@tanstack/react-query';
 //components
+import { CurrentListHeader } from '../header/header';
 import { CartItem } from './list-item';
 import { ScrollArea } from '@/components/ui/scroll-area';
-//icons
-//other
-import { useQuery } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
 import { Separator } from '@/components/ui/separator';
-import { CurrentListHeader } from '../header/header';
+//icons
 import { AlertCircle } from 'lucide-react';
+//other
+import axiosInstance from '@/utils/axiosWrapper';
 
-interface LeftCartEditWithViewOffersProps {
-  closeMobileCartDialog?: () => void;
-}
-
-export const LeftCartEditWithViewOffers = ({
-  closeMobileCartDialog
-}: LeftCartEditWithViewOffersProps) => {
+export const LeftCartEditWithViewOffers = () => {
   const CART_KEY = (cartId: number) => ['cart', cartId] as const;
   const { currentCartId } = useBuyListStore();
   const { data: currentCart } = useQuery<{
@@ -64,7 +58,7 @@ export const LeftCartEditWithViewOffers = ({
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center gap-2">
-                  <AlertCircle></AlertCircle>
+                  <AlertCircle />
                   <div className="flex flex-col items-center justify-center">
                     <p className="text-lg font-semibold">No Items</p>
                     <p className="text-sm text-muted-foreground">

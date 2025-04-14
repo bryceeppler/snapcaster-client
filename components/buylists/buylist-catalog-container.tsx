@@ -8,7 +8,6 @@ import {
   SearchResultsHeader,
   FinalSubmissionHeader
 } from './header/header';
-
 import { CurrentListHeader } from './header/header';
 
 export default function BuylistCatalog() {
