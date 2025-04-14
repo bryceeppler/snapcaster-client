@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/select';
 //icons
 import { ExternalLink } from 'lucide-react';
+import { toast } from 'sonner';
 
 export const SubmitOfferPanel = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -51,7 +52,8 @@ export const SubmitOfferPanel = () => {
         success: true,
         message: result.message
       });
-      setBuylistUIState('listSelectionState');
+      setBuylistUIState('viewAllOffersState');
+      toast.success('Buylist submitted successfully');
     }
   };
   const { data: connectedVendors, isLoading: isLoadingConnections } =
