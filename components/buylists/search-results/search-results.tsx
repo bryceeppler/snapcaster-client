@@ -133,7 +133,7 @@ export const BuylistSearchResults = () => {
             {(isFetchingNextPage ||
               (isLoading &&
                 Array.isArray(data?.searchResults) &&
-                data?.searchResults.length > 0)) && (
+                (data?.searchResults?.length ?? 0) > 0)) && (
               <div className="flex items-center justify-center py-4">
                 <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
               </div>
