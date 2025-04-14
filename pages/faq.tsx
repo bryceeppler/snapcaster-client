@@ -133,9 +133,9 @@ export default function Component() {
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
                     <div>
                       <p>
-                        Login into your account and create a list of cards you
-                        wish to sell for cash or credit and submit your offer to
-                        one of our partnered game stores directly from
+                        Log in to your account, create a list of cards you'd
+                        like to sell for cash or credit, and submit your offer
+                        directly to one of our partnered game stores through
                         Snapcaster.
                       </p>
                     </div>
@@ -146,9 +146,9 @@ export default function Component() {
                     How many stores are supported?
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
-                    Snapcaster's aggregated buylist program currently supports
-                    vendors that are tier 3 sponsors and above. You can view the
-                    full list{' '}
+                    Snapcaster’s aggregated buylist program is currently
+                    available to vendors who are Tier 3 sponsors or higher. You
+                    can view the complete list of participating stores{' '}
                     <a href="/about" target="_none" className="text-blue-500">
                       here
                     </a>{' '}
@@ -160,9 +160,10 @@ export default function Component() {
                     What card games are supported?
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
-                    Although not all stores support all games, all of our TCG's
-                    are supported. This includes, MTG, Pokemon, Yugioh, Lorcana,
-                    One Piece TCG, FAB, and SWU.
+                    While not every store supports every game, all major TCGs
+                    are supported across the platform. This includes Magic: The
+                    Gathering (MTG), Pokémon, Yu-Gi-Oh!, Lorcana, One Piece TCG,
+                    Flesh and Blood (FAB), and Star Wars Unlimited (SWU).
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="buylists-prices-updated">
@@ -170,10 +171,11 @@ export default function Component() {
                     How often are cash and credit prices updated?
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
-                    We update LGS cash/credit and purchase limits daily. Store
-                    buylist prices are auto-adjusted based on TCG Player pricing
-                    which may cause a minor discrepancy in your final offer,
-                    received within a few business days.
+                    Store cash/credit rates and purchase limits are updated
+                    daily. Buylist prices are automatically adjusted based on
+                    current TCGPlayer pricing, which may result in a slight
+                    difference in your final offer. Final adjusted offers are
+                    typically sent within a few business days.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem
@@ -185,10 +187,10 @@ export default function Component() {
                     Your right of cancellation
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
-                    Submissions are simply offer requests. You are not obligated
-                    to accept and send your cards. Please email the LGS if you
-                    do not intend to send your cards after you recieve your
-                    final adjusted offer by email.
+                    Submitting a buylist is simply an offer request—you're under
+                    no obligation to accept or ship your cards. If you choose
+                    not to proceed after receiving your final offer by email,
+                    please notify the store directly.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -240,7 +242,7 @@ const StepCard = ({
   return (
     <div
       className={cn(
-        'grid gap-4 rounded-xl border bg-card p-2 shadow-sm',
+        'grid gap-4 rounded-xl border bg-card p-8 shadow-sm',
         imageUrl ? 'lg:grid-cols-2' : 'grid-cols-1',
         isReversed && imageUrl && "lg:[grid-template-areas:'content_image']"
       )}
@@ -261,7 +263,7 @@ const StepCard = ({
           </p>
         </div>
 
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion type="multiple" className="w-full">
           {steps.map((item, index) => (
             <AccordionItem
               key={index}
@@ -323,12 +325,13 @@ const steps: Step[] = [
     steps: [
       {
         header: 'Create a List',
-        description: 'Create up to 10 unique sell lists.'
+        description:
+          'Create up to 10 unique sell lists to organize your card sales.'
       },
       {
         header: 'Add Your Cards',
         description:
-          'Search for cards across multiple TCGs and add them to your list.'
+          'Search across multiple TCGs and easily add cards to your sell lists.'
       }
     ],
     imageUrl: '/buylists-create-list.PNG',
@@ -341,12 +344,12 @@ const steps: Step[] = [
       {
         header: 'Cash or Store Credit',
         description:
-          'View detailed breakdowns of cash and credit offers across all stores on the review page.'
+          'On the review page, view a detailed breakdown of cash and credit offers from all participating stores.'
       },
       {
         header: 'Best Cash and Credit Badge',
         description:
-          'Keep an eye out for the best price badge on individual cards in the review breakdown.'
+          'Look for the “Best Price” badge to spot top offers for individual cards.'
       }
     ],
     imageUrl: '/buylists-review-offers.PNG',
@@ -359,12 +362,12 @@ const steps: Step[] = [
       {
         header: 'Download the Snapcaster Extension',
         description:
-          'On the review page you will be prompted to download the Snapcaster extension.'
+          'When you reach the store offers page, you’ll be prompted to download the Snapcaster extension.'
       },
       {
         header: 'Connect Your Game Store Account',
         description:
-          'After linking your game store account using the Snapcaster extension, you can submit your quotes from any device.'
+          'Once your game store account is linked via the Snapcaster extension, you can submit offers from any device.'
       },
       {
         header: 'FAQ',
@@ -388,7 +391,7 @@ const steps: Step[] = [
       {
         header: 'Submit Your Offer',
         description:
-          'Ensure you entered your card list correctly and submit your offer. Store credit is automatically applied to the account you registered and connected on the LGS website.'
+          'Double-check your card list for accuracy before submitting your offer. Store credit will be automatically applied to the account you registered and connected on the LGS website.'
       },
       {
         header: 'Await Your Confirmation Email',
@@ -407,12 +410,12 @@ const steps: Step[] = [
       {
         header: 'Ship Your Cards',
         description:
-          'You the seller are responsible for the shipping label, tracking, and insurance if you are shipping your cards. We highly reccomend shipping insurance on high value submissions.\n\nPlease pack your cards in the order they are listed in your confirmation email. Damaged cards from poor packing may result in a lower offer.'
+          'As the seller, you are responsible for providing the shipping label, tracking, and insurance. We strongly recommend insuring high-value submissions.\n\nPack your cards in the exact order shown in your confirmation email. Improper packaging or damage during transit may result in a reduced offer.'
       },
       {
         header: 'Get Paid',
         description:
-          'Once the game store has received your cards, you will receive a confirmation email with your payment details.'
+          'Once the game store receives your cards, you’ll get a confirmation email with your payment details.'
       },
       {
         header: 'Reasons Why Your Offer May Be Adjusted',
