@@ -21,13 +21,6 @@ export const useAdvertisements = () => {
     refetchOnWindowFocus: false
   });
 
-  const getFeedAds = (): AdvertisementWithImages[] => {
-    return (
-      query.data?.filter((ad) => ad.position === AdvertisementPosition.FEED) ||
-      []
-    );
-  };
-
   const getRandomAd = (
     position: AdvertisementPosition
   ): AdvertisementWithImages | null => {
@@ -42,7 +35,6 @@ export const useAdvertisements = () => {
   // Simplify the return value to just include the data
   return {
     ads: query.data || [],
-    getFeedAds,
     getRandomAd
   };
 };
