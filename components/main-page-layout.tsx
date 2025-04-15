@@ -9,10 +9,12 @@ import { AdManagerProvider, TopBanner, SideBanner, AD_DIMENSIONS } from './ads';
 
 type Props = {
   width?: 'md' | 'xl';
+  usesSideBanners: boolean;
 };
 
 export default function MainLayout({
-  children
+  children,
+  usesSideBanners = true
 }: React.PropsWithChildren<Props>) {
   const { showAds } = useAdContext();
   const { hasActiveSubscription } = useAuth();
@@ -52,7 +54,7 @@ export default function MainLayout({
           className={`hidden smlaptop:block`}
           style={{ width: sideAdWidth, flexShrink: 0 }}
         >
-          {shouldShowAds && (
+          {shouldShowAds && usesSideBanners && (
             <div className="sticky top-1/3">
               <SideBanner position={AdvertisementPosition.LEFT_BANNER} />
             </div>
@@ -75,7 +77,7 @@ export default function MainLayout({
           className={`hidden smlaptop:block`}
           style={{ width: sideAdWidth, flexShrink: 0 }}
         >
-          {shouldShowAds && (
+          {shouldShowAds && usesSideBanners && (
             <div className="sticky top-1/3">
               <SideBanner position={AdvertisementPosition.RIGHT_BANNER} />
             </div>
