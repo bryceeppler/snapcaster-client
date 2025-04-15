@@ -1,6 +1,5 @@
 import React from 'react';
 import { AdvertisementPosition } from '@/types/advertisements';
-import { AdContainer } from './AdContainer';
 import { useAdManager } from './AdManager';
 import TopBannerCarousel from '../top-banner-carousel';
 
@@ -19,12 +18,10 @@ export const TopBanner: React.FC<TopBannerProps> = ({ className }) => {
   if (topBannerAds.length === 0) return null;
 
   return (
-    <AdContainer className={`relative w-full ${className || ''}`}>
-      <TopBannerCarousel
-        ads={topBannerAds}
-        vendorWeights={topBannerWeights}
-        className="w-full"
-      />
-    </AdContainer>
+    <TopBannerCarousel
+      ads={topBannerAds}
+      vendorWeights={topBannerWeights}
+      className="w-full"
+    />
   );
 };

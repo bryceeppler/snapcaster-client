@@ -1,10 +1,7 @@
 import React from 'react';
 import { AdvertisementPosition } from '@/types/advertisements';
-import { AdContainer } from './AdContainer';
 import { useAdManager } from './AdManager';
-import VerticalCarousel from '../vertical-carousel';
-import { cn } from '@/lib/utils';
-import { AD_DIMENSIONS } from './AdManager';
+import SideBannerCarousel from '../side-banner-carousel';
 
 interface SideBannerProps {
   position:
@@ -24,27 +21,13 @@ export const SideBanner: React.FC<SideBannerProps> = ({
 
   if (sideBannerAds.length === 0) return null;
 
-  const isLeft = position === AdvertisementPosition.LEFT_BANNER;
-  const wrapperClass = cn(
-    'flex w-full',
-    isLeft ? 'justify-start' : 'justify-end',
-    isLeft ? 'pl-4' : 'pr-4'
-  );
-
+  // Render the carousel directly as an overlay
   return (
-    <div className={wrapperClass}>
-      <AdContainer
-        className={cn('relative', className)}
-        width={AD_DIMENSIONS.sideBanner.width}
-        height={AD_DIMENSIONS.sideBanner.height}
-      >
-        <VerticalCarousel
-          ads={sideBannerAds}
-          vendorWeights={positionWeights}
-          position={position}
-          className="h-full w-full"
-        />
-      </AdContainer>
-    </div>
+    <SideBannerCarousel
+      ads={sideBannerAds}
+      vendorWeights={positionWeights}
+      position={position}
+      className={className}
+    />
   );
 };

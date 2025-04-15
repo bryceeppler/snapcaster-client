@@ -10,21 +10,13 @@ import { AdvertisementImageType } from '@/types/advertisements';
 import { cn } from '@/lib/utils';
 import { AD_DIMENSIONS } from './ads/AdManager';
 
-// Define a type for our responsive image pair
-interface ResponsiveImagePair {
-  isResponsivePair: true;
-  mobile?: AdvertisementImage;
-  desktop?: AdvertisementImage;
-  id: string;
-}
-
 // Extend types to support responsive image pairs
 type ExtendedAdImageInfo = {
-  image: AdvertisementImage | ResponsiveImagePair;
+  image: AdvertisementImage;
   parentAd: AdvertisementWithImages;
 };
 
-interface VerticalCarouselProps {
+interface SideBannerCarouselProps {
   ads: AdvertisementWithImages[];
   position:
     | AdvertisementPosition.LEFT_BANNER
@@ -43,11 +35,6 @@ const appendUtmParams = (url: string): string => {
 
   const separator = url.includes('?') ? '&' : '?';
   return `${url}${separator}${utmParams}`;
-};
-
-// Type guard to check if an image is a responsive pair
-const isResponsiveImagePair = (image: any): image is ResponsiveImagePair => {
-  return image && image.isResponsivePair === true;
 };
 
 // Function to shuffle an array
@@ -108,21 +95,7 @@ const getWeightedAdImages = (
   return shuffleArray(allAdImages);
 };
 
-/**
- * Get dimensions and styling for side banner ads
- */
-const getAdDimensions = (position: AdvertisementPosition) => {
-  return {
-    containerClass: 'relative overflow-hidden rounded-lg',
-    containerStyle: {
-      width: AD_DIMENSIONS.sideBanner.width,
-      height: AD_DIMENSIONS.sideBanner.height,
-      position: 'relative' as const
-    }
-  };
-};
-
-const VerticalCarousel: React.FC<VerticalCarouselProps> = ({
+const SideBannerCarousel: React.FC<SideBannerCarouselProps> = ({
   ads,
   position,
   vendorWeights = {},
@@ -149,51 +122,47 @@ const VerticalCarousel: React.FC<VerticalCarouselProps> = ({
     return null;
   }
 
-  const dimensions = getAdDimensions(position);
+  const isLeftBanner = position === AdvertisementPosition.LEFT_BANNER;
 
   return (
     <div
       className={cn(
-        dimensions.containerClass,
-        className,
-        'vertical-carousel-container',
-        'relative'
+        'vertical-carousel-container fixed z-10 hidden overflow-hidden rounded-lg smlaptop:block',
+        isLeftBanner ? 'left-4' : 'right-4',
+        className
       )}
-      style={dimensions.containerStyle}
+      style={{
+        width: AD_DIMENSIONS.sideBanner.width,
+        height: AD_DIMENSIONS.sideBanner.height,
+        top: '50%',
+        transform: 'translateY(-50%)'
+      }}
     >
       {weightedAdImages.map((adImageInfo, index) => {
         const { image, parentAd } = adImageInfo;
 
         return (
           <div
-            key={`${parentAd.id}-${(image as AdvertisementImage).id}-${index}`}
-            className={`${
-              index === activeIndex ? 'active' : 'inactive'
-            } w-full`}
+            key={`${parentAd.id}-${image.id}-${index}`}
+            className="absolute left-0 top-0 h-full w-full"
             style={{
               visibility: index === activeIndex ? 'visible' : 'hidden',
               zIndex: index === activeIndex ? 1 : 0,
-              transition:
-                index === activeIndex
-                  ? 'visibility 0s, z-index 0s, opacity 1s ease-in-out'
-                  : 'visibility 0s 1s, z-index 0s 1s, opacity 1s ease-in-out',
               opacity: index === activeIndex ? 1 : 0,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%'
+              transition:
+                'opacity 0.5s ease-in-out, visibility 0.5s ease-in-out'
             }}
           >
             <Link
               href={appendUtmParams(parentAd.target_url)}
               target="_blank"
               rel="noopener noreferrer"
+              className="block h-full w-full"
             >
               <img
-                src={(image as AdvertisementImage).image_url}
+                src={image.image_url}
                 className="border-1 h-full w-full overflow-hidden rounded-lg border border-border object-cover"
-                alt={parentAd.alt_text}
+                alt={parentAd.alt_text || 'Advertisement'}
               />
             </Link>
           </div>
@@ -203,4 +172,4 @@ const VerticalCarousel: React.FC<VerticalCarouselProps> = ({
   );
 };
 
-export default VerticalCarousel;
+export default SideBannerCarousel;

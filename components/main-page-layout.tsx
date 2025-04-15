@@ -48,45 +48,22 @@ export default function MainLayout({
 
   const shouldShowAds = showAds && !hasActiveSubscription && hydrated;
 
-  // The width of the side ad banners
-  const sideAdWidth = AD_DIMENSIONS.sideBanner.width;
-
   return (
     <AdManagerProvider positionVendorWeights={positionVendorWeights}>
-      <div className="flex min-h-svh justify-center smlaptop:justify-between">
-        {/* Left Banner */}
-        <div
-          className={`hidden smlaptop:block`}
-          style={{ width: sideAdWidth, flexShrink: 0 }}
-        >
-          {shouldShowAds && usesSideBanners && (
-            <div className="sticky top-1/3">
-              <SideBanner position={AdvertisementPosition.LEFT_BANNER} />
-            </div>
-          )}
-        </div>
+      <div className="flex min-h-svh justify-center">
+        {/* Side Banners are now overlays and don't need container divs */}
+        {shouldShowAds && usesSideBanners && (
+          <>
+            <SideBanner position={AdvertisementPosition.LEFT_BANNER} />
+            <SideBanner position={AdvertisementPosition.RIGHT_BANNER} />
+          </>
+        )}
 
         {/* Top Banner & Content */}
         <div className="w-full max-w-4xl items-center px-4 below1550:max-w-6xl">
-          {shouldShowAds && (
-            <>
-              <TopBanner className="w-full" />
-            </>
-          )}
+          {shouldShowAds && <TopBanner className="w-full" />}
           {/* Page Content */}
           <main>{children}</main>
-        </div>
-
-        {/* Right Banner */}
-        <div
-          className={`hidden smlaptop:block`}
-          style={{ width: sideAdWidth, flexShrink: 0 }}
-        >
-          {shouldShowAds && usesSideBanners && (
-            <div className="sticky top-1/3">
-              <SideBanner position={AdvertisementPosition.RIGHT_BANNER} />
-            </div>
-          )}
         </div>
       </div>
     </AdManagerProvider>
