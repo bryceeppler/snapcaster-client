@@ -1,37 +1,19 @@
-//hooks and store states
-import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
-import { useQuery } from '@tanstack/react-query';
 //components
 import { CartItem } from './list-item';
-import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 //icons
 import { AlertCircle } from 'lucide-react';
 //other
-import axiosInstance from '@/utils/axiosWrapper';
+import { getCurrentCart } from '../utils/utils';
 
 export const VerifyListContainer = () => {
-  const CART_KEY = (cartId: number) => ['cart', cartId] as const;
-  const { currentCartId } = useBuyListStore();
-  const { data: currentCart } = useQuery<{
-    success: boolean;
-    cart: IBuylistCart;
-  } | null>({
-    queryKey: CART_KEY(currentCartId || 0),
-    queryFn: async () => {
-      if (!currentCartId) return null;
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
-      );
-      return response.data;
-    },
-    enabled: !!currentCartId
-  });
+  const currentCart = getCurrentCart();
+
   return (
-    <div className="h-[calc(75vh-4rem)]">
+    <div className="h-full">
       <ScrollArea className="h-full" type="always">
         <div
-          className={`flex h-full flex-col items-center ${
+          className={`mr-2.5 flex h-full flex-col items-center ${
             currentCart?.cart?.items && currentCart.cart.items.length > 0
               ? ''
               : 'pt-[calc(25vh-2rem)]'
@@ -39,12 +21,10 @@ export const VerifyListContainer = () => {
         >
           <div className="w-full ">
             {currentCart?.cart?.items && currentCart.cart.items.length > 0 ? (
-              <div>
-                <Separator className="my-2" />
+              <div className=" space-y-1">
                 {currentCart.cart.items.map((item: any, index) => (
-                  <div key={index}>
+                  <div key={index} className="bg-card p-2">
                     <CartItem item={item} />
-                    <Separator className="my-2" />
                   </div>
                 ))}
               </div>

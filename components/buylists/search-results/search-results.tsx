@@ -4,7 +4,6 @@ import useBuyListStore from '@/stores/useBuylistStore';
 import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
 //components
 import { BuylistCatalogItem } from './catalog-item';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { LeftCartListSelection } from '../saved-lists/saved-lists';
 import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
 
@@ -95,8 +94,6 @@ export const BuylistSearchResults = () => {
     isFetchingNextPage
   ]);
 
-  const {} = useBuyListStore();
-
   return (
     <>
       {buylistUIState === 'listSelectionState' && (
@@ -111,35 +108,33 @@ export const BuylistSearchResults = () => {
       )}
 
       <div
-        className={`h-[75vh] w-full  overflow-hidden rounded-lg  bg-card pt-1  ${
+        className={`  h-full w-full overflow-hidden rounded-lg  ${
           buylistUIState === 'listSelectionState' ? 'hidden md:block' : ''
         }`}
       >
-        <ScrollArea className="h-full px-1" type="always">
-          <div className=" grid grid-cols-2 gap-1  pr-1.5 sm:grid-cols-2 below1550:grid-cols-3">
-            {data?.searchResults?.map((card, index) => (
-              <div className="" key={index}>
-                <BuylistCatalogItem cardData={card} />
-              </div>
-            ))}
-          </div>
-          <div
-            ref={loadMoreRef}
-            className="h-10 w-full"
-            onClick={() => {
-              setShouldReinitObserver(true);
-            }}
-          >
-            {(isFetchingNextPage ||
-              (isLoading &&
-                Array.isArray(data?.searchResults) &&
-                (data?.searchResults?.length ?? 0) > 0)) && (
-              <div className="flex items-center justify-center py-4">
-                <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+        <div className=" grid grid-cols-2 gap-1   sm:grid-cols-2 below1550:grid-cols-3">
+          {data?.searchResults?.map((card, index) => (
+            <div className="" key={index}>
+              <BuylistCatalogItem cardData={card} />
+            </div>
+          ))}
+        </div>
+        <div
+          ref={loadMoreRef}
+          className="h-10 w-full"
+          onClick={() => {
+            setShouldReinitObserver(true);
+          }}
+        >
+          {(isFetchingNextPage ||
+            (isLoading &&
+              Array.isArray(data?.searchResults) &&
+              (data?.searchResults?.length ?? 0) > 0)) && (
+            <div className="flex items-center justify-center py-4">
+              <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

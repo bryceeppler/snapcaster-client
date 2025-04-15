@@ -13,7 +13,6 @@ import CarouselAd from './carousel-ad';
 import { AdSelector } from '@/utils/adSelector';
 import VerticalCarousel from './vertical-carousel';
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
 import { Ad } from '@/types/ads';
 // Constants for ad dimensions and layout
 const AD_DIMENSIONS = {
@@ -231,7 +230,7 @@ const AdLayout = function AdLayout({
   const shouldShowAdLayout = showAds && !hasActiveSubscription;
 
   return (
-    <div className="flex min-h-svh">
+    <div className="min-h-vh flex">
       {/* Left Banner */}
       <div className="hidden w-[200px] flex-shrink-0 smlaptop:block">
         {shouldShowAdLayout && (

@@ -5,6 +5,7 @@ import useBuyListStore, { IBuylistCartItem } from '@/stores/useBuylistStore';
 import { Button } from '@/components/ui/button';
 //icons
 import { MinusIcon, Plus } from 'lucide-react';
+import { toast } from 'sonner';
 
 export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
   const { currentCartId, buylistUIState, setAllCartsData } = useBuyListStore();
@@ -19,7 +20,7 @@ export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
           alt="card_image"
         />
       </div>
-      <div className="flex w-full flex-col gap-0.5  space-y-1 px-1">
+      <div className="flex w-full flex-col gap-0.5  space-y-1 px-2">
         <p className="text-[0.6rem] text-xs font-semibold    leading-none text-muted-foreground">
           {item.set_name}
         </p>
@@ -64,7 +65,7 @@ export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
                     await setAllCartsData(currentCartId);
                   }
                 } catch (error) {
-                  console.error('Failed to update cart:', error);
+                  toast.error('Failed to update item');
                 }
               }
             }}

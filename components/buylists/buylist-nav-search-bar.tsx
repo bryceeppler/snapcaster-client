@@ -176,8 +176,10 @@ export default function BuylistNavSearchBar({
           break;
 
         case 'Enter':
+          event.stopPropagation();
           clearFilters();
           refetch();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           if (
             buylistUIState === 'viewAllOffersState' ||
             buylistUIState === 'finalSubmissionState'
@@ -332,6 +334,7 @@ export default function BuylistNavSearchBar({
               onClick={() => {
                 clearFilters();
                 refetch();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 if (
                   buylistUIState === 'viewAllOffersState' ||
                   buylistUIState === 'finalSubmissionState'

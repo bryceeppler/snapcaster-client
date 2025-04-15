@@ -53,15 +53,14 @@ export const BuylistStoreOffers = () => {
         <LeftCartEditWithViewOffers />
       </span>
 
-      {/* <div className=" w-full"> */}
-      <div className="h-[75vh] w-full rounded-lg bg-card py-1">
-        <ScrollArea className="h-full px-1" type="always">
+      <div className="flex h-full w-full flex-1 rounded-lg  ">
+        <ScrollArea className="h-full w-full " type="always">
           <div
             className={`flex h-full flex-col items-center ${
               storeOffersData.length > 0 ? '' : 'pt-[calc(25vh-2rem)]'
             }`}
           >
-            <div className="w-full pr-2.5">
+            <div className="w-full ">
               {storeOffersData.length > 0 ? (
                 <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
                   {storeOffersData.map((storeOfferData: any, index: number) => {
@@ -71,7 +70,7 @@ export const BuylistStoreOffers = () => {
 
                     return (
                       <div
-                        className="col-span-1 space-y-2 rounded-lg border px-3 py-3 shadow-md"
+                        className="col-span-1 space-y-2 rounded-lg  bg-card px-3 py-3 shadow-md"
                         key={index}
                       >
                         <div className="flex items-end gap-1">
@@ -160,6 +159,7 @@ export const BuylistStoreOffers = () => {
                               setSelectedStoreForReview(
                                 storeOfferData.storeName
                               );
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
                           >
                             Submit Offer

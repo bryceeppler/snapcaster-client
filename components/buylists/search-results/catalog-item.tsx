@@ -85,7 +85,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
   };
   return (
     <>
-      <Card className="h-full">
+      <Card className="h-full border-none">
         <div className="flex h-full flex-col gap-2 rounded-md  p-4 ">
           <div className="mx-auto max-w-[150px]  md:max-w-[160px]">
             <CardImage imageUrl={cardData.image} alt={cardData.name} />

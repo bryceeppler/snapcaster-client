@@ -15,7 +15,7 @@ export const LeftCartListSelection = () => {
   const { carts } = useUserCarts();
   const { isAuthenticated } = useAuth();
   return (
-    <div className="col-span-1 flex h-[75vh] w-full flex-col space-y-1 rounded-lg bg-card md:w-80">
+    <div className="col-span-1 flex min-h-svh w-full flex-col space-y-1 rounded-lg bg-card md:sticky md:top-[162px] md:min-h-[80svh] md:w-80">
       <div className="">
         <ListSelectionHeader />
         <SelectSeparator className="my-0 bg-background" />
@@ -25,12 +25,10 @@ export const LeftCartListSelection = () => {
         <ScrollArea className="h-full" type="always">
           <div
             className={`flex h-[calc(75vh-4rem)] flex-col items-center ${
-              !isAuthenticated || (carts && carts.length === 0)
-                ? 'pt-[calc(25vh-2rem)]'
-                : ''
+              !isAuthenticated || (carts && carts.length === 0) ? '' : ''
             }`}
           >
-            <div className="w-full px-1">
+            <div className="mt-1 w-full px-2">
               {isAuthenticated ? (
                 carts && carts.length > 0 ? (
                   carts.map((cart, index) => (
@@ -39,7 +37,7 @@ export const LeftCartListSelection = () => {
                     </span>
                   ))
                 ) : (
-                  <div className="flex flex-col items-center justify-center gap-2">
+                  <div className="flex flex-col items-center justify-center gap-2 pt-[calc(25vh-2rem)]">
                     <AlertCircle></AlertCircle>
                     <div className="flex flex-col items-center justify-center">
                       <p className="text-lg font-semibold">No Saved Lists</p>
@@ -50,7 +48,7 @@ export const LeftCartListSelection = () => {
                   </div>
                 )
               ) : (
-                <div className="flex flex-col items-center justify-center gap-2">
+                <div className="flex flex-col items-center justify-center gap-2 pt-[calc(25vh-2rem)]">
                   <AlertCircle></AlertCircle>
                   <div className="flex flex-col items-center justify-center">
                     <p className="text-lg font-semibold">Login Required</p>

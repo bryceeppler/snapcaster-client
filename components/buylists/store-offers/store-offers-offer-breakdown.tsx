@@ -44,124 +44,126 @@ export const BuylistStoreOfferBreakdown = () => {
   }, [connectedVendors, isLoadingConnections, submitData?.storeName]);
 
   return (
-    <div className="col-span-1  h-[75vh] rounded-lg  bg-card p-0.5">
-      <ScrollArea className="h-full " type="always">
-        <div className="mr-2.5 md:flex">
-          <div className="mr-2.5 flex w-full flex-col space-y-2 px-2 py-2 md:mr-1 md:py-0">
-            <div className="flex items-end gap-1 md:hidden">
-              <div>
-                {(() => {
-                  const matchingWebsite = websites.find(
-                    (website) => submitData.storeName === website.slug
-                  );
-                  return matchingWebsite?.meta?.branding?.icons ? (
-                    <img
-                      src={
-                        theme === 'dark'
-                          ? matchingWebsite.meta.branding.icons.dark
-                          : matchingWebsite.meta.branding.icons.light
-                      }
-                      alt="Website"
-                      className="size-8"
-                    />
-                  ) : null;
-                })()}
-              </div>
-              <div className="leading-none">
-                <p>{getWebsiteName(submitData?.storeName)}</p>
-
-                <div className="flex items-center gap-1">
-                  {isVendorConnected ? (
-                    <div className="flex items-center gap-1">
-                      <div
-                        className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
-                      ></div>
-                      <p className="text-sm leading-none text-muted-foreground">
-                        Connected
-                      </p>
-                    </div>
-                  ) : (
-                    <div className=" flex items-center gap-1 text-muted-foreground hover:cursor-pointer hover:text-primary">
-                      <div
-                        className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
-                      ></div>
-                      <a
-                        href={
-                          'https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en'
-                        }
-                        target="_blank"
-                        className="text-sm leading-none"
-                      >
-                        Link to Extension
-                      </a>
-                      <ExternalLink className="size-4  " />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className=" w-full items-center gap-0.5 whitespace-nowrap text-xl font-semibold ">
-              <div className="flex w-full items-center justify-between gap-0.5 whitespace-nowrap text-base font-medium ">
-                <div className="flex h-5 items-center space-x-2 leading-none">
-                  <Separator
-                    orientation="vertical"
-                    className="w-[2px] bg-primary"
+    <div className="col-span-1 flex h-full min-h-svh w-full flex-1 rounded-lg  bg-card p-0.5">
+      <div className=" md:flex">
+        <div className="mr-2.5 flex w-full flex-col space-y-2 px-2 py-2 md:mr-1 md:py-0">
+          <div className="flex items-end gap-1 md:hidden">
+            <div>
+              {(() => {
+                const matchingWebsite = websites.find(
+                  (website) => submitData.storeName === website.slug
+                );
+                return matchingWebsite?.meta?.branding?.icons ? (
+                  <img
+                    src={
+                      theme === 'dark'
+                        ? matchingWebsite.meta.branding.icons.dark
+                        : matchingWebsite.meta.branding.icons.light
+                    }
+                    alt="Website"
+                    className="size-8"
                   />
-                  <p className="shrink-0"> Purchasing</p>
-                </div>
-                <p className="shrink-0 text-sm font-extralight">
-                  {breakdownData.items.length} items
-                </p>
+                ) : null;
+              })()}
+            </div>
+            <div className="leading-none">
+              <p>{getWebsiteName(submitData?.storeName)}</p>
+
+              <div className="flex items-center gap-1">
+                {isVendorConnected ? (
+                  <div className="flex items-center gap-1">
+                    <div
+                      className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
+                    ></div>
+                    <p className="text-sm leading-none text-muted-foreground">
+                      Connected
+                    </p>
+                  </div>
+                ) : (
+                  <div className=" flex items-center gap-1 text-muted-foreground hover:cursor-pointer hover:text-primary">
+                    <div
+                      className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
+                    ></div>
+                    <a
+                      href={
+                        'https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en'
+                      }
+                      target="_blank"
+                      className="text-sm leading-none"
+                    >
+                      Link to Extension
+                    </a>
+                    <ExternalLink className="size-4  " />
+                  </div>
+                )}
               </div>
             </div>
+          </div>
 
-            <div className="flex flex-col space-y-1.5">
-              {breakdownData.items.map((cardData: any, index: number) => (
-                <div className="flex flex-col space-y-3" key={index}>
-                  <Separator></Separator>
-                  <span key={index}>
-                    <PurchasingCardSubmitDetails cardData={cardData} />
-                  </span>
-                </div>
-              ))}
+          <div className=" w-full items-center gap-0.5 whitespace-nowrap  pb-1 font-semibold ">
+            <div className="flex w-full items-center justify-between gap-0.5 whitespace-nowrap font-medium ">
+              <div className="flex  items-center space-x-2 leading-none">
+                <Separator
+                  orientation="vertical"
+                  className="h-6  w-[3px] bg-primary"
+                />
+                <p className="shrink-0 text-lg"> Purchasing</p>
+              </div>
+              <p className="shrink-0  font-extralight">
+                {breakdownData.items.length} items
+              </p>
             </div>
+          </div>
 
-            {breakdownData.unableToPurchaseItems.length > 0 && (
-              <>
-                <div className="flex w-full items-center justify-between gap-0.5 whitespace-nowrap text-base font-medium ">
-                  <div className="flex h-5 items-center space-x-2 leading-none">
+          <div className="flex flex-col ">
+            {breakdownData.items.length > 0 && <Separator className="mb-2" />}
+
+            {breakdownData.items.map((cardData: any, index: number) => (
+              <div className="flex flex-col" key={index}>
+                <div key={index}>
+                  <PurchasingCardSubmitDetails cardData={cardData} />
+                  <Separator className="my-2" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {breakdownData.unableToPurchaseItems.length > 0 && (
+            <>
+              <div className=" w-full items-center gap-0.5 whitespace-nowrap  pb-1 font-semibold ">
+                <div className="flex w-full items-center justify-between gap-0.5 whitespace-nowrap font-medium ">
+                  <div className="flex  items-center space-x-2 leading-none">
                     <Separator
                       orientation="vertical"
-                      className="w-[2px] bg-red-500"
+                      className="h-6  w-[3px] bg-red-500"
                     />
-                    <p className="shrink-0"> Not Purchasing</p>
+                    <p className="shrink-0 text-lg"> Not Purchasing</p>
                   </div>
-
-                  <p className="shrink-0 text-sm font-extralight">
+                  <p className="shrink-0  font-extralight">
                     {breakdownData.unableToPurchaseItems.length} items
                   </p>
                 </div>
-                <div className="flex flex-col space-y-1.5">
-                  {breakdownData.unableToPurchaseItems.map(
-                    (cardData: any, index: number) => (
-                      <div className="flex flex-col space-y-3" key={index}>
-                        <Separator />
-                        <span key={index}>
-                          <NotPurchasingCardSubmitDetails cardData={cardData} />
-                        </span>
-                      </div>
-                    )
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-          <div className="sticky top-0 self-start p-2 md:w-3/5">
-            <SubmitOfferPanel />
-          </div>
+              </div>
+              <div className="flex flex-col ">
+                <Separator className="mb-2" />
+                {breakdownData.unableToPurchaseItems.map(
+                  (cardData: any, index: number) => (
+                    <div className="flex flex-col " key={index}>
+                      <span key={index}>
+                        <NotPurchasingCardSubmitDetails cardData={cardData} />
+                        <Separator className="my-2" />
+                      </span>
+                    </div>
+                  )
+                )}
+              </div>
+            </>
+          )}
         </div>
-      </ScrollArea>
+        <div className="sticky self-start p-2 md:top-[164px] md:w-3/5">
+          <SubmitOfferPanel />
+        </div>
+      </div>
     </div>
   );
 };
@@ -181,7 +183,7 @@ const PurchasingCardSubmitDetails = ({ cardData }: SubmitCardDetailsProps) => {
       </div>
 
       <div className="flex w-full flex-col justify-between space-y-0.5 py-1">
-        <div className="space-y-0.5">
+        <div className="space-y-0.5 px-2">
           <p className="text-xs  leading-none text-muted-foreground">
             {cardData.setName}
           </p>
@@ -203,7 +205,7 @@ const PurchasingCardSubmitDetails = ({ cardData }: SubmitCardDetailsProps) => {
 
         <div className="flex flex-col space-y-0.5">
           <div className="flex justify-between ">
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0.5 pl-2">
               <p className="text-xs  leading-none text-muted-foreground ">
                 Purchasing - Limit {cardData.maxPurchaseQuantity}
               </p>
@@ -215,7 +217,7 @@ const PurchasingCardSubmitDetails = ({ cardData }: SubmitCardDetailsProps) => {
             </div>
           </div>
           <div className="flex justify-between">
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0.5 pl-2">
               <p className="text-xs  leading-none text-muted-foreground">
                 Credit - ${cardData.creditPrice} ea
               </p>
@@ -242,7 +244,7 @@ const PurchasingCardSubmitDetails = ({ cardData }: SubmitCardDetailsProps) => {
             </div>
           </div>
           <div className="flex justify-between">
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0.5 pl-2">
               <p className="text-xs leading-none text-muted-foreground">
                 Cash - ${cardData.cashPrice} ea
               </p>
@@ -286,8 +288,8 @@ const NotPurchasingCardSubmitDetails = ({
         />
       </div>
 
-      <div className="flex w-full flex-col justify-between py-1">
-        <div className="space-y-0.5">
+      <div className="flex w-full flex-col justify-between py-1 ">
+        <div className="space-y-0.5 px-2">
           <p className="text-xs  leading-none text-muted-foreground">
             {cardData.setName}
           </p>
@@ -309,7 +311,7 @@ const NotPurchasingCardSubmitDetails = ({
 
         <div className="flex flex-col space-y-0.5">
           <div className="flex justify-between">
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0.5 pl-2">
               <p className="text-xs leading-none text-muted-foreground">
                 Unable To Purchase
               </p>
@@ -320,19 +322,20 @@ const NotPurchasingCardSubmitDetails = ({
               </p>
             </div>
           </div>
-          <div className="flex justify-between">
-            {/* <div className="flex items-center gap-0.5"> */}
-            <p className="text-xs  leading-none text-muted-foreground">
+          <div className="flex justify-between pl-2">
+            <p className="  text-xs leading-none text-muted-foreground">
               Credit
             </p>
-            {/* </div> */}
+
             <div className="flex space-x-1">
               <p className="text-xs font-semibold leading-none ">-</p>
             </div>
           </div>
           <div className="flex justify-between">
-            <div className="flex items-center gap-0.5">
-              <p className="text-xs leading-none text-muted-foreground">Cash</p>
+            <div className="flex items-center gap-0.5 pl-2">
+              <p className=" text-xs leading-none text-muted-foreground">
+                Cash
+              </p>
             </div>
             <div className="flex space-x-1">
               <p className="text-xs font-semibold leading-none ">-</p>

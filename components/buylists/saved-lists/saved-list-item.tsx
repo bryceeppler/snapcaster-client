@@ -35,7 +35,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
 
   return (
     <div
-      className=" mb-1 flex h-14 cursor-pointer flex-col  justify-between rounded-lg border bg-accent px-1 py-1 shadow-sm hover:bg-accent/50"
+      className=" mb-1 flex h-14 cursor-pointer flex-col  justify-between rounded-lg border bg-accent px-2 py-1.5 shadow-sm hover:bg-accent/50"
       onClick={() => {
         if (!dialogJustClosed) {
           setBuylistUIState('searchResultsState');

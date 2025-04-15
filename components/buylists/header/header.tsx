@@ -1,8 +1,7 @@
 //hooks and store states
-import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
+import useBuyListStore from '@/stores/useBuylistStore';
 import { useAuth } from '@/hooks/useAuth';
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useUserCarts } from '@/hooks/useUserCarts';
 //components
 import { VerifyListContainer } from '../modify-list-items/verify-list-container';
@@ -28,13 +27,14 @@ import { Input } from '@/components/ui/input';
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import {
   ChevronLeft,
+  ChevronRight,
   ListIcon,
   PlusIcon,
   ShoppingCart,
   SlidersHorizontal
 } from 'lucide-react';
 //other
-import axiosInstance from '@/utils/axiosWrapper';
+import { getCurrentCart } from '../utils/utils';
 
 /////////////////////////////////////////////////////////////////////////////////////
 // This File Contains All the Header Components for each step in the buylist stage //
@@ -98,23 +98,11 @@ export const ListSelectionHeader = () => {
 };
 
 export const CurrentListHeader = () => {
-  const CART_KEY = (cartId: number) => ['cart', cartId] as const;
-  const { setBuylistUIState, currentCartId, setCurrentCartId, setCurrentCart } =
+  const { isAuthenticated } = useAuth();
+  const { setBuylistUIState, setCurrentCartId, setCurrentCart } =
     useBuyListStore();
-  const { data: currentCart } = useQuery<{
-    success: boolean;
-    cart: IBuylistCart;
-  } | null>({
-    queryKey: CART_KEY(currentCartId || 0),
-    queryFn: async () => {
-      if (!currentCartId) return null;
-      const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
-      );
-      return response.data;
-    },
-    enabled: !!currentCartId
-  });
+
+  const currentCart = getCurrentCart();
   const [cartDialogOpen, setCartDialogOpen] = useState(false);
   return (
     <div className="  flex justify-between rounded-lg bg-card px-1">
@@ -136,18 +124,22 @@ export const CurrentListHeader = () => {
       {/* MIDDLE SECTION */}
       <div className="flex w-full flex-1 items-center gap-1 overflow-hidden text-center">
         <p className="w-full truncate text-sm font-medium">
-          {currentCart?.cart?.name}
+          {currentCart?.cart?.name || '(No List Selected)'}
         </p>
       </div>
       {/* RIGHT SECTION */}
       <div className="flex w-16 items-center justify-end gap-1 ">
         <div className="block md:hidden">
           <Dialog open={cartDialogOpen} onOpenChange={setCartDialogOpen}>
-            <DialogTrigger asChild>
+            <DialogTrigger
+              asChild
+              disabled={!currentCart?.cart?.name || !isAuthenticated}
+            >
               <Button
                 variant="ghost"
                 size="sm"
                 className="relative h-9 px-2 text-sm font-medium"
+                disabled={!currentCart?.cart?.name || !isAuthenticated}
               >
                 <ShoppingCart className="h-5 w-5 cursor-pointer" />
               </Button>
@@ -176,19 +168,6 @@ export const CurrentListHeader = () => {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="hidden md:block">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="relative h-9 px-2 text-sm font-medium"
-            onClick={() => {
-              setCartDialogOpen(false);
-              setBuylistUIState('viewAllOffersState');
-            }}
-          >
-            <ShoppingCart className="h-5 w-5 cursor-pointer" />
-          </Button>
-        </div>
       </div>
     </div>
   );
@@ -208,11 +187,16 @@ export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
     sortByOptions,
     clearFilters,
     searchResultCount,
-    buylistUIState
+    buylistUIState,
+    setBuylistUIState
   } = useBuyListStore();
+  const { isAuthenticated } = useAuth();
+
+  const currentCart = getCurrentCart();
+  const [cartDialogOpen, setCartDialogOpen] = useState(false);
   return (
     <div
-      className={`mx-auto w-full items-center justify-between bg-card p-1 md:rounded-lg ${
+      className={`mx-auto w-full items-center  justify-between bg-card p-1 md:rounded-lg ${
         isMobile && buylistUIState === 'searchResultsState'
           ? 'flex md:hidden' // Show on mobile, hide on desktop when in search state
           : 'hidden md:flex' // Hide on mobile, show on desktop otherwise
@@ -231,7 +215,7 @@ export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
             >
               <span className="flex items-center gap-2">
                 <SlidersHorizontal className="h-5 w-5" />
-                <p className="hidden md:block">Filters</p>
+                <p className="hidden leading-none md:block">Filters</p>
               </span>
             </Button>
           </SheetTrigger>
@@ -264,7 +248,25 @@ export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
 
       {/* RIGHT SECTION */}
       <div className="flex w-24 items-center justify-end gap-1">
-        <a href="/faq#buylists" target="_blank">
+        <div className="hidden md:block">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="relative h-9 px-2 text-sm font-medium"
+            onClick={() => {
+              setCartDialogOpen(false);
+              setBuylistUIState('viewAllOffersState');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            disabled={!currentCart?.cart?.name || !isAuthenticated}
+          >
+            <span className="flex cursor-pointer items-center gap-0.5  rounded-lg font-medium">
+              <p className="text-sm leading-none">Offers</p>
+              <ChevronRight className="h-5 w-5" />
+            </span>
+          </Button>
+        </div>
+        <a href="/faq#buylists" target="_blank" className="block md:hidden">
           <Button
             variant="ghost"
             size="sm"
@@ -282,7 +284,7 @@ export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
 };
 
 export const ViewAllOffersHeader = () => {
-  const { reviewData, setBuylistUIState, buylistUIState } = useBuyListStore();
+  const { reviewData, setBuylistUIState } = useBuyListStore();
   return (
     <div>
       <div className="mx-auto flex  w-full items-center justify-between rounded-lg bg-card p-1">
@@ -294,11 +296,12 @@ export const ViewAllOffersHeader = () => {
             className="relative h-9 px-2 text-sm font-medium"
             onClick={() => {
               setBuylistUIState('searchResultsState');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
             <span className="flex cursor-pointer items-center gap-0.5  rounded-lg font-medium">
               <ChevronLeft className="h-5 w-5" />
-              <p className="text-sm">Back</p>
+              <p className="text-sm leading-none">Search</p>
             </span>
           </Button>
         </div>
@@ -307,30 +310,14 @@ export const ViewAllOffersHeader = () => {
         <p className="truncate text-sm">{reviewData?.length} Store Offers</p>
 
         {/* RIGHT SECTION */}
-        <div className="flex w-24 items-center justify-end gap-1">
-          <a href="/faq#buylists" target="_blank">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="relative h-9 px-2 text-sm font-medium"
-              onClick={() => {
-                setBuylistUIState('searchResultsState');
-              }}
-            >
-              <span className="flex items-center gap-1">
-                <QuestionMarkCircledIcon className="h-6 w-6" />
-                <p className="hidden md:block">Help</p>
-              </span>
-            </Button>
-          </a>
-        </div>
+        <div className="flex w-24 items-center justify-end gap-1"></div>
       </div>
     </div>
   );
 };
 
 export const FinalSubmissionHeader = () => {
-  const { setBuylistUIState, buylistUIState } = useBuyListStore();
+  const { setBuylistUIState } = useBuyListStore();
   return (
     <div>
       <div
@@ -345,11 +332,12 @@ export const FinalSubmissionHeader = () => {
             className="relative h-9 px-2 text-sm font-medium"
             onClick={() => {
               setBuylistUIState('viewAllOffersState');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
             <span className="flex cursor-pointer items-center gap-0.5  rounded-lg font-medium">
               <ChevronLeft className="h-5 w-5" />
-              <p className="text-sm">Back</p>
+              <p className="text-sm leading-none">Offers</p>
             </span>
           </Button>
         </div>
@@ -361,20 +349,7 @@ export const FinalSubmissionHeader = () => {
           </div>
         </div>
         {/* RIGHT SECTION */}
-        <div className="flex w-24 items-center justify-end gap-1">
-          <a href="/faq#buylists" target="_blank">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="relative h-9 text-sm font-medium"
-            >
-              <span className="flex items-center gap-1">
-                <QuestionMarkCircledIcon className="h-6 w-6" />
-                <p className="hidden md:block">Help</p>
-              </span>
-            </Button>
-          </a>
-        </div>
+        <div className="flex w-24 items-center justify-end gap-1"></div>
       </div>
     </div>
   );

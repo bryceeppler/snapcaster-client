@@ -11,37 +11,40 @@ import {
 import { CurrentListHeader } from './header/header';
 
 export default function BuylistCatalog() {
-  const { buylistUIState } = useBuyListStore();
-
+  const { buylistUIState, setBuylistUIState } = useBuyListStore();
   return (
-    <div className="flex flex-col gap-1 ">
+    <div className="flex min-h-svh  flex-col  ">
       {/* Desktop Header */}
       {(buylistUIState === 'searchResultsState' ||
         buylistUIState === 'listSelectionState') && (
-        <>
-          <div className="hidden md:block">
+        <div className="z-30  bg-background md:sticky md:top-[114px]">
+          <div className=" hidden md:block">
             <SearchResultsHeader />
+            <div className="bg-background pb-1"></div>
           </div>
           {buylistUIState === 'searchResultsState' && (
             <div className="block md:hidden">
               <CurrentListHeader />
+              <div className="bg-background pb-1"></div>
             </div>
           )}
-        </>
+        </div>
       )}
 
       {buylistUIState === 'viewAllOffersState' && (
-        <div className="">
+        <div className="z-30  bg-background md:sticky md:top-[114px]">
           <ViewAllOffersHeader />
+          <div className="bg-background pb-1"></div>
         </div>
       )}
       {buylistUIState === 'finalSubmissionState' && (
-        <div className="">
+        <div className="z-30  bg-background md:sticky md:top-[114px]">
           <FinalSubmissionHeader />
+          <div className="bg-background pb-1"></div>
         </div>
       )}
       {/* Body */}
-      <div className="flex gap-1">
+      <div className="flex flex-1 gap-1">
         <BuylistBodyFactory buylistUIState={buylistUIState} />
       </div>
     </div>
