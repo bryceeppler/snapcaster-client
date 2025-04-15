@@ -40,13 +40,10 @@ const FilterSection: React.FC<Prop> = memo(
     sortByOptions
   }) => {
     const { isAuthenticated, hasActiveSubscription } = useAuth();
-    const { getVendorNameBySlug } = useVendors();
     const handleClearFilters = () => {
       clearFilters();
       fetchCards();
     };
-    console.log('xxx sortByOptions in filter section:', sortByOptions);
-    // console.log('test in filter section:', test);
     return (
       <ScrollArea className="flex max-h-[95svh] flex-col overflow-y-auto rounded">
         <div className="sticky top-5 mx-auto h-1/4 w-full rounded-lg  px-3 py-2 text-left shadow-md md:max-w-sm">
