@@ -87,7 +87,7 @@ export default function SingleCatalog() {
                   <div className="mx-auto w-full bg-red-200">
                     <div className="sm:hidden">
                       <SearchSortBy
-                        sortBy={sortBy}
+                        sortBy={sortBy || ''}
                         sortByOptions={sortByOptions}
                         setSortBy={setSortBy}
                         fetchCards={fetchCards}
