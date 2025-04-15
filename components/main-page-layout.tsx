@@ -9,8 +9,7 @@ import { AdManagerProvider, TopBanner, SideBanner, AD_DIMENSIONS } from './ads';
 import {
   TOP_BANNER_AD_WEIGHTS,
   LEFT_BANNER_AD_WEIGHTS,
-  RIGHT_BANNER_AD_WEIGHTS,
-  FEED_AD_WEIGHTS
+  RIGHT_BANNER_AD_WEIGHTS
 } from '@/lib/ad-weights';
 import { PositionVendorWeights } from './ads/AdManager';
 
@@ -28,12 +27,13 @@ export default function MainLayout({
   const [hydrated, setHydrated] = useState(false);
 
   // Use position-specific vendor weights from the ad-weights.ts file
+  // Note: FEED_AD_WEIGHTS are now derived from vendor.tier in AdManager
   const positionVendorWeights: PositionVendorWeights = useMemo(
     () => ({
       [AdvertisementPosition.TOP_BANNER]: TOP_BANNER_AD_WEIGHTS,
       [AdvertisementPosition.LEFT_BANNER]: LEFT_BANNER_AD_WEIGHTS,
-      [AdvertisementPosition.RIGHT_BANNER]: RIGHT_BANNER_AD_WEIGHTS,
-      [AdvertisementPosition.FEED]: FEED_AD_WEIGHTS
+      [AdvertisementPosition.RIGHT_BANNER]: RIGHT_BANNER_AD_WEIGHTS
+      // Feed weights are now derived from vendor tiers
     }),
     []
   );

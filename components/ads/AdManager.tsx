@@ -8,6 +8,8 @@ import {
 } from '@/types/advertisements';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { AdSelector } from '@/utils/adSelector';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { VendorTier } from '@/services/vendorService';
 
 export const AD_DIMENSIONS = {
   topBanner: {
@@ -70,11 +72,50 @@ type AdManagerProviderProps = {
   positionVendorWeights?: PositionVendorWeights;
 };
 
+// Helper function to derive weight from vendor tier
+const getWeightFromTier = (tier: VendorTier): number => {
+  switch (tier) {
+    case VendorTier.TIER_1:
+      return 3;
+    case VendorTier.TIER_2:
+      return 2;
+    case VendorTier.TIER_3:
+    case VendorTier.FREE:
+    default:
+      return 1;
+  }
+};
+
 export function AdManagerProvider({
   children,
   positionVendorWeights = {}
 }: AdManagerProviderProps) {
   const { ads: allAds } = useAdvertisements();
+  const { vendors } = useVendors();
+
+  // Derive vendor weights from tier information
+  const derivedVendorWeights = useMemo(() => {
+    const weights: VendorWeightConfig = {};
+
+    // Only derive weights for vendors with a valid tier
+    vendors.forEach((vendor) => {
+      if (vendor.tier) {
+        weights[vendor.slug] = getWeightFromTier(vendor.tier);
+      }
+    });
+
+    return weights;
+  }, [vendors]);
+
+  // Combine derived weights with any manually set weights
+  const combinedFeedWeights = useMemo(() => {
+    const manualFeedWeights =
+      positionVendorWeights[AdvertisementPosition.FEED] || {};
+    return {
+      ...derivedVendorWeights, // Start with tier-based weights
+      ...manualFeedWeights // Override with any manually specified weights
+    };
+  }, [derivedVendorWeights, positionVendorWeights]);
 
   const adsByPosition = useMemo(() => {
     const result: {
@@ -107,11 +148,16 @@ export function AdManagerProvider({
     const result: PositionVendorWeights = {};
 
     Object.values(AdvertisementPosition).forEach((position) => {
-      result[position] = positionVendorWeights[position] || {};
+      // For FEED position, use our tier-derived weights
+      if (position === AdvertisementPosition.FEED) {
+        result[position] = combinedFeedWeights;
+      } else {
+        result[position] = positionVendorWeights[position] || {};
+      }
     });
 
     return result;
-  }, [positionVendorWeights]);
+  }, [positionVendorWeights, combinedFeedWeights]);
 
   // Helper function to get weights for a specific position
   const getVendorWeightsForPosition = (

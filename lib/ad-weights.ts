@@ -1,3 +1,4 @@
+// Static ad weights for banner positions
 export const TOP_BANNER_AD_WEIGHTS = {
   obsidian: 3,
   exorgames: 3,
@@ -17,12 +18,8 @@ export const RIGHT_BANNER_AD_WEIGHTS = {
   mythicstore: 1
 };
 
-export const FEED_AD_WEIGHTS = {
-  obsidian: 3,
-  exorgames: 3,
-  chimera: 3,
-  levelup: 2,
-  houseofcards: 2,
-  mythicstore: 2,
-  vortexgames: 1
-};
+// Note: FEED_AD_WEIGHTS are now derived dynamically from vendor.tier
+// in the AdManager component with the following mapping:
+// - STORE_TIER_1: weight 3
+// - STORE_TIER_2: weight 2
+// - STORE_TIER_3: weight 1
