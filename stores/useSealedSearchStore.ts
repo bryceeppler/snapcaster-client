@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
-import { FilterOption, SingleSortOptions } from '@/types/query';
+import { FilterOption, SealedSortOptions } from '@/types/query';
 import { Tcg } from '@/types';
 
 const SEALED_LOCAL_STORAGE_VERSION = 1;
@@ -26,8 +26,8 @@ type SearchState = {
   toggleFilter: (field: string, value: string) => void;
   clearFilters: () => void;
 
-  sortBy: SingleSortOptions;
-  setSortBy: (sortBy: SingleSortOptions) => void;
+  sortBy: SealedSortOptions;
+  setSortBy: (sortBy: SealedSortOptions) => void;
 
   region: string;
   setRegion: (region: string) => void;
@@ -79,7 +79,7 @@ export const useSealedSearchStore = create<SearchState>()(
 
         clearFilters: () => set({ selectedFilters: [] }),
 
-        setSortBy: (sortBy: SingleSortOptions) => set({ sortBy }),
+        setSortBy: (sortBy: SealedSortOptions) => set({ sortBy }),
         setRegion: (region: string) => set({ region })
       }),
       {

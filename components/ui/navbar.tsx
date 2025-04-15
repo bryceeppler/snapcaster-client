@@ -10,7 +10,7 @@ import {
 import { Button } from './button';
 import { useAuth } from '@/hooks/useAuth';
 import { AlignJustify, Search, SlidersHorizontal, User, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
@@ -520,9 +520,9 @@ const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
   );
 };
 
-////////////////////////////
-// ResultsToolbar Factory //
-////////////////////////////
+///////////////////////////////////
+// Mobile ResultsToolbar Factory //
+///////////////////////////////////
 /* The bar bewlow the nav for mobile single/buylist search which contains the reuslts, pagination, and filters on a query */
 const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
   switch (searchMode) {
@@ -547,7 +547,8 @@ const SingleResultsToolbar = () => {
     clearFilters,
     setFilter,
     applyFilters,
-    setSortBy
+    setSortBy,
+    sortByOptions
   } = useSingleSearchStore();
   return (
     <>
@@ -581,6 +582,7 @@ const SingleResultsToolbar = () => {
                 setCurrentPage={setCurrentPage}
                 applyFilters={applyFilters}
                 setSortBy={setSortBy}
+                sortByOptions={sortByOptions}
               />
             </SheetContent>
           </Sheet>
@@ -603,7 +605,8 @@ const BuylistsResultsToolbar = () => {
     clearFilters,
     setFilter,
     applyFilters,
-    setSortBy
+    setSortBy,
+    sortByOptions
   } = useBuyListStore();
   return (
     <>
@@ -637,6 +640,7 @@ const BuylistsResultsToolbar = () => {
                 setCurrentPage={setCurrentPage}
                 applyFilters={applyFilters}
                 setSortBy={setSortBy}
+                sortByOptions={sortByOptions}
               />
             </SheetContent>
           </Sheet>

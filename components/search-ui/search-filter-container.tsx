@@ -1,11 +1,7 @@
 import React, { memo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { createCheckoutSession } from '@/lib/utils';
-import {
-  FilterOption,
-  FilterOptionValues,
-  singleSortByLabel
-} from '@/types/query';
+import { FilterOption, FilterOptionValues } from '@/types/query';
 import { useVendors } from '@/hooks/queries/useVendors';
 
 import { Button } from '@/components/ui/button';
@@ -28,6 +24,7 @@ type Prop = {
   setCurrentPage: (currentPage: number) => void;
   applyFilters: () => Promise<void>;
   setSortBy: (sortBy: any) => void;
+  sortByOptions: Record<string, string>;
 };
 
 const FilterSection: React.FC<Prop> = memo(
@@ -39,26 +36,28 @@ const FilterSection: React.FC<Prop> = memo(
     setFilter,
     setCurrentPage,
     applyFilters,
-    setSortBy
+    setSortBy,
+    sortByOptions
   }) => {
     const { isAuthenticated, hasActiveSubscription } = useAuth();
-    const { getVendorNameBySlug } = useVendors();
     const handleClearFilters = () => {
       clearFilters();
       fetchCards();
     };
-
     return (
       <ScrollArea className="flex max-h-[95svh] flex-col overflow-y-auto rounded">
         <div className="sticky top-5 mx-auto h-1/4 w-full rounded-lg  px-3 py-2 text-left shadow-md md:max-w-sm">
-          <div className=" border-b md:hidden">
-            <SearchSortBy
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-              fetchCards={fetchCards}
-              setCurrentPage={setCurrentPage}
-              sortByLabel={singleSortByLabel}
-            />
+          <div className=" border-b ">
+            {/* {sortByOptions && <p>its here</p>} */}
+            <div className="flex w-full justify-center">
+              <SearchSortBy
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                fetchCards={fetchCards}
+                setCurrentPage={setCurrentPage}
+                sortByOptions={sortByOptions}
+              />
+            </div>
           </div>
           <Accordion type="multiple" className="w-full  ">
             {filterOptions &&

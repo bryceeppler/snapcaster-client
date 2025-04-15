@@ -3,11 +3,7 @@ import { create } from 'zustand';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
-import {
-  FilterOption,
-  FilterOptionValues,
-  SingleSortOptions
-} from '@/types/query';
+import { FilterOption } from '@/types/query';
 
 type SearchState = {
   searchTerm: string;
@@ -16,8 +12,9 @@ type SearchState = {
   setTcg: (tcg: Tcg) => void;
   filters: FilterOption[] | null;
   setFilter: (filterField: string, value: string, selected: boolean) => void;
-  sortBy: SingleSortOptions;
-  setSortBy: (sortBy: SingleSortOptions) => void;
+  sortBy: string | null;
+  sortByOptions: Record<string, string>;
+  setSortBy: (sortBy: string | null) => void;
   loadingCardResults: boolean;
   loadingFilterResults: boolean;
   searchResults: Product[] | null;
@@ -49,7 +46,7 @@ export const useSingleSearchStore = create<SearchState>()(
         tcg: 'mtg',
         resultsTcg: 'mtg',
         filters: null,
-        sortBy: 'price-asc',
+        sortBy: null,
         loadingCardResults: false,
         loadingFilterResults: false,
         searchResults: null,
@@ -59,8 +56,12 @@ export const useSingleSearchStore = create<SearchState>()(
         numPages: null,
         region: 'ca',
         isLoading: false,
+        sortByOptions: {},
+
         setIsLoading: (loading: boolean) => set({ isLoading: loading }),
+
         setRegion: (region: string) => set({ region }),
+
         setFilter: (filterField: string, value: string, selected: boolean) => {
           const filters = get().filters || [];
           const updatedFilters = filters.map((filter) => {
@@ -79,19 +80,22 @@ export const useSingleSearchStore = create<SearchState>()(
         },
 
         setSearchTerm: (term: string) => set({ searchTerm: term }),
+
         setTcg: (tcg: Tcg) => {
           if (typeof window !== 'undefined') {
             localStorage.setItem('tcg', tcg);
           }
           set({ tcg, resultsTcg: tcg });
         },
-        setSortBy: (sortBy: SingleSortOptions) => set({ sortBy }),
+        setSortBy: (sortBy: string | null) => set({ sortBy }),
 
         setAutocompleteSuggestions: (suggestions: string[]) =>
           set({ autocompleteSuggestions: suggestions }),
+
         clearFilters: () => set({ filters: null }),
+
         fetchCards: async (page?: number) => {
-          const { tcg, searchTerm, filters, sortBy, region } = get();
+          const { tcg, searchTerm, filters, sortBy } = get();
           try {
             set({ loadingCardResults: true, loadingFilterResults: true });
 
@@ -99,10 +103,8 @@ export const useSingleSearchStore = create<SearchState>()(
               mode: 'singles',
               tcg: `${tcg}`,
               region: 'ca',
-              // index: `ca_singles_${tcg}_prod*`,
               keyword: searchTerm.trim(),
-              // search: 'fuzzy',
-              sortBy: `${sortBy}`,
+              ...(sortBy && { sortBy }),
               maxResultsPerPage: '100',
               pageNumber: (page ?? get().currentPage).toString()
             });
@@ -150,6 +152,17 @@ export const useSingleSearchStore = create<SearchState>()(
             const filterOptionsFromResponse: FilterOption[] =
               response.data.data.filters || [];
 
+            const transformedSortByOptions =
+              response.data.data.sorting.Items.reduce(
+                (acc: Record<string, string>, item: any) => ({
+                  ...acc,
+                  [item.value]: item.label
+                }),
+                {} as Record<string, string>
+              );
+
+            // console.log('Setting sortByOptions:', transformedSortByOptions);
+
             set({
               searchResults: updatedSearchResults,
               promotedResults: updatedPromotedResults,
@@ -158,15 +171,17 @@ export const useSingleSearchStore = create<SearchState>()(
               resultsTcg: tcg,
               numPages: response.data.data.pagination.numPages,
               numResults: response.data.data.pagination.numResults,
-              currentPage: page ?? get().currentPage
+              currentPage: page ?? get().currentPage,
+              sortBy: sortBy ?? response.data.data.sorting.defaultSort,
+              sortByOptions: transformedSortByOptions
             });
           } catch (error: any) {
-            console.error('Error fetching cards:', error);
             toast.error('Unable to fetch cards: ' + error.message);
           } finally {
             set({ loadingCardResults: false, loadingFilterResults: false });
           }
         },
+
         applyFilters: async () => {
           const { tcg, searchTerm, filters, sortBy, region } = get();
           try {
@@ -175,7 +190,6 @@ export const useSingleSearchStore = create<SearchState>()(
               mode: 'singles',
               tcg: tcg,
               keyword: searchTerm.trim(),
-              // search: 'fuzzy',
               sortBy: `${sortBy}`,
               maxResultsPerPage: '100',
               pageNumber: get().currentPage.toString()
@@ -238,14 +252,16 @@ export const useSingleSearchStore = create<SearchState>()(
               loadingCardResults: false
             });
           } catch (error: any) {
-            console.error('Error fetching cards:', error);
             toast.error('Unable to fetch cards: ' + error.message);
           }
         },
+
         clearSearchResults: () =>
           set({ searchResults: null, promotedResults: null }),
+
         setCurrentPage: (currentPage: number) => set({ currentPage })
       }),
+
       {
         name: 'single-search-store',
         storage: createJSONStorage(() => localStorage),

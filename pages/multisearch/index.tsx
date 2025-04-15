@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { Loader2, ShoppingCart } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { createCheckoutSession } from '@/lib/utils';
 import {
@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Cart } from '@/components/multi-search/cart';
 import { RecommendedStores } from '@/components/multi-search/recommended-stores';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Condition, Product, Tcg } from '@/types';
@@ -123,7 +122,7 @@ const SearchView = ({
     setSearchInput(value);
   };
   return (
-    <div className="flex w-full flex-col gap-4 rounded-lg border border-border bg-popover p-4">
+    <div className="flex w-full flex-col gap-4 rounded-lg  bg-popover p-4">
       <div className="flex flex-col items-center gap-4 md:flex-row">
         <div className="flex flex-col gap-2">
           <label htmlFor="tcg-select" className="text-left text-sm">

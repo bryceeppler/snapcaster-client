@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { SingleSortOptions, FilterOption } from '@/types/query';
 import { Label } from '@/components/ui/label';
 import {
   Accordion,
@@ -15,8 +14,8 @@ import { useMemo } from 'react';
 import { useVendors } from '@/hooks/queries/useVendors';
 
 interface FilterSheetProps {
-  sortBy: SingleSortOptions;
-  setSortBy: (sortBy: SingleSortOptions) => void;
+  sortBy: string | null;
+  setSortBy: (sortBy: string | null) => void;
   sortByLabel: Record<string, string>;
   clearFilters: () => void;
 }
@@ -52,8 +51,8 @@ export default function FilterSheet({
           <div className="space-y-4">
             <h4 className="text-sm font-medium leading-none">Sort By</h4>
             <RadioGroup
-              value={sortBy}
-              onValueChange={(value) => setSortBy(value as SingleSortOptions)}
+              value={sortBy ?? ''}
+              onValueChange={(value) => setSortBy(value as string | null)}
               className="grid gap-3"
             >
               {Object.entries(sortByLabel).map(([key, label]) => (

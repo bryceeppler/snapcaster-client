@@ -8,7 +8,6 @@ export class AdvertisementService {
     const response = await axios.get(
       `${BASE_URL}/api/v1/vendor/advertisements?with=images&is_active=true`
     );
-    console.log(response.data.data);
     return response.data.data || ([] as AdvertisementWithImages[]);
   }
 }

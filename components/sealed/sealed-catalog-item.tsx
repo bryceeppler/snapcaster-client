@@ -52,9 +52,9 @@ const SealedCatalogItem = ({ product }: Props) => {
   };
 
   return (
-    <div className="flex flex-col bg-popover font-montserrat">
+    <div className="flex flex-col rounded-lg bg-popover font-montserrat">
       <div
-        className={`group flex h-full flex-col rounded-t-lg border border-accent bg-popover p-4`}
+        className={`group flex h-full flex-col rounded-lg border border-accent bg-popover p-4`}
       >
         <div
           className="relative cursor-pointer bg-white transition-opacity hover:opacity-90"
