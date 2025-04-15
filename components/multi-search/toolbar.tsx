@@ -1,24 +1,22 @@
-import React from "react";
-import useGlobalStore from "@/stores/globalStore";
-import useMultiSearchStore from "@/stores/multiSearchStore";
-import { Product } from "@/types";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ShoppingCart, Download, HelpCircle, PlayCircle } from 'lucide-react';
+import React from 'react';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import { Product } from '@/types';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, ShoppingCart, Download, HelpCircle } from 'lucide-react';
 import { Cart } from './cart';
 import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { InteractiveGuide } from "./interactive-guide";
-
+  DialogTrigger
+} from '@/components/ui/dialog';
+import { InteractiveGuide } from './interactive-guide';
+import { useVendors } from '@/hooks/queries/useVendors';
 export const Toolbar = () => {
   const { resetSearch, cart } = useMultiSearchStore();
-  const { getWebsiteName } = useGlobalStore();
+  const { getVendorNameBySlug } = useVendors();
   const [showHelp, setShowHelp] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [runTour, setRunTour] = useState(false);
@@ -38,7 +36,7 @@ export const Toolbar = () => {
   const isMobile = useMediaQuery(768);
   const exportCart = () => {
     const groupedByWebsite = cart.reduce((acc, product) => {
-      const websiteName = getWebsiteName(product.vendor);
+      const websiteName = getVendorNameBySlug(product.vendor);
       if (!acc[websiteName]) {
         acc[websiteName] = [];
       }
@@ -57,23 +55,27 @@ export const Toolbar = () => {
                 product.condition
               }\n  Link: ${product.link}\n`
           )
-          .join("\n");
+          .join('\n');
         return `Website: ${vendor}\n\n${productsText}`;
       })
-      .join("\n\n");
+      .join('\n\n');
 
     const text = `Cart Summary\n\n${cartData}`;
-    const blob = new Blob([text], { type: "text/plain" });
+    const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = "cart.txt";
+    a.download = 'cart.txt';
     a.click();
     URL.revokeObjectURL(url);
   };
   return (
     <>
-      <div className={`sticky ${isMobile ? "top-16" : "top-28"} z-50 flex w-full items-center justify-between gap-4 rounded-lg border border-border bg-popover/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-popover/75`}>
+      <div
+        className={`sticky ${
+          isMobile ? 'top-16' : 'top-28'
+        } z-50 flex w-full items-center justify-between gap-4 rounded-lg border border-border bg-popover/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-popover/75`}
+      >
         <div className="flex items-center gap-2">
           <Button
             onClick={() => {
@@ -110,15 +112,19 @@ export const Toolbar = () => {
             onClick={exportCart}
             variant="ghost"
             size="sm"
-            className="export-cart-button hidden lg:flex gap-2"
+            className="export-cart-button hidden gap-2 lg:flex"
           >
             <Download className="h-4 w-4" />
             Export Cart
           </Button>
           <Dialog open={showCart} onOpenChange={setShowCart}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="cart-button text-foreground">
-                <ShoppingCart className="h-4 w-4 mr-2" />
+              <Button
+                variant="outline"
+                size="sm"
+                className="cart-button text-foreground"
+              >
+                <ShoppingCart className="mr-2 h-4 w-4" />
                 Cart ({cart.length})
               </Button>
             </DialogTrigger>
@@ -139,25 +145,23 @@ export const Toolbar = () => {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <p>Try our interactive tour to see how to use Multi-Search.</p> 
+              <p>Try our interactive tour to see how to use Multi-Search.</p>
             </div>
-
           </div>
           <div className="mt-6 flex justify-end">
-            <Button onClick={() => {
-              setShowHelp(false);
-              setRunTour(true);
-            }}>
+            <Button
+              onClick={() => {
+                setShowHelp(false);
+                setRunTour(true);
+              }}
+            >
               Take Interactive Tour
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      <InteractiveGuide 
-        run={runTour} 
-        onFinish={() => setRunTour(false)} 
-      />
+      <InteractiveGuide run={runTour} onFinish={() => setRunTour(false)} />
     </>
   );
 };

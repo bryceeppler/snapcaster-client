@@ -10,9 +10,9 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import useGlobalStore from '@/stores/globalStore';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useMemo } from 'react';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 interface FilterSheetProps {
   sortBy: SingleSortOptions;
@@ -27,9 +27,9 @@ export default function FilterSheet({
   sortByLabel,
   clearFilters
 }: FilterSheetProps) {
-  const { getVendorNameBySlug } = useGlobalStore();
   const { selectedFilters, toggleFilter, filterOptions } =
     useSealedSearchStore();
+  const { getVendorNameBySlug } = useVendors();
 
   // Memoize the isSelected function to prevent unnecessary recalculations
   const isSelected = useMemo(() => {

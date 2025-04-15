@@ -1,7 +1,6 @@
 import React from 'react';
 import { SealedProduct } from '@/types';
 import ProductImage from './product-image';
-import useGlobalStore from '@/stores/globalStore';
 import { SEALED_DISCOUNT_MAP } from '@/lib/constants';
 import { handleBuyClick } from '@/utils/analytics';
 import { useTheme } from 'next-themes';
@@ -10,6 +9,7 @@ import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { Button } from '../ui/button';
 import { VendorAssetTheme } from '@/services/vendorService';
 import { VendorAssetType } from '@/services/vendorService';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 type Props = {
   product: SealedProduct;
@@ -35,7 +35,7 @@ const DiscountBadge = ({ product }: Props) => {
 };
 
 const SealedCatalogItem = ({ product }: Props) => {
-  const { getVendorNameBySlug, getVendorBySlug } = useGlobalStore();
+  const { getVendorNameBySlug, getVendorBySlug } = useVendors();
   const { theme } = useTheme();
   const { productCategory } = useSealedSearchStore();
 

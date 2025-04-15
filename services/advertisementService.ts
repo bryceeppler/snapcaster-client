@@ -1,11 +1,11 @@
-import axiosInstance from '@/utils/axiosWrapper';
-import { Advertisement, AdvertisementWithImages } from '@/types/advertisements';
+import axios from 'axios';
+import { AdvertisementWithImages } from '@/types/advertisements';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export class AdvertisementService {
   async getAllAdvertisements(): Promise<AdvertisementWithImages[]> {
-    const response = await axiosInstance.get(
+    const response = await axios.get(
       `${BASE_URL}/api/v1/vendor/advertisements?with=images&is_active=true`
     );
     console.log(response.data.data);

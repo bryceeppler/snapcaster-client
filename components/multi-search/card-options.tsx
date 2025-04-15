@@ -3,15 +3,15 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Trash2, ShoppingCart, PlusCircle, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Product } from '@/types';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const CardOption = ({ product }: { product: Product }) => {
-  const { getVendorNameBySlug } = useGlobalStore();
+  const { getVendorNameBySlug } = useVendors();
   const useMediaQuery = (width: number): boolean => {
     const [isMobile, setIsMobile] = useState(false);
 

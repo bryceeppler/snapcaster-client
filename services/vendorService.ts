@@ -1,4 +1,4 @@
-import axiosInstance from '@/utils/axiosWrapper';
+import axios from 'axios';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -42,10 +42,15 @@ export interface Vendor {
 
 export class VendorService {
   async getAllVendors(): Promise<Vendor[]> {
-    const response = await axiosInstance.get(
-      `${BASE_URL}/api/v1/vendor/vendors?with=assets,discounts&is_active=true`
-    );
-    return response.data.data || ([] as Vendor[]);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/vendor/vendors?with=assets,discounts&is_active=true`
+      );
+      return response.data.data || ([] as Vendor[]);
+    } catch (error) {
+      console.error('Error fetching vendors:', error);
+      return [] as Vendor[];
+    }
   }
 }
 

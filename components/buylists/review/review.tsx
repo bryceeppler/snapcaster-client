@@ -2,7 +2,6 @@ import useBuyListStore, {
   IBuylistCart,
   IBuylistCartItem
 } from '@/stores/buyListStore';
-import useGlobalStore from '@/stores/globalStore';
 import { useTheme } from 'next-themes';
 import { AlertCircle, Ban, Circle, XCircle, ExternalLink } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -25,6 +24,8 @@ import UnpurchasableCardDetails from './unpurchasable-card-details';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axiosWrapper';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
 
 type Props = {
   setCurrentStep: (step: any) => void;
@@ -35,10 +36,33 @@ const CART_KEY = (cartId: number) => ['cart', cartId] as const;
 export default function Review({ setCurrentStep }: Props) {
   const { reviewData, setSelectedStoreForReview, currentCartId } =
     useBuyListStore();
-  const { getWebsiteName, websites } = useGlobalStore();
+  const { vendors } = useVendors();
   const { theme } = useTheme();
   const { data: connectedVendors, isLoading: isLoadingConnections } =
     useConnectedVendors();
+
+  // Helper function to get vendor name from slug
+  const getVendorNameBySlug = (slug: string): string => {
+    const vendor = vendors.find((vendor) => vendor.slug === slug);
+    return vendor ? vendor.name : 'Vendor not found';
+  };
+
+  // Add this helper function after the getVendorNameBySlug function
+  const getVendorIcon = (vendorSlug: string): string | null => {
+    const vendor = vendors.find((v) => v.slug === vendorSlug);
+    if (!vendor) return null;
+
+    // Find the icon asset based on the current theme
+    const iconAsset = vendor.assets.find(
+      (asset) =>
+        asset.asset_type === VendorAssetType.ICON &&
+        (asset.theme ===
+          (theme === 'dark' ? VendorAssetTheme.DARK : VendorAssetTheme.LIGHT) ||
+          asset.theme === VendorAssetTheme.UNIVERSAL)
+    );
+
+    return iconAsset?.url || null;
+  };
 
   // Fetch current cart data
   const { data: currentCart } = useQuery<{
@@ -58,7 +82,7 @@ export default function Review({ setCurrentStep }: Props) {
 
   const isVendorConnected = (vendorSlug: string) => {
     if (isLoadingConnections || !connectedVendors) return false;
-    const matchingWebsite = websites.find(
+    const matchingWebsite = vendors.find(
       (website) => website.slug === vendorSlug
     );
     return matchingWebsite
@@ -141,24 +165,14 @@ export default function Review({ setCurrentStep }: Props) {
             >
               <div className="flex flex-row items-center">
                 {(() => {
-                  const matchingWebsite = websites.find(
-                    (website) => storeData.storeName === website.slug
-                  );
-                  return matchingWebsite?.meta?.branding?.icons ? (
-                    <img
-                      src={
-                        theme === 'dark'
-                          ? matchingWebsite.meta.branding.icons.dark
-                          : matchingWebsite.meta.branding.icons.light
-                      }
-                      alt="Website"
-                      className="size-8"
-                    />
+                  const iconUrl = getVendorIcon(storeData.storeName);
+                  return iconUrl ? (
+                    <img src={iconUrl} alt="Vendor icon" className="size-8" />
                   ) : null;
                 })()}
                 <div className="mx-3 flex flex-col justify-center">
                   <p className="font-bold">
-                    {getWebsiteName(storeData.storeName)}
+                    {getVendorNameBySlug(storeData.storeName)}
                   </p>
                   <div className="flex flex-row items-center gap-1">
                     {isConnected ? (
@@ -303,7 +317,7 @@ export default function Review({ setCurrentStep }: Props) {
                     className="h-8 w-full"
                     disabled={!isConnected}
                   >
-                    Sell to {getWebsiteName(storeData.storeName)}
+                    Sell to {getVendorNameBySlug(storeData.storeName)}
                   </Button>
                 ) : (
                   <Alert className="border bg-background">

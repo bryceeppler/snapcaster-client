@@ -1,4 +1,3 @@
-import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/buyListStore';
 import { useTheme } from 'next-themes';
 import { AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
@@ -15,6 +14,8 @@ import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import PurchasingCardDetails from './review/purchasing-card-details';
 import UnpurchasableCardDetails from './review/unpurchasable-card-details';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
 
 interface ReviewProps {
   setCurrentStep: (step: any) => void;
@@ -28,7 +29,14 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
     currentCartId,
     setReviewData
   } = useBuyListStore();
-  const { getWebsiteName, websites } = useGlobalStore();
+
+  const { vendors } = useVendors();
+
+  const getVendorNameBySlug = (slug: string): string => {
+    const vendor = vendors.find((vendor) => vendor.slug === slug);
+    return vendor ? vendor.name : 'Vendor not found';
+  };
+
   const { theme } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<{
@@ -42,6 +50,23 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
   const storeData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
+
+  // Helper function to get vendor icon
+  const getVendorIcon = (slug: string): string | null => {
+    const vendor = vendors.find((v) => v.slug === slug);
+    if (!vendor) return null;
+
+    // Find the icon asset based on the current theme
+    const iconAsset = vendor.assets.find(
+      (asset) =>
+        asset.asset_type === VendorAssetType.ICON &&
+        (asset.theme ===
+          (theme === 'dark' ? VendorAssetTheme.DARK : VendorAssetTheme.LIGHT) ||
+          asset.theme === VendorAssetTheme.UNIVERSAL)
+    );
+
+    return iconAsset?.url || null;
+  };
 
   const handleSubmit = async (paymentType: 'Cash' | 'Store Credit') => {
     setIsSubmitting(true);
@@ -72,10 +97,10 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
 
               <p className="text-muted-foreground">
                 Your order has been submitted to{' '}
-                {getWebsiteName(selectedStoreForReview || '')}. If you are
+                {getVendorNameBySlug(selectedStoreForReview || '')}. If you are
                 shipping your cards, please wait for a confirmation email in 2-3
                 business days to the email you registerd on the{' '}
-                {getWebsiteName(selectedStoreForReview || '')} website.
+                {getVendorNameBySlug(selectedStoreForReview || '')} website.
                 Otherwise you can just drop your cards off in person.
               </p>
 
@@ -129,8 +154,8 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
     );
   }
 
-  const matchingWebsite = websites.find(
-    (website) => storeData.storeName === website.slug
+  const matchingVendor = vendors.find(
+    (vendor) => storeData.storeName === vendor.slug
   );
 
   return (
@@ -139,19 +164,14 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            {matchingWebsite?.meta?.branding?.icons && (
-              <img
-                src={
-                  theme === 'dark'
-                    ? matchingWebsite.meta.branding.icons.dark
-                    : matchingWebsite.meta.branding.icons.light
-                }
-                alt="Store logo"
-                className="size-8"
-              />
-            )}
+            {(() => {
+              const iconUrl = getVendorIcon(storeData.storeName);
+              return iconUrl ? (
+                <img src={iconUrl} alt="Store logo" className="size-8" />
+              ) : null;
+            })()}
             <span className="font-bold">
-              Order Summary - {getWebsiteName(storeData.storeName)}
+              Order Summary - {getVendorNameBySlug(storeData.storeName)}
             </span>
           </CardTitle>
           <CardDescription>
@@ -237,7 +257,7 @@ const Review: FC<ReviewProps> = ({ setCurrentStep }) => {
               <br />
               In a few business days{' '}
               <span className="text-primary">
-                {getWebsiteName(storeData.storeName)}
+                {getVendorNameBySlug(storeData.storeName)}
               </span>{' '}
               will email you a final adjusted quote and shipping instructions.
               <br />

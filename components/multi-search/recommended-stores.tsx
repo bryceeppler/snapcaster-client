@@ -19,7 +19,6 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import React, { useState } from 'react';
-import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Product } from '@/types';
 import { Card, CardTitle, CardHeader } from '@/components/ui/card';
@@ -32,9 +31,11 @@ import {
 import { ExternalLink, AlertCircle, AlertTriangle } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
+import { useVendors } from '@/hooks/queries/useVendors';
+
 export const RecommendedStores = () => {
   const { results, addToCart, isInCart, notFound } = useMultiSearchStore();
-  const { getVendorNameBySlug, vendors } = useGlobalStore();
+  const { getVendorNameBySlug, vendors } = useVendors();
   const { theme } = useTheme();
 
   // Filter out null values and then get unique card names

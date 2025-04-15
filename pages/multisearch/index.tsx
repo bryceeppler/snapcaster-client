@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/select';
 import { Cart } from '@/components/multi-search/cart';
 import { RecommendedStores } from '@/components/multi-search/recommended-stores';
-import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Condition, Product, Tcg } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,6 +24,7 @@ import { ResultsContainer } from '@/components/multi-search/results-container';
 import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
 import { trackSearch } from '@/utils/analytics';
 import { Vendor } from '@/services/vendorService';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 type Props = {};
 
@@ -42,7 +42,7 @@ export default function Multisearch({}: Props) {
     onWebsiteSelect,
     setTcg
   } = useMultiSearchStore();
-  const { vendors } = useGlobalStore();
+  const { vendors } = useVendors();
 
   return (
     <>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Trash2, ExternalLink } from 'lucide-react';
-import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Product } from '@/types';
 import {
@@ -24,10 +23,11 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 export const Cart = () => {
   const { cart, removeFromCart } = useMultiSearchStore();
-  const { getVendorNameBySlug } = useGlobalStore();
+  const { getVendorNameBySlug } = useVendors();
 
   const recommendedStores = [
     'obsidian',

@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '../ui/badge';
 import CardImage from '../ui/card-image';
-import useGlobalStore from '@/stores/globalStore';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { handleBuyClick } from '../../utils/analytics';
 import { DISCOUNT_MAP } from '@/lib/constants';
 import { useTheme } from 'next-themes';
 import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
+import { useVendors } from '@/hooks/queries/useVendors';
+
 type Props = {
   product: SingleCatalogCard;
 };
@@ -33,7 +34,7 @@ const DiscountBadge = ({ product }: Props) => {
 };
 
 const SingleCatalogItem = ({ product }: Props) => {
-  const { vendors } = useGlobalStore();
+  const { vendors } = useVendors();
   const { resultsTcg } = useSingleSearchStore();
   const { theme } = useTheme();
   const findVendorNameByCode = (slug: string) => {

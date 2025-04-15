@@ -3,16 +3,16 @@ import Head from 'next/head';
 import Link from 'next/link';
 import PageTitle from '@/components/ui/page-title';
 import { trackAdClick } from '@/utils/analytics';
-import useGlobalStore from '@/stores/globalStore';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 type Props = {};
 
 // TODO: Use vendors.tier to map out the sponsors
 const About: NextPage<Props> = () => {
-  const { vendors } = useGlobalStore();
+  const { vendors } = useVendors();
   const router = useRouter();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const About: NextPage<Props> = () => {
               <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
                 {/* OBSIDIAN */}
                 <SponsorCard
-                  href="https://obsidiangames.ca"
+                  href="https://obsidiangames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
                   imgSrc="https://cdn.snapcaster.ca/obsidian_supporter.png"
                   alt="Obsidian Games Vernon"
                   positionId="6"
@@ -54,7 +54,7 @@ const About: NextPage<Props> = () => {
                 />
                 {/* EXOR */}
                 <SponsorCard
-                  href="https://exorgames.com"
+                  href="https://exorgames.com?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
                   imgSrc="https://cdn.snapcaster.ca/supporters/exorgames_supporter.png"
                   alt="Exor Games"
                   positionId="6"
@@ -62,7 +62,7 @@ const About: NextPage<Props> = () => {
                 />
                 {/* CHIMERA */}
                 <SponsorCard
-                  href="https://chimeragamingonline.com/"
+                  href="https://chimeragamingonline.com/?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
                   imgSrc="https://cdn.snapcaster.ca/supporters/chimera_supporter.png"
                   alt="Chimera Gaming"
                   positionId="6"
@@ -82,7 +82,7 @@ const About: NextPage<Props> = () => {
               <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
                 {/* LEVEL UP */}
                 <SponsorCard
-                  href="https://levelupgames.ca"
+                  href="https://levelupgames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
                   imgSrc="https://cdn.snapcaster.ca/supporters/levelup_supporter.png"
                   alt="Level Up Games"
                   positionId="8"
@@ -90,7 +90,7 @@ const About: NextPage<Props> = () => {
                 />
                 {/* The Mythic Store */}
                 <SponsorCard
-                  href="https://themythicstore.com"
+                  href="https://themythicstore.com?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
                   imgSrc="https://cdn.snapcaster.ca/supporters/tms_supporter.png"
                   alt="The Mythic Store"
                   positionId="8"
@@ -98,7 +98,7 @@ const About: NextPage<Props> = () => {
                 />
                 {/* House of Cards */}
                 <SponsorCard
-                  href="https://houseofcards.ca"
+                  href="https://houseofcards.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
                   imgSrc="https://cdn.snapcaster.ca/supporters/hoc_supporter.png"
                   alt="House of Cards"
                   positionId="8"
@@ -116,7 +116,7 @@ const About: NextPage<Props> = () => {
               <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
                 {/* VORTEX */}
                 <SponsorCard
-                  href="https://vortexgames.ca"
+                  href="https://vortexgames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
                   imgSrc="https://cdn.snapcaster.ca/supporters/vortex_supporter.png"
                   alt="Vortex Games"
                 />
