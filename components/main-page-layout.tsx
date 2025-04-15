@@ -6,6 +6,13 @@ import {
   VendorWeightConfig
 } from '@/types/advertisements';
 import { AdManagerProvider, TopBanner, SideBanner, AD_DIMENSIONS } from './ads';
+import {
+  TOP_BANNER_AD_WEIGHTS,
+  LEFT_BANNER_AD_WEIGHTS,
+  RIGHT_BANNER_AD_WEIGHTS,
+  FEED_AD_WEIGHTS
+} from '@/lib/ad-weights';
+import { PositionVendorWeights } from './ads/AdManager';
 
 type Props = {
   width?: 'md' | 'xl';
@@ -20,15 +27,13 @@ export default function MainLayout({
   const { hasActiveSubscription } = useAuth();
   const [hydrated, setHydrated] = useState(false);
 
-  // Sample vendor weights - in a real app, these might come from an API or config
-  const vendorWeights: VendorWeightConfig = useMemo(
+  // Use position-specific vendor weights from the ad-weights.ts file
+  const positionVendorWeights: PositionVendorWeights = useMemo(
     () => ({
-      // Example weights for different vendors (vendor slug -> weight)
-      // Higher weights mean that vendor's ads will appear more frequently
-      obsidian: 5, // Obsidian has weight 5
-      chimera: 3, // Chimera has weight 3
-      goldfish: 2 // Goldfish has weight 2
-      // Other vendors will have default weight of 1
+      [AdvertisementPosition.TOP_BANNER]: TOP_BANNER_AD_WEIGHTS,
+      [AdvertisementPosition.LEFT_BANNER]: LEFT_BANNER_AD_WEIGHTS,
+      [AdvertisementPosition.RIGHT_BANNER]: RIGHT_BANNER_AD_WEIGHTS,
+      [AdvertisementPosition.FEED]: FEED_AD_WEIGHTS
     }),
     []
   );
@@ -47,7 +52,7 @@ export default function MainLayout({
   const sideAdWidth = AD_DIMENSIONS.sideBanner.width;
 
   return (
-    <AdManagerProvider vendorWeights={vendorWeights}>
+    <AdManagerProvider positionVendorWeights={positionVendorWeights}>
       <div className="flex min-h-svh justify-center smlaptop:justify-between">
         {/* Left Banner */}
         <div

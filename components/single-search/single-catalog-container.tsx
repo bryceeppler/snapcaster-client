@@ -9,12 +9,13 @@ import type {
   AdvertisementWeight
 } from '@/types/advertisements';
 import { AdvertisementPosition } from '@/types/advertisements';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { AdSelector } from '@/utils/adSelector';
 import { singleSortByLabel } from '@/types/query';
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import { FEED_AD_WEIGHTS } from '@/lib/ad-weights';
 
 export default function SingleCatalog() {
   const {
@@ -45,15 +46,14 @@ export default function SingleCatalog() {
     null
   );
 
-  // Note these store_ids come from the ads database
-  const storeWeights: AdvertisementWeight[] = [
-    { vendor_id: 2, position: AdvertisementPosition.FEED, weight: 1 }, // obsidian
-    { vendor_id: 5, position: AdvertisementPosition.FEED, weight: 1 }, // exorgames
-    { vendor_id: 4, position: AdvertisementPosition.FEED, weight: 1 }, // chimera
-    { vendor_id: 3, position: AdvertisementPosition.FEED, weight: 1 }, // levelup
-    { vendor_id: 8, position: AdvertisementPosition.FEED, weight: 1 }, // houseofcards
-    { vendor_id: 9, position: AdvertisementPosition.FEED, weight: 1 } // mythicstore
-  ];
+  // Convert the FEED_AD_WEIGHTS to AdvertisementWeight[] format
+  const storeWeights: AdvertisementWeight[] = useMemo(() => {
+    return Object.entries(FEED_AD_WEIGHTS).map(([vendor_slug, weight]) => ({
+      vendor_slug,
+      position: AdvertisementPosition.FEED,
+      weight
+    }));
+  }, []);
 
   useEffect(() => {
     if (!hasActiveSubscription && searchResults) {
@@ -70,7 +70,7 @@ export default function SingleCatalog() {
         setAds(selectedAds);
       }
     }
-  }, [searchResults, hasActiveSubscription, getFeedAds]);
+  }, [searchResults, hasActiveSubscription, getFeedAds, storeWeights]);
 
   return (
     <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-[240px_1fr]">

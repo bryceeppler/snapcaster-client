@@ -1,8 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type {
-  AdvertisementWithImages,
-  Advertisement
-} from '@/types/advertisements';
+import type { AdvertisementWithImages } from '@/types/advertisements';
 import { AdvertisementPosition } from '@/types/advertisements';
 import { advertisementService } from '@/services/advertisementService';
 

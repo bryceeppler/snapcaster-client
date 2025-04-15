@@ -17,9 +17,10 @@ export const SideBanner: React.FC<SideBannerProps> = ({
   position,
   className
 }) => {
-  const { ads, vendorWeights } = useAdManager();
+  const { ads, getVendorWeightsForPosition } = useAdManager();
 
   const sideBannerAds = ads[position] || [];
+  const positionWeights = getVendorWeightsForPosition(position);
 
   if (sideBannerAds.length === 0) return null;
 
@@ -39,7 +40,7 @@ export const SideBanner: React.FC<SideBannerProps> = ({
       >
         <UniversalCarousel
           ads={sideBannerAds}
-          vendorWeights={vendorWeights}
+          vendorWeights={positionWeights}
           position={position}
           className="h-full w-full"
         />

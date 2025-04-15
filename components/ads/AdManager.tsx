@@ -26,11 +26,21 @@ export const AD_DIMENSIONS = {
   }
 } as const;
 
+// Define position-specific vendor weights
+export type PositionVendorWeights = {
+  [key in AdvertisementPosition]?: VendorWeightConfig;
+};
+
 type AdContextType = {
   ads: {
     [key in AdvertisementPosition]?: AdvertisementWithImages[];
   };
-  vendorWeights: VendorWeightConfig;
+  // Individual weights for each position
+  vendorWeights: PositionVendorWeights;
+  // Helper function to get weights for a specific position
+  getVendorWeightsForPosition: (
+    position: AdvertisementPosition
+  ) => VendorWeightConfig;
 };
 
 const AdContext = createContext<AdContextType | undefined>(undefined);
@@ -47,12 +57,12 @@ export function useAdManager() {
 
 type AdManagerProviderProps = {
   children: React.ReactNode;
-  vendorWeights?: VendorWeightConfig;
+  positionVendorWeights?: PositionVendorWeights;
 };
 
 export function AdManagerProvider({
   children,
-  vendorWeights = {}
+  positionVendorWeights = {}
 }: AdManagerProviderProps) {
   const { ads: allAds } = useAdvertisements();
 
@@ -72,9 +82,28 @@ export function AdManagerProvider({
     return result;
   }, [allAds]);
 
+  // Combine position-specific weights with fallback to default weights
+  const combinedVendorWeights = useMemo(() => {
+    const result: PositionVendorWeights = {};
+
+    Object.values(AdvertisementPosition).forEach((position) => {
+      result[position] = positionVendorWeights[position] || {};
+    });
+
+    return result;
+  }, [positionVendorWeights]);
+
+  // Helper function to get weights for a specific position
+  const getVendorWeightsForPosition = (
+    position: AdvertisementPosition
+  ): VendorWeightConfig => {
+    return combinedVendorWeights[position] || {};
+  };
+
   const value = {
     ads: adsByPosition,
-    vendorWeights
+    vendorWeights: combinedVendorWeights,
+    getVendorWeightsForPosition
   };
 
   return <AdContext.Provider value={value}>{children}</AdContext.Provider>;

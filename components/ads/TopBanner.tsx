@@ -9,9 +9,12 @@ interface TopBannerProps {
 }
 
 export const TopBanner: React.FC<TopBannerProps> = ({ className }) => {
-  const { ads, vendorWeights } = useAdManager();
+  const { ads, getVendorWeightsForPosition } = useAdManager();
 
   const topBannerAds = ads[AdvertisementPosition.TOP_BANNER] || [];
+  const topBannerWeights = getVendorWeightsForPosition(
+    AdvertisementPosition.TOP_BANNER
+  );
 
   if (topBannerAds.length === 0) return null;
 
@@ -19,7 +22,7 @@ export const TopBanner: React.FC<TopBannerProps> = ({ className }) => {
     <AdContainer className={`w-full ${className || ''}`}>
       <UniversalCarousel
         ads={topBannerAds}
-        vendorWeights={vendorWeights}
+        vendorWeights={topBannerWeights}
         position={AdvertisementPosition.TOP_BANNER}
         absolute={false}
         className="h-auto w-full overflow-hidden"
