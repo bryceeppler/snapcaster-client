@@ -3,13 +3,16 @@ import BackToTopButton from '../ui/back-to-top-btn';
 import SingleCatalogItem from './single-catalog-item';
 import FilterSection from '@/components/search-ui/search-filter-container';
 import { useAuth } from '@/hooks/useAuth';
-import useGlobalStore from '@/stores/globalStore';
 import AdComponent from '../ad';
-import type { Ad, AdWeight } from '@/types/ads';
-import React, { useState, useEffect } from 'react';
-import { AdSelector } from '@/utils/adSelector';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
+import React, { useState, useEffect, useMemo } from 'react';
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
+import { useAdManager } from '@/components/ads/AdManager';
+
+// Constant defining how often ads should appear in search results
+const AD_INTERVAL = 10;
 
 export default function SingleCatalog() {
   const {
@@ -34,36 +37,38 @@ export default function SingleCatalog() {
   } = useSingleSearchStore();
 
   const { hasActiveSubscription } = useAuth();
-  const { getFeedAds } = useGlobalStore();
+  const { getInitialFeedAd, getIntervalAds } = useAdManager();
 
-  const [ads, setAds] = useState<Ad[]>([]);
-  const [initialAd, setInitialAd] = useState<Ad | null>(null);
+  const [initialAd, setInitialAd] = useState<AdvertisementWithImages | null>(
+    null
+  );
+  const [interleaveAds, setInterleaveAds] = useState<AdvertisementWithImages[]>(
+    []
+  );
 
-  // Note these store_ids come from the ads database
-  const storeWeights: AdWeight[] = [
-    { store_id: 2, weight: 1 }, // obsidian
-    { store_id: 5, weight: 1 }, // exorgames
-    { store_id: 4, weight: 1 }, // chimera
-    { store_id: 3, weight: 1 }, // levelup
-    { store_id: 8, weight: 1 }, // houseofcards
-    { store_id: 9, weight: 1 } // mythicstore
-  ];
-
+  // Get ads when search results change
   useEffect(() => {
     if (!hasActiveSubscription && searchResults) {
-      const ads = getFeedAds();
-      if (ads?.length) {
-        const selector = new AdSelector(ads, storeWeights);
-        setInitialAd(selector.getNextAd());
+      // Get initial ad
+      setInitialAd(getInitialFeedAd());
 
-        const adCount = Math.floor(searchResults.length / 11);
-        const selectedAds = [];
-        for (let i = 0; i < adCount; i++) {
-          selectedAds.push(selector.getNextAd());
-        }
-        setAds(selectedAds);
-      }
+      // Get ads to interleave into search results
+      const resultCount = searchResults.length;
+      setInterleaveAds(getIntervalAds(resultCount, AD_INTERVAL));
     }
+  }, [searchResults, hasActiveSubscription, getInitialFeedAd, getIntervalAds]);
+
+  // Calculate positions where ads should be shown
+  const adPositions = useMemo(() => {
+    if (!searchResults || hasActiveSubscription) return [];
+
+    // Create an array of positions where ads should appear
+    const positions: number[] = [];
+    for (let i = AD_INTERVAL - 1; i < searchResults.length; i += AD_INTERVAL) {
+      positions.push(i);
+    }
+
+    return positions;
   }, [searchResults, hasActiveSubscription]);
 
   return (
@@ -159,28 +164,49 @@ export default function SingleCatalog() {
           {/* #3 Single Search Result Cards Section*/}
           {searchResults && (
             <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-3 xxl:grid-cols-4">
+              {/* Initial ad at the top */}
               {!hasActiveSubscription && initialAd && (
-                <AdComponent ad={initialAd} key={`initial-${initialAd.id}`} />
+                <AdComponent
+                  ad={initialAd}
+                  position={AdvertisementPosition.FEED}
+                  key={`initial-${initialAd.id}`}
+                />
               )}
+
+              {/* Promoted results */}
               {promotedResults &&
                 !hasActiveSubscription &&
                 promotedResults.map((item, index) => {
                   return <SingleCatalogItem product={item} key={index} />;
                 })}
 
-              {searchResults.map((item, index) => (
-                <React.Fragment key={index}>
-                  <SingleCatalogItem product={item} />
-                  {!hasActiveSubscription &&
-                    (index + 1) % 10 === 0 &&
-                    ads[Math.floor(index / 10)] && (
+              {/* Regular results with interleaved ads */}
+              {searchResults.map((item, index) => {
+                // Check if an ad should appear after this item
+                const shouldShowAd =
+                  !hasActiveSubscription &&
+                  adPositions.includes(index) &&
+                  interleaveAds.length > 0;
+
+                // Calculate which ad to show (handles repeated ads if necessary)
+                const adIndex = Math.floor(
+                  adPositions.indexOf(index) % interleaveAds.length
+                );
+
+                return (
+                  <React.Fragment key={index}>
+                    <SingleCatalogItem product={item} />
+
+                    {shouldShowAd && interleaveAds[adIndex] && (
                       <AdComponent
-                        ad={ads[Math.floor(index / 10)]}
-                        key={`feed-${ads[Math.floor(index / 10)].id}`}
+                        ad={interleaveAds[adIndex]}
+                        position={AdvertisementPosition.FEED}
+                        key={`feed-${interleaveAds[adIndex].id}-pos-${index}`}
                       />
                     )}
-                </React.Fragment>
-              ))}
+                  </React.Fragment>
+                );
+              })}
             </div>
           )}
         </div>

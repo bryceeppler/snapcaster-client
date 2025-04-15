@@ -37,16 +37,6 @@ const Navbar: React.FC = () => {
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
   const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
 
-  // Uncomment this to enable notifications
-  // const {
-  //   initNotificationStatus,
-  //   setNotificationStatusFalse,
-  //   notificationStatus
-  // } = globalStore();
-  // useEffect(() => {
-  //   initNotificationStatus();
-  // }, []);
-
   return (
     <>
       {/* MOBILE NAV */}

@@ -9,9 +9,9 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import useGlobalStore from '@/stores/globalStore';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useMemo } from 'react';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 interface FilterSheetProps {
   sortBy: string | null;
@@ -26,9 +26,9 @@ export default function FilterSheet({
   sortByLabel,
   clearFilters
 }: FilterSheetProps) {
-  const { getWebsiteName } = useGlobalStore();
   const { selectedFilters, toggleFilter, filterOptions } =
     useSealedSearchStore();
+  const { getVendorNameBySlug } = useVendors();
 
   // Memoize the isSelected function to prevent unnecessary recalculations
   const isSelected = useMemo(() => {
@@ -94,7 +94,7 @@ export default function FilterSheet({
                           className="text-sm leading-5"
                         >
                           {filterOption.field === 'vendor'
-                            ? getWebsiteName(fValue.value)
+                            ? getVendorNameBySlug(fValue.value)
                             : fValue.label}{' '}
                           ({fValue.count})
                         </label>
