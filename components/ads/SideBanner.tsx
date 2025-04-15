@@ -2,7 +2,7 @@ import React from 'react';
 import { AdvertisementPosition } from '@/types/advertisements';
 import { AdContainer } from './AdContainer';
 import { useAdManager } from './AdManager';
-import UniversalCarousel from '../universal-carousel';
+import VerticalCarousel from '../vertical-carousel';
 import { cn } from '@/lib/utils';
 import { AD_DIMENSIONS } from './AdManager';
 
@@ -38,7 +38,7 @@ export const SideBanner: React.FC<SideBannerProps> = ({
         width={AD_DIMENSIONS.sideBanner.width}
         height={AD_DIMENSIONS.sideBanner.height}
       >
-        <UniversalCarousel
+        <VerticalCarousel
           ads={sideBannerAds}
           vendorWeights={positionWeights}
           position={position}
