@@ -20,9 +20,8 @@ import {
   ChartTooltipContent
 } from '@/components/ui/chart';
 import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
-import useGlobalStore from '@/stores/globalStore';
 import { formatChartDate } from '@/lib/utils';
-
+import { useVendors } from '@/hooks/queries/useVendors';
 const TCG_ORDER = [
   'mtg',
   'pokemon',
@@ -177,13 +176,21 @@ export function VendorBuyClicksChart({
   className
 }: VendorBuyClicksChartProps) {
   const { data, isLoading, error } = useVendorBuyClicks(numberOfDays);
-  const { websites } = useGlobalStore();
+  const { vendors } = useVendors();
 
   // Convert chartHeight to a string with 'px' if it's a number
-  const heightClass = typeof chartHeight === 'number' ? `h-[${chartHeight}px]` : chartHeight;
+  const heightClass =
+    typeof chartHeight === 'number' ? `h-[${chartHeight}px]` : chartHeight;
 
   if (isLoading) {
-    return <ChartSkeleton title="Top Vendors" height={chartHeight as number} description="Buy clicks by TCG across vendors" footer={true} />;
+    return (
+      <ChartSkeleton
+        title="Top Vendors"
+        height={chartHeight as number}
+        description="Buy clicks by TCG across vendors"
+        footer={true}
+      />
+    );
   }
 
   if (error) {
@@ -193,29 +200,27 @@ export function VendorBuyClicksChart({
           <CardTitle>Top Vendors</CardTitle>
           <CardDescription>Buy clicks by TCG across vendors</CardDescription>
         </CardHeader>
-        <CardContent className={`flex items-center justify-center ${heightClass}`}>
+        <CardContent
+          className={`flex items-center justify-center ${heightClass}`}
+        >
           <p className="text-sm text-red-500">Failed to load vendor data</p>
         </CardContent>
       </Card>
     );
   }
 
-  const startDate = data?.startDate
-    ? formatChartDate(data.startDate)
-    : '';
-  const endDate = data?.endDate
-    ? formatChartDate(data.endDate)
-    : '';
+  const startDate = data?.startDate ? formatChartDate(data.startDate) : '';
+  const endDate = data?.endDate ? formatChartDate(data.endDate) : '';
 
   // Process the data to use proper website names
   const processedData = data?.data.map((item) => {
     const normalizedUrl = normalizeWebsiteUrl(item.website);
-    const website = websites.find(
-      (w) => normalizeWebsiteUrl(w.url) === normalizedUrl
+    const vendor = vendors.find(
+      (v) => normalizeWebsiteUrl(v.url) === normalizedUrl
     );
     return {
       ...item,
-      website: website?.name || normalizedUrl, // Fallback to normalized URL if website not found
+      vendor: vendor?.name || normalizedUrl, // Fallback to normalized URL if website not found
       originalUrl: item.website // Keep original URL for tooltip
     };
   });
@@ -229,14 +234,17 @@ export function VendorBuyClicksChart({
         </div>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer config={chartConfig} className={`aspect-auto ${heightClass} w-full`}>
+        <ChartContainer
+          config={chartConfig}
+          className={`aspect-auto ${heightClass} w-full`}
+        >
           <BarChart
             data={processedData}
             margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="website"
+              dataKey="vendor"
               tickLine={false}
               axisLine={false}
               tick={(props: CustomXAxisTickProps) => (
@@ -258,8 +266,8 @@ export function VendorBuyClicksChart({
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm pt-2">
-        <div className="opacity-0 h-[16px] leading-none">
+      <CardFooter className="flex-col gap-2 pt-2 text-sm">
+        <div className="h-[16px] leading-none opacity-0">
           {/* This invisible element maintains the same height as the trend indicator in TrafficChart */}
           Placeholder for alignment
         </div>

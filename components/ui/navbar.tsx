@@ -26,7 +26,6 @@ import {
 import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import globalStore from '@/stores/globalStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/buyListStore';
 
@@ -37,16 +36,6 @@ const Navbar: React.FC = () => {
   const canViewAnalytics = isAdmin || isVendor;
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
   const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
-
-  // Uncomment this to enable notifications
-  // const {
-  //   initNotificationStatus,
-  //   setNotificationStatusFalse,
-  //   notificationStatus
-  // } = globalStore();
-  // useEffect(() => {
-  //   initNotificationStatus();
-  // }, []);
 
   return (
     <>

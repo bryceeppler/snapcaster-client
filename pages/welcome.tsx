@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 
-import useGlobalStore from '@/stores/globalStore';
 import { Integrations } from '@/components/welcome/integrations';
 import Testimonials from '@/components/welcome/testimonials';
 import { SignupForm } from '@/components/forms/SignupForm';
@@ -19,7 +18,6 @@ import { SolutionsGrid } from '@/components/welcome/solutions-grid';
 type Props = {};
 
 const Welcome = (props: Props) => {
-  const { websites } = useGlobalStore();
   const [accountCreated, setAccountCreated] = useState(false);
   return (
     <>

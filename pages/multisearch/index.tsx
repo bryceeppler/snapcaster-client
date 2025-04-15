@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/select';
 import { Cart } from '@/components/multi-search/cart';
 import { RecommendedStores } from '@/components/multi-search/recommended-stores';
-import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Condition, Product, Tcg } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
@@ -24,11 +23,8 @@ import BackToTopButton from '@/components/ui/back-to-top-btn';
 import { ResultsContainer } from '@/components/multi-search/results-container';
 import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
 import { trackSearch } from '@/utils/analytics';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Vendor } from '@/services/vendorService';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 type Props = {};
 
@@ -46,7 +42,7 @@ export default function Multisearch({}: Props) {
     onWebsiteSelect,
     setTcg
   } = useMultiSearchStore();
-  const { websites } = useGlobalStore();
+  const { vendors } = useVendors();
 
   return (
     <>
@@ -60,7 +56,7 @@ export default function Multisearch({}: Props) {
               searchInput={searchInput}
               setSearchInput={setSearchInput}
               handleSubmit={handleSubmit}
-              websites={websites}
+              vendors={vendors}
               selectedWebsites={selectedWebsites}
               onWebsiteSelect={onWebsiteSelect}
               minimumAcceptableCondition={minimumAcceptableCondition}
@@ -83,14 +79,12 @@ export default function Multisearch({}: Props) {
 
 const ResultsView = ({ results }: { results: Product[][] }) => {
   return (
-    <div className="w-full grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0 mb-8">
-      <div className="flex flex-col col-span-12 gap-4">
-      <Toolbar />
+    <div className="mb-8 w-full grid-cols-12 gap-4 space-y-2 lg:grid lg:space-y-0">
+      <div className="col-span-12 flex flex-col gap-4">
+        <Toolbar />
         <RecommendedStores />
         <ResultsContainer results={results} />
-
       </div>
-
     </div>
   );
 };
@@ -109,7 +103,7 @@ const SearchView = ({
   searchInput: string;
   setSearchInput: (value: string) => void;
   handleSubmit: (tcg: string, minimumAcceptableCondition: Condition) => void;
-  websites: any[];
+  vendors: Vendor[];
   selectedWebsites: any[];
   onWebsiteSelect: (value: any) => void;
   minimumAcceptableCondition: Condition;
@@ -117,7 +111,7 @@ const SearchView = ({
 }) => {
   const { loading } = useMultiSearchStore();
   const { hasActiveSubscription, isAuthenticated } = useAuth();
-  const { adsEnabled } = useGlobalStore();
+
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     if (!hasActiveSubscription) {
@@ -132,7 +126,9 @@ const SearchView = ({
     <div className="flex w-full flex-col gap-4 rounded-lg border border-border bg-popover p-4">
       <div className="flex flex-col items-center gap-4 md:flex-row">
         <div className="flex flex-col gap-2">
-          <label htmlFor="tcg-select" className="text-sm text-left">TCG</label>
+          <label htmlFor="tcg-select" className="text-left text-sm">
+            TCG
+          </label>
           <Select value={tcg} onValueChange={(value: Tcg) => setTcg(value)}>
             <SelectTrigger id="tcg-select" className="w-[200px]">
               <SelectValue placeholder="MTG" />
@@ -152,10 +148,14 @@ const SearchView = ({
           </Select>
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="condition-select" className="text-sm text-left">Minimum Condition</label>
+          <label htmlFor="condition-select" className="text-left text-sm">
+            Minimum Condition
+          </label>
           <Select
             value={minimumAcceptableCondition}
-            onValueChange={(value: Condition) => setMinimumAcceptableCondition(value)}
+            onValueChange={(value: Condition) =>
+              setMinimumAcceptableCondition(value)
+            }
           >
             <SelectTrigger id="condition-select" className="w-[200px]">
               <SelectValue placeholder="MP" />

@@ -20,10 +20,10 @@ import {
 } from '@/components/ui/table';
 import { useVendorLeaderboard } from '@/lib/hooks/useAnalytics';
 import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
-import useGlobalStore from '@/stores/globalStore';
 import { formatChartDate } from '@/lib/utils';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useAuth } from '@/hooks/useAuth';
+import { useVendors } from '@/hooks/queries/useVendors';
 const TCG_ORDER = [
   'mtg',
   'pokemon',
@@ -81,13 +81,21 @@ export function VendorLeaderboard({
     dateRange ? dateRange.to : undefined,
     0
   );
-  const { websites } = useGlobalStore();
+  const { vendors } = useVendors();
 
   // Convert chartHeight to a string with 'px' if it's a number
-  const heightClass = typeof chartHeight === 'number' ? `h-[${chartHeight}px]` : chartHeight;
+  const heightClass =
+    typeof chartHeight === 'number' ? `h-[${chartHeight}px]` : chartHeight;
 
   if (isLoading) {
-    return <ChartSkeleton title="Leaderboard" height={chartHeight as number} description="Buy clicks by TCG across vendors" footer={true} />;
+    return (
+      <ChartSkeleton
+        title="Leaderboard"
+        height={chartHeight as number}
+        description="Buy clicks by TCG across vendors"
+        footer={true}
+      />
+    );
   }
 
   if (error) {
@@ -97,31 +105,29 @@ export function VendorLeaderboard({
           <CardTitle>Leaderboard</CardTitle>
           <CardDescription>Buy clicks by TCG across vendors</CardDescription>
         </CardHeader>
-        <CardContent className={`flex items-center justify-center ${heightClass}`}>
+        <CardContent
+          className={`flex items-center justify-center ${heightClass}`}
+        >
           <p className="text-sm text-red-500">Failed to load vendor data</p>
         </CardContent>
       </Card>
     );
   }
 
-  const startDate = data?.startDate
-    ? formatChartDate(data.startDate)
-    : '';
-  const endDate = data?.endDate
-    ? formatChartDate(data.endDate)
-    : '';
+  const startDate = data?.startDate ? formatChartDate(data.startDate) : '';
+  const endDate = data?.endDate ? formatChartDate(data.endDate) : '';
 
   // Process the data to use proper website names
   const processedData = data?.data.map((item) => {
     const normalizedUrl = normalizeWebsiteUrl(item.website);
-    const website = websites.find(
-      (w) => normalizeWebsiteUrl(w.url) === normalizedUrl
+    const vendor = vendors.find(
+      (v) => normalizeWebsiteUrl(v.url) === normalizedUrl
     );
     return {
       ...item,
-      website: website?.name || normalizedUrl, // Fallback to normalized URL if website not found
+      vendor: vendor?.name || normalizedUrl, // Fallback to normalized URL if website not found
       originalUrl: item.website, // Keep original URL for tooltip
-      slug: website?.slug
+      slug: vendor?.slug
     };
   });
 
@@ -134,51 +140,77 @@ export function VendorLeaderboard({
         </div>
       </CardHeader>
       <CardContent className="flex">
-          <ScrollArea className={`${heightClass} w-1 flex-1`}>
-            <div className="min-w-max">
-              <Table className="w-full">
-                <TableHeader className="sticky top-0 bg-background">
-                  <TableRow>
-                    <TableHead className="w-[30px] whitespace-nowrap">Rank</TableHead>
-                    <TableHead className="w-[120px] whitespace-nowrap">Vendor</TableHead>
-                    <TableHead className="w-[120px] text-right whitespace-nowrap">Total Clicks</TableHead>
+        <ScrollArea className={`${heightClass} w-1 flex-1`}>
+          <div className="min-w-max">
+            <Table className="w-full">
+              <TableHeader className="sticky top-0 bg-background">
+                <TableRow>
+                  <TableHead className="w-[30px] whitespace-nowrap">
+                    Rank
+                  </TableHead>
+                  <TableHead className="w-[120px] whitespace-nowrap">
+                    Vendor
+                  </TableHead>
+                  <TableHead className="w-[120px] whitespace-nowrap text-right">
+                    Total Clicks
+                  </TableHead>
+                  {TCG_ORDER.map((tcg) => (
+                    <TableHead
+                      key={tcg}
+                      className="w-[120px] whitespace-nowrap text-right"
+                    >
+                      {tcgLabels[tcg]}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {processedData?.map((vendor, index) => (
+                  <TableRow
+                    key={vendor.website}
+                    className={
+                      profile?.data.user.vendorData?.vendorSlug ===
+                        vendor.slug && vendor.slug
+                        ? 'bg-primary/50'
+                        : ''
+                    }
+                  >
+                    <TableCell className="w-[30px] whitespace-nowrap">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell
+                      className="max-w-[120px] font-medium"
+                      title={vendor.website}
+                    >
+                      {vendor.vendor || vendor.website}
+                    </TableCell>
+                    <TableCell className="w-[120px] text-right">
+                      {vendor.total.toLocaleString()}
+                    </TableCell>
                     {TCG_ORDER.map((tcg) => (
-                      <TableHead key={tcg} className="w-[120px] text-right whitespace-nowrap">
-                        {tcgLabels[tcg]}
-                      </TableHead>
+                      <TableCell key={tcg} className="w-[120px] text-right">
+                        {vendor[tcg] ? (
+                          <div className="flex flex-col">
+                            <span>{vendor[tcg].toLocaleString()}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {((vendor[tcg] / vendor.total) * 100).toFixed(1)}%
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
+                      </TableCell>
                     ))}
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {processedData?.map((vendor, index) => (
-                    <TableRow key={vendor.website} className={(profile?.data.user.vendorData?.vendorSlug === vendor.slug && vendor.slug) ? 'bg-primary/50' : ''}>
-                      <TableCell className="w-[30px] whitespace-nowrap">{index + 1}</TableCell>
-                      <TableCell className="font-medium max-w-[120px]" title={vendor.website}>{vendor.website}</TableCell>
-                      <TableCell className="text-right w-[120px]">{vendor.total.toLocaleString()}</TableCell>
-                      {TCG_ORDER.map((tcg) => (
-                        <TableCell key={tcg} className="text-right w-[120px]">
-                          {vendor[tcg] ? (
-                            <div className="flex flex-col">
-                              <span>{vendor[tcg].toLocaleString()}</span>
-                              <span className="text-xs text-muted-foreground">
-                                {((vendor[tcg] / vendor.total) * 100).toFixed(1)}%
-                              </span>
-                            </div>
-                          ) : (
-                            <span className="text-muted-foreground">-</span>
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm pt-2">
-        <div className="opacity-0 h-[16px] leading-none">
+      <CardFooter className="flex-col gap-2 pt-2 text-sm">
+        <div className="h-[16px] leading-none opacity-0">
           {/* This invisible element maintains the same height as the trend indicator in TrafficChart */}
           Placeholder for alignment
         </div>

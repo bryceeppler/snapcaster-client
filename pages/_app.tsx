@@ -64,18 +64,21 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
 
 function MyApp({ Component, pageProps, router }: MyAppProps) {
   const { width = 0 } = useWindowSize();
-  const isVendorDashboardPage = router.pathname.startsWith('/vendors/dashboard');
-  const isLandingPage = router.pathname === '/welcome' || router.pathname === '/vendors/tier3';
+  const isVendorDashboardPage =
+    router.pathname.startsWith('/vendors/dashboard');
+  const isLandingPage =
+    router.pathname === '/welcome' || router.pathname === '/vendors/tier3';
   const usesMainNav = !isVendorDashboardPage && !isLandingPage;
+  const usesSideBanners = !router.pathname.startsWith('/buylists');
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
             staleTime: 1000 * 60 * 5, // 5 minutes
-            refetchOnWindowFocus: false,
-          },
-        },
+            refetchOnWindowFocus: false
+          }
+        }
       })
   );
 
@@ -94,44 +97,44 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-    <main className={cn('antialiased', inter.className)}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme={!isLandingPage ? 'light' : 'system'}
-        enableSystem={!isLandingPage}
-        forcedTheme={isLandingPage ? 'light' : undefined}
-        disableTransitionOnChange
-      >
-        {isLandingPage && (
-          <>
-            <Toaster
-              position={width > 640 ? 'bottom-center' : 'bottom-right'}
-            />
-            <Component {...pageProps} />
-          </>
-        )}
-        {isVendorDashboardPage && (
-          <Layout>
-            <Toaster
-              position={width > 640 ? 'bottom-center' : 'bottom-right'}
-            />
-            <Component {...pageProps} />
-          </Layout>
-        )}
-        {usesMainNav && (
-          <Layout>
-            <AdProvider>
-              <MainLayout>
-                <Toaster
-                  position={width > 640 ? 'bottom-center' : 'bottom-right'}
-                />
-                <Component {...pageProps} />
-              </MainLayout>
-            </AdProvider>
-          </Layout>
-        )}
-      </ThemeProvider>
-    </main>
+      <main className={cn('antialiased', inter.className)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme={!isLandingPage ? 'light' : 'system'}
+          enableSystem={!isLandingPage}
+          forcedTheme={isLandingPage ? 'light' : undefined}
+          disableTransitionOnChange
+        >
+          {isLandingPage && (
+            <>
+              <Toaster
+                position={width > 640 ? 'bottom-center' : 'bottom-right'}
+              />
+              <Component {...pageProps} />
+            </>
+          )}
+          {isVendorDashboardPage && (
+            <Layout>
+              <Toaster
+                position={width > 640 ? 'bottom-center' : 'bottom-right'}
+              />
+              <Component {...pageProps} />
+            </Layout>
+          )}
+          {usesMainNav && (
+            <Layout>
+              <AdProvider>
+                <MainLayout usesSideBanners={usesSideBanners}>
+                  <Toaster
+                    position={width > 640 ? 'bottom-center' : 'bottom-right'}
+                  />
+                  <Component {...pageProps} />
+                </MainLayout>
+              </AdProvider>
+            </Layout>
+          )}
+        </ThemeProvider>
+      </main>
     </QueryClientProvider>
   );
 }

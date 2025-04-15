@@ -1,14 +1,10 @@
 import React from 'react';
 import { SingleCatalogCard } from '@/types';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Badge } from '../ui/badge';
 import CardImage from '../ui/card-image';
-import useGlobalStore from '@/stores/globalStore';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { handleBuyClick } from '../../utils/analytics';
-import { DISCOUNT_MAP } from '@/lib/constants';
-import { useTheme } from 'next-themes';
 type Props = {
   product: SingleCatalogCard;
   storeLogo: boolean;
@@ -26,13 +22,7 @@ const DiscountBadge = ({ product }: { product: SingleCatalogCard }) => {
 };
 
 const SingleCatalogItem = ({ product, storeLogo = true }: Props) => {
-  const { websites } = useGlobalStore();
   const { resultsTcg } = useSingleSearchStore();
-  const { theme } = useTheme();
-  const findWebsiteNameByCode = (slug: string) => {
-    const website = websites.find((website) => website.slug === slug);
-    return website ? website.name : 'Website not found';
-  };
 
   return (
     <div className="flex flex-col bg-popover font-montserrat">
