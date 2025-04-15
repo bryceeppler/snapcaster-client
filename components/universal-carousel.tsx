@@ -8,27 +8,9 @@ import {
 import Link from 'next/link';
 import { AdvertisementImageType } from '@/types/advertisements';
 import { cn } from '@/lib/utils';
+import { AD_DIMENSIONS } from './ads/AdManager';
 
 // Common dimensions config for all ad types
-export const AD_DIMENSIONS = {
-  topBanner: {
-    mobile: {
-      width: 382,
-      height: 160,
-      aspectRatio: '382/160'
-    },
-    desktop: {
-      width: 1008,
-      height: 160,
-      aspectRatio: '1008/160'
-    }
-  },
-  sideBanner: {
-    width: 160,
-    height: 480,
-    aspectRatio: '160/480'
-  }
-} as const;
 
 // Define a type for our responsive image pair
 interface ResponsiveImagePair {
@@ -49,6 +31,7 @@ interface UniversalCarouselProps {
   position: AdvertisementPosition;
   vendorWeights?: VendorWeightConfig;
   className?: string;
+  absolute?: boolean;
 }
 
 const appendUtmParams = (url: string): string => {
@@ -192,9 +175,6 @@ const getAdDimensions = (position: AdvertisementPosition) => {
         desktop: {
           className: 'hidden w-full sm:block',
           style: { aspectRatio: AD_DIMENSIONS.topBanner.desktop.aspectRatio }
-        },
-        placeholderStyle: {
-          aspectRatio: AD_DIMENSIONS.topBanner.desktop.aspectRatio
         }
       };
     case AdvertisementPosition.LEFT_BANNER:
@@ -203,18 +183,14 @@ const getAdDimensions = (position: AdvertisementPosition) => {
         containerClass: 'relative overflow-hidden rounded-lg',
         containerStyle: {
           width: AD_DIMENSIONS.sideBanner.width,
-          height: AD_DIMENSIONS.sideBanner.height
-        },
-        placeholderStyle: {
-          width: AD_DIMENSIONS.sideBanner.width,
-          height: AD_DIMENSIONS.sideBanner.height
+          height: AD_DIMENSIONS.sideBanner.height,
+          position: 'relative' as const
         }
       };
     default:
       return {
         containerClass: 'w-full',
-        containerStyle: {},
-        placeholderStyle: {}
+        containerStyle: {}
       };
   }
 };
@@ -223,7 +199,8 @@ const UniversalCarousel: React.FC<UniversalCarouselProps> = ({
   ads,
   position,
   vendorWeights = {},
-  className
+  className,
+  absolute = true
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -250,7 +227,12 @@ const UniversalCarousel: React.FC<UniversalCarouselProps> = ({
 
   return (
     <div
-      className={cn(dimensions.containerClass, className)}
+      className={cn(
+        dimensions.containerClass,
+        className,
+        'universal-carousel-container',
+        'relative'
+      )}
       style={dimensions.containerStyle}
     >
       {weightedAdImages.map((adImageInfo, index) => {
@@ -275,7 +257,7 @@ const UniversalCarousel: React.FC<UniversalCarouselProps> = ({
                   ? 'visibility 0s, z-index 0s, opacity 1s ease-in-out'
                   : 'visibility 0s 1s, z-index 0s 1s, opacity 1s ease-in-out',
               opacity: index === activeIndex ? 1 : 0,
-              position: 'absolute',
+              position: absolute ? 'absolute' : 'static',
               top: 0,
               left: 0,
               width: '100%',
@@ -286,80 +268,63 @@ const UniversalCarousel: React.FC<UniversalCarouselProps> = ({
               href={appendUtmParams(parentAd.target_url)}
               target="_blank"
               rel="noopener noreferrer"
-              passHref
-              legacyBehavior
             >
-              <a className="block h-full w-full cursor-pointer">
-                {responsivePair ? (
-                  // Responsive pair logic for TOP_BANNER position
-                  <>
-                    {/* Mobile Image */}
-                    {responsivePair.mobile && (
-                      <div
-                        className={
-                          dimensions.mobile?.className ||
-                          'block w-full sm:hidden'
-                        }
-                      >
-                        <img
-                          src={responsivePair.mobile.image_url}
-                          className="border-1 w-full overflow-hidden rounded-lg border border-border"
-                          alt={parentAd.alt_text}
-                          style={
-                            dimensions.mobile?.style || {
-                              aspectRatio: '382/160'
-                            }
+              {responsivePair ? (
+                // Responsive pair logic for TOP_BANNER position
+                <>
+                  {/* Mobile Image */}
+                  {responsivePair.mobile && (
+                    <div
+                      className={
+                        dimensions.mobile?.className || 'block w-full sm:hidden'
+                      }
+                    >
+                      <img
+                        src={responsivePair.mobile.image_url}
+                        className="border-1 w-full overflow-hidden rounded-lg border border-border"
+                        alt={parentAd.alt_text}
+                        style={
+                          dimensions.mobile?.style || {
+                            aspectRatio: '382/160'
                           }
-                        />
-                      </div>
-                    )}
+                        }
+                      />
+                    </div>
+                  )}
 
-                    {/* Desktop Image */}
-                    {responsivePair.desktop && (
-                      <div
-                        className={
-                          dimensions.desktop?.className ||
-                          'hidden w-full sm:block'
-                        }
-                      >
-                        <img
-                          src={responsivePair.desktop.image_url}
-                          className="border-1 w-full overflow-hidden rounded-lg border border-border"
-                          alt={parentAd.alt_text}
-                          style={
-                            dimensions.desktop?.style || {
-                              aspectRatio: '1008/160'
-                            }
+                  {/* Desktop Image */}
+                  {responsivePair.desktop && (
+                    <div
+                      className={
+                        dimensions.desktop?.className ||
+                        'hidden w-full sm:block'
+                      }
+                    >
+                      <img
+                        src={responsivePair.desktop.image_url}
+                        className="border-1 w-full overflow-hidden rounded-lg border border-border"
+                        alt={parentAd.alt_text}
+                        style={
+                          dimensions.desktop?.style || {
+                            aspectRatio: '1008/160'
                           }
-                        />
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  // Regular image logic for other positions
-                  <div className="h-full w-full">
-                    <img
-                      src={(image as AdvertisementImage).image_url}
-                      className="border-1 h-full w-full overflow-hidden rounded-lg border border-border object-cover"
-                      alt={parentAd.alt_text}
-                    />
-                  </div>
-                )}
-              </a>
+                        }
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                // Regular image logic for other positions
+                <img
+                  src={(image as AdvertisementImage).image_url}
+                  className="border-1 h-full w-full overflow-hidden rounded-lg border border-border object-cover"
+                  alt={parentAd.alt_text}
+                />
+              )}
             </Link>
           </div>
         );
       })}
-
-      {/* Add a container div with proper dimensions so the parent knows how tall this will be */}
-      <div
-        className="w-full"
-        style={{
-          ...dimensions.placeholderStyle,
-          visibility: 'hidden',
-          pointerEvents: 'none'
-        }}
-      ></div>
     </div>
   );
 };

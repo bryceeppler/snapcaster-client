@@ -5,6 +5,7 @@ import type {
 } from '@/types/advertisements';
 import { AdvertisementPosition } from '@/types/advertisements';
 import { advertisementService } from '@/services/advertisementService';
+
 const fetchAdvertisements = async (): Promise<AdvertisementWithImages[]> => {
   try {
     const response = await advertisementService.getAllAdvertisements();
@@ -41,8 +42,8 @@ export const useAdvertisements = () => {
     return filteredAds[randomIndex];
   };
 
+  // Simplify the return value to just include the data
   return {
-    ...query,
     ads: query.data || [],
     getFeedAds,
     getRandomAd

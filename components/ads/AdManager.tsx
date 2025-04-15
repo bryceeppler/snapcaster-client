@@ -5,16 +5,31 @@ import {
   VendorWeightConfig
 } from '@/types/advertisements';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { AD_DIMENSIONS } from '../universal-carousel';
 
-// Re-export AD_DIMENSIONS for backward compatibility
-export { AD_DIMENSIONS };
+export const AD_DIMENSIONS = {
+  topBanner: {
+    mobile: {
+      width: 382,
+      height: 160,
+      aspectRatio: '382/160'
+    },
+    desktop: {
+      width: 1008,
+      height: 160,
+      aspectRatio: '1008/160'
+    }
+  },
+  sideBanner: {
+    width: 160,
+    height: 480,
+    aspectRatio: '160/480'
+  }
+} as const;
 
 type AdContextType = {
   ads: {
     [key in AdvertisementPosition]?: AdvertisementWithImages[];
   };
-  isLoading: boolean;
   vendorWeights: VendorWeightConfig;
 };
 
@@ -39,9 +54,8 @@ export function AdManagerProvider({
   children,
   vendorWeights = {}
 }: AdManagerProviderProps) {
-  const { ads: allAds, isLoading } = useAdvertisements();
+  const { ads: allAds } = useAdvertisements();
 
-  // Group ads by position
   const adsByPosition = useMemo(() => {
     const result: {
       [key in AdvertisementPosition]?: AdvertisementWithImages[];
@@ -49,7 +63,6 @@ export function AdManagerProvider({
 
     if (!allAds) return result;
 
-    // Filter ads by their positions
     Object.values(AdvertisementPosition).forEach((position) => {
       result[position] = allAds.filter(
         (ad) => ad.position === position
@@ -61,7 +74,6 @@ export function AdManagerProvider({
 
   const value = {
     ads: adsByPosition,
-    isLoading,
     vendorWeights
   };
 

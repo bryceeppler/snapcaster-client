@@ -1,10 +1,10 @@
 import React from 'react';
 import { AdvertisementPosition } from '@/types/advertisements';
 import { AdContainer } from './AdContainer';
-import { SideBannerSkeleton } from './AdSkeleton';
 import { useAdManager } from './AdManager';
 import UniversalCarousel from '../universal-carousel';
 import { cn } from '@/lib/utils';
+import { AD_DIMENSIONS } from './AdManager';
 
 interface SideBannerProps {
   position:
@@ -17,13 +17,12 @@ export const SideBanner: React.FC<SideBannerProps> = ({
   position,
   className
 }) => {
-  const { ads, isLoading, vendorWeights } = useAdManager();
+  const { ads, vendorWeights } = useAdManager();
 
   const sideBannerAds = ads[position] || [];
 
   if (sideBannerAds.length === 0) return null;
 
-  // Determine alignment based on position
   const isLeft = position === AdvertisementPosition.LEFT_BANNER;
   const wrapperClass = cn(
     'flex w-full',
@@ -34,14 +33,15 @@ export const SideBanner: React.FC<SideBannerProps> = ({
   return (
     <div className={wrapperClass}>
       <AdContainer
-        isLoading={isLoading}
-        skeleton={<SideBannerSkeleton />}
-        className={className}
+        className={cn('relative', className)}
+        width={AD_DIMENSIONS.sideBanner.width}
+        height={AD_DIMENSIONS.sideBanner.height}
       >
         <UniversalCarousel
           ads={sideBannerAds}
           vendorWeights={vendorWeights}
           position={position}
+          className="h-full w-full"
         />
       </AdContainer>
     </div>

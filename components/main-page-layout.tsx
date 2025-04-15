@@ -46,7 +46,7 @@ export default function MainLayout({
 
   return (
     <AdManagerProvider vendorWeights={vendorWeights}>
-      <div className="flex min-h-svh justify-between">
+      <div className="flex min-h-svh justify-center smlaptop:justify-between">
         {/* Left Banner */}
         <div
           className={`hidden smlaptop:block`}
@@ -63,7 +63,7 @@ export default function MainLayout({
         <div className="w-full max-w-4xl items-center px-4 below1550:max-w-6xl">
           {shouldShowAds && (
             <>
-              <TopBanner className="mb-4 w-full" />
+              <TopBanner className="w-full" />
             </>
           )}
           {/* Page Content */}
