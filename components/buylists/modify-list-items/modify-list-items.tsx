@@ -2,10 +2,11 @@ import { CurrentListHeader } from '../header/header';
 import { CartItem } from './list-item';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { useUserCarts } from '@/hooks/useUserCarts';
 import { AlertCircle } from 'lucide-react';
-import { getCurrentCart } from '../utils/utils';
 
 export const LeftCartEditWithViewOffers = () => {
+  const { getCurrentCart } = useUserCarts();
   const currentCart = getCurrentCart();
 
   return (

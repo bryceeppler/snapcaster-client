@@ -30,7 +30,6 @@ import {
   ShoppingCart,
   SlidersHorizontal
 } from 'lucide-react';
-import { getCurrentCart } from '../utils/utils';
 
 /////////////////////////////////////////////////////////////////////////////////////
 // This File Contains All the Header Components for each step in the buylist stage //
@@ -97,7 +96,7 @@ export const CurrentListHeader = () => {
   const { isAuthenticated } = useAuth();
   const { setBuylistUIState, setCurrentCartId, setCurrentCart } =
     useBuyListStore();
-
+  const { getCurrentCart } = useUserCarts();
   const currentCart = getCurrentCart();
   const [cartDialogOpen, setCartDialogOpen] = useState(false);
   return (
@@ -186,6 +185,7 @@ export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
     buylistUIState,
     setBuylistUIState
   } = useBuyListStore();
+  const { getCurrentCart } = useUserCarts();
   const { isAuthenticated } = useAuth();
 
   const currentCart = getCurrentCart();

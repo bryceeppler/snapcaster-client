@@ -11,11 +11,10 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { BadgeDollarSign, ExternalLink } from 'lucide-react';
-import { getVendorIcon, getVendorNameBySlug } from '../utils/utils';
 
 export const SubmitOffer = () => {
   const { reviewData, selectedStoreForReview } = useBuyListStore();
-  const { vendors } = useVendors();
+  const { vendors, getVendorIcon, getVendorNameBySlug } = useVendors();
   const { data: connectedVendors, isLoading: isLoadingConnections } =
     useConnectedVendors();
 
@@ -28,6 +27,8 @@ export const SubmitOffer = () => {
   const submitData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
+
+  const vendor = vendors.find((vendor) => vendor.slug === submitData.storeName);
 
   useEffect(() => {
     if (isLoadingConnections || !connectedVendors) return;
@@ -46,13 +47,13 @@ export const SubmitOffer = () => {
           <div className="flex items-end gap-1 md:hidden">
             <div>
               <img
-                src={getVendorIcon(submitData.storeName, vendors) || undefined}
+                src={getVendorIcon(vendor) || undefined}
                 alt="Vendor Icon"
                 className="size-8"
               />
             </div>
             <div className="leading-none">
-              <p>{getVendorNameBySlug(submitData.storeName, vendors)}</p>
+              <p>{getVendorNameBySlug(submitData.storeName)}</p>
 
               <div className="flex items-center gap-1">
                 {isVendorConnected ? (

@@ -8,8 +8,6 @@ import { ExternalLink } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
 import { useVendors } from '@/hooks/queries/useVendors';
 
-import { getVendorNameBySlug, getVendorIcon } from '../utils/utils';
-
 export const BuylistStoreOffers = () => {
   const {
     reviewData,
@@ -19,7 +17,7 @@ export const BuylistStoreOffers = () => {
     setBuylistUIState
   } = useBuyListStore();
 
-  const { vendors } = useVendors();
+  const { vendors, getVendorIcon, getVendorNameBySlug } = useVendors();
   const { data: connectedVendors, isLoading: isLoadingConnections } =
     useConnectedVendors();
 
@@ -65,6 +63,9 @@ export const BuylistStoreOffers = () => {
                     const isConnected = isVendorConnected(
                       storeOfferData.storeName
                     );
+                    const vendor = vendors.find(
+                      (vendor) => vendor.slug === storeOfferData.storeName
+                    );
 
                     return (
                       <div
@@ -74,22 +75,14 @@ export const BuylistStoreOffers = () => {
                         <div className="flex items-end gap-1">
                           <div>
                             <img
-                              src={
-                                getVendorIcon(
-                                  storeOfferData.storeName,
-                                  vendors
-                                ) || undefined
-                              }
+                              src={getVendorIcon(vendor) || undefined}
                               alt="Vendor Icon"
                               className="size-8"
                             />
                           </div>
                           <div className="leading-none">
                             <p>
-                              {getVendorNameBySlug(
-                                storeOfferData.storeName,
-                                vendors
-                              )}
+                              {getVendorNameBySlug(storeOfferData.storeName)}
                             </p>
 
                             {isConnected ? (

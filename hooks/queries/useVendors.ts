@@ -1,6 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Vendor } from '@/services/vendorService';
-import { vendorService } from '@/services/vendorService';
+import {
+  VendorAssetTheme,
+  VendorAssetType,
+  vendorService
+} from '@/services/vendorService';
+import { useTheme } from 'next-themes';
 
 const fetchVendors = async (): Promise<Vendor[]> => {
   try {
@@ -29,12 +34,34 @@ export const useVendors = () => {
     return vendor ? vendor.name : 'Vendor not found';
   };
 
+  const getVendorIcon = (
+    // vendorSlug: string,
+    // vendors: any
+    vendor: any
+  ): string | null => {
+    const { theme } = useTheme();
+    // const vendor = vendors.find((vendor: any) => vendor.slug === vendorSlug);
+    // if (!vendor) return null;
+
+    // Find the icon asset based on the current theme
+    const iconAsset = vendor.assets.find(
+      (asset: any) =>
+        asset.asset_type === VendorAssetType.ICON &&
+        (asset.theme ===
+          (theme === 'dark' ? VendorAssetTheme.DARK : VendorAssetTheme.LIGHT) ||
+          asset.theme === VendorAssetTheme.UNIVERSAL)
+    );
+
+    return iconAsset?.url || null;
+  };
+
   return {
     vendors: query.data || [],
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
     getVendorBySlug,
-    getVendorNameBySlug
+    getVendorNameBySlug,
+    getVendorIcon
   };
 };

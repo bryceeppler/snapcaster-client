@@ -1,9 +1,10 @@
 import { CartItem } from './list-item';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useUserCarts } from '@/hooks/useUserCarts';
 import { AlertCircle } from 'lucide-react';
-import { getCurrentCart } from '../utils/utils';
 
 export const VerifyListContainer = () => {
+  const { getCurrentCart } = useUserCarts();
   const currentCart = getCurrentCart();
 
   return (

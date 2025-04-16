@@ -14,11 +14,10 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { ExternalLink } from 'lucide-react';
-import { getVendorIcon, getVendorNameBySlug } from '../utils/utils';
 type PaymentMethod = 'Cash' | 'Store Credit';
 
 export const SubmitOfferPanel = () => {
-  const { vendors } = useVendors();
+  const { vendors, getVendorIcon, getVendorNameBySlug } = useVendors();
   const {
     reviewData,
     selectedStoreForReview,
@@ -37,6 +36,8 @@ export const SubmitOfferPanel = () => {
   const submitData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
+
+  const vendor = vendors.find((vendor) => vendor.slug === submitData.storeName);
 
   const [submissionResult, setSubmissionResult] = useState<{
     success: boolean;
@@ -73,13 +74,13 @@ export const SubmitOfferPanel = () => {
         <div className="hidden items-end gap-1 md:flex ">
           <div>
             <img
-              src={getVendorIcon(submitData.storeName, vendors) || undefined}
+              src={getVendorIcon(vendor) || undefined}
               alt="Vendor Icon"
               className="size-8"
             />
           </div>
           <div className="leading-none">
-            <p>{getVendorNameBySlug(submitData.storeName, vendors)}</p>
+            <p>{getVendorNameBySlug(submitData.storeName)}</p>
 
             <div className="flex items-center gap-1">
               {isVendorConnected ? (
