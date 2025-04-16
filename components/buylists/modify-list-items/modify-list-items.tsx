@@ -14,12 +14,8 @@ export const LeftCartEditWithViewOffers = () => {
         <CurrentListHeader />
         <Separator className=" bg-background" />
       </div>
-
       <ScrollArea className="h-[75svh]" type="always">
-        <div
-          className={`currentCart?.cart?.items && currentCart.cart.items.length <=  0 
-            mr-1 flex h-[calc(75vh-4rem)] flex-col items-center `}
-        >
+        <div className="mr-1 flex h-[calc(75vh-4rem)] flex-col items-center ">
           <div className="w-full  px-1">
             {currentCart?.cart?.items && currentCart.cart.items.length > 0 ? (
               <>

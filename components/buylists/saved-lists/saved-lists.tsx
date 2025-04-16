@@ -20,11 +20,7 @@ export const LeftCartListSelection = () => {
 
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full" type="always">
-          <div
-            className={`flex h-[calc(75vh-4rem)] flex-col items-center ${
-              !isAuthenticated || (carts && carts.length === 0) ? '' : ''
-            }`}
-          >
+          <div className="flex h-[calc(75vh-4rem)] flex-col items-center ">
             <div className="mt-1 w-full px-2">
               {isAuthenticated ? (
                 carts && carts.length > 0 ? (

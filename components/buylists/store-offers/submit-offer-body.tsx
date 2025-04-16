@@ -57,9 +57,7 @@ export const SubmitOffer = () => {
               <div className="flex items-center gap-1">
                 {isVendorConnected ? (
                   <div className="flex items-center gap-1">
-                    <div
-                      className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
-                    ></div>
+                    <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-green-500"></div>
                     <p className="text-sm leading-none text-muted-foreground">
                       Connected
                     </p>

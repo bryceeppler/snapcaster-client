@@ -104,8 +104,8 @@ export const BuylistSearchResults = () => {
 
       <div
         className={`  h-full w-full overflow-hidden rounded-lg  ${
-          buylistUIState === 'listSelectionState' ? 'hidden md:block' : ''
-        }`}
+          buylistUIState === 'listSelectionState' && 'hidden md:block'
+        } `}
       >
         <div className=" grid grid-cols-2 gap-1   sm:grid-cols-2 below1550:grid-cols-3">
           {data?.searchResults?.map((card, index) => (

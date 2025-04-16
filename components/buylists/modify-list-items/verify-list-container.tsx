@@ -11,9 +11,9 @@ export const VerifyListContainer = () => {
       <ScrollArea className="h-full" type="always">
         <div
           className={`mr-2.5 flex h-full flex-col items-center ${
-            currentCart?.cart?.items && currentCart.cart.items.length > 0
-              ? ''
-              : 'pt-[calc(25vh-2rem)]'
+            currentCart?.cart?.items &&
+            currentCart.cart.items.length <= 0 &&
+            'pt-[calc(25vh-2rem)]'
           }`}
         >
           <div className="w-full ">

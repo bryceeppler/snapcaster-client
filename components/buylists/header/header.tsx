@@ -316,10 +316,7 @@ export const FinalSubmissionHeader = () => {
   const { setBuylistUIState } = useBuyListStore();
   return (
     <div>
-      <div
-        className={`mx-auto flex  w-full items-center justify-between rounded-lg bg-card p-1  
-        `}
-      >
+      <div className="mx-auto flex  w-full items-center justify-between rounded-lg bg-card p-1">
         {/* LEFT SECTION */}
         <div className="flex w-24 items-center justify-start gap-1">
           <Button

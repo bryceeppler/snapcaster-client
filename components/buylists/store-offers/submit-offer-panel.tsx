@@ -84,18 +84,14 @@ export const SubmitOfferPanel = () => {
             <div className="flex items-center gap-1">
               {isVendorConnected ? (
                 <div className="flex items-center gap-1">
-                  <div
-                    className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
-                  ></div>
+                  <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-green-500"></div>
                   <p className="text-sm leading-none text-muted-foreground">
                     Connected
                   </p>
                 </div>
               ) : (
                 <div className=" flex items-center gap-1 text-muted-foreground hover:cursor-pointer hover:text-primary">
-                  <div
-                    className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
-                  ></div>
+                  <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-red-500"></div>
                   <a
                     href={
                       'https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en'

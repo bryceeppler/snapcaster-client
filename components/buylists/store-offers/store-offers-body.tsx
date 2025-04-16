@@ -55,7 +55,7 @@ export const BuylistStoreOffers = () => {
         <ScrollArea className="h-full w-full " type="always">
           <div
             className={`flex h-full flex-col items-center ${
-              storeOffersData.length > 0 ? '' : 'pt-[calc(25vh-2rem)]'
+              storeOffersData.length <= 0 && 'pt-[calc(25vh-2rem)]'
             }`}
           >
             <div className="w-full ">
@@ -94,18 +94,14 @@ export const BuylistStoreOffers = () => {
 
                             {isConnected ? (
                               <div className="flex items-center gap-1">
-                                <div
-                                  className={`h-[0.6rem] w-[0.6rem] rounded-full bg-green-500`}
-                                ></div>
+                                <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-green-500"></div>
                                 <p className="text-sm leading-none text-muted-foreground">
                                   Connected
                                 </p>
                               </div>
                             ) : (
                               <div className="flex items-center gap-1 text-muted-foreground hover:cursor-pointer hover:text-primary">
-                                <div
-                                  className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
-                                ></div>
+                                <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-red-500"></div>
                                 <a
                                   href={
                                     'https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en'

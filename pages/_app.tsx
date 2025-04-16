@@ -4,8 +4,7 @@ import {
   useState,
   createContext,
   useContext,
-  ReactNode,
-  memo
+  ReactNode
 } from 'react';
 import React from 'react';
 
@@ -61,31 +60,6 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
     </AdContext.Provider>
   );
 };
-
-// Create QueryClient outside component
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5,
-      refetchOnWindowFocus: false
-    }
-  }
-});
-
-// Memoize the AdProvider
-const MemoizedAdProvider = memo(AdProvider);
-
-// Create a route-aware content wrapper
-const RouteAwareContent = memo(function RouteAwareContent({
-  children,
-  pathname
-}: {
-  children: React.ReactNode;
-  pathname: string;
-}) {
-  // Use pathname as a key to force update when route changes
-  return <React.Fragment key={pathname}>{children}</React.Fragment>;
-});
 
 function MyApp({ Component, pageProps, router }: MyAppProps) {
   const { width = 0 } = useWindowSize();
