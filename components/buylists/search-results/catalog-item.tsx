@@ -23,6 +23,7 @@ import {
   MinusIcon,
   PlusIcon
 } from '@radix-ui/react-icons';
+import { useState } from 'react';
 
 type BuylistCatalogItemProps = {
   cardData: any;
@@ -35,9 +36,8 @@ const conditions = [
   'Damaged'
 ];
 
-export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
+const CartDialogContent = ({ cardData }: { cardData: any }) => {
   const { currentCartId } = useBuyListStore();
-  const { isAuthenticated } = useAuth();
   const { cartItems, updateCartItem } = useCartItems(
     currentCartId || undefined
   );
@@ -80,6 +80,87 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
       quantity: newQuantity
     });
   };
+
+  return (
+    <DialogContent className="w-[95vw] max-w-[400px] rounded-lg px-4 sm:px-6">
+      <div className="mx-auto w-[200px] sm:w-[250px]">
+        <CardImage imageUrl={cardData.image} alt={cardData.name} />
+      </div>
+
+      <div className="mt-2 space-y-2">
+        <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase text-muted-foreground">
+          {cardData.set}
+        </div>
+        <h3 className="text-[0.9rem] font-semibold capitalize">
+          {cardData.name}
+        </h3>
+        <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
+          <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem] capitalize">
+            <p> {cardData.rarity}</p>
+          </span>
+          <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem]">
+            <p> {cardData.foil}</p>
+          </span>
+        </div>
+
+        {conditions.map((conditionName) => {
+          const isAvailable = Object.keys(cardData.conditions).includes(
+            conditionName
+          );
+          const quantity = getQuantityForCondition(conditionName);
+
+          return (
+            <div key={conditionName} className="mt-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {!isAvailable && (
+                    <TooltipProvider>
+                      <Tooltip delayDuration={100}>
+                        <TooltipTrigger asChild className="cursor-help">
+                          <ExclamationTriangleIcon className="size-4 text-red-500" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>No stores are purchasing this card</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                  <p className="text-sm font-medium">{conditionName}</p>
+                </div>
+                <div className="flex h-8 items-center rounded-xl border">
+                  <Button
+                    className="flex h-full w-8 items-center justify-center rounded-l-xl hover:bg-accent"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleUpdateQuantity(conditionName, -1)}
+                    disabled={quantity === 0}
+                  >
+                    <MinusIcon className="h-4 w-4" />
+                  </Button>
+                  <p className="w-8 bg-background text-center ">{quantity}</p>
+                  <Button
+                    className="flex h-full w-8 items-center justify-center rounded-r-xl hover:bg-accent"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleUpdateQuantity(conditionName, 1)}
+                  >
+                    <PlusIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </DialogContent>
+  );
+};
+
+export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
+  const { isAuthenticated } = useAuth();
+  const { currentCartId } = useBuyListStore();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   return (
     <>
       <Card className="h-full border-none">
@@ -108,7 +189,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
             </div>
           </div>
 
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTitle hidden>Add To Cart</DialogTitle>
             <DialogDescription hidden>
               Add this card to your cart
@@ -135,84 +216,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
                 </Button>
               </DialogTrigger>
             )}
-
-            <DialogContent className="w-[95vw] max-w-[400px] rounded-lg px-4 sm:px-6">
-              <div className="mx-auto w-[200px] sm:w-[250px]">
-                <CardImage imageUrl={cardData.image} alt={cardData.name} />
-              </div>
-
-              <div className="mt-2 space-y-2">
-                <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase text-muted-foreground">
-                  {cardData.set}
-                </div>
-                <h3 className="text-[0.9rem] font-semibold capitalize">
-                  {cardData.name}
-                </h3>
-                <div className="flex flex-wrap items-center gap-1 text-xs font-medium text-primary">
-                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem] capitalize">
-                    <p> {cardData.rarity}</p>
-                  </span>
-                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[0.9rem]">
-                    <p> {cardData.foil}</p>
-                  </span>
-                </div>
-
-                {conditions.map((conditionName) => {
-                  const isAvailable = Object.keys(cardData.conditions).includes(
-                    conditionName
-                  );
-                  const quantity = getQuantityForCondition(conditionName);
-
-                  return (
-                    <div key={conditionName} className="mt-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {!isAvailable && (
-                            <TooltipProvider>
-                              <Tooltip delayDuration={100}>
-                                <TooltipTrigger asChild className="cursor-help">
-                                  <ExclamationTriangleIcon className="size-4 text-red-500" />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>No stores are purchasing this card</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          )}
-                          <p className="text-sm font-medium">{conditionName}</p>
-                        </div>
-                        <div className="flex h-8 items-center rounded-xl border">
-                          <Button
-                            className="flex h-full w-8 items-center justify-center rounded-l-xl hover:bg-accent"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() =>
-                              handleUpdateQuantity(conditionName, -1)
-                            }
-                            disabled={quantity === 0}
-                          >
-                            <MinusIcon className="h-4 w-4" />
-                          </Button>
-                          <p className="w-8 bg-background text-center ">
-                            {quantity}
-                          </p>
-                          <Button
-                            className="flex h-full w-8 items-center justify-center rounded-r-xl hover:bg-accent"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() =>
-                              handleUpdateQuantity(conditionName, 1)
-                            }
-                          >
-                            <PlusIcon className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </DialogContent>
+            {isDialogOpen && <CartDialogContent cardData={cardData} />}
           </Dialog>
         </div>
       </Card>
