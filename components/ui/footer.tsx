@@ -4,12 +4,10 @@ import {
   InstagramLogoIcon
 } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import useGlobalStore from '@/stores/globalStore';
 import { useAuth } from '@/hooks/useAuth';
 import { FacebookIcon } from 'lucide-react';
 
 export default function Footer() {
-  const { adsEnabled } = useGlobalStore();
   const { isAuthenticated } = useAuth();
   return (
     <footer className="z-30 bg-popover py-6">

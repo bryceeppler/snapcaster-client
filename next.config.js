@@ -11,7 +11,7 @@ const nextConfig = {
       {
         hostname: 'cdn.snapcaster.ca',
         // pathname: '/.*',
-        protocol: 'http'
+        protocol: 'https'
       }
     ]
   }

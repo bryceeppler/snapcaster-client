@@ -13,7 +13,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { RecommendedStores } from '@/components/multi-search/recommended-stores';
-import useGlobalStore from '@/stores/globalStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Condition, Product, Tcg } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,6 +22,8 @@ import BackToTopButton from '@/components/ui/back-to-top-btn';
 import { ResultsContainer } from '@/components/multi-search/results-container';
 import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
 import { trackSearch } from '@/utils/analytics';
+import { Vendor } from '@/services/vendorService';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 type Props = {};
 
@@ -40,7 +41,7 @@ export default function Multisearch({}: Props) {
     onWebsiteSelect,
     setTcg
   } = useMultiSearchStore();
-  const { websites } = useGlobalStore();
+  const { vendors } = useVendors();
 
   return (
     <>
@@ -54,7 +55,7 @@ export default function Multisearch({}: Props) {
               searchInput={searchInput}
               setSearchInput={setSearchInput}
               handleSubmit={handleSubmit}
-              websites={websites}
+              vendors={vendors}
               selectedWebsites={selectedWebsites}
               onWebsiteSelect={onWebsiteSelect}
               minimumAcceptableCondition={minimumAcceptableCondition}
@@ -101,7 +102,7 @@ const SearchView = ({
   searchInput: string;
   setSearchInput: (value: string) => void;
   handleSubmit: (tcg: string, minimumAcceptableCondition: Condition) => void;
-  websites: any[];
+  vendors: Vendor[];
   selectedWebsites: any[];
   onWebsiteSelect: (value: any) => void;
   minimumAcceptableCondition: Condition;
@@ -109,6 +110,7 @@ const SearchView = ({
 }) => {
   const { loading } = useMultiSearchStore();
   const { hasActiveSubscription, isAuthenticated } = useAuth();
+
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     if (!hasActiveSubscription) {

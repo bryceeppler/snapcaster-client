@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
-import useGlobalStore from '@/stores/globalStore';
 import { useAuth } from '@/hooks/useAuth';
 import { createCheckoutSession } from '@/lib/utils';
 import { FilterOption, FilterOptionValues } from '@/types/query';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
@@ -156,6 +156,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
   setCurrentPage,
   applyFilters
 }) => {
+  const { getVendorNameBySlug } = useVendors();
   const [localSelections, setLocalSelections] = React.useState<{
     [key: string]: boolean;
   }>({});
@@ -181,7 +182,6 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
     applyFilters();
   };
 
-  const { getWebsiteName } = useGlobalStore();
   return (
     <div className="space-y-3 py-2">
       {filterOption &&
@@ -196,7 +196,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
             />
             <label htmlFor={option.value} className="text-sm leading-5">
               {filterOption.field === 'vendor'
-                ? getWebsiteName(option.value)
+                ? getVendorNameBySlug(option.value)
                 : option.label}{' '}
               ({option.count})
             </label>

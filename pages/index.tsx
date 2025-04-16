@@ -25,7 +25,7 @@ const Home: NextPage<Props> = ({}: Props) => {
   return (
     <>
       <HomeHead />
-      <div className="flex w-full flex-col justify-center  text-center">
+      <div className="flex w-full flex-col justify-center text-center">
         {!searchResults && (
           <div className="flex flex-col items-center justify-center md:mt-6">
             <Homebanner prefixText={'Search for'} />
@@ -53,6 +53,7 @@ const Home: NextPage<Props> = ({}: Props) => {
 };
 
 export default Home;
+
 const HomeHead = () => {
   return (
     <Head>

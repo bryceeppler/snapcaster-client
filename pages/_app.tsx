@@ -5,8 +5,7 @@ import {
   createContext,
   useContext,
   ReactNode,
-  memo,
-  useRef
+  memo
 } from 'react';
 import React from 'react';
 
@@ -23,7 +22,6 @@ import { useWindowSize } from 'usehooks-ts';
 import { Inter } from 'next/font/google';
 import { useAuth } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import AdLayout from '@/components/ad-layout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -96,9 +94,18 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
   const isLandingPage =
     router.pathname === '/welcome' || router.pathname === '/vendors/tier3';
   const usesMainNav = !isVendorDashboardPage && !isLandingPage;
-
-  // Create a stable toaster
-  const ToasterComponent = useRef(<Toaster position="bottom-center" />).current;
+  const usesSideBanners = !router.pathname.startsWith('/buylists');
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60 * 5, // 5 minutes
+            refetchOnWindowFocus: false
+          }
+        }
+      })
+  );
 
   useEffect(() => {
     document.body.classList?.remove('loading');
@@ -125,30 +132,30 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
         >
           {isLandingPage && (
             <>
-              {ToasterComponent}
-              <RouteAwareContent pathname={router.pathname}>
-                <Component {...pageProps} />
-              </RouteAwareContent>
+              <Toaster
+                position={width > 640 ? 'bottom-center' : 'bottom-right'}
+              />
+              <Component {...pageProps} />
             </>
           )}
           {isVendorDashboardPage && (
             <Layout>
-              {ToasterComponent}
-              <RouteAwareContent pathname={router.pathname}>
-                <Component {...pageProps} />
-              </RouteAwareContent>
+              <Toaster
+                position={width > 640 ? 'bottom-center' : 'bottom-right'}
+              />
+              <Component {...pageProps} />
             </Layout>
           )}
           {usesMainNav && (
             <Layout>
-              <MemoizedAdProvider>
-                <AdLayout>
-                  {ToasterComponent}
-                  <RouteAwareContent pathname={router.pathname}>
-                    <Component {...pageProps} />
-                  </RouteAwareContent>
-                </AdLayout>
-              </MemoizedAdProvider>
+              <AdProvider>
+                <MainLayout usesSideBanners={usesSideBanners}>
+                  <Toaster
+                    position={width > 640 ? 'bottom-center' : 'bottom-right'}
+                  />
+                  <Component {...pageProps} />
+                </MainLayout>
+              </AdProvider>
             </Layout>
           )}
         </ThemeProvider>
