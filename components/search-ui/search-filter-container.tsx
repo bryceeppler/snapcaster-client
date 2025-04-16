@@ -55,13 +55,11 @@ const FilterSection: React.FC<Prop> = memo(
             {/* {sortByOptions && <p>its here</p>} */}
             <div className="flex w-full justify-center">
               <SearchSortBy
-                defaultSortBy={defaultSortBy}
                 sortBy={sortBy}
                 setSortBy={setSortBy}
                 fetchCards={fetchCards}
                 setCurrentPage={setCurrentPage}
                 sortByOptions={sortByOptions}
-                handleSortByChange={handleSortByChange}
               />
             </div>
           </div>

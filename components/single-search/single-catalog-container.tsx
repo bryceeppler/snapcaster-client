@@ -97,7 +97,6 @@ export default function SingleCatalog() {
                         setSortBy={setSortBy}
                         fetchCards={fetchCards}
                         setCurrentPage={setCurrentPage}
-                        handleSortByChange={handleSortByChange}
                       />
                     </div>
                   </div>
