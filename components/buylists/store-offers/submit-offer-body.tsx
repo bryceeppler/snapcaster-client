@@ -1,12 +1,10 @@
 //hooks and store states
 import { useEffect, useState } from 'react';
 import useBuyListStore from '@/stores/useBuylistStore';
-import useGlobalStore from '@/stores/globalStore';
-import { useTheme } from 'next-themes';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import { useVendors } from '@/hooks/queries/useVendors';
 //components
 import { SubmitOfferPanel } from './submit-offer-panel';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Tooltip,
@@ -16,11 +14,16 @@ import {
 } from '@/components/ui/tooltip';
 //icons
 import { BadgeDollarSign, ExternalLink } from 'lucide-react';
+//other
+import { getVendorIcon, getVendorNameBySlug } from '../utils/utils';
 
-export const BuylistStoreOfferBreakdown = () => {
+export const SubmitOffer = () => {
   const { reviewData, selectedStoreForReview } = useBuyListStore();
-  const { getWebsiteName, websites } = useGlobalStore();
-  const { theme } = useTheme();
+  const { vendors } = useVendors();
+  const { data: connectedVendors, isLoading: isLoadingConnections } =
+    useConnectedVendors();
+
+  const [isVendorConnected, setIsVendorConnected] = useState(false);
 
   const breakdownData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
@@ -29,13 +32,10 @@ export const BuylistStoreOfferBreakdown = () => {
   const submitData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
-  const { data: connectedVendors, isLoading: isLoadingConnections } =
-    useConnectedVendors();
-  const [isVendorConnected, setIsVendorConnected] = useState(false);
 
   useEffect(() => {
     if (isLoadingConnections || !connectedVendors) return;
-    const matchingWebsite = websites.find(
+    const matchingWebsite = vendors.find(
       (website) => website.slug === submitData?.storeName
     );
     if (matchingWebsite) {
@@ -49,25 +49,14 @@ export const BuylistStoreOfferBreakdown = () => {
         <div className="mr-2.5 flex w-full flex-col space-y-2 px-2 py-2 md:mr-1 md:py-0">
           <div className="flex items-end gap-1 md:hidden">
             <div>
-              {(() => {
-                const matchingWebsite = websites.find(
-                  (website) => submitData.storeName === website.slug
-                );
-                return matchingWebsite?.meta?.branding?.icons ? (
-                  <img
-                    src={
-                      theme === 'dark'
-                        ? matchingWebsite.meta.branding.icons.dark
-                        : matchingWebsite.meta.branding.icons.light
-                    }
-                    alt="Website"
-                    className="size-8"
-                  />
-                ) : null;
-              })()}
+              <img
+                src={getVendorIcon(submitData.storeName, vendors) || undefined}
+                alt="Vendor Icon"
+                className="size-8"
+              />
             </div>
             <div className="leading-none">
-              <p>{getWebsiteName(submitData?.storeName)}</p>
+              <p>{getVendorNameBySlug(submitData.storeName, vendors)}</p>
 
               <div className="flex items-center gap-1">
                 {isVendorConnected ? (

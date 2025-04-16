@@ -3,9 +3,9 @@ import { useCartItems } from '@/hooks/useCartItems';
 import useBuyListStore, { IBuylistCartItem } from '@/stores/useBuylistStore';
 //components
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 //icons
 import { MinusIcon, Plus } from 'lucide-react';
-import { toast } from 'sonner';
 
 export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
   const { currentCartId, buylistUIState, setAllCartsData } = useBuyListStore();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { useAdContext } from '@/pages/_app';
-import useGlobalStore from '@/stores/globalStore';
+//import useGlobalStore from '@/stores/globalStore';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/router';
 import {

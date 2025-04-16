@@ -1,9 +1,8 @@
 //hooks and store states
 import { useEffect, useState } from 'react';
-import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/useBuylistStore';
-import { useTheme } from 'next-themes';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import { useVendors } from '@/hooks/queries/useVendors';
 //components
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -16,27 +15,34 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { toast } from 'sonner';
 //icons
 import { ExternalLink } from 'lucide-react';
-import { toast } from 'sonner';
+//other
+import { getVendorIcon, getVendorNameBySlug } from '../utils/utils';
+type PaymentMethod = 'Cash' | 'Store Credit';
 
 export const SubmitOfferPanel = () => {
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  type PaymentMethod = 'Cash' | 'Store Credit';
-  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | ''>(
-    ''
-  );
+  const { vendors } = useVendors();
   const {
     reviewData,
     selectedStoreForReview,
     submitBuylist,
     setBuylistUIState
   } = useBuyListStore();
+  const { data: connectedVendors, isLoading: isLoadingConnections } =
+    useConnectedVendors();
+
+  const [isVendorConnected, setIsVendorConnected] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | ''>(
+    ''
+  );
+
   const submitData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
-  const { getWebsiteName, websites } = useGlobalStore();
-  const { theme } = useTheme();
+
   const [submissionResult, setSubmissionResult] = useState<{
     success: boolean;
     message: string;
@@ -44,25 +50,10 @@ export const SubmitOfferPanel = () => {
     success: false,
     message: ''
   });
-  const handleSubmit = async (paymentType: 'Cash' | 'Store Credit') => {
-    const result = await submitBuylist(paymentType);
-
-    if (result.success) {
-      setSubmissionResult({
-        success: true,
-        message: result.message
-      });
-      setBuylistUIState('viewAllOffersState');
-      toast.success('Buylist submitted successfully');
-    }
-  };
-  const { data: connectedVendors, isLoading: isLoadingConnections } =
-    useConnectedVendors();
-  const [isVendorConnected, setIsVendorConnected] = useState(false);
 
   useEffect(() => {
     if (isLoadingConnections || !connectedVendors) return;
-    const matchingWebsite = websites.find(
+    const matchingWebsite = vendors.find(
       (website) => website.slug === submitData?.storeName
     );
     if (matchingWebsite) {
@@ -70,30 +61,30 @@ export const SubmitOfferPanel = () => {
     }
   }, [connectedVendors, isLoadingConnections, submitData?.storeName]);
 
+  const handleSubmit = async (paymentType: 'Cash' | 'Store Credit') => {
+    const result = await submitBuylist(paymentType);
+    if (result.success) {
+      setSubmissionResult({
+        success: true,
+        message: result.message
+      });
+      setBuylistUIState('viewAllOffersState');
+    }
+  };
+
   return (
     <div className="col-span-1  flex flex-col  space-y-1 rounded-lg md:mr-0  md:bg-accent  md:p-2">
       <div className="col-span-1 space-y-2  ">
         <div className="hidden items-end gap-1 md:flex ">
           <div>
-            {(() => {
-              const matchingWebsite = websites.find(
-                (website) => submitData.storeName === website.slug
-              );
-              return matchingWebsite?.meta?.branding?.icons ? (
-                <img
-                  src={
-                    theme === 'dark'
-                      ? matchingWebsite.meta.branding.icons.dark
-                      : matchingWebsite.meta.branding.icons.light
-                  }
-                  alt="Website"
-                  className="size-8"
-                />
-              ) : null;
-            })()}
+            <img
+              src={getVendorIcon(submitData.storeName, vendors) || undefined}
+              alt="Vendor Icon"
+              className="size-8"
+            />
           </div>
           <div className="leading-none">
-            <p>{getWebsiteName(submitData?.storeName)}</p>
+            <p>{getVendorNameBySlug(submitData.storeName, vendors)}</p>
 
             <div className="flex items-center gap-1">
               {isVendorConnected ? (

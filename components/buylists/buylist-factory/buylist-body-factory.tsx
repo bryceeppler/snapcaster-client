@@ -3,7 +3,7 @@ import { BuylistUIState } from '@/stores/useBuylistStore';
 //components
 import { BuylistSearchResults } from '../search-results/search-results';
 import { BuylistStoreOffers } from '../store-offers/store-offers-body';
-import { BuylistStoreOfferBreakdown } from '../store-offers/store-offers-offer-breakdown';
+import { SubmitOffer } from '../store-offers/submit-offer-body';
 
 interface IBuylistBodyFactoryProps {
   buylistUIState: BuylistUIState;
@@ -18,7 +18,7 @@ const BuylistBodyFactory = ({ buylistUIState }: IBuylistBodyFactoryProps) => {
     case 'viewAllOffersState':
       return <BuylistStoreOffers />;
     case 'finalSubmissionState':
-      return <BuylistStoreOfferBreakdown />;
+      return <SubmitOffer />;
   }
 };
 

@@ -1,6 +1,6 @@
 //hooks and store states
 import { useEffect, useRef } from 'react';
-import useGlobalStore from '@/stores/globalStore';
+//import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/useBuylistStore';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import { useTheme } from 'next-themes';
@@ -11,6 +11,9 @@ import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-ite
 //icons
 import { ExternalLink } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
+import { useVendors } from '@/hooks/queries/useVendors';
+
+import { getVendorNameBySlug, getVendorIcon } from '../utils/utils';
 
 export const BuylistStoreOffers = () => {
   const {
@@ -20,14 +23,14 @@ export const BuylistStoreOffers = () => {
     setAllCartsData,
     setBuylistUIState
   } = useBuyListStore();
-  const { getWebsiteName, websites } = useGlobalStore();
-  const { theme } = useTheme();
+
+  const { vendors } = useVendors();
   const { data: connectedVendors, isLoading: isLoadingConnections } =
     useConnectedVendors();
 
   const isVendorConnected = (vendorSlug: string) => {
     if (isLoadingConnections || !connectedVendors) return false;
-    const matchingWebsite = websites.find(
+    const matchingWebsite = vendors.find(
       (website) => website.slug === vendorSlug
     );
     return matchingWebsite
@@ -75,27 +78,24 @@ export const BuylistStoreOffers = () => {
                       >
                         <div className="flex items-end gap-1">
                           <div>
-                            {(() => {
-                              const matchingWebsite = websites.find(
-                                (website) =>
-                                  storeOfferData.storeName === website.slug
-                              );
-                              return matchingWebsite?.meta?.branding?.icons ? (
-                                <img
-                                  src={
-                                    theme === 'dark'
-                                      ? matchingWebsite.meta.branding.icons.dark
-                                      : matchingWebsite.meta.branding.icons
-                                          .light
-                                  }
-                                  alt="Website"
-                                  className="size-8"
-                                />
-                              ) : null;
-                            })()}
+                            <img
+                              src={
+                                getVendorIcon(
+                                  storeOfferData.storeName,
+                                  vendors
+                                ) || undefined
+                              }
+                              alt="Vendor Icon"
+                              className="size-8"
+                            />
                           </div>
                           <div className="leading-none">
-                            <p>{getWebsiteName(storeOfferData.storeName)}</p>
+                            <p>
+                              {getVendorNameBySlug(
+                                storeOfferData.storeName,
+                                vendors
+                              )}
+                            </p>
 
                             {isConnected ? (
                               <div className="flex items-center gap-1">
