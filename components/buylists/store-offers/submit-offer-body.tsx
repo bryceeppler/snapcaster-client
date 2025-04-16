@@ -1,9 +1,7 @@
-//hooks and store states
 import { useEffect, useState } from 'react';
 import useBuyListStore from '@/stores/useBuylistStore';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import { useVendors } from '@/hooks/queries/useVendors';
-//components
 import { SubmitOfferPanel } from './submit-offer-panel';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -12,9 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-//icons
 import { BadgeDollarSign, ExternalLink } from 'lucide-react';
-//other
 import { getVendorIcon, getVendorNameBySlug } from '../utils/utils';
 
 export const SubmitOffer = () => {

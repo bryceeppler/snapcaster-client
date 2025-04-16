@@ -1,8 +1,6 @@
-//hooks and store states
 import useBuyListStore from '@/stores/useBuylistStore';
 import { useCartItems } from '@/hooks/useCartItems';
 import { useAuth } from '@/hooks/useAuth';
-//components
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -20,7 +18,6 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-//icons
 import {
   ExclamationTriangleIcon,
   MinusIcon,

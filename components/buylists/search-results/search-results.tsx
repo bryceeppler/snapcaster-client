@@ -1,8 +1,6 @@
-//hooks and store states
 import { useEffect, useRef, useState } from 'react';
 import useBuyListStore from '@/stores/useBuylistStore';
 import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
-//components
 import { BuylistCatalogItem } from './catalog-item';
 import { LeftCartListSelection } from '../saved-lists/saved-lists';
 import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
@@ -35,26 +33,23 @@ export const BuylistSearchResults = () => {
     { enabled: false }
   );
 
-  // Refetch Search Results: When the sortBy or selected filters change, refetch the search results
   useEffect(() => {
     refetch();
   }, [filters, sortBy]);
 
-  // Set the number of search results
   useEffect(() => {
     setSearchResultCount(data?.numResults || 0);
   }, [data?.numResults]);
 
-  // Set the default sort by
   useEffect(() => {
     if (defaultSortBy === null && data?.defaultSortBy) {
       setDefaultSortBy(data?.defaultSortBy);
     }
   }, [data?.defaultSortBy]);
 
-  // Infinite Scroll Obsesrver: This useState is needed to reinitialize the observer when the UI state changes off the search results state
   const [shouldReinitObserver, setShouldReinitObserver] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (
       buylistUIState === 'listSelectionState' ||
@@ -63,7 +58,7 @@ export const BuylistSearchResults = () => {
       setShouldReinitObserver(true);
     }
   }, [buylistUIState]);
-  // Infinite Scroll Observer: Fetch more results when the user scrolls to the bottom of the page
+
   useEffect(() => {
     if (
       (shouldReinitObserver || data?.searchResults) &&

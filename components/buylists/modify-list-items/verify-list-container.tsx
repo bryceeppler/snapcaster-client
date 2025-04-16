@@ -1,9 +1,6 @@
-//components
 import { CartItem } from './list-item';
 import { ScrollArea } from '@/components/ui/scroll-area';
-//icons
 import { AlertCircle } from 'lucide-react';
-//other
 import { getCurrentCart } from '../utils/utils';
 
 export const VerifyListContainer = () => {

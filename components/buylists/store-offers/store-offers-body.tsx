@@ -1,14 +1,9 @@
-//hooks and store states
 import { useEffect, useRef } from 'react';
-//import useGlobalStore from '@/stores/globalStore';
 import useBuyListStore from '@/stores/useBuylistStore';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
-import { useTheme } from 'next-themes';
-//components
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LeftCartEditWithViewOffers } from '../modify-list-items/modify-list-items';
-//icons
 import { ExternalLink } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
 import { useVendors } from '@/hooks/queries/useVendors';

@@ -1,9 +1,7 @@
-//hooks and store states
 import useBuyListStore from '@/stores/useBuylistStore';
 import { useAuth } from '@/hooks/useAuth';
 import { useState } from 'react';
 import { useUserCarts } from '@/hooks/useUserCarts';
-//components
 import { VerifyListContainer } from '../modify-list-items/verify-list-container';
 import FilterSection from '@/components/search-ui/search-filter-container';
 import {
@@ -23,7 +21,6 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-//icons
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import {
   ChevronLeft,
@@ -33,7 +30,6 @@ import {
   ShoppingCart,
   SlidersHorizontal
 } from 'lucide-react';
-//other
 import { getCurrentCart } from '../utils/utils';
 
 /////////////////////////////////////////////////////////////////////////////////////

@@ -514,14 +514,11 @@ const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
 ///////////////////////////////////
 /* The bar bewlow the nav for mobile single/buylist search which contains the reuslts, pagination, and filters on a query */
 const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
-  // const { buylistUIState } = useBuyListStore();
   switch (searchMode) {
     case 'singles':
       return <SingleResultsToolbar />;
     case 'buylists':
       return <SearchResultsHeader isMobile={true} />;
-    // return <BuylistsResultsToolbar />;
-    // return <div>BuylistsResultsToolbar</div>;
   }
 };
 
@@ -588,62 +585,5 @@ const SingleResultsToolbar = () => {
     </>
   );
 };
-// const BuylistsResultsToolbar = () => {
-//   const {
-//     searchResults,
-//     numResults,
-//     currentPage,
-//     setCurrentPage,
-//     numPages,
-//     fetchCards,
-//     setIsLoading,
-//     filterOptions,
-//     sortBy,
-//     clearFilters,
-//     setFilter,
-//     applyFilters,
-//     setSortBy,
-//     sortByOptions
-//   } = useBuyListStore();
-//   return (
-//     <>
-//       {searchResults && (
-//         <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-//           <span className="text-center text-sm font-normal text-secondary-foreground ">
-//             {numResults} results
-//           </span>
-//           <SearchPagination
-//             currentPage={currentPage}
-//             setCurrentPage={setCurrentPage}
-//             numPages={numPages}
-//             fetchCards={fetchCards}
-//             setIsLoading={setIsLoading}
-//           />
-//           <Sheet>
-//             <SheetTitle className="hidden">Filters</SheetTitle>
-//             <SheetDescription className="hidden">
-//               Filter your search results
-//             </SheetDescription>
-//             <SheetTrigger>
-//               <SlidersHorizontal className="h-6 w-6" />
-//             </SheetTrigger>
-//             <SheetContent className="min-w-full">
-//               <FilterSection
-//                 filterOptions={filterOptions}
-//                 sortBy={sortBy}
-//                 fetchCards={fetchCards}
-//                 clearFilters={clearFilters}
-//                 setFilter={setFilter}
-//                 setCurrentPage={setCurrentPage}
-//                 applyFilters={applyFilters}
-//                 setSortBy={setSortBy}
-//                 sortByOptions={sortByOptions}
-//               />
-//             </SheetContent>
-//           </Sheet>
-//         </div>
-//       )}
-//     </>
-//   );
-// };
+
 export default Navbar;

@@ -1,6 +1,4 @@
-//hooks and store states
 import { BuylistUIState } from '@/stores/useBuylistStore';
-//components
 import { BuylistSearchResults } from '../search-results/search-results';
 import { BuylistStoreOffers } from '../store-offers/store-offers-body';
 import { SubmitOffer } from '../store-offers/submit-offer-body';

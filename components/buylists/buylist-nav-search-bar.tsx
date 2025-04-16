@@ -1,4 +1,3 @@
-//hooks and store states
 import {
   useState,
   useEffect,
@@ -10,7 +9,6 @@ import {
 import useBuylistStore from '@/stores/useBuylistStore';
 import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
 import { useDebounceCallback } from 'usehooks-ts';
-//components
 import {
   Select,
   SelectContent,
@@ -25,11 +23,8 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
-//icons
 import { ChevronDown, HelpCircle, X, Loader2 } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-//other
-
 import { Tcg } from '@/types';
 
 interface AutocompleteResult {
@@ -53,28 +48,23 @@ export default function BuylistNavSearchBar({
   setTcg,
   tcg
 }: Props) {
-  // Store
   const { filters, sortBy, clearFilters, buylistUIState, setBuylistUIState } =
     useBuylistStore();
 
-  // State
   const [inputValue, setInputValue] = useState(searchTerm);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isTyping, setIsTyping] = useState(false);
 
-  // Refs
   const autoCompleteRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Constants
   const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
   const MIN_SEARCH_LENGTH = 3;
   const DEBOUNCE_MS = 300;
 
-  // Queries
   const { isLoading, refetch } = useBuylistSearch(
     {
       tcg,

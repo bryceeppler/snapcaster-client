@@ -1,9 +1,7 @@
-//hooks and store states
 import { useEffect, useState } from 'react';
 import useBuyListStore from '@/stores/useBuylistStore';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import { useVendors } from '@/hooks/queries/useVendors';
-//components
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -15,10 +13,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { toast } from 'sonner';
-//icons
 import { ExternalLink } from 'lucide-react';
-//other
 import { getVendorIcon, getVendorNameBySlug } from '../utils/utils';
 type PaymentMethod = 'Cash' | 'Store Credit';
 

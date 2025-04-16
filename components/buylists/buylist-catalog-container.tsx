@@ -1,7 +1,5 @@
-//hooks and store states
 import React from 'react';
 import useBuyListStore from '@/stores/useBuylistStore';
-//components
 import BuylistBodyFactory from './buylist-factory/buylist-body-factory';
 import {
   ViewAllOffersHeader,

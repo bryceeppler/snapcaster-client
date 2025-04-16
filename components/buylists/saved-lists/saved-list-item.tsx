@@ -1,8 +1,6 @@
-//hooks and store states
 import { useState } from 'react';
 import useBuyListStore, { IBuylistCart } from '@/stores/useBuylistStore';
 import { useUserCarts } from '@/hooks/useUserCarts';
-//components
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -26,11 +24,9 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   const { deleteCart, renameCartMutation, isDeleting, isRenaming } =
     useUserCarts();
   const [newCartName, setNewCartName] = useState('');
-  //Popup Dialog states (For edit name and delete)
   const [cartToDelete, setCartToDelete] = useState<IBuylistCart | null>(null);
   const [dialogJustClosed, setDialogJustClosed] = useState(false);
   const [activeDialogId, setActiveDialogId] = useState<number | null>(null);
-  //Dropdown Menu State on the edit button
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
@@ -73,7 +69,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
                   e.stopPropagation();
                   e.preventDefault();
                   setActiveDialogId(cart.id);
-                  setDropdownOpen(false); // Close the dropdown
+                  setDropdownOpen(false);
                 }}
               >
                 <p>Rename</p>
@@ -83,7 +79,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
                   e.stopPropagation();
                   e.preventDefault();
                   setCartToDelete(cart);
-                  setDropdownOpen(false); // Close the dropdown
+                  setDropdownOpen(false);
                 }}
               >
                 <p className="text-red-500">Delete</p>
@@ -119,7 +115,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
               placeholder="Enter new list name..."
               value={newCartName}
               onChange={(e) => setNewCartName(e.target.value)}
-              onKeyDown={(e) => e.stopPropagation()} // Needed to capture typing due to the dialog component being nexted in the drop down component
+              onKeyDown={(e) => e.stopPropagation()} // Needed to capture typing due to the dialog component being nested in the drop down component
               maxLength={25}
             />
             <Button
@@ -155,9 +151,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
         onOpenChange={(open) => {
           if (!open) {
             setCartToDelete(null);
-            // Set this flag when dialog closes
             setDialogJustClosed(true);
-            // Reset the flag after a short delay
             setTimeout(() => {
               setDialogJustClosed(false);
             }, 100);
