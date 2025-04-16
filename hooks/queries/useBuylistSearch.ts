@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { Tcg } from '@/types';
 import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
@@ -84,6 +84,7 @@ export const useBuylistSearch = (
   options?: { enabled?: boolean }
 ) => {
   const { setFilterOptions, setSortByOptions } = useBuylistStore();
+  const queryClient = useQueryClient();
 
   const query = useInfiniteQuery({
     queryKey: ['buylistSearch'],
@@ -132,6 +133,11 @@ export const useBuylistSearch = (
     query.refetch();
   };
 
+  const resetSearch = () => {
+    queryClient.removeQueries({ queryKey: ['buylistSearch'] });
+    query.refetch();
+  };
+
   useEffect(() => {
     if (query.data?.filterOptions) {
       setFilterOptions(query.data.filterOptions);
@@ -145,6 +151,7 @@ export const useBuylistSearch = (
   return {
     ...query,
     refetch: refetchWithParams,
+    resetSearch,
     isLoading: query.isLoading || query.isFetching
   };
 };

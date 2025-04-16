@@ -116,7 +116,7 @@ export const BuylistSearchResults = () => {
         </div>
         <div
           ref={loadMoreRef}
-          className="h-10 w-full"
+          className="h-[200svh] w-full"
           onClick={() => {
             setShouldReinitObserver(true);
           }}
@@ -125,7 +125,7 @@ export const BuylistSearchResults = () => {
             (isLoading &&
               Array.isArray(data?.searchResults) &&
               (data?.searchResults?.length ?? 0) > 0)) && (
-            <div className="flex items-center justify-center py-4">
+            <div className="flex items-center justify-center py-16">
               <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
             </div>
           )}
