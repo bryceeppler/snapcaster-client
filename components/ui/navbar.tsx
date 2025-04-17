@@ -210,7 +210,7 @@ const Navbar: React.FC = () => {
               })}
             </div>
           )}
-          {currentPath === '/buylists' && isAuthenticated && (
+          {currentPath === '/buylists' && (
             <div
               className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white transition-transform duration-500 md:px-2 ${
                 mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
@@ -259,7 +259,6 @@ const Navbar: React.FC = () => {
             {currentPath === '/' &&
               NavSearchBarFactory('singles', { deviceType: 'desktop' })}
             {currentPath === '/buylists' &&
-              isAuthenticated &&
               NavSearchBarFactory('buylists', { deviceType: 'desktop' })}
             {currentPath === '/sealed' &&
               NavSearchBarFactory('sealed', { deviceType: 'desktop' })}
