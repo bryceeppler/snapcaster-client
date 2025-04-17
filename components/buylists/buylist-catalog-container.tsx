@@ -9,7 +9,7 @@ import {
 import { CurrentListHeader } from './header/header';
 
 export default function BuylistCatalog() {
-  const { buylistUIState, setBuylistUIState } = useBuyListStore();
+  const { buylistUIState } = useBuyListStore();
   return (
     <div className="flex min-h-svh  flex-col  ">
       {/* Desktop Header */}

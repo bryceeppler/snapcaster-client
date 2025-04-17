@@ -116,7 +116,7 @@ export const BuylistSearchResults = () => {
         </div>
         <div
           ref={loadMoreRef}
-          className="h-[200svh] w-full"
+          className="h-[100svh] w-full"
           onClick={() => {
             setShouldReinitObserver(true);
           }}
