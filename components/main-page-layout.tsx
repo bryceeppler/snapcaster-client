@@ -67,7 +67,7 @@ export default function MainLayout({
             </div>
           )}
           {/* Page Content */}
-          <main className="pt-4">{children}</main>
+          <main className="py-4">{children}</main>
         </div>
       </div>
     </AdManagerProvider>
