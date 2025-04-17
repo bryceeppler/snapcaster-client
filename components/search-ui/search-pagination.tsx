@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Pagination,
   PaginationContent,
@@ -31,12 +31,6 @@ const SearchPagination = ({
     window.scrollTo(0, 0);
     setIsLoading(false);
   };
-
-  // useEffect(() => {
-  //   console.log('Props inside search pagination useEffect:', {
-  //     setCurrentPage
-  //   });
-  // }, [setCurrentPage]);
 
   return (
     <Pagination className="w-min">

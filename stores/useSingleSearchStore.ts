@@ -161,8 +161,6 @@ export const useSingleSearchStore = create<SearchState>()(
                 {} as Record<string, string>
               );
 
-            // console.log('Setting sortByOptions:', transformedSortByOptions);
-
             set({
               searchResults: updatedSearchResults,
               promotedResults: updatedPromotedResults,

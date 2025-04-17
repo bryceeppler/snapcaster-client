@@ -1,16 +1,18 @@
+//hooks and store states
+import useBuyListStore from '@/stores/useBuylistStore';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
-import { IBuylistCart } from '@/stores/buyListStore';
-import { toast } from 'sonner';
+import { IBuylistCart } from '@/stores/useBuylistStore';
 import { useAuth } from '@/hooks/useAuth';
-import useBuyListStore from '@/stores/buyListStore';
+//other
+import axiosInstance from '@/utils/axiosWrapper';
+import { toast } from 'sonner';
 
 const CARTS_QUERY_KEY = ['userCarts'] as const;
 
 export function useUserCarts() {
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
-  const { setCurrentCartId } = useBuyListStore();
+  const { setCurrentCartId, setCurrentCart } = useBuyListStore();
 
   const {
     data: carts,
@@ -62,6 +64,7 @@ export function useUserCarts() {
 
         if (newCart) {
           setCurrentCartId(newCart.id);
+          setCurrentCart(newCart);
         }
       } else {
         toast.error('Failed to create cart');
@@ -79,7 +82,7 @@ export function useUserCarts() {
       );
     },
     onSuccess: () => {
-      toast.success('Cart deleted successfully');
+      toast.success('List deleted successfully');
       queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
     },
     onError: (error: any) => {
@@ -93,16 +96,41 @@ export function useUserCarts() {
         `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${id}`,
         { cartName: name.trim() }
       );
-      return response.data.message;
+      return { success: true, message: response.data.message, id };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Cart renamed successfully');
       queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ['cart', data.id] });
+      return true;
     },
     onError: (error: any) => {
-      toast.error('Error renaming cart: ' + error.response.data.message);
+      toast.error(
+        'Error renaming cart: ' + error.response?.data?.message || error.message
+      );
+      return false;
     }
   });
+
+  const getCurrentCart = () => {
+    const CART_KEY = (cartId: number) => ['cart', cartId] as const;
+    const { currentCartId } = useBuyListStore();
+    const { data: currentCart } = useQuery<{
+      success: boolean;
+      cart: IBuylistCart;
+    } | null>({
+      queryKey: CART_KEY(currentCartId || 0),
+      queryFn: async () => {
+        if (!currentCartId) return null;
+        const response = await axiosInstance.get(
+          `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
+        );
+        return response.data;
+      },
+      enabled: !!currentCartId
+    });
+    return currentCart;
+  };
 
   return {
     carts,
@@ -110,9 +138,10 @@ export function useUserCarts() {
     error,
     createCart: createCartMutation.mutate,
     deleteCart: deleteCartMutation.mutate,
-    renameCart: renameCartMutation.mutate,
+    renameCartMutation,
     isCreating: createCartMutation.isPending,
     isDeleting: deleteCartMutation.isPending,
-    isRenaming: renameCartMutation.isPending
+    isRenaming: renameCartMutation.isPending,
+    getCurrentCart: getCurrentCart
   };
 }

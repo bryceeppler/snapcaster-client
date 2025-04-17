@@ -24,6 +24,7 @@ export default function SearchSortBy({
   sortBy,
   setSortBy,
   fetchCards,
+
   setCurrentPage,
   sortByOptions
 }: Props) {

@@ -71,6 +71,11 @@ export default function SingleCatalog() {
     return positions;
   }, [searchResults, hasActiveSubscription]);
 
+  const handleSortByChange = (value: any) => {
+    setSortBy(value);
+    setCurrentPage(1);
+    fetchCards();
+  };
   return (
     <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-[240px_1fr]">
       {/* #1 Single Search Filter Section */}
@@ -104,6 +109,7 @@ export default function SingleCatalog() {
                     clearFilters={clearFilters}
                     setFilter={setFilter}
                     setCurrentPage={setCurrentPage}
+                    handleSortByChange={handleSortByChange}
                     applyFilters={applyFilters}
                     sortByOptions={sortByOptions}
                   />

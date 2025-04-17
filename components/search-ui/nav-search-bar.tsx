@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  KeyboardEvent,
+  useCallback,
+  useMemo
+} from 'react';
 import {
   Select,
   SelectContent,
@@ -18,8 +25,6 @@ import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
 import { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
-import buyListStore from '@/stores/buyListStore';
-import { useRouter } from 'next/router';
 interface AutocompleteResult {
   name: string;
 }
@@ -47,8 +52,6 @@ export default function NavSearchBar({
   isLoading,
   setIsLoading
 }: Props) {
-  const router = useRouter();
-  const currentPath = router.pathname;
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -77,7 +80,7 @@ export default function NavSearchBar({
   );
   const debouncedAutoCompleteResults = useDebounceCallback(
     fetchAutocomplete,
-    100
+    200
   );
 
   useEffect(() => {
@@ -167,6 +170,37 @@ export default function NavSearchBar({
     },
     [suggestions, selectedIndex]
   );
+
+  // Memoize the suggestions list to prevent re-rendering when other state changes
+  const SuggestionsList = useMemo(() => {
+    if (!isAutoCompleteVisible) return null;
+
+    return (
+      <div
+        ref={autoCompleteRef}
+        className="absolute z-50 mt-1 w-full rounded-lg bg-popover p-1 text-foreground shadow-lg"
+      >
+        {suggestions.map((suggestion, index) => (
+          <div
+            key={index}
+            className={`cursor-pointer px-4 py-2 ${
+              selectedIndex === index
+                ? 'bg-primary text-primary-foreground'
+                : 'hover:bg-accent'
+            }`}
+            onClick={() => handleSuggestionClick(suggestion)}
+          >
+            {suggestion.name}
+          </div>
+        ))}
+      </div>
+    );
+  }, [
+    suggestions,
+    selectedIndex,
+    isAutoCompleteVisible,
+    handleSuggestionClick
+  ]);
 
   return (
     <div
@@ -283,26 +317,7 @@ export default function NavSearchBar({
           </div>
         ) : null}
       </div>
-      {isAutoCompleteVisible && (
-        <div
-          ref={autoCompleteRef}
-          className="absolute z-50 mt-1 w-full rounded-lg bg-popover p-1 text-foreground shadow-lg"
-        >
-          {suggestions.map((suggestion, index) => (
-            <div
-              key={index}
-              className={`cursor-pointer px-4 py-2  ${
-                selectedIndex === index
-                  ? 'bg-primary text-primary-foreground'
-                  : 'hover:bg-accent'
-              } `}
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion.name}
-            </div>
-          ))}
-        </div>
-      )}
+      {SuggestionsList}
     </div>
   );
 }

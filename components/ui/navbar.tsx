@@ -15,6 +15,7 @@ import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import SealedSearchBar from '../sealed/sealed-nav-search-bar';
+import BuylistNavSearchBar from '../buylists/buylist-nav-search-bar';
 import {
   Sheet,
   SheetContent,
@@ -27,7 +28,8 @@ import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
-import useBuyListStore from '@/stores/buyListStore';
+import useBuyListStore from '@/stores/useBuylistStore';
+import { SearchResultsHeader } from '../buylists/header/header';
 
 const Navbar: React.FC = () => {
   const router = useRouter();
@@ -41,7 +43,7 @@ const Navbar: React.FC = () => {
     <>
       {/* MOBILE NAV */}
       <div className="sticky top-0 z-50 md:hidden">
-        <div className=" flex h-[60px]  justify-between bg-card px-1 shadow-xl">
+        <div className=" flex   justify-between bg-card px-1 shadow-xl">
           <div className=" inset-y-0 left-0 flex items-center">
             <Sheet
               open={mobileNavSheetOpen}
@@ -188,7 +190,7 @@ const Navbar: React.FC = () => {
           {/* Nav Search Bars (Sealed, Singles, Buylists)*/}
           {currentPath === '/sealed' && (
             <div className="w-full  bg-card ">
-              <div className="border-t px-2 py-2">
+              <div className=" px-2 py-2">
                 {NavSearchBarFactory('sealed', {
                   deviceType: 'mobile'
                 })}
@@ -197,7 +199,7 @@ const Navbar: React.FC = () => {
           )}
           {currentPath === '/' && (
             <div
-              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
                 mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
               }`}
             >
@@ -210,7 +212,7 @@ const Navbar: React.FC = () => {
           )}
           {currentPath === '/buylists' && isAuthenticated && (
             <div
-              className={`fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white transition-transform duration-500 md:px-2 ${
                 mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
               }`}
             >
@@ -448,29 +450,16 @@ const BuylistsNavSearchBar = ({
   deviceType,
   toggleMobileSearch
 }: NavSearchBarProps) => {
-  const {
-    searchTerm,
-    tcg,
-    isLoading,
-    fetchCards,
-    setSearchTerm,
-    setTcg,
-    clearFilters,
-    setIsLoading
-  } = useBuyListStore();
+  const { searchTerm, tcg, setSearchTerm, setTcg } = useBuyListStore();
   return (
     <>
-      <NavSearchBar
+      <BuylistNavSearchBar
         deviceType={deviceType}
         toggleMobileSearch={toggleMobileSearch}
         searchTerm={searchTerm}
         tcg={tcg}
-        clearFilters={clearFilters}
         setSearchTerm={setSearchTerm}
         setTcg={setTcg}
-        fetchQuery={fetchCards}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
       />
     </>
   );
@@ -529,7 +518,7 @@ const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
     case 'singles':
       return <SingleResultsToolbar />;
     case 'buylists':
-      return <BuylistsResultsToolbar />;
+      return <SearchResultsHeader isMobile={true} />;
   }
 };
 
@@ -580,6 +569,11 @@ const SingleResultsToolbar = () => {
                 clearFilters={clearFilters}
                 setFilter={setFilter}
                 setCurrentPage={setCurrentPage}
+                handleSortByChange={(value: any) => {
+                  setSortBy(value);
+                  setCurrentPage(1);
+                  fetchCards();
+                }}
                 applyFilters={applyFilters}
                 setSortBy={setSortBy}
                 sortByOptions={sortByOptions}
@@ -591,62 +585,5 @@ const SingleResultsToolbar = () => {
     </>
   );
 };
-const BuylistsResultsToolbar = () => {
-  const {
-    searchResults,
-    numResults,
-    currentPage,
-    setCurrentPage,
-    numPages,
-    fetchCards,
-    setIsLoading,
-    filterOptions,
-    sortBy,
-    clearFilters,
-    setFilter,
-    applyFilters,
-    setSortBy,
-    sortByOptions
-  } = useBuyListStore();
-  return (
-    <>
-      {searchResults && (
-        <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-          <span className="text-center text-sm font-normal text-secondary-foreground ">
-            {numResults} results
-          </span>
-          <SearchPagination
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            numPages={numPages}
-            fetchCards={fetchCards}
-            setIsLoading={setIsLoading}
-          />
-          <Sheet>
-            <SheetTitle className="hidden">Filters</SheetTitle>
-            <SheetDescription className="hidden">
-              Filter your search results
-            </SheetDescription>
-            <SheetTrigger>
-              <SlidersHorizontal className="h-6 w-6" />
-            </SheetTrigger>
-            <SheetContent className="min-w-full">
-              <FilterSection
-                filterOptions={filterOptions}
-                sortBy={sortBy}
-                fetchCards={fetchCards}
-                clearFilters={clearFilters}
-                setFilter={setFilter}
-                setCurrentPage={setCurrentPage}
-                applyFilters={applyFilters}
-                setSortBy={setSortBy}
-                sortByOptions={sortByOptions}
-              />
-            </SheetContent>
-          </Sheet>
-        </div>
-      )}
-    </>
-  );
-};
+
 export default Navbar;

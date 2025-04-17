@@ -54,7 +54,6 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
       setShowAds(false);
     }
   }, [hasActiveSubscription]);
-
   return (
     <AdContext.Provider value={{ showAds, setShowAds }}>
       {children}

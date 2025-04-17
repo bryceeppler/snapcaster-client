@@ -1,27 +1,27 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { format } from "date-fns"
-import { PieChart, Pie, Cell, Legend, Label } from "recharts"
+import * as React from 'react';
+import { format } from 'date-fns';
+import { PieChart, Pie, Cell, Legend, Label } from 'recharts';
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { useUserTypes } from "@/lib/hooks/useAnalytics"
-import { 
-  ChartContainer, 
-  ChartConfig, 
+  CardTitle
+} from '@/components/ui/card';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useUserTypes } from '@/lib/hooks/useAnalytics';
+import {
+  ChartContainer,
+  ChartConfig,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent
-} from "@/components/ui/chart"
-import { PieChartSkeleton } from "@/components/vendors/dashboard/chart-skeleton"
+} from '@/components/ui/chart';
+import { PieChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 
 interface UserTypesChartProps {
   dateRange: {
@@ -31,17 +31,17 @@ interface UserTypesChartProps {
 }
 
 const chartConfig = {
-  "users": {
-    label: "Users",
-    color: "hsl(var(--chart-0))"
+  users: {
+    label: 'Users',
+    color: 'hsl(var(--chart-0))'
   },
-  "New": {
-    label: "New Users",
-    color: "hsl(var(--chart-1))"
+  New: {
+    label: 'New Users',
+    color: 'hsl(var(--chart-1))'
   },
-  "Returning": {
-    label: "Returning Users",
-    color: "hsl(var(--chart-2))"
+  Returning: {
+    label: 'Returning Users',
+    color: 'hsl(var(--chart-2))'
   }
 } satisfies ChartConfig;
 
@@ -54,7 +54,6 @@ interface CustomTooltipProps {
 
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (!active || !payload?.length) return null;
-  console.log(payload[0]);
   const entry = payload[0];
   const value = entry.value;
   const name = entry.name;
@@ -84,15 +83,17 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
 
   const returningUsers = React.useMemo(() => {
     if (!data?.data) return 0;
-    return data.data.filter((user) => user.type === "Returning").reduce((acc, user) => acc + user.users, 0);
+    return data.data
+      .filter((user) => user.type === 'Returning')
+      .reduce((acc, user) => acc + user.users, 0);
   }, [data]);
 
   const chartData = React.useMemo(() => {
     if (!data?.data) return [];
-    
+
     const total = data.data.reduce((acc, user) => acc + user.users, 0);
-    
-    return data.data.map(user => ({
+
+    return data.data.map((user) => ({
       ...user,
       percentage: Math.round((user.users / total) * 100)
     }));
@@ -108,7 +109,8 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
         <CardHeader className="items-center pb-0">
           <CardTitle>User Types</CardTitle>
           <CardDescription>
-            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+            {format(dateRange.from, 'LLL dd, y')} -{' '}
+            {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex h-[300px] items-center justify-center">
@@ -123,19 +125,17 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
       <CardHeader className="items-center pb-0">
         <CardTitle>User Types</CardTitle>
         <CardDescription>
-          {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+          {format(dateRange.from, 'LLL dd, y')} -{' '}
+          {format(dateRange.to, 'LLL dd, y')}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer 
-          config={chartConfig} 
+        <ChartContainer
+          config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
         >
           <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<CustomTooltip />}
-            />
+            <ChartTooltip cursor={false} content={<CustomTooltip />} />
             <Pie
               data={chartData}
               dataKey="users"
@@ -145,7 +145,7 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
             >
               <Label
                 content={({ viewBox }: { viewBox?: any }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
                     return (
                       <text
                         x={viewBox.cx}
@@ -174,22 +174,24 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
                 }}
               />
               {chartData.map((entry) => (
-                <Cell 
-                  key={entry.type} 
-                  fill={chartConfig[entry.type as keyof typeof chartConfig]?.color} 
+                <Cell
+                  key={entry.type}
+                  fill={
+                    chartConfig[entry.type as keyof typeof chartConfig]?.color
+                  }
                 />
               ))}
             </Pie>
-            <ChartLegend 
-              verticalAlign="bottom" 
-              height={36} 
-              content={<ChartLegendContent />} 
+            <ChartLegend
+              verticalAlign="bottom"
+              height={36}
+              content={<ChartLegendContent />}
             />
           </PieChart>
         </ChartContainer>
       </CardContent>
       {chartData.length > 0 && (
-        <CardFooter className="flex-col gap-2 text-sm pt-6">
+        <CardFooter className="flex-col gap-2 pt-6 text-sm">
           <div className="leading-none text-muted-foreground">
             Showing user type data for selected date range
           </div>
@@ -197,4 +199,4 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
       )}
     </Card>
   );
-} 
+}
