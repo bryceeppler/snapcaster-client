@@ -50,7 +50,7 @@ export default function MainLayout({
 
   return (
     <AdManagerProvider positionVendorWeights={positionVendorWeights}>
-      <div className="flex min-h-svh justify-center">
+      <div className="flex min-h-svh justify-center py-4">
         {/* Side Banners are now overlays and don't need container divs */}
         {shouldShowAds && usesSideBanners && (
           <>
@@ -63,7 +63,7 @@ export default function MainLayout({
         <div className="w-full max-w-4xl items-center px-4 below1550:max-w-6xl">
           {shouldShowAds && <TopBanner className="w-full" />}
           {/* Page Content */}
-          <main>{children}</main>
+          <main className="py-4">{children}</main>
         </div>
       </div>
     </AdManagerProvider>
