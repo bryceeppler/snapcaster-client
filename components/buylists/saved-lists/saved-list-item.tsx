@@ -29,6 +29,11 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   const [activeDialogId, setActiveDialogId] = useState<number | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const handleEditButtonClick = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    setDropdownOpen(!dropdownOpen);
+  };
+
   return (
     <div
       className=" mb-1 flex h-14 cursor-pointer flex-col  justify-between rounded-lg border bg-accent px-2 py-1.5 shadow-sm hover:bg-accent/50"
@@ -51,13 +56,17 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger
             asChild
-            className="w-min flex-shrink-0 bg-transparent"
+            className="h-min w-min flex-shrink-0 border-0 bg-transparent"
             variant={null}
-            onClick={(e) => e.stopPropagation()}
           >
-            <p className="text-xs font-semibold  text-zinc-400 underline hover:text-primary">
+            <span
+              className="text-xs font-semibold text-zinc-400 underline hover:text-primary "
+              onClick={handleEditButtonClick}
+              onTouchStart={(e) => e.stopPropagation()}
+              onTouchEnd={handleEditButtonClick}
+            >
               Edit
-            </p>
+            </span>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-min"
@@ -67,22 +76,20 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
                   setActiveDialogId(cart.id);
                   setDropdownOpen(false);
                 }}
               >
-                <p>Rename</p>
+                Rename
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
                   setCartToDelete(cart);
                   setDropdownOpen(false);
                 }}
               >
-                <p className="text-red-500">Delete</p>
+                Delete
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -119,7 +126,8 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
               maxLength={25}
             />
             <Button
-              onClick={async () => {
+              onClick={async (e) => {
+                e.stopPropagation();
                 if (activeDialogId) {
                   try {
                     await renameCartMutation.mutateAsync({
