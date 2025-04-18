@@ -1,5 +1,10 @@
 import axios from 'axios';
-
+import axiosInstance from '@/utils/axiosWrapper';
+import {
+  Discount,
+  CreateDiscountRequest,
+  UpdateDiscountRequest
+} from '@/types/discounts';
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export enum VendorTier {
@@ -27,6 +32,10 @@ export interface VendorAsset {
   url: string;
 }
 
+export interface DiscountMap {
+  [key: string]: number;
+}
+
 export interface Vendor {
   id: number;
   name: string;
@@ -50,6 +59,61 @@ export class VendorService {
     } catch (error) {
       console.error('Error fetching vendors:', error);
       return [] as Vendor[];
+    }
+  }
+
+  async getDiscounts(): Promise<Discount[]> {
+    const response = await axios.get(`${BASE_URL}/api/v1/vendor/discounts`);
+    return response.data.data || ([] as Discount[]);
+  }
+
+  async fetchDiscountsByVendorId(
+    vendorId: number,
+    skipCache: boolean = false
+  ): Promise<Discount[]> {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/vendor/discounts?vendor_id=${vendorId}`,
+        {
+          headers: {
+            'x-skip-cache': skipCache ? 'true' : 'false'
+          }
+        }
+      );
+      return response.data.data || ([] as Discount[]);
+    } catch (error) {
+      console.error('Error fetching discounts:', error);
+      return [] as Discount[];
+    }
+  }
+
+  async createDiscount(discount: CreateDiscountRequest): Promise<Discount> {
+    const response = await axiosInstance.post(
+      `${BASE_URL}/api/v1/vendor/discounts`,
+      discount
+    );
+    return response.data.data;
+  }
+
+  async updateDiscount(
+    discountId: number,
+    discount: UpdateDiscountRequest
+  ): Promise<Discount> {
+    const response = await axiosInstance.put(
+      `${BASE_URL}/api/v1/vendor/discounts/${discountId}`,
+      discount
+    );
+    return response.data.data;
+  }
+
+  async deleteDiscount(discountId: number): Promise<void> {
+    const url = `${BASE_URL}/api/v1/vendor/discounts/${discountId}`;
+
+    try {
+      await axiosInstance.delete(url);
+    } catch (error) {
+      console.error('Error deleting discount:', error);
+      throw error; // Re-throw the error so it can be caught by the calling function
     }
   }
 }

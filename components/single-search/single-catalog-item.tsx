@@ -6,26 +6,26 @@ import { Badge } from '../ui/badge';
 import CardImage from '../ui/card-image';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { handleBuyClick } from '../../utils/analytics';
-import { DISCOUNT_MAP } from '@/lib/constants';
 import { useTheme } from 'next-themes';
 import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
 import { useVendors } from '@/hooks/queries/useVendors';
+import { useDiscounts } from '@/hooks/queries/useDiscounts';
+import { Discount } from '@/types/discounts';
+type DiscountBadgeProps = {
+  product: SingleCatalogCard;
+  discount: Discount | undefined;
+};
 
 type Props = {
   product: SingleCatalogCard;
 };
 
-const DiscountBadge = ({ product }: Props) => {
+const DiscountBadge = ({ product, discount }: DiscountBadgeProps) => {
   if (product.discounted_price) {
     return (
       <div className="flex h-[18px] -skew-x-12 transform items-center rounded bg-primary/80 px-2 font-montserrat text-xs font-semibold leading-none text-white shadow-md">
         <span className="skew-x-12 transform">
-          -{' '}
-          {Math.floor(
-            DISCOUNT_MAP[product.discount_code as keyof typeof DISCOUNT_MAP] *
-              100
-          )}
-          %
+          - {Math.round(discount?.discount_amount || 0)}%
         </span>
       </div>
     );
@@ -35,6 +35,7 @@ const DiscountBadge = ({ product }: Props) => {
 
 const SingleCatalogItem = ({ product }: Props) => {
   const { vendors } = useVendors();
+  const { getLargestActiveDiscountByVendorSlug } = useDiscounts();
   const { resultsTcg } = useSingleSearchStore();
   const { theme } = useTheme();
   const findVendorNameByCode = (slug: string) => {
@@ -62,7 +63,10 @@ const SingleCatalogItem = ({ product }: Props) => {
               <h4 className="font-montserrat text-2xl font-semibold">
                 ${Number(product.discounted_price || product.price).toFixed(2)}
               </h4>
-              <DiscountBadge product={product} />
+              <DiscountBadge
+                product={product}
+                discount={getLargestActiveDiscountByVendorSlug(product.vendor)}
+              />
             </div>
             {product.discount_code && (
               <div
