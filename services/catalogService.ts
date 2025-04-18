@@ -1,6 +1,6 @@
 import axiosInstance from '@/utils/axiosWrapper';
 
-const BASE_URL = process.env.NEXT_PUBLIC_CATALOG_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface SearchParams {
   index: string;
@@ -49,7 +49,7 @@ export interface FilterOption {
 export class CatalogService {
   async search(params: SearchParams): Promise<SearchResponse> {
     const queryParams = new URLSearchParams();
-    
+
     // Add base params
     Object.entries(params).forEach(([key, value]) => {
       if (value && !['filterSelections'].includes(key)) {
@@ -60,22 +60,20 @@ export class CatalogService {
     // Add filter selections if they exist
     if (params.filterSelections) {
       Object.entries(params.filterSelections).forEach(([field, values]) => {
-        values.forEach(value => {
+        values.forEach((value) => {
           queryParams.append(`filterSelections[${field}][]`, value);
         });
       });
     }
 
-    const response = await axiosInstance.get(
-      `${BASE_URL}/api/v1/search?${queryParams.toString()}`
-    );
+    const response = await this.search(params);
 
-    return response.data;
+    return response;
   }
 
   async multiSearch(searches: SearchParams[]): Promise<SearchResponse[]> {
     const response = await axiosInstance.post(
-      `${BASE_URL}/api/v1/multisearch`,
+      `${BASE_URL}/api/v1/catalog/multisearch`,
       { searches }
     );
     return response.data;
@@ -83,12 +81,12 @@ export class CatalogService {
 
   async sealedSearch(params: SearchParams): Promise<SearchResponse> {
     // Ensure the index is set for sealed products
-    params.index = params.index.startsWith('ca_sealed') 
-      ? params.index 
+    params.index = params.index.startsWith('ca_sealed')
+      ? params.index
       : `ca_sealed_${params.tcg || 'all'}_prod*`;
-    
+
     return this.search(params);
   }
 }
 
-export const catalogService = new CatalogService(); 
+export const catalogService = new CatalogService();
