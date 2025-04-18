@@ -172,7 +172,9 @@ const Navbar: React.FC = () => {
 
             {/* Right Section */}
             <div className="mx-2 flex items-center ">
-              {(currentPath === '/' || currentPath === '/buylists') && (
+              {(currentPath === '/' ||
+                currentPath === '/buylists' ||
+                currentPath === '/sealed') && (
                 <button
                   onClick={() => {
                     setMobileSearchIsVisible(!mobileSearchIsVisible);
@@ -189,17 +191,21 @@ const Navbar: React.FC = () => {
 
           {/* Nav Search Bars (Sealed, Singles, Buylists)*/}
           {currentPath === '/sealed' && (
-            <div className="w-full  bg-card ">
-              <div className=" px-2 py-2">
-                {NavSearchBarFactory('sealed', {
-                  deviceType: 'mobile'
-                })}
-              </div>
+            <div
+              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
+              }`}
+            >
+              {NavSearchBarFactory('sealed', {
+                deviceType: 'mobile',
+                toggleMobileSearch: () =>
+                  setMobileSearchIsVisible(!mobileSearchIsVisible)
+              })}
             </div>
           )}
           {currentPath === '/' && (
             <div
-              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
+              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white transition-transform duration-500 md:px-2 ${
                 mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
               }`}
             >
@@ -464,7 +470,10 @@ const BuylistsNavSearchBar = ({
   );
 };
 
-const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
+const SealedNavSearchBar = ({
+  deviceType,
+  toggleMobileSearch
+}: NavSearchBarProps) => {
   const {
     productCategory,
     searchTerm: sealedSearchTerm,
@@ -495,6 +504,7 @@ const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
     <>
       <SealedSearchBar
         deviceType={deviceType}
+        toggleMobileSearch={toggleMobileSearch}
         productCategory={productCategory}
         searchTerm={sealedSearchTerm}
         setProductCategory={setProductCategory}
