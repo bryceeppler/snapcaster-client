@@ -32,13 +32,14 @@ export const useDiscounts = () => {
   const getLargestActiveDiscountByVendorSlug = (
     vendorSlug: string
   ): Discount | undefined => {
+    const now = new Date();
     const discounts = query.data?.filter(
-      (discount) =>
-        discount.vendor_slug === vendorSlug &&
-        discount.is_active &&
-        discount.expires_at &&
-        discount.expires_at > new Date()
+      (discount) => discount.vendor_slug === vendorSlug && discount.is_active
     );
+
+    if (discounts?.length && discounts.length >= 1) {
+      console.log('discounts', discounts);
+    }
     return discounts?.reduce((max, current) => {
       return current.discount_amount > max.discount_amount ? current : max;
     }, discounts[0]);
