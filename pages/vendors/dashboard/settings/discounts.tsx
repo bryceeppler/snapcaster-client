@@ -3,7 +3,9 @@ import {
   Plus,
   Trash2,
   Pencil,
-  MoreHorizontal
+  MoreHorizontal,
+  Check,
+  X
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { type SelectRangeEventHandler } from 'react-day-picker';
@@ -51,6 +53,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
 
 // Form schema for discount validation
 const discountFormSchema = z.object({
@@ -221,6 +224,33 @@ export default function DiscountsPage() {
     } catch (error) {
       console.error('Error deleting discount:', error);
       toast.error('Failed to delete discount. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStatusToggle = async (discount: Discount, newStatus: boolean) => {
+    if (!vendor) return;
+
+    setIsLoading(true);
+    try {
+      await vendorService.updateDiscount(discount.id, {
+        is_active: newStatus
+      });
+
+      toast.success(
+        `Discount code ${newStatus ? 'activated' : 'deactivated'} successfully.`
+      );
+
+      // Update the discount in the state
+      setDiscounts(
+        discounts.map((d) =>
+          d.id === discount.id ? { ...d, is_active: newStatus } : d
+        )
+      );
+    } catch (error) {
+      console.error('Error updating discount status:', error);
+      toast.error('Failed to update discount status. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -557,7 +587,7 @@ export default function DiscountsPage() {
                   <TableHead>Discount</TableHead>
                   <TableHead>Start Date</TableHead>
                   <TableHead>End Date</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Enabled</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -584,7 +614,16 @@ export default function DiscountsPage() {
                           : 'No end date'}
                       </TableCell>
                       <TableCell>
-                        {discount.is_active ? 'Active' : 'Inactive'}
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            checked={discount.is_active}
+                            onCheckedChange={(checked) =>
+                              handleStatusToggle(discount, checked)
+                            }
+                            aria-label={`Toggle ${discount.code} status`}
+                            disabled={isLoading}
+                          />
+                        </div>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end space-x-2">
