@@ -104,34 +104,34 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
           forcedTheme={isLandingPage ? 'light' : undefined}
           disableTransitionOnChange
         >
-          {isLandingPage && (
-            <>
-              <Toaster
-                position={width > 640 ? 'bottom-center' : 'bottom-right'}
-              />
-              <Component {...pageProps} />
-            </>
-          )}
-          {isVendorDashboardPage && (
-            <Layout>
-              <Toaster
-                position={width > 640 ? 'bottom-center' : 'bottom-right'}
-              />
-              <Component {...pageProps} />
-            </Layout>
-          )}
-          {usesMainNav && (
-            <Layout>
-              <AdProvider>
+          <AdProvider>
+            {isLandingPage && (
+              <>
+                <Toaster
+                  position={width > 640 ? 'bottom-center' : 'bottom-right'}
+                />
+                <Component {...pageProps} />
+              </>
+            )}
+            {isVendorDashboardPage && (
+              <Layout>
+                <Toaster
+                  position={width > 640 ? 'bottom-center' : 'bottom-right'}
+                />
+                <Component {...pageProps} />
+              </Layout>
+            )}
+            {usesMainNav && (
+              <Layout>
                 <MainLayout usesSideBanners={usesSideBanners}>
                   <Toaster
                     position={width > 640 ? 'bottom-center' : 'bottom-right'}
                   />
                   <Component {...pageProps} />
                 </MainLayout>
-              </AdProvider>
-            </Layout>
-          )}
+              </Layout>
+            )}
+          </AdProvider>
         </ThemeProvider>
       </main>
     </QueryClientProvider>
