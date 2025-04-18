@@ -1,4 +1,10 @@
-import { Calendar as CalendarIcon, Plus, Trash2 } from 'lucide-react';
+import {
+  Calendar as CalendarIcon,
+  Plus,
+  Trash2,
+  Pencil,
+  MoreHorizontal
+} from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { type SelectRangeEventHandler } from 'react-day-picker';
 import { subDays, format } from 'date-fns';
@@ -37,6 +43,14 @@ import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import { vendorService } from '@/services/vendorService';
 import { Discount, DiscountType } from '@/types/discounts';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 
 // Form schema for discount validation
 const discountFormSchema = z.object({
@@ -62,10 +76,22 @@ export default function DiscountsPage() {
   const [discounts, setDiscounts] = useState<Discount[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [currentDiscount, setCurrentDiscount] = useState<Discount | null>(null);
 
   const vendor = getVendorBySlug('obsidian'); // This should be dynamic based on the logged-in vendor
 
   const form = useForm<DiscountFormValues>({
+    resolver: zodResolver(discountFormSchema),
+    defaultValues: {
+      code: '',
+      percentage: 5,
+      start_date: new Date(),
+      end_date: null
+    }
+  });
+
+  const editForm = useForm<DiscountFormValues>({
     resolver: zodResolver(discountFormSchema),
     defaultValues: {
       code: '',
@@ -80,6 +106,20 @@ export default function DiscountsPage() {
       fetchDiscounts();
     }
   }, [vendor, dateRange]);
+
+  // Reset and populate edit form when current discount changes
+  useEffect(() => {
+    if (currentDiscount) {
+      editForm.reset({
+        code: currentDiscount.code,
+        percentage: currentDiscount.discount_amount,
+        start_date: new Date(currentDiscount.starts_at),
+        end_date: currentDiscount.expires_at
+          ? new Date(currentDiscount.expires_at)
+          : null
+      });
+    }
+  }, [currentDiscount, editForm]);
 
   const fetchDiscounts = async () => {
     if (!vendor) return;
@@ -130,6 +170,38 @@ export default function DiscountsPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const onEditSubmit = async (values: DiscountFormValues) => {
+    if (!vendor || !currentDiscount) return;
+
+    setIsLoading(true);
+    try {
+      await vendorService.updateDiscount(currentDiscount.id, {
+        code: values.code,
+        discount_amount: values.percentage,
+        discount_type: DiscountType.PERCENTAGE, // Currently only supporting percentage discounts
+        starts_at: values.start_date,
+        expires_at: values.end_date || null
+      });
+
+      toast.success('Discount code updated successfully.');
+
+      // Refresh the discounts list
+      fetchDiscounts();
+      setIsEditDialogOpen(false);
+      setCurrentDiscount(null);
+    } catch (error) {
+      console.error('Error updating discount:', error);
+      toast.error('Failed to update discount. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEditDiscount = (discount: Discount) => {
+    setCurrentDiscount(discount);
+    setIsEditDialogOpen(true);
   };
 
   const deleteDiscount = async (discountId: number) => {
@@ -328,6 +400,155 @@ export default function DiscountsPage() {
             </div>
           </div>
 
+          {/* Edit Discount Dialog */}
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Edit Discount Code</DialogTitle>
+                <DialogDescription>
+                  Update the discount code details.
+                </DialogDescription>
+              </DialogHeader>
+              <form
+                onSubmit={editForm.handleSubmit(onEditSubmit)}
+                className="space-y-4"
+              >
+                <div className="space-y-2">
+                  <Label htmlFor="edit-code">Discount Code</Label>
+                  <Input
+                    id="edit-code"
+                    placeholder="e.g., SUMMER2023"
+                    {...editForm.register('code')}
+                  />
+                  {editForm.formState.errors.code && (
+                    <p className="text-sm font-medium text-destructive">
+                      {editForm.formState.errors.code.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="edit-percentage">
+                    Discount Percentage (%)
+                  </Label>
+                  <Input
+                    id="edit-percentage"
+                    type="number"
+                    min={1}
+                    max={100}
+                    {...editForm.register('percentage', {
+                      valueAsNumber: true
+                    })}
+                  />
+                  {editForm.formState.errors.percentage && (
+                    <p className="text-sm font-medium text-destructive">
+                      {editForm.formState.errors.percentage.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-start_date">Start Date</Label>
+                    <Controller
+                      control={editForm.control}
+                      name="start_date"
+                      render={({ field }) => (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id="edit-start_date"
+                              variant="outline"
+                              className={
+                                !field.value ? 'text-muted-foreground' : ''
+                              }
+                            >
+                              {field.value ? (
+                                format(field.value, 'PPP')
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      )}
+                    />
+                    {editForm.formState.errors.start_date && (
+                      <p className="text-sm font-medium text-destructive">
+                        {editForm.formState.errors.start_date.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-end_date">End Date (Optional)</Label>
+                    <Controller
+                      control={editForm.control}
+                      name="end_date"
+                      render={({ field }) => (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id="edit-end_date"
+                              variant="outline"
+                              className={
+                                !field.value ? 'text-muted-foreground' : ''
+                              }
+                            >
+                              {field.value ? (
+                                format(field.value, 'PPP')
+                              ) : (
+                                <span>No end date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value || undefined}
+                              onSelect={field.onChange}
+                              initialFocus
+                              disabled={(date) =>
+                                date <
+                                (editForm.getValues().start_date || new Date())
+                              }
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      )}
+                    />
+                    {editForm.formState.errors.end_date && (
+                      <p className="text-sm font-medium text-destructive">
+                        {editForm.formState.errors.end_date.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button type="button" variant="outline">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Updating...' : 'Update Discount'}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+
           <div className="rounded-md border">
             <Table>
               <TableHeader>
@@ -336,13 +557,14 @@ export default function DiscountsPage() {
                   <TableHead>Discount</TableHead>
                   <TableHead>Start Date</TableHead>
                   <TableHead>End Date</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {discounts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
+                    <TableCell colSpan={6} className="h-24 text-center">
                       {isLoading ? 'Loading...' : 'No discounts found.'}
                     </TableCell>
                   </TableRow>
@@ -361,15 +583,41 @@ export default function DiscountsPage() {
                           ? format(new Date(discount.expires_at), 'PP')
                           : 'No end date'}
                       </TableCell>
+                      <TableCell>
+                        {discount.is_active ? 'Active' : 'Inactive'}
+                      </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteDiscount(discount.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          <span className="sr-only">Delete</span>
-                        </Button>
+                        <div className="flex justify-end space-x-2">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-min w-min"
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Open menu</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => handleEditDiscount(discount)}
+                              >
+                                <Pencil className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => deleteDiscount(discount.id)}
+                                className="text-destructive focus:text-destructive"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))

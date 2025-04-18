@@ -21,6 +21,15 @@ export interface CreateDiscountRequest {
   expires_at: Date | null;
 }
 
+export interface UpdateDiscountRequest {
+  code?: string;
+  discount_type?: DiscountType;
+  discount_amount?: number;
+  starts_at?: Date;
+  expires_at?: Date | null;
+  is_active?: boolean;
+}
+
 export enum DiscountType {
   PERCENTAGE = 'PERCENTAGE',
   FIXED = 'FIXED'

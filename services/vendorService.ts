@@ -1,6 +1,10 @@
 import axios from 'axios';
 import axiosInstance from '@/utils/axiosWrapper';
-import { Discount, CreateDiscountRequest } from '@/types/discounts';
+import {
+  Discount,
+  CreateDiscountRequest,
+  UpdateDiscountRequest
+} from '@/types/discounts';
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export enum VendorTier {
@@ -86,6 +90,17 @@ export class VendorService {
   async createDiscount(discount: CreateDiscountRequest): Promise<Discount> {
     const response = await axiosInstance.post(
       `${BASE_URL}/api/v1/vendor/discounts`,
+      discount
+    );
+    return response.data.data;
+  }
+
+  async updateDiscount(
+    discountId: number,
+    discount: UpdateDiscountRequest
+  ): Promise<Discount> {
+    const response = await axiosInstance.put(
+      `${BASE_URL}/api/v1/vendor/discounts/${discountId}`,
       discount
     );
     return response.data.data;
