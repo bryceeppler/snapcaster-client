@@ -11,12 +11,16 @@ import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { Discount } from '@/types/discounts';
-type Props = {
+type DiscountBadgeProps = {
   product: SingleCatalogCard;
   discount: Discount | undefined;
 };
 
-const DiscountBadge = ({ product, discount }: Props) => {
+type Props = {
+  product: SingleCatalogCard;
+};
+
+const DiscountBadge = ({ product, discount }: DiscountBadgeProps) => {
   if (product.discounted_price) {
     return (
       <div className="flex h-[18px] -skew-x-12 transform items-center rounded bg-primary/80 px-2 font-montserrat text-xs font-semibold leading-none text-white shadow-md">
