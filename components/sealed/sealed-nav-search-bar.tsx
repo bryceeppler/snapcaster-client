@@ -7,14 +7,17 @@ import {
   SelectTriggerNoIcon as SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, HelpCircle, X, Loader2 } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Loader2 } from 'lucide-react';
 import { useDebounceCallback } from 'usehooks-ts';
 import { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
-import { X } from 'lucide-react';
 
 interface AutocompleteResult {
   name: string;
@@ -28,7 +31,8 @@ type Props = {
   isLoading: boolean;
   handleSearch: () => void;
   clearFilters: () => void;
-  deviceType?: 'mobile' | 'desktop';
+  deviceType?: string;
+  toggleMobileSearch?: () => void;
 };
 export default function SealedSearchBar({
   productCategory,
@@ -39,7 +43,8 @@ export default function SealedSearchBar({
   handleInputChange,
   handleSearch,
   isLoading,
-  deviceType = 'desktop'
+  deviceType = 'desktop',
+  toggleMobileSearch
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
@@ -85,12 +90,14 @@ export default function SealedSearchBar({
 
   return (
     <div
-      className={`relative w-full ${
-        deviceType === 'desktop' ? 'max-w-2xl md:ml-4 md:mr-4' : ''
+      className={`relative w-full bg-transparent md:ml-4 md:mr-4 ${
+        deviceType == 'desktop' ? 'max-w-2xl' : ''
       }`}
     >
       <div
-        className={`flex h-min w-full items-center rounded border border-border`}
+        className={`flex h-min w-full items-center rounded ${
+          deviceType == 'desktop' ? 'border border-border' : ''
+        }`}
       >
         <Select
           value={productCategory}
@@ -102,9 +109,9 @@ export default function SealedSearchBar({
             setSelectedIndex(-1);
           }}
         >
-          <SelectTrigger className="h-[42px] w-fit max-w-[100px] rounded-l-md rounded-r-none border-none bg-accent p-2 text-xs text-accent-foreground focus:ring-0 focus:ring-offset-0 sm:max-w-fit">
+          <SelectTrigger className="w-[180px] border-none bg-transparent p-2 pl-4 font-bold text-foreground focus:ring-0 focus:ring-offset-0">
             <SelectValue placeholder="TCG" />
-            <ChevronDown className="ml-1 h-3 w-3 shrink-0 transition-transform duration-200" />
+            <ChevronDown className="ml-2 h-4 w-4 shrink-0 transition-transform duration-200" />
           </SelectTrigger>
 
           <SelectContent>
@@ -120,30 +127,79 @@ export default function SealedSearchBar({
           </SelectContent>
         </Select>
 
-        <div className="flex flex-1 items-center">
-          <Input
-            ref={inputRef}
-            type="text"
-            placeholder="Search Snapcaster"
-            className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
-            value={searchTerm}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-          />
-          <button
-            onClick={() => {
-              clearFilters();
-              handleSearch();
-            }}
-            className="flex h-[42px] w-12 items-center justify-center rounded-r-md bg-primary hover:bg-primary/90"
-          >
-            {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-primary-foreground" />
-            ) : (
-              <MagnifyingGlassIcon className="h-5 w-5 text-primary-foreground" />
-            )}
-          </button>
+        <Input
+          ref={inputRef}
+          type="text"
+          placeholder="Search for sealed product"
+          className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
+          value={searchTerm}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+        />
+        <div className="mr-1 text-foreground">
+          {isLoading ? (
+            <Loader2 className="h-6 w-6 animate-spin" />
+          ) : (
+            <MagnifyingGlassIcon
+              className="h-6 w-6 cursor-pointer hover:text-muted-foreground"
+              onClick={() => {
+                clearFilters();
+                handleSearch();
+              }}
+            />
+          )}
         </div>
+        <div>
+          <Popover>
+            <PopoverTrigger asChild className="mr-1">
+              <HelpCircle className="text-popover-foreground hover:cursor-pointer" />
+            </PopoverTrigger>
+            <PopoverContent className="p-2">
+              <div className="rounded-md">
+                <div className="w-full">
+                  <div className="space-y-1 text-xs">
+                    <div>
+                      <h1 className="text-sm font-semibold">Search</h1>
+                      <p className="italic">
+                        Queries are based on the product name only. Please use
+                        the filters to refine your search.
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-sm font-semibold">Exact Search</h1>
+                      <p className="italic">
+                        Double quote your query if you want to do an exact
+                        search. For example:
+                        <span className="rounded px-1 py-0.5 font-mono">
+                          "Modern Horizons 2"
+                        </span>
+                      </p>
+                    </div>
+                    <div>
+                      <h1 className="text-sm font-semibold">Punctuation</h1>
+                      <p className="italic">
+                        Queries are not sensitive to capitalization or
+                        punctuation. For example:
+                        <span className="rounded px-1 py-0.5 font-mono">
+                          '",:.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        {deviceType == 'mobile' ? (
+          <div className="mr-2 text-foreground">
+            <X
+              className="h-6 hover:cursor-pointer"
+              onClick={toggleMobileSearch}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );
