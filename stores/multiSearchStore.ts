@@ -33,11 +33,11 @@ type MultiSearchState = {
 };
 
 const useMultiSearchStore = create<MultiSearchState>()(
-  devtools( 
+  devtools(
     persist(
       // @ts-ignore
       (set, get) => ({
-        cart: [], 
+        cart: [],
         resultsTcg: 'mtg',
         mode: 'search',
         selectedWebsites: [],
@@ -89,7 +89,10 @@ const useMultiSearchStore = create<MultiSearchState>()(
         setMode: (mode: 'search' | 'results') => {
           set({ mode });
         },
-        handleSubmit: async (tcg: string, minimumAcceptableCondition: Condition) => {
+        handleSubmit: async (
+          tcg: string,
+          minimumAcceptableCondition: Condition
+        ) => {
           set({ loading: true });
           set({ searchQuery: get().searchInput });
           set({ resultsTcg: get().tcg });
@@ -97,13 +100,16 @@ const useMultiSearchStore = create<MultiSearchState>()(
           try {
             const cardNames = get().searchInput;
             trackSearch(cardNames, tcg, 'multi');
-            const url = `${process.env.NEXT_PUBLIC_CATALOG_URL}/api/v1/multisearch`;
-            
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/catalog/multisearch`;
+
             const conditionOrder = ['nm', 'lp', 'mp', 'hp', 'dmg'];
-            const minConditionIndex = conditionOrder.indexOf(minimumAcceptableCondition);
-            
+            const minConditionIndex = conditionOrder.indexOf(
+              minimumAcceptableCondition
+            );
+
             const conditionFlags = conditionOrder.reduce((acc, condition) => {
-              acc[condition.toUpperCase()] = conditionOrder.indexOf(condition) <= minConditionIndex;
+              acc[condition.toUpperCase()] =
+                conditionOrder.indexOf(condition) <= minConditionIndex;
               return acc;
             }, {} as Record<string, boolean>);
 
@@ -116,9 +122,9 @@ const useMultiSearchStore = create<MultiSearchState>()(
             const response = await axiosInstance.post(url, body);
 
             set({ mode: 'results' });
-            set({ results: response.data.results });
-            set({ resultsList: response.data.list });
-            set({ notFound : response.data.not_found });
+            set({ results: response.data.data.results });
+            set({ resultsList: response.data.data.list });
+            set({ notFound: response.data.data.not_found });
             set({ loading: false });
           } catch (error) {
             console.error(error);
@@ -156,7 +162,7 @@ const useMultiSearchStore = create<MultiSearchState>()(
       {
         name: 'multi-search-store',
         storage: createJSONStorage(() => localStorage),
-        partialize: (state) => ({ tcg: state.tcg }),
+        partialize: (state) => ({ tcg: state.tcg })
       }
     )
   )

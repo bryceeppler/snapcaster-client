@@ -67,8 +67,8 @@ const fetchSealedProducts = async ({
   try {
     const response = await axiosInstance.get(
       `${
-        process.env.NEXT_PUBLIC_CATALOG_URL
-      }/api/v1/search?${queryParams.toString()}`
+        process.env.NEXT_PUBLIC_API_URL
+      }/api/v1/catalog/search?${queryParams.toString()}`
     );
 
     if (response.status !== 200) {

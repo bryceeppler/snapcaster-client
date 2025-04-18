@@ -1,9 +1,9 @@
 import type { Product, Tcg } from '@/types';
 import { create } from 'zustand';
-import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 import { FilterOption } from '@/types/query';
+import axios from 'axios';
 
 type SearchState = {
   searchTerm: string;
@@ -122,10 +122,10 @@ export const useSingleSearchStore = create<SearchState>()(
               });
             }
 
-            const response = await axiosInstance.get(
+            const response = await axios.get(
               `${
-                process.env.NEXT_PUBLIC_CATALOG_URL
-              }/api/v1/search?${queryParams.toString()}`
+                process.env.NEXT_PUBLIC_API_URL
+              }/api/v1/catalog/search?${queryParams.toString()}`
             );
 
             if (response.status !== 200) {
@@ -209,10 +209,10 @@ export const useSingleSearchStore = create<SearchState>()(
             // set loadingCardResults to true
             set({ loadingCardResults: true });
 
-            const response = await axiosInstance.get(
+            const response = await axios.get(
               `${
-                process.env.NEXT_PUBLIC_CATALOG_URL
-              }/api/v1/search?${queryParams.toString()}`
+                process.env.NEXT_PUBLIC_API_URL
+              }/api/v1/catalog/search?${queryParams.toString()}`
             );
 
             if (response.status !== 200) {
