@@ -113,7 +113,7 @@ export default function DashboardLayout({
               <SidebarGroupLabel>Settings</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  <SidebarMenuItem>
+                  {/* <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
                       isActive={
@@ -125,7 +125,7 @@ export default function DashboardLayout({
                         <span>Advertisements</span>
                       </Link>
                     </SidebarMenuButton>
-                  </SidebarMenuItem>
+                  </SidebarMenuItem> */}
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
@@ -143,7 +143,7 @@ export default function DashboardLayout({
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                  <SidebarMenuItem>
+                  {/* <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
                       isActive={
@@ -155,7 +155,7 @@ export default function DashboardLayout({
                         <span>Store Settings</span>
                       </Link>
                     </SidebarMenuButton>
-                  </SidebarMenuItem>
+                  </SidebarMenuItem> */}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
