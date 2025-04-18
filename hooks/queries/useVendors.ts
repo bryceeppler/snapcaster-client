@@ -34,6 +34,11 @@ export const useVendors = () => {
     return vendor ? vendor.name : 'Vendor not found';
   };
 
+  const getVendorIdBySlug = (slug: string): number | undefined => {
+    const vendor = query.data?.find((vendor) => vendor.slug === slug);
+    return vendor ? vendor.id : undefined;
+  };
+
   const getVendorIcon = (
     // vendorSlug: string,
     // vendors: any
@@ -62,6 +67,7 @@ export const useVendors = () => {
     error: query.error,
     getVendorBySlug,
     getVendorNameBySlug,
-    getVendorIcon
+    getVendorIcon,
+    getVendorIdBySlug
   };
 };

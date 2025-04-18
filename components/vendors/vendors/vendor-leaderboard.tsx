@@ -81,7 +81,7 @@ export function VendorLeaderboard({
     dateRange ? dateRange.to : undefined,
     0
   );
-  const { vendors } = useVendors();
+  const { vendors, getVendorIdBySlug } = useVendors();
 
   // Convert chartHeight to a string with 'px' if it's a number
   const heightClass =
@@ -169,8 +169,8 @@ export function VendorLeaderboard({
                   <TableRow
                     key={vendor.website}
                     className={
-                      profile?.data.user.vendorData?.vendorSlug ===
-                        vendor.slug && vendor.slug
+                      profile?.data.user.vendorData?.vendorId ===
+                      getVendorIdBySlug(vendor.slug || '')
                         ? 'bg-primary/50'
                         : ''
                     }
