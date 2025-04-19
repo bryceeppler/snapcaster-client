@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { Loader2 } from 'lucide-react';
+import { AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { createCheckoutSession } from '@/lib/utils';
 import {
@@ -45,7 +45,21 @@ export default function Multisearch({}: Props) {
 
   return (
     <>
-      <MultisearchHead />
+      <div className="flex flex-col items-center justify-center gap-2 pt-[calc(25vh-2rem)]">
+        <AlertCircle></AlertCircle>
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-lg font-semibold">
+            Multisearch is under maintenance
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Please check our Discord for updates
+          </p>
+          <a href="https://discord.gg/EnKKHxSq75">
+            <Button className="mt-2 w-full">Discord Server</Button>
+          </a>
+        </div>
+      </div>
+      {/* <MultisearchHead />
       <div className="flex w-full flex-col justify-center gap-8 text-center">
         {mode === 'search' && (
           <>
@@ -71,7 +85,7 @@ export default function Multisearch({}: Props) {
           </>
         )}
       </div>
-      <BackToTopButton />
+      <BackToTopButton />*/}
     </>
   );
 }
