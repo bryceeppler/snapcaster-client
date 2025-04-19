@@ -8,7 +8,6 @@ import {
   X
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { type SelectRangeEventHandler } from 'react-day-picker';
 import { subDays, format } from 'date-fns';
 import { z } from 'zod';
 import { useForm, Controller } from 'react-hook-form';
@@ -54,6 +53,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
+import { useAuth } from '@/hooks/useAuth';
 
 // Form schema for discount validation
 const discountFormSchema = z.object({
@@ -71,7 +71,8 @@ const discountFormSchema = z.object({
 type DiscountFormValues = z.infer<typeof discountFormSchema>;
 
 export default function DiscountsPage() {
-  const { getVendorBySlug } = useVendors();
+  const { getVendorById } = useVendors();
+  const { profile } = useAuth();
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: subDays(new Date(), 30),
     to: new Date()
@@ -82,7 +83,7 @@ export default function DiscountsPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [currentDiscount, setCurrentDiscount] = useState<Discount | null>(null);
 
-  const vendor = getVendorBySlug('obsidian'); // This should be dynamic based on the logged-in vendor
+  const vendor = getVendorById(profile?.data?.user.vendorData?.vendorId || 0); // This should be dynamic based on the logged-in vendor
 
   const form = useForm<DiscountFormValues>({
     resolver: zodResolver(discountFormSchema),
@@ -259,15 +260,20 @@ export default function DiscountsPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-          <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
-            <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
-              Discounts
-            </h2>
+        <div className="flex-1 space-y-6 p-6 pt-8 md:p-8">
+          <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
+                Discounts
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Manage discount codes for your customers
+              </p>
+            </div>
             <div className="flex items-center space-x-2">
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button>
+                  <Button className="shadow-sm">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Discount
                   </Button>
@@ -580,14 +586,125 @@ export default function DiscountsPage() {
           </Dialog>
 
           <div className="rounded-md border">
-            <Table>
+            <div className="md:hidden">
+              {isLoading ? (
+                <div className="flex h-48 items-center justify-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                    <p className="text-sm text-muted-foreground">
+                      Loading discounts...
+                    </p>
+                  </div>
+                </div>
+              ) : discounts.length === 0 ? (
+                <div className="flex h-48 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                    <CalendarIcon className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <h3 className="mt-4 text-lg font-medium">
+                    No discounts found
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Get started by creating a new discount code.
+                  </p>
+                  <Button
+                    onClick={() => setIsAddDialogOpen(true)}
+                    className="mt-4"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Discount
+                  </Button>
+                </div>
+              ) : (
+                <div className="divide-y rounded-lg border">
+                  {discounts.map((discount) => (
+                    <div
+                      key={discount.id}
+                      className="group p-4 transition-colors hover:bg-muted/50"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <div className="font-medium">{discount.code}</div>
+                            <div
+                              className={`inline-flex h-5 items-center rounded-full px-2 text-xs font-semibold ${
+                                discount.is_active
+                                  ? 'bg-green-100 text-green-700'
+                                  : 'bg-gray-100 text-gray-700'
+                              }`}
+                            >
+                              {discount.is_active ? 'Active' : 'Inactive'}
+                            </div>
+                          </div>
+                          <div className="mt-1">
+                            <span className="inline-block rounded-md bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
+                              {discount.discount_amount}% off
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={discount.is_active}
+                            onCheckedChange={(checked) =>
+                              handleStatusToggle(discount, checked)
+                            }
+                            aria-label={`Toggle ${discount.code} status`}
+                            disabled={isLoading}
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 opacity-70 transition-opacity group-hover:opacity-100"
+                            onClick={() => handleEditDiscount(discount)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                            <span className="sr-only">Edit</span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 text-destructive opacity-70 transition-opacity group-hover:opacity-100"
+                            onClick={() => deleteDiscount(discount.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span className="sr-only">Delete</span>
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="mt-3 rounded-md bg-muted/50 p-2">
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <div className="flex items-center">
+                            <CalendarIcon className="mr-1 h-3 w-3" />
+                            {format(new Date(discount.starts_at), 'PP')}
+                            {discount.expires_at
+                              ? ` → ${format(
+                                  new Date(discount.expires_at),
+                                  'PP'
+                                )}`
+                              : ' → No end date'}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <Table className="hidden md:table">
               <TableHeader>
-                <TableRow>
-                  <TableHead>Code</TableHead>
-                  <TableHead>Discount</TableHead>
-                  <TableHead>Start Date</TableHead>
-                  <TableHead>End Date</TableHead>
-                  <TableHead>Enabled</TableHead>
+                <TableRow className="bg-muted/50 hover:bg-muted">
+                  <TableHead className="w-[150px]">Code</TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    Discount
+                  </TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    Start Date
+                  </TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    End Date
+                  </TableHead>
+                  <TableHead className="w-[100px]">Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -595,20 +712,48 @@ export default function DiscountsPage() {
                 {discounts.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="h-24 text-center">
-                      {isLoading ? 'Loading...' : 'No discounts found.'}
+                      {isLoading ? (
+                        <div className="flex justify-center">
+                          <div className="flex flex-col items-center gap-2">
+                            <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                            <p className="text-sm text-muted-foreground">
+                              Loading...
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center">
+                          <CalendarIcon className="mb-2 h-8 w-8 text-muted-foreground" />
+                          <p className="text-muted-foreground">
+                            No discounts found
+                          </p>
+                          <Button
+                            variant="outline"
+                            onClick={() => setIsAddDialogOpen(true)}
+                            className="mt-4"
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add Discount
+                          </Button>
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ) : (
                   discounts.map((discount) => (
-                    <TableRow key={discount.id}>
+                    <TableRow key={discount.id} className="group">
                       <TableCell className="font-medium">
                         {discount.code}
                       </TableCell>
-                      <TableCell>{discount.discount_amount}%</TableCell>
-                      <TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <span className="rounded-md bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
+                          {discount.discount_amount}%
+                        </span>
+                      </TableCell>
+                      <TableCell className="hidden text-muted-foreground md:table-cell">
                         {format(new Date(discount.starts_at), 'PP')}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden text-muted-foreground md:table-cell">
                         {discount.expires_at
                           ? format(new Date(discount.expires_at), 'PP')
                           : 'No end date'}
@@ -623,39 +768,31 @@ export default function DiscountsPage() {
                             aria-label={`Toggle ${discount.code} status`}
                             disabled={isLoading}
                           />
+                          <span className="text-xs font-medium text-muted-foreground">
+                            {discount.is_active ? 'Active' : 'Inactive'}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end space-x-2">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-min w-min"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Open menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onClick={() => handleEditDiscount(discount)}
-                              >
-                                <Pencil className="mr-2 h-4 w-4" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => deleteDiscount(discount.id)}
-                                className="text-destructive focus:text-destructive"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 opacity-70 transition-opacity hover:bg-muted group-hover:opacity-100"
+                            onClick={() => handleEditDiscount(discount)}
+                          >
+                            <Pencil className="mr-2 h-4 w-4" />
+                            <span className="hidden sm:inline">Edit</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 text-destructive opacity-70 transition-opacity hover:bg-red-50 group-hover:opacity-100"
+                            onClick={() => deleteDiscount(discount.id)}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            <span className="hidden sm:inline">Delete</span>
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>

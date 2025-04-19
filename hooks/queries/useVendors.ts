@@ -29,6 +29,10 @@ export const useVendors = () => {
     return query.data?.find((vendor) => vendor.slug === slug);
   };
 
+  const getVendorById = (id: number): Vendor | undefined => {
+    return query.data?.find((vendor) => vendor.id === id);
+  };
+
   const getVendorNameBySlug = (slug: string): string => {
     const vendor = query.data?.find((vendor) => vendor.slug === slug);
     return vendor ? vendor.name : 'Vendor not found';
@@ -68,6 +72,7 @@ export const useVendors = () => {
     getVendorBySlug,
     getVendorNameBySlug,
     getVendorIcon,
-    getVendorIdBySlug
+    getVendorIdBySlug,
+    getVendorById
   };
 };

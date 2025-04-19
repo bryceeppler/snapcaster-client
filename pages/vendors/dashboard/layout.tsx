@@ -113,19 +113,23 @@ export default function DashboardLayout({
               <SidebarGroupLabel>Settings</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {/* <SidebarMenuItem>
+                  <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
                       isActive={
-                        router.pathname === '/vendors/dashboard/settings'
+                        router.pathname ===
+                        '/vendors/dashboard/settings/advertisements'
                       }
                     >
-                      <Link href="/vendors/dashboard/settings" className="py-6">
+                      <Link
+                        href="/vendors/dashboard/settings/advertisements"
+                        className="py-6"
+                      >
                         <Megaphone className="h-4 w-4" />
                         <span>Advertisements</span>
                       </Link>
                     </SidebarMenuButton>
-                  </SidebarMenuItem> */}
+                  </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
