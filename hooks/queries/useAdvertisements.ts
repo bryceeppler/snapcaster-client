@@ -21,20 +21,15 @@ export const useAdvertisements = () => {
     refetchOnWindowFocus: false
   });
 
-  const getRandomAd = (
-    position: AdvertisementPosition
-  ): AdvertisementWithImages | null => {
-    const filteredAds =
-      query.data?.filter((ad) => ad.position === position) || [];
-    if (filteredAds.length === 0) return null;
-
-    const randomIndex = Math.floor(Math.random() * filteredAds.length);
-    return filteredAds[randomIndex];
+  const getAdvertisementsByVendorId = (
+    vendorId: number
+  ): AdvertisementWithImages[] => {
+    return query.data?.filter((ad) => ad.vendor_id === vendorId) || [];
   };
 
   // Simplify the return value to just include the data
   return {
     ads: query.data || [],
-    getRandomAd
+    getAdvertisementsByVendorId
   };
 };
