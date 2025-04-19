@@ -90,8 +90,9 @@ export function AdManagerProvider({
   children,
   positionVendorWeights = {}
 }: AdManagerProviderProps) {
-  const { ads: allAds } = useAdvertisements();
+  const { getActiveAdvertisements } = useAdvertisements();
   const { vendors } = useVendors();
+  const activeAds = getActiveAdvertisements();
 
   // Derive vendor weights from tier information
   const derivedVendorWeights = useMemo(() => {
@@ -122,11 +123,11 @@ export function AdManagerProvider({
       [key in AdvertisementPosition]?: AdvertisementWithImages[];
     } = {};
 
-    if (!allAds) return result;
+    if (!activeAds) return result;
 
     // Filter ads by position and ensure they have at least one DEFAULT image for feed ads
     Object.values(AdvertisementPosition).forEach((position) => {
-      const positionAds = allAds.filter((ad) => ad.position === position);
+      const positionAds = activeAds.filter((ad) => ad.position === position);
 
       // For FEED position, ensure ads have DEFAULT images
       if (position === AdvertisementPosition.FEED) {
@@ -141,7 +142,7 @@ export function AdManagerProvider({
     });
 
     return result;
-  }, [allAds]);
+  }, [activeAds]);
 
   // Combine position-specific weights with fallback to default weights
   const combinedVendorWeights = useMemo(() => {

@@ -9,7 +9,7 @@ import {
   Image as ImageIcon,
   Link as LinkIcon
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { format } from 'date-fns';
 import { z } from 'zod';
 import { useForm, Controller } from 'react-hook-form';
@@ -99,13 +99,250 @@ const imageFormSchema = z.object({
 
 type ImageFormValues = z.infer<typeof imageFormSchema>;
 
+// Create a memoized component for individual advertisement rows
+const AdvertisementRow = memo(
+  ({
+    ad,
+    onEdit,
+    onDelete,
+    onToggleStatus,
+    onNavigateToDetails,
+    isLoading
+  }: {
+    ad: AdvertisementWithImages;
+    onEdit: (ad: AdvertisementWithImages) => void;
+    onDelete: (id: number) => void;
+    onToggleStatus: (ad: AdvertisementWithImages, status: boolean) => void;
+    onNavigateToDetails: (id: number) => void;
+    isLoading: boolean;
+  }) => {
+    return (
+      <TableRow key={ad.id} className="group">
+        <TableCell className="hidden font-medium lg:table-cell">
+          <div className="flex items-center gap-2">
+            {ad.position.replace('_', ' ')}
+          </div>
+        </TableCell>
+        <TableCell className="max-w-[200px] truncate">
+          <a
+            href={ad.target_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center text-blue-600 hover:underline"
+          >
+            <LinkIcon className="mr-1 h-3 w-3" />
+            <span className="truncate">{ad.target_url}</span>
+          </a>
+        </TableCell>
+        <TableCell className="hidden text-muted-foreground md:table-cell">
+          {format(new Date(ad.start_date), 'PP')}
+        </TableCell>
+        <TableCell className="hidden text-muted-foreground md:table-cell">
+          {ad.end_date ? format(new Date(ad.end_date), 'PP') : 'Never'}
+        </TableCell>
+        <TableCell className="hidden md:table-cell">
+          <div className="flex items-center">
+            <span
+              className={`mr-2 rounded-full px-2 py-1 text-xs ${
+                ad.images.length > 0
+                  ? 'bg-primary/10 text-primary'
+                  : 'bg-destructive/10 text-destructive'
+              }`}
+            >
+              {ad.images.length} {ad.images.length === 1 ? 'image' : 'images'}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell>
+          <div className="flex items-center space-x-2">
+            <Switch
+              checked={ad.is_active}
+              onCheckedChange={(checked) => onToggleStatus(ad, checked)}
+              aria-label={`Toggle ${ad.id} status`}
+              disabled={isLoading}
+            />
+            <span className="text-xs font-medium text-muted-foreground">
+              {ad.is_active ? 'Active' : 'Inactive'}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="text-right">
+          <div className="flex justify-end space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 w-fit opacity-70 transition-opacity hover:bg-muted group-hover:opacity-100"
+              onClick={() => onNavigateToDetails(ad.id)}
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      prevProps.ad.id === nextProps.ad.id &&
+      prevProps.ad.is_active === nextProps.ad.is_active &&
+      prevProps.ad.target_url === nextProps.ad.target_url &&
+      prevProps.ad.images.length === nextProps.ad.images.length
+    );
+  }
+);
+
+AdvertisementRow.displayName = 'AdvertisementRow';
+
+// Create a memoized component for mobile view advertisement cards
+const MobileAdvertisementCard = memo(
+  ({
+    ad,
+    onEdit,
+    onDelete,
+    onToggleStatus,
+    onNavigateToDetails,
+    isLoading
+  }: {
+    ad: AdvertisementWithImages;
+    onEdit: (ad: AdvertisementWithImages) => void;
+    onDelete: (id: number) => void;
+    onToggleStatus: (ad: AdvertisementWithImages, status: boolean) => void;
+    onNavigateToDetails: (id: number) => void;
+    isLoading: boolean;
+  }) => {
+    const [expanded, setExpanded] = useState(false);
+
+    return (
+      <div className="group border-b p-3 transition-colors hover:bg-muted/50">
+        {/* Main card content - always visible */}
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            {/* Position and image count */}
+            <div className="flex items-center gap-1.5">
+              <p className="max-w-[140px] truncate text-sm font-medium capitalize">
+                {ad.position.replace(/_/g, ' ').toLowerCase()}
+              </p>
+              <span
+                className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${
+                  ad.images.length > 0
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-amber-100 text-amber-800'
+                }`}
+              >
+                {ad.images.length} {ad.images.length === 1 ? 'img' : 'imgs'}
+              </span>
+            </div>
+
+            {/* Status indicator */}
+            <div className="mt-0.5 flex items-center">
+              <div
+                className={`mr-1 inline-block h-1.5 w-1.5 rounded-full ${
+                  ad.is_active ? 'bg-green-500' : 'bg-gray-400'
+                }`}
+              />
+              <span className="text-[10px] text-muted-foreground">
+                {ad.is_active ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+          </div>
+
+          {/* Toggle and actions */}
+          <div className="flex items-center">
+            <Switch
+              className="scale-75"
+              checked={ad.is_active}
+              onCheckedChange={(checked) => onToggleStatus(ad, checked)}
+              aria-label={`Toggle ${ad.id} status`}
+              disabled={isLoading}
+            />
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="ml-1 rounded-full p-1 hover:bg-muted"
+            >
+              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </div>
+        </div>
+
+        {/* URL preview - visible but compact */}
+        <div className="mt-1 truncate text-xs text-blue-600">
+          <LinkIcon className="mr-1 inline-flex h-3 w-3" />
+          <span className="truncate">{ad.target_url}</span>
+        </div>
+
+        {/* Expandable section - only visible when expanded */}
+        {expanded && (
+          <div className="mt-2 border-t border-dashed border-muted pt-2">
+            {/* Date information */}
+            <div className="mb-3 flex text-xs text-muted-foreground">
+              <CalendarIcon className="mr-1 mt-0.5 h-3 w-3 flex-shrink-0" />
+              <div>
+                <div>From: {format(new Date(ad.start_date), 'PP')}</div>
+                {ad.end_date && (
+                  <div>Until: {format(new Date(ad.end_date), 'PP')}</div>
+                )}
+                {!ad.end_date && <div>No expiration date</div>}
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 flex-1 text-xs"
+                onClick={() => onNavigateToDetails(ad.id)}
+              >
+                <Pencil className="mr-1 h-3 w-3" />
+                Edit
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 flex-1 border-destructive/30 text-xs text-destructive hover:bg-destructive/10"
+                onClick={() => onDelete(ad.id)}
+              >
+                <Trash2 className="mr-1 h-3 w-3" />
+                Delete
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  },
+  (
+    prevProps: {
+      ad: AdvertisementWithImages;
+      onEdit: (ad: AdvertisementWithImages) => void;
+      onDelete: (id: number) => void;
+      onToggleStatus: (ad: AdvertisementWithImages, status: boolean) => void;
+      onNavigateToDetails: (id: number) => void;
+      isLoading: boolean;
+    },
+    nextProps: {
+      ad: AdvertisementWithImages;
+      onEdit: (ad: AdvertisementWithImages) => void;
+      onDelete: (id: number) => void;
+      onToggleStatus: (ad: AdvertisementWithImages, status: boolean) => void;
+      onNavigateToDetails: (id: number) => void;
+      isLoading: boolean;
+    }
+  ) => {
+    return (
+      prevProps.ad.id === nextProps.ad.id &&
+      prevProps.ad.is_active === nextProps.ad.is_active &&
+      prevProps.ad.target_url === nextProps.ad.target_url &&
+      prevProps.ad.images.length === nextProps.ad.images.length
+    );
+  }
+);
+
+MobileAdvertisementCard.displayName = 'MobileAdvertisementCard';
+
 export default function AdvertisementsPage() {
   const { getVendorById } = useVendors();
   const { profile } = useAuth();
-  const [advertisements, setAdvertisements] = useState<
-    AdvertisementWithImages[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
@@ -114,7 +351,26 @@ export default function AdvertisementsPage() {
   );
   const router = useRouter();
 
-  const vendor = getVendorById(profile?.data?.user.vendorData?.vendorId || 0);
+  // Get vendor information from profile
+  const vendorId = profile?.data?.user.vendorData?.vendorId || 0;
+  const vendor = getVendorById(vendorId);
+
+  // Determine if user is admin
+  const isAdmin = profile?.data?.user.role === 'ADMIN';
+
+  // Use the useAdvertisements hook with the correct vendorId parameter
+  const {
+    ads,
+    isLoading,
+    createAdvertisement,
+    updateAdvertisement,
+    deleteAdvertisement: deleteAd,
+    addAdvertisementImage,
+    deleteAdvertisementImage,
+    getAdvertisementsByVendorId
+  } = useAdvertisements();
+
+  const advertisements = getAdvertisementsByVendorId(vendorId);
 
   const form = useForm<AdvertisementFormValues>({
     resolver: zodResolver(advertisementFormSchema),
@@ -146,12 +402,6 @@ export default function AdvertisementsPage() {
     }
   });
 
-  useEffect(() => {
-    if (vendor) {
-      fetchAdvertisements();
-    }
-  }, [vendor]);
-
   // Reset and populate edit form when current ad changes
   useEffect(() => {
     if (currentAd) {
@@ -165,31 +415,12 @@ export default function AdvertisementsPage() {
     }
   }, [currentAd, editForm]);
 
-  const fetchAdvertisements = async () => {
-    if (!vendor) return;
-
-    setIsLoading(true);
-    try {
-      const ads = await advertisementService.getAdvertisementsByVendorId(
-        vendor.id,
-        true
-      );
-      setAdvertisements(ads);
-    } catch (error) {
-      console.error('Error fetching advertisements:', error);
-      toast.error('Failed to fetch advertisements. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const onSubmit = async (values: AdvertisementFormValues) => {
-    if (!vendor) return;
+    if (!vendor && !isAdmin) return;
 
-    setIsLoading(true);
     try {
-      await advertisementService.createAdvertisement({
-        vendor_id: vendor.id,
+      await createAdvertisement.mutateAsync({
+        vendor_id: vendorId,
         position: values.position,
         target_url: values.target_url,
         alt_text: values.alt_text,
@@ -198,44 +429,34 @@ export default function AdvertisementsPage() {
         is_active: true
       });
 
-      toast.success('Advertisement created successfully.');
-
-      // Refresh the advertisements list
-      fetchAdvertisements();
+      // Close the dialog and reset the form
       setIsAddDialogOpen(false);
       form.reset();
     } catch (error) {
       console.error('Error creating advertisement:', error);
-      toast.error('Failed to create advertisement. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const onEditSubmit = async (values: AdvertisementFormValues) => {
-    if (!vendor || !currentAd) return;
+    if ((!vendor && !isAdmin) || !currentAd) return;
 
-    setIsLoading(true);
     try {
-      await advertisementService.updateAdvertisement(currentAd.id, {
-        position: values.position,
-        target_url: values.target_url,
-        alt_text: values.alt_text,
-        start_date: values.start_date,
-        end_date: values.end_date || null
+      await updateAdvertisement.mutateAsync({
+        id: currentAd.id,
+        data: {
+          position: values.position,
+          target_url: values.target_url,
+          alt_text: values.alt_text,
+          start_date: values.start_date,
+          end_date: values.end_date || null
+        }
       });
 
-      toast.success('Advertisement updated successfully.');
-
-      // Refresh the advertisements list
-      fetchAdvertisements();
+      // Close the dialog and reset
       setIsEditDialogOpen(false);
       setCurrentAd(null);
     } catch (error) {
       console.error('Error updating advertisement:', error);
-      toast.error('Failed to update advertisement. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -245,24 +466,16 @@ export default function AdvertisementsPage() {
   };
 
   const deleteAdvertisement = async (adId: number) => {
-    if (!vendor) return;
+    if (!vendor && !isAdmin) return;
 
     if (!confirm('Are you sure you want to delete this advertisement?')) {
       return;
     }
 
-    setIsLoading(true);
     try {
-      await advertisementService.deleteAdvertisement(adId);
-      toast.success('Advertisement deleted successfully.');
-
-      // Remove the deleted advertisement from state
-      setAdvertisements(advertisements.filter((a) => a.id !== adId));
+      await deleteAd.mutateAsync(adId);
     } catch (error) {
       console.error('Error deleting advertisement:', error);
-      toast.error('Failed to delete advertisement. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -270,29 +483,15 @@ export default function AdvertisementsPage() {
     ad: AdvertisementWithImages,
     newStatus: boolean
   ) => {
-    if (!vendor) return;
+    if (!vendor && !isAdmin) return;
 
-    setIsLoading(true);
     try {
-      await advertisementService.updateAdvertisement(ad.id, {
-        is_active: newStatus
+      await updateAdvertisement.mutateAsync({
+        id: ad.id,
+        data: { is_active: newStatus }
       });
-
-      toast.success(
-        `Advertisement ${newStatus ? 'activated' : 'deactivated'} successfully.`
-      );
-
-      // Update the advertisement in the state
-      setAdvertisements(
-        advertisements.map((a) =>
-          a.id === ad.id ? { ...a, is_active: newStatus } : a
-        )
-      );
     } catch (error) {
       console.error('Error updating advertisement status:', error);
-      toast.error('Failed to update advertisement status. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -303,29 +502,26 @@ export default function AdvertisementsPage() {
   };
 
   const onImageSubmit = async (values: ImageFormValues) => {
-    if (!vendor || !currentAd) return;
+    if ((!vendor && !isAdmin) || !currentAd) return;
 
-    setIsLoading(true);
     try {
-      await advertisementService.createAdvertisementImage({
+      await addAdvertisementImage.mutateAsync({
         advertisement_id: currentAd.id,
         image_type: values.image_type,
         image_url: values.image_url,
         is_active: true
       });
 
-      toast.success('Advertisement image added successfully.');
-
-      // Refresh the advertisements list
-      fetchAdvertisements();
+      // Close the dialog and reset
       setIsImageDialogOpen(false);
       imageForm.reset();
     } catch (error) {
       console.error('Error adding advertisement image:', error);
-      toast.error('Failed to add advertisement image. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
+  };
+
+  const handleNavigateToDetails = (adId: number) => {
+    router.push(`/vendors/dashboard/settings/advertisements/${adId}`);
   };
 
   return (
@@ -342,198 +538,208 @@ export default function AdvertisementsPage() {
               </p>
             </div>
             <div className="flex items-center space-x-2">
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="shadow-sm">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Advertisement
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Create Advertisement</DialogTitle>
-                    <DialogDescription>
-                      Add a new advertisement to display on the site.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-4"
-                  >
-                    <div className="space-y-2">
-                      <Label htmlFor="target_url">Target URL</Label>
-                      <Input
-                        id="target_url"
-                        placeholder="https://example.com"
-                        {...form.register('target_url')}
-                      />
-                      {form.formState.errors.target_url && (
-                        <p className="text-sm font-medium text-destructive">
-                          {form.formState.errors.target_url.message}
-                        </p>
-                      )}
-                      <p className="text-sm text-muted-foreground">
-                        The URL where users will be directed when they click on
-                        the ad.
-                      </p>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="position">Position</Label>
-                      <Controller
-                        control={form.control}
-                        name="position"
-                        render={({ field }) => (
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select position" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {Object.values(AdvertisementPosition).map(
-                                (pos) => (
-                                  <SelectItem key={pos} value={pos}>
-                                    {pos.replace('_', ' ')}
-                                  </SelectItem>
-                                )
-                              )}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
-                      {form.formState.errors.position && (
-                        <p className="text-sm font-medium text-destructive">
-                          {form.formState.errors.position.message}
-                        </p>
-                      )}
-                      <p className="text-sm text-muted-foreground">
-                        Where the advertisement will be displayed on the site.
-                      </p>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="alt_text">Alt Text</Label>
-                      <Input
-                        id="alt_text"
-                        placeholder="Brief description of the advertisement"
-                        {...form.register('alt_text')}
-                      />
-                      {form.formState.errors.alt_text && (
-                        <p className="text-sm font-medium text-destructive">
-                          {form.formState.errors.alt_text.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
+              {isAdmin && (
+                <Dialog
+                  open={isAddDialogOpen}
+                  onOpenChange={setIsAddDialogOpen}
+                >
+                  <DialogTrigger asChild>
+                    <Button className="shadow-sm">
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Advertisement
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Create Advertisement</DialogTitle>
+                      <DialogDescription>
+                        Add a new advertisement to display on the site.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="space-y-4"
+                    >
                       <div className="space-y-2">
-                        <Label htmlFor="start_date">Start Date</Label>
+                        <Label htmlFor="target_url">Target URL</Label>
+                        <Input
+                          id="target_url"
+                          placeholder="https://example.com"
+                          {...form.register('target_url')}
+                        />
+                        {form.formState.errors.target_url && (
+                          <p className="text-sm font-medium text-destructive">
+                            {form.formState.errors.target_url.message}
+                          </p>
+                        )}
+                        <p className="text-sm text-muted-foreground">
+                          The URL where users will be directed when they click
+                          on the ad.
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="position">Position</Label>
                         <Controller
                           control={form.control}
-                          name="start_date"
+                          name="position"
                           render={({ field }) => (
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  id="start_date"
-                                  variant="outline"
-                                  className={
-                                    !field.value ? 'text-muted-foreground' : ''
-                                  }
-                                >
-                                  {field.value ? (
-                                    format(field.value, 'PPP')
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                              >
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select position" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Object.values(AdvertisementPosition).map(
+                                  (pos) => (
+                                    <SelectItem key={pos} value={pos}>
+                                      {pos.replace('_', ' ')}
+                                    </SelectItem>
+                                  )
+                                )}
+                              </SelectContent>
+                            </Select>
                           )}
                         />
-                        {form.formState.errors.start_date && (
+                        {form.formState.errors.position && (
                           <p className="text-sm font-medium text-destructive">
-                            {form.formState.errors.start_date.message}
+                            {form.formState.errors.position.message}
+                          </p>
+                        )}
+                        <p className="text-sm text-muted-foreground">
+                          Where the advertisement will be displayed on the site.
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="alt_text">Alt Text</Label>
+                        <Input
+                          id="alt_text"
+                          placeholder="Brief description of the advertisement"
+                          {...form.register('alt_text')}
+                        />
+                        {form.formState.errors.alt_text && (
+                          <p className="text-sm font-medium text-destructive">
+                            {form.formState.errors.alt_text.message}
                           </p>
                         )}
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="end_date">End Date (Optional)</Label>
-                        <Controller
-                          control={form.control}
-                          name="end_date"
-                          render={({ field }) => (
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  id="end_date"
-                                  variant="outline"
-                                  className={
-                                    !field.value ? 'text-muted-foreground' : ''
-                                  }
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="start_date">Start Date</Label>
+                          <Controller
+                            control={form.control}
+                            name="start_date"
+                            render={({ field }) => (
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    id="start_date"
+                                    variant="outline"
+                                    className={
+                                      !field.value
+                                        ? 'text-muted-foreground'
+                                        : ''
+                                    }
+                                  >
+                                    {field.value ? (
+                                      format(field.value, 'PPP')
+                                    ) : (
+                                      <span>Pick a date</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                  className="w-auto p-0"
+                                  align="start"
                                 >
-                                  {field.value ? (
-                                    format(field.value, 'PPP')
-                                  ) : (
-                                    <span>No end date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                              >
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value || undefined}
-                                  onSelect={field.onChange}
-                                  initialFocus
-                                  disabled={(date) =>
-                                    date <
-                                    (form.getValues().start_date || new Date())
-                                  }
-                                />
-                              </PopoverContent>
-                            </Popover>
+                                  <Calendar
+                                    mode="single"
+                                    selected={field.value}
+                                    onSelect={field.onChange}
+                                    initialFocus
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            )}
+                          />
+                          {form.formState.errors.start_date && (
+                            <p className="text-sm font-medium text-destructive">
+                              {form.formState.errors.start_date.message}
+                            </p>
                           )}
-                        />
-                        {form.formState.errors.end_date && (
-                          <p className="text-sm font-medium text-destructive">
-                            {form.formState.errors.end_date.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                        </div>
 
-                    <DialogFooter>
-                      <DialogClose asChild>
-                        <Button type="button" variant="outline">
-                          Cancel
+                        <div className="space-y-2">
+                          <Label htmlFor="end_date">End Date (Optional)</Label>
+                          <Controller
+                            control={form.control}
+                            name="end_date"
+                            render={({ field }) => (
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    id="end_date"
+                                    variant="outline"
+                                    className={
+                                      !field.value
+                                        ? 'text-muted-foreground'
+                                        : ''
+                                    }
+                                  >
+                                    {field.value ? (
+                                      format(field.value, 'PPP')
+                                    ) : (
+                                      <span>No end date</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                  className="w-auto p-0"
+                                  align="start"
+                                >
+                                  <Calendar
+                                    mode="single"
+                                    selected={field.value || undefined}
+                                    onSelect={field.onChange}
+                                    initialFocus
+                                    disabled={(date) =>
+                                      date <
+                                      (form.getValues().start_date ||
+                                        new Date())
+                                    }
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            )}
+                          />
+                          {form.formState.errors.end_date && (
+                            <p className="text-sm font-medium text-destructive">
+                              {form.formState.errors.end_date.message}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button type="button" variant="outline">
+                            Cancel
+                          </Button>
+                        </DialogClose>
+                        <Button type="submit" disabled={isLoading}>
+                          {isLoading ? 'Creating...' : 'Create Advertisement'}
                         </Button>
-                      </DialogClose>
-                      <Button type="submit" disabled={isLoading}>
-                        {isLoading ? 'Creating...' : 'Create Advertisement'}
-                      </Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           </div>
 
@@ -853,88 +1059,15 @@ export default function AdvertisementsPage() {
               ) : (
                 <div className="divide-y rounded-lg border">
                   {advertisements.map((ad) => (
-                    <div
+                    <MobileAdvertisementCard
                       key={ad.id}
-                      className="group p-4 transition-colors hover:bg-muted/50"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <div className="font-medium">
-                              {ad.position.replace('_', ' ')}
-                            </div>
-                            <div
-                              className={`inline-flex h-5 items-center rounded-full px-2 text-xs font-semibold ${
-                                ad.is_active
-                                  ? 'bg-green-100 text-green-700'
-                                  : 'bg-gray-100 text-gray-700'
-                              }`}
-                            >
-                              {ad.is_active ? 'Active' : 'Inactive'}
-                            </div>
-                          </div>
-                          <div className="mt-1 text-sm">
-                            {ad.images.length > 0 ? (
-                              <span className="flex items-center text-muted-foreground">
-                                <ImageIcon className="mr-1 h-3 w-3" />
-                                {ad.images.length}{' '}
-                                {ad.images.length === 1 ? 'image' : 'images'}
-                              </span>
-                            ) : (
-                              <span className="flex items-center text-amber-600">
-                                <ImageIcon className="mr-1 h-3 w-3" />
-                                No images
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={ad.is_active}
-                            onCheckedChange={(checked) =>
-                              handleStatusToggle(ad, checked)
-                            }
-                            aria-label={`Toggle ${ad.id} status`}
-                            disabled={isLoading}
-                          />
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 opacity-70 transition-opacity group-hover:opacity-100"
-                            onClick={() =>
-                              router.push(
-                                `/vendors/dashboard/settings/advertisements/${ad.id}`
-                              )
-                            }
-                          >
-                            <Pencil className="h-4 w-4" />
-                            <span className="sr-only">Edit</span>
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="mt-3 space-y-2 text-sm">
-                        <div className="truncate rounded-md bg-muted/50 p-2">
-                          <a
-                            href={ad.target_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center text-blue-600 hover:underline"
-                          >
-                            <LinkIcon className="mr-1 h-3 w-3 flex-shrink-0" />
-                            <span className="truncate">{ad.target_url}</span>
-                          </a>
-                        </div>
-                        <div className="flex justify-between text-xs text-muted-foreground">
-                          <div className="flex items-center">
-                            <CalendarIcon className="mr-1 h-3 w-3" />
-                            {format(new Date(ad.start_date), 'PP')}
-                            {ad.end_date
-                              ? ` → ${format(new Date(ad.end_date), 'PP')}`
-                              : ' → No end date'}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      ad={ad}
+                      onEdit={handleEditAdvertisement}
+                      onDelete={deleteAdvertisement}
+                      onToggleStatus={handleStatusToggle}
+                      onNavigateToDetails={handleNavigateToDetails}
+                      isLoading={isLoading}
+                    />
                   ))}
                 </div>
               )}
@@ -991,92 +1124,15 @@ export default function AdvertisementsPage() {
                   </TableRow>
                 ) : (
                   advertisements.map((ad) => (
-                    <TableRow key={ad.id} className="group">
-                      <TableCell className="hidden font-medium lg:table-cell">
-                        <div className="flex items-center gap-2">
-                          {ad.position.replace('_', ' ')}
-                          {ad.is_active ? (
-                            <span className="flex h-2 w-2 rounded-full bg-green-500"></span>
-                          ) : (
-                            <span className="flex h-2 w-2 rounded-full bg-gray-300"></span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="max-w-[200px] truncate">
-                        <a
-                          href={ad.target_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center text-blue-600 hover:underline"
-                        >
-                          <LinkIcon className="mr-1 h-3 w-3" />
-                          <span className="truncate">{ad.target_url}</span>
-                        </a>
-                      </TableCell>
-                      <TableCell className="hidden text-muted-foreground md:table-cell">
-                        {format(new Date(ad.start_date), 'PP')}
-                      </TableCell>
-                      <TableCell className="hidden text-muted-foreground md:table-cell">
-                        {ad.end_date
-                          ? format(new Date(ad.end_date), 'PP')
-                          : 'No end date'}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        <div className="flex items-center">
-                          <span
-                            className={`mr-2 rounded-full px-2 py-1 text-xs ${
-                              ad.images.length > 0
-                                ? 'bg-blue-100 text-blue-800'
-                                : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            {ad.images.length}{' '}
-                            {ad.images.length === 1 ? 'image' : 'images'}
-                          </span>
-                          {ad.images.length > 0 && (
-                            <span className="text-xs text-muted-foreground">
-                              (
-                              {ad.images
-                                .map((img) => img.image_type)
-                                .join(', ')}
-                              )
-                            </span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Switch
-                            checked={ad.is_active}
-                            onCheckedChange={(checked) =>
-                              handleStatusToggle(ad, checked)
-                            }
-                            aria-label={`Toggle ${ad.id} status`}
-                            disabled={isLoading}
-                          />
-                          <span className="text-xs font-medium text-muted-foreground">
-                            {ad.is_active ? 'Active' : 'Inactive'}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end space-x-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 opacity-70 transition-opacity hover:bg-muted group-hover:opacity-100"
-                            onClick={() =>
-                              router.push(
-                                `/vendors/dashboard/settings/advertisements/${ad.id}`
-                              )
-                            }
-                          >
-                            <Pencil className="mr-2 h-4 w-4" />
-                            <span className="hidden sm:inline">Edit</span>
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                    <AdvertisementRow
+                      key={ad.id}
+                      ad={ad}
+                      onEdit={handleEditAdvertisement}
+                      onDelete={deleteAdvertisement}
+                      onToggleStatus={handleStatusToggle}
+                      onNavigateToDetails={handleNavigateToDetails}
+                      isLoading={isLoading}
+                    />
                   ))
                 )}
               </TableBody>

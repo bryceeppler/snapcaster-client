@@ -30,24 +30,24 @@ export type CreateAdvertisementImageRequest = {
 export class AdvertisementService {
   async getAllAdvertisements(): Promise<AdvertisementWithImages[]> {
     const response = await axios.get(
-      `${BASE_URL}/api/v1/vendor/advertisements?with=images&is_active=true`
+      `${BASE_URL}/api/v1/vendor/advertisements?with=images`
     );
     return response.data.data || ([] as AdvertisementWithImages[]);
   }
 
   async getAdvertisementsByVendorId(
-    vendorId: number,
+    vendorId: number | null,
     skipCache: boolean = false
   ): Promise<AdvertisementWithImages[]> {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/api/v1/vendor/advertisements?vendor_id=${vendorId}&with=images`,
-        {
-          headers: {
-            'x-skip-cache': skipCache ? 'true' : 'false'
-          }
+      const url = vendorId
+        ? `${BASE_URL}/api/v1/vendor/advertisements?with=images&vendor_id=${vendorId}`
+        : `${BASE_URL}/api/v1/vendor/advertisements?with=images`;
+      const response = await axios.get(url, {
+        headers: {
+          'x-skip-cache': skipCache ? 'true' : 'false'
         }
-      );
+      });
       return response.data.data || ([] as AdvertisementWithImages[]);
     } catch (error) {
       console.error('Error fetching advertisements:', error);
@@ -69,6 +69,7 @@ export class AdvertisementService {
     advertisementId: number,
     advertisement: UpdateAdvertisementRequest
   ): Promise<AdvertisementWithImages> {
+    console.log('advertisement', advertisement);
     const response = await axiosInstance.put(
       `${BASE_URL}/api/v1/vendor/advertisements/${advertisementId}`,
       advertisement

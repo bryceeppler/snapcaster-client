@@ -99,11 +99,20 @@ export class VendorService {
     discountId: number,
     discount: UpdateDiscountRequest
   ): Promise<Discount> {
-    const response = await axiosInstance.put(
-      `${BASE_URL}/api/v1/vendor/discounts/${discountId}`,
-      discount
-    );
-    return response.data.data;
+    const url = `${BASE_URL}/api/v1/vendor/discounts/${discountId}`;
+    console.log(`Making updateDiscount API request to: ${url}`, {
+      discountId,
+      discountData: discount
+    });
+
+    try {
+      const response = await axiosInstance.put(url, discount);
+      console.log('API response for updateDiscount:', response.data);
+      return response.data.data;
+    } catch (error) {
+      console.error('API error in updateDiscount:', error);
+      throw error;
+    }
   }
 
   async deleteDiscount(discountId: number): Promise<void> {
