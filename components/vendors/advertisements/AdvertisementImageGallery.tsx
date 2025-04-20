@@ -37,6 +37,16 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog';
 
 interface AdvertisementImageGalleryProps {
   advertisement: AdvertisementWithImages;
@@ -51,6 +61,7 @@ export function AdvertisementImageGallery({
 }: AdvertisementImageGalleryProps) {
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [copiedImageId, setCopiedImageId] = useState<number | null>(null);
+  const [imageToDelete, setImageToDelete] = useState<number | null>(null);
 
   const hasMobileImage = advertisement.images.some(
     (img) => img.image_type === AdvertisementImageType.MOBILE
@@ -80,6 +91,13 @@ export function AdvertisementImageGallery({
 
   const openImageInNewTab = (imageUrl: string) => {
     window.open(imageUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (imageToDelete !== null) {
+      await onDeleteImage(imageToDelete);
+      setImageToDelete(null);
+    }
   };
 
   return (
@@ -238,7 +256,7 @@ export function AdvertisementImageGallery({
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => onDeleteImage(image.id)}
+                          onClick={() => setImageToDelete(image.id)}
                           disabled={isLoading}
                           className="h-8 w-8 p-0 text-muted-foreground transition-all hover:bg-red-50 hover:text-red-600 focus:opacity-100 dark:hover:bg-red-950/50 md:opacity-0 md:group-hover:opacity-100"
                           aria-label={`Delete image ${image.id}`}
@@ -270,6 +288,31 @@ export function AdvertisementImageGallery({
           </div>
         )}
       </CardContent>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        open={imageToDelete !== null}
+        onOpenChange={(open) => !open && setImageToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Image</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this image? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

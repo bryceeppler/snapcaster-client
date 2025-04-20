@@ -487,7 +487,7 @@ export default function AdvertisementsPage() {
                 )}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Manage advertisements displayed across your storefront
+                Manage your advertisements displayed on Snapcaster
               </p>
             </div>
           </div>
