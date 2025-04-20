@@ -10,7 +10,7 @@ import {
   Link as LinkIcon,
   Store
 } from 'lucide-react';
-import { useState, useEffect, memo, useCallback } from 'react';
+import React, { useState, useEffect, memo, useCallback, useMemo } from 'react';
 import { format } from 'date-fns';
 import { z } from 'zod';
 import { useForm, Controller } from 'react-hook-form';
@@ -137,14 +137,14 @@ const AdvertisementRow = memo(
             </div>
           </TableCell>
         )}
-        <TableCell className="max-w-[200px] truncate">
+        <TableCell className="max-w-[200px]">
           <a
             href={ad.target_url}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center text-blue-600 hover:underline"
           >
-            <LinkIcon className="mr-1 h-3 w-3" />
+            <LinkIcon className="mr-1 h-3 w-3 min-w-[12px] flex-shrink-0" />
             <span className="truncate">{ad.target_url}</span>
           </a>
         </TableCell>
@@ -290,8 +290,8 @@ const MobileAdvertisementCard = memo(
         </div>
 
         {/* URL preview - visible but compact */}
-        <div className="mt-1 truncate text-xs text-blue-600">
-          <LinkIcon className="mr-1 inline-flex h-3 w-3" />
+        <div className="mt-1 flex items-center text-xs text-blue-600">
+          <LinkIcon className="mr-1 h-3 w-3 min-w-[12px] flex-shrink-0" />
           <span className="truncate">{ad.target_url}</span>
         </div>
 
@@ -366,16 +366,15 @@ export default function AdvertisementsPage() {
   // Determine if user is admin
   const isAdmin = profile?.data?.user.role === 'ADMIN';
 
-  // Use the useAdvertisements hook with the correct vendorId parameter
+  // Use the useAdvertisements hook only once
   const {
     isLoading,
     createAdvertisement,
     updateAdvertisement,
     deleteAdvertisement: deleteAd,
-    getAdvertisementsByVendorId
+    getAdvertisementsByVendorId,
+    ads: allAds
   } = useAdvertisements();
-
-  const advertisements = getAdvertisementsByVendorId(vendorId);
 
   // Helper function to get vendor name from ID
   const getVendorName = useCallback(
@@ -385,6 +384,38 @@ export default function AdvertisementsPage() {
     },
     [getVendorById]
   );
+
+  // Get the appropriate advertisements based on user role
+  const advertisements = useMemo(() => {
+    if (isAdmin) {
+      return allAds || [];
+    } else {
+      return getAdvertisementsByVendorId(vendorId) || [];
+    }
+  }, [isAdmin, allAds, getAdvertisementsByVendorId, vendorId]);
+
+  // Group advertisements by vendor for admin view
+  const advertisementsByVendor = useMemo(() => {
+    if (!isAdmin || !advertisements.length) return [];
+
+    // Group ads by vendor_id
+    const groupedAds = advertisements.reduce((acc, ad) => {
+      if (!acc[ad.vendor_id]) {
+        acc[ad.vendor_id] = {
+          vendorId: ad.vendor_id,
+          vendorName: getVendorName(ad.vendor_id),
+          advertisements: []
+        };
+      }
+      acc[ad.vendor_id].advertisements.push(ad);
+      return acc;
+    }, {} as Record<number, { vendorId: number; vendorName: string; advertisements: AdvertisementWithImages[] }>);
+
+    // Convert to array and sort by vendor name
+    return Object.values(groupedAds).sort((a, b) =>
+      a.vendorName.localeCompare(b.vendorName)
+    );
+  }, [isAdmin, advertisements, getVendorName]);
 
   const editForm = useForm<AdvertisementFormValues>({
     resolver: zodResolver(advertisementFormSchema),
@@ -592,7 +623,48 @@ export default function AdvertisementsPage() {
                       )}
                     </TableCell>
                   </TableRow>
+                ) : isAdmin &&
+                  advertisementsByVendor &&
+                  advertisementsByVendor.length > 0 ? (
+                  // Admin view with vendors grouped
+                  advertisementsByVendor.map((vendorGroup) => (
+                    <React.Fragment key={vendorGroup.vendorId}>
+                      {/* Vendor Header Row */}
+                      <TableRow className="bg-muted/20 hover:bg-muted/30">
+                        <TableCell
+                          colSpan={6}
+                          className="py-2 font-medium text-foreground"
+                        >
+                          <div className="flex items-center">
+                            <Store className="mr-2 h-4 w-4" />
+                            {vendorGroup.vendorName}
+                            <Badge variant="outline" className="ml-2">
+                              {vendorGroup.advertisements.length}{' '}
+                              {vendorGroup.advertisements.length === 1
+                                ? 'ad'
+                                : 'ads'}
+                            </Badge>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                      {/* Vendor's Advertisements */}
+                      {vendorGroup.advertisements.map((ad) => (
+                        <AdvertisementRow
+                          key={ad.id}
+                          ad={ad}
+                          onEdit={handleEditAdvertisement}
+                          onDelete={deleteAdvertisement}
+                          onToggleStatus={handleStatusToggle}
+                          onNavigateToDetails={handleNavigateToDetails}
+                          isLoading={isLoading}
+                          isAdmin={isAdmin}
+                          getVendorName={getVendorName}
+                        />
+                      ))}
+                    </React.Fragment>
+                  ))
                 ) : (
+                  // Normal vendor view (unchanged)
                   advertisements.map((ad) => (
                     <AdvertisementRow
                       key={ad.id}
