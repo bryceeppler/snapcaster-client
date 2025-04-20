@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { z } from 'zod';
 import { useForm, Controller } from 'react-hook-form';
@@ -12,7 +12,6 @@ import {
   ArrowLeft,
   Plus,
   X,
-  ToggleLeft,
   Store
 } from 'lucide-react';
 
@@ -26,11 +25,8 @@ import {
 } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useDiscounts } from '@/hooks/queries/useDiscounts';
