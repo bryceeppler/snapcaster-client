@@ -536,16 +536,6 @@ export default function AdvertisementsPage() {
                   <h3 className="mt-4 text-lg font-medium">
                     No advertisements found
                   </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Get started by creating a new advertisement.
-                  </p>
-                  <Button
-                    onClick={() => setIsAddDialogOpen(true)}
-                    className="mt-4"
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Advertisement
-                  </Button>
                 </div>
               ) : (
                 <div className="divide-y rounded-lg border">
@@ -605,14 +595,6 @@ export default function AdvertisementsPage() {
                           <p className="text-muted-foreground">
                             No advertisements found
                           </p>
-                          <Button
-                            variant="outline"
-                            onClick={() => setIsAddDialogOpen(true)}
-                            className="mt-4"
-                          >
-                            <Plus className="mr-2 h-4 w-4" />
-                            Add Advertisement
-                          </Button>
                         </div>
                       )}
                     </TableCell>
