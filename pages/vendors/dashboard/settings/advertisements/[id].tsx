@@ -86,7 +86,7 @@ import {
 // Form schema for advertisement validation
 const advertisementFormSchema = z.object({
   target_url: z.string().url({
-    message: 'Please enter a valid URL.'
+    message: 'Please enter a valid URL. (e.g. https://snapcaster.ca)'
   }),
   position: z.nativeEnum(AdvertisementPosition),
   alt_text: z.string().min(3, {
@@ -115,6 +115,7 @@ export default function EditAdvertisementPage() {
   const [advertisement, setAdvertisement] =
     useState<AdvertisementWithImages | null>(null);
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
+  const [formHasChanges, setFormHasChanges] = useState(false);
 
   const { profile } = useAuth();
   const { getVendorById } = useVendors();
@@ -169,6 +170,45 @@ export default function EditAdvertisementPage() {
     : advertisement?.is_active
     ? 'Active'
     : 'Inactive';
+
+  // This effect runs when form values change to detect if the form has been modified
+  useEffect(() => {
+    if (!advertisement) return;
+
+    // Get the current form values
+    const currentValues = form.getValues();
+
+    // Check if basic text/select fields have changed
+    const urlChanged = currentValues.target_url !== advertisement.target_url;
+    const positionChanged = currentValues.position !== advertisement.position;
+    const altTextChanged = currentValues.alt_text !== advertisement.alt_text;
+
+    // For date fields, we need to compare the date strings
+    const formStartDate = currentValues.start_date
+      ? format(currentValues.start_date, 'yyyy-MM-dd')
+      : null;
+    const adStartDate = advertisement.start_date
+      ? format(new Date(advertisement.start_date), 'yyyy-MM-dd')
+      : null;
+    const startDateChanged = formStartDate !== adStartDate;
+
+    const formEndDate = currentValues.end_date
+      ? format(currentValues.end_date, 'yyyy-MM-dd')
+      : null;
+    const adEndDate = advertisement.end_date
+      ? format(new Date(advertisement.end_date), 'yyyy-MM-dd')
+      : null;
+    const endDateChanged = formEndDate !== adEndDate;
+
+    // Update the state based on whether any fields have changed
+    setFormHasChanges(
+      urlChanged ||
+        positionChanged ||
+        altTextChanged ||
+        startDateChanged ||
+        endDateChanged
+    );
+  }, [form.watch(), advertisement]);
 
   // Fetch advertisement on component mount
   useEffect(() => {
@@ -225,6 +265,9 @@ export default function EditAdvertisementPage() {
           ? new Date(advertisement.end_date)
           : null
       });
+
+      // Reset the form changes state when we load new advertisement data
+      setFormHasChanges(false);
     }
   }, [advertisement, form]);
 
@@ -232,35 +275,80 @@ export default function EditAdvertisementPage() {
     if (!vendor || !advertisement) return;
 
     try {
-      await updateAdvertisement.mutateAsync({
-        id: advertisement.id,
-        data: {
-          position: values.position,
-          target_url: values.target_url,
-          alt_text: values.alt_text,
-          start_date: values.start_date,
-          end_date: values.end_date || null
-        }
-      });
+      // Compare current form values with the advertisement data
+      // and only include changed fields in the update
+      const changedFields: Partial<AdvertisementFormValues> = {};
 
-      // Update our local state with the updated advertisement
-      const updatedAd = getAdvertisementById(advertisement.id);
-      if (updatedAd) {
-        setAdvertisement(updatedAd);
+      // Check each field to see if it has changed
+      if (values.target_url !== advertisement.target_url) {
+        changedFields.target_url = values.target_url;
+      }
+
+      if (values.position !== advertisement.position) {
+        changedFields.position = values.position;
+      }
+
+      if (values.alt_text !== advertisement.alt_text) {
+        changedFields.alt_text = values.alt_text;
+      }
+
+      // For date fields, we need to compare the date strings since the Date objects will be different
+      const formStartDate = values.start_date
+        ? format(values.start_date, 'yyyy-MM-dd')
+        : null;
+      const adStartDate = advertisement.start_date
+        ? format(new Date(advertisement.start_date), 'yyyy-MM-dd')
+        : null;
+
+      if (formStartDate !== adStartDate) {
+        changedFields.start_date = values.start_date;
+      }
+
+      const formEndDate = values.end_date
+        ? format(values.end_date, 'yyyy-MM-dd')
+        : null;
+      const adEndDate = advertisement.end_date
+        ? format(new Date(advertisement.end_date), 'yyyy-MM-dd')
+        : null;
+
+      if (formEndDate !== adEndDate) {
+        changedFields.end_date = values.end_date || null;
+      }
+
+      // Only send the update request if there are changes
+      if (Object.keys(changedFields).length > 0) {
+        setIsSaving(true);
+
+        // Convert the changedFields to the expected format for updateAdvertisement
+        const updateData = {
+          ...changedFields,
+          // These conversions ensure the backend receives the correct data types
+          start_date: changedFields.start_date,
+          end_date: changedFields.end_date
+        };
+
+        await updateAdvertisement.mutateAsync({
+          id: advertisement.id,
+          data: updateData
+        });
+
+        // Update our local state with the updated advertisement
+        const updatedAd = getAdvertisementById(advertisement.id);
+        if (updatedAd) {
+          setAdvertisement(updatedAd);
+        }
+
+        toast.success('Advertisement updated successfully');
+        setFormHasChanges(false);
+      } else {
+        // No changes detected
+        toast.info('No changes detected');
       }
     } catch (error) {
       console.error('Error updating advertisement:', error);
-    }
-  };
-
-  const handleDeleteAdvertisement = async () => {
-    if (!vendor || !advertisement) return;
-
-    try {
-      await deleteAdvertisement.mutateAsync(advertisement.id);
-      router.push('/vendors/dashboard/settings/advertisements');
-    } catch (error) {
-      console.error('Error deleting advertisement:', error);
+      toast.error('Failed to update advertisement');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -724,14 +812,19 @@ export default function EditAdvertisementPage() {
                         form="edit-form"
                         disabled={
                           updateAdvertisement.isPending ||
-                          form.formState.isSubmitting
+                          form.formState.isSubmitting ||
+                          !formHasChanges
                         }
-                        className="h-8 w-full text-xs sm:w-auto md:h-9 md:text-sm"
+                        className={`h-8 w-full text-xs sm:w-auto md:h-9 md:text-sm ${
+                          !formHasChanges ? 'cursor-not-allowed opacity-50' : ''
+                        }`}
                       >
                         <Save className="mr-1.5 h-3 w-3 md:h-3.5 md:w-3.5" />
                         {updateAdvertisement.isPending
                           ? 'Saving...'
-                          : 'Save Changes'}
+                          : formHasChanges
+                          ? 'Save Changes'
+                          : 'No Changes'}
                       </Button>
                     </div>
                   </form>
@@ -971,15 +1064,7 @@ export default function EditAdvertisementPage() {
           {/* Delete button at bottom - More minimal */}
           <div className="pt-2">
             <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="h-8 w-full border-red-100 text-xs text-red-600 hover:bg-red-50 hover:text-red-700 md:max-w-[200px] md:text-sm"
-                >
-                  <Trash2 className="mr-1.5 h-3 w-3" />
-                  Delete Advertisement
-                </Button>
-              </AlertDialogTrigger>
+              <AlertDialogTrigger asChild></AlertDialogTrigger>
               <AlertDialogContent className="max-w-[90vw] p-4 sm:max-w-[400px]">
                 <AlertDialogHeader className="space-y-1">
                   <AlertDialogTitle className="text-base">
@@ -994,12 +1079,6 @@ export default function EditAdvertisementPage() {
                   <AlertDialogCancel className="h-8 flex-1 text-xs sm:flex-none md:text-sm">
                     Cancel
                   </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDeleteAdvertisement}
-                    className="h-8 flex-1 bg-red-600 text-xs hover:bg-red-700 sm:flex-none md:text-sm"
-                  >
-                    Delete
-                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

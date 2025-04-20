@@ -7,9 +7,10 @@ import {
   Check,
   X,
   Image as ImageIcon,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Store
 } from 'lucide-react';
-import { useState, useEffect, memo } from 'react';
+import { useState, useEffect, memo, useCallback } from 'react';
 import { format } from 'date-fns';
 import { z } from 'zod';
 import { useForm, Controller } from 'react-hook-form';
@@ -74,6 +75,8 @@ import {
 } from '@/components/ui/select';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { AD_DIMENSIONS } from '@/components/ads/AdManager';
+import { VisuallyHidden } from '@/components/ui/visually-hidden';
+import { Badge } from '@/components/ui/badge';
 
 // Form schema for advertisement validation
 const advertisementFormSchema = z.object({
@@ -107,7 +110,9 @@ const AdvertisementRow = memo(
     onDelete,
     onToggleStatus,
     onNavigateToDetails,
-    isLoading
+    isLoading,
+    isAdmin,
+    getVendorName
   }: {
     ad: AdvertisementWithImages;
     onEdit: (ad: AdvertisementWithImages) => void;
@@ -115,6 +120,8 @@ const AdvertisementRow = memo(
     onToggleStatus: (ad: AdvertisementWithImages, status: boolean) => void;
     onNavigateToDetails: (id: number) => void;
     isLoading: boolean;
+    isAdmin: boolean;
+    getVendorName: (vendorId: number) => string;
   }) => {
     return (
       <TableRow key={ad.id} className="group">
@@ -123,6 +130,13 @@ const AdvertisementRow = memo(
             {ad.position.replace('_', ' ')}
           </div>
         </TableCell>
+        {isAdmin && (
+          <TableCell className="hidden text-muted-foreground md:table-cell">
+            <div className="flex items-center gap-2">
+              {getVendorName(ad.vendor_id)}
+            </div>
+          </TableCell>
+        )}
         <TableCell className="max-w-[200px] truncate">
           <a
             href={ad.target_url}
@@ -158,12 +172,17 @@ const AdvertisementRow = memo(
             <Switch
               checked={ad.is_active}
               onCheckedChange={(checked) => onToggleStatus(ad, checked)}
-              aria-label={`Toggle ${ad.id} status`}
+              aria-label={`${
+                ad.is_active ? 'Deactivate' : 'Activate'
+              } advertisement`}
               disabled={isLoading}
+              id={`ad-${ad.id}-status`}
             />
-            <span className="text-xs font-medium text-muted-foreground">
-              {ad.is_active ? 'Active' : 'Inactive'}
-            </span>
+            <VisuallyHidden>
+              <label htmlFor={`ad-${ad.id}-status`}>
+                {ad.is_active ? 'Active' : 'Inactive'}
+              </label>
+            </VisuallyHidden>
           </div>
         </TableCell>
         <TableCell className="text-right">
@@ -201,7 +220,9 @@ const MobileAdvertisementCard = memo(
     onDelete,
     onToggleStatus,
     onNavigateToDetails,
-    isLoading
+    isLoading,
+    isAdmin,
+    getVendorName
   }: {
     ad: AdvertisementWithImages;
     onEdit: (ad: AdvertisementWithImages) => void;
@@ -209,6 +230,8 @@ const MobileAdvertisementCard = memo(
     onToggleStatus: (ad: AdvertisementWithImages, status: boolean) => void;
     onNavigateToDetails: (id: number) => void;
     isLoading: boolean;
+    isAdmin: boolean;
+    getVendorName: (vendorId: number) => string;
   }) => {
     const [expanded, setExpanded] = useState(false);
 
@@ -244,6 +267,14 @@ const MobileAdvertisementCard = memo(
                 {ad.is_active ? 'Active' : 'Inactive'}
               </span>
             </div>
+
+            {/* Vendor (admin only) */}
+            {isAdmin && (
+              <div className="mt-0.5 flex items-center text-xs text-muted-foreground">
+                <Store className="mr-1 h-3 w-3" />
+                {getVendorName(ad.vendor_id)}
+              </div>
+            )}
           </div>
 
           {/* Toggle and actions */}
@@ -319,6 +350,8 @@ const MobileAdvertisementCard = memo(
       onToggleStatus: (ad: AdvertisementWithImages, status: boolean) => void;
       onNavigateToDetails: (id: number) => void;
       isLoading: boolean;
+      isAdmin: boolean;
+      getVendorName: (vendorId: number) => string;
     },
     nextProps: {
       ad: AdvertisementWithImages;
@@ -327,6 +360,8 @@ const MobileAdvertisementCard = memo(
       onToggleStatus: (ad: AdvertisementWithImages, status: boolean) => void;
       onNavigateToDetails: (id: number) => void;
       isLoading: boolean;
+      isAdmin: boolean;
+      getVendorName: (vendorId: number) => string;
     }
   ) => {
     return (
@@ -371,6 +406,15 @@ export default function AdvertisementsPage() {
   } = useAdvertisements();
 
   const advertisements = getAdvertisementsByVendorId(vendorId);
+
+  // Helper function to get vendor name from ID
+  const getVendorName = useCallback(
+    (vendorId: number): string => {
+      const vendor = getVendorById(vendorId);
+      return vendor ? vendor.name : `Unknown Vendor (ID: ${vendorId})`;
+    },
+    [getVendorById]
+  );
 
   const form = useForm<AdvertisementFormValues>({
     resolver: zodResolver(advertisementFormSchema),
@@ -532,6 +576,11 @@ export default function AdvertisementsPage() {
             <div>
               <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
                 Advertisements
+                {isAdmin && (
+                  <Badge className="ml-2 bg-primary/10 text-primary">
+                    Admin
+                  </Badge>
+                )}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Manage advertisements displayed across your storefront
@@ -1067,6 +1116,8 @@ export default function AdvertisementsPage() {
                       onToggleStatus={handleStatusToggle}
                       onNavigateToDetails={handleNavigateToDetails}
                       isLoading={isLoading}
+                      isAdmin={isAdmin}
+                      getVendorName={getVendorName}
                     />
                   ))}
                 </div>
@@ -1079,6 +1130,11 @@ export default function AdvertisementsPage() {
                   <TableHead className="hidden w-[150px] lg:table-cell">
                     Position
                   </TableHead>
+                  {isAdmin && (
+                    <TableHead className="hidden md:table-cell">
+                      Vendor
+                    </TableHead>
+                  )}
                   <TableHead>Target URL</TableHead>
                   <TableHead className="hidden md:table-cell">
                     Start Date
@@ -1087,14 +1143,17 @@ export default function AdvertisementsPage() {
                     End Date
                   </TableHead>
                   <TableHead className="hidden md:table-cell">Images</TableHead>
-                  <TableHead className="w-[100px]">Status</TableHead>
+                  <TableHead className="w-[100px]">Enabled</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {advertisements.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-24 text-center">
+                    <TableCell
+                      colSpan={isAdmin ? 8 : 7}
+                      className="h-24 text-center"
+                    >
                       {isLoading ? (
                         <div className="flex justify-center">
                           <div className="flex flex-col items-center gap-2">
@@ -1132,6 +1191,8 @@ export default function AdvertisementsPage() {
                       onToggleStatus={handleStatusToggle}
                       onNavigateToDetails={handleNavigateToDetails}
                       isLoading={isLoading}
+                      isAdmin={isAdmin}
+                      getVendorName={getVendorName}
                     />
                   ))
                 )}

@@ -69,8 +69,11 @@ export class AdvertisementService {
     advertisementId: number,
     advertisement: UpdateAdvertisementRequest
   ): Promise<AdvertisementWithImages> {
-    console.log('advertisement', advertisement);
-    const response = await axiosInstance.put(
+    console.log(
+      'Updating advertisement with only changed fields:',
+      advertisement
+    );
+    const response = await axiosInstance.patch(
       `${BASE_URL}/api/v1/vendor/advertisements/${advertisementId}`,
       advertisement
     );
