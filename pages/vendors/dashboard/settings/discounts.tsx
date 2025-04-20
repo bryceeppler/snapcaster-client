@@ -540,7 +540,7 @@ export default function DiscountsPage() {
             <h2 id="desktop-discounts-heading" className="sr-only">
               Discounts Table
             </h2>
-            <Table className="hidden md:table">
+            <Table className="hidden rounded-md bg-card md:table">
               <TableHeader>
                 <TableRow className="bg-muted/50 hover:bg-muted">
                   <TableHead className="">Code</TableHead>

@@ -4,23 +4,11 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../layout';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { useAuth } from '@/hooks/useAuth';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { AdvertisementWithImages } from '@/types/advertisements';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/alert-dialog';
 import {
   AdvertisementDetailsForm,
   AdvertisementFormValues,
@@ -70,10 +58,18 @@ export default function EditAdvertisementPage() {
     ? 'Active'
     : 'Inactive';
 
+  // Determine if user is admin
+  const isAdmin = profile?.data?.user.role === 'ADMIN';
+
   // Fetch advertisement on component mount
   useEffect(() => {
     async function loadAdvertisement() {
-      if (!advertisementId || !vendor) {
+      if (!advertisementId) {
+        return;
+      }
+
+      // Admin users should be able to load ads even without a vendor
+      if (!isAdmin && !vendor) {
         return;
       }
 
@@ -87,7 +83,12 @@ export default function EditAdvertisementPage() {
           setAdvertisement(cachedAd);
         } else {
           // If not in cache, fetch it (which will also update the cache)
-          const ad = await fetchAdvertisementById(vendor.id, advertisementId);
+          // For admin users, we can pass any vendorId since they have access to all ads
+          const vendorIdToUse = isAdmin ? 0 : vendor?.id || 0;
+          const ad = await fetchAdvertisementById(
+            vendorIdToUse,
+            advertisementId
+          );
 
           if (!ad) {
             router.push('/vendors/dashboard/settings/advertisements');
@@ -107,13 +108,14 @@ export default function EditAdvertisementPage() {
   }, [
     advertisementId,
     vendor,
+    isAdmin,
     router,
     fetchAdvertisementById,
     getAdvertisementById
   ]);
 
   const onFormSubmit = async (values: AdvertisementFormValues) => {
-    if (!vendor || !advertisement) return;
+    if ((!isAdmin && !vendor) || !advertisement) return;
 
     try {
       // Compare current form values with the advertisement data
@@ -187,7 +189,7 @@ export default function EditAdvertisementPage() {
   };
 
   const handleStatusToggle = async (newStatus: boolean) => {
-    if (!vendor || !advertisement) return;
+    if ((!isAdmin && !vendor) || !advertisement) return;
 
     try {
       await updateAdvertisement.mutateAsync({
@@ -206,7 +208,7 @@ export default function EditAdvertisementPage() {
   };
 
   const handleDeleteImage = async (imageId: number) => {
-    if (!vendor || !advertisement) return;
+    if ((!isAdmin && !vendor) || !advertisement) return;
 
     try {
       await deleteAdvertisementImage.mutateAsync(imageId);

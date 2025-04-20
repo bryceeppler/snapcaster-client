@@ -142,7 +142,7 @@ const AdvertisementRow = memo(
             href={ad.target_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center text-blue-600 hover:underline"
+            className="flex items-center text-primary hover:underline"
           >
             <LinkIcon className="mr-1 h-3 w-3 min-w-[12px] flex-shrink-0" />
             <span className="truncate">{ad.target_url}</span>
@@ -287,12 +287,6 @@ const MobileAdvertisementCard = memo(
               <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
-        </div>
-
-        {/* URL preview - visible but compact */}
-        <div className="mt-1 flex items-center text-xs text-blue-600">
-          <LinkIcon className="mr-1 h-3 w-3 min-w-[12px] flex-shrink-0" />
-          <span className="truncate">{ad.target_url}</span>
         </div>
 
         {/* Expandable section - only visible when expanded */}
@@ -572,7 +566,7 @@ export default function AdvertisementsPage() {
               )}
             </div>
 
-            <Table className="hidden md:table">
+            <Table className="hidden rounded bg-card md:table">
               <TableHeader>
                 <TableRow className="bg-muted/50 hover:bg-muted">
                   <TableHead className="hidden md:table-cell">
@@ -630,7 +624,7 @@ export default function AdvertisementsPage() {
                   advertisementsByVendor.map((vendorGroup) => (
                     <React.Fragment key={vendorGroup.vendorId}>
                       {/* Vendor Header Row */}
-                      <TableRow className="bg-muted/20 hover:bg-muted/30">
+                      <TableRow className="bg-primary/20 hover:bg-primary/30">
                         <TableCell
                           colSpan={6}
                           className="py-2 font-medium text-foreground"
@@ -638,12 +632,6 @@ export default function AdvertisementsPage() {
                           <div className="flex items-center">
                             <Store className="mr-2 h-4 w-4" />
                             {vendorGroup.vendorName}
-                            <Badge variant="outline" className="ml-2">
-                              {vendorGroup.advertisements.length}{' '}
-                              {vendorGroup.advertisements.length === 1
-                                ? 'ad'
-                                : 'ads'}
-                            </Badge>
                           </div>
                         </TableCell>
                       </TableRow>
