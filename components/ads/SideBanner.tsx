@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { AdvertisementPosition } from '@/types/advertisements';
 import { useAdManager } from './AdManager';
 import SideBannerCarousel from '../side-banner-carousel';
@@ -10,14 +10,15 @@ interface SideBannerProps {
   className?: string;
 }
 
-export const SideBanner: React.FC<SideBannerProps> = ({
-  position,
-  className
-}) => {
+const SideBanner: React.FC<SideBannerProps> = ({ position, className }) => {
   const { ads, getVendorWeightsForPosition } = useAdManager();
 
-  const sideBannerAds = ads[position] || [];
-  const positionWeights = getVendorWeightsForPosition(position);
+  // Memoize these values to prevent recalculation on window resize
+  const sideBannerAds = useMemo(() => ads[position] || [], [ads, position]);
+  const positionWeights = useMemo(
+    () => getVendorWeightsForPosition(position),
+    [getVendorWeightsForPosition, position]
+  );
 
   if (sideBannerAds.length === 0) return null;
 
@@ -31,3 +32,14 @@ export const SideBanner: React.FC<SideBannerProps> = ({
     />
   );
 };
+
+// Use React.memo with custom comparison function to prevent unnecessary re-renders
+const SideBannerMemo = React.memo(SideBanner, (prevProps, nextProps) => {
+  // Only re-render if position or className has changed
+  return (
+    prevProps.position === nextProps.position &&
+    prevProps.className === nextProps.className
+  );
+});
+
+export { SideBannerMemo as SideBanner };

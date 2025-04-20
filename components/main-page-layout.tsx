@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAdContext } from '@/pages/_app';
 import { useAuth } from '@/hooks/useAuth';
 import {
@@ -18,7 +18,7 @@ type Props = {
   usesSideBanners: boolean;
 };
 
-export default function MainLayout({
+function MainLayout({
   children,
   usesSideBanners = true
 }: React.PropsWithChildren<Props>) {
@@ -42,30 +42,47 @@ export default function MainLayout({
     setHydrated(true);
   }, []);
 
+  // Memoize this value to prevent recalculation on resize
+  const shouldShowAds = useMemo(() => {
+    return showAds && !hasActiveSubscription && hydrated;
+  }, [showAds, hasActiveSubscription, hydrated]);
+
+  // Memoize the side banners to prevent re-renders on window resize
+  const sideBanners = useMemo(() => {
+    if (!shouldShowAds || !usesSideBanners) return null;
+
+    return (
+      <>
+        <SideBanner position={AdvertisementPosition.LEFT_BANNER} />
+        <SideBanner position={AdvertisementPosition.RIGHT_BANNER} />
+      </>
+    );
+  }, [shouldShowAds, usesSideBanners]);
+
+  // Memoize the top banner to prevent re-renders on window resize
+  const topBanner = useMemo(() => {
+    if (!shouldShowAds) return null;
+
+    return (
+      <div className="pt-4">
+        <TopBanner className="w-full" />
+      </div>
+    );
+  }, [shouldShowAds]);
+
   if (!hydrated) {
     return <div className="mt-4">{children}</div>;
   }
 
-  const shouldShowAds = showAds && !hasActiveSubscription && hydrated;
-
   return (
     <AdManagerProvider positionVendorWeights={positionVendorWeights}>
-      <div className="flex min-h-svh justify-center ">
+      <div className="flex min-h-svh justify-center">
         {/* Side Banners are now overlays and don't need container divs */}
-        {shouldShowAds && usesSideBanners && (
-          <>
-            <SideBanner position={AdvertisementPosition.LEFT_BANNER} />
-            <SideBanner position={AdvertisementPosition.RIGHT_BANNER} />
-          </>
-        )}
+        {sideBanners}
 
         {/* Top Banner & Content */}
-        <div className="w-full max-w-4xl items-center px-4  below1550:max-w-6xl">
-          {shouldShowAds && (
-            <div className="pt-4">
-              <TopBanner className="w-full" />
-            </div>
-          )}
+        <div className="w-full max-w-4xl items-center px-4 below1550:max-w-6xl">
+          {topBanner}
           {/* Page Content */}
           <main className="py-4">{children}</main>
         </div>
@@ -73,3 +90,5 @@ export default function MainLayout({
     </AdManagerProvider>
   );
 }
+
+export default React.memo(MainLayout);

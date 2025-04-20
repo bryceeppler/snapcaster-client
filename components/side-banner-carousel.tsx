@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef
+} from 'react';
 import {
   AdvertisementWithImages,
   AdvertisementPosition,
@@ -101,7 +107,37 @@ const SideBannerCarousel: React.FC<SideBannerCarouselProps> = ({
   vendorWeights = {},
   className
 }) => {
+  const carouselRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isResizingRef = useRef(false);
+
+  // Handle window resize events to prevent multiple re-renders
+  useEffect(() => {
+    const handleResize = () => {
+      if (!isResizingRef.current) {
+        isResizingRef.current = true;
+      }
+
+      // Clear any existing timeout
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+
+      // Set a timeout to mark the end of resize event
+      resizeTimeoutRef.current = setTimeout(() => {
+        isResizingRef.current = false;
+      }, 200);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Generate weighted ad images based on vendor weights
   const weightedAdImages = useMemo(() => {
@@ -112,7 +148,11 @@ const SideBannerCarousel: React.FC<SideBannerCarouselProps> = ({
     if (weightedAdImages.length === 0) return;
 
     const interval = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % weightedAdImages.length);
+      if (!isResizingRef.current) {
+        setActiveIndex(
+          (prevIndex) => (prevIndex + 1) % weightedAdImages.length
+        );
+      }
     }, 20000); // 20 seconds
 
     return () => clearInterval(interval);
@@ -124,8 +164,42 @@ const SideBannerCarousel: React.FC<SideBannerCarouselProps> = ({
 
   const isLeftBanner = position === AdvertisementPosition.LEFT_BANNER;
 
+  // Memoize the carousel items to prevent unnecessary re-renders
+  const carouselItems = useMemo(() => {
+    return weightedAdImages.map((adImageInfo, index) => {
+      const { image, parentAd } = adImageInfo;
+
+      return (
+        <div
+          key={`${parentAd.id}-${image.id}-${index}`}
+          className="absolute left-0 top-0 h-full w-full"
+          style={{
+            visibility: index === activeIndex ? 'visible' : 'hidden',
+            zIndex: index === activeIndex ? 1 : 0,
+            opacity: index === activeIndex ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out, visibility 0.5s ease-in-out'
+          }}
+        >
+          <Link
+            href={appendUtmParams(parentAd.target_url)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block h-full w-full"
+          >
+            <img
+              src={image.image_url}
+              className="border-1 h-full w-full overflow-hidden rounded-lg border border-border object-cover"
+              alt={parentAd.alt_text || 'Advertisement'}
+            />
+          </Link>
+        </div>
+      );
+    });
+  }, [weightedAdImages, activeIndex]);
+
   return (
     <div
+      ref={carouselRef}
       className={cn(
         'vertical-carousel-container fixed z-10 hidden overflow-hidden rounded-lg smlaptop:block',
         isLeftBanner ? 'left-4' : 'right-4',
@@ -138,38 +212,18 @@ const SideBannerCarousel: React.FC<SideBannerCarouselProps> = ({
         transform: 'translateY(-50%)'
       }}
     >
-      {weightedAdImages.map((adImageInfo, index) => {
-        const { image, parentAd } = adImageInfo;
-
-        return (
-          <div
-            key={`${parentAd.id}-${image.id}-${index}`}
-            className="absolute left-0 top-0 h-full w-full"
-            style={{
-              visibility: index === activeIndex ? 'visible' : 'hidden',
-              zIndex: index === activeIndex ? 1 : 0,
-              opacity: index === activeIndex ? 1 : 0,
-              transition:
-                'opacity 0.5s ease-in-out, visibility 0.5s ease-in-out'
-            }}
-          >
-            <Link
-              href={appendUtmParams(parentAd.target_url)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block h-full w-full"
-            >
-              <img
-                src={image.image_url}
-                className="border-1 h-full w-full overflow-hidden rounded-lg border border-border object-cover"
-                alt={parentAd.alt_text || 'Advertisement'}
-              />
-            </Link>
-          </div>
-        );
-      })}
+      {carouselItems}
     </div>
   );
 };
 
-export default SideBannerCarousel;
+// Use React.memo with custom comparison to prevent unnecessary re-renders
+export default React.memo(SideBannerCarousel, (prevProps, nextProps) => {
+  // Only re-render if ads, vendorWeights, position, or className have changed by reference
+  return (
+    prevProps.ads === nextProps.ads &&
+    prevProps.vendorWeights === nextProps.vendorWeights &&
+    prevProps.position === nextProps.position &&
+    prevProps.className === nextProps.className
+  );
+});

@@ -7,6 +7,7 @@ import {
   CreateAdvertisementImageRequest
 } from '@/services/advertisementService';
 import { toast } from 'sonner';
+import { useMemo, useRef } from 'react';
 
 export const QUERY_KEY = 'advertisements';
 
@@ -22,41 +23,96 @@ const fetchAdvertisements = async (): Promise<AdvertisementWithImages[]> => {
 
 export const useAdvertisements = (vendorId?: number | null) => {
   const queryClient = useQueryClient();
+  const cachedAdsRef = useRef<{ [key: string]: any }>({});
 
   // Query for fetching all advertisements
   const query = useQuery({
     queryKey: [QUERY_KEY],
     queryFn: fetchAdvertisements,
     staleTime: 1000 * 60 * 60, // 1 hour
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false
   });
 
-  // Query function to get advertisements by vendor ID
-  const getAdvertisementsByVendorId = (
-    vendorId: number | null
-  ): AdvertisementWithImages[] => {
-    if (!vendorId) return query.data || [];
-    return query.data?.filter((ad) => ad.vendor_id === vendorId) || [];
-  };
+  // Memoize and cache query results to prevent unnecessary filtering on window resize
+  const cachedData = useMemo(() => query.data || [], [query.data]);
 
-  // Get advertisement by ID from the cached data
-  const getAdvertisementById = (
-    adId: number
-  ): AdvertisementWithImages | undefined => {
-    return query.data?.find((ad) => ad.id === adId);
-  };
+  // Query function to get advertisements by vendor ID - memoized
+  const getAdvertisementsByVendorId = useMemo(() => {
+    return (vendorId: number | null): AdvertisementWithImages[] => {
+      const cacheKey = `vendor_${vendorId || 'all'}`;
 
-  const getActiveAdvertisements = (): AdvertisementWithImages[] => {
-    // filter the advertisements by is_active, and the images by is_active
-    return (
-      query.data
-        ?.filter((ad) => ad.is_active)
+      // Use cached result if available and data hasn't changed
+      if (
+        cachedAdsRef.current[cacheKey] &&
+        query.dataUpdatedAt === cachedAdsRef.current.updatedAt
+      ) {
+        return cachedAdsRef.current[cacheKey];
+      }
+
+      // Calculate and cache the result
+      const result = vendorId
+        ? cachedData.filter((ad) => ad.vendor_id === vendorId)
+        : cachedData;
+
+      cachedAdsRef.current[cacheKey] = result;
+      cachedAdsRef.current.updatedAt = query.dataUpdatedAt;
+
+      return result;
+    };
+  }, [cachedData, query.dataUpdatedAt]);
+
+  // Get advertisement by ID from the cached data - memoized
+  const getAdvertisementById = useMemo(() => {
+    return (adId: number): AdvertisementWithImages | undefined => {
+      const cacheKey = `ad_${adId}`;
+
+      // Use cached result if available and data hasn't changed
+      if (
+        cachedAdsRef.current[cacheKey] &&
+        query.dataUpdatedAt === cachedAdsRef.current.updatedAt
+      ) {
+        return cachedAdsRef.current[cacheKey];
+      }
+
+      // Calculate and cache the result
+      const result = cachedData.find((ad) => ad.id === adId);
+
+      cachedAdsRef.current[cacheKey] = result;
+      cachedAdsRef.current.updatedAt = query.dataUpdatedAt;
+
+      return result;
+    };
+  }, [cachedData, query.dataUpdatedAt]);
+
+  // Get active advertisements - memoized
+  const getActiveAdvertisements = useMemo(() => {
+    return (): AdvertisementWithImages[] => {
+      const cacheKey = 'active_ads';
+
+      // Use cached result if available and data hasn't changed
+      if (
+        cachedAdsRef.current[cacheKey] &&
+        query.dataUpdatedAt === cachedAdsRef.current.updatedAt
+      ) {
+        return cachedAdsRef.current[cacheKey];
+      }
+
+      // Calculate and cache the result
+      const result = cachedData
+        .filter((ad) => ad.is_active)
         .map((ad) => ({
           ...ad,
           images: ad.images.filter((img) => img.is_active)
-        })) || []
-    );
-  };
+        }));
+
+      cachedAdsRef.current[cacheKey] = result;
+      cachedAdsRef.current.updatedAt = query.dataUpdatedAt;
+
+      return result;
+    };
+  }, [cachedData, query.dataUpdatedAt]);
 
   // Mutation for creating a new advertisement
   const createAdvertisement = useMutation({
@@ -66,6 +122,8 @@ export const useAdvertisements = (vendorId?: number | null) => {
       toast.success('Advertisement created successfully');
       // Invalidate the appropriate query based on vendorId
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      // Clear the cache
+      cachedAdsRef.current = {};
     },
     onError: (error) => {
       console.error('Error creating advertisement:', error);
@@ -86,6 +144,8 @@ export const useAdvertisements = (vendorId?: number | null) => {
       toast.success('Advertisement updated successfully');
       // Invalidate the appropriate query based on vendorId
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      // Clear the cache
+      cachedAdsRef.current = {};
     },
     onError: (error) => {
       console.error('Error updating advertisement:', error);
@@ -100,6 +160,8 @@ export const useAdvertisements = (vendorId?: number | null) => {
       toast.success('Advertisement deleted successfully');
       // Invalidate the appropriate query based on vendorId
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      // Clear the cache
+      cachedAdsRef.current = {};
     },
     onError: (error) => {
       console.error('Error deleting advertisement:', error);
@@ -115,6 +177,8 @@ export const useAdvertisements = (vendorId?: number | null) => {
       toast.success('Image deleted successfully');
       // Invalidate the appropriate query based on vendorId
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      // Clear the cache
+      cachedAdsRef.current = {};
     },
     onError: (error) => {
       console.error('Error deleting advertisement image:', error);
@@ -139,6 +203,9 @@ export const useAdvertisements = (vendorId?: number | null) => {
       // Fetching all advertisements first to ensure our cache is updated
       await queryClient.fetchQuery({ queryKey: [QUERY_KEY] });
 
+      // Clear the cache after fetching new data
+      cachedAdsRef.current = {};
+
       // Check the cache again after refreshing
       const refreshedAd = getAdvertisementById(adId);
       if (refreshedAd) {
@@ -157,7 +224,7 @@ export const useAdvertisements = (vendorId?: number | null) => {
 
   return {
     // Query data
-    ads: query.data || [],
+    ads: cachedData,
     isLoading: query.isLoading,
     isError: query.isError,
     getAdvertisementsByVendorId,
