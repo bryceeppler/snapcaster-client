@@ -1,10 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AdvertisementWithImages } from '@/types/advertisements';
 import {
-  AdvertisementPosition,
-  AdvertisementImageType
-} from '@/types/advertisements';
-import {
   advertisementService,
   CreateAdvertisementRequest,
   UpdateAdvertisementRequest,
@@ -12,7 +8,7 @@ import {
 } from '@/services/advertisementService';
 import { toast } from 'sonner';
 
-const QUERY_KEY = 'advertisements';
+export const QUERY_KEY = 'advertisements';
 
 const fetchAdvertisements = async (): Promise<AdvertisementWithImages[]> => {
   try {
@@ -111,21 +107,6 @@ export const useAdvertisements = (vendorId?: number | null) => {
     }
   });
 
-  // Mutation for adding an image to an advertisement
-  const addAdvertisementImage = useMutation({
-    mutationFn: (data: CreateAdvertisementImageRequest) =>
-      advertisementService.createAdvertisementImage(data),
-    onSuccess: () => {
-      toast.success('Advertisement image added successfully');
-      // Invalidate the appropriate query based on vendorId
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
-    },
-    onError: (error) => {
-      console.error('Error adding advertisement image:', error);
-      toast.error('Failed to add advertisement image. Please try again.');
-    }
-  });
-
   // Mutation for deleting an advertisement image
   const deleteAdvertisementImage = useMutation({
     mutationFn: (id: number) =>
@@ -189,7 +170,6 @@ export const useAdvertisements = (vendorId?: number | null) => {
     createAdvertisement,
     updateAdvertisement,
     deleteAdvertisement,
-    addAdvertisementImage,
     deleteAdvertisementImage
   };
 };

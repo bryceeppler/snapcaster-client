@@ -395,13 +395,10 @@ export default function AdvertisementsPage() {
 
   // Use the useAdvertisements hook with the correct vendorId parameter
   const {
-    ads,
     isLoading,
     createAdvertisement,
     updateAdvertisement,
     deleteAdvertisement: deleteAd,
-    addAdvertisementImage,
-    deleteAdvertisementImage,
     getAdvertisementsByVendorId
   } = useAdvertisements();
 
@@ -416,17 +413,6 @@ export default function AdvertisementsPage() {
     [getVendorById]
   );
 
-  const form = useForm<AdvertisementFormValues>({
-    resolver: zodResolver(advertisementFormSchema),
-    defaultValues: {
-      target_url: '',
-      position: AdvertisementPosition.FEED,
-      alt_text: '',
-      start_date: new Date(),
-      end_date: null
-    }
-  });
-
   const editForm = useForm<AdvertisementFormValues>({
     resolver: zodResolver(advertisementFormSchema),
     defaultValues: {
@@ -435,14 +421,6 @@ export default function AdvertisementsPage() {
       alt_text: '',
       start_date: new Date(),
       end_date: null
-    }
-  });
-
-  const imageForm = useForm<ImageFormValues>({
-    resolver: zodResolver(imageFormSchema),
-    defaultValues: {
-      image_url: '',
-      image_type: AdvertisementImageType.DEFAULT
     }
   });
 
@@ -458,28 +436,6 @@ export default function AdvertisementsPage() {
       });
     }
   }, [currentAd, editForm]);
-
-  const onSubmit = async (values: AdvertisementFormValues) => {
-    if (!vendor && !isAdmin) return;
-
-    try {
-      await createAdvertisement.mutateAsync({
-        vendor_id: vendorId,
-        position: values.position,
-        target_url: values.target_url,
-        alt_text: values.alt_text,
-        start_date: values.start_date,
-        end_date: values.end_date || null,
-        is_active: true
-      });
-
-      // Close the dialog and reset the form
-      setIsAddDialogOpen(false);
-      form.reset();
-    } catch (error) {
-      console.error('Error creating advertisement:', error);
-    }
-  };
 
   const onEditSubmit = async (values: AdvertisementFormValues) => {
     if ((!vendor && !isAdmin) || !currentAd) return;
@@ -539,31 +495,6 @@ export default function AdvertisementsPage() {
     }
   };
 
-  const handleAddImage = (ad: AdvertisementWithImages) => {
-    setCurrentAd(ad);
-    setIsImageDialogOpen(true);
-    imageForm.reset();
-  };
-
-  const onImageSubmit = async (values: ImageFormValues) => {
-    if ((!vendor && !isAdmin) || !currentAd) return;
-
-    try {
-      await addAdvertisementImage.mutateAsync({
-        advertisement_id: currentAd.id,
-        image_type: values.image_type,
-        image_url: values.image_url,
-        is_active: true
-      });
-
-      // Close the dialog and reset
-      setIsImageDialogOpen(false);
-      imageForm.reset();
-    } catch (error) {
-      console.error('Error adding advertisement image:', error);
-    }
-  };
-
   const handleNavigateToDetails = (adId: number) => {
     router.push(`/vendors/dashboard/settings/advertisements/${adId}`);
   };
@@ -585,210 +516,6 @@ export default function AdvertisementsPage() {
               <p className="mt-1 text-sm text-muted-foreground">
                 Manage advertisements displayed across your storefront
               </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              {isAdmin && (
-                <Dialog
-                  open={isAddDialogOpen}
-                  onOpenChange={setIsAddDialogOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button className="shadow-sm">
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Advertisement
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>Create Advertisement</DialogTitle>
-                      <DialogDescription>
-                        Add a new advertisement to display on the site.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form
-                      onSubmit={form.handleSubmit(onSubmit)}
-                      className="space-y-4"
-                    >
-                      <div className="space-y-2">
-                        <Label htmlFor="target_url">Target URL</Label>
-                        <Input
-                          id="target_url"
-                          placeholder="https://example.com"
-                          {...form.register('target_url')}
-                        />
-                        {form.formState.errors.target_url && (
-                          <p className="text-sm font-medium text-destructive">
-                            {form.formState.errors.target_url.message}
-                          </p>
-                        )}
-                        <p className="text-sm text-muted-foreground">
-                          The URL where users will be directed when they click
-                          on the ad.
-                        </p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="position">Position</Label>
-                        <Controller
-                          control={form.control}
-                          name="position"
-                          render={({ field }) => (
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select position" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {Object.values(AdvertisementPosition).map(
-                                  (pos) => (
-                                    <SelectItem key={pos} value={pos}>
-                                      {pos.replace('_', ' ')}
-                                    </SelectItem>
-                                  )
-                                )}
-                              </SelectContent>
-                            </Select>
-                          )}
-                        />
-                        {form.formState.errors.position && (
-                          <p className="text-sm font-medium text-destructive">
-                            {form.formState.errors.position.message}
-                          </p>
-                        )}
-                        <p className="text-sm text-muted-foreground">
-                          Where the advertisement will be displayed on the site.
-                        </p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="alt_text">Alt Text</Label>
-                        <Input
-                          id="alt_text"
-                          placeholder="Brief description of the advertisement"
-                          {...form.register('alt_text')}
-                        />
-                        {form.formState.errors.alt_text && (
-                          <p className="text-sm font-medium text-destructive">
-                            {form.formState.errors.alt_text.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="start_date">Start Date</Label>
-                          <Controller
-                            control={form.control}
-                            name="start_date"
-                            render={({ field }) => (
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <Button
-                                    id="start_date"
-                                    variant="outline"
-                                    className={
-                                      !field.value
-                                        ? 'text-muted-foreground'
-                                        : ''
-                                    }
-                                  >
-                                    {field.value ? (
-                                      format(field.value, 'PPP')
-                                    ) : (
-                                      <span>Pick a date</span>
-                                    )}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                  </Button>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                  className="w-auto p-0"
-                                  align="start"
-                                >
-                                  <Calendar
-                                    mode="single"
-                                    selected={field.value}
-                                    onSelect={field.onChange}
-                                    initialFocus
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                            )}
-                          />
-                          {form.formState.errors.start_date && (
-                            <p className="text-sm font-medium text-destructive">
-                              {form.formState.errors.start_date.message}
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="end_date">End Date (Optional)</Label>
-                          <Controller
-                            control={form.control}
-                            name="end_date"
-                            render={({ field }) => (
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <Button
-                                    id="end_date"
-                                    variant="outline"
-                                    className={
-                                      !field.value
-                                        ? 'text-muted-foreground'
-                                        : ''
-                                    }
-                                  >
-                                    {field.value ? (
-                                      format(field.value, 'PPP')
-                                    ) : (
-                                      <span>No end date</span>
-                                    )}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                  </Button>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                  className="w-auto p-0"
-                                  align="start"
-                                >
-                                  <Calendar
-                                    mode="single"
-                                    selected={field.value || undefined}
-                                    onSelect={field.onChange}
-                                    initialFocus
-                                    disabled={(date) =>
-                                      date <
-                                      (form.getValues().start_date ||
-                                        new Date())
-                                    }
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                            )}
-                          />
-                          {form.formState.errors.end_date && (
-                            <p className="text-sm font-medium text-destructive">
-                              {form.formState.errors.end_date.message}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      <DialogFooter>
-                        <DialogClose asChild>
-                          <Button type="button" variant="outline">
-                            Cancel
-                          </Button>
-                        </DialogClose>
-                        <Button type="submit" disabled={isLoading}>
-                          {isLoading ? 'Creating...' : 'Create Advertisement'}
-                        </Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              )}
             </div>
           </div>
 
@@ -959,116 +686,6 @@ export default function AdvertisementsPage() {
                   </DialogClose>
                   <Button type="submit" disabled={isLoading}>
                     {isLoading ? 'Updating...' : 'Update Advertisement'}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-
-          {/* Add Image Dialog */}
-          <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Add Advertisement Image</DialogTitle>
-                <DialogDescription>
-                  Add an image to your advertisement.
-                  {currentAd?.position === AdvertisementPosition.TOP_BANNER && (
-                    <div className="mt-2">
-                      <p className="text-sm font-medium">
-                        Recommended dimensions:
-                      </p>
-                      <ul className="mt-1 list-inside list-disc text-sm text-muted-foreground">
-                        <li>
-                          Desktop: {AD_DIMENSIONS.topBanner.desktop.width}x
-                          {AD_DIMENSIONS.topBanner.desktop.height}px
-                        </li>
-                        <li>
-                          Mobile: {AD_DIMENSIONS.topBanner.mobile.width}x
-                          {AD_DIMENSIONS.topBanner.mobile.height}px
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                  {(currentAd?.position === AdvertisementPosition.LEFT_BANNER ||
-                    currentAd?.position ===
-                      AdvertisementPosition.RIGHT_BANNER) && (
-                    <div className="mt-2">
-                      <p className="text-sm font-medium">
-                        Recommended dimensions:
-                      </p>
-                      <ul className="mt-1 list-inside list-disc text-sm text-muted-foreground">
-                        <li>
-                          Side banner: {AD_DIMENSIONS.sideBanner.width}x
-                          {AD_DIMENSIONS.sideBanner.height}px
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </DialogDescription>
-              </DialogHeader>
-              <form
-                onSubmit={imageForm.handleSubmit(onImageSubmit)}
-                className="space-y-4"
-              >
-                <div className="space-y-2">
-                  <Label htmlFor="image_url">Image URL</Label>
-                  <Input
-                    id="image_url"
-                    placeholder="https://example.com/image.jpg"
-                    {...imageForm.register('image_url')}
-                  />
-                  {imageForm.formState.errors.image_url && (
-                    <p className="text-sm font-medium text-destructive">
-                      {imageForm.formState.errors.image_url.message}
-                    </p>
-                  )}
-                  <p className="text-sm text-muted-foreground">
-                    Direct URL to the image file.
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="image_type">Image Type</Label>
-                  <Controller
-                    control={imageForm.control}
-                    name="image_type"
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select image type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Object.values(AdvertisementImageType).map((type) => (
-                            <SelectItem key={type} value={type}>
-                              {type}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {imageForm.formState.errors.image_type && (
-                    <p className="text-sm font-medium text-destructive">
-                      {imageForm.formState.errors.image_type.message}
-                    </p>
-                  )}
-                  <p className="text-sm text-muted-foreground">
-                    MOBILE and DESKTOP are used for responsive display. DEFAULT
-                    is used when only one image is needed.
-                  </p>
-                </div>
-
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button type="button" variant="outline">
-                      Cancel
-                    </Button>
-                  </DialogClose>
-                  <Button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Adding...' : 'Add Image'}
                   </Button>
                 </DialogFooter>
               </form>

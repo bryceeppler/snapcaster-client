@@ -27,6 +27,27 @@ export type CreateAdvertisementImageRequest = {
   is_active?: boolean;
 };
 
+export type PresignedUrlRequest = {
+  fileType: string;
+  fileName: string;
+  imageType: AdvertisementImageType;
+};
+
+export type PresignedUrlResponse = {
+  presignedUrl: string;
+  publicUrl: string;
+  objectKey: string;
+  imageType: AdvertisementImageType;
+  advertisementId: number;
+  expiresIn: number;
+};
+
+export type ConfirmUploadRequest = {
+  publicUrl: string;
+  imageType: AdvertisementImageType;
+  isActive: boolean;
+};
+
 export class AdvertisementService {
   async getAllAdvertisements(): Promise<AdvertisementWithImages[]> {
     const response = await axios.get(
@@ -104,11 +125,64 @@ export class AdvertisementService {
   async deleteAdvertisementImage(imageId: number): Promise<void> {
     try {
       await axiosInstance.delete(
-        `${BASE_URL}/api/v1/vendor/advertisement-images/${imageId}`
+        `${BASE_URL}/api/v1/vendor/advertisements/images/${imageId}`
       );
     } catch (error) {
       console.error('Error deleting advertisement image:', error);
       throw error;
+    }
+  }
+
+  async requestPresignedUrl(
+    advertisementId: number,
+    data: PresignedUrlRequest
+  ): Promise<PresignedUrlResponse> {
+    const response = await axiosInstance.post(
+      `${BASE_URL}/api/v1/vendor/advertisements/${advertisementId}/images/presigned-url`,
+      data
+    );
+    return response.data.data;
+  }
+
+  async confirmImageUpload(
+    advertisementId: number,
+    data: ConfirmUploadRequest
+  ): Promise<any> {
+    const response = await axiosInstance.post(
+      `${BASE_URL}/api/v1/vendor/advertisements/${advertisementId}/images/confirm-upload`,
+      data
+    );
+    return response.data.data;
+  }
+
+  async uploadImageToS3(presignedUrl: string, file: File): Promise<void> {
+    try {
+      console.log('Uploading file to S3:', {
+        fileType: file.type,
+        fileSize: file.size,
+        url: presignedUrl.split('?')[0] // Log the base URL without query params for security
+      });
+
+      await axios.put(presignedUrl, file, {
+        headers: {
+          'Content-Type': file.type
+          // Removed x-amz-acl header as it should be included in the presigned URL if needed
+        }
+      });
+
+      console.log('File successfully uploaded to S3');
+    } catch (error) {
+      console.error('Error uploading file to S3:', error);
+      if (axios.isAxiosError(error) && error.response) {
+        console.error(
+          'S3 response:',
+          error.response.status,
+          error.response.data
+        );
+      }
+      throw new Error(
+        'Failed to upload image to S3. Check server logs for details.'
+      );
     }
   }
 }
