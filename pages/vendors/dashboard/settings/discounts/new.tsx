@@ -51,6 +51,7 @@ const discountFormSchema = z.object({
   }),
   percentage: z.coerce
     .number()
+    .int({ message: 'Percentage must be an integer (no decimals allowed).' })
     .min(1, { message: 'Percentage must be at least 1%.' })
     .max(100, { message: 'Percentage cannot exceed 100%.' }),
   start_date: z.date(),
@@ -253,7 +254,7 @@ export default function NewDiscountPage() {
                         </div>
                         <Input
                           id="code"
-                          placeholder="e.g., SUMMER2023"
+                          placeholder="e.g. SNAPCASTER5"
                           className="h-8 pl-8 text-xs uppercase md:h-9 md:text-sm"
                           {...form.register('code')}
                         />
@@ -285,6 +286,7 @@ export default function NewDiscountPage() {
                           type="number"
                           min={1}
                           max={100}
+                          step={1}
                           className="h-8 pl-8 pr-8 text-xs md:h-9 md:text-sm"
                           {...form.register('percentage', {
                             valueAsNumber: true
@@ -302,7 +304,7 @@ export default function NewDiscountPage() {
                         </p>
                       )}
                       <p className="text-[10px] text-muted-foreground md:text-xs">
-                        Enter a value between 1 and 100
+                        Enter a whole number between 1 and 100 (no decimals)
                       </p>
                     </div>
 
