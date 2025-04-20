@@ -120,10 +120,10 @@ const DiscountRow = memo(
             {discount.discount_amount}%
           </span>
         </TableCell>
-        <TableCell className="hidden text-muted-foreground md:table-cell">
+        <TableCell className="hidden text-muted-foreground lg:table-cell">
           {format(new Date(discount.starts_at), 'PP')}
         </TableCell>
-        <TableCell className="hidden text-muted-foreground md:table-cell">
+        <TableCell className="hidden text-muted-foreground lg:table-cell">
           {discount.expires_at
             ? format(new Date(discount.expires_at), 'PP')
             : 'Never'}
@@ -152,7 +152,7 @@ const DiscountRow = memo(
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 w-8 p-0 opacity-70 transition-opacity hover:bg-muted group-hover:opacity-100"
+                  className="flex h-8 w-8 items-center justify-center p-0 opacity-70 transition-opacity hover:bg-muted group-hover:opacity-100"
                   aria-label="Actions for discount code"
                 >
                   <MoreHorizontal className="h-4 w-4" />
@@ -534,7 +534,7 @@ export default function DiscountsPage() {
 
           {/* Desktop view table */}
           <section
-            className="rounded-md border"
+            className="hidden rounded-md border md:block"
             aria-labelledby="desktop-discounts-heading"
           >
             <h2 id="desktop-discounts-heading" className="sr-only">
@@ -543,7 +543,7 @@ export default function DiscountsPage() {
             <Table className="hidden md:table">
               <TableHeader>
                 <TableRow className="bg-muted/50 hover:bg-muted">
-                  <TableHead className="w-[200px]">Code</TableHead>
+                  <TableHead className="">Code</TableHead>
                   {isAdmin && (
                     <TableHead className="hidden md:table-cell">
                       Vendor
@@ -552,13 +552,13 @@ export default function DiscountsPage() {
                   <TableHead className="hidden md:table-cell">
                     Discount
                   </TableHead>
-                  <TableHead className="hidden md:table-cell">
+                  <TableHead className="hidden lg:table-cell">
                     Start Date
                   </TableHead>
-                  <TableHead className="hidden md:table-cell">
+                  <TableHead className="hidden lg:table-cell">
                     End Date
                   </TableHead>
-                  <TableHead className="w-[100px]">Enabled</TableHead>
+                  <TableHead className="">Enabled</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>

@@ -64,7 +64,14 @@ export class VendorService {
 
   async getDiscounts(): Promise<Discount[]> {
     const response = await axios.get(`${BASE_URL}/api/v1/vendor/discounts`);
-    return response.data.data || ([] as Discount[]);
+    const discounts = response.data.data || ([] as Discount[]);
+
+    // Convert string dates to Date objects
+    return discounts.map((discount: any) => ({
+      ...discount,
+      starts_at: discount.starts_at ? new Date(discount.starts_at) : null,
+      expires_at: discount.expires_at ? new Date(discount.expires_at) : null
+    }));
   }
 
   async fetchDiscountsByVendorId(
@@ -80,7 +87,14 @@ export class VendorService {
           }
         }
       );
-      return response.data.data || ([] as Discount[]);
+      const discounts = response.data.data || ([] as Discount[]);
+
+      // Convert string dates to Date objects
+      return discounts.map((discount: any) => ({
+        ...discount,
+        starts_at: discount.starts_at ? new Date(discount.starts_at) : null,
+        expires_at: discount.expires_at ? new Date(discount.expires_at) : null
+      }));
     } catch (error) {
       console.error('Error fetching discounts:', error);
       return [] as Discount[];

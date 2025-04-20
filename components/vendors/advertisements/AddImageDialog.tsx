@@ -131,16 +131,31 @@ export function AddImageDialog({
       setFileMetadata(null);
       setUploadProgress(0);
       setIsUploading(false);
+
+      // Set appropriate default image type based on position
+      const defaultImageType =
+        advertisement.position === AdvertisementPosition.TOP_BANNER
+          ? AdvertisementImageType.DESKTOP
+          : AdvertisementImageType.DEFAULT;
+
       imageForm.reset({
-        image_type: AdvertisementImageType.DEFAULT
+        image_type: defaultImageType
       });
     }
-  }, [isOpen, imageForm]);
+  }, [isOpen, imageForm, advertisement.position]);
 
-  // Set image type to DEFAULT when position changes to non-TOP_BANNER
+  // Set image type based on advertisement position
   useEffect(() => {
     if (!allowsMultipleImageTypes) {
       imageForm.setValue('image_type', AdvertisementImageType.DEFAULT);
+    } else {
+      // For TOP_BANNER, set DESKTOP as default if not already set to MOBILE
+      if (
+        advertisement.position === AdvertisementPosition.TOP_BANNER &&
+        imageForm.getValues('image_type') === AdvertisementImageType.DEFAULT
+      ) {
+        imageForm.setValue('image_type', AdvertisementImageType.DESKTOP);
+      }
     }
   }, [advertisement.position, allowsMultipleImageTypes, imageForm]);
 
@@ -555,11 +570,23 @@ export function AddImageDialog({
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(AdvertisementImageType).map((type) => (
-                        <SelectItem key={type} value={type} className="text-sm">
-                          {type}
-                        </SelectItem>
-                      ))}
+                      {Object.values(AdvertisementImageType)
+                        .filter((type) =>
+                          advertisement.position ===
+                          AdvertisementPosition.TOP_BANNER
+                            ? type === AdvertisementImageType.MOBILE ||
+                              type === AdvertisementImageType.DESKTOP
+                            : true
+                        )
+                        .map((type) => (
+                          <SelectItem
+                            key={type}
+                            value={type}
+                            className="text-sm"
+                          >
+                            {type}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -570,8 +597,9 @@ export function AddImageDialog({
                 </p>
               )}
               <p className="text-[10px] text-muted-foreground">
-                MOBILE for small screens, DESKTOP for larger screens, DEFAULT
-                for all sizes.
+                {advertisement.position === AdvertisementPosition.TOP_BANNER
+                  ? 'MOBILE for small screens, DESKTOP for larger screens.'
+                  : 'DEFAULT is used for all screen sizes.'}
               </p>
             </div>
           )}

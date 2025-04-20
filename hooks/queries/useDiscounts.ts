@@ -52,13 +52,20 @@ export const useDiscounts = () => {
   ): Discount | undefined => {
     const now = new Date();
     const discounts = query.data?.filter(
-      (discount) => discount.vendor_slug === vendorSlug && discount.is_active
+      (discount) =>
+        discount.vendor_slug === vendorSlug &&
+        discount.is_active &&
+        discount.starts_at <= now &&
+        (discount.expires_at === null || discount.expires_at >= now)
     );
 
-    if (discounts?.length && discounts.length >= 1) {
-      console.log('discounts', discounts);
+    // If no active discounts are found, return undefined
+    if (!discounts?.length) {
+      return undefined;
     }
-    return discounts?.reduce((max, current) => {
+
+    // Find the largest discount amount among all active discounts
+    return discounts.reduce((max, current) => {
       return current.discount_amount > max.discount_amount ? current : max;
     }, discounts[0]);
   };

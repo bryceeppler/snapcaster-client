@@ -125,7 +125,7 @@ const AdvertisementRow = memo(
   }) => {
     return (
       <TableRow key={ad.id} className="group">
-        <TableCell className="hidden font-medium lg:table-cell">
+        <TableCell className="hidden font-medium md:table-cell">
           <div className="flex items-center gap-2">
             {ad.position.replace('_', ' ')}
           </div>
@@ -148,13 +148,7 @@ const AdvertisementRow = memo(
             <span className="truncate">{ad.target_url}</span>
           </a>
         </TableCell>
-        <TableCell className="hidden text-muted-foreground md:table-cell">
-          {format(new Date(ad.start_date), 'PP')}
-        </TableCell>
-        <TableCell className="hidden text-muted-foreground md:table-cell">
-          {ad.end_date ? format(new Date(ad.end_date), 'PP') : 'Never'}
-        </TableCell>
-        <TableCell className="hidden md:table-cell">
+        <TableCell className="hidden lg:table-cell">
           <div className="flex items-center">
             <span
               className={`mr-2 rounded-full px-2 py-1 text-xs ${
@@ -304,18 +298,6 @@ const MobileAdvertisementCard = memo(
         {/* Expandable section - only visible when expanded */}
         {expanded && (
           <div className="mt-2 border-t border-dashed border-muted pt-2">
-            {/* Date information */}
-            <div className="mb-3 flex text-xs text-muted-foreground">
-              <CalendarIcon className="mr-1 mt-0.5 h-3 w-3 flex-shrink-0" />
-              <div>
-                <div>From: {format(new Date(ad.start_date), 'PP')}</div>
-                {ad.end_date && (
-                  <div>Until: {format(new Date(ad.end_date), 'PP')}</div>
-                )}
-                {!ad.end_date && <div>No expiration date</div>}
-              </div>
-            </div>
-
             {/* Action buttons */}
             <div className="flex space-x-2">
               <Button
@@ -326,15 +308,6 @@ const MobileAdvertisementCard = memo(
               >
                 <Pencil className="mr-1 h-3 w-3" />
                 Edit
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-7 flex-1 border-destructive/30 text-xs text-destructive hover:bg-destructive/10"
-                onClick={() => onDelete(ad.id)}
-              >
-                <Trash2 className="mr-1 h-3 w-3" />
-                Delete
               </Button>
             </div>
           </div>
@@ -519,179 +492,6 @@ export default function AdvertisementsPage() {
             </div>
           </div>
 
-          {/* Edit Advertisement Dialog */}
-          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Edit Advertisement</DialogTitle>
-                <DialogDescription>
-                  Update the advertisement details.
-                </DialogDescription>
-              </DialogHeader>
-              <form
-                onSubmit={editForm.handleSubmit(onEditSubmit)}
-                className="space-y-4"
-              >
-                <div className="space-y-2">
-                  <Label htmlFor="edit-target_url">Target URL</Label>
-                  <Input
-                    id="edit-target_url"
-                    placeholder="https://example.com"
-                    {...editForm.register('target_url')}
-                  />
-                  {editForm.formState.errors.target_url && (
-                    <p className="text-sm font-medium text-destructive">
-                      {editForm.formState.errors.target_url.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="edit-position">Position</Label>
-                  <Controller
-                    control={editForm.control}
-                    name="position"
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select position" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Object.values(AdvertisementPosition).map((pos) => (
-                            <SelectItem key={pos} value={pos}>
-                              {pos.replace('_', ' ')}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {editForm.formState.errors.position && (
-                    <p className="text-sm font-medium text-destructive">
-                      {editForm.formState.errors.position.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="edit-alt_text">Alt Text</Label>
-                  <Input
-                    id="edit-alt_text"
-                    placeholder="Brief description of the advertisement"
-                    {...editForm.register('alt_text')}
-                  />
-                  {editForm.formState.errors.alt_text && (
-                    <p className="text-sm font-medium text-destructive">
-                      {editForm.formState.errors.alt_text.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="edit-start_date">Start Date</Label>
-                    <Controller
-                      control={editForm.control}
-                      name="start_date"
-                      render={({ field }) => (
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              id="edit-start_date"
-                              variant="outline"
-                              className={
-                                !field.value ? 'text-muted-foreground' : ''
-                              }
-                            >
-                              {field.value ? (
-                                format(field.value, 'PPP')
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      )}
-                    />
-                    {editForm.formState.errors.start_date && (
-                      <p className="text-sm font-medium text-destructive">
-                        {editForm.formState.errors.start_date.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="edit-end_date">End Date (Optional)</Label>
-                    <Controller
-                      control={editForm.control}
-                      name="end_date"
-                      render={({ field }) => (
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              id="edit-end_date"
-                              variant="outline"
-                              className={
-                                !field.value ? 'text-muted-foreground' : ''
-                              }
-                            >
-                              {field.value ? (
-                                format(field.value, 'PPP')
-                              ) : (
-                                <span>No end date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value || undefined}
-                              onSelect={field.onChange}
-                              initialFocus
-                              disabled={(date) =>
-                                date <
-                                (editForm.getValues().start_date || new Date())
-                              }
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      )}
-                    />
-                    {editForm.formState.errors.end_date && (
-                      <p className="text-sm font-medium text-destructive">
-                        {editForm.formState.errors.end_date.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button type="button" variant="outline">
-                      Cancel
-                    </Button>
-                  </DialogClose>
-                  <Button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Updating...' : 'Update Advertisement'}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-
           <div className="rounded-md border">
             <div className="md:hidden">
               {isLoading ? (
@@ -744,7 +544,7 @@ export default function AdvertisementsPage() {
             <Table className="hidden md:table">
               <TableHeader>
                 <TableRow className="bg-muted/50 hover:bg-muted">
-                  <TableHead className="hidden w-[150px] lg:table-cell">
+                  <TableHead className="hidden md:table-cell">
                     Position
                   </TableHead>
                   {isAdmin && (
@@ -753,14 +553,8 @@ export default function AdvertisementsPage() {
                     </TableHead>
                   )}
                   <TableHead>Target URL</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Start Date
-                  </TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    End Date
-                  </TableHead>
-                  <TableHead className="hidden md:table-cell">Images</TableHead>
-                  <TableHead className="w-[100px]">Enabled</TableHead>
+                  <TableHead className="hidden lg:table-cell">Images</TableHead>
+                  <TableHead className="">Enabled</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>

@@ -229,7 +229,7 @@ export function AdvertisementDetailsForm({
             )}
           </div>
 
-          <div className="space-y-3 pt-2">
+          {/* <div className="space-y-3 pt-2">
             <div className="flex items-center gap-1.5">
               <CalendarIcon className="h-3 w-3 text-muted-foreground" />
               <p className="text-xs font-medium md:text-sm">Schedule</p>
@@ -322,7 +322,7 @@ export function AdvertisementDetailsForm({
                 />
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="pt-2">
             <Button

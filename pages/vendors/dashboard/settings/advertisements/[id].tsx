@@ -289,8 +289,8 @@ export default function EditAdvertisementPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-3">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 gap-4 md:gap-5 xl:grid-cols-4">
+            <div className="xl:col-span-2">
               <AdvertisementDetailsForm
                 advertisement={advertisement}
                 isActive={advertisement.is_active}
@@ -299,7 +299,7 @@ export default function EditAdvertisementPage() {
               />
             </div>
 
-            <div className="lg:col-span-1">
+            <div className="xl:col-span-2">
               <AdvertisementImageGallery
                 advertisement={advertisement}
                 onDeleteImage={handleDeleteImage}
