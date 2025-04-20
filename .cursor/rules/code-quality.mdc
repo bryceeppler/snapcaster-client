@@ -1,0 +1,35 @@
+---
+description: Typescript and react code quality guidelines
+globs: *.ts, *.tsx
+---
+# Code Quality Standards
+
+## TypeScript
+- Use proper TypeScript types for all variables, functions, and components
+- Avoid using `any` type unless absolutely necessary
+- Create interfaces or types for complex data structures
+- Use union types for variables that can have multiple types
+
+## Functions
+- Keep functions small and focused on a single task
+- Use descriptive function names that indicate what they do
+- Implement proper error handling in functions
+- Use async/await for asynchronous operations
+
+## Variables
+- Use descriptive variable names
+- Prefer const over let when variables don't need to be reassigned
+- Avoid global variables
+- Use proper scoping for variables
+
+## Comments
+- Write comments for complex logic
+- Document public APIs and components
+- Use JSDoc comments for functions and components
+- Keep comments up-to-date with code changes
+
+## Error Handling
+- Implement proper error boundaries for React components
+- Use try/catch for error-prone operations
+- Log errors appropriately
+- Provide user-friendly error messages

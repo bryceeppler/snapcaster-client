@@ -1,0 +1,34 @@
+---
+description: Frontend design rules
+globs: *.tsx
+---
+# Frontend Design Rules
+
+## Component Structure
+- Components should follow the single responsibility principle
+- Break down complex UI into smaller, reusable components
+- Use composition over inheritance for component relationships
+
+## Styling
+- Prefer Tailwind utility classes for styling
+- Extract common patterns into custom Tailwind components using `@layer components`
+- Use CSS variables for theming and dynamic values
+- Follow mobile-first responsive design principles
+
+## Accessibility
+- All interactive elements must have appropriate ARIA attributes
+- Implement keyboard navigation support for all interactive elements
+- Use semantic HTML elements whenever possible
+
+## Performance
+- Implement code-splitting for large components
+- Lazy load images and heavy components
+- Optimize render performance by memoizing expensive components
+- Minimize unnecessary re-renders
+
+## Design System
+- Follow the established design system for consistency
+- Use the defined color palette from the theme
+- Maintain consistent spacing using Tailwind's spacing scale
+- Use the defined typography scale for font sizes
+- We use ShadCN for our component library

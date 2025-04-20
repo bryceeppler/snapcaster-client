@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+  useEffect
+} from 'react';
 import {
   AdvertisementWithImages,
   AdvertisementPosition,
@@ -90,8 +97,37 @@ export function AdManagerProvider({
   children,
   positionVendorWeights = {}
 }: AdManagerProviderProps) {
-  const { ads: allAds } = useAdvertisements();
+  const { getActiveAdvertisements } = useAdvertisements();
   const { vendors } = useVendors();
+
+  // Store the active ads in state to prevent re-fetching on window resize
+  const [storedActiveAds, setStoredActiveAds] = useState<
+    AdvertisementWithImages[]
+  >([]);
+
+  // Use a ref to track initial mount
+  const initialMountRef = useRef(true);
+
+  // Get active ads only on first mount and when data actually changes
+  useEffect(() => {
+    if (initialMountRef.current) {
+      const ads = getActiveAdvertisements();
+      setStoredActiveAds(ads);
+      initialMountRef.current = false;
+    }
+  }, [getActiveAdvertisements]);
+
+  // Only update stored ads when the hook returns new data (not on resize)
+  const activeAdsRef = useRef<AdvertisementWithImages[]>([]);
+  useEffect(() => {
+    const currentAds = getActiveAdvertisements();
+
+    // Compare with previous ads to see if we actually got new data
+    if (JSON.stringify(currentAds) !== JSON.stringify(activeAdsRef.current)) {
+      activeAdsRef.current = currentAds;
+      setStoredActiveAds(currentAds);
+    }
+  }, [getActiveAdvertisements]);
 
   // Derive vendor weights from tier information
   const derivedVendorWeights = useMemo(() => {
@@ -122,11 +158,13 @@ export function AdManagerProvider({
       [key in AdvertisementPosition]?: AdvertisementWithImages[];
     } = {};
 
-    if (!allAds) return result;
+    if (!storedActiveAds.length) return result;
 
     // Filter ads by position and ensure they have at least one DEFAULT image for feed ads
     Object.values(AdvertisementPosition).forEach((position) => {
-      const positionAds = allAds.filter((ad) => ad.position === position);
+      const positionAds = storedActiveAds.filter(
+        (ad) => ad.position === position
+      );
 
       // For FEED position, ensure ads have DEFAULT images
       if (position === AdvertisementPosition.FEED) {
@@ -141,7 +179,7 @@ export function AdManagerProvider({
     });
 
     return result;
-  }, [allAds]);
+  }, [storedActiveAds]);
 
   // Combine position-specific weights with fallback to default weights
   const combinedVendorWeights = useMemo(() => {
@@ -178,149 +216,161 @@ export function AdManagerProvider({
     }));
   };
 
-  // Get all available feed ads with DEFAULT images
-  const getAllAvailableFeedAds = (): AdvertisementWithImages[] => {
-    return adsByPosition[AdvertisementPosition.FEED] || [];
-  };
-
-  // Rotate the images in the ad to show different DEFAULT images each time
-  // This ensures different images are shown each time the same ad is selected
-  const rotateAdImages = (
-    ad: AdvertisementWithImages,
-    rotationIndex: number = 0
-  ): AdvertisementWithImages => {
-    // Get all DEFAULT images
-    const defaultImages = ad.images.filter(
-      (img) => img.image_type === AdvertisementImageType.DEFAULT
-    );
-
-    // If we only have one or zero DEFAULT images, return the ad as is
-    if (defaultImages.length <= 1) {
-      return ad;
-    }
-
-    // Create a copy of the non-DEFAULT images
-    const nonDefaultImages = ad.images.filter(
-      (img) => img.image_type !== AdvertisementImageType.DEFAULT
-    );
-
-    // Create a new rotated array of DEFAULT images based on the rotation index
-    // This ensures we get a different order every time
-    let rotatedDefaultImages = [...defaultImages];
-
-    // Rotate the array the specified number of times
-    for (let i = 0; i < rotationIndex % defaultImages.length; i++) {
-      // Move the first element to the end
-      const firstImage = rotatedDefaultImages.shift();
-      if (firstImage) {
-        rotatedDefaultImages.push(firstImage);
-      }
-    }
-
-    // Combine the non-DEFAULT images with the rotated DEFAULT images
-    const rotatedImages = [...nonDefaultImages, ...rotatedDefaultImages];
-
-    // Return a new ad object with the rotated images
-    return {
-      ...ad,
-      images: rotatedImages
+  // Memoize all functions to prevent recreating them on window resize
+  const getAllAvailableFeedAds = useMemo(() => {
+    return (): AdvertisementWithImages[] => {
+      return adsByPosition[AdvertisementPosition.FEED] || [];
     };
-  };
+  }, [adsByPosition]);
 
-  // Select a specific number of feed ads based on the weights
-  const getFeedAds = (count: number = 5): AdvertisementWithImages[] => {
-    const feedAds = getAllAvailableFeedAds();
-    if (feedAds.length === 0) return [];
+  // Memoize rotateAdImages function to prevent recreating it on every render
+  const rotateAdImages = useMemo(() => {
+    return (
+      ad: AdvertisementWithImages,
+      rotationIndex: number = 0
+    ): AdvertisementWithImages => {
+      // Get all DEFAULT images
+      const defaultImages = ad.images.filter(
+        (img) => img.image_type === AdvertisementImageType.DEFAULT
+      );
 
-    const feedWeights = convertWeightsToArray(AdvertisementPosition.FEED);
-    const selector = new AdSelector(feedAds, feedWeights);
+      // If we only have one or zero DEFAULT images, return the ad as is
+      if (defaultImages.length <= 1) {
+        return ad;
+      }
 
-    const selectedAds: AdvertisementWithImages[] = [];
-    const maxAds = Math.min(count, feedAds.length);
+      // Create a copy of the non-DEFAULT images
+      const nonDefaultImages = ad.images.filter(
+        (img) => img.image_type !== AdvertisementImageType.DEFAULT
+      );
 
-    for (let i = 0; i < maxAds; i++) {
-      const nextAd = selector.getNextAd();
-      selectedAds.push(rotateAdImages(nextAd));
-    }
+      // Create a new rotated array of DEFAULT images based on the rotation index
+      // This ensures we get a different order every time
+      let rotatedDefaultImages = [...defaultImages];
 
-    return selectedAds;
-  };
+      // Rotate the array the specified number of times
+      for (let i = 0; i < rotationIndex % defaultImages.length; i++) {
+        // Move the first element to the end
+        const firstImage = rotatedDefaultImages.shift();
+        if (firstImage) {
+          rotatedDefaultImages.push(firstImage);
+        }
+      }
 
-  // Get a single ad for the Feed position
-  const getInitialFeedAd = (): AdvertisementWithImages | null => {
-    const feedAds = getAllAvailableFeedAds();
-    if (feedAds.length === 0) return null;
+      // Combine the non-DEFAULT images with the rotated DEFAULT images
+      const rotatedImages = [...nonDefaultImages, ...rotatedDefaultImages];
 
-    // Convert the position weights to the format expected by AdSelector
-    const feedWeights = convertWeightsToArray(AdvertisementPosition.FEED);
+      // Return a new ad object with the rotated images
+      return {
+        ...ad,
+        images: rotatedImages
+      };
+    };
+  }, []);
 
-    // Create the ad selector with proper weighting
-    const selector = new AdSelector([...feedAds], feedWeights);
+  // Select a specific number of feed ads based on the weights - memoized
+  const getFeedAds = useMemo(() => {
+    return (count: number = 5): AdvertisementWithImages[] => {
+      const feedAds = getAllAvailableFeedAds();
+      if (feedAds.length === 0) return [];
 
-    try {
-      // Get a single random ad that respects the weights
-      const selectedAd = selector.getNextAd();
+      const feedWeights = convertWeightsToArray(AdvertisementPosition.FEED);
+      const selector = new AdSelector(feedAds, feedWeights);
 
-      // Apply random rotation for variety
-      const randomRotationIndex = Math.floor(Math.random() * 10);
-      return rotateAdImages(selectedAd, randomRotationIndex);
-    } catch (error) {
-      console.error('Error selecting initial feed ad:', error);
-      return null;
-    }
-  };
+      const selectedAds: AdvertisementWithImages[] = [];
+      const maxAds = Math.min(count, feedAds.length);
 
-  // Get ads to interleave in search results at regular intervals
-  // Ensures there are enough ads to cover the entire result set by reusing ads if necessary
-  const getIntervalAds = (
-    resultCount: number,
-    interval: number = 10
-  ): AdvertisementWithImages[] => {
-    const neededAdCount = Math.floor(resultCount / interval);
-    if (neededAdCount <= 0) return [];
+      for (let i = 0; i < maxAds; i++) {
+        const nextAd = selector.getNextAd();
+        selectedAds.push(rotateAdImages(nextAd));
+      }
 
-    const availableFeedAds = getAllAvailableFeedAds();
-    if (availableFeedAds.length === 0) return [];
+      return selectedAds;
+    };
+  }, [getAllAvailableFeedAds, convertWeightsToArray, rotateAdImages]);
 
-    // Convert the position weights to the format expected by AdSelector
-    const feedWeights = convertWeightsToArray(AdvertisementPosition.FEED);
+  // Get a single ad for the Feed position - memoized
+  const getInitialFeedAd = useMemo(() => {
+    return (): AdvertisementWithImages | null => {
+      const feedAds = getAllAvailableFeedAds();
+      if (feedAds.length === 0) return null;
 
-    // Create the ad selector with all available feed ads
-    const selector = new AdSelector([...availableFeedAds], feedWeights);
+      // Convert the position weights to the format expected by AdSelector
+      const feedWeights = convertWeightsToArray(AdvertisementPosition.FEED);
 
-    // Result array for selected and rotated ads
-    const result: AdvertisementWithImages[] = [];
+      // Create the ad selector with proper weighting
+      const selector = new AdSelector([...feedAds], feedWeights);
 
-    // Get one ad at a time with proper weighting
-    for (let i = 0; i < neededAdCount; i++) {
       try {
-        // If we need more ads than we have available, we'll end up reusing some
-        // The AdSelector will handle avoiding immediate repetition automatically
+        // Get a single random ad that respects the weights
         const selectedAd = selector.getNextAd();
 
-        // Calculate a unique rotation for this position if we're reusing ads
-        // This ensures we see different images if we use the same ad multiple times
-        const rotationIndex = Math.floor(i / availableFeedAds.length);
-        const rotatedAd = rotateAdImages(selectedAd, rotationIndex);
-
-        result.push(rotatedAd);
+        // Apply random rotation for variety
+        const randomRotationIndex = Math.floor(Math.random() * 10);
+        return rotateAdImages(selectedAd, randomRotationIndex);
       } catch (error) {
-        console.error('Error selecting ad:', error);
-        break;
+        console.error('Error selecting initial feed ad:', error);
+        return null;
       }
-    }
+    };
+  }, [getAllAvailableFeedAds, convertWeightsToArray, rotateAdImages]);
 
-    return result;
-  };
+  // Get ads to interleave in search results at regular intervals - memoized
+  const getIntervalAds = useMemo(() => {
+    return (
+      resultCount: number,
+      interval: number = 10
+    ): AdvertisementWithImages[] => {
+      const neededAdCount = Math.floor(resultCount / interval);
+      if (neededAdCount <= 0) return [];
 
-  const value = {
-    ads: adsByPosition,
-    vendorWeights: combinedVendorWeights,
-    getVendorWeightsForPosition,
-    getFeedAds,
-    getInitialFeedAd,
-    getIntervalAds
-  };
+      const availableFeedAds = getAllAvailableFeedAds();
+      if (availableFeedAds.length === 0) return [];
+
+      // Convert the position weights to the format expected by AdSelector
+      const feedWeights = convertWeightsToArray(AdvertisementPosition.FEED);
+
+      // Create the ad selector with all available feed ads
+      const selector = new AdSelector([...availableFeedAds], feedWeights);
+
+      // Result array for selected and rotated ads
+      const result: AdvertisementWithImages[] = [];
+
+      // Get one ad at a time with proper weighting
+      for (let i = 0; i < neededAdCount; i++) {
+        try {
+          // If we need more ads than we have available, we'll end up reusing some
+          // The AdSelector will handle avoiding immediate repetition automatically
+          const selectedAd = selector.getNextAd();
+
+          // Calculate a unique rotation for this position if we're reusing ads
+          // This ensures we see different images if we use the same ad multiple times
+          const rotationIndex = Math.floor(i / availableFeedAds.length);
+          const rotatedAd = rotateAdImages(selectedAd, rotationIndex);
+
+          result.push(rotatedAd);
+        } catch (error) {
+          console.error('Error selecting ad:', error);
+          break;
+        }
+      }
+
+      return result;
+    };
+  }, [getAllAvailableFeedAds, convertWeightsToArray, rotateAdImages]);
+
+  // Memoize the context value object to prevent unnecessary re-renders
+  const value = useMemo(
+    () => ({
+      ads: adsByPosition,
+      vendorWeights: combinedVendorWeights,
+      getVendorWeightsForPosition,
+      getFeedAds,
+      getInitialFeedAd,
+      getIntervalAds
+    }),
+    [adsByPosition, combinedVendorWeights]
+  );
 
   return <AdContext.Provider value={value}>{children}</AdContext.Provider>;
 }

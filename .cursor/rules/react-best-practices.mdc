@@ -1,0 +1,41 @@
+---
+description: React best practices
+globs: *.tsx
+---
+# React Best Practices
+
+## Hooks
+- Follow the Rules of Hooks (only call hooks at the top level)
+- Create custom hooks for reusable stateful logic
+- Use appropriate hooks for different use cases:
+  - `useState` for simple state
+  - `useReducer` for complex state logic
+  - `useContext` for deeply nested state sharing
+  - `useMemo` for expensive calculations
+  - `useCallback` for stable function references
+
+## Components
+- Use functional components with hooks instead of class components
+- Implement proper prop validation with TypeScript
+- Destructure props for better readability
+- Use React.memo for pure components that render often
+- Keep components focused on a single responsibility
+
+## State Management
+- Use local state for component-specific state
+- Use Zustand for global application state
+- Use tanstack query (react query) for server state
+- Avoid prop drilling by using context or state management
+- Keep state as close as possible to where it's used
+
+## Effects
+- Use cleanup functions in useEffect to prevent memory leaks
+- Specify dependencies array correctly in useEffect
+- Avoid unnecessary effects by using event handlers when possible
+- Split complex effects into smaller, focused effects
+
+## Rendering
+- Avoid expensive operations during render
+- Use conditional rendering wisely
+- Implement virtualization for long lists
+- Use fragments to avoid unnecessary DOM nodes
