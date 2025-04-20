@@ -17,6 +17,7 @@ export interface CreateDiscountRequest {
   code: string;
   discount_type: DiscountType;
   discount_amount: number;
+  is_active: boolean;
   starts_at: Date;
   expires_at: Date | null;
 }

@@ -11,7 +11,8 @@ import {
   Clock,
   ArrowLeft,
   Check,
-  X
+  X,
+  Store
 } from 'lucide-react';
 
 import DashboardLayout from '../../../layout';
@@ -34,6 +35,7 @@ import { useVendors } from '@/hooks/queries/useVendors';
 import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { Discount, DiscountType } from '@/types/discounts';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Switch } from '@/components/ui/switch';
 
 // Form schema for discount validation
 const discountFormSchema = z.object({
@@ -45,7 +47,8 @@ const discountFormSchema = z.object({
     .min(1, { message: 'Percentage must be at least 1%.' })
     .max(100, { message: 'Percentage cannot exceed 100%.' }),
   start_date: z.date(),
-  end_date: z.date().nullable().optional()
+  end_date: z.date().nullable().optional(),
+  is_active: z.boolean().default(true)
 });
 
 type DiscountFormValues = z.infer<typeof discountFormSchema>;
@@ -56,7 +59,7 @@ export default function EditDiscountPage() {
   const discountId = typeof id === 'string' ? parseInt(id, 10) : undefined;
 
   const { profile } = useAuth();
-  const { getVendorById } = useVendors();
+  const { getVendorById, vendors } = useVendors();
   const { updateDiscount, discounts, isLoading } = useDiscounts();
 
   const [currentDiscount, setCurrentDiscount] = useState<Discount | null>(null);
@@ -77,7 +80,8 @@ export default function EditDiscountPage() {
       code: '',
       percentage: 5,
       start_date: new Date(),
-      end_date: null
+      end_date: null,
+      is_active: true
     }
   });
 
@@ -115,7 +119,8 @@ export default function EditDiscountPage() {
           code: discount.code,
           percentage: discount.discount_amount,
           start_date: new Date(discount.starts_at),
-          end_date: discount.expires_at ? new Date(discount.expires_at) : null
+          end_date: discount.expires_at ? new Date(discount.expires_at) : null,
+          is_active: discount.is_active
         });
       } catch (error) {
         console.error('Error loading discount:', error);
@@ -151,7 +156,8 @@ export default function EditDiscountPage() {
           discount_amount: values.percentage,
           discount_type: DiscountType.PERCENTAGE, // Currently only supporting percentage discounts
           starts_at: values.start_date,
-          expires_at: values.end_date || null
+          expires_at: values.end_date || null,
+          is_active: values.is_active
         }
       });
 
@@ -181,19 +187,6 @@ export default function EditDiscountPage() {
                 <ArrowLeft className="mr-1.5 h-4 w-4" />
                 <span className="text-xs">Back</span>
               </Button>
-
-              {currentDiscount && (
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      currentDiscount.is_active ? 'bg-green-500' : 'bg-gray-300'
-                    }`}
-                  />
-                  <span className="text-xs text-muted-foreground">
-                    {currentDiscount.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-              )}
             </div>
 
             <div>
@@ -256,6 +249,32 @@ export default function EditDiscountPage() {
                   </CardHeader>
                   <CardContent className="p-4 md:p-5">
                     <div className="space-y-4">
+                      {/* Vendor information (admin only) */}
+                      {isAdmin && currentDiscount && (
+                        <div className="space-y-1.5">
+                          <Label
+                            htmlFor="vendor"
+                            className="text-xs font-medium md:text-sm"
+                          >
+                            Vendor
+                          </Label>
+                          <div className="relative">
+                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
+                              <Store className="h-3 w-3 text-muted-foreground" />
+                            </div>
+                            <div className="flex h-8 w-full items-center rounded-md border bg-muted/10 pl-8 text-xs md:h-9 md:text-sm">
+                              {vendors.find(
+                                (v) => v.id === currentDiscount.vendor_id
+                              )?.name ||
+                                `Vendor ID: ${currentDiscount.vendor_id}`}
+                            </div>
+                          </div>
+                          <p className="text-[10px] text-muted-foreground md:text-xs">
+                            This discount code belongs to this vendor
+                          </p>
+                        </div>
+                      )}
+
                       <div className="space-y-1.5">
                         <Label
                           htmlFor="code"
@@ -313,6 +332,36 @@ export default function EditDiscountPage() {
                             {form.formState.errors.percentage.message}
                           </p>
                         )}
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <Label
+                            htmlFor="is_active"
+                            className="text-xs font-medium md:text-sm"
+                          >
+                            Status
+                          </Label>
+                          <Controller
+                            control={form.control}
+                            name="is_active"
+                            render={({ field }) => (
+                              <div className="flex items-center space-x-2">
+                                <Switch
+                                  id="is_active"
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                                <span className="text-xs text-muted-foreground">
+                                  {field.value ? 'Active' : 'Inactive'}
+                                </span>
+                              </div>
+                            )}
+                          />
+                        </div>
+                        <p className="text-[10px] text-muted-foreground md:text-xs">
+                          Active discounts can be applied at checkout
+                        </p>
                       </div>
                     </div>
                   </CardContent>

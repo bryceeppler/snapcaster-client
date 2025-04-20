@@ -11,7 +11,9 @@ import {
   Clock,
   ArrowLeft,
   Plus,
-  X
+  X,
+  ToggleLeft,
+  Store
 } from 'lucide-react';
 
 import DashboardLayout from '../../layout';
@@ -33,6 +35,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { DiscountType } from '@/types/discounts';
+import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 
 // Form schema for discount validation
 const discountFormSchema = z.object({
@@ -44,7 +54,11 @@ const discountFormSchema = z.object({
     .min(1, { message: 'Percentage must be at least 1%.' })
     .max(100, { message: 'Percentage cannot exceed 100%.' }),
   start_date: z.date(),
-  end_date: z.date().nullable().optional()
+  end_date: z.date().nullable().optional(),
+  is_active: z.boolean().default(true),
+  vendor_id: z.coerce.number().positive({
+    message: 'Please select a vendor'
+  })
 });
 
 type DiscountFormValues = z.infer<typeof discountFormSchema>;
@@ -52,7 +66,7 @@ type DiscountFormValues = z.infer<typeof discountFormSchema>;
 export default function NewDiscountPage() {
   const router = useRouter();
   const { profile } = useAuth();
-  const { getVendorById } = useVendors();
+  const { vendors, getVendorById } = useVendors();
   const { createDiscount } = useDiscounts();
 
   // Get admin status
@@ -70,23 +84,36 @@ export default function NewDiscountPage() {
       code: '',
       percentage: 5,
       start_date: new Date(),
-      end_date: null
+      end_date: null,
+      is_active: true,
+      vendor_id: isAdmin ? 0 : vendor?.id || 0
     }
   });
 
+  // Update form values when vendor is loaded or admin status changes
+  useEffect(() => {
+    if (!isAdmin && vendor) {
+      form.setValue('vendor_id', vendor.id);
+    }
+  }, [isAdmin, vendor, form]);
+
   const onSubmit = async (values: DiscountFormValues) => {
-    // Skip vendor check for admins, but require vendor for regular users
+    // For admin users, ensure a vendor is selected
+    if (isAdmin && (!values.vendor_id || values.vendor_id === 0)) {
+      toast.error('Please select a vendor for this discount code');
+      return;
+    }
+
+    // For regular users, ensure vendor info is available
     if (!isAdmin && !vendor) {
       toast.error('Vendor information is not available');
       return;
     }
 
     try {
-      // For admin users, they would need to explicitly select a vendor ID
-      // This is a simplification - you may need to add vendor selection UI for admins
-      const vendorIdToUse = vendor?.id || 0;
+      const vendorIdToUse = isAdmin ? values.vendor_id : vendor?.id || 0;
 
-      if (!isAdmin && vendorIdToUse === 0) {
+      if (vendorIdToUse === 0) {
         toast.error('Invalid vendor ID');
         return;
       }
@@ -97,7 +124,8 @@ export default function NewDiscountPage() {
         vendor_id: vendorIdToUse,
         discount_type: DiscountType.PERCENTAGE,
         starts_at: values.start_date,
-        expires_at: values.end_date || null
+        expires_at: values.end_date || null,
+        is_active: values.is_active
       });
 
       toast.success('Discount code created successfully');
@@ -110,7 +138,7 @@ export default function NewDiscountPage() {
 
   return (
     <DashboardLayout>
-      <div className="flex min-h-screen flex-col bg-white">
+      <div className="flex min-h-screen flex-col">
         <div className="flex-1 space-y-4 p-4 pt-6 md:space-y-5 md:p-6">
           {/* Header Section - Simplified and minimal */}
           <div className="flex flex-col space-y-4 md:space-y-5">
@@ -156,6 +184,62 @@ export default function NewDiscountPage() {
                 </CardHeader>
                 <CardContent className="p-4 md:p-5">
                   <div className="space-y-4">
+                    {/* Vendor selection (admin only) */}
+                    {isAdmin && (
+                      <div className="space-y-1.5">
+                        <Label
+                          htmlFor="vendor_id"
+                          className="text-xs font-medium md:text-sm"
+                        >
+                          Vendor
+                        </Label>
+                        <div className="relative">
+                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
+                            <Store className="h-3 w-3 text-muted-foreground" />
+                          </div>
+                          <Controller
+                            control={form.control}
+                            name="vendor_id"
+                            render={({ field }) => (
+                              <Select
+                                onValueChange={(value) =>
+                                  field.onChange(parseInt(value))
+                                }
+                                value={
+                                  field.value ? field.value.toString() : ''
+                                }
+                              >
+                                <SelectTrigger className="h-8 pl-8 text-xs md:h-9 md:text-sm">
+                                  <SelectValue placeholder="Select a vendor" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {vendors
+                                    .filter((v) => v.is_active)
+                                    .map((vendor) => (
+                                      <SelectItem
+                                        key={vendor.id}
+                                        value={vendor.id.toString()}
+                                        className="text-xs md:text-sm"
+                                      >
+                                        {vendor.name}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
+                        </div>
+                        {form.formState.errors.vendor_id && (
+                          <p className="text-xs font-medium text-destructive">
+                            {form.formState.errors.vendor_id.message}
+                          </p>
+                        )}
+                        <p className="text-[10px] text-muted-foreground md:text-xs">
+                          Select the vendor this discount code will apply to
+                        </p>
+                      </div>
+                    )}
+
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="code"
@@ -219,6 +303,36 @@ export default function NewDiscountPage() {
                       )}
                       <p className="text-[10px] text-muted-foreground md:text-xs">
                         Enter a value between 1 and 100
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <Label
+                          htmlFor="is_active"
+                          className="text-xs font-medium md:text-sm"
+                        >
+                          Status
+                        </Label>
+                        <Controller
+                          control={form.control}
+                          name="is_active"
+                          render={({ field }) => (
+                            <div className="flex items-center space-x-2">
+                              <Switch
+                                id="is_active"
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                              <span className="text-xs text-muted-foreground">
+                                {field.value ? 'Active' : 'Inactive'}
+                              </span>
+                            </div>
+                          )}
+                        />
+                      </div>
+                      <p className="text-[10px] text-muted-foreground md:text-xs">
+                        Active discounts can be applied at checkout
                       </p>
                     </div>
                   </div>

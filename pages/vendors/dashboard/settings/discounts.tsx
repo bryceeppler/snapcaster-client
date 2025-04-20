@@ -3,7 +3,8 @@ import {
   Plus,
   Trash2,
   Pencil,
-  MoreHorizontal
+  MoreHorizontal,
+  Store
 } from 'lucide-react';
 import { useState, useEffect, useCallback, memo } from 'react';
 import { subDays, format } from 'date-fns';
@@ -57,16 +58,25 @@ const DiscountRow = memo(
     discount,
     onEdit,
     onDelete,
-    onToggleStatus
+    onToggleStatus,
+    isAdmin,
+    getVendorName
   }: {
     discount: Discount;
     onEdit: (discount: Discount) => void;
     onDelete: (id: number) => void;
     onToggleStatus: (discount: Discount, status: boolean) => void;
+    isAdmin: boolean;
+    getVendorName: (vendorId: number) => string;
   }) => {
     return (
       <TableRow className="group">
         <TableCell className="font-medium">{discount.code}</TableCell>
+        {isAdmin && (
+          <TableCell className="hidden text-muted-foreground md:table-cell">
+            {getVendorName(discount.vendor_id)}
+          </TableCell>
+        )}
         <TableCell className="hidden md:table-cell">
           <span className="rounded-md bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">
             {discount.discount_amount}%
@@ -131,19 +141,25 @@ const DiscountRow = memo(
       onEdit: Function;
       onDelete: Function;
       onToggleStatus: Function;
+      isAdmin: boolean;
+      getVendorName: Function;
     },
     nextProps: {
       discount: Discount;
       onEdit: Function;
       onDelete: Function;
       onToggleStatus: Function;
+      isAdmin: boolean;
+      getVendorName: Function;
     }
   ) => {
     return (
       prevProps.discount.id === nextProps.discount.id &&
       prevProps.discount.is_active === nextProps.discount.is_active &&
       prevProps.discount.code === nextProps.discount.code &&
-      prevProps.discount.discount_amount === nextProps.discount.discount_amount
+      prevProps.discount.discount_amount ===
+        nextProps.discount.discount_amount &&
+      prevProps.isAdmin === nextProps.isAdmin
     );
   }
 );
@@ -157,12 +173,16 @@ const MobileDiscountCard = memo(
     discount,
     onEdit,
     onDelete,
-    onToggleStatus
+    onToggleStatus,
+    isAdmin,
+    getVendorName
   }: {
     discount: Discount;
     onEdit: (discount: Discount) => void;
     onDelete: (id: number) => void;
     onToggleStatus: (discount: Discount, status: boolean) => void;
+    isAdmin: boolean;
+    getVendorName: (vendorId: number) => string;
   }) => {
     const [expanded, setExpanded] = useState(false);
 
@@ -180,6 +200,13 @@ const MobileDiscountCard = memo(
                 {discount.discount_amount}%
               </span>
             </div>
+
+            {/* Vendor (admin only) */}
+            {isAdmin && (
+              <div className="mt-0.5 text-[10px] text-muted-foreground">
+                {getVendorName(discount.vendor_id)}
+              </div>
+            )}
 
             {/* Status indicator */}
             <div className="mt-0.5 flex items-center">
@@ -260,19 +287,25 @@ const MobileDiscountCard = memo(
       onEdit: Function;
       onDelete: Function;
       onToggleStatus: Function;
+      isAdmin: boolean;
+      getVendorName: Function;
     },
     nextProps: {
       discount: Discount;
       onEdit: Function;
       onDelete: Function;
       onToggleStatus: Function;
+      isAdmin: boolean;
+      getVendorName: Function;
     }
   ) => {
     return (
       prevProps.discount.id === nextProps.discount.id &&
       prevProps.discount.is_active === nextProps.discount.is_active &&
       prevProps.discount.code === nextProps.discount.code &&
-      prevProps.discount.discount_amount === nextProps.discount.discount_amount
+      prevProps.discount.discount_amount ===
+        nextProps.discount.discount_amount &&
+      prevProps.isAdmin === nextProps.isAdmin
     );
   }
 );
@@ -281,7 +314,7 @@ MobileDiscountCard.displayName = 'MobileDiscountCard';
 
 export default function DiscountsPage() {
   const router = useRouter();
-  const { getVendorById } = useVendors();
+  const { getVendorById, vendors } = useVendors();
   const { profile } = useAuth();
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: subDays(new Date(), 30),
@@ -300,6 +333,12 @@ export default function DiscountsPage() {
   // Get the vendor information (only needed for non-admin users)
   const vendor = getVendorById(vendorId);
   console.log('Vendor data:', vendor);
+
+  // Helper function to get vendor name from ID
+  const getVendorName = (vendorId: number): string => {
+    const vendor = vendors.find((v) => v.id === vendorId);
+    return vendor ? vendor.name : `Unknown Vendor (ID: ${vendorId})`;
+  };
 
   const {
     getDiscountsByVendorId,
@@ -445,6 +484,8 @@ export default function DiscountsPage() {
                       onEdit={handleEditDiscount}
                       onDelete={handleDeleteDiscount}
                       onToggleStatus={handleStatusToggle}
+                      isAdmin={isAdmin}
+                      getVendorName={getVendorName}
                     />
                   ))}
                 </div>
@@ -455,6 +496,11 @@ export default function DiscountsPage() {
               <TableHeader>
                 <TableRow className="bg-muted/50 hover:bg-muted">
                   <TableHead className="w-[150px]">Code</TableHead>
+                  {isAdmin && (
+                    <TableHead className="hidden md:table-cell">
+                      Vendor
+                    </TableHead>
+                  )}
                   <TableHead className="hidden md:table-cell">
                     Discount
                   </TableHead>
@@ -471,7 +517,10 @@ export default function DiscountsPage() {
               <TableBody>
                 {discounts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
+                    <TableCell
+                      colSpan={isAdmin ? 7 : 6}
+                      className="h-24 text-center"
+                    >
                       {isLoading ? (
                         <div className="flex justify-center">
                           <div className="flex flex-col items-center gap-2">
@@ -507,6 +556,8 @@ export default function DiscountsPage() {
                       onEdit={handleEditDiscount}
                       onDelete={handleDeleteDiscount}
                       onToggleStatus={handleStatusToggle}
+                      isAdmin={isAdmin}
+                      getVendorName={getVendorName}
                     />
                   ))
                 )}
