@@ -46,6 +46,28 @@ export interface FilterOption {
   }[];
 }
 
+export interface BuylistAnalytics {
+  vendor: {
+    id: string;
+    name: string;
+    slug: string;
+    url: string;
+    is_active: boolean;
+    buylist_enabled: boolean;
+    tier: string;
+    created_at: string;
+  };
+  submissionData: {
+    successfulSubmissions: {
+      totalValue: number;
+      totalCards: number;
+      cashSubmissions: number;
+      storeCreditSubmissions: number;
+      totalSubmissions: number;
+    };
+  };
+}
+
 export class CatalogService {
   async search(params: SearchParams): Promise<SearchResponse> {
     const queryParams = new URLSearchParams();
@@ -86,6 +108,13 @@ export class CatalogService {
       : `ca_sealed_${params.tcg || 'all'}_prod*`;
 
     return this.search(params);
+  }
+
+  async getBuylistAnalytics(vendorId: string): Promise<BuylistAnalytics> {
+    const response = await axiosInstance.get(
+      `${BASE_URL}/api/v1/catalog/analytics/buylists/${vendorId}`
+    );
+    return response.data.data;
   }
 }
 

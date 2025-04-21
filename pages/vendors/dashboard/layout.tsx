@@ -107,6 +107,19 @@ export default function DashboardLayout({
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={
+                        router.pathname === '/vendors/dashboard/buylists'
+                      }
+                    >
+                      <Link href="/vendors/dashboard/buylists" className="py-6">
+                        <ShoppingBag className="h-4 w-4" />
+                        <span>Buylists</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
