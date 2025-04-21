@@ -10,7 +10,8 @@ import {
   BarChart4,
   Megaphone,
   Percent,
-  ShoppingBag
+  ShoppingBag,
+  CheckCircle
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -116,10 +117,9 @@ export default function DashboardLayout({
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={
-                        router.pathname ===
+                      isActive={router.pathname.startsWith(
                         '/vendors/dashboard/settings/advertisements'
-                      }
+                      )}
                     >
                       <Link
                         href="/vendors/dashboard/settings/advertisements"
@@ -133,10 +133,9 @@ export default function DashboardLayout({
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={
-                        router.pathname ===
+                      isActive={router.pathname.startsWith(
                         '/vendors/dashboard/settings/discounts'
-                      }
+                      )}
                     >
                       <Link
                         href="/vendors/dashboard/settings/discounts"
@@ -147,6 +146,24 @@ export default function DashboardLayout({
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
+                  {isAdmin && (
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={router.pathname.startsWith(
+                          '/vendors/dashboard/settings/approvals'
+                        )}
+                      >
+                        <Link
+                          href="/vendors/dashboard/settings/approvals"
+                          className="py-6"
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                          <span>Approvals</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )}
                   {/* <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild

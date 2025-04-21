@@ -304,7 +304,7 @@ export function AddImageDialog({
         });
 
       // 2. Upload the image directly to S3 using the presigned URL
-      await advertisementService.uploadImageToS3(
+      const uploadResponse = await advertisementService.uploadImageToS3(
         presignedUrlResponse.presignedUrl,
         values.image
       );
@@ -317,7 +317,12 @@ export function AddImageDialog({
       await advertisementService.confirmImageUpload(advertisement.id, {
         publicUrl: presignedUrlResponse.publicUrl,
         imageType: values.image_type,
-        isActive: true
+        isActive: true,
+        width: uploadResponse.width,
+        height: uploadResponse.height,
+        fileSize: uploadResponse.fileSize,
+        fileType: uploadResponse.fileType,
+        metadata: {}
       });
 
       // 4. Invalidate advertisements query to refresh the data

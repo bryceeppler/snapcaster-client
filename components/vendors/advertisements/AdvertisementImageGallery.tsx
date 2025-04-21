@@ -5,7 +5,6 @@ import {
   Trash2,
   AlertCircle,
   Link,
-  Calendar,
   Hash,
   Copy,
   Check,
@@ -25,7 +24,6 @@ import {
   AdvertisementWithImages
 } from '@/types/advertisements';
 import { AddImageDialog } from './AddImageDialog';
-import { AD_DIMENSIONS } from '@/components/ads/AdManager';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { format } from 'date-fns';
 import {
@@ -36,7 +34,6 @@ import {
 } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -247,6 +244,21 @@ export function AdvertisementImageGallery({
                             )}
                           </button>
                         </div>
+                        {!image.is_active && (
+                          <Alert
+                            variant="default"
+                            className="w-fit border-yellow-500 bg-yellow-500/20"
+                          >
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle className="text-xs">
+                              Pending Admin Approval
+                            </AlertTitle>
+                            <AlertDescription className="hidden text-xs md:block">
+                              Please allow up to 24 hours for your image to be
+                              approved.
+                            </AlertDescription>
+                          </Alert>
+                        )}
                       </div>
                     </div>
                   </div>

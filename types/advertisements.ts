@@ -31,6 +31,11 @@ export type AdvertisementImage = {
   image_type: AdvertisementImageType;
   image_url: string;
   is_active: boolean;
+  width: number;
+  height: number;
+  file_size: number;
+  file_type: string;
+  metadata: Record<string, any>;
   created_at: Date;
   updated_at: Date;
 };

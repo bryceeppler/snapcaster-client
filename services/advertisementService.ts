@@ -3,7 +3,8 @@ import axiosInstance from '@/utils/axiosWrapper';
 import {
   AdvertisementWithImages,
   AdvertisementPosition,
-  AdvertisementImageType
+  AdvertisementImageType,
+  AdvertisementImage
 } from '@/types/advertisements';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -27,6 +28,10 @@ export type CreateAdvertisementImageRequest = {
   is_active?: boolean;
 };
 
+export type UpdateAdvertisementImageRequest = {
+  is_active?: boolean;
+};
+
 export type PresignedUrlRequest = {
   fileType: string;
   fileName: string;
@@ -46,6 +51,11 @@ export type ConfirmUploadRequest = {
   publicUrl: string;
   imageType: AdvertisementImageType;
   isActive: boolean;
+  width: number;
+  height: number;
+  fileSize: number;
+  fileType: string;
+  metadata: Record<string, any>;
 };
 
 export class AdvertisementService {
@@ -54,6 +64,13 @@ export class AdvertisementService {
       `${BASE_URL}/api/v1/vendor/advertisements?with=images`
     );
     return response.data.data || ([] as AdvertisementWithImages[]);
+  }
+
+  async getAllAdImages(): Promise<AdvertisementImage[]> {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/vendor/advertisements/images`
+    );
+    return response.data.data || ([] as AdvertisementImage[]);
   }
 
   async getAdvertisementsByVendorId(
@@ -97,6 +114,17 @@ export class AdvertisementService {
     const response = await axiosInstance.patch(
       `${BASE_URL}/api/v1/vendor/advertisements/${advertisementId}`,
       advertisement
+    );
+    return response.data.data;
+  }
+
+  async updateAdvertisementImage(
+    imageId: number,
+    image: UpdateAdvertisementImageRequest
+  ): Promise<any> {
+    const response = await axiosInstance.patch(
+      `${BASE_URL}/api/v1/vendor/advertisements/images/${imageId}`,
+      image
     );
     return response.data.data;
   }
@@ -150,27 +178,68 @@ export class AdvertisementService {
   ): Promise<any> {
     const response = await axiosInstance.post(
       `${BASE_URL}/api/v1/vendor/advertisements/${advertisementId}/images/confirm-upload`,
-      data
+      {
+        publicUrl: data.publicUrl,
+        imageType: data.imageType,
+        fileSize: data.fileSize,
+        fileType: data.fileType,
+        width: data.width,
+        height: data.height
+      }
     );
     return response.data.data;
   }
 
-  async uploadImageToS3(presignedUrl: string, file: File): Promise<void> {
+  async getImageDimensions(
+    file: File
+  ): Promise<{ width: number; height: number }> {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+
+    return new Promise((resolve, reject) => {
+      img.onload = () => {
+        resolve({
+          width: img.width,
+          height: img.height
+        });
+      };
+      img.onerror = reject;
+    });
+  }
+
+  async uploadImageToS3(
+    presignedUrl: string,
+    file: File
+  ): Promise<{
+    fileType: string;
+    fileSize: number;
+    width: number;
+    height: number;
+  }> {
     try {
+      // get the dimensions for the image
+      const dimensions = await this.getImageDimensions(file);
       console.log('Uploading file to S3:', {
         fileType: file.type,
         fileSize: file.size,
+        width: dimensions.width,
+        height: dimensions.height,
         url: presignedUrl.split('?')[0] // Log the base URL without query params for security
       });
 
       await axios.put(presignedUrl, file, {
         headers: {
           'Content-Type': file.type
-          // Removed x-amz-acl header as it should be included in the presigned URL if needed
         }
       });
 
       console.log('File successfully uploaded to S3');
+      return {
+        fileType: file.type,
+        fileSize: file.size,
+        width: dimensions.width,
+        height: dimensions.height
+      };
     } catch (error) {
       console.error('Error uploading file to S3:', error);
       if (axios.isAxiosError(error) && error.response) {
