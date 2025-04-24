@@ -196,7 +196,7 @@ export default function TCGAnalyticsPage() {
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="h-8 w-full justify-start text-left font-normal md:w-auto"
+                  className="h-8 w-full justify-start bg-card text-left font-normal md:w-auto"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {format(dateRange.from, 'LLL dd, y')} -{' '}
