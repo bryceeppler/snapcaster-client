@@ -204,9 +204,9 @@ function QuickLinks() {
       description: 'Page load times and core web vitals'
     },
     {
-      href: '/vendors/dashboard/conversions',
-      title: 'Conversion Analytics',
-      description: 'Conversion funnels and goals tracking'
+      href: '/vendors/dashboard/vendors',
+      title: 'Vendor Leaderboard',
+      description: 'View your competitors and their performance'
     }
   ];
 
@@ -223,9 +223,11 @@ export default function DashboardPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 md:p-8 pt-6">
-        <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-             Analytics Overview
+        <div className="flex-1 space-y-4 pt-6 md:p-8">
+          <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
+            {' '}
+            <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
+              Analytics Overview
             </h2>
           </div>
           <AnalyticsMetrics />
