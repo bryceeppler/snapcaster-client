@@ -116,6 +116,13 @@ export class CatalogService {
     );
     return response.data.data;
   }
+
+  async getAdminBuylistAnalytics(): Promise<BuylistAnalytics[]> {
+    const response = await axiosInstance.get(
+      `${BASE_URL}/api/v1/catalog/analytics/buylists`
+    );
+    return response.data.data;
+  }
 }
 
 export const catalogService = new CatalogService();
