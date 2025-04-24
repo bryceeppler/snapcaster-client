@@ -1,33 +1,6 @@
-import { Calendar as CalendarIcon } from 'lucide-react';
-import { useState } from 'react';
-import { type SelectRangeEventHandler } from 'react-day-picker';
-import { subDays, format } from 'date-fns';
 import DashboardLayout from '../layout';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
-import { VendorLeaderboard } from '@/components/vendors/vendors/vendor-leaderboard';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+
 export default function SettingsPage() {
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
-    from: subDays(new Date(), 30),
-    to: new Date()
-  });
-
-  const handleDateRangeChange: SelectRangeEventHandler = (range) => {
-    if (!range) {
-      setDateRange({ from: subDays(new Date(), 30), to: new Date() });
-      return;
-    }
-    if (range.from && range.to) {
-      setDateRange({ from: range.from, to: range.to });
-    }
-  };
-
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">

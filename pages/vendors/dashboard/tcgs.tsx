@@ -6,7 +6,7 @@ import {
   Calendar as CalendarIcon
 } from 'lucide-react';
 import { useState } from 'react';
-import { type SelectRangeEventHandler } from 'react-day-picker';
+import { type PropsRange } from 'react-day-picker';
 import { subDays, format } from 'date-fns';
 
 import {
@@ -16,21 +16,14 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { TrafficChart } from '@/components/vendors/users/traffic-chart';
 import { SearchChart } from '@/components/vendors/tcgs/search-chart';
 import { BuyClicksChart } from '@/components/vendors/tcgs/buy-clicks-chart';
-import { UserDeviceChart } from '@/components/vendors/dashboard/user-device-chart';
-import { UserDeviceAreaChart } from '@/components/vendors/users/user-device-area-chart';
-import { CityAnalyticsTable } from '@/components/vendors/users/city-analytics-table';
-import { UserTypesChart } from '@/components/vendors/users/user-types-chart';
-import { TrafficSourcesChart } from '@/components/vendors/users/traffic-sources-chart';
 import DashboardLayout from './layout';
 import { useAuth } from '@/hooks/useAuth';
 import {
   type AnalyticsError,
   useUniqueUsersByDate,
   useEngagementTime,
-  useSearchQueries,
   useSearchQueriesWithParams,
   useBuyClicksWithParams
 } from '@/lib/hooks/useAnalytics';
@@ -181,7 +174,7 @@ export default function TCGAnalyticsPage() {
 
   const { isAdmin } = useAuth();
 
-  const handleDateRangeChange: SelectRangeEventHandler = (range) => {
+  const handleDateRangeChange: PropsRange['onSelect'] = (range) => {
     if (!range) {
       setDateRange({ from: subDays(new Date(), 30), to: new Date() });
       return;
@@ -194,14 +187,16 @@ export default function TCGAnalyticsPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
           <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">TCG Analytics</h2>
+            <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
+              TCG Analytics
+            </h2>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full md:w-auto h-8 justify-start text-left font-normal"
+                  className="h-8 w-full justify-start text-left font-normal md:w-auto"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {format(dateRange.from, 'LLL dd, y')} -{' '}
@@ -210,7 +205,7 @@ export default function TCGAnalyticsPage() {
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="end">
                 <Calendar
-                  initialFocus
+                  autoFocus
                   mode="range"
                   defaultMonth={dateRange.from}
                   selected={{ from: dateRange.from, to: dateRange.to }}
@@ -219,7 +214,7 @@ export default function TCGAnalyticsPage() {
                   className="md:hidden"
                 />
                 <Calendar
-                  initialFocus
+                  autoFocus
                   mode="range"
                   defaultMonth={dateRange.from}
                   selected={{ from: dateRange.from, to: dateRange.to }}
@@ -231,7 +226,7 @@ export default function TCGAnalyticsPage() {
             </Popover>
           </div>
           <AnalyticsMetrics dateRange={dateRange} />
-          <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <div className="overflow-x-auto">
               <SearchChart
                 dateRange={dateRange}
@@ -247,7 +242,7 @@ export default function TCGAnalyticsPage() {
               />
             </div>
           </div>
-          <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <div className="overflow-x-auto">
               <SearchChart
                 dateRange={dateRange}
@@ -277,7 +272,7 @@ export default function TCGAnalyticsPage() {
               />
             </div>
           </div>
-          <div className="grid gap-4 grid-cols-1 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <div className="overflow-x-auto">
               <PopularClickedCards dateRange={dateRange} />
             </div>
