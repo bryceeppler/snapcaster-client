@@ -20,6 +20,7 @@ export const BuylistStoreOffers = () => {
   const { vendors, getVendorIcon, getVendorNameBySlug } = useVendors();
   const { data: connectedVendors, isLoading: isLoadingConnections } =
     useConnectedVendors();
+  console.log(connectedVendors);
 
   const isVendorConnected = (vendorSlug: string) => {
     if (isLoadingConnections || !connectedVendors) return false;
@@ -27,7 +28,7 @@ export const BuylistStoreOffers = () => {
       (website) => website.slug === vendorSlug
     );
     return matchingWebsite
-      ? connectedVendors.includes(matchingWebsite.id)
+      ? connectedVendors.includes(matchingWebsite.slug)
       : false;
   };
 

@@ -53,7 +53,7 @@ export const SubmitOfferPanel = () => {
       (website) => website.slug === submitData?.storeName
     );
     if (matchingWebsite) {
-      setIsVendorConnected(connectedVendors.includes(matchingWebsite.id));
+      setIsVendorConnected(connectedVendors.includes(matchingWebsite.slug));
     }
   }, [connectedVendors, isLoadingConnections, submitData?.storeName]);
 

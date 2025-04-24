@@ -12,22 +12,8 @@ const Buylist: NextPage<Props> = () => {
     <>
       <BuylistHead />
       <div className="h-full min-h-svh ">
-        <div className="flex flex-col items-center justify-center gap-2 pt-[calc(25vh-2rem)]">
-          <AlertCircle></AlertCircle>
-          <div className="flex flex-col items-center justify-center">
-            <p className="text-lg font-semibold">
-              Buylists is currently under maintenance
-            </p>
-            <p className="text-sm text-muted-foreground">
-              This feature will return in the next few days
-            </p>
-            <a href="https://discord.gg/EnKKHxSq75">
-              <Button className="mt-2 w-full">Discord Updates</Button>
-            </a>
-          </div>
-        </div>
-        {/* <BuylistCatalog />
-        <BackToTopButton /> */}
+        <BuylistCatalog />
+        <BackToTopButton />
       </div>
     </>
   );
