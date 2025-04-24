@@ -133,9 +133,10 @@ export const SubmitOfferPanel = () => {
           </div>
 
           <p className=" text-xs text-muted-foreground">
-            Please wait for a final adjusted email offer from Obsidian Games. If
-            you are not dropping off your cards in person, we recommend
-            recommend purchasing shipping insurance.
+            Please wait for a final adjusted email offer from{' '}
+            {getVendorNameBySlug(submitData.storeName)}. If you are not dropping
+            off your cards in person, we recommend recommend purchasing shipping
+            insurance.
           </p>
           <div>
             <div className="flex  space-x-2 ">
