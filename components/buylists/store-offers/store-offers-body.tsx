@@ -149,44 +149,8 @@ export const BuylistStoreOffers = () => {
                                 <div className="flex items-center gap-2">
                                   <div className="flex items-center gap-1.5">
                                     <span className="text-sm font-medium text-green-700 dark:text-green-300">
-                                      Get an extra $15 on orders over $250
+                                      Free shipping on buylists over $250
                                     </span>
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger>
-                                          <InfoIcon className="size-4 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200" />
-                                        </TooltipTrigger>
-                                        <TooltipContent className="z-40 max-w-xs p-4">
-                                          <div className="space-y-2">
-                                            <p className="border-b pb-1 text-sm font-semibold text-primary">
-                                              $15 Bonus Offer Details
-                                            </p>
-                                            <p className="text-xs">
-                                              Here's how it works:
-                                            </p>
-                                            <ul className="space-y-1.5 pl-1 text-xs">
-                                              <li className="flex items-start gap-1.5">
-                                                <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary"></span>
-                                                <span>
-                                                  Submit your buylist to Exor
-                                                  Games
-                                                </span>
-                                              </li>
-                                              <li className="flex items-start gap-1.5">
-                                                <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary"></span>
-                                                <span>
-                                                  If it totals $250 or more, and
-                                                  the submission is accepted,
-                                                  they'll tack on an extra $15
-                                                  to your payout to help cover
-                                                  shipping.
-                                                </span>
-                                              </li>
-                                            </ul>
-                                          </div>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
                                   </div>
                                 </div>
                                 <div className="mt-2 border-t border-green-200 pt-1.5 dark:border-green-900">

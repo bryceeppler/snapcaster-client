@@ -145,27 +145,8 @@ export const SubmitOfferPanel = () => {
                 <div className="flex items-center gap-2">
                   <div className="flex flex-col gap-1.5">
                     <span className="text-sm font-medium text-green-700 dark:text-green-300">
-                      Get an extra $15 on orders over $250
+                      Free shipping on buylists over $250
                     </span>
-
-                    <div className="space-y-2">
-                      <ul className="space-y-1.5 pl-1 text-xs">
-                        <li className="flex items-start gap-1.5">
-                          <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-green-700 dark:bg-green-300"></span>
-                          <span className="text-green-700 dark:text-green-300">
-                            Submit your buylist to Exor Games
-                          </span>
-                        </li>
-                        <li className="flex items-start gap-1.5">
-                          <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-green-700 dark:bg-green-300"></span>
-                          <span className="text-green-700 dark:text-green-300">
-                            If it totals $250 or more, and the submission is
-                            accepted, they'll tack on an extra $15 to your
-                            payout to help cover shipping.
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
                   </div>
                 </div>
                 <div className="mt-2 border-t border-green-200 pt-1.5 dark:border-green-900">
