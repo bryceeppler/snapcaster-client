@@ -243,7 +243,7 @@ const Navbar: React.FC = () => {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <Link legacyBehavior href="/" passHref>
+                  <Link href="/" passHref>
                     <div className="flex cursor-pointer items-center space-x-3">
                       <img
                         className="h-6 w-auto"
