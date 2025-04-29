@@ -13,7 +13,14 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Info as InfoIcon } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
+
 type PaymentMethod = 'Cash' | 'Store Credit';
 
 export const SubmitOfferPanel = () => {
@@ -131,11 +138,54 @@ export const SubmitOfferPanel = () => {
               </p>
             </div>
           </div>
+          {submitData?.storeName === 'exorgames' &&
+            (submitData?.cashSubtotal > 250 ||
+              submitData?.creditSubtotal > 250) && (
+              <div className="rounded-md border border-green-200 bg-green-50 p-2 dark:border-green-900 dark:bg-green-950/50">
+                <div className="flex items-center gap-2">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                      Get an extra $15 on orders over $250
+                    </span>
+
+                    <div className="space-y-2">
+                      <ul className="space-y-1.5 pl-1 text-xs">
+                        <li className="flex items-start gap-1.5">
+                          <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-green-700 dark:bg-green-300"></span>
+                          <span className="text-green-700 dark:text-green-300">
+                            Submit your buylist to Exor Games
+                          </span>
+                        </li>
+                        <li className="flex items-start gap-1.5">
+                          <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-green-700 dark:bg-green-300"></span>
+                          <span className="text-green-700 dark:text-green-300">
+                            If it totals $250 or more, and the submission is
+                            accepted, they'll tack on an extra $15 to your
+                            payout to help cover shipping.
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-2 border-t border-green-200 pt-1.5 dark:border-green-900">
+                  <a
+                    href="https://exorgames.com/pages/selling-policy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-xs text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200"
+                  >
+                    <span>View full selling policy</span>
+                    <ExternalLink className="size-3" />
+                  </a>
+                </div>
+              </div>
+            )}
 
           <p className=" text-xs text-muted-foreground">
             Please wait for a final adjusted email offer from{' '}
             {getVendorNameBySlug(submitData.storeName)}. If you are not dropping
-            off your cards in person, we recommend recommend purchasing shipping
+            off your cards in person, we recommend purchasing shipping
             insurance.
           </p>
           <div>
