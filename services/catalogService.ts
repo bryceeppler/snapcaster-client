@@ -68,6 +68,41 @@ export interface BuylistAnalytics {
   };
 }
 
+export interface BuylistSubmission {
+  userId: number;
+  cartId: string;
+  timestamp: string;
+  status: string;
+  vendorSlug: string;
+  paymentType: string;
+  totalCards: number;
+  totalValue: number;
+  cards: {
+    baseCardId: number;
+    cardName: string;
+    setName: string;
+    game: string;
+    foil: string;
+    condition: string;
+    conditionName: string;
+    quantity: number;
+    cashPrice: number;
+    creditPrice: number;
+  }[];
+}
+
+export interface BuylistSubmissionResponse {
+  submissions: BuylistSubmission[];
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+}
+
 export class CatalogService {
   async search(params: SearchParams): Promise<SearchResponse> {
     const queryParams = new URLSearchParams();
@@ -120,6 +155,21 @@ export class CatalogService {
   async getAdminBuylistAnalytics(): Promise<BuylistAnalytics[]> {
     const response = await axiosInstance.get(
       `${BASE_URL}/api/v1/catalog/analytics/buylists`
+    );
+    return response.data.data;
+  }
+
+  async getBuylistSubmissions(
+    page?: number,
+    limit?: number,
+    vendorSlug?: string,
+    status?: string,
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<BuylistSubmissionResponse> {
+    const response = await axiosInstance.get(
+      `${BASE_URL}/api/v1/catalog/analytics/buylists/submissions`,
+      { params: { page, limit, vendorSlug, status, startDate, endDate } }
     );
     return response.data.data;
   }

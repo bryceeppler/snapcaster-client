@@ -3,7 +3,11 @@ import { useBuylistAnalytics } from '@/hooks/queries/useBuylistAnalytics';
 import { useAuth } from '@/hooks/useAuth';
 import BuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/buylist-analytics';
 import AdminBuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/admin-buylist-analytics';
-import { BuylistAnalytics } from '@/services/catalogService';
+import {
+  BuylistAnalytics,
+  BuylistSubmissionResponse
+} from '@/services/catalogService';
+import BuylistSubmissionTable from '@/components/vendors/dashboard/buylists/buylist-submission-table';
 import { useState, useEffect } from 'react';
 import {
   Select,
@@ -13,6 +17,8 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 export default function BuylistsPage() {
   const { profile, isAdmin, isLoadingProfile } = useAuth();
 
@@ -28,8 +34,19 @@ export default function BuylistsPage() {
   // Use the vendor ID from the user profile if available, otherwise default to 26
   const vendorId = profile?.data?.user.vendorData?.vendorId || 26;
 
-  const { buylistAnalytics, isLoading, isError, isRolePending } =
-    useBuylistAnalytics(vendorId.toString(), userRole);
+  const {
+    buylistAnalytics,
+    isLoadingAnalytics,
+    isErrorAnalytics,
+    isRolePending,
+    buylistSubmissions,
+    isLoadingSubmissions,
+    isErrorSubmissions,
+    currentPage,
+    pageSize,
+    handlePageChange,
+    handlePageSizeChange
+  } = useBuylistAnalytics(vendorId.toString(), userRole);
 
   // For admins, determine which vendor data to display
   const analyticsToDisplay: BuylistAnalytics | undefined =
@@ -39,13 +56,18 @@ export default function BuylistsPage() {
         : buylistAnalytics[0]
       : undefined;
 
+  // Check if we have valid submissions data to display
+  const submissionsToDisplay: BuylistSubmissionResponse | undefined =
+    buylistSubmissions ? (isAdmin ? buylistSubmissions : undefined) : undefined;
+
   // Handle vendor selection change (admin only)
   const handleVendorChange = (value: string) => {
     setSelectedVendorIndex(parseInt(value));
   };
 
   // Determine if we're in a loading state
-  const isLoadingData = isLoadingProfile || isRolePending || isLoading;
+  const isLoadingData =
+    isLoadingProfile || isRolePending || isLoadingAnalytics || isErrorAnalytics;
 
   return (
     <DashboardLayout>
@@ -88,7 +110,7 @@ export default function BuylistsPage() {
             <div className="flex h-40 items-center justify-center">
               <p className="text-muted-foreground">Loading analytics data...</p>
             </div>
-          ) : isError ? (
+          ) : isErrorAnalytics ? (
             <div className="flex h-40 items-center justify-center">
               <p className="text-red-500">Error loading analytics data</p>
             </div>
@@ -97,14 +119,14 @@ export default function BuylistsPage() {
               {isAdmin ? (
                 <AdminBuylistAnalyticsOverview
                   data={analyticsToDisplay}
-                  isLoading={isLoading}
-                  isError={isError}
+                  isLoading={isLoadingAnalytics}
+                  isError={isErrorAnalytics}
                 />
               ) : (
                 <BuylistAnalyticsOverview
                   data={analyticsToDisplay}
-                  isLoading={isLoading}
-                  isError={isError}
+                  isLoading={isLoadingAnalytics}
+                  isError={isErrorAnalytics}
                 />
               )}
             </>
@@ -112,6 +134,42 @@ export default function BuylistsPage() {
             <div className="flex h-40 items-center justify-center">
               <p className="text-muted-foreground">No data available</p>
             </div>
+          )}
+
+          {/* Buylist Submissions Section - Only show for admin users */}
+          {isAdmin && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Buylist Submissions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoadingSubmissions ? (
+                  <div className="flex h-40 items-center justify-center">
+                    <p className="text-muted-foreground">
+                      Loading submissions...
+                    </p>
+                  </div>
+                ) : isErrorSubmissions ? (
+                  <div className="flex h-40 items-center justify-center">
+                    <p className="text-red-500">Error loading submissions</p>
+                  </div>
+                ) : submissionsToDisplay ? (
+                  <BuylistSubmissionTable
+                    data={submissionsToDisplay}
+                    currentPage={currentPage}
+                    pageSize={pageSize}
+                    onPageChange={handlePageChange}
+                    onPageSizeChange={handlePageSizeChange}
+                  />
+                ) : (
+                  <div className="flex h-40 items-center justify-center">
+                    <p className="text-muted-foreground">
+                      No submissions available
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>
