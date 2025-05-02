@@ -8,7 +8,7 @@ import {
 } from '@/services/advertisementService';
 import { toast } from 'sonner';
 import { useMemo, useRef } from 'react';
-
+import { AdvertisementPosition } from '@/types/advertisements';
 export const QUERY_KEY = 'advertisements';
 
 const fetchAdvertisements = async (): Promise<AdvertisementWithImages[]> => {
@@ -106,6 +106,58 @@ export const useAdvertisements = (vendorId?: number | null) => {
           ...ad,
           images: ad.images.filter((img) => img.is_active)
         }));
+
+      cachedAdsRef.current[cacheKey] = result;
+      cachedAdsRef.current.updatedAt = query.dataUpdatedAt;
+
+      return result;
+    };
+  }, [cachedData, query.dataUpdatedAt]);
+
+  // return ads with the position TOP_BANNER, and allow for passing a param to filter by is_active = true
+  const topBannerAds = useMemo(() => {
+    return cachedData.filter(
+      (ad) =>
+        ad.position === AdvertisementPosition.TOP_BANNER &&
+        ad.is_active === true
+    );
+  }, [cachedData]);
+
+  // Get ads with the position LEFT_BANNER that are active
+  const leftBannerAds = useMemo(() => {
+    return cachedData.filter(
+      (ad) =>
+        ad.position === AdvertisementPosition.LEFT_BANNER &&
+        ad.is_active === true
+    );
+  }, [cachedData]);
+
+  // Get ads with the position RIGHT_BANNER that are active
+  const rightBannerAds = useMemo(() => {
+    return cachedData.filter(
+      (ad) =>
+        ad.position === AdvertisementPosition.RIGHT_BANNER &&
+        ad.is_active === true
+    );
+  }, [cachedData]);
+
+  // Get ads by position that are active
+  const getAdsByPosition = useMemo(() => {
+    return (position: AdvertisementPosition): AdvertisementWithImages[] => {
+      const cacheKey = `position_${position}`;
+
+      // Use cached result if available and data hasn't changed
+      if (
+        cachedAdsRef.current[cacheKey] &&
+        query.dataUpdatedAt === cachedAdsRef.current.updatedAt
+      ) {
+        return cachedAdsRef.current[cacheKey];
+      }
+
+      // Calculate and cache the result
+      const result = cachedData.filter(
+        (ad) => ad.position === position && ad.is_active === true
+      );
 
       cachedAdsRef.current[cacheKey] = result;
       cachedAdsRef.current.updatedAt = query.dataUpdatedAt;
@@ -228,6 +280,10 @@ export const useAdvertisements = (vendorId?: number | null) => {
     isLoading: query.isLoading,
     isError: query.isError,
     getAdvertisementsByVendorId,
+    topBannerAds,
+    leftBannerAds,
+    rightBannerAds,
+    getAdsByPosition,
     getActiveAdvertisements,
     getAdvertisementById,
     // Direct fetch methods

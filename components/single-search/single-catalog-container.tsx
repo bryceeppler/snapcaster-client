@@ -3,16 +3,72 @@ import BackToTopButton from '../ui/back-to-top-btn';
 import SingleCatalogItem from './single-catalog-item';
 import FilterSection from '@/components/search-ui/search-filter-container';
 import { useAuth } from '@/hooks/useAuth';
-import AdComponent from '../ad';
-import type { AdvertisementWithImages } from '@/types/advertisements';
-import { AdvertisementPosition } from '@/types/advertisements';
-import React, { useState, useEffect, useMemo } from 'react';
+import {
+  AdvertisementPosition,
+  AdvertisementWithImages
+} from '@/types/advertisements';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
-import { useAdManager } from '@/components/ads/AdManager';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 // Constant defining how often ads should appear in search results
 const AD_INTERVAL = 10;
+
+/**
+ * Helper function to get a random item from an array
+ */
+const getRandomItem = <T,>(items: T[]): T | undefined => {
+  if (!items || !items.length) return undefined;
+  const randomIndex = Math.floor(Math.random() * items.length);
+  return items[randomIndex];
+};
+
+/**
+ * Feed Ad Component to be inserted in search results
+ */
+const FeedAd = ({
+  ad,
+  isFeatured = false
+}: {
+  ad: AdvertisementWithImages;
+  isFeatured?: boolean;
+}) => {
+  const [imageUrl, setImageUrl] = useState<string | undefined>();
+
+  // Select a random image for the ad when it first renders
+  useEffect(() => {
+    if (!ad || !ad.images || !ad.images.length) return;
+
+    // Get all active images
+    const activeImages = ad.images.filter((img) => img.is_active);
+    if (!activeImages.length) return;
+
+    // Select a random image from the active images
+    const randomImage = getRandomItem(activeImages);
+    setImageUrl(randomImage?.image_url);
+  }, [ad]);
+
+  if (!imageUrl) return null;
+
+  return (
+    <a
+      href={ad.target_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex flex-col overflow-hidden rounded-lg border border-gray-200 transition-shadow duration-200 hover:shadow-md"
+    >
+      <div className="relative">
+        <img
+          src={imageUrl}
+          alt={ad.alt_text || 'Advertisement'}
+          className="h-auto w-full rounded-t-lg object-cover"
+        />
+      </div>
+    </a>
+  );
+};
 
 export default function SingleCatalog() {
   const {
@@ -37,30 +93,68 @@ export default function SingleCatalog() {
   } = useSingleSearchStore();
 
   const { hasActiveSubscription } = useAuth();
-  const { getInitialFeedAd, getIntervalAds } = useAdManager();
+  const { getAdsByPosition } = useAdvertisements();
 
-  const [initialAd, setInitialAd] = useState<AdvertisementWithImages | null>(
+  // Get feed ads and manage selection
+  const feedAds = useMemo(
+    () => getAdsByPosition(AdvertisementPosition.FEED),
+    [getAdsByPosition]
+  );
+
+  // Set up weighted selection for feed ads
+  const feedAdManager = useMemo(() => {
+    const manager = createWeightedSelectionManager<AdvertisementWithImages>();
+    manager.setItems(feedAds);
+    return manager;
+  }, [feedAds]);
+
+  // Keep track of which ad is displayed at each position and the featured ad
+  const [adMap, setAdMap] = useState<Record<number, AdvertisementWithImages>>(
+    {}
+  );
+  const [featuredAd, setFeaturedAd] = useState<AdvertisementWithImages | null>(
     null
   );
-  const [interleaveAds, setInterleaveAds] = useState<AdvertisementWithImages[]>(
-    []
-  );
 
-  // Get ads when search results change
+  // Generate the featured ad and interleaved ads whenever search results change
   useEffect(() => {
-    if (!hasActiveSubscription && searchResults) {
-      // Get initial ad
-      setInitialAd(getInitialFeedAd());
-
-      // Get ads to interleave into search results
-      const resultCount = searchResults.length;
-      setInterleaveAds(getIntervalAds(resultCount, AD_INTERVAL));
+    if (!searchResults || hasActiveSubscription || !feedAds.length) {
+      setFeaturedAd(null);
+      setAdMap({});
+      return;
     }
-  }, [searchResults, hasActiveSubscription, getInitialFeedAd, getIntervalAds]);
+
+    // Select a featured ad based on weights
+    const featuredAdIndex = feedAdManager.selectRandom();
+    if (featuredAdIndex >= 0) {
+      setFeaturedAd(feedAds[featuredAdIndex]);
+      // Set as previous selection to avoid showing the same ad in the results
+      feedAdManager.setPreviousSelection(featuredAdIndex);
+    } else {
+      setFeaturedAd(null);
+    }
+
+    // Now select ads for interleaving in the results
+    const newAdMap: Record<number, AdvertisementWithImages> = {};
+
+    // Calculate positions for the interleaved ads
+    for (let i = AD_INTERVAL - 1; i < searchResults.length; i += AD_INTERVAL) {
+      // Select a random ad based on weights that's different from previous selections
+      const adIndex = feedAdManager.selectDifferentRandom();
+
+      if (adIndex >= 0) {
+        // Store the selected ad, then set it as previous to avoid repeats
+        newAdMap[i] = feedAds[adIndex];
+        feedAdManager.setPreviousSelection(adIndex);
+      }
+    }
+
+    setAdMap(newAdMap);
+  }, [searchResults, hasActiveSubscription, feedAds, feedAdManager]);
 
   // Calculate positions where ads should be shown
   const adPositions = useMemo(() => {
-    if (!searchResults || hasActiveSubscription) return [];
+    if (!searchResults || hasActiveSubscription || !feedAds.length) return [];
 
     // Create an array of positions where ads should appear
     const positions: number[] = [];
@@ -69,7 +163,7 @@ export default function SingleCatalog() {
     }
 
     return positions;
-  }, [searchResults, hasActiveSubscription]);
+  }, [searchResults, hasActiveSubscription, feedAds]);
 
   const handleSortByChange = (value: any) => {
     setSortBy(value);
@@ -170,49 +264,29 @@ export default function SingleCatalog() {
           {/* #3 Single Search Result Cards Section*/}
           {searchResults && (
             <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-3 xxl:grid-cols-4">
-              {/* Initial ad at the top */}
-              {!hasActiveSubscription && initialAd && (
-                <AdComponent
-                  ad={initialAd}
-                  position={AdvertisementPosition.FEED}
-                  key={`initial-${initialAd.id}`}
-                />
+              {/* Featured Ad - displayed as first item in the grid */}
+              {!hasActiveSubscription && featuredAd && (
+                <FeedAd ad={featuredAd} />
               )}
 
               {/* Promoted results */}
               {promotedResults &&
                 !hasActiveSubscription &&
-                promotedResults.map((item, index) => {
-                  return <SingleCatalogItem product={item} key={index} />;
-                })}
+                promotedResults.map((item, index) => (
+                  <SingleCatalogItem product={item} key={`promoted-${index}`} />
+                ))}
 
               {/* Regular results with interleaved ads */}
-              {searchResults.map((item, index) => {
-                // Check if an ad should appear after this item
-                const shouldShowAd =
-                  !hasActiveSubscription &&
-                  adPositions.includes(index) &&
-                  interleaveAds.length > 0;
+              {searchResults.map((item, index) => (
+                <React.Fragment key={`result-${index}`}>
+                  <SingleCatalogItem product={item} />
 
-                // Calculate which ad to show (handles repeated ads if necessary)
-                const adIndex = Math.floor(
-                  adPositions.indexOf(index) % interleaveAds.length
-                );
-
-                return (
-                  <React.Fragment key={index}>
-                    <SingleCatalogItem product={item} />
-
-                    {shouldShowAd && interleaveAds[adIndex] && (
-                      <AdComponent
-                        ad={interleaveAds[adIndex]}
-                        position={AdvertisementPosition.FEED}
-                        key={`feed-${interleaveAds[adIndex].id}-pos-${index}`}
-                      />
-                    )}
-                  </React.Fragment>
-                );
-              })}
+                  {/* Insert ad at specified intervals if user doesn't have a subscription */}
+                  {!hasActiveSubscription &&
+                    adPositions.includes(index) &&
+                    adMap[index] && <FeedAd ad={adMap[index]} />}
+                </React.Fragment>
+              ))}
             </div>
           )}
         </div>

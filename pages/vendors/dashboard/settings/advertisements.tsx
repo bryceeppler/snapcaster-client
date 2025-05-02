@@ -1,29 +1,17 @@
 import {
-  Calendar as CalendarIcon,
-  Plus,
-  Trash2,
   Pencil,
   MoreHorizontal,
-  Check,
-  X,
   Image as ImageIcon,
   Link as LinkIcon,
   Store
 } from 'lucide-react';
 import React, { useState, useEffect, memo, useCallback, useMemo } from 'react';
-import { format } from 'date-fns';
 import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
 import DashboardLayout from '../layout';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
 import {
   Table,
   TableBody,
@@ -32,51 +20,37 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { useVendors } from '@/hooks/queries/useVendors';
-import { toast } from 'sonner';
-import { Label } from '@/components/ui/label';
-import {
-  advertisementService,
-  CreateAdvertisementRequest,
-  CreateAdvertisementImageRequest
-} from '@/services/advertisementService';
 import {
   AdvertisementWithImages,
   AdvertisementPosition,
   AdvertisementImageType
 } from '@/types/advertisements';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
 import { useAuth } from '@/hooks/useAuth';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { AD_DIMENSIONS } from '@/components/ads/AdManager';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { Badge } from '@/components/ui/badge';
+
+export const AD_DIMENSIONS = {
+  topBanner: {
+    mobile: {
+      width: 382,
+      height: 160,
+      aspectRatio: '382/160'
+    },
+    desktop: {
+      width: 1008,
+      height: 160,
+      aspectRatio: '1008/160'
+    }
+  },
+  sideBanner: {
+    width: 160,
+    height: 480,
+    aspectRatio: '160/480'
+  }
+} as const;
 
 // Form schema for advertisement validation
 const advertisementFormSchema = z.object({
