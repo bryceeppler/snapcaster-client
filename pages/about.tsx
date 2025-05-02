@@ -34,6 +34,22 @@ const About: NextPage<Props> = () => {
               title="Our Supporters"
               subtitle="We're grateful for the support of these amazing companies."
             />
+            <div className="space-y-8">
+              <div className="flex flex-col items-center">
+                <h3 className="text-center text-3xl font-bold">Coming Soon</h3>
+                <p>The Snapcaster Marketplace</p>
+              </div>
+              <div className="relative mx-auto flex max-w-sm items-center justify-center rounded-lg bg-zinc-800/50 p-10">
+                <div className="absolute left-3 top-3 text-xs text-white/70">
+                  Powered By
+                </div>
+                <img
+                  src="https://imagedelivery.net/kwpOMlVOHoYYK5BfnMRBqg/ff0cfeac-4e3a-494c-e6fb-4b671b2f3200/public"
+                  alt="Sort Swift"
+                  className="w-full"
+                />
+              </div>
+            </div>
             {/* Tier 1 Sponsors */}
             {/* TODO: Use vendors.tier to map out the sponsors */}
             <div className="space-y-8">
