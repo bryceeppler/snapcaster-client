@@ -16,7 +16,10 @@ function MainLayout({
   const { showAds } = useAdContext();
   const { hasActiveSubscription } = useAuth();
 
-  const shouldShowAds = showAds && !hasActiveSubscription;
+  const shouldShowAds = useMemo(
+    () => showAds && !hasActiveSubscription,
+    [showAds, hasActiveSubscription]
+  );
 
   return (
     <div className="relative flex justify-center">
