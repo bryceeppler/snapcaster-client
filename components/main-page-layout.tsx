@@ -24,11 +24,11 @@ function MainLayout({
         <>
           <SideBanner
             position={AdvertisementPosition.LEFT_BANNER}
-            intervalMs={4000}
+            intervalMs={10000}
           />
           <SideBanner
             position={AdvertisementPosition.RIGHT_BANNER}
-            intervalMs={4000}
+            intervalMs={10000}
           />
         </>
       )}
@@ -37,7 +37,7 @@ function MainLayout({
       <div className="w-full max-w-4xl items-center px-4 below1550:max-w-6xl">
         {shouldShowAds && (
           <div className="pt-4">
-            <TopBanner className="w-full" intervalMs={4000} />
+            <TopBanner className="w-full" intervalMs={10000} />
           </div>
         )}
         {/* Page Content */}
