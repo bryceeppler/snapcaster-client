@@ -5,6 +5,7 @@ import {
 } from '@/types/advertisements';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { createWeightedSelectionManager } from '@/utils/weightedSelection';
+import { appendUtmParameters } from '@/utils/adUrlBuilder';
 
 interface SideBannerProps {
   position: AdvertisementPosition;
@@ -121,9 +122,14 @@ const SideBanner: React.FC<SideBannerProps> = ({
       ? 'fixed left-0 top-1/2 transform -translate-y-1/2 ml-4 z-10'
       : 'fixed right-0 top-1/2 transform -translate-y-1/2 mr-4 z-10';
 
+  // Append UTM parameters to the URL
+  const adUrl = appendUtmParameters(selectedImage.url || '', {
+    content: position.toLowerCase()
+  });
+
   return (
     <a
-      href={selectedImage.url}
+      href={adUrl}
       target="_blank"
       rel="noopener noreferrer"
       className={`hidden xl:block ${positionStyles} ${className || ''}`}

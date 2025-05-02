@@ -12,6 +12,7 @@ import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { createWeightedSelectionManager } from '@/utils/weightedSelection';
+import { appendUtmParameters } from '@/utils/adUrlBuilder';
 
 // Constant defining how often ads should appear in search results
 const AD_INTERVAL = 10;
@@ -52,9 +53,14 @@ const FeedAd = ({
 
   if (!imageUrl) return null;
 
+  // Append UTM parameters to the URL
+  const adUrl = appendUtmParameters(ad.target_url || '', {
+    content: isFeatured ? 'feed_featured' : 'feed_inline'
+  });
+
   return (
     <a
-      href={ad.target_url}
+      href={adUrl}
       target="_blank"
       rel="noopener noreferrer"
       className="flex flex-col overflow-hidden rounded-lg border border-gray-200 transition-shadow duration-200 hover:shadow-md"

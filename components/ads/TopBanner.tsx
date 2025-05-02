@@ -2,9 +2,11 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import {
   AdvertisementWithImages,
-  AdvertisementImageType
+  AdvertisementImageType,
+  AdvertisementPosition
 } from '@/types/advertisements';
 import { createWeightedSelectionManager } from '@/utils/weightedSelection';
+import { appendUtmParameters } from '@/utils/adUrlBuilder';
 
 interface TopBannerProps {
   className?: string;
@@ -122,9 +124,14 @@ const TopBanner: React.FC<TopBannerProps> = ({
     return null;
   }
 
+  // Append UTM parameters to the URL
+  const adUrl = appendUtmParameters(selectedImages.url || '', {
+    content: AdvertisementPosition.TOP_BANNER.toLowerCase()
+  });
+
   return (
     <a
-      href={selectedImages.url}
+      href={adUrl}
       target="_blank"
       rel="noopener noreferrer"
       className={`block aspect-[382/160] sm:aspect-[1008/160] ${
