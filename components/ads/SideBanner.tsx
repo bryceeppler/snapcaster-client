@@ -1,44 +1,151 @@
-import React, { useMemo } from 'react';
-import { AdvertisementPosition } from '@/types/advertisements';
-import { useAdManager } from './AdManager';
-import SideBannerCarousel from '../side-banner-carousel';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import {
+  AdvertisementPosition,
+  AdvertisementWithImages
+} from '@/types/advertisements';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 interface SideBannerProps {
-  position:
-    | AdvertisementPosition.LEFT_BANNER
-    | AdvertisementPosition.RIGHT_BANNER;
+  position: AdvertisementPosition;
   className?: string;
+  intervalMs?: number; // Rotation interval in milliseconds
 }
 
-const SideBanner: React.FC<SideBannerProps> = ({ position, className }) => {
-  const { ads, getVendorWeightsForPosition } = useAdManager();
+/**
+ * Helper function to get a random item from an array
+ */
+const getRandomItem = <T,>(items: T[]): T | undefined => {
+  if (!items || !items.length) return undefined;
+  const randomIndex = Math.floor(Math.random() * items.length);
+  return items[randomIndex];
+};
 
-  // Memoize these values to prevent recalculation on window resize
-  const sideBannerAds = useMemo(() => ads[position] || [], [ads, position]);
-  const positionWeights = useMemo(
-    () => getVendorWeightsForPosition(position),
-    [getVendorWeightsForPosition, position]
+const SideBanner: React.FC<SideBannerProps> = ({
+  position,
+  className,
+  intervalMs = 5000 // Default to 5 seconds rotation
+}) => {
+  const { getAdsByPosition } = useAdvertisements();
+  const bannerAds = useMemo(
+    () => getAdsByPosition(position),
+    [getAdsByPosition, position]
   );
 
-  if (sideBannerAds.length === 0) return null;
+  const [currentAdIndex, setCurrentAdIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<{
+    imageUrl?: string;
+    alt?: string;
+    url?: string;
+  }>({});
 
-  // Render the carousel directly as an overlay
+  // Create a weighted selection manager for the ads
+  const selectionManager = useMemo(() => {
+    const manager = createWeightedSelectionManager<AdvertisementWithImages>();
+    manager.setItems(bannerAds);
+    return manager;
+  }, [bannerAds]);
+
+  // Keep track of whether it's the first render
+  const isFirstRender = useRef(true);
+
+  // Function to select a random image for the current ad
+  const selectRandomImage = (ad: AdvertisementWithImages) => {
+    // Get all active images for this ad
+    const activeImages = ad.images.filter((img) => img.is_active);
+
+    // Select a random image from the active images
+    const randomImage = getRandomItem(activeImages);
+
+    setSelectedImage({
+      imageUrl: randomImage?.image_url,
+      alt: ad.alt_text,
+      url: ad.target_url
+    });
+  };
+
+  // Select an initial ad based on weights on component mount
+  useEffect(() => {
+    if (!bannerAds || !bannerAds.length) return;
+
+    if (isFirstRender.current) {
+      // First render - select any ad using weights
+      const initialIndex = selectionManager.selectRandom();
+      if (initialIndex >= 0) {
+        setCurrentAdIndex(initialIndex);
+        // Store this as the previous selection to avoid showing it again next
+        selectionManager.setPreviousSelection(initialIndex);
+        // Select random image for this ad
+        selectRandomImage(bannerAds[initialIndex]);
+      }
+      isFirstRender.current = false;
+    } else if (bannerAds.length > 1) {
+      // Data changed - make sure we don't show the same ad again
+      selectionManager.setPreviousSelection(currentAdIndex);
+      const nextIndex = selectionManager.selectDifferentRandom();
+      if (nextIndex >= 0) {
+        setCurrentAdIndex(nextIndex);
+        // Select random image for this ad
+        selectRandomImage(bannerAds[nextIndex]);
+      }
+    }
+  }, [bannerAds, selectionManager]);
+
+  // Set up rotation effect for interval timer
+  useEffect(() => {
+    if (bannerAds.length <= 1) return; // No need for rotation with 0 or 1 ads
+
+    const rotationTimer = setInterval(() => {
+      // Always select a different ad than the current one
+      selectionManager.setPreviousSelection(currentAdIndex);
+      const nextIndex = selectionManager.selectDifferentRandom();
+      if (nextIndex >= 0) {
+        setCurrentAdIndex(nextIndex);
+        // Select random image for this ad
+        selectRandomImage(bannerAds[nextIndex]);
+      }
+    }, intervalMs);
+
+    // Cleanup timer on component unmount
+    return () => clearInterval(rotationTimer);
+  }, [bannerAds, intervalMs, selectionManager, currentAdIndex]);
+
+  // Handle case when there are no ads or no selected image
+  if (!bannerAds.length || !selectedImage.imageUrl) {
+    return null;
+  }
+
+  // Different position and styling based on the banner position
+  const positionStyles =
+    position === AdvertisementPosition.LEFT_BANNER
+      ? 'fixed left-0 top-1/2 transform -translate-y-1/2 ml-4 z-10'
+      : 'fixed right-0 top-1/2 transform -translate-y-1/2 mr-4 z-10';
+
   return (
-    <SideBannerCarousel
-      ads={sideBannerAds}
-      vendorWeights={positionWeights}
-      position={position}
-      className={className}
-    />
+    <a
+      href={selectedImage.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`hidden xl:block ${positionStyles} ${className || ''}`}
+    >
+      <img
+        src={selectedImage.imageUrl}
+        alt={selectedImage.alt || ''}
+        className="w-[160px] rounded-lg object-cover"
+        width={160}
+        height={600}
+      />
+    </a>
   );
 };
 
 // Use React.memo with custom comparison function to prevent unnecessary re-renders
 const SideBannerMemo = React.memo(SideBanner, (prevProps, nextProps) => {
-  // Only re-render if position or className has changed
+  // Only re-render if position, className or intervalMs has changed
   return (
     prevProps.position === nextProps.position &&
-    prevProps.className === nextProps.className
+    prevProps.className === nextProps.className &&
+    prevProps.intervalMs === nextProps.intervalMs
   );
 });
 

@@ -8,10 +8,10 @@ export enum AdvertisementPosition {
 export type Advertisement = {
   id: number;
   vendor_id: number;
-  vendor_slug: string;
   position: AdvertisementPosition;
   target_url: string;
   is_active: boolean;
+  weight: number;
   alt_text: string;
   start_date: Date;
   end_date?: Date;
