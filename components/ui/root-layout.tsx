@@ -6,7 +6,8 @@ type Props = {};
 
 export default function Layout({ children }: React.PropsWithChildren<Props>) {
   const pathname = usePathname();
-  const usesFooter = !pathname.includes('buylists');
+  const usesFooter = pathname ? !pathname.includes('buylists') : true;
+
   return (
     <div className="flex flex-col bg-background">
       <div className="min-h-screen">
