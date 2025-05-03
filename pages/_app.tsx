@@ -67,8 +67,11 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
     router.pathname.startsWith('/vendors/dashboard');
   const isLandingPage =
     router.pathname === '/welcome' || router.pathname === '/vendors/tier3';
-  const usesMainNav = !isVendorDashboardPage && !isLandingPage;
-  const usesSideBanners = !router.pathname.startsWith('/buylists');
+  const isBuylistsPage = router.pathname === '/buylists';
+  const usesMainNav =
+    !isVendorDashboardPage && !isLandingPage && !isBuylistsPage;
+
+  const usesSideBanners = !isBuylistsPage;
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -113,7 +116,7 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
                 <Component {...pageProps} />
               </>
             )}
-            {isVendorDashboardPage && (
+            {(isVendorDashboardPage || isBuylistsPage) && (
               <Layout>
                 <Toaster
                   position={width > 640 ? 'bottom-center' : 'bottom-right'}

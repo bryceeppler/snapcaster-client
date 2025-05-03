@@ -10,7 +10,16 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { BadgeDollarSign, ExternalLink } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  BadgeDollarSign,
+  ExternalLink,
+  CheckCircle2,
+  Info
+} from 'lucide-react';
+import { FinalSubmissionHeader } from '../header/header';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export const SubmitOffer = () => {
   const { reviewData, selectedStoreForReview } = useBuyListStore();
@@ -20,131 +29,111 @@ export const SubmitOffer = () => {
 
   const [isVendorConnected, setIsVendorConnected] = useState(false);
 
-  const breakdownData = reviewData?.find(
+  const storeData = reviewData?.find(
     (store: any) => store.storeName === selectedStoreForReview
   );
 
-  const submitData = reviewData?.find(
-    (store: any) => store.storeName === selectedStoreForReview
-  );
-
-  const vendor = vendors.find((vendor) => vendor.slug === submitData.storeName);
+  const vendor = vendors.find((vendor) => vendor.slug === storeData?.storeName);
 
   useEffect(() => {
     if (isLoadingConnections || !connectedVendors) return;
     const matchingWebsite = vendors.find(
-      (website) => website.slug === submitData?.storeName
+      (website) => website.slug === storeData?.storeName
     );
     if (matchingWebsite) {
       setIsVendorConnected(connectedVendors.includes(matchingWebsite.slug));
     }
-  }, [connectedVendors, isLoadingConnections, submitData?.storeName]);
+  }, [connectedVendors, isLoadingConnections, storeData?.storeName, vendors]);
+
+  if (!storeData) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-muted-foreground">No store selected</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="col-span-1 flex h-full min-h-svh w-full flex-1 rounded-lg  bg-card p-0.5">
-      <div className=" md:flex">
-        <div className="mr-2.5 flex w-full flex-col space-y-2 px-2 py-2 md:mr-1 md:py-0">
-          <div className="flex items-end gap-1 md:hidden">
-            <div>
-              <img
-                src={getVendorIcon(vendor) || undefined}
-                alt="Vendor Icon"
-                className="size-8"
-              />
-            </div>
-            <div className="leading-none">
-              <p>{getVendorNameBySlug(submitData.storeName)}</p>
+    <div className="flex h-full w-full flex-col overflow-hidden">
+      <FinalSubmissionHeader />
 
-              <div className="flex items-center gap-1">
-                {isVendorConnected ? (
-                  <div className="flex items-center gap-1">
-                    <div className="h-[0.6rem] w-[0.6rem] rounded-full bg-green-500"></div>
-                    <p className="text-sm leading-none text-muted-foreground">
-                      Connected
-                    </p>
+      <div className="mt-6 grid gap-6 md:grid-cols-[1fr_300px]">
+        {/* Main Content Container */}
+        <Card className="overflow-hidden border bg-card shadow-sm">
+          <div className="flex flex-col">
+            {/* Mobile Vendor Info */}
+            <VendorInfoCard
+              vendor={vendor}
+              storeName={storeData.storeName}
+              isVendorConnected={isVendorConnected}
+              getVendorIcon={getVendorIcon}
+              getVendorNameBySlug={getVendorNameBySlug}
+              className="border-b bg-muted/50 p-4 md:hidden"
+            />
+
+            {/* Cards Container with Scrollable Area */}
+            <ScrollArea className="h-[calc(100vh-9rem)] p-4">
+              <div className="space-y-8">
+                {/* Purchasing Section */}
+                <CardSection
+                  title="Purchasing"
+                  count={storeData.items.length}
+                  totalCount={
+                    storeData.items.length +
+                    storeData.unableToPurchaseItems.length
+                  }
+                  accentColor="bg-primary"
+                >
+                  <div className="grid gap-4 sm:grid-cols-1">
+                    {storeData.items.map((cardData: any, index: number) => (
+                      <PurchaseCard
+                        key={index}
+                        cardData={cardData}
+                        index={index}
+                      />
+                    ))}
                   </div>
-                ) : (
-                  <div className=" flex items-center gap-1 text-muted-foreground hover:cursor-pointer hover:text-primary">
-                    <div
-                      className={`h-[0.6rem] w-[0.6rem] rounded-full bg-red-500`}
-                    ></div>
-                    <a
-                      href={
-                        'https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en'
-                      }
-                      target="_blank"
-                      className="text-sm leading-none"
-                    >
-                      Link to Extension
-                    </a>
-                    <ExternalLink className="size-4  " />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+                </CardSection>
 
-          <div className=" w-full items-center gap-0.5 whitespace-nowrap  pb-1 font-semibold ">
-            <div className="flex w-full items-center justify-between gap-0.5 whitespace-nowrap font-medium ">
-              <div className="flex  items-center space-x-2 leading-none">
-                <Separator
-                  orientation="vertical"
-                  className="h-6  w-[3px] bg-primary"
-                />
-                <p className="shrink-0 text-lg"> Purchasing</p>
-              </div>
-              <p className="shrink-0  font-extralight">
-                {breakdownData.items.length} items
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col ">
-            {breakdownData.items.length > 0 && <Separator className="mb-2" />}
-
-            {breakdownData.items.map((cardData: any, index: number) => (
-              <div className="flex flex-col" key={index}>
-                <div key={index}>
-                  <PurchasingCardSubmitDetails cardData={cardData} />
-                  <Separator className="my-2" />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {breakdownData.unableToPurchaseItems.length > 0 && (
-            <>
-              <div className=" w-full items-center gap-0.5 whitespace-nowrap  pb-1 font-semibold ">
-                <div className="flex w-full items-center justify-between gap-0.5 whitespace-nowrap font-medium ">
-                  <div className="flex  items-center space-x-2 leading-none">
-                    <Separator
-                      orientation="vertical"
-                      className="h-6  w-[3px] bg-red-500"
-                    />
-                    <p className="shrink-0 text-lg"> Not Purchasing</p>
-                  </div>
-                  <p className="shrink-0  font-extralight">
-                    {breakdownData.unableToPurchaseItems.length} items
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col ">
-                <Separator className="mb-2" />
-                {breakdownData.unableToPurchaseItems.map(
-                  (cardData: any, index: number) => (
-                    <div className="flex flex-col " key={index}>
-                      <span key={index}>
-                        <NotPurchasingCardSubmitDetails cardData={cardData} />
-                        <Separator className="my-2" />
-                      </span>
+                {/* Not Purchasing Section */}
+                {storeData.unableToPurchaseItems.length > 0 && (
+                  <CardSection
+                    title="Not Purchasing"
+                    count={storeData.unableToPurchaseItems.length}
+                    totalCount={
+                      storeData.items.length +
+                      storeData.unableToPurchaseItems.length
+                    }
+                    accentColor="bg-red-500"
+                  >
+                    <div className="grid gap-4 sm:grid-cols-1">
+                      {storeData.unableToPurchaseItems.map(
+                        (cardData: any, index: number) => (
+                          <NotPurchasingCard
+                            key={index}
+                            cardData={cardData}
+                            index={index}
+                          />
+                        )
+                      )}
                     </div>
-                  )
+                  </CardSection>
                 )}
               </div>
-            </>
-          )}
-        </div>
-        <div className="sticky self-start p-2 md:top-[164px] md:w-3/5">
+            </ScrollArea>
+          </div>
+        </Card>
+
+        {/* Sidebar - Submit Offer Panel */}
+        <div className="space-y-4">
+          <VendorInfoCard
+            vendor={vendor}
+            storeName={storeData.storeName}
+            isVendorConnected={isVendorConnected}
+            getVendorIcon={getVendorIcon}
+            getVendorNameBySlug={getVendorNameBySlug}
+            className="hidden rounded-lg border bg-card p-4 shadow-sm md:flex"
+          />
           <SubmitOfferPanel />
         </div>
       </div>
@@ -152,181 +141,267 @@ export const SubmitOffer = () => {
   );
 };
 
-type SubmitCardDetailsProps = {
-  cardData: any;
-};
-const PurchasingCardSubmitDetails = ({ cardData }: SubmitCardDetailsProps) => {
-  return (
-    <div className="flex w-full items-stretch space-x-1   pr-1">
-      <div className="shrink-0 self-center">
+// Vendor Info Card Component
+const VendorInfoCard = ({
+  vendor,
+  storeName,
+  isVendorConnected,
+  getVendorIcon,
+  getVendorNameBySlug,
+  className
+}: any) => (
+  <div className={`flex items-center gap-4 ${className}`}>
+    {getVendorIcon(vendor) && (
+      <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-md border bg-white p-1 shadow-sm">
         <img
-          className="w-20 object-contain"
-          src={cardData.image}
-          alt={cardData.name}
+          src={getVendorIcon(vendor) || undefined}
+          alt={`${getVendorNameBySlug(vendor?.slug)} logo`}
+          className="h-full w-full object-contain"
         />
       </div>
+    )}
+    <div className="flex flex-col gap-1">
+      <p className="text-lg font-medium">{getVendorNameBySlug(storeName)}</p>
 
-      <div className="flex w-full flex-col justify-between space-y-0.5 py-1">
-        <div className="space-y-0.5 px-2">
-          <p className="text-xs  leading-none text-muted-foreground">
-            {cardData.setName}
-          </p>
-          <p className="text-sm font-medium leading-none">
-            {cardData.cardName}
-          </p>
-          <div className="font-0 flex flex-wrap items-center gap-1 text-xs text-primary">
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
-              <p> {cardData.condition}</p>
-            </span>
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
-              <p> {cardData.rarity}</p>
-            </span>
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs">
-              <p> {cardData.foil}</p>
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-col space-y-0.5">
-          <div className="flex justify-between ">
-            <div className="flex items-center gap-0.5 pl-2">
-              <p className="text-xs  leading-none text-muted-foreground ">
-                Purchasing - Limit {cardData.maxPurchaseQuantity}
-              </p>
-            </div>
-            <div className="flex space-x-1">
-              <p className="text-xs font-medium leading-none">
-                {cardData.purchaseQuantity}
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <div className="flex items-center gap-0.5 pl-2">
-              <p className="text-xs  leading-none text-muted-foreground">
-                Credit - ${cardData.creditPrice} ea
-              </p>
-              {cardData.bestCreditOffer && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <BadgeDollarSign className="size-3.5 text-primary hover:cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Top Credit Unit Price</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
-            </div>
-            <div className="flex space-x-1">
-              <p className="text-xs font-medium leading-none ">
-                $
-                {(
-                  Number(cardData.creditPrice) * cardData.purchaseQuantity
-                ).toFixed(2)}
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <div className="flex items-center gap-0.5 pl-2">
-              <p className="text-xs leading-none text-muted-foreground">
-                Cash - ${cardData.cashPrice} ea
-              </p>
-              {cardData.bestCreditOffer && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <BadgeDollarSign className="size-3.5 text-primary hover:cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Top Cash Unit Price</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
-            </div>
-            <div className="flex space-x-1">
-              <p className="text-xs font-medium leading-none ">
-                $
-                {(
-                  Number(cardData.cashPrice) * cardData.purchaseQuantity
-                ).toFixed(2)}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {isVendorConnected ? (
+        <Badge
+          variant="outline"
+          className="flex w-fit items-center gap-1.5 border-green-200 bg-green-50 text-green-800 dark:border-green-900 dark:bg-green-950/30 dark:text-green-400"
+        >
+          <CheckCircle2 className="size-3.5" />
+          <span className="text-xs font-normal">Connected</span>
+        </Badge>
+      ) : (
+        <a
+          href="https://chromewebstore.google.com/detail/snapcaster/abelehkkdaejkofgdpnnecpipaaikflb?hl=en"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex w-fit items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-medium text-red-800 transition-colors hover:bg-red-100 dark:border-red-900 dark:bg-red-950/30 dark:text-red-400 dark:hover:bg-red-950/50"
+        >
+          <span className="h-2 w-2 rounded-full bg-red-500"></span>
+          <span>Connect Via Extension</span>
+          <ExternalLink className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+        </a>
+      )}
     </div>
+  </div>
+);
+
+// Card Section Component
+const CardSection = ({
+  title,
+  count,
+  totalCount,
+  accentColor,
+  children,
+  className = ''
+}: {
+  title: string;
+  count: number;
+  totalCount: number;
+  accentColor: string;
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div className={`${className}`}>
+    <div className="mb-4 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className={`h-5 w-1.5 rounded-full ${accentColor}`}></div>
+        <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+      </div>
+      <Badge variant="outline" className="font-normal">
+        {count} of {totalCount} items
+      </Badge>
+    </div>
+    <Separator className="mb-5" />
+    {children}
+  </div>
+);
+
+// Purchase Card Component
+const PurchaseCard = ({
+  cardData,
+  index
+}: {
+  cardData: any;
+  index: number;
+}) => {
+  return (
+    <Card
+      key={index}
+      className="group overflow-hidden border bg-card transition-all duration-200 hover:border-primary/20 hover:shadow-md"
+    >
+      <CardContent className="p-0">
+        <div className="flex flex-col gap-4 p-4 sm:flex-row">
+          <div className="relative shrink-0 self-center">
+            <img
+              className="h-24 w-20 rounded-md object-contain shadow-sm transition-transform duration-200 group-hover:scale-105"
+              src={cardData.image}
+              alt={cardData.name}
+              loading="lazy"
+            />
+            {cardData.bestCreditOffer || cardData.bestCashOffer ? (
+              <div className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-white shadow-md">
+                <BadgeDollarSign className="size-3.5" />
+              </div>
+            ) : null}
+          </div>
+
+          <div className="flex w-full flex-col justify-between space-y-3">
+            {/* Card Info */}
+            <div>
+              <p className="font-montserrat text-xs uppercase text-muted-foreground">
+                {cardData.setName}
+              </p>
+              <p className="font-medium leading-tight">{cardData.cardName}</p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                <Badge variant="secondary" className="text-xs capitalize">
+                  {cardData.condition}
+                </Badge>
+                <Badge variant="secondary" className="text-xs capitalize">
+                  {cardData.rarity}
+                </Badge>
+                {cardData.foil && (
+                  <Badge variant="secondary" className="text-xs">
+                    {cardData.foil}
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            {/* Purchase Details */}
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  Purchasing - Limit {cardData.maxPurchaseQuantity}
+                </span>
+                <span className="font-medium">{cardData.purchaseQuantity}</span>
+              </div>
+
+              <PriceRow
+                label="Credit"
+                unitPrice={cardData.creditPrice}
+                quantity={cardData.purchaseQuantity}
+                isBestOffer={cardData.bestCreditOffer}
+                tooltipText="Top Credit Unit Price"
+              />
+
+              <PriceRow
+                label="Cash"
+                unitPrice={cardData.cashPrice}
+                quantity={cardData.purchaseQuantity}
+                isBestOffer={cardData.bestCashOffer}
+                tooltipText="Top Cash Unit Price"
+              />
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
-const NotPurchasingCardSubmitDetails = ({
-  cardData
-}: SubmitCardDetailsProps) => {
+
+// Not Purchasing Card Component
+const NotPurchasingCard = ({
+  cardData,
+  index
+}: {
+  cardData: any;
+  index: number;
+}) => {
   return (
-    <div className="flex w-full items-stretch space-x-1  pr-1">
-      <div className="shrink-0 self-center">
-        <img
-          className="w-20 object-contain"
-          src={cardData.image}
-          alt={cardData.name}
-        />
-      </div>
-
-      <div className="flex w-full flex-col justify-between py-1 ">
-        <div className="space-y-0.5 px-2">
-          <p className="text-xs  leading-none text-muted-foreground">
-            {cardData.setName}
-          </p>
-          <p className="text-sm font-medium leading-none">
-            {cardData.cardName}
-          </p>
-          <div className="font-0 flex flex-wrap items-center gap-1 text-xs text-primary">
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
-              <p> {cardData.condition}</p>
-            </span>
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs capitalize">
-              <p> {cardData.rarity}</p>
-            </span>
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs">
-              <p> {cardData.foil}</p>
-            </span>
+    <Card
+      key={index}
+      className="group overflow-hidden border border-muted bg-muted/30 transition-all duration-200 hover:border-muted/80 hover:bg-muted/50"
+    >
+      <CardContent className="p-0">
+        <div className="flex gap-4 p-4">
+          <div className="shrink-0 self-center">
+            <img
+              className="h-24 w-20 rounded-md object-contain grayscale filter transition-opacity duration-200 group-hover:opacity-80"
+              src={cardData.image}
+              alt={cardData.name}
+              loading="lazy"
+            />
           </div>
-        </div>
 
-        <div className="flex flex-col space-y-0.5">
-          <div className="flex justify-between">
-            <div className="flex items-center gap-0.5 pl-2">
-              <p className="text-xs leading-none text-muted-foreground">
-                Unable To Purchase
+          <div className="flex w-full flex-col justify-between space-y-3">
+            {/* Card Info */}
+            <div>
+              <p className="font-montserrat text-xs uppercase text-muted-foreground">
+                {cardData.setName}
               </p>
+              <p className="font-medium leading-tight">{cardData.cardName}</p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                <Badge variant="secondary" className="text-xs capitalize">
+                  {cardData.condition}
+                </Badge>
+                <Badge variant="secondary" className="text-xs capitalize">
+                  {cardData.rarity}
+                </Badge>
+                {cardData.foil && (
+                  <Badge variant="secondary" className="text-xs">
+                    {cardData.foil}
+                  </Badge>
+                )}
+              </div>
             </div>
-            <div className="flex space-x-1">
-              <p className="text-xs font-medium leading-none">
-                {cardData.unableToPurchaseQuantity}
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-between pl-2">
-            <p className="  text-xs leading-none text-muted-foreground">
-              Credit
-            </p>
 
-            <div className="flex space-x-1">
-              <p className="text-xs font-semibold leading-none ">-</p>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <div className="flex items-center gap-0.5 pl-2">
-              <p className=" text-xs leading-none text-muted-foreground">
-                Cash
-              </p>
-            </div>
-            <div className="flex space-x-1">
-              <p className="text-xs font-semibold leading-none ">-</p>
+            {/* Unable to Purchase Details */}
+            <div className="space-y-1 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-muted-foreground">
+                  <Info className="size-3.5" />
+                  <span>Unable To Purchase</span>
+                </span>
+                <span className="font-medium">
+                  {cardData.unableToPurchaseQuantity}
+                </span>
+              </div>
             </div>
           </div>
         </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Price Row Component
+const PriceRow = ({
+  label,
+  unitPrice,
+  quantity,
+  isBestOffer = false,
+  tooltipText
+}: {
+  label: string;
+  unitPrice: string | number;
+  quantity: number;
+  isBestOffer?: boolean;
+  tooltipText: string;
+}) => {
+  const total = (Number(unitPrice) * quantity).toFixed(2);
+
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-1.5">
+        <span className="text-muted-foreground">
+          {label} - ${unitPrice} ea
+        </span>
+        {isBestOffer && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <BadgeDollarSign className="size-3.5 text-primary hover:cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="px-3 py-1.5">
+                <p className="text-xs">{tooltipText}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
       </div>
+      <span className="font-medium">${total}</span>
     </div>
   );
 };

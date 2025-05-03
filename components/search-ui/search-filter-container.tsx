@@ -27,6 +27,7 @@ type Prop = {
   setSortBy: (sortBy: any) => void;
   handleSortByChange: (value: any) => void;
   sortByOptions: Record<string, string>;
+  hidePromo?: boolean;
 };
 
 const FilterSection: React.FC<Prop> = memo(
@@ -41,7 +42,8 @@ const FilterSection: React.FC<Prop> = memo(
     applyFilters,
     setSortBy,
     handleSortByChange,
-    sortByOptions
+    sortByOptions,
+    hidePromo = false
   }) => {
     const { isAuthenticated, hasActiveSubscription } = useAuth();
     const handleClearFilters = () => {
@@ -82,7 +84,7 @@ const FilterSection: React.FC<Prop> = memo(
                 </AccordionItem>
               ))}
           </Accordion>
-          {!hasActiveSubscription && (
+          {!hasActiveSubscription && !hidePromo && (
             <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
               <p>
                 Support us with{' '}

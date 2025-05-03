@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   const { setBuylistUIState, currentCartId, setCurrentCartId, setCurrentCart } =
@@ -29,6 +30,8 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   const [activeDialogId, setActiveDialogId] = useState<number | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const isSelected = cart.id === currentCartId;
+
   const handleEditButtonClick = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
     setDropdownOpen(!dropdownOpen);
@@ -36,7 +39,12 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
 
   return (
     <div
-      className=" mb-1 flex h-14 cursor-pointer flex-col  justify-between rounded-lg border bg-accent px-2 py-1.5 shadow-sm hover:bg-accent/50"
+      className={cn(
+        'mb-1 flex h-14 cursor-pointer flex-col justify-between rounded-lg border px-2 py-1.5 shadow-sm transition-colors',
+        isSelected
+          ? 'border-primary bg-primary/10 hover:bg-primary/15'
+          : 'bg-accent hover:bg-accent/50'
+      )}
       onClick={() => {
         if (!dialogJustClosed) {
           setBuylistUIState('searchResultsState');
@@ -46,7 +54,11 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
       }}
     >
       <div className="flex justify-between">
-        <p className="text-sm font-normal ">{cart.name}</p>
+        <p
+          className={cn('text-sm', isSelected ? 'font-medium' : 'font-normal')}
+        >
+          {cart.name}
+        </p>
       </div>
       <div className="flex justify-between">
         {/* Rename Cart Dialog */}

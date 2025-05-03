@@ -28,9 +28,19 @@ import {
   ListIcon,
   PlusIcon,
   ShoppingCart,
-  SlidersHorizontal
+  SlidersHorizontal,
+  ChevronDown
 } from 'lucide-react';
-
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { FilterScrollArea } from '@/components/search-ui/filter-scroll-area';
+import SearchSortBy from '@/components/buylists/sort-by';
+import FilterSelector from '@/components/buylists/filter-selector';
+import FilterSheet from '@/components/buylists/filter-sheet';
 /////////////////////////////////////////////////////////////////////////////////////
 // This File Contains All the Header Components for each step in the buylist stage //
 /////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +134,7 @@ export const CurrentListHeader = () => {
       </div>
       {/* RIGHT SECTION */}
       <div className="flex w-16 items-center justify-end gap-1 ">
-        <div className="block md:hidden">
+        <div className="block lg:hidden">
           <Dialog open={cartDialogOpen} onOpenChange={setCartDialogOpen}>
             <DialogTrigger
               asChild
@@ -169,10 +179,12 @@ export const CurrentListHeader = () => {
 };
 
 interface SearchResultsHeaderProps {
-  isMobile?: true;
+  isMobile?: boolean;
 }
 
-export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
+export const SearchResultsHeader = ({
+  isMobile
+}: SearchResultsHeaderProps = {}) => {
   const {
     filterOptions,
     setFilter,
@@ -187,94 +199,77 @@ export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
   } = useBuyListStore();
   const { getCurrentCart } = useUserCarts();
   const { isAuthenticated } = useAuth();
-
+  const { openListSelection, setOpenListSelection } = useBuyListStore();
+  const [openFilterSheet, setOpenFilterSheet] = useState(false);
   const currentCart = getCurrentCart();
-  const [cartDialogOpen, setCartDialogOpen] = useState(false);
+
   return (
-    <div
-      className={`mx-auto w-full items-center  justify-between bg-card p-1 md:rounded-lg ${
-        isMobile && buylistUIState === 'searchResultsState'
-          ? 'flex md:hidden' // Show on mobile, hide on desktop when in search state
-          : 'hidden md:flex' // Hide on mobile, show on desktop otherwise
-      }`}
-    >
-      {/* LEFT SECTION */}
-      <div className="flex w-24 items-center justify-start gap-1">
-        <Sheet>
-          <SheetTitle hidden>Filters</SheetTitle>
-          <SheetDescription hidden>Filter your search results</SheetDescription>
-          <SheetTrigger asChild className="">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="relative h-9 text-sm font-medium"
-            >
-              <span className="flex items-center gap-2">
-                <SlidersHorizontal className="h-5 w-5" />
-                <p className="hidden leading-none md:block">Filters</p>
-              </span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent
-            side="left"
-            className="w-[100vw] p-0 px-3 py-6 sm:w-[400px]"
-          >
-            <FilterSection
-              filterOptions={filterOptions}
-              sortBy={sortBy ? sortBy : defaultSortBy}
-              fetchCards={async () => {}}
-              clearFilters={clearFilters}
+    <div className="mx-auto flex w-full flex-col space-y-2">
+      {/* List Selection Button */}
+      <div className="flex w-full items-center gap-2 lg:hidden">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex w-full items-center gap-2 bg-card"
+          onClick={() => setOpenListSelection(!openListSelection)}
+        >
+          <ListIcon className="h-4 w-4" />
+          <span>My Lists</span>
+        </Button>
+      </div>
+
+      {/* Mobile: Filter Sheet Button */}
+      <div className="flex w-full items-center gap-2 lg:hidden">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex w-full items-center gap-2 bg-card"
+          onClick={() => setOpenFilterSheet(!openFilterSheet)}
+        >
+          <SlidersHorizontal className="h-4 w-4" />
+          <span>Filters</span>
+        </Button>
+      </div>
+
+      {/* Mobile: Filter Sheet Component */}
+      <FilterSheet open={openFilterSheet} onOpenChange={setOpenFilterSheet} />
+
+      {/* Desktop: Filter Dropdowns */}
+      <div className="hidden w-full lg:flex lg:flex-wrap lg:gap-2">
+        {/* Sort by dropdown */}
+        <SearchSortBy
+          sortBy={sortBy ?? defaultSortBy ?? 'price-asc'}
+          setSortBy={setSortBy}
+          fetchCards={async () => {}}
+          setCurrentPage={() => {}}
+          sortByOptions={sortByOptions}
+        />
+
+        {filterOptions &&
+          filterOptions.map((filterOption, index) => (
+            <FilterSelector
+              key={index}
+              keyIndex={index}
+              filterOption={filterOption}
               setFilter={setFilter}
-              setCurrentPage={() => {}}
-              applyFilters={async () => {}}
-              setSortBy={setSortBy}
-              handleSortByChange={(value: any) => {
-                setSortBy(value);
-              }}
-              sortByOptions={sortByOptions}
             />
-          </SheetContent>
-        </Sheet>
+          ))}
+
+        {/* Clear Filters Button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={clearFilters}
+          className="ml-auto bg-card"
+        >
+          Clear Filters
+        </Button>
       </div>
 
       {/* MIDDLE SECTION */}
-      <div className="overflow-hidden">
-        <p className="truncate text-sm">{searchResultCount} Results</p>
-      </div>
-
-      {/* RIGHT SECTION */}
-      <div className="flex w-24 items-center justify-end gap-1">
-        <div className="hidden md:block">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="relative h-9 px-2 text-sm font-medium"
-            onClick={() => {
-              setCartDialogOpen(false);
-              setBuylistUIState('viewAllOffersState');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            disabled={!currentCart?.cart?.name || !isAuthenticated}
-          >
-            <span className="flex cursor-pointer items-center gap-0.5  rounded-lg font-medium">
-              <p className="text-sm leading-none">Offers</p>
-              <ChevronRight className="h-5 w-5" />
-            </span>
-          </Button>
-        </div>
-        <a href="/faq#buylists" target="_blank" className="block md:hidden">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="relative h-9 text-sm font-medium"
-          >
-            <span className="flex items-center gap-1">
-              <QuestionMarkCircledIcon className="h-6 w-6" />
-              <p className="hidden md:block">Help</p>
-            </span>
-          </Button>
-        </a>
-      </div>
+      <p className="text-center text-xs text-muted-foreground">
+        {searchResultCount} Results
+      </p>
     </div>
   );
 };
@@ -282,32 +277,19 @@ export const SearchResultsHeader = ({ isMobile }: SearchResultsHeaderProps) => {
 export const ViewAllOffersHeader = () => {
   const { reviewData, setBuylistUIState } = useBuyListStore();
   return (
-    <div>
-      <div className="mx-auto flex  w-full items-center justify-between rounded-lg bg-card p-1">
-        {/* LEFT SECTION */}
-        <div className="flex w-24 items-center justify-start gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="relative h-9 px-2 text-sm font-medium"
-            onClick={() => {
-              setBuylistUIState('searchResultsState');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          >
-            <span className="flex cursor-pointer items-center gap-0.5  rounded-lg font-medium">
-              <ChevronLeft className="h-5 w-5" />
-              <p className="text-sm leading-none">Search</p>
-            </span>
-          </Button>
-        </div>
-
-        {/* MIDDLE SECTION */}
-        <p className="truncate text-sm">{reviewData?.length} Store Offers</p>
-
-        {/* RIGHT SECTION */}
-        <div className="flex w-24 items-center justify-end gap-1"></div>
-      </div>
+    <div className="flex">
+      <Button
+        variant="outline"
+        size="sm"
+        className="bg-card"
+        onClick={() => {
+          setBuylistUIState('searchResultsState');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      >
+        <ChevronLeft className="mr-2 h-5 w-5" />
+        Search
+      </Button>
     </div>
   );
 };
@@ -315,35 +297,19 @@ export const ViewAllOffersHeader = () => {
 export const FinalSubmissionHeader = () => {
   const { setBuylistUIState } = useBuyListStore();
   return (
-    <div>
-      <div className="mx-auto flex  w-full items-center justify-between rounded-lg bg-card p-1">
-        {/* LEFT SECTION */}
-        <div className="flex w-24 items-center justify-start gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="relative h-9 px-2 text-sm font-medium"
-            onClick={() => {
-              setBuylistUIState('viewAllOffersState');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          >
-            <span className="flex cursor-pointer items-center gap-0.5  rounded-lg font-medium">
-              <ChevronLeft className="h-5 w-5" />
-              <p className="text-sm leading-none">Offers</p>
-            </span>
-          </Button>
-        </div>
-
-        {/* MIDDLE SECTION */}
-        <div className="my-0.25">
-          <div className="max-w-full overflow-hidden">
-            <p className="truncate text-sm">Submit Offer</p>
-          </div>
-        </div>
-        {/* RIGHT SECTION */}
-        <div className="flex w-24 items-center justify-end gap-1"></div>
-      </div>
+    <div className="flex">
+      <Button
+        variant="outline"
+        size="sm"
+        className="bg-card"
+        onClick={() => {
+          setBuylistUIState('viewAllOffersState');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      >
+        <ChevronLeft className="mr-2 h-5 w-5" />
+        Offers
+      </Button>
     </div>
   );
 };

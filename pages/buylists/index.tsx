@@ -1,20 +1,16 @@
 import React from 'react';
 import Head from 'next/head';
 import { NextPage } from 'next';
-import BackToTopButton from '@/components/ui/back-to-top-btn';
 import BuylistCatalog from '@/components/buylists/buylist-catalog-container';
-import { AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-
+import BuylistLayout from '@/components/buylists/buylist-layout';
 type Props = {};
 const Buylist: NextPage<Props> = () => {
   return (
     <>
       <BuylistHead />
-      <div className="h-full min-h-svh ">
+      <BuylistLayout>
         <BuylistCatalog />
-        <BackToTopButton />
-      </div>
+      </BuylistLayout>
     </>
   );
 };

@@ -12,51 +12,51 @@ export const LeftCartListSelection = () => {
   const { carts } = useUserCarts();
   const { isAuthenticated } = useAuth();
   return (
-    <div className="col-span-1 flex min-h-svh w-full flex-col space-y-1 rounded-lg bg-card md:sticky md:top-[162px] md:min-h-[80svh] md:w-80">
-      <div className="">
+    <div className="col-span-1 flex h-full w-full flex-col rounded-lg bg-card">
+      {/* Fixed Header */}
+      <div className="sticky top-0 z-10 bg-card">
         <ListSelectionHeader />
         <SelectSeparator className="my-0 bg-background" />
       </div>
 
+      {/* Scrollable Content Area */}
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full" type="always">
-          <div className="flex h-[calc(75vh-4rem)] flex-col items-center ">
-            <div className="mt-1 w-full px-2">
-              {isAuthenticated ? (
-                carts && carts.length > 0 ? (
-                  carts.map((cart, index) => (
-                    <span key={index}>
-                      <ListItem key={cart.id} cart={cart} />
-                    </span>
-                  ))
-                ) : (
-                  <div className="flex flex-col items-center justify-center gap-2 pt-[calc(25vh-2rem)]">
-                    <AlertCircle></AlertCircle>
-                    <div className="flex flex-col items-center justify-center">
-                      <p className="text-lg font-semibold">No Saved Lists</p>
-                      <p className="text-sm text-muted-foreground">
-                        Click the plus icon to create a new list
-                      </p>
-                    </div>
-                  </div>
-                )
+          <div className="flex w-full flex-col items-center px-2 py-1">
+            {isAuthenticated ? (
+              carts && carts.length > 0 ? (
+                carts.map((cart, index) => (
+                  <span key={index} className="w-full">
+                    <ListItem key={cart.id} cart={cart} />
+                  </span>
+                ))
               ) : (
-                <div className="flex flex-col items-center justify-center gap-2 pt-[calc(25vh-2rem)]">
+                <div className="flex flex-col items-center justify-center gap-2 py-16">
                   <AlertCircle></AlertCircle>
                   <div className="flex flex-col items-center justify-center">
-                    <p className="text-lg font-semibold">Login Required</p>
+                    <p className="text-lg font-semibold">No Saved Lists</p>
                     <p className="text-sm text-muted-foreground">
-                      Please login to view your saved lists
+                      Click the plus icon to create a new list
                     </p>
-                    <a href="/signin?redirect=%2Fbuylists">
-                      <Button variant="outline" className="mt-2 w-full">
-                        Continue to Log In
-                      </Button>
-                    </a>
                   </div>
                 </div>
-              )}
-            </div>
+              )
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-2 py-16">
+                <AlertCircle></AlertCircle>
+                <div className="flex flex-col items-center justify-center">
+                  <p className="text-lg font-semibold">Login Required</p>
+                  <p className="text-sm text-muted-foreground">
+                    Please login to view your saved lists
+                  </p>
+                  <a href="/signin?redirect=%2Fbuylists">
+                    <Button variant="outline" className="mt-2 w-full">
+                      Continue to Log In
+                    </Button>
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </ScrollArea>
       </div>

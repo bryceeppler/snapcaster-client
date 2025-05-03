@@ -63,13 +63,13 @@ const FeedAd = ({
       href={adUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex flex-col overflow-hidden rounded-lg border border-gray-200 transition-shadow duration-200 hover:shadow-md"
+      className="flex h-fit flex-col overflow-hidden rounded-lg border border-border transition-shadow duration-200 hover:shadow-md"
     >
       <div className="relative">
         <img
           src={imageUrl}
           alt={ad.alt_text || 'Advertisement'}
-          className="h-auto w-full rounded-t-lg object-cover"
+          className="h-auto w-full rounded-lg object-cover"
         />
       </div>
     </a>

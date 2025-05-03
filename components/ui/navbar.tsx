@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Button } from './button';
 import { useAuth } from '@/hooks/useAuth';
-import { AlignJustify, Search, SlidersHorizontal, User, X } from 'lucide-react';
-import React, { useState } from 'react';
+import { AlignJustify, SlidersHorizontal, ShoppingCart } from 'lucide-react';
+import React, { useState, useRef } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
@@ -29,7 +29,8 @@ import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import useBuyListStore from '@/stores/useBuylistStore';
-import { SearchResultsHeader } from '../buylists/header/header';
+import { Badge } from './badge';
+import { useUserCarts } from '@/hooks/useUserCarts';
 
 const Navbar: React.FC = () => {
   const router = useRouter();
@@ -37,19 +38,38 @@ const Navbar: React.FC = () => {
   const { isAuthenticated, isVendor, isAdmin } = useAuth();
   const canViewAnalytics = isAdmin || isVendor;
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
-  const [mobileSearchIsVisible, setMobileSearchIsVisible] = useState(false);
+  const { openCart: cartSheetOpen, setOpenCart: setCartSheetOpen } =
+    useBuyListStore();
+  const cartTriggerRef = useRef<HTMLButtonElement>(null);
+
+  // Get cart data
+  const { getCurrentCart } = useUserCarts();
+  const currentCart = getCurrentCart();
+  const hasItems =
+    currentCart?.cart?.items && currentCart.cart.items.length > 0;
+  const cartItemCount = hasItems ? currentCart.cart.items.length : 0;
+
+  // Connect to buylist store
+  const { setBuylistUIState } = useBuyListStore();
+
+  // Handle cart button click
+  const handleCartClick = () => {
+    // Toggle cart sheet
+    setCartSheetOpen(!cartSheetOpen);
+  };
 
   return (
     <>
       {/* MOBILE NAV */}
-      <div className="sticky top-0 z-50 md:hidden">
-        <div className=" flex   justify-between bg-card px-1 shadow-xl">
-          <div className=" inset-y-0 left-0 flex items-center">
+      <div className="sticky top-0 z-50 lg:hidden">
+        {/* Top Bar: Logo, Hamburger and Cart */}
+        <div className="flex justify-between bg-card px-1 shadow-sm">
+          {/* Left: Hamburger Menu */}
+          <div className="inset-y-0 left-0 flex items-center">
             <Sheet
               open={mobileNavSheetOpen}
               onOpenChange={setMobileNavSheetOpen}
             >
-              <SheetTitle className="hidden">Snapcaster</SheetTitle>
               <SheetTrigger className="m-1 inline-flex items-center justify-center p-2">
                 <AlignJustify className="h-6 w-6" />
               </SheetTrigger>
@@ -158,86 +178,60 @@ const Navbar: React.FC = () => {
               </SheetContent>
             </Sheet>
           </div>
-          <div className="flex flex-1 items-center justify-between">
-            {/* Left Section */}
-            <div className="flex flex-shrink-0 items-center">
-              <Link legacyBehavior href="/" passHref>
-                <div className="flex cursor-pointer items-center space-x-1">
-                  <p className="pr-4 font-genos text-2xl font-bold leading-none tracking-tighter">
-                    Snapcaster
-                  </p>
-                </div>
-              </Link>
-            </div>
 
-            {/* Right Section */}
-            <div className="mx-2 flex items-center ">
-              {(currentPath === '/' ||
-                currentPath === '/buylists' ||
-                currentPath === '/sealed') && (
-                <button
-                  onClick={() => {
-                    setMobileSearchIsVisible(!mobileSearchIsVisible);
-                  }}
-                >
-                  <Search className="mr-2" />
-                </button>
-              )}
-              <Link href={isAuthenticated ? `/profile` : '/signin'}>
-                <User />
-              </Link>
-            </div>
+          {/* Middle: Logo */}
+          <div className="flex flex-1 items-center">
+            <Link legacyBehavior href="/" passHref>
+              <div className="flex cursor-pointer items-center space-x-1">
+                <p className="font-genos text-2xl font-bold leading-none tracking-tighter">
+                  Snapcaster
+                </p>
+              </div>
+            </Link>
           </div>
 
-          {/* Nav Search Bars (Sealed, Singles, Buylists)*/}
-          {currentPath === '/sealed' && (
-            <div
-              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white shadow-lg transition-transform duration-500 md:px-2 ${
-                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
-              }`}
-            >
-              {NavSearchBarFactory('sealed', {
-                deviceType: 'mobile',
-                toggleMobileSearch: () =>
-                  setMobileSearchIsVisible(!mobileSearchIsVisible)
-              })}
-            </div>
-          )}
-          {currentPath === '/' && (
-            <div
-              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white transition-transform duration-500 md:px-2 ${
-                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
-              }`}
-            >
-              {NavSearchBarFactory('singles', {
-                deviceType: 'mobile',
-                toggleMobileSearch: () =>
-                  setMobileSearchIsVisible(!mobileSearchIsVisible)
-              })}
-            </div>
-          )}
-          {currentPath === '/buylists' && (
-            <div
-              className={`fixed left-0 top-0 z-50 flex h-[48px] w-full items-center justify-between bg-background text-white transition-transform duration-500 md:px-2 ${
-                mobileSearchIsVisible ? 'translate-y-0' : '-translate-y-full'
-              }`}
-            >
-              {NavSearchBarFactory('buylists', {
-                deviceType: 'mobile',
-                toggleMobileSearch: () =>
-                  setMobileSearchIsVisible(!mobileSearchIsVisible)
-              })}
-            </div>
-          )}
+          {/* Right: Cart Icon (for buylists) */}
+          <div className="flex items-center">
+            {currentPath === '/buylists' && (
+              <div className="relative mr-1">
+                {cartItemCount > 0 && (
+                  <Badge className="absolute -right-1 -top-1 h-4 w-4 items-center justify-center px-1 text-[10px]">
+                    {cartItemCount}
+                  </Badge>
+                )}
+                <Button
+                  ref={cartTriggerRef}
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8"
+                  onClick={handleCartClick}
+                  disabled={!currentCart?.cart?.name}
+                >
+                  <ShoppingCart className="size-5" />
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-        {/* ResultsToolbarFactory (Singles, Buylists) */}
+
+        {/* Search Bar: Always visible below main nav */}
+        <div className="border-b bg-card p-2">
+          {currentPath === '/' &&
+            NavSearchBarFactory('singles', { deviceType: 'mobile' })}
+          {currentPath === '/buylists' &&
+            NavSearchBarFactory('buylists', { deviceType: 'mobile' })}
+          {currentPath === '/sealed' &&
+            NavSearchBarFactory('sealed', { deviceType: 'mobile' })}
+        </div>
+
+        {/* Results Toolbar: Filter and pagination */}
         {currentPath === '/' && ResultsToolbarFactory('singles')}
         {currentPath === '/buylists' && ResultsToolbarFactory('buylists')}
       </div>
 
       {/* DESKTOP NAV MD+ */}
-      <div className="sticky top-0 z-50 bg-card  shadow-md">
-        <div className="hidden h-16 items-stretch justify-between px-6 py-4 md:flex">
+      <div className="sticky top-0 z-40 border-b bg-card">
+        <div className="hidden h-16 items-stretch justify-between px-6 py-4 lg:flex">
           {/* 1. Left Section: Snapcaster Logo */}
           <div className="flex items-center">
             <NavigationMenu>
@@ -261,7 +255,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* 2. Middle Section: Nav Search Bar (Singles, Buylists, Sealed) */}
-          <div className="flex flex-1 items-center justify-center">
+          <div className="flex max-w-2xl flex-1 items-center justify-center">
             {currentPath === '/' &&
               NavSearchBarFactory('singles', { deviceType: 'desktop' })}
             {currentPath === '/buylists' &&
@@ -270,9 +264,10 @@ const Navbar: React.FC = () => {
               NavSearchBarFactory('sealed', { deviceType: 'desktop' })}
           </div>
 
-          {/* 3. Right Section: Theme Toggle, Account Button) */}
+          {/* 3. Right Section: Theme Toggle, Account Button */}
           <div className="flex items-center gap-2">
             <ModeToggle />
+
             <Link href={isAuthenticated ? `/profile` : '/signin'}>
               <Button className="px-4 py-2 text-sm font-medium">
                 {isAuthenticated ? <span>Account</span> : <span>Sign In</span>}
@@ -282,7 +277,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* 4. Nav Links (Home, Multi Search, Sealed Search, Buylists, About, Discord, Analytics) */}
-        <div className=" mx-3 hidden items-center justify-between md:flex">
+        <div className="mx-3 hidden items-center justify-between lg:flex">
           <NavigationMenu className="my-1">
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -379,16 +374,6 @@ const Navbar: React.FC = () => {
           </NavigationMenu>
         </div>
       </div>
-      {/* {notificationStatus == true && (
-        <div className="flex w-full items-center bg-primary px-1 text-secondary">
-          <p className="flex-1 text-center text-xs font-medium md:text-base">
-            Snapcaster now supports Star Wars: Unlimited! Try it out now!
-          </p>
-          <button onClick={setNotificationStatusFalse}>
-            <X />
-          </button>
-        </div>
-      )} */}
     </>
   );
 };
@@ -419,10 +404,7 @@ const NavSearchBarFactory = (
   }
 };
 
-const SingleNavSearchBar = ({
-  deviceType,
-  toggleMobileSearch
-}: NavSearchBarProps) => {
+const SingleNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
   const {
     searchTerm,
     tcg,
@@ -434,46 +416,34 @@ const SingleNavSearchBar = ({
     setIsLoading
   } = useSingleSearchStore();
   return (
-    <>
-      <NavSearchBar
-        deviceType={deviceType}
-        toggleMobileSearch={toggleMobileSearch}
-        searchTerm={searchTerm}
-        tcg={tcg}
-        clearFilters={clearFilters}
-        setSearchTerm={setSearchTerm}
-        setTcg={setTcg}
-        fetchQuery={fetchCards}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-      />
-    </>
+    <NavSearchBar
+      deviceType={deviceType}
+      searchTerm={searchTerm}
+      tcg={tcg}
+      clearFilters={clearFilters}
+      setSearchTerm={setSearchTerm}
+      setTcg={setTcg}
+      fetchQuery={fetchCards}
+      isLoading={isLoading}
+      setIsLoading={setIsLoading}
+    />
   );
 };
 
-const BuylistsNavSearchBar = ({
-  deviceType,
-  toggleMobileSearch
-}: NavSearchBarProps) => {
+const BuylistsNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
   const { searchTerm, tcg, setSearchTerm, setTcg } = useBuyListStore();
   return (
-    <>
-      <BuylistNavSearchBar
-        deviceType={deviceType}
-        toggleMobileSearch={toggleMobileSearch}
-        searchTerm={searchTerm}
-        tcg={tcg}
-        setSearchTerm={setSearchTerm}
-        setTcg={setTcg}
-      />
-    </>
+    <BuylistNavSearchBar
+      deviceType={deviceType}
+      searchTerm={searchTerm}
+      tcg={tcg}
+      setSearchTerm={setSearchTerm}
+      setTcg={setTcg}
+    />
   );
 };
 
-const SealedNavSearchBar = ({
-  deviceType,
-  toggleMobileSearch
-}: NavSearchBarProps) => {
+const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
   const {
     productCategory,
     searchTerm: sealedSearchTerm,
@@ -501,20 +471,17 @@ const SealedNavSearchBar = ({
     refetch();
   };
   return (
-    <>
-      <SealedSearchBar
-        deviceType={deviceType}
-        toggleMobileSearch={toggleMobileSearch}
-        productCategory={productCategory}
-        searchTerm={sealedSearchTerm}
-        setProductCategory={setProductCategory}
-        setSearchTerm={sealedSetSearchTerm}
-        handleInputChange={handleInputChange}
-        handleSearch={handleSearch}
-        clearFilters={sealedClearFilters}
-        isLoading={sealedSearchLoading}
-      />
-    </>
+    <SealedSearchBar
+      deviceType={deviceType}
+      productCategory={productCategory}
+      searchTerm={sealedSearchTerm}
+      setProductCategory={setProductCategory}
+      setSearchTerm={sealedSetSearchTerm}
+      handleInputChange={handleInputChange}
+      handleSearch={handleSearch}
+      clearFilters={sealedClearFilters}
+      isLoading={sealedSearchLoading}
+    />
   );
 };
 
@@ -526,9 +493,54 @@ const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
   switch (searchMode) {
     case 'singles':
       return <SingleResultsToolbar />;
-    case 'buylists':
-      return <SearchResultsHeader isMobile={true} />;
+    default:
+      return null;
   }
+};
+
+// Add BuylistResultsToolbar component for mobile
+const BuylistResultsToolbar = () => {
+  const {
+    searchResultCount,
+    filterOptions,
+    sortBy,
+    setSortBy,
+    setFilter,
+    clearFilters,
+    sortByOptions
+  } = useBuyListStore();
+
+  return (
+    <>
+      <div className="z-40 flex h-12 items-center justify-between border-b bg-background px-4">
+        <span className="text-center text-sm font-normal text-secondary-foreground">
+          {searchResultCount} results
+        </span>
+
+        <Sheet>
+          <SheetTrigger>
+            <SlidersHorizontal className="h-6 w-6" />
+          </SheetTrigger>
+          <SheetContent className="min-w-full">
+            <FilterSection
+              filterOptions={filterOptions}
+              sortBy={sortBy}
+              fetchCards={async () => {}}
+              clearFilters={clearFilters}
+              setFilter={setFilter}
+              setCurrentPage={() => {}}
+              applyFilters={async () => {}}
+              setSortBy={setSortBy}
+              handleSortByChange={(value: any) => {
+                setSortBy(value);
+              }}
+              sortByOptions={sortByOptions}
+            />
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
+  );
 };
 
 const SingleResultsToolbar = () => {
@@ -552,7 +564,7 @@ const SingleResultsToolbar = () => {
     <>
       {searchResults && (
         <div className="z-50 flex h-12 items-center justify-between border-b bg-background px-4">
-          <span className="text-center text-sm font-normal text-secondary-foreground ">
+          <span className="text-center text-sm font-normal text-secondary-foreground">
             {numResults} results
           </span>
           <SearchPagination

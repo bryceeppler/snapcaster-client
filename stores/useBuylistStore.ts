@@ -38,6 +38,11 @@ export interface IBuylistCart {
 }
 
 type BuyListState = {
+  openCart: boolean;
+  setOpenCart: (open: boolean) => void;
+
+  openListSelection: boolean;
+  setOpenListSelection: (open: boolean) => void;
   /////////////////////////////////////////
   //1. Search State Variables & functions//
   /////////////////////////////////////////
@@ -93,6 +98,10 @@ type BuyListState = {
 
 const useBuyListStore = create<BuyListState>((set, get) => ({
   buylistUIState: 'listSelectionState',
+  openCart: false,
+  setOpenCart: (open: boolean) => set({ openCart: open }),
+  openListSelection: false,
+  setOpenListSelection: (open: boolean) => set({ openListSelection: open }),
   //Search State Variables
   searchTerm: '',
   searchResultCount: 0,

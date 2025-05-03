@@ -9,23 +9,9 @@ import {
 import useBuylistStore from '@/stores/useBuylistStore';
 import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
 import { useDebounceCallback } from 'usehooks-ts';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTriggerNoIcon as SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
-import { ChevronDown, HelpCircle, X, Loader2 } from 'lucide-react';
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { HelpCircle, X } from 'lucide-react';
 import { Tcg } from '@/types';
+import BaseSearchBar, { DeviceType } from '../ui/base-search-bar';
 
 interface AutocompleteResult {
   name: string;
@@ -192,7 +178,16 @@ export default function BuylistNavSearchBar({
           break;
       }
     },
-    [suggestions, selectedIndex, handleSuggestionClick, isTyping]
+    [
+      suggestions,
+      selectedIndex,
+      handleSuggestionClick,
+      isTyping,
+      clearFilters,
+      refetch,
+      buylistUIState,
+      setBuylistUIState
+    ]
   );
 
   // Handle clicks outside the autocomplete
@@ -226,155 +221,70 @@ export default function BuylistNavSearchBar({
     setInputValue(searchTerm);
   }, [searchTerm]);
 
-  const searchHelpContent = useMemo(
-    () => (
-      <div className="rounded-md">
-        <div className="w-full">
-          <div className="space-y-1 text-xs">
-            <div>
-              <h1 className="text-sm font-semibold">Search</h1>
-              <p className="italic">
-                Queries are based on the card base name only and should not be
-                combined with set names, foiling, collector number, etc. Please
-                use the filters to refine your search.
-              </p>
-            </div>
-            <div>
-              <h1 className="text-sm font-semibold">Exact Search</h1>
-              <p className="italic">
-                Double quote your query if you want to do an exact search. For
-                example:
-                <span className="rounded px-1 py-0.5 font-mono">
-                  "Mana Crypt"
-                </span>
-              </p>
-            </div>
-            <div>
-              <h1 className="text-sm font-semibold">Punctuation</h1>
-              <p className="italic">
-                Queries are not sensitive to capitalization or punctuation. For
-                example:
-                <span className="rounded px-1 py-0.5 font-mono">'",:.</span>
-              </p>
-            </div>
+  const handleTcgChange = (value: Tcg) => {
+    clearFilters();
+    setTcg(value);
+    setSearchTerm('');
+    setInputValue('');
+    setSuggestions([]);
+    setIsAutoCompleteVisible(false);
+    setSelectedIndex(-1);
+  };
+
+  const handleSearchClick = () => {
+    clearFilters();
+    refetch();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (
+      buylistUIState === 'viewAllOffersState' ||
+      buylistUIState === 'finalSubmissionState'
+    ) {
+      setBuylistUIState('searchResultsState');
+    }
+  };
+
+  // Render autocomplete suggestions
+  const renderAutoComplete = () => {
+    if (!isAutoCompleteVisible || !suggestions || suggestions.length === 0) {
+      return null;
+    }
+
+    return (
+      <div
+        ref={autoCompleteRef}
+        className="absolute left-0 right-0 top-full z-50 mt-[6px] rounded-b-md border bg-popover p-1 text-foreground shadow-lg"
+      >
+        {suggestions.map((suggestion, index) => (
+          <div
+            key={index}
+            className={`cursor-pointer px-4 py-2 ${
+              selectedIndex === index
+                ? 'bg-primary text-primary-foreground'
+                : 'hover:bg-accent'
+            }`}
+            onClick={() => handleSuggestionClick(suggestion)}
+          >
+            {suggestion.name}
           </div>
-        </div>
+        ))}
       </div>
-    ),
-    []
-  );
+    );
+  };
 
   return (
-    <div
-      className={`relative w-full bg-transparent md:ml-4 md:mr-4 ${
-        deviceType === 'desktop' ? 'max-w-2xl' : ''
-      }`}
-    >
-      <div
-        className={`flex h-min w-full items-center rounded ${
-          deviceType === 'desktop' ? 'border border-border' : ''
-        }`}
-      >
-        <Select
-          value={tcg}
-          onValueChange={(value: Tcg) => {
-            clearFilters();
-            setTcg(value);
-            setSearchTerm('');
-            setInputValue('');
-            setSuggestions([]);
-            setIsAutoCompleteVisible(false);
-            setSelectedIndex(-1);
-          }}
-        >
-          <SelectTrigger className="w-[180px] border-none bg-transparent p-2 pl-4 font-bold text-foreground focus:ring-0 focus:ring-offset-0">
-            <SelectValue placeholder="TCG" />
-            <ChevronDown className="ml-2 h-4 w-4 shrink-0 transition-transform duration-200" />
-          </SelectTrigger>
-
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="mtg">MTG</SelectItem>
-              <SelectItem value="lorcana">Lorcana</SelectItem>
-              <SelectItem value="onepiece">One Piece</SelectItem>
-              <SelectItem value="pokemon">Pokemon</SelectItem>
-              <SelectItem value="yugioh">Yu-Gi-Oh</SelectItem>
-              <SelectItem value="starwars">Star Wars</SelectItem>
-              <SelectItem value="fleshandblood">Flesh and Blood</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-
-        <Input
-          ref={inputRef}
-          type="text"
-          placeholder="Search for a card"
-          className="flex-grow border-none bg-transparent text-foreground placeholder-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0"
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-        />
-
-        <div className="mr-1 text-foreground">
-          {isLoading ? (
-            <Loader2 className="h-6 w-6 animate-spin" />
-          ) : (
-            <MagnifyingGlassIcon
-              className="h-6 w-6 cursor-pointer hover:text-muted-foreground"
-              onClick={() => {
-                clearFilters();
-                refetch();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                if (
-                  buylistUIState === 'viewAllOffersState' ||
-                  buylistUIState === 'finalSubmissionState'
-                ) {
-                  setBuylistUIState('searchResultsState');
-                }
-              }}
-            />
-          )}
-        </div>
-
-        <div>
-          <Popover>
-            <PopoverTrigger asChild className="mr-1">
-              <HelpCircle className="text-popover-foreground hover:cursor-pointer" />
-            </PopoverTrigger>
-            <PopoverContent className="p-2">{searchHelpContent}</PopoverContent>
-          </Popover>
-        </div>
-
-        {deviceType === 'mobile' && (
-          <div className="mr-2 text-foreground">
-            <X
-              className="h-6 hover:cursor-pointer"
-              onClick={toggleMobileSearch}
-            />
-          </div>
-        )}
-      </div>
-
-      {isAutoCompleteVisible && suggestions.length > 0 && (
-        <div
-          ref={autoCompleteRef}
-          className="absolute z-50 mt-1 w-full rounded-lg bg-popover p-1 text-foreground shadow-lg"
-        >
-          {suggestions.map((suggestion, index) => (
-            <div
-              key={index}
-              className={`cursor-pointer px-4 py-2 ${
-                selectedIndex === index
-                  ? 'bg-primary text-primary-foreground'
-                  : 'hover:bg-accent'
-              }`}
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion.name}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <BaseSearchBar
+      deviceType={deviceType as DeviceType}
+      tcg={tcg}
+      searchTerm={inputValue}
+      placeholder="Search for a card"
+      isLoading={isLoading}
+      inputRef={inputRef}
+      onTcgChange={handleTcgChange}
+      onInputChange={handleInputChange}
+      onInputKeyDown={handleKeyDown}
+      onSearchClick={handleSearchClick}
+      renderAutoComplete={renderAutoComplete}
+      showSearchHelp={false}
+    />
   );
 }

@@ -1,50 +1,33 @@
-import React from 'react';
+import { useEffect } from 'react';
 import useBuyListStore from '@/stores/useBuylistStore';
-import BuylistBodyFactory from './buylist-factory/buylist-body-factory';
-import {
-  ViewAllOffersHeader,
-  SearchResultsHeader,
-  FinalSubmissionHeader
-} from './header/header';
-import { CurrentListHeader } from './header/header';
+import { BuylistSearchResults } from './search-results/search-results';
+import { BuylistStoreOffers } from './store-offers/store-offers-body';
+import { SubmitOffer } from './store-offers/submit-offer-body';
 
 export default function BuylistCatalog() {
-  const { buylistUIState } = useBuyListStore();
-  return (
-    <div className="flex min-h-svh  flex-col  ">
-      {/* Desktop Header */}
-      {(buylistUIState === 'searchResultsState' ||
-        buylistUIState === 'listSelectionState') && (
-        <div className="z-30  bg-background md:sticky md:top-[114px]">
-          <div className=" hidden md:block">
-            <SearchResultsHeader />
-            <div className="bg-background pb-1"></div>
-          </div>
-          {buylistUIState === 'searchResultsState' && (
-            <div className="block md:hidden">
-              <CurrentListHeader />
-              <div className="bg-background pb-1"></div>
-            </div>
-          )}
-        </div>
-      )}
+  const { buylistUIState, currentCartId, setAllCartsData } = useBuyListStore();
 
-      {buylistUIState === 'viewAllOffersState' && (
-        <div className="z-30  bg-background md:sticky md:top-[114px]">
-          <ViewAllOffersHeader />
-          <div className="bg-background pb-1"></div>
-        </div>
-      )}
-      {buylistUIState === 'finalSubmissionState' && (
-        <div className="z-30  bg-background md:sticky md:top-[114px]">
-          <FinalSubmissionHeader />
-          <div className="bg-background pb-1"></div>
-        </div>
-      )}
-      {/* Body */}
-      <div className="flex flex-1 gap-1">
-        <BuylistBodyFactory buylistUIState={buylistUIState} />
-      </div>
-    </div>
-  );
+  // Fetch offers data when switching to offers view
+  useEffect(() => {
+    if (buylistUIState === 'viewAllOffersState' && currentCartId) {
+      setAllCartsData(currentCartId);
+    }
+  }, [buylistUIState, currentCartId]);
+
+  // Render the appropriate content based on the UI state
+  const renderContent = () => {
+    switch (buylistUIState) {
+      case 'listSelectionState':
+      case 'searchResultsState':
+        return <BuylistSearchResults />;
+      case 'viewAllOffersState':
+        return <BuylistStoreOffers />;
+      case 'finalSubmissionState':
+        return <SubmitOffer />;
+      default:
+        return <BuylistSearchResults />;
+    }
+  };
+
+  return <div className="w-full">{renderContent()}</div>;
 }
