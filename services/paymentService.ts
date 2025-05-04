@@ -1,41 +1,31 @@
 import axiosInstance from '@/utils/axiosWrapper';
 
-const BASE_URL = process.env.NEXT_PUBLIC_PAYMENT_URL;
-
-export interface CheckoutSession {
-  checkoutUrl: string;
-}
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface CustomerPortalSession {
   portalUrl: string;
 }
 
-export class PaymentService {
-  async createCheckoutSession(
-    priceId: string,
-    successUrl: string,
-    cancelUrl: string
-  ): Promise<CheckoutSession> {
-    const response = await axiosInstance.post(
-      `${BASE_URL}/createcheckoutsession`,
-      {
-        priceId,
-        successUrl,
-        cancelUrl
-      }
-    );
-    return response.data;
-  }
+interface PaymentApiResponse<T> {
+  status: string;
+  data: T;
+}
 
-  async createCustomerPortalSession(returnUrl: string): Promise<CustomerPortalSession> {
-    const response = await axiosInstance.post(
-      `${BASE_URL}/createportalsession`,
-      {
-        returnUrl
-      }
-    );
-    return response.data;
+interface CheckoutSession {
+  url: string;
+  successUrl: string;
+  cancelUrl: string;
+  sessionId: string;
+  message: string;
+}
+
+export class PaymentService {
+  async createCheckoutSession(): Promise<CheckoutSession> {
+    const response = await axiosInstance.post<
+      PaymentApiResponse<CheckoutSession>
+    >(`${API_URL}/api/v1/payment/checkout-sessions`);
+    return response.data.data;
   }
 }
 
-export const paymentService = new PaymentService(); 
+export const paymentService = new PaymentService();
