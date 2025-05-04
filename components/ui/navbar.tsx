@@ -74,6 +74,8 @@ const Navbar: React.FC = () => {
                 <AlignJustify className="h-6 w-6" />
               </SheetTrigger>
               <SheetContent side={'left'} className="text-lg">
+                <SheetTitle hidden>Snapcaster</SheetTitle>
+                <SheetDescription hidden>Mobile Nav</SheetDescription>
                 <SheetHeader>
                   <div className="flex flex-col gap-3 pb-3 pt-2">
                     <Link href="/" as="/">
