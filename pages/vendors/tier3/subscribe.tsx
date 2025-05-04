@@ -1,7 +1,7 @@
 import { useAuth } from '@/hooks/useAuth';
 import Signin from '@/pages/signin';
 import { paymentService, SubscriptionType } from '@/services/paymentService';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Select,
   SelectContent,
@@ -39,6 +39,7 @@ import {
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
+import { useRouter } from 'next/router';
 
 const Subscribe = () => {
   const { isAuthenticated } = useAuth();
@@ -49,6 +50,7 @@ const Subscribe = () => {
   const [selectedVendor, setSelectedVendor] = useState<string>('');
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const router = useRouter();
 
   const pricing = {
     [SubscriptionType.TIER_3_MONTHLY]: 350,
@@ -64,6 +66,13 @@ const Subscribe = () => {
     'Snapcaster buylist integration',
     'Express multi-search checkout'
   ];
+
+  // Handle authentication redirect
+  useEffect(() => {
+    if (!isAuthenticated && typeof window !== 'undefined') {
+      router.push('/signin?redirect=/vendors/tier3/subscribe');
+    }
+  }, [isAuthenticated, router]);
 
   const handleOpenConfirmDialog = () => {
     if (!selectedVendor) {
@@ -99,9 +108,13 @@ const Subscribe = () => {
       'Unknown vendor'
     : '';
 
+  // Show sign-in page if not authenticated
   if (!isAuthenticated) {
-    // TODO: Make sure we redirect to the subscribe page after signin
-    return <Signin />;
+    return (
+      <div className="container mx-auto py-8 text-center">
+        Checking authentication status...
+      </div>
+    );
   }
 
   return (
