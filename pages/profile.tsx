@@ -18,7 +18,7 @@ import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 import ThemeSelector from '@/components/theme-selector';
 import { useAuth } from '@/hooks/useAuth';
 import { Skeleton } from '@/components/ui/skeleton';
-import { paymentService } from '@/services/paymentService';
+import { paymentService, SubscriptionType } from '@/services/paymentService';
 import { useRouter } from 'next/router';
 import { toast } from 'sonner';
 // Types
@@ -469,7 +469,9 @@ const Profile: NextPage = () => {
   // Create checkout session function
   const createCheckoutSession = async () => {
     try {
-      const session = await paymentService.createCheckoutSession();
+      const session = await paymentService.createCheckoutSession(
+        SubscriptionType.PRO
+      );
 
       // Redirect to the checkout URL
       if (session.url) {
