@@ -1,10 +1,7 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
 import Signin from './signin';
 import { Button } from '@/components/ui/button';
-import { createCheckoutSession, createPortalSession } from '@/lib/utils';
-import { toast } from 'sonner';
 import {
   Card,
   CardHeader,
@@ -21,7 +18,9 @@ import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 import ThemeSelector from '@/components/theme-selector';
 import { useAuth } from '@/hooks/useAuth';
 import { Skeleton } from '@/components/ui/skeleton';
-
+import { paymentService } from '@/services/paymentService';
+import { useRouter } from 'next/router';
+import { toast } from 'sonner';
 // Types
 interface UserProfile {
   email: string;
@@ -454,6 +453,7 @@ const ProfileSkeleton = () => (
 
 // Main Profile Page Component
 const Profile: NextPage = () => {
+  const router = useRouter();
   const {
     profile,
     isLoadingProfile,
@@ -465,6 +465,41 @@ const Profile: NextPage = () => {
     resendVerificationEmail,
     isResendingVerification
   } = useAuth();
+
+  // Create checkout session function
+  const createCheckoutSession = async () => {
+    try {
+      const session = await paymentService.createCheckoutSession();
+
+      // Redirect to the checkout URL
+      if (session.url) {
+        window.location.href = session.url;
+      }
+    } catch (error) {
+      toast.error('Failed to create checkout session');
+      console.error('Failed to create checkout session:', error);
+    }
+  };
+
+  // Create portal session function
+  const createPortalSession = async () => {
+    try {
+      const baseUrl = window.location.origin;
+      const returnUrl = `${baseUrl}/profile`;
+
+      // const session = await paymentService.createCustomerPortalSession(
+      //   returnUrl
+      // );
+
+      // // Redirect to the portal URL
+      // if (session.portalUrl) {
+      //   window.location.href = session.portalUrl;
+      // }
+    } catch (error) {
+      console.error('Failed to create portal session:', error);
+      // You might want to add some error handling UI here
+    }
+  };
 
   const pageContent =
     isInitializing ||
