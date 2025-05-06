@@ -1,18 +1,36 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authService } from '@/services/authService';
-import { useRouter } from 'next/router';
 import { toast } from 'sonner';
 import { tokenManager } from '@/utils/axiosWrapper';
+import { useCallback } from 'react';
+
+// Create a compatibility layer for router
+function useCompatRouter() {
+  // Check if we're in a browser environment
+  const isBrowser = typeof window !== 'undefined';
+
+  // Simple navigation function that works in both routers
+  const push = useCallback(
+    (path: string) => {
+      if (isBrowser) {
+        window.location.href = path;
+      }
+    },
+    [isBrowser]
+  );
+
+  return { push };
+}
 
 export function useAuth() {
   const queryClient = useQueryClient();
-  const router = useRouter();
+  const router = useCompatRouter();
 
   // Use React Query to manage token state
   const { data: accessToken } = useQuery({
     queryKey: ['auth-token'],
     queryFn: () => tokenManager.accessToken,
-    staleTime: Infinity,
+    staleTime: Infinity
   });
 
   // Helper function to set access token
@@ -143,8 +161,13 @@ export function useAuth() {
     isPending: isResettingPassword,
     error: resetPasswordError
   } = useMutation({
-    mutationFn: ({ token, newPassword }: { token: string; newPassword: string }) =>
-      authService.resetPassword(token, newPassword),
+    mutationFn: ({
+      token,
+      newPassword
+    }: {
+      token: string;
+      newPassword: string;
+    }) => authService.resetPassword(token, newPassword),
     onSuccess: () => {
       toast.success('Password reset successfully');
       router.push('/signin');
@@ -208,7 +231,7 @@ export function useAuth() {
     accessToken,
     isAuthenticated: !!accessToken,
     isInitializing,
-    
+
     // User profile
     profile,
     isLoadingProfile,
@@ -248,8 +271,9 @@ export function useAuth() {
     isDisconnectingDiscord,
     disconnectDiscordError,
 
+    // Verification
     resendVerificationEmail,
     isResendingVerification,
-    resendVerificationError,
+    resendVerificationError
   };
-} 
+}

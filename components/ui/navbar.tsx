@@ -1,5 +1,7 @@
+'use client';
+
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -33,8 +35,8 @@ import { Badge } from './badge';
 import { useUserCarts } from '@/hooks/useUserCarts';
 
 const Navbar: React.FC = () => {
-  const router = useRouter();
-  const currentPath = router.pathname;
+  const pathname = usePathname();
+  const currentPath = pathname || '';
   const { isAuthenticated, isVendor, isAdmin } = useAuth();
   const canViewAnalytics = isAdmin || isVendor;
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
