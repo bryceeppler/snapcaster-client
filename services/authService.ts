@@ -61,6 +61,7 @@ interface UserProfile {
     updatedAt: string;
     role: UserRole;
     twoFactorEnabled: boolean;
+    twoFactorMethods: string[];
     vendorData?: VendorData;
   };
 }
@@ -167,13 +168,13 @@ export class AuthService {
     );
   }
 
-  async setup2FA(): Promise<{
+  async setupApp2FA(): Promise<{
     secret: string;
     qrCode: string;
     backupCodes: string[];
   }> {
     const response = await axiosInstance.post(
-      `${BASE_URL}/api/v1/auth/2fa/setup`,
+      `${BASE_URL}/api/v1/auth/2fa/app/setup`,
       {},
       {
         withCredentials: true
@@ -182,10 +183,25 @@ export class AuthService {
     return response.data.data;
   }
 
-  async verify2FA(token: string, secret: string): Promise<void> {
+  async setupEmail2FA(): Promise<{
+    emailEnabled: boolean;
+  }> {
+    const response = await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/email/setup`,
+      {},
+      { withCredentials: true }
+    );
+    return response.data.data;
+  }
+
+  async verifyApp2FA(
+    token: string,
+    secret: string,
+    method: string = 'app'
+  ): Promise<void> {
     await axiosInstance.post(
-      `${BASE_URL}/api/v1/auth/2fa/verify`,
-      { token, secret },
+      `${BASE_URL}/api/v1/auth/2fa/app/verify`,
+      { token, secret, method },
       {
         withCredentials: true
       }

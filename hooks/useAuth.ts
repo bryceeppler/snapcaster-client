@@ -271,39 +271,111 @@ export function useAuth() {
     }
   });
 
-  // 2FA setup mutation
-  const {
-    mutate: setup2FA,
-    isPending: isSettingUp2FA,
-    error: setup2FAError
-  } = useMutation({
-    mutationFn: authService.setup2FA,
+  // 2FA setup mutation for authenticator app
+  const setupApp2FAMutation = useMutation({
+    mutationFn: () => authService.setupApp2FA(),
     onSuccess: (data) => {
-      // The component will handle the success
+      // Data contains secret, qrCode, and backupCodes
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
     },
     onError: (error) => {
-      toast.error('Error setting up 2FA');
-      console.error('2FA setup error:', error);
+      toast.error('Error setting up app-based 2FA');
+      console.error('App 2FA setup error:', error);
     }
   });
 
-  // 2FA verification mutation
+  // Create a wrapper function that allows passing additional callbacks
+  const setupApp2FA = (
+    params?: undefined,
+    options?: {
+      onSuccess?: (data: any) => void;
+      onError?: (error: Error) => void;
+    }
+  ) => {
+    return setupApp2FAMutation.mutate(params, {
+      onSuccess: (data) => {
+        // Call the default onSuccess behavior (invalidate queries)
+        queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+        // Call the additional onSuccess if provided
+        options?.onSuccess?.(data);
+      },
+      onError: (error) => {
+        toast.error('Error setting up app-based 2FA');
+        console.error('App 2FA setup error:', error);
+        // Call the additional onError if provided
+        options?.onError?.(error);
+      }
+    });
+  };
+
+  const isSettingUpApp2FA = setupApp2FAMutation.isPending;
+  const setupApp2FAError = setupApp2FAMutation.error;
+
+  // 2FA setup mutation for email
   const {
-    mutate: verify2FA,
-    isPending: isVerifying2FA,
-    error: verify2FAError
+    mutate: setupEmail2FA,
+    isPending: isSettingUpEmail2FA,
+    error: setupEmail2FAError
   } = useMutation({
-    mutationFn: ({ token, secret }: { token: string; secret: string }) =>
-      authService.verify2FA(token, secret),
+    mutationFn: () => authService.setupEmail2FA(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('2FA enabled successfully!');
+      toast.success('Email-based 2FA enabled successfully!');
+    },
+    onError: (error) => {
+      toast.error('Error setting up email-based 2FA');
+      console.error('Email 2FA setup error:', error);
+    }
+  });
+
+  // 2FA verification mutation for authenticator app
+  const verifyApp2FAMutation = useMutation({
+    mutationFn: ({
+      token,
+      secret = '',
+      method = ''
+    }: {
+      token: string;
+      secret?: string;
+      method?: string;
+    }) => authService.verifyApp2FA(token, secret, method),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      toast.success('App-based 2FA enabled successfully!');
     },
     onError: (error) => {
       toast.error('Error verifying 2FA code');
-      console.error('2FA verification error:', error);
+      console.error('App 2FA verification error:', error);
     }
   });
+
+  // Create a wrapper function that allows passing additional callbacks
+  const verifyApp2FA = (
+    params: { token: string; secret?: string; method?: string },
+    options?: {
+      onSuccess?: () => void;
+      onError?: (error: Error) => void;
+    }
+  ) => {
+    return verifyApp2FAMutation.mutate(params, {
+      onSuccess: () => {
+        // Call the default onSuccess behavior
+        queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+        toast.success('App-based 2FA enabled successfully!');
+        // Call the additional onSuccess if provided
+        options?.onSuccess?.();
+      },
+      onError: (error) => {
+        toast.error('Error verifying 2FA code');
+        console.error('App 2FA verification error:', error);
+        // Call the additional onError if provided
+        options?.onError?.(error);
+      }
+    });
+  };
+
+  const isVerifyingApp2FA = verifyApp2FAMutation.isPending;
+  const verifyApp2FAError = verifyApp2FAMutation.error;
 
   // 2FA disable mutation
   const {
@@ -372,15 +444,21 @@ export function useAuth() {
     isResendingVerification,
     resendVerificationError,
 
-    // 2FA methods
-    setup2FA,
-    isSettingUp2FA,
-    setup2FAError,
+    // 2FA methods - App based
+    setupApp2FA,
+    isSettingUpApp2FA,
+    setupApp2FAError,
 
-    verify2FA,
-    isVerifying2FA,
-    verify2FAError,
+    verifyApp2FA,
+    isVerifyingApp2FA,
+    verifyApp2FAError,
 
+    // 2FA methods - Email based
+    setupEmail2FA,
+    isSettingUpEmail2FA,
+    setupEmail2FAError,
+
+    // Disable 2FA
     disable2FA,
     isDisabling2FA,
     disable2FAError,
