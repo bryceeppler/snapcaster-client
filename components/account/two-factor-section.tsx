@@ -17,7 +17,8 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
+  CardFooter
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,6 +26,14 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
 
 type TwoFactorSetupData = {
   secret: string;
@@ -52,6 +61,12 @@ export function TwoFactorSection() {
     isSettingUpEmail2FA,
     verifyApp2FA,
     isVerifyingApp2FA,
+    disableApp2FA,
+    isDisablingApp2FA,
+    disableEmail2FA,
+    isDisablingEmail2FA,
+    generateDisable2FACode,
+    isGeneratingDisableCode,
     disable2FA,
     isDisabling2FA,
     resendVerificationEmail,
@@ -66,6 +81,11 @@ export function TwoFactorSection() {
   const [activeMethod, setActiveMethod] = useState<TwoFactorMethod | null>(
     null
   );
+  const [disableDialogOpen, setDisableDialogOpen] = useState(false);
+  const [disableVerificationCode, setDisableVerificationCode] = useState('');
+  const [methodToDisable, setMethodToDisable] =
+    useState<TwoFactorMethod | null>(null);
+  const [isGeneratingEmailCode, setIsGeneratingEmailCode] = useState(false);
 
   const user = profile?.data?.user;
   const is2faEnabled = user?.twoFactorEnabled || false;
@@ -160,20 +180,45 @@ export function TwoFactorSection() {
     setTimeout(() => setCopiedBackupCodes(false), 3000);
   };
 
-  const disableTwoFactorMethod = async (method: TwoFactorMethod) => {
-    // For simplicity, we're just going to request verification code when disabling
-    // In a real app, you might want to show a prompt or modal to enter the code
-    const code = prompt(`Enter verification code to disable ${method} 2FA:`);
-    if (!code) return;
+  // Handle opening the disable 2FA dialog
+  const handleOpenDisableDialog = (method: TwoFactorMethod) => {
+    setMethodToDisable(method);
+    setDisableVerificationCode('');
+    setDisableDialogOpen(true);
 
-    disable2FA(code);
+    // For email method, we need to generate a verification code first
+    if (method === 'email') {
+      setIsGeneratingEmailCode(true);
+      generateDisable2FACode('email');
 
-    toast({
-      title: `${method === 'app' ? 'App' : 'Email'} 2FA Disabled`,
-      description: `Two-factor authentication using ${
-        method === 'app' ? 'authenticator app' : 'email'
-      } has been disabled.`
-    });
+      // Set a timer to reset the loading state after 2 seconds if API doesn't respond
+      setTimeout(() => {
+        setIsGeneratingEmailCode(false);
+      }, 2000);
+    }
+  };
+
+  // Handle disabling 2FA based on the selected method
+  const handleDisable2FA = () => {
+    if (!disableVerificationCode || !methodToDisable) {
+      toast({
+        title: 'Verification Code Required',
+        description: 'Please enter a valid verification code.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    if (methodToDisable === 'app') {
+      disableApp2FA(disableVerificationCode);
+    } else if (methodToDisable === 'email') {
+      disableEmail2FA(disableVerificationCode);
+    }
+
+    // Close the dialog
+    setDisableDialogOpen(false);
+    setDisableVerificationCode('');
+    setMethodToDisable(null);
   };
 
   const handleResendVerification = () => {
@@ -221,10 +266,10 @@ export function TwoFactorSection() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => disableTwoFactorMethod('app')}
-              disabled={isDisabling2FA}
+              onClick={() => handleOpenDisableDialog('app')}
+              disabled={isDisablingApp2FA}
             >
-              {isDisabling2FA ? 'Disabling...' : 'Disable'}
+              {isDisablingApp2FA ? 'Disabling...' : 'Disable'}
             </Button>
           </div>
         ) : (
@@ -278,10 +323,10 @@ export function TwoFactorSection() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => disableTwoFactorMethod('email')}
-              disabled={isDisabling2FA}
+              onClick={() => handleOpenDisableDialog('email')}
+              disabled={isDisablingEmail2FA}
             >
-              {isDisabling2FA ? 'Disabling...' : 'Disable'}
+              {isDisablingEmail2FA ? 'Disabling...' : 'Disable'}
             </Button>
           </div>
         ) : (
@@ -440,18 +485,99 @@ export function TwoFactorSection() {
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl">Security</CardTitle>
-        <CardDescription>
-          Manage your account security settings and two-factor authentication.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {setupStep === 'initial' && renderInitialState()}
-        {setupStep === 'app-setup' && renderAppSetupState()}
-        {setupStep === 'app-verify' && renderAppVerifyState()}
-      </CardContent>
-    </Card>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Security</CardTitle>
+          <CardDescription>
+            Manage your account security settings and two-factor authentication.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {setupStep === 'initial' && renderInitialState()}
+          {setupStep === 'app-setup' && renderAppSetupState()}
+          {setupStep === 'app-verify' && renderAppVerifyState()}
+        </CardContent>
+      </Card>
+
+      {/* Disable 2FA Dialog */}
+      <Dialog open={disableDialogOpen} onOpenChange={setDisableDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Disable {methodToDisable === 'app' ? 'App' : 'Email'} 2FA
+            </DialogTitle>
+            <DialogDescription>
+              {methodToDisable === 'app'
+                ? 'Enter the verification code from your authenticator app to disable 2FA.'
+                : 'Enter the verification code sent to your email to disable email 2FA.'}
+              {methodToDisable === 'app' &&
+                user?.twoFactorMethods?.length === 1 && (
+                  <Alert variant="destructive" className="mt-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Warning</AlertTitle>
+                    <AlertDescription>
+                      This is your only active 2FA method. Disabling it will
+                      remove all two-factor authentication protection from your
+                      account.
+                    </AlertDescription>
+                  </Alert>
+                )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="disableVerificationCode">Verification Code</Label>
+              <Input
+                id="disableVerificationCode"
+                value={disableVerificationCode}
+                onChange={(e) => setDisableVerificationCode(e.target.value)}
+                placeholder="Enter 6-digit code"
+                maxLength={6}
+                disabled={isGeneratingEmailCode}
+              />
+              {methodToDisable === 'email' && isGeneratingEmailCode && (
+                <p className="text-sm text-muted-foreground">
+                  Sending verification code to your email...
+                </p>
+              )}
+              {methodToDisable === 'email' && !isGeneratingEmailCode && (
+                <p className="text-sm text-muted-foreground">
+                  A verification code has been sent to your email address.
+                </p>
+              )}
+              {methodToDisable === 'app' && (
+                <p className="text-sm text-muted-foreground">
+                  Enter the code from your authenticator app or use a backup
+                  code.
+                </p>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDisableDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDisable2FA}
+              disabled={
+                disableVerificationCode.length !== 6 ||
+                isDisablingApp2FA ||
+                isDisablingEmail2FA ||
+                isGeneratingEmailCode
+              }
+            >
+              {isDisablingApp2FA || isDisablingEmail2FA
+                ? 'Disabling...'
+                : 'Disable 2FA'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

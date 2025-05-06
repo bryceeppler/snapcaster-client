@@ -66,10 +66,16 @@ interface UserProfile {
   };
 }
 
+export interface TwoFactorRequiredResponse {
+  requiresTwoFactor: true;
+  tempToken: string;
+  methods: string[];
+}
+
 export class AuthService {
   async login(
     credentials: LoginCredentials
-  ): Promise<string | { requiresTwoFactor: true; tempToken: string }> {
+  ): Promise<string | TwoFactorRequiredResponse> {
     const response = await axios.post(
       `${BASE_URL}/api/v1/auth/login`,
       credentials,
@@ -81,7 +87,8 @@ export class AuthService {
     if (response.data.data.requiresTwoFactor) {
       return {
         requiresTwoFactor: true,
-        tempToken: response.data.data.tempToken
+        tempToken: response.data.data.tempToken,
+        methods: response.data.data.methods || ['app'] // Default to app if not provided
       };
     }
 
@@ -208,6 +215,36 @@ export class AuthService {
     );
   }
 
+  async generateDisable2FACode(method: string): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/generate-disable-code`,
+      { method },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async disableApp2FA(token: string): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/app/disable`,
+      { token },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async disableEmail2FA(token: string): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/email/disable`,
+      { token },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
   async disable2FA(token: string): Promise<void> {
     await axiosInstance.post(
       `${BASE_URL}/api/v1/auth/2fa/disable`,
@@ -220,13 +257,15 @@ export class AuthService {
 
   async completeTwoFactorLogin(
     tempToken: string,
-    twoFactorCode: string
+    twoFactorCode: string,
+    method: string = 'app'
   ): Promise<string> {
     const response = await axios.post(
       `${BASE_URL}/api/v1/auth/2fa/validate`,
       {
         tempToken,
-        token: twoFactorCode
+        token: twoFactorCode,
+        method
       },
       {
         withCredentials: true

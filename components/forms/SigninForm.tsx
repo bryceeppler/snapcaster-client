@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,9 @@ import {
   CardFooter
 } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Smartphone, Mail } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 type Props = {
   redirectUrl?: string;
@@ -31,12 +32,21 @@ export default function SignInForm({ redirectUrl }: Props) {
     isLoggingIn,
     requiresTwoFactor,
     tempToken,
+    availableMethods,
     completeTwoFactorLogin,
     isCompletingTwoFactorLogin
   } = useAuth();
 
   const [twoFactorCode, setTwoFactorCode] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<string>('app');
+
+  // If there's only one method available, automatically select it
+  useEffect(() => {
+    if (availableMethods.length === 1) {
+      setSelectedMethod(availableMethods[0]);
+    }
+  }, [availableMethods]);
 
   const {
     register,
@@ -62,7 +72,33 @@ export default function SignInForm({ redirectUrl }: Props) {
       return;
     }
 
-    completeTwoFactorLogin({ tempToken, twoFactorCode });
+    completeTwoFactorLogin({
+      tempToken,
+      twoFactorCode,
+      method: selectedMethod
+    });
+  };
+
+  const getMethodIcon = (method: string) => {
+    switch (method) {
+      case 'app':
+        return <Smartphone className="h-4 w-4" />;
+      case 'email':
+        return <Mail className="h-4 w-4" />;
+      default:
+        return <Smartphone className="h-4 w-4" />;
+    }
+  };
+
+  const getMethodLabel = (method: string) => {
+    switch (method) {
+      case 'app':
+        return 'Authenticator App';
+      case 'email':
+        return 'Email';
+      default:
+        return method;
+    }
   };
 
   // Render the 2FA form if required
@@ -71,9 +107,7 @@ export default function SignInForm({ redirectUrl }: Props) {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Two-Factor Authentication</CardTitle>
-          <CardDescription>
-            Enter the verification code from your authenticator app
-          </CardDescription>
+          <CardDescription>Verify your identity to continue</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleTwoFactorSubmit} className="space-y-4">
@@ -82,6 +116,35 @@ export default function SignInForm({ redirectUrl }: Props) {
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
+            )}
+
+            {availableMethods.length > 1 && (
+              <div className="space-y-2">
+                <Label>Authentication Method</Label>
+                <RadioGroup
+                  value={selectedMethod}
+                  onValueChange={setSelectedMethod}
+                  className="flex flex-col space-y-2"
+                >
+                  {availableMethods.map((method) => (
+                    <div
+                      key={method}
+                      className="flex items-center space-x-2 rounded-md border p-3"
+                    >
+                      <RadioGroupItem value={method} id={method} />
+                      <Label
+                        htmlFor={method}
+                        className="flex cursor-pointer items-center"
+                      >
+                        <span className="flex items-center gap-2">
+                          {getMethodIcon(method)}
+                          {getMethodLabel(method)}
+                        </span>
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
             )}
 
             <div className="space-y-2">
@@ -96,6 +159,11 @@ export default function SignInForm({ redirectUrl }: Props) {
                 inputMode="numeric"
                 pattern="[0-9]*"
               />
+              {selectedMethod === 'email' && (
+                <p className="mt-1 text-sm text-muted-foreground">
+                  A verification code has been sent to your email address
+                </p>
+              )}
             </div>
 
             <Button

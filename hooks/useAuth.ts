@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { authService } from '@/services/authService';
+import { authService, TwoFactorRequiredResponse } from '@/services/authService';
 import { toast } from 'sonner';
 import { tokenManager } from '@/utils/axiosWrapper';
 import { useCallback, useState } from 'react';
@@ -77,19 +77,17 @@ export function useAuth() {
   // Add these to your useAuth hook state
   const [requiresTwoFactor, setRequiresTwoFactor] = useState(false);
   const [tempToken, setTempToken] = useState<string | null>(null);
+  const [availableMethods, setAvailableMethods] = useState<string[]>(['app']);
 
   // Login mutation
-  const {
-    mutate: login,
-    isPending: isLoggingIn,
-    error: loginError
-  } = useMutation({
+  const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: (result) => {
       // Check if 2FA is required
       if (typeof result === 'object' && result.requiresTwoFactor) {
         setRequiresTwoFactor(true);
         setTempToken(result.tempToken);
+        setAvailableMethods(result.methods || ['app']);
         // Don't set the access token or redirect yet
         return;
       }
@@ -111,23 +109,48 @@ export function useAuth() {
     }
   });
 
+  // Create a wrapper function for login that allows passing additional callbacks
+  const login = (
+    credentials: { email: string; password: string },
+    options?: {
+      onSuccess?: (result: string | TwoFactorRequiredResponse) => void;
+      onError?: (error: Error) => void;
+    }
+  ) => {
+    return loginMutation.mutate(credentials, {
+      onSuccess: (result) => {
+        // Call the default onSuccess behavior
+        // This is handled by the loginMutation's onSuccess
+
+        // Call the additional onSuccess if provided
+        options?.onSuccess?.(result);
+      },
+      onError: (error) => {
+        // Call the additional onError if provided
+        options?.onError?.(error);
+      }
+    });
+  };
+
+  const isLoggingIn = loginMutation.isPending;
+  const loginError = loginMutation.error;
+
   // Add a mutation for completing 2FA login
-  const {
-    mutate: completeTwoFactorLogin,
-    isPending: isCompletingTwoFactorLogin,
-    error: twoFactorLoginError
-  } = useMutation({
+  const completeTwoFactorLoginMutation = useMutation({
     mutationFn: ({
       tempToken,
-      twoFactorCode
+      twoFactorCode,
+      method = 'app'
     }: {
       tempToken: string;
       twoFactorCode: string;
-    }) => authService.completeTwoFactorLogin(tempToken, twoFactorCode),
+      method?: string;
+    }) => authService.completeTwoFactorLogin(tempToken, twoFactorCode, method),
     onSuccess: (token) => {
       setAccessToken(token);
       setRequiresTwoFactor(false);
       setTempToken(null);
+      setAvailableMethods(['app']);
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
       toast.success('Login successful!');
       router.push('/account');
@@ -141,6 +164,34 @@ export function useAuth() {
       console.error('2FA login error:', error);
     }
   });
+
+  // Create a wrapper function for completeTwoFactorLogin that allows passing additional callbacks
+  const completeTwoFactorLogin = (
+    params: {
+      tempToken: string;
+      twoFactorCode: string;
+      method?: string;
+    },
+    options?: {
+      onSuccess?: (token: string) => void;
+      onError?: (error: Error) => void;
+    }
+  ) => {
+    return completeTwoFactorLoginMutation.mutate(params, {
+      onSuccess: (token) => {
+        // The default behavior is handled in the mutation
+        // Call the additional onSuccess if provided
+        options?.onSuccess?.(token);
+      },
+      onError: (error) => {
+        // Call the additional onError if provided
+        options?.onError?.(error);
+      }
+    });
+  };
+
+  const isCompletingTwoFactorLogin = completeTwoFactorLoginMutation.isPending;
+  const twoFactorLoginError = completeTwoFactorLoginMutation.error;
 
   // Register mutation
   const {
@@ -394,6 +445,62 @@ export function useAuth() {
     }
   });
 
+  // 2FA disable mutations
+  const {
+    mutate: generateDisable2FACode,
+    isPending: isGeneratingDisableCode,
+    error: generateDisableCodeError
+  } = useMutation({
+    mutationFn: (method: string) => authService.generateDisable2FACode(method),
+    onSuccess: () => {
+      toast.success('Verification code has been sent to your email');
+    },
+    onError: (error) => {
+      toast.error('Error generating verification code');
+      console.error('Generate disable code error:', error);
+    }
+  });
+
+  const {
+    mutate: disableApp2FA,
+    isPending: isDisablingApp2FA,
+    error: disableApp2FAError
+  } = useMutation({
+    mutationFn: (token: string) => authService.disableApp2FA(token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      toast.success('App-based 2FA has been disabled');
+    },
+    onError: (error: any) => {
+      if (error?.response?.data) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error('Error disabling app-based 2FA');
+      }
+      console.error('Disable app 2FA error:', error);
+    }
+  });
+
+  const {
+    mutate: disableEmail2FA,
+    isPending: isDisablingEmail2FA,
+    error: disableEmail2FAError
+  } = useMutation({
+    mutationFn: (token: string) => authService.disableEmail2FA(token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      toast.success('Email-based 2FA has been disabled');
+    },
+    onError: (error: any) => {
+      if (error?.response?.data) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error('Error disabling email-based 2FA');
+      }
+      console.error('Disable email 2FA error:', error);
+    }
+  });
+
   return {
     // Auth state
     accessToken,
@@ -466,8 +573,22 @@ export function useAuth() {
     // 2FA login state and methods
     requiresTwoFactor,
     tempToken,
+    availableMethods,
     completeTwoFactorLogin,
     isCompletingTwoFactorLogin,
-    twoFactorLoginError
+    twoFactorLoginError,
+
+    // Disable specific 2FA methods
+    generateDisable2FACode,
+    isGeneratingDisableCode,
+    generateDisableCodeError,
+
+    disableApp2FA,
+    isDisablingApp2FA,
+    disableApp2FAError,
+
+    disableEmail2FA,
+    isDisablingEmail2FA,
+    disableEmail2FAError
   };
 }
