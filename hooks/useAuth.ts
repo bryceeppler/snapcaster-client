@@ -85,7 +85,7 @@ export function useAuth() {
       setAccessToken(token);
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
       toast.success('Login successful!');
-      router.push('/profile');
+      router.push('/account');
     },
     onError: (error: any) => {
       if (error?.response?.data) {
@@ -108,7 +108,7 @@ export function useAuth() {
       setAccessToken(response.data.accessToken);
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
       toast.success('Registration successful!');
-      router.push('/profile');
+      router.push('/account');
     },
     onError: (error: any) => {
       if (error?.response?.data) {

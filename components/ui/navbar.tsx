@@ -214,7 +214,7 @@ const Navbar: React.FC = () => {
                   )}
                 </div>
                 <div className="mt-auto flex items-center justify-between border-t p-4">
-                  <Link href={isAuthenticated ? `/profile` : '/signin'}>
+                  <Link href={isAuthenticated ? `/account` : '/signin'}>
                     <Button
                       variant="outline"
                       className="mr-2"
@@ -274,7 +274,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Search Bar: Always visible below main nav */}
-        <div className="border-b border-border/40 bg-background/80 p-2.5 backdrop-blur-sm">
+        <div className="border-b border-border/40 bg-background/80 p-2.5">
           {currentPath === '/' &&
             NavSearchBarFactory('singles', { deviceType: 'mobile' })}
           {currentPath === '/buylists' &&
@@ -291,7 +291,7 @@ const Navbar: React.FC = () => {
       {/* DESKTOP NAV MD+ */}
       <div className="sticky top-0 z-40 hidden lg:block">
         {/* Top section with logo, search and account */}
-        <div className="border-b border-border/40 bg-background/90 shadow-sm backdrop-blur-sm">
+        <div className="border-b border-border/40 bg-card">
           <div className="flex h-16 items-center justify-between px-6">
             {/* 1. Left Section: Snapcaster Logo */}
             <div className="flex items-center">
@@ -323,7 +323,7 @@ const Navbar: React.FC = () => {
             <div className="flex items-center gap-3">
               <ModeToggle />
 
-              <Link href={isAuthenticated ? `/profile` : '/signin'}>
+              <Link href={isAuthenticated ? `/account` : '/signin'}>
                 <Button
                   variant={isAuthenticated ? 'default' : 'outline'}
                   size="sm"
@@ -344,7 +344,7 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* 4. Nav Links section */}
-        <div className="border-b border-border/40 bg-background shadow-sm">
+        <div className="border-b border-border/40 bg-card">
           <div className="px-6">
             <nav className="flex">
               <NavLink href="/" isActive={currentPath === '/'}>
