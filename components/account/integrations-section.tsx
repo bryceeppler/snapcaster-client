@@ -13,38 +13,23 @@ import {
 } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-
+import { useAuth } from '@/hooks/useAuth';
 export function IntegrationsSection() {
   const { toast } = useToast();
-  const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { connectDiscord, disconnectDiscord, profile } = useAuth();
   const handleConnect = async () => {
-    setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsConnected(true);
-      toast({
-        title: 'Discord connected',
-        description: 'Your Discord account has been successfully connected.'
-      });
-    }, 1000);
+    connectDiscord();
   };
 
   const handleDisconnect = async () => {
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsConnected(false);
-      toast({
-        title: 'Discord disconnected',
-        description: 'Your Discord account has been disconnected.'
-      });
-    }, 1000);
+    disconnectDiscord();
+    toast({
+      title: 'Discord disconnected',
+      description: 'Your Discord account has been disconnected.'
+    });
+    setIsLoading(false);
   };
 
   return (
@@ -65,16 +50,15 @@ export function IntegrationsSection() {
               <div>
                 <p className="text-sm font-medium leading-none">Discord</p>
                 <p className="text-sm text-muted-foreground">
-                  {isConnected
+                  {profile?.data?.user?.discordId
                     ? 'Your Discord account is connected'
                     : 'Connect your Discord account'}
                 </p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              {isConnected ? (
+              {profile?.data?.user?.discordId ? (
                 <>
-                  <Switch checked={isConnected} disabled />
                   <Button
                     variant="outline"
                     size="sm"
