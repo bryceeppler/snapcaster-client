@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authService } from '@/services/authService';
 import { toast } from 'sonner';
 import { tokenManager } from '@/utils/axiosWrapper';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 // Create a compatibility layer for router
 function useCompatRouter() {
@@ -74,6 +74,10 @@ export function useAuth() {
     retry: false
   });
 
+  // Add these to your useAuth hook state
+  const [requiresTwoFactor, setRequiresTwoFactor] = useState(false);
+  const [tempToken, setTempToken] = useState<string | null>(null);
+
   // Login mutation
   const {
     mutate: login,
@@ -81,7 +85,17 @@ export function useAuth() {
     error: loginError
   } = useMutation({
     mutationFn: authService.login,
-    onSuccess: (token) => {
+    onSuccess: (result) => {
+      // Check if 2FA is required
+      if (typeof result === 'object' && result.requiresTwoFactor) {
+        setRequiresTwoFactor(true);
+        setTempToken(result.tempToken);
+        // Don't set the access token or redirect yet
+        return;
+      }
+
+      // Regular login success
+      const token = result as string;
       setAccessToken(token);
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
       toast.success('Login successful!');
@@ -94,6 +108,37 @@ export function useAuth() {
         toast.error('An error occurred during login');
       }
       console.error('Login error:', error);
+    }
+  });
+
+  // Add a mutation for completing 2FA login
+  const {
+    mutate: completeTwoFactorLogin,
+    isPending: isCompletingTwoFactorLogin,
+    error: twoFactorLoginError
+  } = useMutation({
+    mutationFn: ({
+      tempToken,
+      twoFactorCode
+    }: {
+      tempToken: string;
+      twoFactorCode: string;
+    }) => authService.completeTwoFactorLogin(tempToken, twoFactorCode),
+    onSuccess: (token) => {
+      setAccessToken(token);
+      setRequiresTwoFactor(false);
+      setTempToken(null);
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      toast.success('Login successful!');
+      router.push('/account');
+    },
+    onError: (error: any) => {
+      if (error?.response?.data) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error('Invalid verification code');
+      }
+      console.error('2FA login error:', error);
     }
   });
 
@@ -226,6 +271,57 @@ export function useAuth() {
     }
   });
 
+  // 2FA setup mutation
+  const {
+    mutate: setup2FA,
+    isPending: isSettingUp2FA,
+    error: setup2FAError
+  } = useMutation({
+    mutationFn: authService.setup2FA,
+    onSuccess: (data) => {
+      // The component will handle the success
+    },
+    onError: (error) => {
+      toast.error('Error setting up 2FA');
+      console.error('2FA setup error:', error);
+    }
+  });
+
+  // 2FA verification mutation
+  const {
+    mutate: verify2FA,
+    isPending: isVerifying2FA,
+    error: verify2FAError
+  } = useMutation({
+    mutationFn: ({ token, secret }: { token: string; secret: string }) =>
+      authService.verify2FA(token, secret),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      toast.success('2FA enabled successfully!');
+    },
+    onError: (error) => {
+      toast.error('Error verifying 2FA code');
+      console.error('2FA verification error:', error);
+    }
+  });
+
+  // 2FA disable mutation
+  const {
+    mutate: disable2FA,
+    isPending: isDisabling2FA,
+    error: disable2FAError
+  } = useMutation({
+    mutationFn: (token: string) => authService.disable2FA(token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      toast.success('2FA disabled successfully');
+    },
+    onError: (error) => {
+      toast.error('Error disabling 2FA');
+      console.error('2FA disable error:', error);
+    }
+  });
+
   return {
     // Auth state
     accessToken,
@@ -274,6 +370,26 @@ export function useAuth() {
     // Verification
     resendVerificationEmail,
     isResendingVerification,
-    resendVerificationError
+    resendVerificationError,
+
+    // 2FA methods
+    setup2FA,
+    isSettingUp2FA,
+    setup2FAError,
+
+    verify2FA,
+    isVerifying2FA,
+    verify2FAError,
+
+    disable2FA,
+    isDisabling2FA,
+    disable2FAError,
+
+    // 2FA login state and methods
+    requiresTwoFactor,
+    tempToken,
+    completeTwoFactorLogin,
+    isCompletingTwoFactorLogin,
+    twoFactorLoginError
   };
 }

@@ -6,6 +6,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 interface LoginCredentials {
   email: string;
   password: string;
+  twoFactorToken?: string;
+  tempToken?: string;
 }
 
 interface RegisterCredentials extends LoginCredentials {
@@ -58,12 +60,15 @@ interface UserProfile {
     createdAt: string;
     updatedAt: string;
     role: UserRole;
+    twoFactorEnabled: boolean;
     vendorData?: VendorData;
   };
 }
 
 export class AuthService {
-  async login(credentials: LoginCredentials): Promise<string> {
+  async login(
+    credentials: LoginCredentials
+  ): Promise<string | { requiresTwoFactor: true; tempToken: string }> {
     const response = await axios.post(
       `${BASE_URL}/api/v1/auth/login`,
       credentials,
@@ -71,6 +76,14 @@ export class AuthService {
         withCredentials: true
       }
     );
+
+    if (response.data.data.requiresTwoFactor) {
+      return {
+        requiresTwoFactor: true,
+        tempToken: response.data.data.tempToken
+      };
+    }
+
     return response.data.data.accessToken;
   }
 
@@ -152,6 +165,59 @@ export class AuthService {
         withCredentials: true
       }
     );
+  }
+
+  async setup2FA(): Promise<{
+    secret: string;
+    qrCode: string;
+    backupCodes: string[];
+  }> {
+    const response = await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/setup`,
+      {},
+      {
+        withCredentials: true
+      }
+    );
+    return response.data.data;
+  }
+
+  async verify2FA(token: string, secret: string): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/verify`,
+      { token, secret },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async disable2FA(token: string): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/disable`,
+      { token },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async completeTwoFactorLogin(
+    tempToken: string,
+    twoFactorCode: string
+  ): Promise<string> {
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/auth/2fa/validate`,
+      {
+        tempToken,
+        token: twoFactorCode
+      },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data.data.accessToken;
   }
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,9 +9,12 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent
+  CardContent,
+  CardFooter
 } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 type Props = {
   redirectUrl?: string;
@@ -22,82 +25,156 @@ type SignInFormData = {
   password: string;
 };
 
-const SignInForm = (props: Props) => {
-  const { login, isLoggingIn } = useAuth();
+export default function SignInForm({ redirectUrl }: Props) {
+  const {
+    login,
+    isLoggingIn,
+    requiresTwoFactor,
+    tempToken,
+    completeTwoFactorLogin,
+    isCompletingTwoFactorLogin
+  } = useAuth();
+
+  const [twoFactorCode, setTwoFactorCode] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<SignInFormData>({
-    defaultValues: {
-      email: '',
-      password: ''
-    }
-  });
+  } = useForm<SignInFormData>();
 
-  const onSubmit = async (data: SignInFormData) => {
+  const onSubmit = (data: SignInFormData) => {
+    setError(null);
     login(data);
   };
 
+  const handleTwoFactorSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!tempToken) {
+      setError('Session expired. Please try logging in again.');
+      return;
+    }
+
+    if (!twoFactorCode || twoFactorCode.length !== 6) {
+      setError('Please enter a valid 6-digit verification code');
+      return;
+    }
+
+    completeTwoFactorLogin({ tempToken, twoFactorCode });
+  };
+
+  // Render the 2FA form if required
+  if (requiresTwoFactor) {
+    return (
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">Two-Factor Authentication</CardTitle>
+          <CardDescription>
+            Enter the verification code from your authenticator app
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleTwoFactorSubmit} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="twoFactorCode">Verification Code</Label>
+              <Input
+                id="twoFactorCode"
+                value={twoFactorCode}
+                onChange={(e) => setTwoFactorCode(e.target.value)}
+                placeholder="Enter 6-digit code"
+                maxLength={6}
+                autoComplete="one-time-code"
+                inputMode="numeric"
+                pattern="[0-9]*"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isCompletingTwoFactorLogin}
+            >
+              {isCompletingTwoFactorLogin ? 'Verifying...' : 'Verify'}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <Button
+            variant="link"
+            onClick={() => window.location.reload()}
+            className="px-2"
+          >
+            Back to login
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  // Regular login form
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Sign In</CardTitle>
-        <CardDescription>Log in to your Snapcaster account.</CardDescription>
+        <CardDescription>
+          Enter your email to sign in to your account
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="grid gap-4 md:gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
-              {...register('email', {
-                required: 'Email is required',
-                pattern: /^\S+@\S+\.\S+$/
-              })}
-              type="text"
+              id="email"
+              type="email"
               placeholder="m@example.com"
+              {...register('email', { required: true })}
             />
             {errors.email && (
-              <p className="text-red-500">{errors.email.message}</p>
-            )}
-            {errors.email?.type === 'pattern' && (
-              <p className="text-red-500">Invalid email</p>
+              <p className="text-sm text-destructive">Email is required</p>
             )}
           </div>
-          <div className="grid gap-2">
-            <div className="flex flex-col gap-1 md:flex-row md:items-center">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
               <Label htmlFor="password">Password</Label>
               <Link
                 href="/forgot-password"
-                className="inline-block text-sm text-muted-foreground underline md:ml-auto"
+                className="text-sm text-primary hover:underline"
               >
-                Forgot your password?
+                Forgot password?
               </Link>
             </div>
             <Input
-              {...register('password', {
-                required: 'Password is required'
-              })}
+              id="password"
               type="password"
-              placeholder=""
+              {...register('password', { required: true })}
             />
             {errors.password && (
-              <p className="text-red-500">{errors.password.message}</p>
+              <p className="text-sm text-destructive">Password is required</p>
             )}
           </div>
-          <Button type="submit" disabled={isLoggingIn}>
+          <Button type="submit" className="w-full" disabled={isLoggingIn}>
             {isLoggingIn ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
-        <div className="mt-4 text-center text-sm">
+      </CardContent>
+      <CardFooter>
+        <div className="w-full text-center text-sm">
           Don't have an account?{' '}
-          <Link href="/signup" className="underline">
-            Sign up.
+          <Link href="/signup" className="text-primary hover:underline">
+            Sign up
           </Link>
         </div>
-      </CardContent>
+      </CardFooter>
     </Card>
   );
-};
-
-export default SignInForm;
+}
