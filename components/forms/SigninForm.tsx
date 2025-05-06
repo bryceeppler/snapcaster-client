@@ -13,7 +13,7 @@ import {
   CardFooter
 } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
-import { AlertCircle, Smartphone, Mail } from 'lucide-react';
+import { AlertCircle, Smartphone, Mail, Send } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
@@ -34,12 +34,15 @@ export default function SignInForm({ redirectUrl }: Props) {
     tempToken,
     availableMethods,
     completeTwoFactorLogin,
-    isCompletingTwoFactorLogin
+    isCompletingTwoFactorLogin,
+    sendEmailVerificationCode,
+    isSendingEmailCode
   } = useAuth();
 
   const [twoFactorCode, setTwoFactorCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string>('app');
+  const [emailCodeSent, setEmailCodeSent] = useState(false);
 
   // If there's only one method available, automatically select it
   useEffect(() => {
@@ -47,6 +50,11 @@ export default function SignInForm({ redirectUrl }: Props) {
       setSelectedMethod(availableMethods[0]);
     }
   }, [availableMethods]);
+
+  // Reset emailCodeSent when method changes
+  useEffect(() => {
+    setEmailCodeSent(false);
+  }, [selectedMethod]);
 
   const {
     register,
@@ -77,6 +85,15 @@ export default function SignInForm({ redirectUrl }: Props) {
       twoFactorCode,
       method: selectedMethod
     });
+  };
+
+  const handleSendEmailCode = () => {
+    if (tempToken) {
+      sendEmailVerificationCode(tempToken);
+      setEmailCodeSent(true);
+    } else {
+      setError('Session expired. Please try logging in again.');
+    }
   };
 
   const getMethodIcon = (method: string) => {
@@ -159,10 +176,29 @@ export default function SignInForm({ redirectUrl }: Props) {
                 inputMode="numeric"
                 pattern="[0-9]*"
               />
+
               {selectedMethod === 'email' && (
-                <p className="mt-1 text-sm text-muted-foreground">
-                  A verification code has been sent to your email address
-                </p>
+                <div className="mt-2">
+                  {emailCodeSent ? (
+                    <p className="text-sm text-muted-foreground">
+                      A verification code has been sent to your email address
+                    </p>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="flex w-full items-center gap-1"
+                      onClick={handleSendEmailCode}
+                      disabled={isSendingEmailCode}
+                    >
+                      <Send className="h-4 w-4" />
+                      {isSendingEmailCode
+                        ? 'Sending...'
+                        : 'Send Verification Email'}
+                    </Button>
+                  )}
+                </div>
               )}
             </div>
 

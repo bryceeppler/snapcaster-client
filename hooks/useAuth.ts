@@ -501,6 +501,27 @@ export function useAuth() {
     }
   });
 
+  // Add a mutation for sending email verification codes for 2FA login
+  const {
+    mutate: sendEmailVerificationCode,
+    isPending: isSendingEmailCode,
+    error: sendEmailCodeError
+  } = useMutation({
+    mutationFn: (tempToken: string) =>
+      authService.sendEmailVerificationCode(tempToken),
+    onSuccess: () => {
+      toast.success('Verification code sent to your email');
+    },
+    onError: (error: any) => {
+      if (error?.response?.data) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error('Error sending verification code');
+      }
+      console.error('Send email verification code error:', error);
+    }
+  });
+
   return {
     // Auth state
     accessToken,
@@ -589,6 +610,11 @@ export function useAuth() {
 
     disableEmail2FA,
     isDisablingEmail2FA,
-    disableEmail2FAError
+    disableEmail2FAError,
+
+    // Send email verification code for 2FA login
+    sendEmailVerificationCode,
+    isSendingEmailCode,
+    sendEmailCodeError
   };
 }

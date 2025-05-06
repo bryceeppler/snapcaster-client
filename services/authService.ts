@@ -274,6 +274,16 @@ export class AuthService {
 
     return response.data.data.accessToken;
   }
+
+  async sendEmailVerificationCode(tempToken: string): Promise<void> {
+    await axios.post(
+      `${BASE_URL}/api/v1/auth/2fa/email/send`,
+      { tempToken },
+      {
+        withCredentials: true
+      }
+    );
+  }
 }
 
 export const authService = new AuthService();
