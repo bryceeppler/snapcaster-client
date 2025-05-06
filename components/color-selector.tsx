@@ -11,17 +11,26 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { Check } from 'lucide-react';
+import { Check, Palette } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // Define our color palette options
 const colorOptions = [
+  // Original colors
   { name: 'Blue', value: '221 76% 62%', class: 'bg-[hsl(221,76%,62%)]' },
   { name: 'Purple', value: '262 80% 60%', class: 'bg-[hsl(262,80%,60%)]' },
   { name: 'Green', value: '142 76% 36%', class: 'bg-[hsl(142,76%,36%)]' },
   { name: 'Red', value: '355 78% 56%', class: 'bg-[hsl(355,78%,56%)]' },
   { name: 'Orange', value: '16 90% 50%', class: 'bg-[hsl(16,90%,50%)]' },
-  { name: 'Teal', value: '180 70% 40%', class: 'bg-[hsl(180,70%,40%)]' }
+  { name: 'Teal', value: '180 70% 40%', class: 'bg-[hsl(180,70%,40%)]' },
+
+  // New colors
+  { name: 'Pink', value: '330 90% 65%', class: 'bg-[hsl(330,90%,65%)]' },
+  { name: 'Indigo', value: '245 75% 52%', class: 'bg-[hsl(245,75%,52%)]' },
+  { name: 'Amber', value: '38 92% 50%', class: 'bg-[hsl(38,92%,50%)]' },
+  { name: 'Emerald', value: '152 76% 40%', class: 'bg-[hsl(152,76%,40%)]' },
+  { name: 'Cyan', value: '195 85% 55%', class: 'bg-[hsl(195,85%,55%)]' },
+  { name: 'Rose', value: '350 89% 60%', class: 'bg-[hsl(350,89%,60%)]' }
 ];
 
 export default function ColorSelector() {
@@ -94,12 +103,12 @@ export default function ColorSelector() {
         <RadioGroup
           value={primaryColor}
           onValueChange={handleColorChange}
-          className="flex flex-wrap gap-2"
+          className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6"
         >
           {colorOptions.map((color) => (
             <Tooltip key={color.value}>
               <TooltipTrigger asChild>
-                <div className="relative">
+                <div className="relative flex justify-center">
                   <RadioGroupItem
                     value={color.value}
                     id={`color-${color.value}`}
@@ -107,14 +116,14 @@ export default function ColorSelector() {
                   />
                   <Label
                     htmlFor={`color-${color.value}`}
-                    className="flex h-6 w-6 items-center justify-center rounded-full border transition-all duration-200 
-                    hover:scale-110 hover:shadow-md peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-foreground peer-data-[state=checked]:ring-offset-1"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-muted bg-popover transition-all duration-200 
+                    hover:scale-110 hover:shadow-md peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary peer-data-[state=checked]:ring-offset-1"
                   >
-                    <div className={`h-5 w-5 rounded-full ${color.class}`} />
+                    <div className={`h-7 w-7 rounded-full ${color.class}`} />
 
                     {primaryColor === color.value && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <Check className="h-3 w-3 text-white drop-shadow-[0_0_1px_rgba(0,0,0,0.5)]" />
+                        <Check className="h-4 w-4 text-white drop-shadow-[0_0_1px_rgba(0,0,0,0.7)]" />
                       </div>
                     )}
 

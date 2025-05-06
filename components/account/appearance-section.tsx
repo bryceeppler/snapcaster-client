@@ -10,25 +10,41 @@ import {
 import ThemeSelector from '@/components/theme-selector';
 import ColorSelector from '@/components/color-selector';
 import { Separator } from '@/components/ui/separator';
+import { Palette, Monitor } from 'lucide-react';
 
 export function AppearanceSection() {
   return (
-    <Card>
+    <Card className="duration-500 animate-in fade-in-50">
       <CardHeader>
-        <CardTitle className="text-2xl">Appearance</CardTitle>
+        <CardTitle className="flex items-center gap-2 text-2xl">
+          <Palette className="h-6 w-6 text-primary" />
+          Appearance
+        </CardTitle>
         <CardDescription>
           Customize how the application looks on your device.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div>
-          <ThemeSelector />
+      <CardContent className="space-y-8">
+        <div className="space-y-5">
+          <div className="flex items-center gap-2">
+            <Monitor className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-base font-medium">Display</h3>
+          </div>
+          <div className="pl-7">
+            <ThemeSelector />
+          </div>
         </div>
 
-        <Separator />
+        <Separator className="my-6" />
 
-        <div>
-          <ColorSelector />
+        <div className="space-y-5">
+          <div className="flex items-center gap-2">
+            <Palette className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-base font-medium">Colors</h3>
+          </div>
+          <div className="pl-7">
+            <ColorSelector />
+          </div>
         </div>
       </CardContent>
     </Card>
