@@ -8,6 +8,8 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import ThemeSelector from '@/components/theme-selector';
+import ColorSelector from '@/components/color-selector';
+import { Separator } from '@/components/ui/separator';
 
 export function AppearanceSection() {
   return (
@@ -18,8 +20,16 @@ export function AppearanceSection() {
           Customize how the application looks on your device.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <ThemeSelector />
+      <CardContent className="space-y-6">
+        <div>
+          <ThemeSelector />
+        </div>
+
+        <Separator />
+
+        <div>
+          <ColorSelector />
+        </div>
       </CardContent>
     </Card>
   );
