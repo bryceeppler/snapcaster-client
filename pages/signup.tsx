@@ -1,7 +1,6 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useAuth } from '@/hooks/useAuth';
-import Profile from './profile';
 import { SignupForm } from '@/components/forms/SignupForm';
 import {
   Card,
@@ -11,12 +10,14 @@ import {
   CardContent,
   CardFooter
 } from '@/components/ui/card';
-
+import { useRouter } from 'next/navigation';
 type Props = {};
 const Signup: NextPage<Props> = () => {
-  const { isAuthenticated } = useAuth();
-  if (isAuthenticated) {
-    return <Profile />;
+  const { isAuthenticated, isInitializing } = useAuth();
+  const router = useRouter();
+
+  if (!isInitializing && isAuthenticated) {
+    router.push('/account');
   }
 
   return (

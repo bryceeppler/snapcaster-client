@@ -119,7 +119,11 @@ const Feature = ({
       </CardHeader>
       <CardContent>
         <p className="mb-4 text-muted-foreground">{description}</p>
-        <Link href={`#${id}`} className="flex items-center gap-2 text-primary" onClick={handleClick}>
+        <Link
+          href={`#${id}`}
+          className="flex items-center gap-2 text-primary"
+          onClick={handleClick}
+        >
           Learn More <ArrowRightIcon className="h-4 w-4 text-primary" />
         </Link>
       </CardContent>

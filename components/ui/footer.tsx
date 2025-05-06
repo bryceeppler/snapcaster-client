@@ -22,7 +22,7 @@ export default function Footer() {
             {!isAuthenticated ? (
               <Link href="/signin">Login</Link>
             ) : (
-              <Link href="/profile">Account</Link>
+              <Link href="/account">Account</Link>
             )}
           </nav>
         </div>

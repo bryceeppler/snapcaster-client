@@ -11,7 +11,9 @@ import {
   Megaphone,
   Percent,
   ShoppingBag,
-  CheckCircle
+  CheckCircle,
+  Key,
+  Blocks
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -55,8 +57,8 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <div className="flex w-full">
-        <Sidebar className="fixed top-[112px] h-[calc(100vh-4rem)]">
-          <SidebarContent>
+        <Sidebar className="fixed top-[calc(theme(spacing.16)+theme(spacing.9))] h-[calc(100vh-theme(spacing.16)-theme(spacing.9))]">
+          <SidebarContent className="bg-card">
             <SidebarGroup>
               <SidebarGroupLabel>Analytics</SidebarGroupLabel>
               <SidebarGroupContent>
@@ -177,6 +179,22 @@ export default function DashboardLayout({
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   )}
+                  {/* <SidebarMenuItem>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={router.pathname.startsWith(
+                        '/vendors/dashboard/settings/integrations'
+                      )}
+                    >
+                      <Link
+                        href="/vendors/dashboard/settings/integrations"
+                        className="py-6"
+                      >
+                        <Blocks className="h-4 w-4" />
+                        <span>Integrations</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem> */}
                   {/* <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild

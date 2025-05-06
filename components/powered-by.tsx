@@ -20,8 +20,10 @@ const PoweredBy = (props: Props) => {
       }`}
       href="https://obsidiangames.ca"
       target="_blank"
-      data-position-id="7" // hardcoded for the powered by logo position
-      data-ad-id="14" // hardcoded for the obsidian powered by logo
+      // hardcoded for the powered by logo position
+      data-position-id="7"
+      // hardcoded for the obsidian powered by logo
+      data-ad-id="14"
       onClick={() => trackAdClick('14')}
     >
       <img

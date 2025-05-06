@@ -5,6 +5,12 @@ import {
   CreateDiscountRequest,
   UpdateDiscountRequest
 } from '@/types/discounts';
+import {
+  ApiKey,
+  CreateApiKeyRequest,
+  CreateApiKeyResponse
+} from '@/hooks/queries/useApiKeys';
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export enum VendorTier {
@@ -137,6 +143,47 @@ export class VendorService {
     } catch (error) {
       console.error('Error deleting discount:', error);
       throw error; // Re-throw the error so it can be caught by the calling function
+    }
+  }
+
+  // API Keys methods
+  async getApiKeys(vendorId: number): Promise<ApiKey[]> {
+    try {
+      const response = await axiosInstance.get(
+        `${BASE_URL}/api/v1/vendor/vendors/${vendorId}/api-keys`
+      );
+      console.log('API keys response:', response.data);
+      return response.data.data || ([] as ApiKey[]);
+    } catch (error) {
+      console.error('Error fetching API keys:', error);
+      throw error;
+    }
+  }
+
+  async createApiKey(
+    vendorId: number,
+    request: CreateApiKeyRequest
+  ): Promise<CreateApiKeyResponse> {
+    try {
+      const response = await axiosInstance.post(
+        `${BASE_URL}/api/v1/vendor/vendors/${vendorId}/api-keys`,
+        request
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error('Error creating API key:', error);
+      throw error;
+    }
+  }
+
+  async deleteApiKey(vendorId: number, apiKeyId: string): Promise<void> {
+    try {
+      await axiosInstance.delete(
+        `${BASE_URL}/api/v1/vendor/vendors/${vendorId}/api-keys/${apiKeyId}`
+      );
+    } catch (error) {
+      console.error('Error deleting API key:', error);
+      throw error;
     }
   }
 }

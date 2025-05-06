@@ -431,7 +431,7 @@ export function AddImageDialog({
             <div className="space-y-2">
               {!fileName ? (
                 // Empty state with file drop zone
-                <div
+                (<div
                   role="button"
                   tabIndex={0}
                   onClick={triggerFileInput}
@@ -451,10 +451,10 @@ export function AddImageDialog({
                   <span className="mt-0.5 text-[10px] text-muted-foreground">
                     JPEG, PNG, GIF, WebP up to 5MB
                   </span>
-                </div>
+                </div>)
               ) : (
                 // File metadata display
-                <div className="rounded-md border border-border bg-muted/10 p-3">
+                (<div className="rounded-md border border-border bg-muted/10 p-3">
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0 pt-0.5">
                       <ImageIcon className="h-4 w-4 text-muted-foreground" />
@@ -532,7 +532,7 @@ export function AddImageDialog({
                         )}
                     </div>
                   </div>
-                </div>
+                </div>)
               )}
 
               <input

@@ -1,27 +1,19 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useAuth } from '@/hooks/useAuth';
-import Profile from './profile';
 import { useRouter } from 'next/router';
 import React from 'react';
 import SignInForm from '@/components/forms/SigninForm';
 
 type Props = {};
 const Signin: NextPage<Props> = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isInitializing } = useAuth();
   const router = useRouter();
   const { redirect } = router.query;
 
-  // If authenticated, handle redirect
-  React.useEffect(() => {
-    if (isAuthenticated) {
-      if (redirect) {
-        router.push(decodeURIComponent(redirect as string));
-      } else {
-        router.push('/profile');
-      }
-    }
-  }, [isAuthenticated, redirect, router]);
+  if (!isInitializing && isAuthenticated) {
+    router.push('/account');
+  }
 
   // Show loading or signin form
   if (isAuthenticated) {

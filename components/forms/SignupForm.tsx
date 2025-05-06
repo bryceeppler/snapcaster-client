@@ -61,7 +61,6 @@ export function SignupForm({
           <p className="text-red-500">{errors.fullName.message}</p>
         )}
       </div>
-
       <div className="grid gap-2">
         {labels === 'explicit' && <Label htmlFor="email">Email</Label>}
         <Input
@@ -80,7 +79,6 @@ export function SignupForm({
           <p className="text-red-500">{errors.email.message}</p>
         )}
       </div>
-
       <div className="grid gap-2">
         {labels === 'explicit' && <Label htmlFor="password">Password</Label>}
         <Input
@@ -99,7 +97,6 @@ export function SignupForm({
           <p className="text-red-500">{errors.password.message}</p>
         )}
       </div>
-
       {confirmPassword && (
         <div className="grid gap-2">
           {labels === 'explicit' && <Label htmlFor="confirmPassword">Confirm Password</Label>}
@@ -118,7 +115,6 @@ export function SignupForm({
           )}
         </div>
       )}
-
       <div className="flex items-center space-x-2">
         <input
           type="checkbox"
@@ -131,11 +127,9 @@ export function SignupForm({
           Subscribe to our newsletter
         </Label>
       </div>
-
       <Button type="submit" disabled={isRegistering}>
         {isRegistering ? 'Creating account...' : callToAction}
       </Button>
-      
       {showSignInLink && (
         <div className="mt-4 text-center text-sm">
           Already have an account?{' '}
