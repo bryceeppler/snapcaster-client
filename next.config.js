@@ -12,6 +12,11 @@ const nextConfig = {
         hostname: 'cdn.snapcaster.ca',
         // pathname: '/.*',
         protocol: 'https'
+      },
+      {
+        hostname: 'imagedelivery.net',
+        // pathname: '/.*',
+        protocol: 'https'
       }
     ]
   }

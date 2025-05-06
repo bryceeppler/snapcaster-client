@@ -1,139 +1,152 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { trackAdClick } from '@/utils/analytics';
+import { Card, CardContent } from '@/components/ui/card';
+import Image from 'next/image';
+import { Separator } from '@/components/ui/separator';
 
-interface SponsorCardProps {
+// Define sponsor tiers with types
+type Sponsor = {
+  id: number;
+  name: string;
   href: string;
-  imgSrc: string;
-  alt?: string;
-  positionId?: string;
-  adId?: string;
-}
+  logo: string;
+};
 
-const SponsorCard = ({
-  href,
-  imgSrc,
-  alt,
-  positionId,
-  adId
-}: SponsorCardProps) => (
-  <motion.div
-    whileHover={{
-      scale: 1.02,
-      boxShadow:
-        '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)'
-    }}
-    whileTap={{ scale: 0.98 }}
-    className="group relative overflow-visible rounded-xl border border-transparent bg-zinc-800/50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:z-10 hover:border-primary/20"
-  >
-    <Link
-      href={href}
-      target="_blank"
-      data-position-id={positionId}
-      data-ad-id={adId}
-      onClick={() => adId && trackAdClick(adId)}
-      className="block overflow-visible p-8"
-    >
-      <div className="relative aspect-[2/1] overflow-visible rounded-lg">
-        <img
-          alt={alt}
-          className="absolute h-full w-full origin-center transform object-contain transition-transform duration-300 group-hover:scale-110 group-hover:brightness-110"
-          src={imgSrc}
-        />
-      </div>
-    </Link>
-  </motion.div>
-);
+type SponsorTier = {
+  title: string;
+  sponsors: Sponsor[];
+  cardClassName: string;
+  titleClassName?: string;
+};
 
 export default function SponsorSection() {
+  // Organize sponsors into tiers
+  const sponsorTiers: SponsorTier[] = [
+    {
+      title: 'Tier 1 Sponsors',
+      sponsors: [
+        {
+          id: 1,
+          name: 'Obsidian Games',
+          href: 'https://obsidiangames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/obsidian_supporter.png'
+        },
+        {
+          id: 2,
+          name: 'Exor Games',
+          href: 'https://exorgames.com?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/supporters/exorgames_supporter.png'
+        },
+        {
+          id: 3,
+          name: 'Chimera Gaming',
+          href: 'https://chimeragamingonline.com/?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/supporters/chimera_supporter.png'
+        }
+      ],
+      cardClassName:
+        'overflow-hidden border-2 border-primary/20 transition-all duration-200 hover:border-primary/50 hover:shadow-md',
+      titleClassName: 'text-xl font-bold'
+    },
+    {
+      title: 'Tier 2 Sponsors',
+      sponsors: [
+        {
+          id: 1,
+          name: 'Level Up Games',
+          href: 'https://levelupgames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/supporters/levelup_supporter.png'
+        },
+        {
+          id: 2,
+          name: 'The Mythic Store',
+          href: 'https://themythicstore.com?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/supporters/tms_supporter.png'
+        },
+        {
+          id: 3,
+          name: 'House of Cards',
+          href: 'https://houseofcards.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/supporters/hoc_supporter.png'
+        }
+      ],
+      cardClassName:
+        'overflow-hidden border border-muted transition-all duration-200 hover:border-muted/80 hover:shadow-sm',
+      titleClassName: 'text-lg font-bold'
+    },
+    {
+      title: 'Tier 3 Sponsors',
+      sponsors: [
+        {
+          id: 1,
+          name: 'Vortex Games',
+          href: 'https://vortexgames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/supporters/vortex_supporter.png'
+        }
+      ],
+      cardClassName:
+        'overflow-hidden border border-muted/50 transition-all duration-200 hover:border-muted/70 hover:shadow-sm',
+      titleClassName: 'text-base font-bold'
+    }
+  ];
+
   return (
-    <>
-      {/* Tier 1 Sponsors */}
-      <div className="space-y-8">
-        <div className="flex flex-col items-center">
-          <h3 className="text-center text-3xl font-bold">Tier 1 Sponsors</h3>
-          <div className="mx-auto mt-2 h-2 w-16 rounded-full bg-primary/40"></div>
-        </div>
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-          {/* OBSIDIAN */}
-          <SponsorCard
-            href="https://obsidiangames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
-            imgSrc="https://cdn.snapcaster.ca/obsidian_supporter.png"
-            alt="Obsidian Games Vernon"
-            positionId="6"
-            adId="13"
-          />
-          {/* EXOR */}
-          <SponsorCard
-            href="https://exorgames.com?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
-            imgSrc="https://cdn.snapcaster.ca/supporters/exorgames_supporter.png"
-            alt="Exor Games"
-            positionId="6"
-            adId="44"
-          />
-          {/* CHIMERA */}
-          <SponsorCard
-            href="https://chimeragamingonline.com/?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
-            imgSrc="https://cdn.snapcaster.ca/supporters/chimera_supporter.png"
-            alt="Chimera Gaming"
-            positionId="6"
-            adId="43"
-          />
-        </div>
+    <section>
+      <div className="mb-10 flex items-center justify-center">
+        <Separator className="mr-4 w-12" />
+        <h2 className="text-center text-3xl font-bold">Our Sponsors</h2>
+        <Separator className="ml-4 w-12" />
       </div>
 
-      {/* Tier 2 Sponsors */}
-      <div className="space-y-8">
-        <div className="flex flex-col items-center">
-          <h3 className="text-center text-3xl font-bold">Tier 2 Sponsors</h3>
-          <div className="mx-auto mt-2 h-2 w-16 rounded-full bg-primary/40"></div>
-        </div>
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-          {/* LEVEL UP */}
-          <SponsorCard
-            href="https://levelupgames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
-            imgSrc="https://cdn.snapcaster.ca/supporters/levelup_supporter.png"
-            alt="Level Up Games"
-            positionId="8"
-            adId="42"
-          />
-          {/* The Mythic Store */}
-          <SponsorCard
-            href="https://themythicstore.com?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
-            imgSrc="https://cdn.snapcaster.ca/supporters/tms_supporter.png"
-            alt="The Mythic Store"
-            positionId="8"
-            adId="55"
-          />
-          {/* House of Cards */}
-          <SponsorCard
-            href="https://houseofcards.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
-            imgSrc="https://cdn.snapcaster.ca/supporters/hoc_supporter.png"
-            alt="House of Cards"
-            positionId="8"
-            adId="56"
-          />
-        </div>
+      <div className="mb-8 text-center">
+        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+          These amazing partners help make Snapcaster possible. Please support
+          them as they support the Canadian MTG community.
+        </p>
       </div>
 
-      {/* Tier 3 Sponsors */}
-      <div className="space-y-8">
-        <div className="flex flex-col items-center">
-          <h3 className="text-center text-3xl font-bold">Tier 3 Sponsors</h3>
-          <div className="mx-auto mt-2 h-2 w-16 rounded-full bg-primary/40"></div>
-        </div>
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-          {/* VORTEX */}
-          <SponsorCard
-            href="https://vortexgames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement"
-            imgSrc="https://cdn.snapcaster.ca/supporters/vortex_supporter.png"
-            alt="Vortex Games"
-          />
-        </div>
+      <div className="space-y-16">
+        {sponsorTiers.map((tier, index) => (
+          <div key={index} className="mb-12">
+            <div className="mb-8 flex items-center justify-center">
+              <Separator className="mr-4 w-8" />
+              <h3 className="text-center text-2xl font-bold">{tier.title}</h3>
+              <Separator className="ml-4 w-8" />
+            </div>
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              {tier.sponsors.map((sponsor) => (
+                <Card key={sponsor.id} className={tier.cardClassName}>
+                  <CardContent className="flex flex-col items-center p-6 text-center">
+                    <div className="mb-4 h-[200px] w-full rounded-md bg-zinc-600 p-4 dark:bg-muted">
+                      <a
+                        href={sponsor.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative block h-full w-full"
+                      >
+                        <Image
+                          src={sponsor.logo || '/placeholder.svg'}
+                          alt={`${sponsor.name} logo`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          style={{ objectFit: 'contain' }}
+                        />
+                      </a>
+                    </div>
+                    <h3
+                      className={`mb-2 ${
+                        tier.titleClassName || 'text-lg font-bold'
+                      }`}
+                    >
+                      {sponsor.name}
+                    </h3>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
-    </>
+    </section>
   );
 }

@@ -1,67 +1,41 @@
 'use client';
 
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { useVendors } from '@/hooks/queries/useVendors';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { Separator } from '@/components/ui/separator';
+import { Card } from '@/components/ui/card';
 
 export default function VendorsSection() {
   const { vendors } = useVendors();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    // Handle hash navigation for #vendors
-    // This will work in both the Pages Router and App Router
-    if (typeof window !== 'undefined') {
-      // Check if we have a hash in the URL
-      const hash = window.location.hash;
-      if (hash === '#vendors') {
-        const element = document.getElementById('vendors');
-        if (element) {
-          // Use a small delay to ensure the DOM is fully rendered
-          setTimeout(() => {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }, 100);
-        }
-      }
-    }
-  }, [pathname, searchParams]);
 
   return (
-    <div id="vendors" className="scroll-mt-32 space-y-8">
-      <div className="space-y-4 text-center">
-        <h3 className="text-3xl font-bold">
-          We support {vendors.length} stores across Canada!
-        </h3>
-        <p className="mx-auto max-w-3xl leading-relaxed text-muted-foreground">
-          If you're a Local Game Store (LGS) owner and wish to feature your
-          website on Snapcaster, we invite you to join our official Discord
-          server and send us a direct message or send us an email at{' '}
-          <a
-            href="mailto:info@snapcaster.gg"
-            className="text-primary transition-colors hover:text-primary/80"
-          >
-            info@snapcaster.gg
-          </a>
-          . This is an excellent chance to promote your store's special offers,
-          discount codes, and events.
+    <section>
+      <div className="mb-10 flex items-center justify-center">
+        <Separator className="mr-4 w-12" />
+        <h2 className="text-center text-3xl font-bold">Supported Vendors</h2>
+        <Separator className="ml-4 w-12" />
+      </div>
+
+      <div className="mb-8 text-center">
+        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+          We proudly support{' '}
+          <span className="font-medium text-primary">{vendors.length}</span>{' '}
+          vendors across Canada, helping TCG players connect with local game
+          stores.
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {vendors.map((vendor) => (
-          <motion.a
-            key={vendor.slug}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            target="_blank"
-            href={vendor.url}
-            className="rounded-xl border bg-popover p-4 text-center shadow-sm backdrop-blur-sm transition-all duration-200 hover:bg-accent/50 hover:shadow-md"
-          >
-            {vendor.name}
-          </motion.a>
-        ))}
-      </div>
-    </div>
+
+      <Card className="overflow-hidden p-8">
+        <ul className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {vendors.map((vendor, index) => (
+            <li
+              key={index}
+              className="rounded-md px-4 py-3 text-center font-medium transition-colors hover:bg-primary/5"
+            >
+              {vendor.name}
+            </li>
+          ))}
+        </ul>
+      </Card>
+    </section>
   );
 }

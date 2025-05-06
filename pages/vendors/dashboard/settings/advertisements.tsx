@@ -262,7 +262,6 @@ const MobileAdvertisementCard = memo(
             </button>
           </div>
         </div>
-
         {/* Expandable section - only visible when expanded */}
         {expanded && (
           <div className="mt-2 border-t border-dashed border-muted pt-2">
@@ -577,7 +576,7 @@ export default function AdvertisementsPage() {
                   advertisementsByVendor &&
                   advertisementsByVendor.length > 0 ? (
                   // Admin view with vendors grouped
-                  advertisementsByVendor.map((vendorGroup) => (
+                  (advertisementsByVendor.map((vendorGroup) => (
                     <React.Fragment key={vendorGroup.vendorId}>
                       {/* Vendor Header Row */}
                       <TableRow className="bg-primary/20 hover:bg-primary/30">
@@ -606,10 +605,10 @@ export default function AdvertisementsPage() {
                         />
                       ))}
                     </React.Fragment>
-                  ))
+                  )))
                 ) : (
                   // Normal vendor view (unchanged)
-                  advertisements.map((ad) => (
+                  (advertisements.map((ad) => (
                     <AdvertisementRow
                       key={ad.id}
                       ad={ad}
@@ -621,7 +620,7 @@ export default function AdvertisementsPage() {
                       isAdmin={isAdmin}
                       getVendorName={getVendorName}
                     />
-                  ))
+                  )))
                 )}
               </TableBody>
             </Table>
