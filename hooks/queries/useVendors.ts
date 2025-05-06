@@ -18,6 +18,8 @@ const fetchVendors = async (): Promise<Vendor[]> => {
 };
 
 export const useVendors = () => {
+  const { theme } = useTheme();
+
   const query = useQuery({
     queryKey: ['vendors'],
     queryFn: fetchVendors,
@@ -53,9 +55,7 @@ export const useVendors = () => {
     // vendors: any
     vendor: any
   ): string | null => {
-    const { theme } = useTheme();
-    // const vendor = vendors.find((vendor: any) => vendor.slug === vendorSlug);
-    // if (!vendor) return null;
+    if (!vendor) return null;
 
     // Find the icon asset based on the current theme
     const iconAsset = vendor.assets.find(

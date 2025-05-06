@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
 
 // Define proper TypeScript interface for store offer data
 interface StoreOfferData {

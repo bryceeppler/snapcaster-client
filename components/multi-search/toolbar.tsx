@@ -10,16 +10,15 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
+  DialogDescription
 } from '@/components/ui/dialog';
-import { InteractiveGuide } from './interactive-guide';
 import { useVendors } from '@/hooks/queries/useVendors';
 export const Toolbar = () => {
   const { resetSearch, cart } = useMultiSearchStore();
   const { getVendorNameBySlug } = useVendors();
   const [showHelp, setShowHelp] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  const [runTour, setRunTour] = useState(false);
   const useMediaQuery = (width: number): boolean => {
     const [isMobile, setIsMobile] = useState(false);
 
@@ -131,6 +130,9 @@ export const Toolbar = () => {
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
                 <DialogTitle>Shopping Cart</DialogTitle>
+                <DialogDescription hidden>
+                  Add more cards to your cart or remove items.
+                </DialogDescription>
               </DialogHeader>
               <Cart />
             </DialogContent>
@@ -142,26 +144,20 @@ export const Toolbar = () => {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>How to Use Multi-Search</DialogTitle>
+            <DialogDescription hidden>
+              See how to use Multi-Search.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {/* 1. Search for your cards, 2. Build your cart, 3. Checkout or export your cart */}
             <div>
-              <p>Try our interactive tour to see how to use Multi-Search.</p>
+              <p>1. Search for your cards</p>
+              <p>2. Build your cart</p>
+              <p>3. Checkout or export your cart</p>
             </div>
-          </div>
-          <div className="mt-6 flex justify-end">
-            <Button
-              onClick={() => {
-                setShowHelp(false);
-                setRunTour(true);
-              }}
-            >
-              Take Interactive Tour
-            </Button>
           </div>
         </DialogContent>
       </Dialog>
-
-      <InteractiveGuide run={runTour} onFinish={() => setRunTour(false)} />
     </>
   );
 };

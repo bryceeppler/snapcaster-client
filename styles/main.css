@@ -36,11 +36,11 @@
     --radius: 0.3rem;
     --chart-1: 221 76% 62%;
     --chart-2: 212 94% 68%;
-    --chart-3: 16 90% 50%;   /* Vibrant orange */
-    --chart-4: 291 70% 50%;  /* Rich purple */
-    --chart-5: 142 76% 36%;  /* Forest green */
-    --chart-6: 355 78% 56%;  /* Bright red */
-    --chart-7: 45 93% 47%;   /* Golden yellow */
+    --chart-3: 16 90% 50%; /* Vibrant orange */
+    --chart-4: 291 70% 50%; /* Rich purple */
+    --chart-5: 142 76% 36%; /* Forest green */
+    --chart-6: 355 78% 56%; /* Bright red */
+    --chart-7: 45 93% 47%; /* Golden yellow */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -73,11 +73,11 @@
     --ring: 224.3 76.3% 48%;
     --chart-1: 221 76% 62%;
     --chart-2: 212 94% 68%;
-    --chart-3: 16 90% 50%;   /* Vibrant orange */
-    --chart-4: 291 70% 50%;  /* Rich purple */
-    --chart-5: 142 76% 36%;  /* Forest green */
-    --chart-6: 355 78% 56%;  /* Bright red */
-    --chart-7: 45 93% 47%;   /* Golden yellow */
+    --chart-3: 16 90% 50%; /* Vibrant orange */
+    --chart-4: 291 70% 50%; /* Rich purple */
+    --chart-5: 142 76% 36%; /* Forest green */
+    --chart-6: 355 78% 56%; /* Bright red */
+    --chart-7: 45 93% 47%; /* Golden yellow */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -143,15 +143,6 @@
 .animate-scroll {
   animation: scroll 4s linear infinite;
 }
-
-/* Add this to your existing CSS */
-/* .react-joyride__tooltip {
-  font-family: var(--font-inter) !important;
-}
-
-.react-joyride__button {
-  font-family: var(--font-inter) !important;
-} */
 
 @layer base {
   * {

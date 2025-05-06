@@ -67,6 +67,7 @@ const Navbar: React.FC = () => {
   const { isAuthenticated, isVendor, isAdmin } = useAuth();
   const canViewAnalytics = isAdmin || isVendor;
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
+  const { buylistUIState } = useBuyListStore();
   const { openCart: cartSheetOpen, setOpenCart: setCartSheetOpen } =
     useBuyListStore();
   const cartTriggerRef = useRef<HTMLButtonElement>(null);
@@ -77,9 +78,6 @@ const Navbar: React.FC = () => {
   const hasItems =
     currentCart?.cart?.items && currentCart.cart.items.length > 0;
   const cartItemCount = hasItems ? currentCart.cart.items.length : 0;
-
-  // Connect to buylist store
-  const { setBuylistUIState } = useBuyListStore();
 
   // Handle cart button click
   const handleCartClick = () => {
@@ -109,6 +107,10 @@ const Navbar: React.FC = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side={'left'} className="p-0">
+                <SheetTitle hidden>Snapcaster</SheetTitle>
+                <SheetDescription hidden>
+                  Search Magic: The Gathering cards across Canada
+                </SheetDescription>
                 <SheetHeader className="border-b p-4">
                   <Link href="/" onClick={() => setMobileNavSheetOpen(false)}>
                     <div className="flex cursor-pointer items-center space-x-3">
@@ -228,7 +230,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Middle: Logo */}
-          <div className="flex flex-1 items-center justify-center">
+          <div className="absolute left-1/2 top-1/2 flex flex-1 -translate-x-1/2 -translate-y-1/2 items-center justify-center">
             <Link href="/" passHref>
               <div className="flex cursor-pointer items-center space-x-2">
                 <img
@@ -245,28 +247,29 @@ const Navbar: React.FC = () => {
 
           {/* Right: Cart Icon (for buylists) */}
           <div className="flex items-center">
-            {currentPath === '/buylists' && (
-              <div className="relative">
-                {cartItemCount > 0 && (
-                  <Badge
-                    className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center p-0 text-[10px]"
-                    variant="destructive"
+            {currentPath === '/buylists' &&
+              buylistUIState !== 'finalSubmissionState' && (
+                <div className="relative">
+                  {cartItemCount > 0 && (
+                    <Badge
+                      className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center p-0 text-[10px]"
+                      variant="destructive"
+                    >
+                      {cartItemCount}
+                    </Badge>
+                  )}
+                  <Button
+                    ref={cartTriggerRef}
+                    size="icon"
+                    variant="ghost"
+                    className="h-9 w-9 rounded-full hover:bg-accent"
+                    onClick={handleCartClick}
+                    disabled={!currentCart?.cart?.name}
                   >
-                    {cartItemCount}
-                  </Badge>
-                )}
-                <Button
-                  ref={cartTriggerRef}
-                  size="icon"
-                  variant="ghost"
-                  className="h-9 w-9 rounded-full hover:bg-accent"
-                  onClick={handleCartClick}
-                  disabled={!currentCart?.cart?.name}
-                >
-                  <ShoppingCart className="size-[18px]" />
-                </Button>
-              </div>
-            )}
+                    <ShoppingCart className="size-[18px]" />
+                  </Button>
+                </div>
+              )}
           </div>
         </div>
 
@@ -377,32 +380,6 @@ const Navbar: React.FC = () => {
                 >
                   Analytics
                 </NavLink>
-              )}
-
-              {/* Buylist cart icon for desktop */}
-              {currentPath === '/buylists' && (
-                <div className="ml-auto flex items-center">
-                  <div className="relative">
-                    {cartItemCount > 0 && (
-                      <Badge
-                        className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center p-0 text-[10px]"
-                        variant="destructive"
-                      >
-                        {cartItemCount}
-                      </Badge>
-                    )}
-                    <Button
-                      ref={cartTriggerRef}
-                      size="icon"
-                      variant="ghost"
-                      className="h-9 w-9 rounded-full hover:bg-accent"
-                      onClick={handleCartClick}
-                      disabled={!currentCart?.cart?.name}
-                    >
-                      <ShoppingCart className="size-[18px]" />
-                    </Button>
-                  </div>
-                </div>
               )}
             </nav>
           </div>
@@ -527,63 +504,9 @@ const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
   switch (searchMode) {
     case 'singles':
       return <SingleResultsToolbar />;
-    case 'buylists':
-      return <BuylistResultsToolbar />;
     default:
       return null;
   }
-};
-
-// Add BuylistResultsToolbar component for mobile
-const BuylistResultsToolbar = () => {
-  const {
-    searchResultCount,
-    filterOptions,
-    sortBy,
-    setSortBy,
-    setFilter,
-    clearFilters,
-    sortByOptions
-  } = useBuyListStore();
-
-  return (
-    <>
-      <div className="z-40 flex h-12 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm">
-        <span className="text-center text-sm font-normal text-muted-foreground">
-          {searchResultCount} results
-        </span>
-
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1.5 rounded-full px-2.5"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-              <span>Filters</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="min-w-full">
-            <FilterSection
-              filterOptions={filterOptions}
-              sortBy={sortBy}
-              fetchCards={async () => {}}
-              clearFilters={clearFilters}
-              setFilter={setFilter}
-              setCurrentPage={() => {}}
-              applyFilters={async () => {}}
-              setSortBy={setSortBy}
-              handleSortByChange={(value: any) => {
-                setSortBy(value);
-              }}
-              sortByOptions={sortByOptions}
-            />
-          </SheetContent>
-        </Sheet>
-      </div>
-    </>
-  );
 };
 
 const SingleResultsToolbar = () => {
