@@ -11,7 +11,9 @@ import {
   Megaphone,
   Percent,
   ShoppingBag,
-  CheckCircle
+  CheckCircle,
+  Key,
+  Blocks
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -177,6 +179,22 @@ export default function DashboardLayout({
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   )}
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={router.pathname.startsWith(
+                        '/vendors/dashboard/settings/integrations'
+                      )}
+                    >
+                      <Link
+                        href="/vendors/dashboard/settings/integrations"
+                        className="py-6"
+                      >
+                        <Blocks className="h-4 w-4" />
+                        <span>Integrations</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
                   {/* <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
