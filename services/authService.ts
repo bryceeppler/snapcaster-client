@@ -284,6 +284,21 @@ export class AuthService {
       }
     );
   }
+
+  async recover2FA(tempToken: string, recoveryCode: string): Promise<string> {
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/auth/2fa/recover`,
+      {
+        tempToken,
+        recoveryCode
+      },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data.data.accessToken;
+  }
 }
 
 export const authService = new AuthService();

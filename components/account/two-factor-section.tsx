@@ -41,7 +41,7 @@ type TwoFactorSetupData = {
   backupCodes: string[];
 };
 
-type TwoFactorMethod = 'app' | 'email';
+type TwoFactorMethod = 'app' | 'email' | 'recovery';
 
 // This helper safely checks if the property exists on an object
 const hasProp = <T extends object, K extends PropertyKey>(

@@ -457,6 +457,55 @@ export function useAuth() {
     }
   });
 
+  // Add a mutation for 2FA recovery using recovery codes
+  const recover2FAMutation = useMutation({
+    mutationFn: ({
+      tempToken,
+      recoveryCode
+    }: {
+      tempToken: string;
+      recoveryCode: string;
+    }) => authService.recover2FA(tempToken, recoveryCode),
+    onSuccess: (token) => {
+      setAccessToken(token);
+      setRequiresTwoFactor(false);
+      setTempToken(null);
+      setAvailableMethods(['app']);
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+      router.push('/account');
+    },
+    onError: (error: any) => {
+      console.error('2FA recovery error:', error);
+    }
+  });
+
+  // Create a wrapper function for recover2FA that allows passing additional callbacks
+  const recover2FA = (
+    params: {
+      tempToken: string;
+      recoveryCode: string;
+    },
+    options?: {
+      onSuccess?: (token: string) => void;
+      onError?: (error: Error) => void;
+    }
+  ) => {
+    return recover2FAMutation.mutate(params, {
+      onSuccess: (token) => {
+        // The default behavior is handled in the mutation
+        // Call the additional onSuccess if provided
+        options?.onSuccess?.(token);
+      },
+      onError: (error) => {
+        // Call the additional onError if provided
+        options?.onError?.(error);
+      }
+    });
+  };
+
+  const isRecovering2FA = recover2FAMutation.isPending;
+  const recover2FAError = recover2FAMutation.error;
+
   return {
     // Auth state
     accessToken,
@@ -550,6 +599,11 @@ export function useAuth() {
     // Send email verification code for 2FA login
     sendEmailVerificationCode,
     isSendingEmailCode,
-    sendEmailCodeError
+    sendEmailCodeError,
+
+    // Recovery code 2FA method
+    recover2FA,
+    isRecovering2FA,
+    recover2FAError
   };
 }

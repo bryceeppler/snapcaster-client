@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { AlertCircle, Smartphone, Mail, Send, Key } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 type Props = {
@@ -36,7 +36,9 @@ export default function SignInForm({ redirectUrl }: Props) {
     completeTwoFactorLogin,
     isCompletingTwoFactorLogin,
     sendEmailVerificationCode,
-    isSendingEmailCode
+    isSendingEmailCode,
+    recover2FA,
+    isRecovering2FA
   } = useAuth();
 
   const [twoFactorCode, setTwoFactorCode] = useState('');
@@ -44,17 +46,30 @@ export default function SignInForm({ redirectUrl }: Props) {
   const [selectedMethod, setSelectedMethod] = useState<string>('app');
   const [emailCodeSent, setEmailCodeSent] = useState(false);
 
-  // If there's only one method available, automatically select it
-  useEffect(() => {
-    if (availableMethods.length === 1) {
-      setSelectedMethod(availableMethods[0]);
-    }
-  }, [availableMethods]);
-
   // Reset emailCodeSent when method changes
   useEffect(() => {
     setEmailCodeSent(false);
   }, [selectedMethod]);
+
+  // Sort available methods in order: app -> email -> recovery
+
+  const sortedMethods = availableMethods.sort((a, b) => {
+    const order = { app: 1, email: 2, recovery: 3 };
+    return (
+      (order[a as keyof typeof order] || 99) -
+      (order[b as keyof typeof order] || 99)
+    );
+  });
+
+  // If there's only one method available, automatically select it
+  useEffect(() => {
+    if (availableMethods.length === 1) {
+      setSelectedMethod(availableMethods[0]);
+    } else if (availableMethods.length > 1) {
+      // Select the highest priority method by default
+      setSelectedMethod(sortedMethods[0]);
+    }
+  }, [availableMethods, sortedMethods]);
 
   const {
     register,
@@ -79,26 +94,55 @@ export default function SignInForm({ redirectUrl }: Props) {
       return;
     }
 
-    if (!twoFactorCode || twoFactorCode.length !== 6) {
+    // For recovery codes we don't validate length as they might be different formats
+    if (
+      selectedMethod !== 'recovery' &&
+      (!twoFactorCode || twoFactorCode.length !== 6)
+    ) {
       setError('Please enter a valid 6-digit verification code');
       return;
     }
 
-    completeTwoFactorLogin(
-      {
-        tempToken,
-        twoFactorCode,
-        method: selectedMethod
-      },
-      {
-        onSuccess: () => {
-          setError(null);
-        },
-        onError: (error) => {
-          setError(error.message);
-        }
+    if (selectedMethod === 'recovery') {
+      if (!twoFactorCode || twoFactorCode.trim() === '') {
+        setError('Please enter a valid recovery code');
+        return;
       }
-    );
+
+      recover2FA(
+        {
+          tempToken,
+          recoveryCode: twoFactorCode
+        },
+        {
+          onSuccess: () => {
+            setError(null);
+          },
+          onError: (error: any) => {
+            setError(
+              error.response?.data.message ||
+                'Invalid recovery code. Please try again.'
+            );
+          }
+        }
+      );
+    } else {
+      completeTwoFactorLogin(
+        {
+          tempToken,
+          twoFactorCode,
+          method: selectedMethod
+        },
+        {
+          onSuccess: () => {
+            setError(null);
+          },
+          onError: (error) => {
+            setError(error.message);
+          }
+        }
+      );
+    }
   };
 
   const handleSendEmailCode = () => {
@@ -155,6 +199,7 @@ export default function SignInForm({ redirectUrl }: Props) {
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -167,7 +212,7 @@ export default function SignInForm({ redirectUrl }: Props) {
                   onValueChange={setSelectedMethod}
                   className="flex flex-col space-y-2"
                 >
-                  {availableMethods.map((method) => (
+                  {sortedMethods.map((method) => (
                     <div
                       key={method}
                       className="flex items-center space-x-2 rounded-md border p-3"
@@ -185,20 +230,32 @@ export default function SignInForm({ redirectUrl }: Props) {
                     </div>
                   ))}
                 </RadioGroup>
+
+                {/* Recovery code option is now included in sortedMethods */}
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="twoFactorCode">Verification Code</Label>
+              <Label htmlFor="twoFactorCode">
+                {selectedMethod === 'recovery'
+                  ? 'Recovery Code'
+                  : 'Verification Code'}
+              </Label>
               <Input
                 id="twoFactorCode"
                 value={twoFactorCode}
                 onChange={(e) => setTwoFactorCode(e.target.value)}
-                placeholder="Enter 6-digit code"
-                maxLength={6}
-                autoComplete="one-time-code"
-                inputMode="numeric"
-                pattern="[0-9]*"
+                placeholder={
+                  selectedMethod === 'recovery'
+                    ? 'Enter recovery code'
+                    : 'Enter 6-digit code'
+                }
+                maxLength={selectedMethod === 'recovery' ? undefined : 6}
+                autoComplete={
+                  selectedMethod === 'recovery' ? 'off' : 'one-time-code'
+                }
+                inputMode={selectedMethod === 'recovery' ? 'text' : 'numeric'}
+                pattern={selectedMethod === 'recovery' ? undefined : '[0-9]*'}
               />
 
               {selectedMethod === 'email' && (
@@ -224,14 +281,30 @@ export default function SignInForm({ redirectUrl }: Props) {
                   )}
                 </div>
               )}
+
+              {selectedMethod === 'recovery' && (
+                <Alert variant="destructive">
+                  <AlertTitle>Important</AlertTitle>
+                  <AlertDescription>
+                    Each recovery code can only be used once. If you login with
+                    a recovery code,{' '}
+                    <span className="font-bold">
+                      your authenticator app will be disabled
+                    </span>
+                    .
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
 
             <Button
               type="submit"
               className="w-full"
-              disabled={isCompletingTwoFactorLogin}
+              disabled={isCompletingTwoFactorLogin || isRecovering2FA}
             >
-              {isCompletingTwoFactorLogin ? 'Verifying...' : 'Verify'}
+              {isCompletingTwoFactorLogin || isRecovering2FA
+                ? 'Verifying...'
+                : 'Verify'}
             </Button>
           </form>
         </CardContent>
