@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
-import { HelpCircle, X } from 'lucide-react';
-import { useDebounceCallback } from 'usehooks-ts';
 import { Tcg } from '@/types';
-import { trackSearch } from '@/utils/analytics';
 import BaseSearchBar, { DeviceType } from '../ui/base-search-bar';
 
 interface AutocompleteResult {

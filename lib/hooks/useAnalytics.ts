@@ -370,7 +370,7 @@ export function useVendorBuyClicks(
         ]
       : ['vendorBuyClicks', 'days', numberOfDays],
     queryFn: async () => {
-      let url = '/api/analytics/vendor-buy-clicks';
+      const url = '/api/analytics/vendor-buy-clicks';
       const params = new URLSearchParams();
 
       if (isDateRange && startDate && endDate) {
@@ -415,7 +415,7 @@ export function useVendorLeaderboard(
         ]
       : ['vendorLeaderboard', 'days', numberOfDays],
     queryFn: async () => {
-      let url = '/api/analytics/vendor-buy-clicks';
+      const url = '/api/analytics/vendor-buy-clicks';
       const params = new URLSearchParams();
 
       if (isDateRange && startDate && endDate) {

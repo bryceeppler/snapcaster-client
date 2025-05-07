@@ -1,6 +1,5 @@
 "use client"
 
-import { format } from "date-fns"
 import {
   Card,
   CardContent,
@@ -8,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useUserRetention } from "@/lib/hooks/useAnalytics"
 import { Skeleton } from "@/components/ui/skeleton"
 

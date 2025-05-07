@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Trash2, ShoppingCart, PlusCircle, Plus } from 'lucide-react';
+import { Trash2, PlusCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 import useMultiSearchStore from '@/stores/multiSearchStore';

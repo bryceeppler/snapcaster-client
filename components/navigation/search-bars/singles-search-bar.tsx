@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
+import { useState, useRef, KeyboardEvent, useCallback } from 'react';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import { RouteSearchBarProps, DeviceType } from '../navbar-types';
+import { DeviceType } from '../navbar-types';
 import BaseSearchBar from '@/components/ui/base-search-bar';
 import { useDebounceCallback } from 'usehooks-ts';
 import { trackSearch } from '@/utils/analytics';

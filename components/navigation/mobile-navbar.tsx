@@ -25,7 +25,6 @@ import {
   Package,
   Info,
   MessageSquare,
-  ChevronRight,
   LogOut
 } from 'lucide-react';
 import React, { useState, useRef } from 'react';

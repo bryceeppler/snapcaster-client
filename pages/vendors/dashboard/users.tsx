@@ -36,7 +36,6 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { UserRetentionChart } from '@/components/vendors/users/user-retention-chart';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface AnalyticsErrorMessageProps {

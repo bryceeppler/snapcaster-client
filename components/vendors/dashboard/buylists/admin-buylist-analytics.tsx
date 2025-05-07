@@ -15,8 +15,7 @@ import {
   CreditCard,
   Coins,
   Package,
-  ShoppingCart,
-  Star
+  ShoppingCart
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

@@ -7,7 +7,7 @@ import {
   AdvertisementPosition,
   AdvertisementWithImages
 } from '@/types/advertisements';
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';

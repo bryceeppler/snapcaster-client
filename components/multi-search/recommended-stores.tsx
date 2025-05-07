@@ -23,12 +23,11 @@ import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Product } from '@/types';
 import { Card, CardTitle, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { DialogClose } from '@radix-ui/react-dialog';
 import {
   groupProductsByHost,
   buildCartUpdateUrls
 } from '@/utils/cartUrlBuilder';
-import { ExternalLink, AlertCircle, AlertTriangle } from 'lucide-react';
+import { ExternalLink, AlertTriangle } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
 import { useVendors } from '@/hooks/queries/useVendors';

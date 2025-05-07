@@ -8,7 +8,7 @@ import {
   BuylistSubmissionResponse
 } from '@/services/catalogService';
 import BuylistSubmissionTable from '@/components/vendors/dashboard/buylists/buylist-submission-table';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Select,
   SelectContent,

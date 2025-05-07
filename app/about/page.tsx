@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import PageTitle from '@/components/ui/page-title';
 import SponsorSection from '@/components/about/sponsor-section';
 import VendorsSection from '@/components/about/vendors-section';
 import ComingSoon from '@/components/about/coming-soon';

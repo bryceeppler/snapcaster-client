@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, KeyboardEvent, useCallback } from 'react';
+import { useRef, KeyboardEvent } from 'react';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import { DeviceType } from '../navbar-types';

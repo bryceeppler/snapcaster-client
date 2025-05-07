@@ -1,10 +1,9 @@
-import { Plus, Key } from 'lucide-react';
+import { Key } from 'lucide-react';
 import DashboardLayout from '../../layout';
 import { Button } from '@/components/ui/button';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/router';
-import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardHeader,

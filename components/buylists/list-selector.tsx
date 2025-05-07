@@ -3,7 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUserCarts } from '@/hooks/useUserCarts';
 import useBuyListStore from '@/stores/useBuylistStore';
 import { ListItem } from './saved-lists/saved-list-item';
-import { AlertCircle, ListIcon, PlusIcon } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import {
   Sheet,
   SheetContent,

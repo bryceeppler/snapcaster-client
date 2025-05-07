@@ -3,9 +3,6 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
-  LogOut,
-  Settings,
-  Menu,
   LineChart,
   Users,
   Tags,
@@ -15,13 +12,8 @@ import {
   CheckSquare,
   MessageSquare
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
 interface MenuItem {

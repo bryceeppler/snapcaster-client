@@ -3,13 +3,11 @@ import {
   useEffect,
   useRef,
   KeyboardEvent,
-  useCallback,
-  useMemo
+  useCallback
 } from 'react';
 import useBuylistStore from '@/stores/useBuylistStore';
 import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
 import { useDebounceCallback } from 'usehooks-ts';
-import { HelpCircle, X } from 'lucide-react';
 import { Tcg } from '@/types';
 import BaseSearchBar, { DeviceType } from '../ui/base-search-bar';
 

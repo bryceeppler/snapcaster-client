@@ -3,14 +3,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useState } from 'react';
 import { useUserCarts } from '@/hooks/useUserCarts';
 import { VerifyListContainer } from '../modify-list-items/verify-list-container';
-import FilterSection from '@/components/search-ui/search-filter-container';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetTitle,
-  SheetTrigger
-} from '@/components/ui/sheet';
+
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,23 +15,15 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import {
   ChevronLeft,
-  ChevronRight,
   ListIcon,
   PlusIcon,
   ShoppingCart,
-  SlidersHorizontal,
-  ChevronDown
+  SlidersHorizontal
 } from 'lucide-react';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { FilterScrollArea } from '@/components/search-ui/filter-scroll-area';
+
+
 import SearchSortBy from '@/components/buylists/sort-by';
 import FilterSelector from '@/components/buylists/filter-selector';
 import FilterSheet from '@/components/buylists/filter-sheet';

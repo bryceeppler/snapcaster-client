@@ -12,7 +12,6 @@ import { Input } from '@/components/ui/input';
 import { ChevronDown, Loader2 } from 'lucide-react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useDebounceCallback } from 'usehooks-ts';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
 

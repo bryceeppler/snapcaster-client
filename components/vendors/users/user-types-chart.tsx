@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { format } from 'date-fns';
-import { PieChart, Pie, Cell, Legend, Label } from 'recharts';
+import { PieChart, Pie, Cell, Label } from 'recharts';
 import {
   Card,
   CardContent,
@@ -11,13 +11,11 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useUserTypes } from '@/lib/hooks/useAnalytics';
 import {
   ChartContainer,
   ChartConfig,
   ChartTooltip,
-  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent
 } from '@/components/ui/chart';

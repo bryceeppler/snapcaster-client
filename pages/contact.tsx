@@ -1,6 +1,5 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { DiscordLogoIcon } from '@radix-ui/react-icons';

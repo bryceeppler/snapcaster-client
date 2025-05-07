@@ -12,8 +12,6 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import {
   groupProductsByHost,
   buildCartUpdateUrls

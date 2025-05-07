@@ -3,8 +3,7 @@ import type { AdvertisementWithImages } from '@/types/advertisements';
 import {
   advertisementService,
   CreateAdvertisementRequest,
-  UpdateAdvertisementRequest,
-  CreateAdvertisementImageRequest
+  UpdateAdvertisementRequest
 } from '@/services/advertisementService';
 import { toast } from 'sonner';
 import { useMemo, useRef } from 'react';

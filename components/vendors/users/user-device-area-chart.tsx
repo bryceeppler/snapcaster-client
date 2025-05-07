@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { format, subDays } from "date-fns"
+import { format } from "date-fns"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import {
@@ -24,7 +24,7 @@ import { ChartSkeleton } from "@/components/vendors/dashboard/chart-skeleton"
 // Mock data - in a real implementation, this would come from an API
 const generateMockData = (startDate: Date, endDate: Date) => {
   const data = [];
-  let currentDate = new Date(startDate);
+  const currentDate = new Date(startDate);
   
   while (currentDate <= endDate) {
     // Generate random but somewhat realistic data

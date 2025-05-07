@@ -19,12 +19,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Calendar,
   CheckCircle,
-  ExternalLink,
-  FileType,
   Info,
-  Eye,
   AlertTriangle
 } from 'lucide-react';
 import {

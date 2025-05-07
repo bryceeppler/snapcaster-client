@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { useAdContext } from '@/pages/_app';
 import { useAuth } from '@/hooks/useAuth';
 import { AdvertisementPosition } from '@/types/advertisements';

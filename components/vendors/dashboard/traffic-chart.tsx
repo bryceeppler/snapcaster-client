@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { format, parseISO } from "date-fns"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { TrendingDown, TrendingUp } from "lucide-react"
 
@@ -20,7 +19,6 @@ import {
   ChartTooltipContent
 } from "@/components/ui/chart"
 import { ChartSkeleton } from "@/components/vendors/dashboard/chart-skeleton"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useUniqueUsers } from "@/lib/hooks/useAnalytics"
 import { formatChartDate } from "@/lib/utils"
 

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import {
-  Copy,
   MoreHorizontal,
   Trash2,
   Loader2,
@@ -27,19 +26,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { toast } from 'sonner';
-import { EmptyState } from '@/components/empty-state';
 import { DeleteApiKeyDialog } from './delete-api-key-dialog';
 import { useApiKeys, ApiKey } from '@/hooks/queries/useApiKeys';
 import { parseISO } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+
+
 
 // Loading skeleton for the table
 const TableLoadingSkeleton = () => (

@@ -20,18 +20,13 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
 import { usePopularClickedCards } from '@/lib/hooks/useAnalytics';
 import { TableSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useState } from "react";
-import { subDays } from "date-fns";
-import { Skeleton } from "@/components/ui/skeleton";
-import { PopularClickedCardsByTCG } from '@/lib/GA4Client';
 
 interface PopularClickedCardsProps {
   dateRange: {

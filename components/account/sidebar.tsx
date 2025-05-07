@@ -5,20 +5,17 @@ import Link from 'next/link';
 import {
   CreditCard,
   LogOut,
-  Store,
   User,
   Webhook,
   Settings,
-  Menu,
   Palette
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
 interface MenuItem {

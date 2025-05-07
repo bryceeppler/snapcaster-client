@@ -5,7 +5,6 @@ import { Moon, Sun, Laptop } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { cn } from '@/lib/utils';
 
 export default function ThemeSelector() {
   const { theme, setTheme } = useTheme();

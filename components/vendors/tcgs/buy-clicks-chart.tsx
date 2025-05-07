@@ -3,16 +3,13 @@
 import * as React from 'react';
 import { format, parseISO } from 'date-fns';
 import {
-  Line,
-  LineChart,
   Area,
   AreaChart,
   CartesianGrid,
   XAxis,
   YAxis,
   Legend,
-  ResponsiveContainer,
-  Tooltip
+  ResponsiveContainer
 } from 'recharts';
 
 import {

@@ -16,7 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useCityAnalytics } from "@/lib/hooks/useAnalytics"
 import { TableSkeleton } from "@/components/vendors/dashboard/chart-skeleton"
 

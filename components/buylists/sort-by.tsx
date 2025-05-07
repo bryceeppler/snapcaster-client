@@ -1,4 +1,3 @@
-import { FilterDropdown } from '@/components/ui/filter-dropdown';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';

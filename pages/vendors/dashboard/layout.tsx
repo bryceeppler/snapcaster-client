@@ -1,35 +1,10 @@
 import type React from 'react';
 import {
-  Frame,
-  LineChart,
-  Lock,
-  Settings,
-  Store,
-  Users,
-  Layers,
-  BarChart4,
-  Megaphone,
-  Percent,
-  ShoppingBag,
-  CheckCircle,
-  Key,
-  Blocks
+  Lock
 } from 'lucide-react';
-import Link from 'next/link';
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger
-} from '@/components/ui/sidebar';
+
+
 import { useRouter } from 'next/router';
 import { useAuth } from '@/hooks/useAuth';
 import { VendorSidebar } from '@/components/vendors/sidebar';

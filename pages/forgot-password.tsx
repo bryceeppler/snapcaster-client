@@ -1,7 +1,5 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import axios from 'axios';
-import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -13,8 +11,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
-  CardFooter
+  CardContent
 } from '@/components/ui/card';
 import { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';

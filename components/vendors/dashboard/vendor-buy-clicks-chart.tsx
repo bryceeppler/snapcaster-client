@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { format, parseISO } from 'date-fns';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   Card,
@@ -12,12 +11,10 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { useVendorBuyClicks } from '@/lib/hooks/useAnalytics';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent
+  ChartTooltip
 } from '@/components/ui/chart';
 import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 import { formatChartDate } from '@/lib/utils';

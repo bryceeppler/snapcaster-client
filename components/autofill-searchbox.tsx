@@ -1,4 +1,3 @@
-import ReactGA from 'react-ga4';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';

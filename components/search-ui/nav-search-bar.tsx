@@ -3,10 +3,8 @@ import {
   useEffect,
   useRef,
   KeyboardEvent,
-  useCallback,
-  useMemo
+  useCallback
 } from 'react';
-import { HelpCircle, X } from 'lucide-react';
 import { useDebounceCallback } from 'usehooks-ts';
 import { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';

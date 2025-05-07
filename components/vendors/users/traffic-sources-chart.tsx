@@ -7,8 +7,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
+  Tooltip
 } from 'recharts';
 import {
   Card,
@@ -22,7 +21,6 @@ import { useTrafficSources } from '@/lib/hooks/useAnalytics';
 import {
   ChartContainer,
   ChartConfig,
-  ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
 

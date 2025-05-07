@@ -20,7 +20,6 @@ import {
   ChartLegend,
   ChartLegendContent
 } from '@/components/ui/chart';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useUsersByDevice } from '@/lib/hooks/useAnalytics';
 import { PieChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 
