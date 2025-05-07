@@ -88,7 +88,7 @@ export function TwoFactorSection() {
   const [isGeneratingEmailCode, setIsGeneratingEmailCode] = useState(false);
 
   const user = profile?.data?.user;
-  const is2faEnabled = user?.twoFactorEnabled || false;
+  const is2faEnabled = user?.twoFactorMethods?.length || false;
   const isApp2FAEnabled = user?.twoFactorMethods?.includes('app') || false;
   const isEmail2FAEnabled = user?.twoFactorMethods?.includes('email') || false;
   const isEmailVerified = user?.emailVerified || false;
@@ -316,6 +316,16 @@ export function TwoFactorSection() {
           </p>
         </div>
       </div>
+
+      {!is2faEnabled && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>2FA Not Enabled</AlertTitle>
+          <AlertDescription>
+            Please enable two-factor authentication to secure your account.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* App 2FA Section */}
       <div className="rounded-lg border p-4">

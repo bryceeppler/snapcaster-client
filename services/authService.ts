@@ -60,7 +60,6 @@ interface UserProfile {
     createdAt: string;
     updatedAt: string;
     role: UserRole;
-    twoFactorEnabled: boolean;
     twoFactorMethods: string[];
     vendorData?: VendorData;
   };
