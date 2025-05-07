@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DiscordLogoIcon } from '@radix-ui/react-icons';
+import { useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -18,18 +19,47 @@ export function IntegrationsSection() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const { connectDiscord, disconnectDiscord, profile } = useAuth();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams?.get('discord_connected') === 'true') {
+      toast({
+        title: 'Discord connected',
+        description: 'Your Discord account has been successfully connected.'
+      });
+    }
+  }, [searchParams, toast]);
+
   const handleConnect = async () => {
-    connectDiscord();
+    connectDiscord(undefined, {
+      onError: (error) => {
+        toast({
+          title: 'Error connecting to Discord',
+          description: error.message
+        });
+      }
+    });
   };
 
   const handleDisconnect = async () => {
     setIsLoading(true);
-    disconnectDiscord();
-    toast({
-      title: 'Discord disconnected',
-      description: 'Your Discord account has been disconnected.'
-    });
-    setIsLoading(false);
+    try {
+      await disconnectDiscord();
+      toast({
+        title: 'Discord disconnected',
+        description: 'Your Discord account has been disconnected.'
+      });
+    } catch (error) {
+      toast({
+        title: 'Error disconnecting Discord',
+        description:
+          'An error occurred while disconnecting your Discord account.',
+        variant: 'destructive'
+      });
+      console.error('Discord disconnect error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

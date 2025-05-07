@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authService, TwoFactorRequiredResponse } from '@/services/authService';
-import { toast } from 'sonner';
 import { tokenManager } from '@/utils/axiosWrapper';
 import { useCallback, useState } from 'react';
 
@@ -96,15 +95,9 @@ export function useAuth() {
       const token = result as string;
       setAccessToken(token);
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('Login successful!');
       router.push('/account');
     },
     onError: (error: any) => {
-      if (error?.response?.data) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('An error occurred during login');
-      }
       console.error('Login error:', error);
     }
   });
@@ -152,15 +145,9 @@ export function useAuth() {
       setTempToken(null);
       setAvailableMethods(['app']);
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('Login successful!');
       router.push('/account');
     },
     onError: (error: any) => {
-      if (error?.response?.data) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('Invalid verification code');
-      }
       console.error('2FA login error:', error);
     }
   });
@@ -203,15 +190,9 @@ export function useAuth() {
     onSuccess: (response) => {
       setAccessToken(response.data.accessToken);
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('Registration successful!');
       router.push('/account');
     },
     onError: (error: any) => {
-      if (error?.response?.data) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('An error occurred during registration');
-      }
       console.error('Registration error:', error);
     }
   });
@@ -229,7 +210,6 @@ export function useAuth() {
       router.push('/');
     },
     onError: (error) => {
-      toast.error('Error logging out');
       console.error('Logout error:', error);
     }
   });
@@ -241,11 +221,7 @@ export function useAuth() {
     error: forgotPasswordError
   } = useMutation({
     mutationFn: authService.forgotPassword,
-    onSuccess: () => {
-      toast.success('Password reset instructions sent to your email');
-    },
     onError: (error) => {
-      toast.error('Error requesting password reset');
       console.error('Forgot password error:', error);
     }
   });
@@ -264,11 +240,9 @@ export function useAuth() {
       newPassword: string;
     }) => authService.resetPassword(token, newPassword),
     onSuccess: () => {
-      toast.success('Password reset successfully');
-      router.push('/signin');
+      router.push('/signin?password_reset=true');
     },
     onError: (error) => {
-      toast.error('Error resetting password');
       console.error('Reset password error:', error);
     }
   });
@@ -284,7 +258,6 @@ export function useAuth() {
       window.location.href = response.data.url;
     },
     onError: (error) => {
-      toast.error('Error connecting to Discord');
       console.error('Discord connection error:', error);
     }
   });
@@ -296,11 +269,8 @@ export function useAuth() {
     error: resendVerificationError
   } = useMutation({
     mutationFn: authService.resendVerificationEmail,
-    onSuccess: () => {
-      toast.success('Verification email sent! Please check your inbox.');
-    },
+    onSuccess: () => {},
     onError: (error) => {
-      toast.error('Error sending verification email');
       console.error('Resend verification error:', error);
     }
   });
@@ -313,10 +283,8 @@ export function useAuth() {
     mutationFn: authService.disconnectDiscord,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('Discord disconnected successfully');
     },
     onError: (error) => {
-      toast.error('Error disconnecting from Discord');
       console.error('Discord disconnection error:', error);
     }
   });
@@ -329,7 +297,6 @@ export function useAuth() {
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
     },
     onError: (error) => {
-      toast.error('Error setting up app-based 2FA');
       console.error('App 2FA setup error:', error);
     }
   });
@@ -350,7 +317,6 @@ export function useAuth() {
         options?.onSuccess?.(data);
       },
       onError: (error) => {
-        toast.error('Error setting up app-based 2FA');
         console.error('App 2FA setup error:', error);
         // Call the additional onError if provided
         options?.onError?.(error);
@@ -370,10 +336,8 @@ export function useAuth() {
     mutationFn: () => authService.setupEmail2FA(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('Email-based 2FA enabled successfully!');
     },
     onError: (error) => {
-      toast.error('Error setting up email-based 2FA');
       console.error('Email 2FA setup error:', error);
     }
   });
@@ -391,10 +355,8 @@ export function useAuth() {
     }) => authService.verifyApp2FA(token, secret, method),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('App-based 2FA enabled successfully!');
     },
     onError: (error) => {
-      toast.error('Error verifying 2FA code');
       console.error('App 2FA verification error:', error);
     }
   });
@@ -411,12 +373,10 @@ export function useAuth() {
       onSuccess: () => {
         // Call the default onSuccess behavior
         queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-        toast.success('App-based 2FA enabled successfully!');
         // Call the additional onSuccess if provided
         options?.onSuccess?.();
       },
       onError: (error) => {
-        toast.error('Error verifying 2FA code');
         console.error('App 2FA verification error:', error);
         // Call the additional onError if provided
         options?.onError?.(error);
@@ -436,10 +396,8 @@ export function useAuth() {
     mutationFn: (token: string) => authService.disable2FA(token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('2FA disabled successfully');
     },
     onError: (error) => {
-      toast.error('Error disabling 2FA');
       console.error('2FA disable error:', error);
     }
   });
@@ -451,12 +409,9 @@ export function useAuth() {
     error: generateDisableCodeError
   } = useMutation({
     mutationFn: (method: string) => authService.generateDisable2FACode(method),
-    onSuccess: () => {
-      toast.success('Verification code has been sent to your email');
-    },
+    onSuccess: () => {},
     onError: (error) => {
-      toast.error('Error generating verification code');
-      console.error('Generate disable code error:', error);
+      console.error('Error generating disable code:', error);
     }
   });
 
@@ -468,14 +423,8 @@ export function useAuth() {
     mutationFn: (token: string) => authService.disableApp2FA(token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('App-based 2FA has been disabled');
     },
     onError: (error: any) => {
-      if (error?.response?.data) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('Error disabling app-based 2FA');
-      }
       console.error('Disable app 2FA error:', error);
     }
   });
@@ -488,14 +437,8 @@ export function useAuth() {
     mutationFn: (token: string) => authService.disableEmail2FA(token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
-      toast.success('Email-based 2FA has been disabled');
     },
     onError: (error: any) => {
-      if (error?.response?.data) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('Error disabling email-based 2FA');
-      }
       console.error('Disable email 2FA error:', error);
     }
   });
@@ -508,15 +451,8 @@ export function useAuth() {
   } = useMutation({
     mutationFn: (tempToken: string) =>
       authService.sendEmailVerificationCode(tempToken),
-    onSuccess: () => {
-      toast.success('Verification code sent to your email');
-    },
+    onSuccess: () => {},
     onError: (error: any) => {
-      if (error?.response?.data) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('Error sending verification code');
-      }
       console.error('Send email verification code error:', error);
     }
   });

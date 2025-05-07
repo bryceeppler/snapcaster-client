@@ -28,7 +28,20 @@ export function ProfileSection() {
   const isVerified = profile?.data?.user?.emailVerified || false;
 
   const handleResendVerification = async () => {
-    resendVerificationEmail();
+    resendVerificationEmail(undefined, {
+      onSuccess: () => {
+        toast({
+          title: 'Verification Email Sent',
+          description: 'Please check your inbox for the verification link.'
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error sending verification email',
+          description: error.message
+        });
+      }
+    });
   };
 
   return (

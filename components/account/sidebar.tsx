@@ -12,6 +12,7 @@ import {
   Menu,
   Palette
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -32,7 +33,7 @@ export function AccountSidebar() {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
   const { logout, isLoggingOut } = useAuth();
-
+  const { toast } = useToast();
   const menuItems: MenuItem[] = [
     {
       title: 'General',
@@ -106,7 +107,22 @@ export function AccountSidebar() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => logout()}
+                onClick={() =>
+                  logout(undefined, {
+                    onSuccess: () => {
+                      toast({
+                        title: 'Logged out',
+                        description: 'You have been logged out'
+                      });
+                    },
+                    onError: (error) => {
+                      toast({
+                        title: 'Error logging out',
+                        description: error.message
+                      });
+                    }
+                  })
+                }
                 disabled={isLoggingOut}
               >
                 <LogOut className="mr-2 h-4 w-4" />

@@ -13,7 +13,7 @@ import {
   CardFooter
 } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
-import { AlertCircle, Smartphone, Mail, Send } from 'lucide-react';
+import { AlertCircle, Smartphone, Mail, Send, Key } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
@@ -64,7 +64,11 @@ export default function SignInForm({ redirectUrl }: Props) {
 
   const onSubmit = (data: SignInFormData) => {
     setError(null);
-    login(data);
+    login(data, {
+      onError: (error) => {
+        setError(error.message);
+      }
+    });
   };
 
   const handleTwoFactorSubmit = (e: React.FormEvent) => {
@@ -80,17 +84,33 @@ export default function SignInForm({ redirectUrl }: Props) {
       return;
     }
 
-    completeTwoFactorLogin({
-      tempToken,
-      twoFactorCode,
-      method: selectedMethod
-    });
+    completeTwoFactorLogin(
+      {
+        tempToken,
+        twoFactorCode,
+        method: selectedMethod
+      },
+      {
+        onSuccess: () => {
+          setError(null);
+        },
+        onError: (error) => {
+          setError(error.message);
+        }
+      }
+    );
   };
 
   const handleSendEmailCode = () => {
     if (tempToken) {
-      sendEmailVerificationCode(tempToken);
-      setEmailCodeSent(true);
+      sendEmailVerificationCode(tempToken, {
+        onSuccess: () => {
+          setEmailCodeSent(true);
+        },
+        onError: () => {
+          setError('Error sending verification code. Please try again.');
+        }
+      });
     } else {
       setError('Session expired. Please try logging in again.');
     }
@@ -102,6 +122,8 @@ export default function SignInForm({ redirectUrl }: Props) {
         return <Smartphone className="h-4 w-4" />;
       case 'email':
         return <Mail className="h-4 w-4" />;
+      case 'recovery':
+        return <Key className="h-4 w-4" />;
       default:
         return <Smartphone className="h-4 w-4" />;
     }
@@ -113,6 +135,8 @@ export default function SignInForm({ redirectUrl }: Props) {
         return 'Authenticator App';
       case 'email':
         return 'Email';
+      case 'recovery':
+        return 'Recovery Code';
       default:
         return method;
     }

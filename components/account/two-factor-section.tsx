@@ -74,9 +74,9 @@ export function TwoFactorSection() {
   } = useAuth();
   const [verificationCode, setVerificationCode] = useState('');
   const [setupData, setSetupData] = useState<TwoFactorSetupData | null>(null);
-  const [setupStep, setSetupStep] = useState<
-    'initial' | 'app-setup' | 'app-verify'
-  >('initial');
+  const [setupStep, setSetupStep] = useState<'initial' | 'app-setup'>(
+    'initial'
+  );
   const [copiedBackupCodes, setCopiedBackupCodes] = useState(false);
   const [activeMethod, setActiveMethod] = useState<TwoFactorMethod | null>(
     null
@@ -100,6 +100,7 @@ export function TwoFactorSection() {
       onSuccess: (data) => {
         setSetupData(data);
         setSetupStep('app-setup');
+        setVerificationCode('');
         toast({
           title: '2FA Setup Initiated',
           description: 'Please scan the QR code with your authenticator app.'
@@ -127,7 +128,21 @@ export function TwoFactorSection() {
       });
       return;
     }
-    setupEmail2FA();
+    setupEmail2FA(undefined, {
+      onSuccess: () => {
+        toast({
+          title: 'Email 2FA Enabled',
+          description: 'Email 2FA has been enabled.'
+        });
+      },
+      onError: () => {
+        toast({
+          title: 'Setup Failed',
+          description: 'There was an error setting up 2FA. Please try again.',
+          variant: 'destructive'
+        });
+      }
+    });
   }, [isEmailVerified, setupEmail2FA, toast]);
 
   // Verify app-based 2FA
@@ -189,7 +204,25 @@ export function TwoFactorSection() {
     // For email method, we need to generate a verification code first
     if (method === 'email') {
       setIsGeneratingEmailCode(true);
-      generateDisable2FACode('email');
+      generateDisable2FACode('email', {
+        onSuccess: () => {
+          toast({
+            title: 'Verification Code Sent',
+            description:
+              'A verification code has been sent to your email address.'
+          });
+          setIsGeneratingEmailCode(false);
+        },
+        onError: () => {
+          toast({
+            title: 'Failed to Send Code',
+            description:
+              'There was an error sending the verification code. Please try again.',
+            variant: 'destructive'
+          });
+          setIsGeneratingEmailCode(false);
+        }
+      });
 
       // Set a timer to reset the loading state after 2 seconds if API doesn't respond
       setTimeout(() => {
@@ -210,9 +243,39 @@ export function TwoFactorSection() {
     }
 
     if (methodToDisable === 'app') {
-      disableApp2FA(disableVerificationCode);
+      disableApp2FA(disableVerificationCode, {
+        onSuccess: () => {
+          toast({
+            title: 'App 2FA Disabled',
+            description: 'App 2FA has been disabled.'
+          });
+        },
+        onError: () => {
+          toast({
+            title: 'Disable Failed',
+            description:
+              'There was an error disabling 2FA. Please refresh the page and try again.',
+            variant: 'destructive'
+          });
+        }
+      });
     } else if (methodToDisable === 'email') {
-      disableEmail2FA(disableVerificationCode);
+      disableEmail2FA(disableVerificationCode, {
+        onSuccess: () => {
+          toast({
+            title: 'Email 2FA Disabled',
+            description: 'Email 2FA has been disabled.'
+          });
+        },
+        onError: () => {
+          toast({
+            title: 'Disable Failed',
+            description:
+              'There was an error disabling 2FA. Please refresh the page and try again.',
+            variant: 'destructive'
+          });
+        }
+      });
     }
 
     // Close the dialog
@@ -222,11 +285,19 @@ export function TwoFactorSection() {
   };
 
   const handleResendVerification = () => {
-    resendVerificationEmail();
-
-    toast({
-      title: 'Verification Email Sent',
-      description: 'Please check your inbox for the verification link.'
+    resendVerificationEmail(undefined, {
+      onSuccess: () => {
+        toast({
+          title: 'Verification Email Sent',
+          description: 'Please check your inbox for the verification link.'
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error sending verification email',
+          description: error.message
+        });
+      }
     });
   };
 
@@ -375,8 +446,23 @@ export function TwoFactorSection() {
                 If you can't scan the QR code, enter this code manually in your
                 app:
               </p>
-              <div className="mb-4 rounded bg-muted p-2 text-center font-mono">
+              <div className="relative mb-4 rounded bg-muted p-2 text-center font-mono">
                 {setupData.secret}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 p-0"
+                  onClick={() => {
+                    navigator.clipboard.writeText(setupData.secret);
+                    toast({
+                      title: 'Secret Copied',
+                      description: 'Secret code copied to clipboard.'
+                    });
+                  }}
+                >
+                  <Copy className="h-4 w-4" />
+                  <span className="sr-only">Copy secret code</span>
+                </Button>
               </div>
             </div>
 
@@ -394,6 +480,25 @@ export function TwoFactorSection() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="mb-2 font-medium">4. Verify Setup</h4>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Enter the verification code from your authenticator app to
+                complete the setup.
+              </p>
+
+              <div className="mb-6 space-y-2">
+                <Label htmlFor="verificationCode">Verification Code</Label>
+                <Input
+                  id="verificationCode"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  placeholder="Enter 6-digit code"
+                  maxLength={6}
+                />
               </div>
             </div>
 
@@ -430,9 +535,10 @@ export function TwoFactorSection() {
                 <Button
                   variant="default"
                   size="sm"
-                  onClick={() => setSetupStep('app-verify')}
+                  onClick={verifyAppAuth}
+                  disabled={isVerifyingApp2FA || verificationCode.length !== 6}
                 >
-                  Continue
+                  {isVerifyingApp2FA ? 'Verifying...' : 'Verify & Enable'}
                 </Button>
               </div>
             </div>
@@ -441,48 +547,6 @@ export function TwoFactorSection() {
       </div>
     );
   };
-
-  const renderAppVerifyState = () => (
-    <div className="space-y-4">
-      <div className="rounded-lg border p-4">
-        <h3 className="mb-2 text-lg font-medium">Verify Setup</h3>
-        <p className="mb-4 text-sm text-muted-foreground">
-          Enter the verification code from your authenticator app to complete
-          the setup.
-        </p>
-
-        <div className="mb-6 space-y-2">
-          <Label htmlFor="verificationCode">Verification Code</Label>
-          <Input
-            id="verificationCode"
-            value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
-            placeholder="Enter 6-digit code"
-            maxLength={6}
-          />
-        </div>
-
-        <div className="flex justify-between">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setSetupStep('app-setup')}
-          >
-            Back
-          </Button>
-
-          <Button
-            variant="default"
-            size="sm"
-            onClick={verifyAppAuth}
-            disabled={isVerifyingApp2FA || verificationCode.length !== 6}
-          >
-            {isVerifyingApp2FA ? 'Verifying...' : 'Verify & Enable'}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <>
@@ -496,7 +560,6 @@ export function TwoFactorSection() {
         <CardContent>
           {setupStep === 'initial' && renderInitialState()}
           {setupStep === 'app-setup' && renderAppSetupState()}
-          {setupStep === 'app-verify' && renderAppVerifyState()}
         </CardContent>
       </Card>
 

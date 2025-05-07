@@ -19,12 +19,13 @@ import {
 import { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle } from 'lucide-react';
-
+import { useToast } from '@/hooks/use-toast';
 type Props = {};
 
 const ForgotPassword: NextPage<Props> = () => {
   const { forgotPassword } = useAuth();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { toast } = useToast();
   const {
     register,
     handleSubmit,
@@ -40,12 +41,21 @@ const ForgotPassword: NextPage<Props> = () => {
   };
   const onSubmit = async (data: Submision) => {
     const { email } = data;
-    try {
-      await forgotPassword(email);
-      setIsSubmitted(true);
-    } catch (error) {
-      toast.error('Failed to send reset email. Please try again.');
-    }
+    await forgotPassword(email, {
+      onSuccess: () => {
+        toast({
+          title: 'Reset email sent',
+          description: 'Check your email for a password reset link.'
+        });
+        setIsSubmitted(true);
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error sending reset email',
+          description: error.message
+        });
+      }
+    });
   };
 
   return (
@@ -60,7 +70,6 @@ const ForgotPassword: NextPage<Props> = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-
             <form
               className="grid gap-4 md:gap-4"
               onSubmit={handleSubmit(onSubmit)}
@@ -89,7 +98,8 @@ const ForgotPassword: NextPage<Props> = () => {
               <Alert className="mt-4" variant="success">
                 <CheckCircle className="size-4" />
                 <AlertDescription>
-                  If an account exists with this email, you will receive a password reset link shortly.
+                  If an account exists with this email, you will receive a
+                  password reset link shortly.
                 </AlertDescription>
               </Alert>
             )}
