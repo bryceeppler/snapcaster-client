@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '@/components/ui/navbar';
+import Navbar from '@/components/navigation/navbar';
 import Footer from '@/components/ui/footer';
 import { usePathname } from 'next/navigation';
 type Props = {};
