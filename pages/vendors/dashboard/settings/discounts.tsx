@@ -460,7 +460,7 @@ export default function DiscountsPage() {
   return (
     <DashboardLayout>
       <main className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-6 p-6 pt-8 md:p-8">
+        <div className="flex-1 space-y-6">
           {/* Header section */}
           <header className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
             <div>

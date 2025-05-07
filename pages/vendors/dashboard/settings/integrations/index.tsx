@@ -26,7 +26,7 @@ export default function IntegrationsPage() {
   return (
     <DashboardLayout>
       <main className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-6 p-6 pt-8 md:p-8">
+        <div className="flex-1 space-y-6">
           {/* Header section */}
           <PageHeader title="Integrations" />
 

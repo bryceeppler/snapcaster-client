@@ -473,7 +473,7 @@ export default function AdvertisementsPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-6 p-6 pt-8 md:p-8">
+        <div className="flex-1 space-y-6">
           <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
             <div>
               <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
@@ -576,7 +576,7 @@ export default function AdvertisementsPage() {
                   advertisementsByVendor &&
                   advertisementsByVendor.length > 0 ? (
                   // Admin view with vendors grouped
-                  (advertisementsByVendor.map((vendorGroup) => (
+                  advertisementsByVendor.map((vendorGroup) => (
                     <React.Fragment key={vendorGroup.vendorId}>
                       {/* Vendor Header Row */}
                       <TableRow className="bg-primary/20 hover:bg-primary/30">
@@ -605,10 +605,10 @@ export default function AdvertisementsPage() {
                         />
                       ))}
                     </React.Fragment>
-                  )))
+                  ))
                 ) : (
                   // Normal vendor view (unchanged)
-                  (advertisements.map((ad) => (
+                  advertisements.map((ad) => (
                     <AdvertisementRow
                       key={ad.id}
                       ad={ad}
@@ -620,7 +620,7 @@ export default function AdvertisementsPage() {
                       isAdmin={isAdmin}
                       getVendorName={getVendorName}
                     />
-                  )))
+                  ))
                 )}
               </TableBody>
             </Table>

@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/sidebar';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/hooks/useAuth';
-
+import { VendorSidebar } from '@/components/vendors/sidebar';
 export default function DashboardLayout({
   children
 }: {
@@ -55,174 +55,13 @@ export default function DashboardLayout({
   }
 
   return (
-    <SidebarProvider>
-      <div className="flex w-full">
-        <Sidebar className="fixed top-[calc(theme(spacing.16)+theme(spacing.9))] h-[calc(100vh-theme(spacing.16)-theme(spacing.9))]">
-          <SidebarContent className="bg-card">
-            <SidebarGroup>
-              <SidebarGroupLabel>Analytics</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={router.pathname === '/vendors/dashboard'}
-                    >
-                      <Link href="/vendors/dashboard" className="py-6">
-                        <LineChart className="h-4 w-4" />
-                        <span>Overview</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={router.pathname === '/vendors/dashboard/users'}
-                    >
-                      <Link href="/vendors/dashboard/users" className="py-6">
-                        <Users className="h-4 w-4" />
-                        <span>Users</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={router.pathname === '/vendors/dashboard/tcgs'}
-                    >
-                      <Link href="/vendors/dashboard/tcgs" className="py-6">
-                        <Layers className="h-4 w-4" />
-                        <span>TCGs</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={
-                        router.pathname === '/vendors/dashboard/vendors'
-                      }
-                    >
-                      <Link href="/vendors/dashboard/vendors" className="py-6">
-                        <Store className="h-4 w-4" />
-                        <span>Vendors</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={
-                        router.pathname === '/vendors/dashboard/buylists'
-                      }
-                    >
-                      <Link href="/vendors/dashboard/buylists" className="py-6">
-                        <ShoppingBag className="h-4 w-4" />
-                        <span>Buylists</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarGroup>
-              <SidebarGroupLabel>Settings</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={router.pathname.startsWith(
-                        '/vendors/dashboard/settings/advertisements'
-                      )}
-                    >
-                      <Link
-                        href="/vendors/dashboard/settings/advertisements"
-                        className="py-6"
-                      >
-                        <Megaphone className="h-4 w-4" />
-                        <span>Advertisements</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={router.pathname.startsWith(
-                        '/vendors/dashboard/settings/discounts'
-                      )}
-                    >
-                      <Link
-                        href="/vendors/dashboard/settings/discounts"
-                        className="py-6"
-                      >
-                        <Percent className="h-4 w-4" />
-                        <span>Discounts</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  {isAdmin && (
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={router.pathname.startsWith(
-                          '/vendors/dashboard/settings/approvals'
-                        )}
-                      >
-                        <Link
-                          href="/vendors/dashboard/settings/approvals"
-                          className="py-6"
-                        >
-                          <CheckCircle className="h-4 w-4" />
-                          <span>Approvals</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )}
-                  {/* <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={router.pathname.startsWith(
-                        '/vendors/dashboard/settings/integrations'
-                      )}
-                    >
-                      <Link
-                        href="/vendors/dashboard/settings/integrations"
-                        className="py-6"
-                      >
-                        <Blocks className="h-4 w-4" />
-                        <span>Integrations</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem> */}
-                  {/* <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={
-                        router.pathname === '/vendors/dashboard/settings'
-                      }
-                    >
-                      <Link href="/vendors/dashboard/settings" className="py-6">
-                        <ShoppingBag className="h-4 w-4" />
-                        <span>Store Settings</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem> */}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-        </Sidebar>
-        <main className="flex-1">
-          <div className="border-b">
-            <div className="flex h-16 items-center gap-4 px-4">
-              <SidebarTrigger />
-              <div className="font-semibold">Vendor Dashboard</div>
-            </div>
-          </div>
+    <div className="w-full">
+      <VendorSidebar />
+      <main className="lg:ml-[280px]">
+        <div className="flex flex-col gap-4 p-4 md:gap-8 md:p-8">
           {children}
-        </main>
-      </div>
-    </SidebarProvider>
+        </div>
+      </main>
+    </div>
   );
 }

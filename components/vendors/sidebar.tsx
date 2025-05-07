@@ -3,14 +3,17 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
-  CreditCard,
   LogOut,
-  Store,
-  User,
-  Webhook,
   Settings,
   Menu,
-  Palette
+  LineChart,
+  Users,
+  Tags,
+  Store,
+  ShoppingCart,
+  BadgePercent,
+  CheckSquare,
+  MessageSquare
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -28,36 +31,51 @@ interface MenuItem {
   isActive: boolean;
 }
 
-export function AccountSidebar() {
+export function VendorSidebar() {
   const pathname = usePathname();
-  const isMobile = useIsMobile();
-  const [isOpen, setIsOpen] = useState(false);
-  const { logout, isLoggingOut } = useAuth();
-  const { toast } = useToast();
+  const { logout, isLoggingOut, isAdmin } = useAuth();
   const menuItems: MenuItem[] = [
     {
-      title: 'General',
-      icon: User,
-      href: '/account',
-      isActive: pathname === '/account'
+      title: 'Overview',
+      icon: LineChart,
+      href: '/vendors/dashboard',
+      isActive: pathname === '/vendors/dashboard'
     },
     {
-      title: 'Appearance',
-      icon: Palette,
-      href: '/account/appearance',
-      isActive: pathname === '/account/appearance'
+      title: 'Users',
+      icon: Users,
+      href: '/vendors/dashboard/users',
+      isActive: pathname === '/vendors/dashboard/users'
     },
     {
-      title: 'Integrations',
-      icon: Webhook,
-      href: '/account/integrations',
-      isActive: pathname === '/account/integrations'
+      title: 'TCGs',
+      icon: Tags,
+      href: '/vendors/dashboard/tcgs',
+      isActive: pathname === '/vendors/dashboard/tcgs'
     },
     {
-      title: 'Subscription',
-      icon: CreditCard,
-      href: '/account/subscription',
-      isActive: pathname === '/account/subscription'
+      title: 'Vendors',
+      icon: Store,
+      href: '/vendors/dashboard/vendors',
+      isActive: pathname === '/vendors/dashboard/vendors'
+    },
+    {
+      title: 'Buylists',
+      icon: ShoppingCart,
+      href: '/vendors/dashboard/buylists',
+      isActive: pathname === '/vendors/dashboard/buylists'
+    },
+    {
+      title: 'Advertisements',
+      icon: MessageSquare,
+      href: '/vendors/dashboard/settings/advertisements',
+      isActive: pathname === '/vendors/dashboard/settings/advertisements'
+    },
+    {
+      title: 'Discounts',
+      icon: BadgePercent,
+      href: '/vendors/dashboard/settings/discounts',
+      isActive: pathname === '/vendors/dashboard/settings/discounts'
     }
     // {
     //   title: 'Merchant Settings',
@@ -67,12 +85,21 @@ export function AccountSidebar() {
     // }
   ];
 
+  // Add Approvals menu item only for admins
+  if (isAdmin) {
+    menuItems.push({
+      title: 'Approvals',
+      icon: CheckSquare,
+      href: '/vendors/dashboard/settings/approvals',
+      isActive: pathname === '/vendors/dashboard/settings/approvals'
+    });
+  }
+
   // For desktop view
   return (
     <div className="fixed top-[calc(theme(spacing.16)+theme(spacing.9))] hidden h-[calc(100vh-theme(spacing.16)-theme(spacing.9))] w-[280px] flex-col overflow-hidden border-r bg-card lg:flex">
       <div className="flex items-center gap-2 border-b px-6 py-4 font-semibold">
-        <Settings className="h-6 w-6" />
-        <span>Account Settings</span>
+        <span>Analytics Dashboard</span>
       </div>
       <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
         {menuItems.map((item) => (
@@ -91,17 +118,6 @@ export function AccountSidebar() {
           </Link>
         ))}
       </nav>
-      <div className="mt-auto border-t p-4">
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={() => logout()}
-          disabled={isLoggingOut}
-        >
-          <LogOut className="mr-2 h-4 w-4" />
-          {isLoggingOut ? 'Logging out...' : 'Logout'}
-        </Button>
-      </div>
     </div>
   );
 }

@@ -4,8 +4,26 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from './button';
 import { useAuth } from '@/hooks/useAuth';
-import { AlignJustify, SlidersHorizontal, ShoppingCart } from 'lucide-react';
-import React, { useState, useRef } from 'react';
+import {
+  AlignJustify,
+  SlidersHorizontal,
+  ShoppingCart,
+  ChevronDown,
+  User,
+  Settings,
+  Palette,
+  Plug2,
+  CreditCard,
+  LayoutDashboard,
+  Users,
+  Tag,
+  Store,
+  ShoppingBag,
+  BarChart4,
+  Tags,
+  Shield
+} from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
 import ModeToggle from '../theme-toggle';
 import NavSearchBar from '../search-ui/nav-search-bar';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
@@ -19,6 +37,12 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 import FilterSection from '../search-ui/search-filter-container';
 import SearchPagination from '../search-ui/search-pagination';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
@@ -27,7 +51,7 @@ import useBuyListStore from '@/stores/useBuylistStore';
 import { Badge } from './badge';
 import { useUserCarts } from '@/hooks/useUserCarts';
 import { cn } from '@/lib/utils';
-
+import MobileNav from '@/components/mobile-nav';
 // Custom navigation link component
 interface NavLinkProps {
   href: string;
@@ -72,12 +96,25 @@ const Navbar: React.FC = () => {
     useBuyListStore();
   const cartTriggerRef = useRef<HTMLButtonElement>(null);
 
+  // State for accordion sections
+  const [accountExpanded, setAccountExpanded] = useState<boolean>(false);
+  const [analyticsExpanded, setAnalyticsExpanded] = useState<boolean>(false);
+
   // Get cart data
   const { getCurrentCart } = useUserCarts();
   const currentCart = getCurrentCart();
   const hasItems =
     currentCart?.cart?.items && currentCart.cart.items.length > 0;
   const cartItemCount = hasItems ? currentCart.cart.items.length : 0;
+
+  // Auto-expand sections based on current path
+  useEffect(() => {
+    if (currentPath.startsWith('/account')) {
+      setAccountExpanded(true);
+    } else if (currentPath.startsWith('/vendors')) {
+      setAnalyticsExpanded(true);
+    }
+  }, [currentPath]);
 
   // Handle cart button click
   const handleCartClick = () => {
@@ -88,205 +125,7 @@ const Navbar: React.FC = () => {
   return (
     <>
       {/* MOBILE NAV */}
-      <div className="sticky top-0 z-50 lg:hidden">
-        {/* Top Bar: Logo, Hamburger and Cart */}
-        <div className="flex justify-between border-b border-border/40 bg-background/90 px-3 py-2.5 shadow-sm backdrop-blur-sm">
-          {/* Left: Hamburger Menu */}
-          <div className="flex items-center">
-            <Sheet
-              open={mobileNavSheetOpen}
-              onOpenChange={setMobileNavSheetOpen}
-            >
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="mr-1 rounded-full hover:bg-accent"
-                >
-                  <AlignJustify className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side={'left'} className="p-0">
-                <SheetTitle hidden>Snapcaster</SheetTitle>
-                <SheetDescription hidden>
-                  Search Magic: The Gathering cards across Canada
-                </SheetDescription>
-                <SheetHeader className="border-b p-4">
-                  <Link href="/" onClick={() => setMobileNavSheetOpen(false)}>
-                    <div className="flex cursor-pointer items-center space-x-3">
-                      <img
-                        className="h-6 w-auto"
-                        src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
-                        alt="Snapcaster"
-                      />
-                      <p className="font-genos text-2xl font-bold leading-none tracking-tighter">
-                        Snapcaster
-                      </p>
-                    </div>
-                  </Link>
-                </SheetHeader>
-                <div className="flex flex-col py-3">
-                  <NavLink
-                    href="/"
-                    isActive={currentPath === '/'}
-                    onClick={() => setMobileNavSheetOpen(false)}
-                  >
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start rounded-none pl-6 text-left"
-                    >
-                      Home
-                    </Button>
-                  </NavLink>
-                  <NavLink
-                    href="/multisearch"
-                    isActive={currentPath === '/multisearch'}
-                    onClick={() => setMobileNavSheetOpen(false)}
-                  >
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start rounded-none pl-6 text-left"
-                    >
-                      Multi Search
-                    </Button>
-                  </NavLink>
-                  <NavLink
-                    href="/sealed"
-                    isActive={currentPath === '/sealed'}
-                    onClick={() => setMobileNavSheetOpen(false)}
-                  >
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start rounded-none pl-6 text-left"
-                    >
-                      Sealed Search
-                    </Button>
-                  </NavLink>
-                  <NavLink
-                    href="/buylists"
-                    isActive={currentPath === '/buylists'}
-                    onClick={() => setMobileNavSheetOpen(false)}
-                  >
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start rounded-none pl-6 text-left"
-                    >
-                      Buylists
-                    </Button>
-                  </NavLink>
-                  <NavLink
-                    href="/about"
-                    isActive={currentPath === '/about'}
-                    onClick={() => setMobileNavSheetOpen(false)}
-                  >
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start rounded-none pl-6 text-left"
-                    >
-                      About
-                    </Button>
-                  </NavLink>
-                  <NavLink
-                    href="https://discord.gg/EnKKHxSq75"
-                    isActive={false}
-                    onClick={() => setMobileNavSheetOpen(false)}
-                  >
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start rounded-none pl-6 text-left"
-                    >
-                      Discord
-                    </Button>
-                  </NavLink>
-                  {canViewAnalytics && (
-                    <NavLink
-                      href="/vendors/dashboard"
-                      isActive={currentPath.startsWith('/vendors')}
-                      onClick={() => setMobileNavSheetOpen(false)}
-                    >
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start rounded-none pl-6 text-left"
-                      >
-                        Analytics
-                      </Button>
-                    </NavLink>
-                  )}
-                </div>
-                <div className="mt-auto flex items-center justify-between border-t p-4">
-                  <Link href={isAuthenticated ? `/account` : '/signin'}>
-                    <Button
-                      variant="outline"
-                      className="mr-2"
-                      onClick={() => setMobileNavSheetOpen(false)}
-                    >
-                      {isAuthenticated ? 'Account' : 'Sign In'}
-                    </Button>
-                  </Link>
-                  <ModeToggle />
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-
-          {/* Middle: Logo */}
-          <div className="absolute left-1/2 top-1/2 flex flex-1 -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-            <Link href="/" passHref>
-              <div className="flex cursor-pointer items-center space-x-2">
-                <img
-                  className="h-5 w-auto"
-                  src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
-                  alt="Snapcaster"
-                />
-                <p className="font-genos text-xl font-bold leading-none tracking-tighter">
-                  Snapcaster
-                </p>
-              </div>
-            </Link>
-          </div>
-
-          {/* Right: Cart Icon (for buylists) */}
-          <div className="flex items-center">
-            {currentPath === '/buylists' &&
-              buylistUIState !== 'finalSubmissionState' && (
-                <div className="relative">
-                  {cartItemCount > 0 && (
-                    <Badge
-                      className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center p-0 text-[10px]"
-                      variant="destructive"
-                    >
-                      {cartItemCount}
-                    </Badge>
-                  )}
-                  <Button
-                    ref={cartTriggerRef}
-                    size="icon"
-                    variant="ghost"
-                    className="h-9 w-9 rounded-full hover:bg-accent"
-                    onClick={handleCartClick}
-                    disabled={!currentCart?.cart?.name}
-                  >
-                    <ShoppingCart className="size-[18px]" />
-                  </Button>
-                </div>
-              )}
-          </div>
-        </div>
-
-        {/* Search Bar: Always visible below main nav */}
-        <div className="border-b border-border/40 bg-background/80 p-2.5">
-          {currentPath === '/' &&
-            NavSearchBarFactory('singles', { deviceType: 'mobile' })}
-          {currentPath === '/buylists' &&
-            NavSearchBarFactory('buylists', { deviceType: 'mobile' })}
-          {currentPath === '/sealed' &&
-            NavSearchBarFactory('sealed', { deviceType: 'mobile' })}
-        </div>
-
-        {/* Results Toolbar: Filter and pagination */}
-        {currentPath === '/' && ResultsToolbarFactory('singles')}
-        {currentPath === '/buylists' && ResultsToolbarFactory('buylists')}
-      </div>
+      <MobileNav />
 
       {/* DESKTOP NAV MD+ */}
       <div className="sticky top-0 z-40 hidden lg:block">
@@ -399,7 +238,7 @@ interface NavSearchBarProps {
   toggleMobileSearch?: () => void;
 }
 
-const NavSearchBarFactory = (
+export const NavSearchBarFactory = (
   searchMode: NavSearchMode,
   props: NavSearchBarProps
 ): JSX.Element | null => {
@@ -500,7 +339,7 @@ const SealedNavSearchBar = ({ deviceType }: NavSearchBarProps) => {
 // Mobile ResultsToolbar Factory //
 ///////////////////////////////////
 /* The bar bewlow the nav for mobile single/buylist search which contains the reuslts, pagination, and filters on a query */
-const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
+export const ResultsToolbarFactory = (searchMode: NavSearchMode) => {
   switch (searchMode) {
     case 'singles':
       return <SingleResultsToolbar />;

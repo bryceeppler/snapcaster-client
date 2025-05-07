@@ -30,7 +30,7 @@ export function AppearanceSection() {
             <Monitor className="h-5 w-5 text-muted-foreground" />
             <h3 className="text-base font-medium">Display</h3>
           </div>
-          <div className="pl-7">
+          <div className="">
             <ThemeSelector />
           </div>
         </div>
@@ -42,7 +42,7 @@ export function AppearanceSection() {
             <Palette className="h-5 w-5 text-muted-foreground" />
             <h3 className="text-base font-medium">Colors</h3>
           </div>
-          <div className="pl-7">
+          <div className="">
             <ColorSelector />
           </div>
         </div>
