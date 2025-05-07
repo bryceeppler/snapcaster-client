@@ -2,41 +2,43 @@
 
 import * as React from 'react';
 import { useTheme } from 'next-themes';
-import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Button } from '@/components/ui/button';
+import { Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
-import { Check, Palette } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
-// Define our color palette options
 const colorOptions = [
-  // Original colors
+  // Default color first
   { name: 'Blue', value: '221 76% 62%', class: 'bg-[hsl(221,76%,62%)]' },
-  { name: 'Purple', value: '262 80% 60%', class: 'bg-[hsl(262,80%,60%)]' },
-  { name: 'Green', value: '142 76% 36%', class: 'bg-[hsl(142,76%,36%)]' },
   { name: 'Red', value: '355 78% 56%', class: 'bg-[hsl(355,78%,56%)]' },
+  { name: 'Rose', value: '350 89% 60%', class: 'bg-[hsl(350,89%,60%)]' },
   { name: 'Orange', value: '16 90% 50%', class: 'bg-[hsl(16,90%,50%)]' },
-  { name: 'Teal', value: '180 70% 40%', class: 'bg-[hsl(180,70%,40%)]' },
-
-  // New colors
-  { name: 'Pink', value: '330 90% 65%', class: 'bg-[hsl(330,90%,65%)]' },
-  { name: 'Indigo', value: '245 75% 52%', class: 'bg-[hsl(245,75%,52%)]' },
-  { name: 'Amber', value: '38 92% 50%', class: 'bg-[hsl(38,92%,50%)]' },
-  { name: 'Emerald', value: '152 76% 40%', class: 'bg-[hsl(152,76%,40%)]' },
-  { name: 'Cyan', value: '195 85% 55%', class: 'bg-[hsl(195,85%,55%)]' },
-  { name: 'Rose', value: '350 89% 60%', class: 'bg-[hsl(350,89%,60%)]' }
+  { name: 'Green', value: '142 76% 36%', class: 'bg-[hsl(142,76%,36%)]' },
+  { name: 'Yellow', value: '38 92% 50%', class: 'bg-[hsl(38,92%,50%)]' },
+  { name: 'Violet', value: '262 80% 60%', class: 'bg-[hsl(262,80%,60%)]' }
 ];
 
 export default function ColorSelector() {
   const { theme } = useTheme();
   const [primaryColor, setPrimaryColor] = useState<string>('');
   const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Check if we're on desktop based on window width
+  useEffect(() => {
+    const checkIfDesktop = () => {
+      setIsDesktop(window.innerWidth >= 640);
+    };
+
+    // Check initially
+    checkIfDesktop();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfDesktop);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfDesktop);
+  }, []);
 
   // Load saved color preference from localStorage on mount
   useEffect(() => {
@@ -79,65 +81,77 @@ export default function ColorSelector() {
   // Don't render until client-side to prevent hydration mismatch
   if (!mounted) return null;
 
-  const selectedColor = colorOptions.find((c) => c.value === primaryColor);
-
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <div
-          className={cn(
-            'h-4 w-4 rounded-full border shadow-sm transition-transform',
-            selectedColor?.class
-          )}
-          aria-hidden="true"
-        ></div>
-        <div className="flex flex-col">
-          <h3 className="text-sm font-medium leading-none">Theme Color</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {selectedColor?.name || 'Select a color'}
-          </p>
-        </div>
-      </div>
+      <RadioGroup
+        value={primaryColor}
+        onValueChange={handleColorChange}
+        className={
+          isDesktop
+            ? 'flex flex-wrap gap-3'
+            : 'grid grid-cols-4 justify-items-center gap-4'
+        }
+      >
+        {colorOptions.map((color) => {
+          // Direct click handler for the color option
+          const handleClick = () => {
+            handleColorChange(color.value);
+          };
 
-      <TooltipProvider delayDuration={300}>
-        <RadioGroup
-          value={primaryColor}
-          onValueChange={handleColorChange}
-          className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6"
-        >
-          {colorOptions.map((color) => (
-            <Tooltip key={color.value}>
-              <TooltipTrigger asChild>
-                <div className="relative flex justify-center">
-                  <RadioGroupItem
-                    value={color.value}
-                    id={`color-${color.value}`}
-                    className="peer sr-only"
-                  />
-                  <Label
-                    htmlFor={`color-${color.value}`}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-muted bg-popover transition-all duration-200 
-                    hover:scale-110 hover:shadow-md peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-primary peer-data-[state=checked]:ring-offset-1"
+          return (
+            <div key={color.value} className="relative">
+              <RadioGroupItem
+                value={color.value}
+                id={`color-${color.value}`}
+                className={`peer sr-only`}
+              />
+              {isDesktop ? (
+                // Desktop view: Pill-shaped buttons with color + text
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClick}
+                  className={`flex h-auto items-center border-2 bg-card px-4 py-2 transition-all ${
+                    primaryColor === color.value
+                      ? 'border-gray-400 shadow-md'
+                      : 'border-gray-200'
+                  } ${isDesktop ? 'w-24' : ''}`}
+                >
+                  <div
+                    className={`h-5 w-5 rounded-full ${color.class} mr-2 flex flex-shrink-0 items-center justify-center`}
                   >
-                    <div className={`h-7 w-7 rounded-full ${color.class}`} />
-
                     {primaryColor === color.value && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Check className="h-4 w-4 text-white drop-shadow-[0_0_1px_rgba(0,0,0,0.7)]" />
-                      </div>
+                      <Check className="h-3 w-3 text-white drop-shadow-[0_0_1px_rgba(0,0,0,0.5)]" />
                     )}
-
-                    <span className="sr-only">{color.name}</span>
-                  </Label>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs font-medium">
-                {color.name}
-              </TooltipContent>
-            </Tooltip>
-          ))}
-        </RadioGroup>
-      </TooltipProvider>
+                  </div>
+                  <span className="text-sm font-medium">{color.name}</span>
+                </Button>
+              ) : (
+                // Mobile view: Just the color circles
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={handleClick}
+                  className={`flex items-center justify-center border-2 bg-card transition-all ${
+                    primaryColor === color.value
+                      ? 'border-gray-400 shadow-md'
+                      : 'border-gray-200'
+                  }`}
+                >
+                  <div
+                    className={`h-5 w-5 rounded-full ${color.class} flex flex-shrink-0 items-center justify-center`}
+                  >
+                    {primaryColor === color.value && (
+                      <Check className="h-3 w-3 text-white drop-shadow-[0_0_1px_rgba(0,0,0,0.5)]" />
+                    )}
+                  </div>
+                </Button>
+              )}
+            </div>
+          );
+        })}
+      </RadioGroup>
     </div>
   );
 }

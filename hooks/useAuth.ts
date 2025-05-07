@@ -227,7 +227,6 @@ export function useAuth() {
       setAccessToken(null);
       queryClient.clear(); // Clear all queries from cache
       router.push('/');
-      toast.success('Logged out successfully');
     },
     onError: (error) => {
       toast.error('Error logging out');

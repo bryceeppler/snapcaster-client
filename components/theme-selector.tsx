@@ -20,26 +20,6 @@ export default function ThemeSelector() {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <div
-          className={cn(
-            'h-4 w-4 rounded-md border shadow-sm transition-transform',
-            theme === 'dark'
-              ? 'bg-slate-900'
-              : theme === 'light'
-              ? 'bg-slate-100'
-              : 'bg-slate-500'
-          )}
-          aria-hidden="true"
-        ></div>
-        <div className="flex flex-col">
-          <h3 className="text-sm font-medium leading-none">Display Mode</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {theme === 'dark' ? 'Dark' : theme === 'light' ? 'Light' : 'System'}
-          </p>
-        </div>
-      </div>
-
       <RadioGroup
         value={theme}
         onValueChange={setTheme}

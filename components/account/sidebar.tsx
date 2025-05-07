@@ -9,7 +9,8 @@ import {
   User,
   Webhook,
   Settings,
-  Menu
+  Menu,
+  Palette
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -38,6 +39,12 @@ export function AccountSidebar() {
       icon: User,
       href: '/account',
       isActive: pathname === '/account'
+    },
+    {
+      title: 'Appearance',
+      icon: Palette,
+      href: '/account/appearance',
+      isActive: pathname === '/account/appearance'
     },
     {
       title: 'Integrations',
