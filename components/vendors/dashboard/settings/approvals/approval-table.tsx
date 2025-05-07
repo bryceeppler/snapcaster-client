@@ -161,14 +161,12 @@ const AdImageCard = ({
           </Badge>
         </div>
         <CardDescription className="mt-1 flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <span className="font-medium">{ad?.position}</span>
-            {adImage.image_type && (
-              <span className="rounded-sm bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
-                {adImage.image_type}
-              </span>
-            )}
-          </div>
+          <span className="font-medium">{ad?.position}</span>
+          {adImage.image_type && (
+            <span className="rounded-sm bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
+              {adImage.image_type}
+            </span>
+          )}
         </CardDescription>
       </CardHeader>
 

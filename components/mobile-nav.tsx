@@ -28,7 +28,7 @@ import {
   ChevronRight,
   LogOut
 } from 'lucide-react';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import ModeToggle from '@/components/theme-toggle';
 import {
   Sheet,
@@ -65,6 +65,214 @@ interface NavGroup {
   items: NavItem[];
 }
 
+// NavLink component for consistent navigation styling
+const NavLink = ({
+  item,
+  isActive,
+  onClick,
+  className
+}: {
+  item: NavItem;
+  isActive: boolean;
+  onClick?: () => void;
+  className?: string;
+}) => {
+  const isExternal = item.href.startsWith('http');
+
+  return (
+    <Link
+      href={item.href}
+      className={cn(
+        'flex items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors',
+        isActive
+          ? 'border-l-2 border-primary bg-accent/60 pl-[10px] text-accent-foreground'
+          : 'text-muted-foreground hover:bg-accent/40 hover:text-accent-foreground',
+        className
+      )}
+      onClick={onClick}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+      aria-current={isActive ? 'page' : undefined}
+    >
+      <div className="flex items-center">
+        <item.icon className="mr-3 h-4 w-4" aria-hidden="true" />
+        <span>{item.label}</span>
+      </div>
+      {isExternal && (
+        <ChevronRight className="h-4 w-4 opacity-60" aria-hidden="true" />
+      )}
+    </Link>
+  );
+};
+
+// SearchBar component based on current path
+const SearchBarSection = ({ currentPath }: { currentPath: string }) => {
+  // Check if search bar should be displayed on this route
+  const pathsWithSearch = ['/', '/buylists', '/sealed'];
+  if (!pathsWithSearch.includes(currentPath)) return null;
+
+  let searchType: 'singles' | 'buylists' | 'sealed';
+
+  if (currentPath === '/') searchType = 'singles';
+  else if (currentPath === '/buylists') searchType = 'buylists';
+  else searchType = 'sealed';
+
+  return (
+    <section
+      className="bg-background/80 px-2 pb-2"
+      aria-label={`Search ${searchType}`}
+    >
+      {NavSearchBarFactory(searchType, { deviceType: 'mobile' })}
+    </section>
+  );
+};
+
+// Results toolbar component based on current path
+const ResultsToolbarSection = ({ currentPath }: { currentPath: string }) => {
+  if (currentPath === '/') {
+    return (
+      <section aria-label="Search results filters">
+        {ResultsToolbarFactory('singles')}
+      </section>
+    );
+  }
+
+  if (currentPath === '/buylists') {
+    return (
+      <section aria-label="Buylist filters">
+        {ResultsToolbarFactory('buylists')}
+      </section>
+    );
+  }
+
+  return null;
+};
+
+// Navigation menu accordion section
+const NavAccordionSection = ({
+  title,
+  icon: Icon,
+  items,
+  currentPath,
+  sectionValue,
+  onSectionValueChange,
+  closeMobileNav
+}: {
+  title: string;
+  icon: React.ElementType;
+  items: NavItem[];
+  currentPath: string;
+  sectionValue: string;
+  onSectionValueChange: (value: string) => void;
+  closeMobileNav: () => void;
+}) => {
+  return (
+    <section aria-label={`${title} navigation`}>
+      <Separator className="my-1" />
+      <div className="px-4">
+        <Accordion
+          type="single"
+          collapsible
+          value={sectionValue}
+          onValueChange={onSectionValueChange}
+          className="border-none"
+        >
+          <AccordionItem value={title.toLowerCase()} className="border-none">
+            <AccordionTrigger
+              className="rounded-md px-3 py-2 text-sm font-medium hover:bg-accent/40 hover:no-underline data-[state=open]:bg-accent/60"
+              aria-label={`Toggle ${title.toLowerCase()} menu`}
+            >
+              <div className="flex items-center text-sm font-medium">
+                <Icon className="mr-3 h-4 w-4" aria-hidden="true" />
+                <span>{title}</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pb-0 pt-1">
+              <ul className="space-y-1 pl-2">
+                {items.map((item) => (
+                  <li key={item.href}>
+                    <NavLink
+                      item={item}
+                      isActive={currentPath === item.href}
+                      onClick={closeMobileNav}
+                      className="px-4 py-1.5"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    </section>
+  );
+};
+
+// Analytics accordion with grouped items
+const AnalyticsAccordionSection = ({
+  groups,
+  currentPath,
+  sectionValue,
+  onSectionValueChange,
+  closeMobileNav
+}: {
+  groups: NavGroup[];
+  currentPath: string;
+  sectionValue: string;
+  onSectionValueChange: (value: string) => void;
+  closeMobileNav: () => void;
+}) => {
+  return (
+    <section aria-label="Analytics navigation">
+      <Separator className="my-1" />
+      <div className="px-4">
+        <Accordion
+          type="single"
+          collapsible
+          value={sectionValue}
+          onValueChange={onSectionValueChange}
+          className="border-none"
+        >
+          <AccordionItem value="analytics" className="border-none">
+            <AccordionTrigger
+              className="rounded-md px-3 py-2 text-sm font-medium hover:bg-accent/40 hover:no-underline data-[state=open]:bg-accent/60"
+              aria-label="Toggle analytics menu"
+            >
+              <div className="flex items-center text-sm font-medium">
+                <BarChart4 className="mr-3 h-4 w-4" aria-hidden="true" />
+                <span>Analytics</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pb-0 pt-1">
+              <div className="space-y-1 pl-2">
+                {groups.map((group) => (
+                  <div key={group.title} className="mb-3">
+                    <h3 className="mb-1 px-4 py-1 text-xs font-medium text-muted-foreground">
+                      {group.title}
+                    </h3>
+                    <ul className="space-y-1">
+                      {group.items.map((item) => (
+                        <li key={item.href}>
+                          <NavLink
+                            item={item}
+                            isActive={currentPath === item.href}
+                            onClick={closeMobileNav}
+                            className="px-4 py-1.5"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    </section>
+  );
+};
+
 function MobileNav() {
   const pathname = usePathname();
   const currentPath = pathname || '';
@@ -72,20 +280,14 @@ function MobileNav() {
   const canViewAnalytics = isAdmin || isVendor;
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
   const { buylistUIState } = useBuyListStore();
-  const displaySearchBar =
-    currentPath === '/' ||
-    currentPath === '/buylists' ||
-    currentPath === '/sealed';
   const { openCart: cartSheetOpen, setOpenCart: setCartSheetOpen } =
     useBuyListStore();
   const cartTriggerRef = useRef<HTMLButtonElement>(null);
 
-  // Create accordion states with explicit initial values (never undefined)
-  // Use empty string as default value to ensure we're always in controlled mode
+  // Initialize accordion states based on current path
   const [accountSection, setAccountSection] = useState<string>(
     pathname?.startsWith('/account') ? 'account' : ''
   );
-
   const [analyticsSection, setAnalyticsSection] = useState<string>(
     pathname?.startsWith('/vendors') ? 'analytics' : ''
   );
@@ -93,377 +295,276 @@ function MobileNav() {
   // Get cart data
   const { getCurrentCart } = useUserCarts();
   const currentCart = getCurrentCart();
-  const hasItems =
-    currentCart?.cart?.items && currentCart.cart.items.length > 0;
-  const cartItemCount = hasItems ? currentCart.cart.items.length : 0;
+  const cartItemCount = currentCart?.cart?.items?.length || 0;
+  const hasCartItems = cartItemCount > 0;
+  const isCartVisible =
+    currentPath === '/buylists' && buylistUIState !== 'finalSubmissionState';
+  const isCartEnabled = Boolean(currentCart?.cart?.name);
 
   // Handle cart button click
-  const handleCartClick = () => {
-    // Toggle cart sheet
-    setCartSheetOpen(!cartSheetOpen);
+  const handleCartClick = () => setCartSheetOpen(!cartSheetOpen);
+
+  // Close mobile navigation
+  const closeMobileNav = () => setMobileNavSheetOpen(false);
+
+  // Sign out handler
+  const handleSignOut = () => {
+    logout();
+    closeMobileNav();
   };
 
-  // Main navigation items
-  const mainNavItems: NavItem[] = [
-    { label: 'Home', href: '/', icon: Home },
-    { label: 'Multi Search', href: '/multisearch', icon: Search },
-    { label: 'Sealed Search', href: '/sealed', icon: Package },
-    { label: 'Buylists', href: '/buylists', icon: ShoppingBag },
-    { label: 'About', href: '/about', icon: Info },
-    {
-      label: 'Discord',
-      href: 'https://discord.gg/EnKKHxSq75',
-      icon: MessageSquare
-    }
-  ];
+  // Navigation data - memoized to prevent recreation on each render
+  const mainNavItems = useMemo<NavItem[]>(
+    () => [
+      { label: 'Home', href: '/', icon: Home },
+      { label: 'Multi Search', href: '/multisearch', icon: Search },
+      { label: 'Sealed Search', href: '/sealed', icon: Package },
+      { label: 'Buylists', href: '/buylists', icon: ShoppingBag },
+      { label: 'About', href: '/about', icon: Info },
+      {
+        label: 'Discord',
+        href: 'https://discord.gg/EnKKHxSq75',
+        icon: MessageSquare
+      }
+    ],
+    []
+  );
 
-  // Account navigation items (only shown when authenticated)
-  const accountNavItems: NavItem[] = [
-    { label: 'General', href: '/account', icon: Settings },
-    { label: 'Appearance', href: '/account/appearance', icon: Palette },
-    { label: 'Integrations', href: '/account/integrations', icon: Plug2 },
-    { label: 'Subscription', href: '/account/subscription', icon: CreditCard }
-  ];
+  const accountNavItems = useMemo<NavItem[]>(
+    () => [
+      { label: 'General', href: '/account', icon: Settings },
+      { label: 'Appearance', href: '/account/appearance', icon: Palette },
+      { label: 'Integrations', href: '/account/integrations', icon: Plug2 },
+      { label: 'Subscription', href: '/account/subscription', icon: CreditCard }
+    ],
+    []
+  );
 
-  // Analytics navigation items (only shown for vendors and admins)
-  const analyticsNavItems: NavGroup[] = [
-    {
-      title: 'Dashboard',
-      items: [
-        {
-          label: 'Overview',
-          href: '/vendors/dashboard',
-          icon: LayoutDashboard
-        },
-        { label: 'Users', href: '/vendors/dashboard/users', icon: Users },
-        { label: 'TCGs', href: '/vendors/dashboard/tcgs', icon: Tag },
-        { label: 'Vendors', href: '/vendors/dashboard/vendors', icon: Store },
-        {
-          label: 'Buylists',
-          href: '/vendors/dashboard/buylists',
-          icon: ShoppingBag
-        }
-      ]
-    },
-    {
-      title: 'Settings',
-      items: [
-        {
-          label: 'Advertisements',
-          href: '/vendors/dashboard/settings/advertisements',
-          icon: Tags
-        },
-        {
-          label: 'Discounts',
-          href: '/vendors/dashboard/settings/discounts',
-          icon: Tag
-        },
-        // Only show Approvals menu item for admins
-        ...(isAdmin
-          ? [
-              {
-                label: 'Approvals',
-                href: '/vendors/dashboard/settings/approvals',
-                icon: Shield
-              }
-            ]
-          : [])
-      ]
-    }
-  ];
+  const analyticsNavItems = useMemo<NavGroup[]>(
+    () => [
+      {
+        title: 'Dashboard',
+        items: [
+          {
+            label: 'Overview',
+            href: '/vendors/dashboard',
+            icon: LayoutDashboard
+          },
+          { label: 'Users', href: '/vendors/dashboard/users', icon: Users },
+          { label: 'TCGs', href: '/vendors/dashboard/tcgs', icon: Tag },
+          { label: 'Vendors', href: '/vendors/dashboard/vendors', icon: Store },
+          {
+            label: 'Buylists',
+            href: '/vendors/dashboard/buylists',
+            icon: ShoppingBag
+          }
+        ]
+      },
+      {
+        title: 'Settings',
+        items: [
+          {
+            label: 'Advertisements',
+            href: '/vendors/dashboard/settings/advertisements',
+            icon: Tags
+          },
+          {
+            label: 'Discounts',
+            href: '/vendors/dashboard/settings/discounts',
+            icon: Tag
+          },
+          ...(isAdmin
+            ? [
+                {
+                  label: 'Approvals',
+                  href: '/vendors/dashboard/settings/approvals',
+                  icon: Shield
+                }
+              ]
+            : [])
+        ]
+      }
+    ],
+    [isAdmin]
+  );
 
   return (
-    <div className="sticky top-0 z-50 lg:hidden">
-      {/* Top Bar: Logo, Hamburger and Cart */}
-      <div className="flex justify-between border-b border-border/40 bg-background/95 px-3 py-2.5 shadow-sm backdrop-blur-sm">
-        {/* Left: Hamburger Menu */}
-        <div className="flex items-center">
-          <Sheet
-            open={mobileNavSheetOpen}
-            onOpenChange={(open) => {
-              // When the sheet closes, don't reset accordion states
-              // When it opens, keep the current state
-              setMobileNavSheetOpen(open);
-            }}
-          >
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="mr-1 rounded-full hover:bg-accent"
-              >
-                <AlignJustify className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side={'left'}
-              className="flex h-full w-[300px] flex-col gap-0 p-0"
+    <header className="sticky top-0 z-50 border-b lg:hidden">
+      <nav
+        className="flex justify-between bg-background/95 px-3 py-2.5 backdrop-blur-sm"
+        aria-label="Mobile navigation"
+      >
+        {/* Hamburger Menu Button */}
+        <Sheet open={mobileNavSheetOpen} onOpenChange={setMobileNavSheetOpen}>
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mr-1 rounded-full hover:bg-accent"
+              aria-label="Open menu"
             >
-              <SheetTitle hidden>Navigation Menu</SheetTitle>
-              <SheetDescription hidden>
-                Browse the Snapcaster pages
-              </SheetDescription>
-              <SheetHeader className="border-b p-4">
-                <Link href="/" onClick={() => setMobileNavSheetOpen(false)}>
-                  <div className="flex cursor-pointer items-center space-x-3">
-                    <img
-                      className="h-7 w-auto"
-                      src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
-                      alt="Snapcaster"
-                    />
-                    <p className="font-genos text-2xl font-bold leading-none tracking-tighter">
-                      Snapcaster
-                    </p>
-                  </div>
-                </Link>
-              </SheetHeader>
+              <AlignJustify className="h-5 w-5" aria-hidden="true" />
+            </Button>
+          </SheetTrigger>
 
-              {/* Scrollable Content */}
-              <div className="flex-1 overflow-y-auto">
-                {/* Main Navigation */}
-                <div className="px-4 pt-4">
-                  <nav className="space-y-1">
-                    {mainNavItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={cn(
-                          'flex items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                          currentPath === item.href
-                            ? 'border-l-2 border-primary bg-accent/60 pl-[10px] text-accent-foreground'
-                            : 'text-muted-foreground hover:bg-accent/40 hover:text-accent-foreground'
-                        )}
-                        onClick={() => setMobileNavSheetOpen(false)}
-                        target={
-                          item.href.startsWith('http') ? '_blank' : undefined
-                        }
-                        rel={
-                          item.href.startsWith('http')
-                            ? 'noopener noreferrer'
-                            : undefined
-                        }
-                      >
-                        <div className="flex items-center">
-                          <item.icon className="mr-3 h-4 w-4" />
-                          {item.label}
-                        </div>
-                        {item.href.startsWith('http') && (
-                          <ChevronRight className="h-4 w-4 opacity-60" />
-                        )}
-                      </Link>
-                    ))}
-                  </nav>
+          <SheetContent
+            side="left"
+            className="flex h-full w-[300px] flex-col gap-0 p-0"
+            aria-label="Site navigation"
+          >
+            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            <SheetDescription className="sr-only">
+              Browse the Snapcaster pages
+            </SheetDescription>
+
+            <SheetHeader className="border-b p-4">
+              <Link
+                href="/"
+                onClick={closeMobileNav}
+                className="flex items-center space-x-3"
+              >
+                <img
+                  className="h-7 w-auto"
+                  src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
+                  alt="Snapcaster"
+                  width="28"
+                  height="28"
+                />
+                <span className="font-genos text-2xl font-bold leading-none tracking-tighter">
+                  Snapcaster
+                </span>
+              </Link>
+            </SheetHeader>
+
+            {/* Main Navigation Menu */}
+            <div className="flex-1 overflow-y-auto">
+              <section className="px-4 pt-4" aria-label="Main navigation">
+                <ul className="space-y-1">
+                  {mainNavItems.map((item) => (
+                    <li key={item.href}>
+                      <NavLink
+                        item={item}
+                        isActive={currentPath === item.href}
+                        onClick={closeMobileNav}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+
+              {/* Account Section */}
+              {isAuthenticated && (
+                <NavAccordionSection
+                  title="Account"
+                  icon={User}
+                  items={accountNavItems}
+                  currentPath={currentPath}
+                  sectionValue={accountSection}
+                  onSectionValueChange={setAccountSection}
+                  closeMobileNav={closeMobileNav}
+                />
+              )}
+
+              {/* Analytics Section */}
+              {canViewAnalytics && (
+                <AnalyticsAccordionSection
+                  groups={analyticsNavItems}
+                  currentPath={currentPath}
+                  sectionValue={analyticsSection}
+                  onSectionValueChange={setAnalyticsSection}
+                  closeMobileNav={closeMobileNav}
+                />
+              )}
+            </div>
+
+            {/* Footer: Theme Toggle + Auth Button */}
+            <footer className="mt-auto border-t p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex-shrink-0">
+                  <ModeToggle />
                 </div>
 
-                {/* Account Section - Only show when authenticated */}
-                {isAuthenticated && (
-                  <>
-                    <Separator className="my-1" />
-                    <div className="px-4">
-                      <Accordion
-                        key="account-accordion"
-                        type="single"
-                        collapsible
-                        value={accountSection || ''}
-                        onValueChange={(value) =>
-                          setAccountSection(value || '')
-                        }
-                        className="border-none"
-                      >
-                        <AccordionItem value="account" className="border-none">
-                          <AccordionTrigger className="rounded-md px-3 py-2 text-sm font-medium hover:bg-accent/40 hover:no-underline data-[state=open]:bg-accent/60">
-                            <div className="flex items-center text-sm font-medium">
-                              <User className="mr-3 h-4 w-4" />
-                              Account
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent className="pb-0 pt-1">
-                            <div className="space-y-1 pl-2">
-                              {accountNavItems.map((item) => (
-                                <Link
-                                  key={item.href}
-                                  href={item.href}
-                                  className={cn(
-                                    'flex items-center rounded-md px-4 py-1.5 text-sm transition-colors',
-                                    currentPath === item.href
-                                      ? 'border-l-2 border-primary bg-accent/40 pl-[14px] font-medium text-accent-foreground'
-                                      : 'text-muted-foreground hover:bg-accent/30 hover:text-accent-foreground'
-                                  )}
-                                  onClick={() => setMobileNavSheetOpen(false)}
-                                >
-                                  <item.icon className="mr-3 h-4 w-4" />
-                                  {item.label}
-                                </Link>
-                              ))}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    </div>
-                  </>
-                )}
-
-                {/* Analytics Section - Only show for vendors and admins */}
-                {canViewAnalytics && (
-                  <>
-                    <Separator className="my-1" />
-                    <div className="px-4">
-                      <Accordion
-                        key="analytics-accordion"
-                        type="single"
-                        collapsible
-                        value={analyticsSection || ''}
-                        onValueChange={(value) =>
-                          setAnalyticsSection(value || '')
-                        }
-                        className="border-none"
-                      >
-                        <AccordionItem
-                          value="analytics"
-                          className="border-none"
-                        >
-                          <AccordionTrigger className="rounded-md px-3 py-2 text-sm font-medium hover:bg-accent/40 hover:no-underline data-[state=open]:bg-accent/60">
-                            <div className="flex items-center text-sm font-medium">
-                              <BarChart4 className="mr-3 h-4 w-4" />
-                              Analytics
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent className="pb-0 pt-1">
-                            <div className="space-y-1 pl-2">
-                              {analyticsNavItems.map((group, index) => (
-                                <div key={group.title} className="mb-3">
-                                  <div className="mb-1 px-4 py-1 text-xs font-medium text-muted-foreground">
-                                    {group.title}
-                                  </div>
-                                  <div className="space-y-1">
-                                    {group.items.map((item) => (
-                                      <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        className={cn(
-                                          'flex items-center rounded-md px-4 py-1.5 text-sm transition-colors',
-                                          currentPath === item.href
-                                            ? 'border-l-2 border-primary bg-accent/40 pl-[14px] font-medium text-accent-foreground'
-                                            : 'text-muted-foreground hover:bg-accent/30 hover:text-accent-foreground'
-                                        )}
-                                        onClick={() =>
-                                          setMobileNavSheetOpen(false)
-                                        }
-                                      >
-                                        <item.icon className="mr-3 h-4 w-4" />
-                                        {item.label}
-                                      </Link>
-                                    ))}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Bottom Section: Theme + Sign In/Out */}
-              <div className="mt-auto border-t p-4">
-                <div className="flex items-center justify-between">
-                  <div className="max-w-24">
-                    <ModeToggle />
-                  </div>
-                  {isAuthenticated ? (
+                {isAuthenticated ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
+                    <span>Sign Out</span>
+                  </Button>
+                ) : (
+                  <Link href="/signin">
                     <Button
                       variant="outline"
                       size="sm"
                       className="flex items-center"
-                      onClick={() => {
-                        logout();
-                        setMobileNavSheetOpen(false);
-                      }}
+                      onClick={closeMobileNav}
                     >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sign Out
+                      <User className="mr-2 h-4 w-4" aria-hidden="true" />
+                      <span>Sign In</span>
                     </Button>
-                  ) : (
-                    <Link href="/signin">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex items-center"
-                        onClick={() => setMobileNavSheetOpen(false)}
-                      >
-                        <User className="mr-2 h-4 w-4" />
-                        Sign In
-                      </Button>
-                    </Link>
-                  )}
-                </div>
+                  </Link>
+                )}
               </div>
-            </SheetContent>
-          </Sheet>
-        </div>
+            </footer>
+          </SheetContent>
+        </Sheet>
 
-        {/* Middle: Logo */}
-        <div className="absolute left-1/2 top-1/2 flex flex-1 -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-          <Link href="/" passHref>
-            <div className="flex cursor-pointer items-center space-x-2">
-              <img
-                className="h-5 w-auto"
-                src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
-                alt="Snapcaster"
-              />
-              <p className="font-genos text-xl font-bold leading-none tracking-tighter">
-                Snapcaster
-              </p>
-            </div>
+        {/* Logo */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Link
+            href="/"
+            className="flex items-center space-x-2"
+            aria-label="Snapcaster home"
+          >
+            <img
+              className="h-5 w-auto"
+              src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
+              alt=""
+              aria-hidden="true"
+              width="20"
+              height="20"
+            />
+            <span className="font-genos text-xl font-bold leading-none tracking-tighter">
+              Snapcaster
+            </span>
           </Link>
         </div>
 
-        {/* Right: Cart Icon (for buylists) */}
-        <div className="flex items-center">
-          {currentPath === '/buylists' &&
-            buylistUIState !== 'finalSubmissionState' && (
-              <div className="relative">
-                {cartItemCount > 0 && (
-                  <Badge
-                    className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center p-0 text-[10px]"
-                    variant="destructive"
-                  >
-                    {cartItemCount}
-                  </Badge>
-                )}
-                <Button
-                  ref={cartTriggerRef}
-                  size="icon"
-                  variant="ghost"
-                  className="h-9 w-9 rounded-full hover:bg-accent"
-                  onClick={handleCartClick}
-                  disabled={!currentCart?.cart?.name}
+        {/* Cart Button */}
+        {isCartVisible && (
+          <div>
+            <Button
+              ref={cartTriggerRef}
+              size="icon"
+              variant="ghost"
+              className="h-9 w-9 rounded-full hover:bg-accent"
+              onClick={handleCartClick}
+              disabled={!isCartEnabled}
+              aria-label={`Shopping cart with ${cartItemCount} items`}
+            >
+              <ShoppingCart className="size-[18px]" aria-hidden="true" />
+              {hasCartItems && (
+                <Badge
+                  className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center p-0 text-[10px]"
+                  variant="destructive"
                 >
-                  <ShoppingCart className="size-[18px]" />
-                </Button>
-              </div>
-            )}
-        </div>
-      </div>
+                  {cartItemCount}
+                </Badge>
+              )}
+            </Button>
+          </div>
+        )}
+      </nav>
 
-      {/* Search Bar: Always visible below main nav */}
-      {displaySearchBar && (
-        <div className="border-b border-border/40 bg-background/80 p-2.5">
-          {currentPath === '/' &&
-            NavSearchBarFactory('singles', { deviceType: 'mobile' })}
-          {currentPath === '/buylists' &&
-            NavSearchBarFactory('buylists', { deviceType: 'mobile' })}
-          {currentPath === '/sealed' &&
-            NavSearchBarFactory('sealed', { deviceType: 'mobile' })}
-        </div>
-      )}
+      {/* Search Bar */}
+      <SearchBarSection currentPath={currentPath} />
 
-      {/* Results Toolbar: Filter and pagination */}
-      {currentPath === '/' && ResultsToolbarFactory('singles')}
-      {currentPath === '/buylists' && ResultsToolbarFactory('buylists')}
-    </div>
+      {/* Results Toolbar */}
+      <ResultsToolbarSection currentPath={currentPath} />
+    </header>
   );
 }
 
