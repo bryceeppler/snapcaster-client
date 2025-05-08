@@ -1,18 +1,18 @@
-import React from "react";
-import { Product } from "@/types";
-import { Separator } from "@/components/ui/separator";
-import { CardOptions } from "./card-options";
+import React from 'react';
+import { Product } from '@/types';
+import { Separator } from '@/components/ui/separator';
+import { CardOptions } from './card-options';
 
 export const CardInfo = ({
   resultInfo,
-  results,
+  results
 }: {
   resultInfo: { name: string; normalized_name: string };
   results: Product[];
 }) => {
   return (
-    <div className="w-full flex flex-col border border-border rounded-lg bg-popover">
-      <div className="flex flex-col text-left p-4">
+    <div className="flex w-full flex-col rounded-lg border border-border bg-popover">
+      <div className="flex flex-col p-4 text-left">
         <div className="text-lg font-bold">{resultInfo.name}</div>
         <div className="text-sm text-muted-foreground">
           {results?.length || 0} results
@@ -20,7 +20,7 @@ export const CardInfo = ({
       </div>
       <Separator />
 
-      <CardOptions results={results} name={resultInfo.name} />
+      <CardOptions results={results} />
     </div>
   );
 };
