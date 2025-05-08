@@ -14,9 +14,7 @@ import {
   CardContent
 } from '@/components/ui/card';
 
-type Props = {};
-
-const ResetPassword: NextPage<Props> = () => {
+const ResetPassword: NextPage = () => {
   const { resetPassword } = useAuth();
   const router = useRouter();
   const { token } = router.query;

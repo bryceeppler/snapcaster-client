@@ -17,9 +17,8 @@ import { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-type Props = {};
 
-const ForgotPassword: NextPage<Props> = () => {
+const ForgotPassword: NextPage = () => {
   const { forgotPassword } = useAuth();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();

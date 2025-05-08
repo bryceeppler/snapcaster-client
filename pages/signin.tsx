@@ -5,11 +5,9 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import SignInForm from '@/components/forms/SigninForm';
 import { useToast } from '@/hooks/use-toast';
-type Props = {};
-const Signin: NextPage<Props> = () => {
+const Signin: NextPage = () => {
   const { isAuthenticated, isInitializing } = useAuth();
   const router = useRouter();
-  const { redirect } = router.query;
   const { toast } = useToast();
   if (router.query.password_reset) {
     toast({
@@ -31,11 +29,7 @@ const Signin: NextPage<Props> = () => {
     <>
       <SigninHead />
       <section className="flex w-full justify-center py-6 md:py-12">
-        <SignInForm
-          redirectUrl={
-            redirect ? decodeURIComponent(redirect as string) : undefined
-          }
-        />
+        <SignInForm />
       </section>
     </>
   );

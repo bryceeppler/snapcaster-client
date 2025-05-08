@@ -11,8 +11,8 @@ import {
   CardFooter
 } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
-type Props = {};
-const Signup: NextPage<Props> = () => {
+
+const Signup: NextPage = () => {
   const { isAuthenticated, isInitializing } = useAuth();
   const router = useRouter();
 

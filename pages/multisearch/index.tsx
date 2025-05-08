@@ -25,9 +25,7 @@ import { trackSearch } from '@/utils/analytics';
 import { Vendor } from '@/services/vendorService';
 import { useVendors } from '@/hooks/queries/useVendors';
 
-type Props = {};
-
-export default function Multisearch({}: Props) {
+export default function Multisearch() {
   const {
     mode,
     selectedWebsites,

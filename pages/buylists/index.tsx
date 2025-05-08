@@ -3,8 +3,8 @@ import Head from 'next/head';
 import { NextPage } from 'next';
 import BuylistCatalog from '@/components/buylists/buylist-catalog-container';
 import BuylistLayout from '@/components/buylists/buylist-layout';
-type Props = {};
-const Buylist: NextPage<Props> = () => {
+
+const Buylist: NextPage = () => {
   return (
     <>
       <BuylistHead />

@@ -15,9 +15,7 @@ import {
 import { Card } from '@/components/ui/card';
 import { SolutionsGrid } from '@/components/welcome/solutions-grid';
 
-type Props = {};
-
-const Welcome = (props: Props) => {
+const Welcome = () => {
   const [accountCreated, setAccountCreated] = useState(false);
   return (
     <>

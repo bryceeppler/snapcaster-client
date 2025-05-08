@@ -1,11 +1,10 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-type Props = {};
 
-const About: NextPage<Props> = () => {
+const Privacy: NextPage = () => {
   return (
     <>
-      <AboutHead />
+      <PrivacyHead />
       <div className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
         <section className="w-full py-6 md:py-12">
           <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
@@ -23,7 +22,7 @@ const About: NextPage<Props> = () => {
               information in accordance with this Privacy Policy. This Privacy
               Policy has been created with the help of the{' '}
               <a
-                className="text-primary hover:text-primary-muted"
+                className="hover:text-primary-muted text-primary"
                 href="https://www.freeprivacypolicy.com/free-privacy-policy-generator/"
                 target="_blank"
               >
@@ -126,7 +125,7 @@ const About: NextPage<Props> = () => {
                 <p>
                   <strong>Website</strong> refers to Snapcaster, accessible from{' '}
                   <a
-                    className="text-primary hover:text-primary-muted"
+                    className="hover:text-primary-muted text-primary"
                     href="https://www.snapcaster.ca"
                     rel="external nofollow noopener"
                     target="_blank"
@@ -254,7 +253,7 @@ const About: NextPage<Props> = () => {
               deleted as soon as You close Your web browser. Learn more about
               cookies on the{' '}
               <a
-                className="text-primary hover:text-primary-muted"
+                className="hover:text-primary-muted text-primary"
                 href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking"
                 target="_blank"
               >
@@ -596,9 +595,9 @@ const About: NextPage<Props> = () => {
   );
 };
 
-export default About;
+export default Privacy;
 
-const AboutHead = () => {
+const PrivacyHead = () => {
   return (
     <Head>
       <title>Privacy</title>

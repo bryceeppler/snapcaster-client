@@ -4,9 +4,7 @@ import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import SealedCatalogContainer from '@/components/sealed/sealed-catalog-container';
 
-type Props = {};
-
-const SealedSearch: NextPage<Props> = () => {
+const SealedSearch: NextPage = () => {
   const {
     productCategory,
     searchTerm,
