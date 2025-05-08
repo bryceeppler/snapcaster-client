@@ -19,11 +19,8 @@ import {
 import { SearchChart } from '@/components/vendors/tcgs/search-chart';
 import { BuyClicksChart } from '@/components/vendors/tcgs/buy-clicks-chart';
 import DashboardLayout from './layout';
-import { useAuth } from '@/hooks/useAuth';
 import {
   type AnalyticsError,
-  useUniqueUsersByDate,
-  useEngagementTime,
   useSearchQueriesWithParams,
   useBuyClicksWithParams
 } from '@/lib/hooks/useAnalytics';
@@ -108,18 +105,11 @@ function AnalyticsMetrics({
 }: {
   dateRange: { from: Date; to: Date };
 }) {
-  const uniqueUsers = useUniqueUsersByDate(dateRange.from, dateRange.to);
   const searchQueries = useSearchQueriesWithParams(
     dateRange.from,
     dateRange.to
   );
-  const engagementTime = useEngagementTime(dateRange.from, dateRange.to);
   const buyClicks = useBuyClicksWithParams(dateRange.from, dateRange.to);
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    return `${minutes}m ${Math.round(seconds % 60)}s`;
-  };
 
   const metrics = [
     {
@@ -171,8 +161,6 @@ export default function TCGAnalyticsPage() {
     from: subDays(new Date(), 30),
     to: new Date()
   });
-
-  const { isAdmin } = useAuth();
 
   const handleDateRangeChange: PropsRange['onSelect'] = (range) => {
     if (!range) {

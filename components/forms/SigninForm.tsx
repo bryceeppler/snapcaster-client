@@ -159,7 +159,7 @@ export default function SignInForm() {
         onSuccess: () => {
           setEmailCodeSent(true);
         },
-        onError: (error: ApiError) => {
+        onError: () => {
           setError('Error sending verification code. Please try again.');
         }
       });

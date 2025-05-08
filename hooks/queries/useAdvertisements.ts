@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AdvertisementWithImages } from '@/types/advertisements';
 import {
   advertisementService,
-  CreateAdvertisementRequest,
   UpdateAdvertisementRequest
 } from '@/services/advertisementService';
 import { toast } from 'sonner';
@@ -20,7 +19,7 @@ const fetchAdvertisements = async (): Promise<AdvertisementWithImages[]> => {
   }
 };
 
-export const useAdvertisements = (vendorId?: number | null) => {
+export const useAdvertisements = () => {
   const queryClient = useQueryClient();
   const cachedAdsRef = useRef<{ [key: string]: any }>({});
 
@@ -165,23 +164,6 @@ export const useAdvertisements = (vendorId?: number | null) => {
     };
   }, [cachedData, query.dataUpdatedAt]);
 
-  // Mutation for creating a new advertisement
-  const createAdvertisement = useMutation({
-    mutationFn: (data: CreateAdvertisementRequest) =>
-      advertisementService.createAdvertisement(data),
-    onSuccess: () => {
-      toast.success('Advertisement created successfully');
-      // Invalidate the appropriate query based on vendorId
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
-      // Clear the cache
-      cachedAdsRef.current = {};
-    },
-    onError: (error) => {
-      console.error('Error creating advertisement:', error);
-      toast.error('Failed to create advertisement. Please try again.');
-    }
-  });
-
   // Mutation for updating an advertisement
   const updateAdvertisement = useMutation({
     mutationFn: ({
@@ -240,7 +222,6 @@ export const useAdvertisements = (vendorId?: number | null) => {
   // Function to fetch a specific advertisement by vendor and ad ID if it's not in the cache
   // This is a fallback method that should be used only when necessary
   const fetchAdvertisementById = async (
-    vendorId: number,
     adId: number
   ): Promise<AdvertisementWithImages | null> => {
     // First, check if we have this advertisement in the cache
@@ -289,7 +270,6 @@ export const useAdvertisements = (vendorId?: number | null) => {
     fetchAdvertisementById,
 
     // Mutations
-    createAdvertisement,
     updateAdvertisement,
     deleteAdvertisement,
     deleteAdvertisementImage

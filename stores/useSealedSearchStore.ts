@@ -56,7 +56,6 @@ export const useSealedSearchStore = create<SearchState>()(
 
         toggleFilter: (field: string, value: string) => {
           const currentSelections = get().selectedFilters;
-          const selectionKey = `${field}:${value}`;
 
           const exists = currentSelections.some(
             (f) => f.field === field && f.value === value

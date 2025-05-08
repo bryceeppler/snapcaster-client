@@ -15,7 +15,6 @@ const Cart = () => {
   const { getCurrentCart } = useUserCarts();
   const currentCart = getCurrentCart();
   const {
-    buylistUIState,
     setBuylistUIState,
     openCart: sheetOpen,
     setOpenCart: setSheetOpen

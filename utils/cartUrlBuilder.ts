@@ -13,7 +13,7 @@ export function groupProductsByHost(
       }
 
       acc[host].push(product);
-    } catch (error) {
+    } catch {
       console.error(`Invalid URL in product: ${product.link}`);
     }
 

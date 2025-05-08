@@ -61,7 +61,7 @@ export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
                   if (buylistUIState === 'viewAllOffersState') {
                     await setAllCartsData(currentCartId);
                   }
-                } catch (error) {
+                } catch {
                   toast.error('Failed to update item');
                 }
               }

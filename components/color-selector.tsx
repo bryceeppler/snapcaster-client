@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { useTheme } from 'next-themes';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
@@ -19,7 +18,6 @@ const colorOptions = [
 ];
 
 export default function ColorSelector() {
-  const { theme } = useTheme();
   const [primaryColor, setPrimaryColor] = useState<string>('');
   const [mounted, setMounted] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);

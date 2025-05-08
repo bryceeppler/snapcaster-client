@@ -47,8 +47,6 @@ export const MobileNavLink = ({
   href,
   isActive,
   children,
-  target,
-  rel,
   onClick,
   className
 }: NavLinkProps) => {

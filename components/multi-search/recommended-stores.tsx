@@ -18,7 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import React, { useState } from 'react';
+import React from 'react';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import { Product } from '@/types';
 import { Card, CardTitle, CardHeader } from '@/components/ui/card';
@@ -33,7 +33,7 @@ import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
 import { useVendors } from '@/hooks/queries/useVendors';
 
 export const RecommendedStores = () => {
-  const { results, addToCart, isInCart, notFound } = useMultiSearchStore();
+  const { results } = useMultiSearchStore();
   const { getVendorNameBySlug, vendors } = useVendors();
   const { theme } = useTheme();
 
@@ -42,7 +42,6 @@ export const RecommendedStores = () => {
     results.filter((group) => group && group[0]).map((group) => group[0].name)
   );
 
-  const totalRequested = allCardNames.size;
   const reccomendedWebsites = [
     'obsidian',
     'levelup',
@@ -52,7 +51,6 @@ export const RecommendedStores = () => {
     'houseofcards',
     'vortexgames'
   ];
-  const [selectedTopStore, setSelectedTopStore] = useState('');
 
   const getTopWebsites = (results: Product[][]) => {
     const websiteProducts: { [vendor: string]: Map<string, Product> } = {};

@@ -39,11 +39,7 @@ export function useAuth() {
   };
 
   // Initial auth check using React Query
-  const {
-    isLoading: isInitializing,
-    isSuccess: isInitialized,
-    error: initError
-  } = useQuery({
+  const { isLoading: isInitializing, isSuccess: isInitialized } = useQuery({
     queryKey: ['auth-init'],
     queryFn: async () => {
       if (!accessToken) {
@@ -292,7 +288,7 @@ export function useAuth() {
   // 2FA setup mutation for authenticator app
   const setupApp2FAMutation = useMutation({
     mutationFn: () => authService.setupApp2FA(),
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Data contains secret, qrCode, and backupCodes
       queryClient.invalidateQueries({ queryKey: ['user-profile'] });
     },

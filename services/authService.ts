@@ -22,13 +22,6 @@ interface RegisterResponse {
   };
 }
 
-interface AuthResponse {
-  status: string;
-  data: {
-    accessToken: string;
-  };
-}
-
 interface UserProfileResponse {
   status: string;
   data: UserProfile;

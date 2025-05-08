@@ -1,11 +1,6 @@
 import type React from 'react';
-import {
-  Lock
-} from 'lucide-react';
+import { Lock } from 'lucide-react';
 
-
-
-import { useRouter } from 'next/router';
 import { useAuth } from '@/hooks/useAuth';
 import { VendorSidebar } from '@/components/vendors/sidebar';
 export default function DashboardLayout({
@@ -14,7 +9,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { isAdmin, isVendor } = useAuth();
-  const router = useRouter();
 
   if (!isAdmin && !isVendor) {
     return (

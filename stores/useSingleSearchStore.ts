@@ -109,7 +109,7 @@ export const useSingleSearchStore = create<SearchState>()(
             });
 
             if (filters) {
-              Object.entries(filters).forEach(([index, filter]) => {
+              Object.entries(filters).forEach(([_, filter]) => {
                 filter.values.forEach((value) => {
                   if (value.selected) {
                     queryParams.append(
@@ -193,7 +193,7 @@ export const useSingleSearchStore = create<SearchState>()(
             });
 
             if (filters) {
-              Object.entries(filters).forEach(([index, filter]) => {
+              Object.entries(filters).forEach(([_, filter]) => {
                 filter.values.forEach((value) => {
                   if (value.selected) {
                     queryParams.append(

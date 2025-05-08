@@ -37,7 +37,6 @@ type FilterSectionProps = {
 const FilterSection: React.FC<FilterSectionProps> = memo(
   ({
     filterOptions,
-    defaultSortBy,
     sortBy,
     fetchCards,
     clearFilters,
@@ -45,7 +44,6 @@ const FilterSection: React.FC<FilterSectionProps> = memo(
     setCurrentPage,
     applyFilters,
     setSortBy,
-    handleSortByChange,
     sortByOptions,
     hidePromo = false
   }) => {
@@ -195,7 +193,7 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
               type="checkbox"
               id={option.value}
               checked={localSelections[option.value] ?? option.selected}
-              onChange={(e) => handleOptionChange(filterOption, option)}
+              onChange={() => handleOptionChange(filterOption, option)}
               className="mr-2 mt-1"
             />
             <label htmlFor={option.value} className="text-sm leading-5">

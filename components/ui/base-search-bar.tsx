@@ -40,7 +40,6 @@ interface BaseSearchBarProps {
  * for all search bar implementations in the application.
  */
 export default function BaseSearchBar({
-  deviceType,
   tcg,
   searchTerm,
   placeholder = 'Search for a card',

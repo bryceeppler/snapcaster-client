@@ -48,7 +48,7 @@ const DropdownMenuTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger> &
     VariantProps<typeof dropdownMenuVariants>
->(({ className, variant, children, ...props }, ref) => {
+>(({ className, variant, children, ...props }, _ref) => {
   const setIsOpen = React.useContext(DropdownMenuContext);
   return (
     <DropdownMenuPrimitive.Trigger

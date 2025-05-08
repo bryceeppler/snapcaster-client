@@ -152,7 +152,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
                     setBuylistUIState('searchResultsState');
                     setCurrentCartId(cart.id);
                     setCurrentCart(cart);
-                  } catch (error) {
+                  } catch {
                     setNewCartName('');
                     setActiveDialogId(null);
                   }

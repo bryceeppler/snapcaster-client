@@ -32,7 +32,6 @@ export default function EditAdvertisementPage() {
     getAdvertisementById,
     fetchAdvertisementById,
     updateAdvertisement,
-    deleteAdvertisement,
     deleteAdvertisementImage
   } = useAdvertisements();
 
@@ -41,15 +40,6 @@ export default function EditAdvertisementPage() {
   const [isSaving, setIsSaving] = useState(false);
 
   const vendor = getVendorById(profile?.data?.user.vendorData?.vendorId || 0);
-
-  // Track combined loading state for better UX
-  const isMutating =
-    updateAdvertisement.isPending ||
-    deleteAdvertisement.isPending ||
-    deleteAdvertisementImage.isPending;
-
-  // Show loading state when initial data is loading or any mutation is in progress
-  const isPageLoading = isLoading || isQueryLoading || isMutating;
 
   // Show appropriate loading state based on mutation status
   const statusLabelText = updateAdvertisement.isPending
@@ -84,11 +74,7 @@ export default function EditAdvertisementPage() {
         } else {
           // If not in cache, fetch it (which will also update the cache)
           // For admin users, we can pass any vendorId since they have access to all ads
-          const vendorIdToUse = isAdmin ? 0 : vendor?.id || 0;
-          const ad = await fetchAdvertisementById(
-            vendorIdToUse,
-            advertisementId
-          );
+          const ad = await fetchAdvertisementById(advertisementId);
 
           if (!ad) {
             router.push('/vendors/dashboard/settings/advertisements');

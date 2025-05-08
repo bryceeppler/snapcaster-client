@@ -83,13 +83,8 @@ export const ListSelectionHeader = () => {
     </div>
   );
 };
-interface SearchResultsHeaderProps {
-  isMobile?: boolean;
-}
 
-export const SearchResultsHeader = ({
-  isMobile
-}: SearchResultsHeaderProps = {}) => {
+export const SearchResultsHeader = () => {
   const {
     filterOptions,
     setFilter,
@@ -98,15 +93,10 @@ export const SearchResultsHeader = ({
     setSortBy,
     sortByOptions,
     clearFilters,
-    searchResultCount,
-    buylistUIState,
-    setBuylistUIState
+    searchResultCount
   } = useBuyListStore();
-  const { getCurrentCart } = useUserCarts();
-  const { isAuthenticated } = useAuth();
   const { openListSelection, setOpenListSelection } = useBuyListStore();
   const [openFilterSheet, setOpenFilterSheet] = useState(false);
-  const currentCart = getCurrentCart();
 
   return (
     <div className="mx-auto flex w-full flex-col space-y-2">
@@ -180,7 +170,7 @@ export const SearchResultsHeader = ({
 };
 
 export const ViewAllOffersHeader = () => {
-  const { reviewData, setBuylistUIState } = useBuyListStore();
+  const { setBuylistUIState } = useBuyListStore();
   return (
     <div className="flex">
       <Button

@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { useState, useCallback, memo, useMemo } from 'react';
 import { format } from 'date-fns';
-import { z } from 'zod';
 import DashboardLayout from '../layout';
 import { Button } from '@/components/ui/button';
 import {
@@ -48,21 +47,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
-
-// Form schema for discount validation
-const discountFormSchema = z.object({
-  code: z.string().min(3, {
-    message: 'Discount code must be at least 3 characters.'
-  }),
-  percentage: z.coerce
-    .number()
-    .min(1, { message: 'Percentage must be at least 1%.' })
-    .max(100, { message: 'Percentage cannot exceed 100%.' }),
-  start_date: z.date(),
-  end_date: z.date().nullable().optional()
-});
-
-type DiscountFormValues = z.infer<typeof discountFormSchema>;
 
 // Reusable loading skeleton component
 const TableLoadingSkeleton = ({ isAdmin = false }: { isAdmin?: boolean }) => (
@@ -363,7 +347,6 @@ export default function DiscountsPage() {
 
   const {
     getDiscountsByVendorId,
-    createDiscount,
     updateDiscount,
     deleteDiscount,
     isLoading,
@@ -394,7 +377,7 @@ export default function DiscountsPage() {
     try {
       await deleteDiscount.mutateAsync(discountToDelete);
       toast.success('Discount deleted successfully');
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete discount');
     } finally {
       setDeleteDialogOpen(false);
@@ -429,7 +412,7 @@ export default function DiscountsPage() {
         toast.success(
           `Discount code ${newStatus ? 'activated' : 'deactivated'}`
         );
-      } catch (error) {
+      } catch {
         toast.error('Failed to update discount status');
       }
     },

@@ -23,7 +23,6 @@ import { CityAnalyticsTable } from '@/components/vendors/users/city-analytics-ta
 import { UserTypesChart } from '@/components/vendors/users/user-types-chart';
 import { TrafficSourcesChart } from '@/components/vendors/users/traffic-sources-chart';
 import DashboardLayout from './layout';
-import { useAuth } from '@/hooks/useAuth';
 import {
   type AnalyticsError,
   useUniqueUsersByDate,
@@ -170,8 +169,6 @@ export default function UserAnalyticsPage() {
     from: subDays(new Date(), 30),
     to: new Date()
   });
-
-  const { isAdmin } = useAuth();
 
   const handleDateRangeChange: PropsRange['onSelect'] = (range) => {
     if (!range) {

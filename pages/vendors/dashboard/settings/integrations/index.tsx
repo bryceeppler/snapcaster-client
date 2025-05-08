@@ -1,8 +1,6 @@
 import { Key } from 'lucide-react';
 import DashboardLayout from '../../layout';
 import { Button } from '@/components/ui/button';
-import { useVendors } from '@/hooks/queries/useVendors';
-import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/router';
 import {
   Card,
@@ -15,12 +13,6 @@ import {
 import { PageHeader } from '@/components/vendors/page-header';
 export default function IntegrationsPage() {
   const router = useRouter();
-  const { getVendorById, vendors } = useVendors();
-  const { profile } = useAuth();
-
-  const vendorId = profile?.data?.user.vendorData?.vendorId || 0;
-  const isAdmin = profile?.data?.user.role === 'ADMIN';
-  const vendor = getVendorById(vendorId);
 
   return (
     <DashboardLayout>

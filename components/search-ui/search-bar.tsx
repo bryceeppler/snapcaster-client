@@ -40,10 +40,9 @@ export default function SearchBar({
   fetchCards,
   clearFilters,
   isLoading,
-  setIsLoading,
-  setCurrentPage
+  setIsLoading
 }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, _setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);

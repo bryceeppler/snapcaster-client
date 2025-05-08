@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Trash2, PlusCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -12,20 +12,6 @@ import { toast } from 'sonner';
 
 const CardOption = ({ product }: { product: Product }) => {
   const { getVendorNameBySlug } = useVendors();
-  const useMediaQuery = (width: number): boolean => {
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-      const handleResize = () => setIsMobile(window.innerWidth <= width);
-      window.addEventListener('resize', handleResize);
-      handleResize(); // Call once to set the initial value
-
-      return () => window.removeEventListener('resize', handleResize);
-    }, [width]);
-
-    return isMobile;
-  };
-  const isMobile = useMediaQuery(768);
 
   const { addToCart, isInCart, removeFromCart } = useMultiSearchStore();
   return (
@@ -79,13 +65,7 @@ const CardOption = ({ product }: { product: Product }) => {
   );
 };
 
-export const CardOptions = ({
-  results,
-  name
-}: {
-  results: Product[];
-  name: string;
-}) => {
+export const CardOptions = ({ results }: { results: Product[] }) => {
   return (
     <ScrollArea className="h-[400px] w-full px-4 pb-4">
       <div className="mt-2 flex w-full flex-col gap-4 text-left">

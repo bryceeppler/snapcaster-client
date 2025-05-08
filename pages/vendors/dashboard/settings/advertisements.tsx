@@ -23,8 +23,7 @@ import {
 import { useVendors } from '@/hooks/queries/useVendors';
 import {
   AdvertisementWithImages,
-  AdvertisementPosition,
-  AdvertisementImageType
+  AdvertisementPosition
 } from '@/types/advertisements';
 import { Switch } from '@/components/ui/switch';
 import { useAuth } from '@/hooks/useAuth';
@@ -67,21 +66,10 @@ const advertisementFormSchema = z.object({
 
 type AdvertisementFormValues = z.infer<typeof advertisementFormSchema>;
 
-const imageFormSchema = z.object({
-  image_url: z.string().url({
-    message: 'Please enter a valid image URL.'
-  }),
-  image_type: z.nativeEnum(AdvertisementImageType)
-});
-
-type ImageFormValues = z.infer<typeof imageFormSchema>;
-
 // Create a memoized component for individual advertisement rows
 const AdvertisementRow = memo(
   ({
     ad,
-    onEdit,
-    onDelete,
     onToggleStatus,
     onNavigateToDetails,
     isLoading,
@@ -184,8 +172,6 @@ AdvertisementRow.displayName = 'AdvertisementRow';
 const MobileAdvertisementCard = memo(
   ({
     ad,
-    onEdit,
-    onDelete,
     onToggleStatus,
     onNavigateToDetails,
     isLoading,
@@ -318,9 +304,6 @@ MobileAdvertisementCard.displayName = 'MobileAdvertisementCard';
 export default function AdvertisementsPage() {
   const { getVendorById } = useVendors();
   const { profile } = useAuth();
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [currentAd, setCurrentAd] = useState<AdvertisementWithImages | null>(
     null
   );
@@ -336,7 +319,6 @@ export default function AdvertisementsPage() {
   // Use the useAdvertisements hook only once
   const {
     isLoading,
-    createAdvertisement,
     updateAdvertisement,
     deleteAdvertisement: deleteAd,
     getAdvertisementsByVendorId,
@@ -408,32 +390,8 @@ export default function AdvertisementsPage() {
     }
   }, [currentAd, editForm]);
 
-  const onEditSubmit = async (values: AdvertisementFormValues) => {
-    if ((!vendor && !isAdmin) || !currentAd) return;
-
-    try {
-      await updateAdvertisement.mutateAsync({
-        id: currentAd.id,
-        data: {
-          position: values.position,
-          target_url: values.target_url,
-          alt_text: values.alt_text,
-          start_date: values.start_date,
-          end_date: values.end_date || null
-        }
-      });
-
-      // Close the dialog and reset
-      setIsEditDialogOpen(false);
-      setCurrentAd(null);
-    } catch (error) {
-      console.error('Error updating advertisement:', error);
-    }
-  };
-
   const handleEditAdvertisement = (ad: AdvertisementWithImages) => {
     setCurrentAd(ad);
-    setIsEditDialogOpen(true);
   };
 
   const deleteAdvertisement = async (adId: number) => {
