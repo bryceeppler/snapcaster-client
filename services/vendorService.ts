@@ -31,15 +31,11 @@ export enum VendorAssetTheme {
   UNIVERSAL = 'universal'
 }
 
-export interface VendorAsset {
+interface VendorAsset {
   id: number;
   asset_type: VendorAssetType;
   theme: VendorAssetTheme;
   url: string;
-}
-
-export interface DiscountMap {
-  [key: string]: number;
 }
 
 export interface Vendor {
@@ -55,7 +51,7 @@ export interface Vendor {
   updated_at: Date;
 }
 
-export class VendorService {
+class VendorService {
   async getAllVendors(): Promise<Vendor[]> {
     try {
       const response = await axios.get(

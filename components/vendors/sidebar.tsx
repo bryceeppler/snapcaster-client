@@ -25,7 +25,7 @@ interface MenuItem {
 
 export function VendorSidebar() {
   const pathname = usePathname();
-  const { logout, isLoggingOut, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const menuItems: MenuItem[] = [
     {
       title: 'Overview',

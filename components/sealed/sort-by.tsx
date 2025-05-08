@@ -8,13 +8,17 @@ import {
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 
+// Type for sort options - consistent with search-filter-container.tsx
+export type SortByOption = string;
+
 type Props = {
-  sortBy: any;
-  setSortBy: (sortBy: any) => void;
+  sortBy: SortByOption;
+  setSortBy: (sortBy: SortByOption) => void;
   sortByLabel: Record<string, string>;
 };
+
 export default function SortBy({ sortBy, setSortBy, sortByLabel = {} }: Props) {
-  const handleSortByChange = (value: any) => {
+  const handleSortByChange = (value: SortByOption) => {
     setSortBy(value);
   };
 
@@ -38,7 +42,7 @@ export default function SortBy({ sortBy, setSortBy, sortByLabel = {} }: Props) {
         >
           <DropdownMenuRadioGroup
             value={sortBy}
-            onValueChange={(value) => handleSortByChange(value as any)}
+            onValueChange={handleSortByChange}
           >
             {Object.entries(sortByLabel).map(([key, label]) => (
               <DropdownMenuRadioItem key={key} value={key}>

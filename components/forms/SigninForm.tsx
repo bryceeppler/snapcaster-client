@@ -17,16 +17,24 @@ import { AlertCircle, Smartphone, Mail, Send, Key } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
-type Props = {
-  redirectUrl?: string;
-};
-
 type SignInFormData = {
   email: string;
   password: string;
 };
 
-export default function SignInForm({ redirectUrl }: Props) {
+// API error response type
+interface ApiError {
+  response?: {
+    data: {
+      status: string;
+      message: string;
+      code: string;
+    };
+  };
+  message: string;
+}
+
+export default function SignInForm() {
   const {
     login,
     isLoggingIn,
@@ -80,7 +88,7 @@ export default function SignInForm({ redirectUrl }: Props) {
   const onSubmit = (data: SignInFormData) => {
     setError(null);
     login(data, {
-      onError: (error) => {
+      onError: (error: ApiError) => {
         setError(error.message);
       }
     });
@@ -118,7 +126,7 @@ export default function SignInForm({ redirectUrl }: Props) {
           onSuccess: () => {
             setError(null);
           },
-          onError: (error: any) => {
+          onError: (error: ApiError) => {
             setError(
               error.response?.data.message ||
                 'Invalid recovery code. Please try again.'
@@ -137,7 +145,7 @@ export default function SignInForm({ redirectUrl }: Props) {
           onSuccess: () => {
             setError(null);
           },
-          onError: (error) => {
+          onError: (error: ApiError) => {
             setError(error.message);
           }
         }
@@ -151,7 +159,7 @@ export default function SignInForm({ redirectUrl }: Props) {
         onSuccess: () => {
           setEmailCodeSent(true);
         },
-        onError: () => {
+        onError: (error: ApiError) => {
           setError('Error sending verification code. Please try again.');
         }
       });

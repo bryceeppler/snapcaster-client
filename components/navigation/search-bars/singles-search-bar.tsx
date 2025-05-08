@@ -28,7 +28,11 @@ export default function SinglesSearchBar({
   } = useSingleSearchStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<
+    {
+      name: string;
+    }[]
+  >([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 

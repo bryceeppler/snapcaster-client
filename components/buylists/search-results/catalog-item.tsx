@@ -25,9 +25,27 @@ import {
 } from '@radix-ui/react-icons';
 import { useState } from 'react';
 
+// Interface for condition prices
+interface ConditionPrices {
+  [key: string]: number;
+}
+
+// Interface for card data used in buylist catalog
+interface BuylistCardData {
+  baseCardId: number;
+  name: string;
+  set: string;
+  game: string;
+  rarity: string;
+  foil: string;
+  image: string;
+  conditions: ConditionPrices;
+}
+
 type BuylistCatalogItemProps = {
-  cardData: any;
+  cardData: BuylistCardData;
 };
+
 const conditions = [
   'Near Mint',
   'Lightly Played',
@@ -36,7 +54,21 @@ const conditions = [
   'Damaged'
 ];
 
-const CartDialogContent = ({ cardData }: { cardData: any }) => {
+// Interface for cart item
+interface CartItem {
+  id?: number;
+  base_card_id: number;
+  card_name: string;
+  set_name: string;
+  game: string;
+  rarity: string;
+  condition_name: string;
+  foil: string;
+  image: string;
+  quantity?: number;
+}
+
+const CartDialogContent = ({ cardData }: { cardData: BuylistCardData }) => {
   const { currentCartId } = useBuyListStore();
   const { cartItems, updateCartItem } = useCartItems(
     currentCartId || undefined
@@ -64,7 +96,7 @@ const CartDialogContent = ({ cardData }: { cardData: any }) => {
       toast.error('Max Quantity 99');
       return;
     }
-    const cartItem = {
+    const cartItem: CartItem = {
       base_card_id: cardData.baseCardId,
       card_name: cardData.name,
       set_name: cardData.set,

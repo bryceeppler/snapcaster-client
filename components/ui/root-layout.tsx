@@ -2,9 +2,8 @@ import React from 'react';
 import Navbar from '@/components/navigation/navbar';
 import Footer from '@/components/ui/footer';
 import { usePathname } from 'next/navigation';
-type Props = {};
 
-export default function Layout({ children }: React.PropsWithChildren<Props>) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const usesFooter = pathname
     ? !pathname.includes('buylists') && !pathname.includes('vendors/dashboard')

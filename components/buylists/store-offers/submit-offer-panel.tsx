@@ -19,8 +19,30 @@ import { AlertCircle, ExternalLink, ShieldCheck } from 'lucide-react';
 
 type PaymentMethod = 'Cash' | 'Store Credit';
 
+// Interface for the card items in the buylist
+interface BuylistItem {
+  id: number;
+  card_name: string;
+  set_name: string;
+  condition_name: string;
+  foil: string;
+  quantity: number;
+  cashPrice: number;
+  creditPrice: number;
+  // Add other fields as needed
+}
+
+// Interface for the store data received from the API
+interface StoreOfferData {
+  storeName: string;
+  cashSubtotal: string;
+  creditSubtotal: string;
+  items: BuylistItem[];
+  unableToPurchaseItems: BuylistItem[];
+}
+
 export const SubmitOfferPanel = () => {
-  const { vendors, getVendorIcon, getVendorNameBySlug } = useVendors();
+  const { vendors, getVendorNameBySlug } = useVendors();
   const {
     reviewData,
     selectedStoreForReview,
@@ -37,18 +59,8 @@ export const SubmitOfferPanel = () => {
   );
 
   const submitData = reviewData?.find(
-    (store: any) => store.storeName === selectedStoreForReview
+    (store: StoreOfferData) => store.storeName === selectedStoreForReview
   );
-
-  const vendor = vendors.find((vendor) => vendor.slug === submitData.storeName);
-
-  const [submissionResult, setSubmissionResult] = useState<{
-    success: boolean;
-    message: string;
-  }>({
-    success: false,
-    message: ''
-  });
 
   useEffect(() => {
     if (isLoadingConnections || !connectedVendors) return;
@@ -58,15 +70,11 @@ export const SubmitOfferPanel = () => {
     if (matchingWebsite) {
       setIsVendorConnected(connectedVendors.includes(matchingWebsite.slug));
     }
-  }, [connectedVendors, isLoadingConnections, submitData?.storeName]);
+  }, [connectedVendors, isLoadingConnections, submitData?.storeName, vendors]);
 
   const handleSubmit = async (paymentType: 'Cash' | 'Store Credit') => {
     const result = await submitBuylist(paymentType);
     if (result.success) {
-      setSubmissionResult({
-        success: true,
-        message: result.message
-      });
       setBuylistUIState('viewAllOffersState');
     }
   };
@@ -101,8 +109,8 @@ export const SubmitOfferPanel = () => {
 
         {/* Free shipping notice for exorgames */}
         {submitData?.storeName === 'exorgames' &&
-          (submitData?.cashSubtotal > 250 ||
-            submitData?.creditSubtotal > 250) && (
+          (parseFloat(submitData?.cashSubtotal) > 250 ||
+            parseFloat(submitData?.creditSubtotal) > 250) && (
             <div className="mt-2 rounded-md border border-green-200 bg-green-50 p-3 dark:border-green-900 dark:bg-green-950/50">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-green-700 dark:text-green-300" />
@@ -130,7 +138,7 @@ export const SubmitOfferPanel = () => {
             <AlertCircle className="mt-0.5 h-4 w-4 text-muted-foreground" />
             <p className="text-xs text-muted-foreground">
               Please wait for a final adjusted email offer from{' '}
-              {getVendorNameBySlug(submitData.storeName)}. If you are not
+              {getVendorNameBySlug(submitData?.storeName || '')}. If you are not
               dropping off your cards in person, we recommend purchasing
               shipping insurance.
             </p>

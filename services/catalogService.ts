@@ -2,7 +2,7 @@ import axiosInstance from '@/utils/axiosWrapper';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export interface SearchParams {
+interface SearchParams {
   index: string;
   keyword: string;
   sortBy: string;
@@ -13,7 +13,7 @@ export interface SearchParams {
   tcg?: string;
 }
 
-export interface Product {
+interface Product {
   id: string;
   name: string;
   set: string;
@@ -24,7 +24,7 @@ export interface Product {
   // Add other product fields as needed
 }
 
-export interface SearchResponse {
+interface SearchResponse {
   results: Product[];
   filters: FilterOption[];
   pagination: {
@@ -35,7 +35,7 @@ export interface SearchResponse {
   promotedResults?: Product[];
 }
 
-export interface FilterOption {
+interface FilterOption {
   field: string;
   label: string;
   values: {
@@ -68,7 +68,7 @@ export interface BuylistAnalytics {
   };
 }
 
-export interface BuylistSubmission {
+interface BuylistSubmission {
   userId: number;
   cartId: string;
   timestamp: string;
@@ -103,7 +103,7 @@ export interface BuylistSubmissionResponse {
   };
 }
 
-export class CatalogService {
+class CatalogService {
   async search(params: SearchParams): Promise<SearchResponse> {
     const queryParams = new URLSearchParams();
 

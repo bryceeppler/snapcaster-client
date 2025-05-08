@@ -9,15 +9,6 @@ export const logPageView = () => {
   ReactGA.send({ hitType: 'pageview', page: window.location.pathname });
 };
 
-export const trackOutboundLink = (url: string, price: number) => {
-  ReactGA.event({
-    category: 'Outbound Link',
-    action: 'outgoing_conversion',
-    label: url,
-    value: price
-  });
-};
-
 export const handleBuyClick = (
   link: string,
   price: number,
@@ -80,13 +71,5 @@ export const trackSearch = (
     search_term: searchTerm,
     tcg: tradingCardGame,
     search_tool: searchTool
-  });
-};
-
-export const trackAdVisible = (adId: string) => {
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    event: 'ad_visible',
-    ad_id: adId
   });
 };

@@ -10,12 +10,8 @@ import {
   Settings,
   Palette
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-
 import { Button } from '@/components/ui/button';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 
 interface MenuItem {
@@ -27,10 +23,7 @@ interface MenuItem {
 
 export function AccountSidebar() {
   const pathname = usePathname();
-  const isMobile = useIsMobile();
-  const [isOpen, setIsOpen] = useState(false);
   const { logout, isLoggingOut } = useAuth();
-  const { toast } = useToast();
   const menuItems: MenuItem[] = [
     {
       title: 'General',

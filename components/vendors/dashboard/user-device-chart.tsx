@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import * as React from 'react';
 import { Pie, PieChart, Label, Cell } from 'recharts';
@@ -57,7 +57,7 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
 
   const dominantDevice = React.useMemo(() => {
     if (!data) return { device: '', percentage: 0 };
-    
+
     const total = data.desktop + data.mobile + data.tablet;
     const devices = [
       {
@@ -76,14 +76,16 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
         percentage: Math.round((data.tablet / total) * 100)
       }
     ];
-    
+
     return devices.reduce((prev, current) =>
       current.percentage > prev.percentage ? current : prev
     );
   }, [data]);
 
   if (isLoading) {
-    return <PieChartSkeleton title="Device Distribution" dateRange={dateRange} />;
+    return (
+      <PieChartSkeleton title="Device Distribution" dateRange={dateRange} />
+    );
   }
 
   if (error || !data) {
@@ -132,8 +134,8 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer 
-          config={chartConfig} 
+        <ChartContainer
+          config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
         >
           <PieChart>
@@ -149,31 +151,44 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
               strokeWidth={5}
             >
               {chartData.map((entry) => (
-                <Cell 
-                  key={entry.device} 
-                  fill={chartConfig[entry.device as keyof typeof chartConfig]?.color} 
+                <Cell
+                  key={entry.device}
+                  fill={
+                    chartConfig[entry.device as keyof typeof chartConfig]?.color
+                  }
                 />
               ))}
               <Label
-                content={({ viewBox }: { viewBox?: any }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                content={(props) => {
+                  const viewBox = props.viewBox;
+                  if (
+                    viewBox &&
+                    typeof viewBox === 'object' &&
+                    'cx' in viewBox &&
+                    'cy' in viewBox &&
+                    typeof viewBox.cx === 'number' &&
+                    typeof viewBox.cy === 'number'
+                  ) {
+                    const cx = viewBox.cx;
+                    const cy = viewBox.cy;
+
                     return (
                       <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
+                        x={cx}
+                        y={cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
                       >
                         <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
+                          x={cx}
+                          y={cy}
                           className="fill-foreground text-3xl font-bold"
                         >
                           {dominantDevice.percentage}%
                         </tspan>
                         <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
+                          x={cx}
+                          y={cy + 24}
                           className="fill-muted-foreground"
                         >
                           {dominantDevice.device}
@@ -185,16 +200,16 @@ export function UserDeviceChart({ dateRange }: UserDeviceChartProps) {
                 }}
               />
             </Pie>
-            <ChartLegend 
-              verticalAlign="bottom" 
-              height={36} 
-              content={<ChartLegendContent />} 
+            <ChartLegend
+              verticalAlign="bottom"
+              height={36}
+              content={<ChartLegendContent />}
             />
           </PieChart>
         </ChartContainer>
       </CardContent>
       {chartData.length > 0 && (
-        <CardFooter className="flex-col gap-2 text-sm pt-6">
+        <CardFooter className="flex-col gap-2 pt-6 text-sm">
           <div className="leading-none text-muted-foreground">
             Showing device distribution for selected date range
           </div>

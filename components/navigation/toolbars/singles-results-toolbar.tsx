@@ -73,13 +73,13 @@ export default function SinglesResultsToolbar(): JSX.Element | null {
           <SheetDescription>Filter your search results</SheetDescription>
 
           <FilterSection
-            filterOptions={filterOptions}
-            sortBy={sortBy}
+            filterOptions={filterOptions || []}
+            sortBy={sortBy || ''}
             fetchCards={fetchCards}
             clearFilters={clearFilters}
             setFilter={setFilter}
             setCurrentPage={setCurrentPage}
-            handleSortByChange={(value: any) => {
+            handleSortByChange={(value: string) => {
               setSortBy(value);
               setCurrentPage(1);
               fetchCards();

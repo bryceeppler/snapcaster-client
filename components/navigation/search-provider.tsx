@@ -1,6 +1,6 @@
 'use client';
 
-import { DeviceType, SearchMode, SearchProviderProps } from './navbar-types';
+import { DeviceType, SearchMode } from './navbar-types';
 import SinglesSearchBar from './search-bars/singles-search-bar';
 import BuylistsSearchBar from './search-bars/buylists-search-bar';
 import SealedSearchBar from './search-bars/sealed-search-bar';
@@ -13,13 +13,6 @@ const routeToSearchModeMap: Record<string, SearchMode> = {
   '/': 'singles',
   '/buylists': 'buylists',
   '/sealed': 'sealed'
-};
-
-/**
- * Determines if a search bar should be displayed for the current path
- */
-const shouldShowSearchBar = (path: string): boolean => {
-  return Object.keys(routeToSearchModeMap).includes(path);
 };
 
 /**
@@ -74,28 +67,4 @@ export const ResultsToolbar = ({
     default:
       return null;
   }
-};
-
-/**
- * Main search provider component
- * Acts as a container for search-related components based on the current route
- */
-export const SearchProvider = ({
-  children,
-  currentPath,
-  deviceType
-}: SearchProviderProps): JSX.Element => {
-  return (
-    <>
-      {shouldShowSearchBar(currentPath) && (
-        <SearchBar currentPath={currentPath} deviceType={deviceType} />
-      )}
-
-      {children}
-
-      {shouldShowSearchBar(currentPath) && (
-        <ResultsToolbar currentPath={currentPath} />
-      )}
-    </>
-  );
 };

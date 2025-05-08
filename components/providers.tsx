@@ -1,12 +1,6 @@
 'use client';
 
-import React, {
-  useState,
-  createContext,
-  useContext,
-  useEffect,
-  ReactNode
-} from 'react';
+import React, { useState, createContext, useEffect, ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
@@ -20,14 +14,6 @@ type AdContextType = {
 };
 
 const AdContext = createContext<AdContextType | undefined>(undefined);
-
-export const useAdContext = () => {
-  const context = useContext(AdContext);
-  if (!context) {
-    throw new Error('useAdContext must be used within an AdProvider');
-  }
-  return context;
-};
 
 interface AdProviderProps {
   children: ReactNode;

@@ -20,6 +20,47 @@ import {
 } from 'lucide-react';
 import { FinalSubmissionHeader } from '../header/header';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Vendor } from '@/services/vendorService';
+
+// Interface for the card items in the buylist
+interface BuylistItem {
+  id: number;
+  cardName: string;
+  setName: string;
+  condition: string;
+  condition_name?: string;
+  rarity: string;
+  foil: string;
+  quantity: number;
+  purchaseQuantity: number;
+  maxPurchaseQuantity: number;
+  unableToPurchaseQuantity?: number;
+  cashPrice: number;
+  creditPrice: number;
+  bestCashOffer?: boolean;
+  bestCreditOffer?: boolean;
+  image: string;
+  name?: string;
+}
+
+// Interface for the store data received from the API
+interface StoreOfferData {
+  storeName: string;
+  cashSubtotal: string;
+  creditSubtotal: string;
+  items: BuylistItem[];
+  unableToPurchaseItems: BuylistItem[];
+}
+
+// Interface for the VendorInfoCard props
+interface VendorInfoCardProps {
+  vendor: Vendor | undefined;
+  storeName: string;
+  isVendorConnected: boolean;
+  getVendorIcon: (vendor: Vendor | undefined) => string | null;
+  getVendorNameBySlug: (slug: string) => string;
+  className: string;
+}
 
 export const SubmitOffer = () => {
   const { reviewData, selectedStoreForReview } = useBuyListStore();
@@ -30,7 +71,7 @@ export const SubmitOffer = () => {
   const [isVendorConnected, setIsVendorConnected] = useState(false);
 
   const storeData = reviewData?.find(
-    (store: any) => store.storeName === selectedStoreForReview
+    (store: StoreOfferData) => store.storeName === selectedStoreForReview
   );
 
   const vendor = vendors.find((vendor) => vendor.slug === storeData?.storeName);
@@ -85,13 +126,15 @@ export const SubmitOffer = () => {
                   accentColor="bg-primary"
                 >
                   <div className="grid gap-4 sm:grid-cols-1">
-                    {storeData.items.map((cardData: any, index: number) => (
-                      <PurchaseCard
-                        key={index}
-                        cardData={cardData}
-                        index={index}
-                      />
-                    ))}
+                    {storeData.items.map(
+                      (cardData: BuylistItem, index: number) => (
+                        <PurchaseCard
+                          key={index}
+                          cardData={cardData}
+                          index={index}
+                        />
+                      )
+                    )}
                   </div>
                 </CardSection>
 
@@ -108,7 +151,7 @@ export const SubmitOffer = () => {
                   >
                     <div className="grid gap-4 sm:grid-cols-1">
                       {storeData.unableToPurchaseItems.map(
-                        (cardData: any, index: number) => (
+                        (cardData: BuylistItem, index: number) => (
                           <NotPurchasingCard
                             key={index}
                             cardData={cardData}
@@ -149,13 +192,13 @@ const VendorInfoCard = ({
   getVendorIcon,
   getVendorNameBySlug,
   className
-}: any) => (
+}: VendorInfoCardProps) => (
   <div className={`flex items-center gap-4 ${className}`}>
     {getVendorIcon(vendor) && (
       <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-md border bg-white p-1 shadow-sm">
         <img
           src={getVendorIcon(vendor) || undefined}
-          alt={`${getVendorNameBySlug(vendor?.slug)} logo`}
+          alt={`${getVendorNameBySlug(storeName)} logo`}
           className="h-full w-full object-contain"
         />
       </div>
@@ -223,7 +266,7 @@ const PurchaseCard = ({
   cardData,
   index
 }: {
-  cardData: any;
+  cardData: BuylistItem;
   index: number;
 }) => {
   return (
@@ -237,7 +280,7 @@ const PurchaseCard = ({
             <img
               className="h-24 w-20 rounded-md object-contain shadow-sm transition-transform duration-200 group-hover:scale-105"
               src={cardData.image}
-              alt={cardData.name}
+              alt={cardData.name || cardData.cardName}
               loading="lazy"
             />
             {cardData.bestCreditOffer || cardData.bestCashOffer ? (
@@ -306,7 +349,7 @@ const NotPurchasingCard = ({
   cardData,
   index
 }: {
-  cardData: any;
+  cardData: BuylistItem;
   index: number;
 }) => {
   return (
@@ -320,7 +363,7 @@ const NotPurchasingCard = ({
             <img
               className="h-24 w-20 rounded-md object-contain grayscale filter transition-opacity duration-200 group-hover:opacity-80"
               src={cardData.image}
-              alt={cardData.name}
+              alt={cardData.name || cardData.cardName}
               loading="lazy"
             />
           </div>

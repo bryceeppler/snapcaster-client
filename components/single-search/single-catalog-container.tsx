@@ -171,7 +171,7 @@ export default function SingleCatalog() {
     return positions;
   }, [searchResults, hasActiveSubscription, feedAds]);
 
-  const handleSortByChange = (value: any) => {
+  const handleSortByChange = (value: string) => {
     setSortBy(value);
     setCurrentPage(1);
     fetchCards();
@@ -202,8 +202,8 @@ export default function SingleCatalog() {
                   </div>
 
                   <FilterSection
-                    filterOptions={filterOptions}
-                    sortBy={sortBy}
+                    filterOptions={filterOptions || []}
+                    sortBy={sortBy || ''}
                     setSortBy={setSortBy}
                     fetchCards={fetchCards}
                     clearFilters={clearFilters}

@@ -26,13 +26,6 @@ import {
   CartesianGrid
 } from 'recharts';
 import { useVendors } from '@/hooks/queries/useVendors';
-interface DistributionItem {
-  vendor_slug: string;
-  expected: number;
-  actual: number;
-  weight: number;
-  id: number;
-}
 
 const AdTest = () => {
   // State for simulation controls
@@ -230,7 +223,7 @@ const AdTest = () => {
                     />
                     <YAxis />
                     <Tooltip
-                      formatter={(value, name, props) => [`${value}%`, name]}
+                      formatter={(value, name, _props) => [`${value}%`, name]}
                       labelFormatter={(value) => `Vendor: ${value}`}
                     />
                     <Legend />

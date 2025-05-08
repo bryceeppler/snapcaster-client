@@ -18,11 +18,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  CheckCircle,
-  Info,
-  AlertTriangle
-} from 'lucide-react';
+import { CheckCircle, Info, AlertTriangle } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -32,8 +28,6 @@ import {
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AD_RESOLUTIONS } from '@/lib/constants';
-
-type Props = {};
 
 const formatFileSize = (kilobytes: number) => {
   // if less than 1mb, return the kilobytes
@@ -396,11 +390,11 @@ const AdImageCard = ({
   );
 };
 
-const ApprovalTable = (props: Props) => {
+const ApprovalTable = () => {
   const { adImages } = useAdImages();
   const { ads } = useAdvertisements();
   const { vendors } = useVendors();
-  const [activeTab, setActiveTab] = useState<string>('pending');
+  const [_activeTab, setActiveTab] = useState<string>('pending');
 
   // Filter ad images based on active status
   const pendingAdImages = adImages.filter((adImage) => !adImage.is_active);

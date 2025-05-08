@@ -79,13 +79,14 @@ export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
             size="icon"
             className="h-6 w-6"
             onClick={() => {
-              currentCartId &&
+              if (currentCartId) {
                 updateCartItem({
                   cartId: currentCartId,
                   item,
                   quantity: Math.max(0, item.quantity - 1)
                 });
-              if (buylistUIState === 'viewAllOffersState') {
+              }
+              if (buylistUIState === 'viewAllOffersState' && currentCartId) {
                 setAllCartsData(currentCartId);
               }
             }}

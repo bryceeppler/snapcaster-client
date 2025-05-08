@@ -5,7 +5,7 @@
 /**
  * Interface for items that have a weight property
  */
-export interface Weighted {
+interface Weighted {
   weight: number;
 }
 
@@ -16,7 +16,7 @@ export interface Weighted {
  * @param getWeight Optional function to extract weight from complex objects (defaults to using .weight)
  * @returns Array of indices where each index appears weight number of times
  */
-export function createWeightedDistribution<T extends Weighted>(
+function createWeightedDistribution<T extends Weighted>(
   items: T[],
   getWeight: (item: T) => number = (item) => item.weight
 ): number[] {
@@ -46,7 +46,7 @@ export function createWeightedDistribution<T extends Weighted>(
  * @param getWeight Optional function to extract weight from complex objects
  * @returns Array of indices where each index appears weight number of times (excluding the specified index)
  */
-export function createWeightedDistributionExcluding<T extends Weighted>(
+function createWeightedDistributionExcluding<T extends Weighted>(
   items: T[],
   excludeIndex: number,
   getWeight: (item: T) => number = (item) => item.weight
@@ -70,54 +70,6 @@ export function createWeightedDistributionExcluding<T extends Weighted>(
   });
 
   return indices;
-}
-
-/**
- * Selects a random item from an array using weighted distribution
- *
- * @param items Array of items with weight property
- * @param getWeight Optional function to extract weight from complex objects
- * @returns Selected item index or -1 if array is empty or all weights are 0
- */
-export function selectRandomWeighted<T extends Weighted>(
-  items: T[],
-  getWeight: (item: T) => number = (item) => item.weight
-): number {
-  const distribution = createWeightedDistribution(items, getWeight);
-
-  if (distribution.length === 0) return -1;
-
-  const randomIndex = Math.floor(Math.random() * distribution.length);
-  return distribution[randomIndex];
-}
-
-/**
- * Selects a random item that's different from the previous selection
- *
- * @param items Array of items with weight property
- * @param previousIndex The previous selected index to avoid
- * @param getWeight Optional function to extract weight from complex objects
- * @returns Selected item index or -1 if no suitable item found
- */
-export function selectDifferentRandomWeighted<T extends Weighted>(
-  items: T[],
-  previousIndex: number,
-  getWeight: (item: T) => number = (item) => item.weight
-): number {
-  // If only one item or empty array, can't select different item
-  if (items.length <= 1) return -1;
-
-  // Create distribution excluding the previous index
-  const distribution = createWeightedDistributionExcluding(
-    items,
-    previousIndex,
-    getWeight
-  );
-
-  if (distribution.length === 0) return -1;
-
-  const randomIndex = Math.floor(Math.random() * distribution.length);
-  return distribution[randomIndex];
 }
 
 /**

@@ -71,7 +71,7 @@ export interface TwoFactorRequiredResponse {
   methods: string[];
 }
 
-export class AuthService {
+class AuthService {
   async login(
     credentials: LoginCredentials
   ): Promise<string | TwoFactorRequiredResponse> {

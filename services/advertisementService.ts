@@ -9,7 +9,7 @@ import {
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export type CreateAdvertisementRequest = {
+type CreateAdvertisementRequest = {
   vendor_id: number;
   position: AdvertisementPosition;
   target_url: string;
@@ -32,13 +32,13 @@ export type UpdateAdvertisementImageRequest = {
   is_active?: boolean;
 };
 
-export type PresignedUrlRequest = {
+type PresignedUrlRequest = {
   fileType: string;
   fileName: string;
   imageType: AdvertisementImageType;
 };
 
-export type PresignedUrlResponse = {
+type PresignedUrlResponse = {
   presignedUrl: string;
   publicUrl: string;
   objectKey: string;
@@ -47,7 +47,7 @@ export type PresignedUrlResponse = {
   expiresIn: number;
 };
 
-export type ConfirmUploadRequest = {
+type ConfirmUploadRequest = {
   publicUrl: string;
   imageType: AdvertisementImageType;
   isActive: boolean;
@@ -58,7 +58,7 @@ export type ConfirmUploadRequest = {
   metadata: Record<string, any>;
 };
 
-export class AdvertisementService {
+class AdvertisementService {
   async getAllAdvertisements(): Promise<AdvertisementWithImages[]> {
     const response = await axios.get(
       `${BASE_URL}/api/v1/vendor/advertisements?with=images`

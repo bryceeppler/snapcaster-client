@@ -2,8 +2,6 @@ import useBuyListStore from '@/stores/useBuylistStore';
 import { useAuth } from '@/hooks/useAuth';
 import { useState } from 'react';
 import { useUserCarts } from '@/hooks/useUserCarts';
-import { VerifyListContainer } from '../modify-list-items/verify-list-container';
-
 
 import { Button } from '@/components/ui/button';
 import {
@@ -19,10 +17,8 @@ import {
   ChevronLeft,
   ListIcon,
   PlusIcon,
-  ShoppingCart,
   SlidersHorizontal
 } from 'lucide-react';
-
 
 import SearchSortBy from '@/components/buylists/sort-by';
 import FilterSelector from '@/components/buylists/filter-selector';
@@ -87,83 +83,6 @@ export const ListSelectionHeader = () => {
     </div>
   );
 };
-
-export const CurrentListHeader = () => {
-  const { isAuthenticated } = useAuth();
-  const { setBuylistUIState, setCurrentCartId, setCurrentCart } =
-    useBuyListStore();
-  const { getCurrentCart } = useUserCarts();
-  const currentCart = getCurrentCart();
-  const [cartDialogOpen, setCartDialogOpen] = useState(false);
-  return (
-    <div className="  flex justify-between rounded-lg bg-card px-1">
-      {/* LEFT SECTION */}
-      <div className="flex h-10 w-16 items-center justify-start gap-1">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="relative h-9 px-2 text-sm font-medium"
-          onClick={() => {
-            setBuylistUIState('listSelectionState');
-            setCurrentCartId(null);
-            setCurrentCart(null);
-          }}
-        >
-          <ListIcon className="h-6 w-6" />
-        </Button>
-      </div>
-      {/* MIDDLE SECTION */}
-      <div className="flex w-full flex-1 items-center gap-1 overflow-hidden text-center">
-        <p className="w-full truncate text-sm font-medium">
-          {currentCart?.cart?.name || '(No List Selected)'}
-        </p>
-      </div>
-      {/* RIGHT SECTION */}
-      <div className="flex w-16 items-center justify-end gap-1 ">
-        <div className="block lg:hidden">
-          <Dialog open={cartDialogOpen} onOpenChange={setCartDialogOpen}>
-            <DialogTrigger
-              asChild
-              disabled={!currentCart?.cart?.name || !isAuthenticated}
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative h-9 px-2 text-sm font-medium"
-                disabled={!currentCart?.cart?.name || !isAuthenticated}
-              >
-                <ShoppingCart className="h-5 w-5 cursor-pointer" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="flex h-[100dvh] max-w-none flex-col overflow-hidden p-0">
-              <DialogHeader className="p-6 pb-0">
-                <DialogTitle>Confirm Your Buylist</DialogTitle>
-                <DialogDescription>
-                  Make sure your buylist is correct before submitting.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex-1 overflow-hidden p-6">
-                <VerifyListContainer />
-              </div>
-              <div className="sticky bottom-0 border-t bg-background p-4">
-                <Button
-                  className="w-full"
-                  onClick={() => {
-                    setCartDialogOpen(false);
-                    setBuylistUIState('viewAllOffersState');
-                  }}
-                >
-                  View Offers
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 interface SearchResultsHeaderProps {
   isMobile?: boolean;
 }

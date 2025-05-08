@@ -43,10 +43,32 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
+// Type definitions for the chart data
+interface UserTypeData {
+  type: string;
+  users: number;
+  percentage: number;
+}
+
+// Payload structure for recharts tooltip
+interface TooltipPayloadItem {
+  name: string;
+  value: number;
+  dataKey: string;
+  payload: {
+    payload: UserTypeData;
+    stroke: string;
+    fill: string;
+    cx: string;
+    cy: string;
+    strokeWidth: number;
+  } & UserTypeData;
+}
+
 // Custom tooltip component
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: TooltipPayloadItem[];
   label?: string;
 }
 
@@ -142,25 +164,37 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
               strokeWidth={5}
             >
               <Label
-                content={({ viewBox }: { viewBox?: any }) => {
-                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
+                content={(props) => {
+                  // Type guard to check if viewBox has the required properties
+                  const viewBox = props.viewBox;
+                  if (
+                    viewBox &&
+                    typeof viewBox === 'object' &&
+                    'cx' in viewBox &&
+                    'cy' in viewBox &&
+                    typeof viewBox.cx === 'number' &&
+                    typeof viewBox.cy === 'number'
+                  ) {
+                    const cx = viewBox.cx;
+                    const cy = viewBox.cy;
+
                     return (
                       <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
+                        x={cx}
+                        y={cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
                       >
                         <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
+                          x={cx}
+                          y={cy}
                           className="fill-foreground text-3xl font-bold"
                         >
                           {returningUsers.toLocaleString()}
                         </tspan>
                         <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
+                          x={cx}
+                          y={cy + 24}
                           className="fill-muted-foreground"
                         >
                           Returning Users
