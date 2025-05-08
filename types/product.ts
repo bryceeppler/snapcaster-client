@@ -8,8 +8,9 @@ export type Tcg =
   | 'fleshandblood';
 export type Condition = 'nm' | 'lp' | 'mp' | 'hp' | 'dmg';
 
-export type Product = {
+export interface Product {
   name: string;
+  normalized_name: string;
   set: string;
   price: number;
   condition: string;
@@ -19,7 +20,11 @@ export type Product = {
   image: string;
   variant_id?: string;
   [key: string]: any;
-};
+}
+
+export interface PromotedProduct extends Product {
+  promoted?: boolean;
+}
 
 export type SealedProduct = {
   name: string;

@@ -1,4 +1,5 @@
 import { AlertCircle } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 
 import { ListItem } from './saved-lists/saved-list-item';
@@ -84,11 +85,11 @@ const ListSelector = () => {
                   <p className="text-sm text-muted-foreground">
                     Please login to view your saved lists
                   </p>
-                  <a href="/signin?redirect=%2Fbuylists">
+                  <Link href="/signin?redirect=%2Fbuylists">
                     <Button variant="outline" className="mt-2 w-full">
                       Continue to Log In
                     </Button>
-                  </a>
+                  </Link>
                 </div>
               </div>
             )}

@@ -14,15 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import useBuyListStore from '@/stores/useBuylistStore';
-
-// Define proper TypeScript interface for store offer data
-interface StoreOfferData {
-  storeName: string;
-  creditSubtotal: number;
-  cashSubtotal: number;
-  items: unknown[];
-  unableToPurchaseItems: unknown[];
-}
+import type { StoreOfferData } from '@/types/buylists';
 
 export const BuylistStoreOffers = () => {
   const { reviewData, setSelectedStoreForReview, setBuylistUIState } =
@@ -122,24 +114,14 @@ export const BuylistStoreOffers = () => {
                           <div className="flex items-center justify-between">
                             <p className="text-sm">Credit</p>
                             <p className={'text-sm font-medium'}>
-                              $
-                              {typeof storeOfferData.creditSubtotal === 'number'
-                                ? storeOfferData.creditSubtotal.toFixed(2)
-                                : parseFloat(
-                                    String(storeOfferData.creditSubtotal)
-                                  ).toFixed(2) || '0.00'}
+                              ${storeOfferData.creditSubtotal.toFixed(2)}
                             </p>
                           </div>
 
                           <div className="flex items-center justify-between">
                             <p className="text-sm">Cash</p>
                             <p className={'text-sm font-medium'}>
-                              $
-                              {typeof storeOfferData.cashSubtotal === 'number'
-                                ? storeOfferData.cashSubtotal.toFixed(2)
-                                : parseFloat(
-                                    String(storeOfferData.cashSubtotal)
-                                  ).toFixed(2) || '0.00'}
+                              ${storeOfferData.cashSubtotal.toFixed(2)}
                             </p>
                           </div>
 

@@ -28,11 +28,8 @@ import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useAuth } from '@/hooks/useAuth';
-import type {
-  AdvertisementWithImages} from '@/types/advertisements';
-import {
-  AdvertisementPosition
-} from '@/types/advertisements';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 
 export const AD_DIMENSIONS = {
   topBanner: {

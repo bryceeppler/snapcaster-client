@@ -22,10 +22,6 @@ import type { SealedProduct } from '@/types';
 import { sealedSortByLabel } from '@/types/query';
 import type { SealedSortOptions } from '@/types/query';
 
-
-
-
-
 interface SealedCatalogContainerProps {
   clearFilters: () => void;
   searchResults?: SealedProduct[];
@@ -59,8 +55,9 @@ export default function SealedCatalogContainer({
   // Intersection Observer for infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+      (entries: IntersectionObserverEntry[]) => {
+        const firstEntry = entries[0];
+        if (firstEntry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },

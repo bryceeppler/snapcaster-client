@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import type { SingleCatalogCard } from '@/types';
 
-
 type Props = {
   product: SingleCatalogCard;
   storeLogo: boolean;

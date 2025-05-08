@@ -7,8 +7,7 @@ import DashboardLayout from '../../layout';
 
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import type {
-  AdvertisementFormValues} from '@/components/vendors/advertisements';
+import type { AdvertisementFormValues } from '@/components/vendors/advertisements';
 import {
   AdvertisementDetailsForm,
   AdvertisementImageGallery,

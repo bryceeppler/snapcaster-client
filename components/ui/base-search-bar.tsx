@@ -1,6 +1,5 @@
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { ChevronDown, Loader2, HelpCircle } from 'lucide-react';
-import type { ReactNode, RefObject } from 'react';
 import React from 'react';
 
 import { Input } from '@/components/ui/input';
@@ -17,25 +16,7 @@ import {
   SelectTriggerNoIcon as SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import type { Tcg } from '@/types';
-
-export type DeviceType = 'mobile' | 'desktop';
-
-interface BaseSearchBarProps {
-  deviceType: DeviceType;
-  tcg: Tcg;
-  searchTerm: string;
-  placeholder?: string;
-  isLoading?: boolean;
-  inputRef?: RefObject<HTMLInputElement>;
-  onTcgChange: (tcg: Tcg) => void;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onInputKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
-  onSearchClick: () => void;
-  renderAutoComplete?: () => ReactNode;
-  showSearchHelp?: boolean;
-  searchHelpContent?: ReactNode;
-}
+import type { BaseSearchBarProps } from '@/types/navbar';
 
 /**
  * A reusable base search bar component that handles the common UI structure and styling

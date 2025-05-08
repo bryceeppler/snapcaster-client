@@ -6,8 +6,7 @@ import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 import type { Product, Tcg } from '@/types';
 import type { FilterOption } from '@/types/query';
 
-
-type SearchState = {
+type SingleSearchStore = {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   tcg: Tcg;
@@ -39,7 +38,7 @@ type SearchState = {
   clearSearchResults: () => void;
 };
 
-export const useSingleSearchStore = create<SearchState>()(
+export const useSingleSearchStore = create<SingleSearchStore>()(
   devtools(
     persist(
       (set, get) => ({

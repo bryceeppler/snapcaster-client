@@ -25,11 +25,14 @@ export default async function handler(
     );
 
     // Set caching headers
-    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
-    
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=3600, stale-while-revalidate=7200'
+    );
+
     return res.status(200).json(data);
   } catch (error) {
     console.error('Error fetching engagement time:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
-} 
+}

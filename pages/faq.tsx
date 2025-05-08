@@ -1,5 +1,6 @@
 import { CheckCircle } from 'lucide-react';
 import Head from 'next/head';
+import Link from 'next/link';
 
 import {
   Accordion,
@@ -84,13 +85,13 @@ export default function Component() {
                 <div>
                   <p>
                     Absolutely! please have your LGS owners fill our{' '}
-                    <a
+                    <Link
                       href="https://docs.google.com/forms/d/161NAY_EZrQ64CKiMmU4LnxTrj37mfiA8hoDkB_pZdok/edit"
                       target="_none"
                       className="text-blue-500"
                     >
                       Google form
-                    </a>{' '}
+                    </Link>{' '}
                     and reach out to us at either info@snapcaster.gg or Discord.
                   </p>
                 </div>
@@ -103,13 +104,13 @@ export default function Component() {
               </AccordionTrigger>
               <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
                 You can learn more about our tier 3 packages{' '}
-                <a
+                <Link
                   href="/vendors/tier3"
                   className="text-blue-500"
                   target="_none"
                 >
                   here
-                </a>
+                </Link>
                 .
               </AccordionContent>
             </AccordionItem>
@@ -147,12 +148,16 @@ export default function Component() {
                     How many stores are supported?
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted px-4 py-3 text-popover-foreground">
-                    Snapcaster’s aggregated buylist program is currently
+                    Snapcaster's aggregated buylist program is currently
                     available to vendors who are Tier 3 sponsors or higher. You
                     can view the complete list of participating stores{' '}
-                    <a href="/about" target="_none" className="text-blue-500">
+                    <Link
+                      href="/about"
+                      target="_none"
+                      className="text-blue-500"
+                    >
                       here
-                    </a>{' '}
+                    </Link>{' '}
                     .
                   </AccordionContent>
                 </AccordionItem>
@@ -226,9 +231,9 @@ type StepCardProps = {
     header: string;
     description: string;
   }>;
-  imageUrl?: string;
-  isReversed?: boolean;
-  imageStyle?: 'default' | 'bordered';
+  imageUrl: string | undefined;
+  isReversed: boolean;
+  imageStyle: 'default' | 'bordered' | undefined;
 };
 
 const StepCard = ({
@@ -350,7 +355,7 @@ const steps: Step[] = [
       {
         header: 'Best Cash and Credit Badge',
         description:
-          'Look for the “Best Price” badge to spot top offers for individual cards.'
+          'Look for the "Best Price" badge to spot top offers for individual cards.'
       }
     ],
     imageUrl: '/buylists-review-offers.PNG',
@@ -363,7 +368,7 @@ const steps: Step[] = [
       {
         header: 'Download the Snapcaster Extension',
         description:
-          'When you reach the store offers page, you’ll be prompted to download the Snapcaster extension.'
+          "When you reach the store offers page, you'll be prompted to download the Snapcaster extension."
       },
       {
         header: 'Connect Your Game Store Account',
@@ -416,7 +421,7 @@ const steps: Step[] = [
       {
         header: 'Get Paid',
         description:
-          'Once the game store receives your cards, you’ll get a confirmation email with your payment details.'
+          "Once the game store receives your cards, you'll get a confirmation email with your payment details."
       },
       {
         header: 'Reasons Why Your Offer May Be Adjusted',

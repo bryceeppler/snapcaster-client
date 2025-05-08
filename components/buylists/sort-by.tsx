@@ -10,17 +10,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-
-type SortOption = string;
-
-type SortByProps = {
-  sortBy: SortOption;
-  setSortBy: (sortBy: SortOption) => void;
-  fetchCards: () => Promise<void>;
-  setCurrentPage: (currentPage: number) => void;
-  sortByOptions: Record<string, string>;
-  triggerClassName?: string;
-};
+import type { SortByProps, SortOption } from '@/types/sorting';
 
 export default function SearchSortBy({
   sortBy,

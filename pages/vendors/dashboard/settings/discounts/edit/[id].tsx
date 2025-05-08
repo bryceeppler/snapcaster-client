@@ -33,7 +33,11 @@ import { Switch } from '@/components/ui/switch';
 import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useAuth } from '@/hooks/useAuth';
-import type { Discount} from '@/types/discounts';
+import type {
+  Discount,
+  DiscountFormValues,
+  UpdateDiscountPayload
+} from '@/types/discounts';
 import { DiscountType } from '@/types/discounts';
 
 // Form schema for discount validation
@@ -49,8 +53,6 @@ const discountFormSchema = z.object({
   end_date: z.date().nullable().optional(),
   is_active: z.boolean().default(true)
 });
-
-type DiscountFormValues = z.infer<typeof discountFormSchema>;
 
 export default function EditDiscountPage() {
   const router = useRouter();
@@ -148,7 +150,7 @@ export default function EditDiscountPage() {
     }
 
     try {
-      await updateDiscount.mutateAsync({
+      const payload: UpdateDiscountPayload = {
         id: currentDiscount.id,
         data: {
           code: values.code,
@@ -158,7 +160,9 @@ export default function EditDiscountPage() {
           expires_at: values.end_date || null,
           is_active: values.is_active
         }
-      });
+      };
+
+      await updateDiscount.mutateAsync(payload);
 
       toast.success('Discount updated successfully');
       router.push('/vendors/dashboard/settings/discounts');

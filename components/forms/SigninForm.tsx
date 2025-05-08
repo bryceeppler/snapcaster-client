@@ -73,10 +73,10 @@ export default function SignInForm() {
   // If there's only one method available, automatically select it
   useEffect(() => {
     if (availableMethods.length === 1) {
-      setSelectedMethod(availableMethods[0]);
+      setSelectedMethod(availableMethods[0] || 'app');
     } else if (availableMethods.length > 1) {
       // Select the highest priority method by default
-      setSelectedMethod(sortedMethods[0]);
+      setSelectedMethod(sortedMethods[0] || 'app');
     }
   }, [availableMethods, sortedMethods]);
 

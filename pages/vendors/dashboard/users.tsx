@@ -1,6 +1,5 @@
 import { subDays, format } from 'date-fns';
-import type {
-  LucideIcon} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
   BarChart3,
   LineChart,

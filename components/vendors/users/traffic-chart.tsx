@@ -2,13 +2,7 @@
 
 import { format, parseISO } from 'date-fns';
 import * as React from 'react';
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  XAxis,
-  YAxis
-} from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import {
   Card,
@@ -17,8 +11,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import type {
-  ChartConfig} from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart';
 import {
   ChartContainer,
   ChartTooltip,
@@ -56,7 +49,13 @@ export function TrafficChart({ dateRange }: TrafficChartProps) {
   );
 
   if (isLoading) {
-    return <ChartSkeleton title="Traffic Overview" dateRange={dateRange} height={250} />;
+    return (
+      <ChartSkeleton
+        title="Traffic Overview"
+        dateRange={dateRange}
+        height={250}
+      />
+    );
   }
 
   if (error) {
@@ -65,7 +64,8 @@ export function TrafficChart({ dateRange }: TrafficChartProps) {
         <CardHeader className="items-center pb-0">
           <CardTitle>Traffic Overview</CardTitle>
           <CardDescription>
-            {format(dateRange.from, 'LLL dd, y')} - {format(dateRange.to, 'LLL dd, y')}
+            {format(dateRange.from, 'LLL dd, y')} -{' '}
+            {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex h-[300px] items-center justify-center">
@@ -87,13 +87,14 @@ export function TrafficChart({ dateRange }: TrafficChartProps) {
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Traffic Overview</CardTitle>
           <CardDescription>
-            {format(dateRange.from, 'LLL dd, y')} - {format(dateRange.to, 'LLL dd, y')}
+            {format(dateRange.from, 'LLL dd, y')} -{' '}
+            {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </div>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer 
-          config={chartConfig} 
+        <ChartContainer
+          config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
           <AreaChart data={chartData}>

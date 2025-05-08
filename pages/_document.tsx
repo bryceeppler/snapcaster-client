@@ -45,7 +45,10 @@ class MyDocument extends Document {
           </noscript>
           {/* End Google Tag Manager (noscript) */}
           <noscript>
-            <img height="1" width="1" style={{ display: 'none' }}
+            <img
+              height="1"
+              width="1"
+              style={{ display: 'none' }}
               src="https://www.facebook.com/tr?id=1297702238099595&ev=PageView&noscript=1"
             />
           </noscript>

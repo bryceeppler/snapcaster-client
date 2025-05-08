@@ -10,11 +10,7 @@ import {
   SheetTitle
 } from '@/components/ui/sheet';
 import useBuyListStore from '@/stores/useBuylistStore';
-
-interface FilterSheetProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import type { FilterSheetProps } from '@/types/filters';
 
 const FilterSheet = ({ open, onOpenChange }: FilterSheetProps) => {
   const {

@@ -56,7 +56,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUserCarts } from '@/hooks/useUserCarts';
 import useBuyListStore from '@/stores/useBuylistStore';
 
-
 // Interface for navigation items with icons
 interface NavItem {
   label: string;

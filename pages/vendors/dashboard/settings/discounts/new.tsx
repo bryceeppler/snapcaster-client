@@ -39,6 +39,10 @@ import { Switch } from '@/components/ui/switch';
 import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useAuth } from '@/hooks/useAuth';
+import type {
+  CreateDiscountPayload,
+  DiscountFormValues
+} from '@/types/discounts';
 import { DiscountType } from '@/types/discounts';
 
 // Form schema for discount validation
@@ -58,8 +62,6 @@ const discountFormSchema = z.object({
     message: 'Please select a vendor'
   })
 });
-
-type DiscountFormValues = z.infer<typeof discountFormSchema>;
 
 export default function NewDiscountPage() {
   const router = useRouter();
@@ -109,14 +111,14 @@ export default function NewDiscountPage() {
     }
 
     try {
-      const vendorIdToUse = isAdmin ? values.vendor_id : vendor?.id || 0;
+      const vendorIdToUse = isAdmin ? values.vendor_id! : vendor?.id || 0;
 
       if (vendorIdToUse === 0) {
         toast.error('Invalid vendor ID');
         return;
       }
 
-      await createDiscount.mutateAsync({
+      const payload: CreateDiscountPayload = {
         code: values.code.toUpperCase(),
         discount_amount: values.percentage,
         vendor_id: vendorIdToUse,
@@ -124,7 +126,9 @@ export default function NewDiscountPage() {
         starts_at: values.start_date,
         expires_at: values.end_date || null,
         is_active: values.is_active
-      });
+      };
+
+      await createDiscount.mutateAsync(payload);
 
       toast.success('Discount code created successfully');
       router.push('/vendors/dashboard/settings/discounts');

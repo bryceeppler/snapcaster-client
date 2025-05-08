@@ -10,22 +10,14 @@ import {
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import type { SortByProps, SortOption } from '@/types/sorting';
 
-type SortOption = string;
-
-type Props = {
-  sortBy: SortOption;
-  setSortBy: (sortBy: SortOption) => void;
-  fetchCards: () => Promise<void>;
-  setCurrentPage: (currentPage: number) => void;
-  sortByOptions: Record<string, string>;
-};
+type Props = Omit<SortByProps, 'triggerClassName'>;
 
 export default function SearchSortBy({
   sortBy,
   setSortBy,
   fetchCards,
-
   setCurrentPage,
   sortByOptions
 }: Props) {

@@ -5,8 +5,7 @@ import {
   Users,
   Calendar as CalendarIcon
 } from 'lucide-react';
-import type {
-  LucideIcon} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import { type PropsRange } from 'react-day-picker';
 

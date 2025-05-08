@@ -1,15 +1,12 @@
 // _app.tsx
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { AppProps } from 'next/app';
-import type {
-  ReactNode
-} from 'react';
-import {
-  useEffect,
-  useState,
-  createContext,
-  useContext
-} from 'react';
+import { Inter } from 'next/font/google';
+import type { ReactNode } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
 import React from 'react';
+import 'styles/chrome-bug.css';
+import 'styles/main.css';
 import { useWindowSize } from 'usehooks-ts';
 
 import { initGA, logPageView } from '../utils/analytics';
@@ -21,10 +18,6 @@ import { Toaster } from '@/components/ui/sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 
-import 'styles/main.css';
-import 'styles/chrome-bug.css';
-import { Inter } from 'next/font/google';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -106,7 +99,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
           attribute="class"
           defaultTheme={!isLandingPage ? 'light' : 'system'}
           enableSystem={!isLandingPage}
-          forcedTheme={isLandingPage ? 'light' : undefined}
+          {...(isLandingPage ? { forcedTheme: 'light' } : {})}
           disableTransitionOnChange
         >
           <AdProvider>

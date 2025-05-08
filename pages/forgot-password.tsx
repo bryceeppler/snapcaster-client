@@ -19,8 +19,6 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 
-
-
 const ForgotPassword: NextPage = () => {
   const { forgotPassword } = useAuth();
   const [isSubmitted, setIsSubmitted] = useState(false);

@@ -1,8 +1,6 @@
 'use client';
 
-import type {
-  ChartData,
-  ChartOptions} from 'chart.js';
+import type { ChartData, ChartOptions } from 'chart.js';
 import {
   Chart as ChartJS,
   CategoryScale,

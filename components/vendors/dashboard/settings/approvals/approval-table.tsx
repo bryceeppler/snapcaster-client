@@ -24,9 +24,7 @@ import { useVendors } from '@/hooks/queries/useVendors';
 import { AD_RESOLUTIONS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import type { Vendor } from '@/services/vendorService';
-import {
-  AdvertisementImageType
-} from '@/types/advertisements';
+import { AdvertisementImageType } from '@/types/advertisements';
 import type {
   AdvertisementImage,
   AdvertisementWithImages

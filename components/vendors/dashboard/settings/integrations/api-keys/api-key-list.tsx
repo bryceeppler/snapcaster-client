@@ -34,10 +34,6 @@ import {
 import type { ApiKey } from '@/hooks/queries/useApiKeys';
 import { useApiKeys } from '@/hooks/queries/useApiKeys';
 
-
-
-
-
 // Loading skeleton for the table
 const TableLoadingSkeleton = () => (
   <div className="w-full space-y-2 p-4">

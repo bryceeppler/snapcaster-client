@@ -1,10 +1,6 @@
-"use client"
+'use client';
 
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
-
-import type {
-  ChartData,
-  ChartOptions} from 'chart.js';
+import type { ChartData, ChartOptions } from 'chart.js';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,20 +11,16 @@ import {
   Tooltip,
   Filler,
   Legend,
-  TimeScale,
-} from 'chart.js'
-import { format } from "date-fns"
-import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
-import { Line } from 'react-chartjs-2'
-import 'chartjs-adapter-date-fns'
+  TimeScale
+} from 'chart.js';
+import { format } from 'date-fns';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 // Register ChartJS components
 ChartJS.register(
@@ -41,7 +33,7 @@ ChartJS.register(
   Filler,
   Legend,
   TimeScale
-)
+);
 
 interface DataPoint {
   date: string;
@@ -51,43 +43,50 @@ interface DataPoint {
 export function BuyClicksChart() {
   const [chartData, setChartData] = useState<ChartData<'line'>>({
     datasets: []
-  })
-  const [isLoading, setIsLoading] = useState(true)
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `/api/analytics/buy-clicks?days=120`
-        )
-        
+        const response = await fetch(`/api/analytics/buy-clicks?days=120`);
+
         if (!response.ok) {
-          throw new Error('Failed to fetch data')
+          throw new Error('Failed to fetch data');
         }
-        
-        const data = await response.json()
-        
+
+        const data = await response.json();
+
         // Transform daily data
-        const dailyData = data.map((item: { date: string; count: number }) => {
-          const year = item.date.substring(0, 4)
-          const month = item.date.substring(4, 6)
-          const day = item.date.substring(6, 8)
-          return {
-            date: `${year}-${month}-${day}`,
-            users: item.count
-          }
-        }).sort((a: DataPoint, b: DataPoint) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        const dailyData = data
+          .map((item: { date: string; count: number }) => {
+            const year = item.date.substring(0, 4);
+            const month = item.date.substring(4, 6);
+            const day = item.date.substring(6, 8);
+            return {
+              date: `${year}-${month}-${day}`,
+              users: item.count
+            };
+          })
+          .sort(
+            (a: DataPoint, b: DataPoint) =>
+              new Date(a.date).getTime() - new Date(b.date).getTime()
+          );
 
         // Calculate 7-day moving average
-        const movingAverage = dailyData.map((point: DataPoint, index: number, array: DataPoint[]) => {
-          const start = Math.max(0, index - 6)
-          const count = Math.min(7, index - start + 1)
-          const sum = array.slice(start, index + 1).reduce((sum: number, p: DataPoint) => sum + p.users, 0)
-          return {
-            date: point.date,
-            users: Math.round(sum / count)
+        const movingAverage = dailyData.map(
+          (point: DataPoint, index: number, array: DataPoint[]) => {
+            const start = Math.max(0, index - 6);
+            const count = Math.min(7, index - start + 1);
+            const sum = array
+              .slice(start, index + 1)
+              .reduce((sum: number, p: DataPoint) => sum + p.users, 0);
+            return {
+              date: point.date,
+              users: Math.round(sum / count)
+            };
           }
-        })
+        );
 
         setChartData({
           datasets: [
@@ -118,16 +117,16 @@ export function BuyClicksChart() {
               fill: true
             }
           ]
-        })
+        });
       } catch (error) {
-        console.error('Error fetching buy clicks data:', error)
+        console.error('Error fetching buy clicks data:', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const options: ChartOptions<'line'> = {
     responsive: true,
@@ -160,10 +159,10 @@ export function BuyClicksChart() {
         padding: 12,
         callbacks: {
           title: (tooltipItems) => {
-            return format(new Date(tooltipItems[0].parsed.x), 'MMM dd, yyyy')
+            return format(new Date(tooltipItems[0].parsed.x), 'MMM dd, yyyy');
           },
           label: (context) => {
-            return `${context.dataset.label}: ${context.parsed.y} clicks`
+            return `${context.dataset.label}: ${context.parsed.y} clicks`;
           }
         }
       }
@@ -198,7 +197,7 @@ export function BuyClicksChart() {
         }
       }
     }
-  }
+  };
 
   return (
     <Card>
@@ -206,9 +205,9 @@ export function BuyClicksChart() {
         <CardTitle>Buy Button Clicks</CardTitle>
       </CardHeader>
       <CardContent>
-      {isLoading ? (
-          <motion.div 
-            className="flex flex-col items-center justify-center h-[300px] gap-4"
+        {isLoading ? (
+          <motion.div
+            className="flex h-[300px] flex-col items-center justify-center gap-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
@@ -224,7 +223,7 @@ export function BuyClicksChart() {
             </motion.p>
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             className="h-[300px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -235,5 +234,5 @@ export function BuyClicksChart() {
         )}
       </CardContent>
     </Card>
-  )
-} 
+  );
+}

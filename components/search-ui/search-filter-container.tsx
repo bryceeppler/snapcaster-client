@@ -17,10 +17,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { createCheckoutSession } from '@/lib/utils';
 import type { FilterOption, FilterOptionValues } from '@/types/query';
 
-
-
-
-
 // Type for the sort options - matches what's in the provided data
 export type SortByOption = string;
 

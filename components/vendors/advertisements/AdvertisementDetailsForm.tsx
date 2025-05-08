@@ -16,12 +16,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import type {
-  AdvertisementWithImages} from '@/types/advertisements';
-import {
-  AdvertisementPosition
-} from '@/types/advertisements';
-
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 
 // Form schema for advertisement validation
 const advertisementFormSchema = z.object({

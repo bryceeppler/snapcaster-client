@@ -9,7 +9,6 @@ import { useVendors } from '@/hooks/queries/useVendors';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import type { Product } from '@/types';
 
-
 const CardOption = ({ product }: { product: Product }) => {
   const { getVendorNameBySlug } = useVendors();
 

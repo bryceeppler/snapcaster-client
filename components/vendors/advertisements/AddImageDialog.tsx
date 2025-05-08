@@ -1,9 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-
-import { AD_RESOLUTIONS } from '@/lib/constants';
-import { advertisementService } from '@/services/advertisementService';
-import { toast } from 'sonner';
 import {
   UploadIcon,
   ImageIcon,
@@ -14,7 +10,9 @@ import {
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -35,13 +33,14 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { QUERY_KEY } from '@/hooks/queries/useAdvertisements';
+import { AD_RESOLUTIONS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { advertisementService } from '@/services/advertisementService';
 import {
   AdvertisementPosition,
   AdvertisementImageType
 } from '@/types/advertisements';
-import type {
-  AdvertisementWithImages} from '@/types/advertisements';
+import type { AdvertisementWithImages } from '@/types/advertisements';
 
 // Form schema for image upload
 const imageFormSchema = z.object({

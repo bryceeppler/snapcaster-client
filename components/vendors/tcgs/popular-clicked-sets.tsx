@@ -2,21 +2,21 @@
 
 import { format } from 'date-fns';
 import * as React from 'react';
-import { useState } from "react";
+import { useState } from 'react';
 
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '@/components/ui/select';
 import {
   Table,
@@ -24,11 +24,10 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from '@/components/ui/table';
 import { TableSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 import { usePopularClickedSets } from '@/lib/hooks/useAnalytics';
-
 
 interface PopularClickedSetsProps {
   dateRange: {
@@ -43,8 +42,12 @@ interface SetData {
 }
 
 export function PopularClickedSets({ dateRange }: PopularClickedSetsProps) {
-  const { data, isLoading, error } = usePopularClickedSets(dateRange.from, dateRange.to, 50);
-  const [selectedTcg, setSelectedTcg] = useState<string>("");
+  const { data, isLoading, error } = usePopularClickedSets(
+    dateRange.from,
+    dateRange.to,
+    50
+  );
+  const [selectedTcg, setSelectedTcg] = useState<string>('');
 
   const tcgSlugToName = {
     mtg: 'Magic: The Gathering',
@@ -53,7 +56,7 @@ export function PopularClickedSets({ dateRange }: PopularClickedSetsProps) {
     lorcana: 'Lorcana',
     starwars: 'Star Wars',
     onepiece: 'One Piece',
-    fleshandblood: 'Flesh and Blood',
+    fleshandblood: 'Flesh and Blood'
   };
 
   // Set initial selected TCG when data is loaded
@@ -62,7 +65,13 @@ export function PopularClickedSets({ dateRange }: PopularClickedSetsProps) {
   }
 
   if (isLoading) {
-    return <TableSkeleton title="Popular Clicked Sets" dateRange={dateRange} height={400} />;
+    return (
+      <TableSkeleton
+        title="Popular Clicked Sets"
+        dateRange={dateRange}
+        height={400}
+      />
+    );
   }
 
   if (error || !data || Object.keys(data).length === 0) {
@@ -71,12 +80,15 @@ export function PopularClickedSets({ dateRange }: PopularClickedSetsProps) {
         <CardHeader>
           <CardTitle>Popular Clicked Sets</CardTitle>
           <CardDescription>
-            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+            {format(dateRange.from, 'LLL dd, y')} -{' '}
+            {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex h-[400px] items-center justify-center">
           <p className="text-sm text-red-500">
-            {error ? `Failed to load data: ${error.message}` : 'No data available'}
+            {error
+              ? `Failed to load data: ${error.message}`
+              : 'No data available'}
           </p>
         </CardContent>
       </Card>
@@ -91,7 +103,8 @@ export function PopularClickedSets({ dateRange }: PopularClickedSetsProps) {
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Popular Clicked Sets</CardTitle>
           <CardDescription>
-            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+            {format(dateRange.from, 'LLL dd, y')} -{' '}
+            {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </div>
         <Select value={selectedTcg} onValueChange={setSelectedTcg}>
@@ -120,7 +133,9 @@ export function PopularClickedSets({ dateRange }: PopularClickedSetsProps) {
               {tcgData[selectedTcg]?.map((set: SetData, index: number) => (
                 <TableRow key={`${set.setName}-${index}`}>
                   <TableCell className="capitalize">{set.setName}</TableCell>
-                  <TableCell className="text-right">{set.count.toLocaleString()}</TableCell>
+                  <TableCell className="text-right">
+                    {set.count.toLocaleString()}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -129,4 +144,4 @@ export function PopularClickedSets({ dateRange }: PopularClickedSetsProps) {
       </CardContent>
     </Card>
   );
-} 
+}

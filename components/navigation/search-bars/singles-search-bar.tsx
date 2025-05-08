@@ -1,10 +1,10 @@
 'use client';
 
-import type { KeyboardEvent} from 'react';
+import type { KeyboardEvent } from 'react';
 import { useState, useRef, useCallback } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 
-import type { DeviceType } from '../navbar-types';
+import type { DeviceType } from '../../../types/navbar';
 
 import BaseSearchBar from '@/components/ui/base-search-bar';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';

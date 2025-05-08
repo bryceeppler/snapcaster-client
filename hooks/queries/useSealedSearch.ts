@@ -7,9 +7,6 @@ import type { Product, Tcg } from '@/types';
 import type { FilterOption, SealedSortOptions } from '@/types/query';
 import axiosInstance from '@/utils/axiosWrapper';
 
-
-
-
 interface SearchParams {
   productCategory: Tcg;
   searchTerm: string;

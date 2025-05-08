@@ -6,7 +6,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAdContext } from '@/pages/_app';
 import { AdvertisementPosition } from '@/types/advertisements';
 
-
 type Props = {
   width?: 'md' | 'xl';
   usesSideBanners?: boolean;

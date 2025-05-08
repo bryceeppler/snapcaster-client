@@ -3,7 +3,7 @@
 import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
 
-import type { DeviceType } from '../navbar-types';
+import type { DeviceType } from '../../../types/navbar';
 
 import BaseSearchBar from '@/components/ui/base-search-bar';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';

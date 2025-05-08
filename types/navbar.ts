@@ -2,7 +2,9 @@
  * Shared types and interfaces for the navbar system
  */
 
-import type { ReactNode } from 'react';
+import type { ReactNode, RefObject } from 'react';
+
+import type { Tcg } from '@/types';
 
 /**
  * Supported search modes for the application
@@ -33,4 +35,20 @@ export interface SearchProviderProps {
   children: ReactNode;
   currentPath: string;
   deviceType: DeviceType;
+}
+
+export interface BaseSearchBarProps {
+  deviceType: DeviceType;
+  tcg: Tcg;
+  searchTerm: string;
+  placeholder?: string;
+  isLoading?: boolean;
+  inputRef?: RefObject<HTMLInputElement>;
+  onTcgChange: (tcg: Tcg) => void;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  onSearchClick: () => void;
+  renderAutoComplete?: () => ReactNode;
+  showSearchHelp?: boolean;
+  searchHelpContent?: ReactNode;
 }

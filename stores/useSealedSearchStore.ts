@@ -11,7 +11,7 @@ interface FilterSelection {
   value: string;
 }
 
-type SearchState = {
+type SealedSearchStore = {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 
@@ -34,7 +34,7 @@ type SearchState = {
   setRegion: (region: string) => void;
 };
 
-export const useSealedSearchStore = create<SearchState>()(
+export const useSealedSearchStore = create<SealedSearchStore>()(
   devtools(
     persist(
       (set, get) => ({

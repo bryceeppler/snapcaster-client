@@ -1,24 +1,24 @@
-"use client"
+'use client';
 
-import { format } from "date-fns"
+import { format } from 'date-fns';
 
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+  CardTitle
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { TableSkeleton } from "@/components/vendors/dashboard/chart-skeleton"
-import { useCityAnalytics } from "@/lib/hooks/useAnalytics"
+  TableRow
+} from '@/components/ui/table';
+import { TableSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
+import { useCityAnalytics } from '@/lib/hooks/useAnalytics';
 
 interface CityAnalyticsTableProps {
   dateRange: {
@@ -28,10 +28,19 @@ interface CityAnalyticsTableProps {
 }
 
 export function CityAnalyticsTable({ dateRange }: CityAnalyticsTableProps) {
-  const { data, isLoading, error } = useCityAnalytics(dateRange.from, dateRange.to);
+  const { data, isLoading, error } = useCityAnalytics(
+    dateRange.from,
+    dateRange.to
+  );
 
   if (isLoading) {
-    return <TableSkeleton title="City Distribution" dateRange={dateRange} height={400} />;
+    return (
+      <TableSkeleton
+        title="City Distribution"
+        dateRange={dateRange}
+        height={400}
+      />
+    );
   }
 
   if (error || !data) {
@@ -40,7 +49,8 @@ export function CityAnalyticsTable({ dateRange }: CityAnalyticsTableProps) {
         <CardHeader>
           <CardTitle>City Distribution</CardTitle>
           <CardDescription>
-            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+            {format(dateRange.from, 'LLL dd, y')} -{' '}
+            {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex h-[400px] items-center justify-center">
@@ -56,7 +66,8 @@ export function CityAnalyticsTable({ dateRange }: CityAnalyticsTableProps) {
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>City Distribution</CardTitle>
           <CardDescription>
-            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+            {format(dateRange.from, 'LLL dd, y')} -{' '}
+            {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </div>
       </CardHeader>
@@ -74,8 +85,12 @@ export function CityAnalyticsTable({ dateRange }: CityAnalyticsTableProps) {
               {data.data.map((city) => (
                 <TableRow key={city.city}>
                   <TableCell>{city.city}</TableCell>
-                  <TableCell className="text-right">{city.users.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">{city.percentage}%</TableCell>
+                  <TableCell className="text-right">
+                    {city.users.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {city.percentage}%
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

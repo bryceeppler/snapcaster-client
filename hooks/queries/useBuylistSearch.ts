@@ -6,7 +6,6 @@ import useBuylistStore from '@/stores/useBuylistStore';
 import type { Tcg } from '@/types';
 import axiosInstance from '@/utils/axiosWrapper';
 
-
 interface SearchParams {
   tcg: Tcg;
   searchTerm: string;

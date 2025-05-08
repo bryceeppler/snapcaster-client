@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { ChevronDown, Loader2 } from 'lucide-react';
-import type { KeyboardEvent} from 'react';
+import type { KeyboardEvent } from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 

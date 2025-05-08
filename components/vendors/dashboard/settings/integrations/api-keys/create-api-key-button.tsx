@@ -6,7 +6,6 @@ import { CreateApiKeyDialog } from './create-api-key-dialog';
 
 import { Button } from '@/components/ui/button';
 
-
 export function CreateApiKeyButton() {
   const [showDialog, setShowDialog] = useState(false);
 

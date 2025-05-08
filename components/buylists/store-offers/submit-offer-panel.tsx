@@ -17,30 +17,9 @@ import { Separator } from '@/components/ui/separator';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import useBuyListStore from '@/stores/useBuylistStore';
+import type { BuylistPaymentMethod, StoreOfferData } from '@/types/buylists';
 
-type PaymentMethod = 'Cash' | 'Store Credit';
-
-// Interface for the card items in the buylist
-interface BuylistItem {
-  id: number;
-  card_name: string;
-  set_name: string;
-  condition_name: string;
-  foil: string;
-  quantity: number;
-  cashPrice: number;
-  creditPrice: number;
-  // Add other fields as needed
-}
-
-// Interface for the store data received from the API
-interface StoreOfferData {
-  storeName: string;
-  cashSubtotal: string;
-  creditSubtotal: string;
-  items: BuylistItem[];
-  unableToPurchaseItems: BuylistItem[];
-}
+type PaymentMethod = BuylistPaymentMethod;
 
 export const SubmitOfferPanel = () => {
   const { vendors, getVendorNameBySlug } = useVendors();

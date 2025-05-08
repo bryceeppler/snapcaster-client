@@ -24,36 +24,11 @@ import { useVendors } from '@/hooks/queries/useVendors';
 import { useConnectedVendors } from '@/hooks/useConnectedVendors';
 import type { Vendor } from '@/services/vendorService';
 import useBuyListStore from '@/stores/useBuylistStore';
-
-// Interface for the card items in the buylist
-interface BuylistItem {
-  id: number;
-  cardName: string;
-  setName: string;
-  condition: string;
-  condition_name?: string;
-  rarity: string;
-  foil: string;
-  quantity: number;
-  purchaseQuantity: number;
-  maxPurchaseQuantity: number;
-  unableToPurchaseQuantity?: number;
-  cashPrice: number;
-  creditPrice: number;
-  bestCashOffer?: boolean;
-  bestCreditOffer?: boolean;
-  image: string;
-  name?: string;
-}
-
-// Interface for the store data received from the API
-interface StoreOfferData {
-  storeName: string;
-  cashSubtotal: string;
-  creditSubtotal: string;
-  items: BuylistItem[];
-  unableToPurchaseItems: BuylistItem[];
-}
+import type {
+  StoreOfferData,
+  BuylistItem,
+  PriceRowProps
+} from '@/types/buylists';
 
 // Interface for the VendorInfoCard props
 interface VendorInfoCardProps {
@@ -328,7 +303,7 @@ const PurchaseCard = ({
                 label="Credit"
                 unitPrice={cardData.creditPrice}
                 quantity={cardData.purchaseQuantity}
-                isBestOffer={cardData.bestCreditOffer}
+                isBestOffer={cardData.bestCreditOffer ?? undefined}
                 tooltipText="Top Credit Unit Price"
               />
 
@@ -336,7 +311,7 @@ const PurchaseCard = ({
                 label="Cash"
                 unitPrice={cardData.cashPrice}
                 quantity={cardData.purchaseQuantity}
-                isBestOffer={cardData.bestCashOffer}
+                isBestOffer={cardData.bestCashOffer ?? undefined}
                 tooltipText="Top Cash Unit Price"
               />
             </div>
@@ -417,15 +392,9 @@ const PriceRow = ({
   label,
   unitPrice,
   quantity,
-  isBestOffer = false,
+  isBestOffer,
   tooltipText
-}: {
-  label: string;
-  unitPrice: string | number;
-  quantity: number;
-  isBestOffer?: boolean;
-  tooltipText: string;
-}) => {
+}: PriceRowProps) => {
   const total = (Number(unitPrice) * quantity).toFixed(2);
 
   return (

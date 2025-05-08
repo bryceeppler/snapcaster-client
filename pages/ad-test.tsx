@@ -22,12 +22,8 @@ import {
 } from '@/components/ui/select';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { useVendors } from '@/hooks/queries/useVendors';
-import type {
-  AdvertisementWithImages
-} from '@/types/advertisements';
-import {
-  AdvertisementPosition
-} from '@/types/advertisements';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 const AdTest = () => {

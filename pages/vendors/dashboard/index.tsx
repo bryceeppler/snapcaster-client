@@ -1,12 +1,5 @@
-import type {
-  LucideIcon
-} from 'lucide-react';
-import {
-  ArrowRight,
-  BarChart3,
-  LineChart,
-  Users
-} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { ArrowRight, BarChart3, LineChart, Users } from 'lucide-react';
 import Link from 'next/link';
 
 import DashboardLayout from './layout';

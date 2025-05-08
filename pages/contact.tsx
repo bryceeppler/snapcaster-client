@@ -10,9 +10,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
+  TooltipTrigger
+} from '@/components/ui/tooltip';
 
 const ContactMethod = ({
   icon: Icon,
@@ -53,9 +52,9 @@ const EmailButton = () => {
     <TooltipProvider>
       <Tooltip open={copied}>
         <TooltipTrigger asChild>
-          <Button 
-            variant="outline" 
-            className="w-full sm:w-fit" 
+          <Button
+            variant="outline"
+            className="w-full sm:w-fit"
             onClick={copyToClipboard}
           >
             {copied ? (
@@ -88,10 +87,7 @@ const Contact: NextPage = () => {
           name="description"
           content="Get in touch with the Snapcaster team for support, feedback, or questions."
         />
-        <meta
-          property="og:title"
-          content="Contact - Snapcaster"
-        />
+        <meta property="og:title" content="Contact - Snapcaster" />
         <meta
           property="og:description"
           content="Get in touch with the Snapcaster team for support, feedback, or questions."
@@ -118,7 +114,11 @@ const Contact: NextPage = () => {
               description="Connect with other users and get direct support from the Snapcaster team. Our Discord server is the best place to stay updated and get help."
               action={
                 <Button className="w-full sm:w-fit" asChild>
-                  <a href="https://discord.gg/EnKKHxSq75" target="_blank" rel="noopener noreferrer">
+                  <a
+                    href="https://discord.gg/EnKKHxSq75"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <DiscordLogoIcon className="mr-2 h-4 w-4" />
                     Join Discord Server
                   </a>

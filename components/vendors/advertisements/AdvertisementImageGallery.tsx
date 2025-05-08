@@ -28,27 +28,18 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import type {
-  AdvertisementWithImages
-} from '@/types/advertisements';
+import type { AdvertisementWithImages } from '@/types/advertisements';
 import {
   AdvertisementPosition,
   AdvertisementImageType
 } from '@/types/advertisements';
-
-
 
 interface AdvertisementImageGalleryProps {
   advertisement: AdvertisementWithImages;

@@ -5,7 +5,6 @@ import type { TwoFactorRequiredResponse } from '@/services/authService';
 import { authService } from '@/services/authService';
 import { tokenManager } from '@/utils/axiosWrapper';
 
-
 // Create a compatibility layer for router
 function useCompatRouter() {
   // Check if we're in a browser environment

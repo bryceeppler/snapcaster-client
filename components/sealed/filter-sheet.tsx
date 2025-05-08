@@ -13,20 +13,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-
-interface FilterSheetProps {
-  sortBy: string | null;
-  setSortBy: (sortBy: string | null) => void;
-  sortByLabel: Record<string, string>;
-  clearFilters: () => void;
-}
+import type { SealedFilterSheetProps } from '@/types/filters';
 
 export default function FilterSheet({
   sortBy,
   setSortBy,
   sortByLabel,
   clearFilters
-}: FilterSheetProps) {
+}: SealedFilterSheetProps) {
   const { selectedFilters, toggleFilter, filterOptions } =
     useSealedSearchStore();
   const { getVendorNameBySlug } = useVendors();

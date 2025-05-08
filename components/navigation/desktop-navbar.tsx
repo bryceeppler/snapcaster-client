@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 
-
 /**
  * Desktop navigation bar component
  * Shown on lg+ screens

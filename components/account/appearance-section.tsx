@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
-
 export function AppearanceSection() {
   return (
     <Card className="duration-500 animate-in fade-in-50">

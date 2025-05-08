@@ -2,12 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useRef } from 'react';
 import { toast } from 'sonner';
 
-import type {
-  UpdateAdvertisementRequest
-} from '@/services/advertisementService';
-import {
-  advertisementService
-} from '@/services/advertisementService';
+import type { UpdateAdvertisementRequest } from '@/services/advertisementService';
+import { advertisementService } from '@/services/advertisementService';
 import type { AdvertisementWithImages } from '@/types/advertisements';
 import { AdvertisementPosition } from '@/types/advertisements';
 export const QUERY_KEY = 'advertisements';

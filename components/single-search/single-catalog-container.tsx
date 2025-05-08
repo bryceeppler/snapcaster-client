@@ -10,12 +10,8 @@ import FilterSection from '@/components/search-ui/search-filter-container';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { useAuth } from '@/hooks/useAuth';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import type {
-  AdvertisementWithImages
-} from '@/types/advertisements';
-import {
-  AdvertisementPosition
-} from '@/types/advertisements';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 import { appendUtmParameters } from '@/utils/adUrlBuilder';
 import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 

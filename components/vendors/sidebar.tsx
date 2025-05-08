@@ -15,13 +15,7 @@ import { usePathname } from 'next/navigation';
 
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
-
-interface MenuItem {
-  title: string;
-  icon: React.ElementType;
-  href: string;
-  isActive: boolean;
-}
+import type { MenuItem } from '@/types/navigation';
 
 export function VendorSidebar() {
   const pathname = usePathname();

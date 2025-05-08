@@ -11,12 +11,8 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import type {
-  ChartConfig} from '@/components/ui/chart';
-import {
-  ChartContainer,
-  ChartTooltip
-} from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip } from '@/components/ui/chart';
 import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useVendorBuyClicks } from '@/lib/hooks/useAnalytics';

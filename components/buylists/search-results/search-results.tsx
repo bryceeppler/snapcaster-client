@@ -64,7 +64,12 @@ export const BuylistSearchResults = () => {
       setShouldReinitObserver(false);
       const observer = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          if (
+            entries.length > 0 &&
+            entries[0]?.isIntersecting &&
+            hasNextPage &&
+            !isFetchingNextPage
+          ) {
             fetchNextPage();
           }
         },
@@ -77,6 +82,7 @@ export const BuylistSearchResults = () => {
         }
       };
     }
+    return undefined;
   }, [
     shouldReinitObserver,
     data?.searchResults,

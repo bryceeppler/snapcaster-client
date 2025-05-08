@@ -1,6 +1,6 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-
+import Link from 'next/link';
 const Privacy: NextPage = () => {
   return (
     <>
@@ -21,13 +21,13 @@ const Privacy: NextPage = () => {
               using the Service, You agree to the collection and use of
               information in accordance with this Privacy Policy. This Privacy
               Policy has been created with the help of the{' '}
-              <a
+              <Link
                 className="hover:text-primary-muted text-primary"
                 href="https://www.freeprivacypolicy.com/free-privacy-policy-generator/"
                 target="_blank"
               >
                 Free Privacy Policy Generator
-              </a>
+              </Link>
               .
             </p>
             <h2 className="text-lg font-bold">
@@ -124,14 +124,14 @@ const Privacy: NextPage = () => {
               <li>
                 <p>
                   <strong>Website</strong> refers to Snapcaster, accessible from{' '}
-                  <a
+                  <Link
                     className="hover:text-primary-muted text-primary"
-                    href="https://www.snapcaster.ca"
+                    href="/"
                     rel="external nofollow noopener"
                     target="_blank"
                   >
                     https://www.snapcaster.ca/
-                  </a>
+                  </Link>
                 </p>
               </li>
               <li>
@@ -252,13 +252,13 @@ const Privacy: NextPage = () => {
               mobile device when You go offline, while Session Cookies are
               deleted as soon as You close Your web browser. Learn more about
               cookies on the{' '}
-              <a
+              <Link
                 className="hover:text-primary-muted text-primary"
                 href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking"
                 target="_blank"
               >
                 Free Privacy Policy website
-              </a>{' '}
+              </Link>{' '}
               article.
             </p>
             <p>

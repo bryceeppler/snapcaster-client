@@ -1,5 +1,6 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 
 const Terms: NextPage = () => {
   return (
@@ -19,13 +20,13 @@ const Terms: NextPage = () => {
             </p>
             <p>
               We operate the website{' '}
-              <a
+              <Link
                 href="https://www.snapcaster.ca/"
                 target="_blank"
                 className="hover:text-primary-muted text-primary"
               >
                 https://www.snapcaster.ca/
-              </a>{' '}
+              </Link>{' '}
               (the <strong>"Site"</strong> ) , as well as any other related
               products and services that refer or link to these legal terms (the{' '}
               <strong>"Legal Terms"</strong> ) (collectively, the{' '}
@@ -87,88 +88,92 @@ const Terms: NextPage = () => {
             <h2 className="text-lg font-bold">TABLE OF CONTENTS</h2>
             <ul>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#services">1. OUR SERVICES</a>
+                <Link href="#services">1. OUR SERVICES</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#ip">2. INTELLECTUAL PROPERTY RIGHTS</a>
+                <Link href="#ip">2. INTELLECTUAL PROPERTY RIGHTS</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#userreps">3. USER REPRESENTATIONS</a>
+                <Link href="#userreps">3. USER REPRESENTATIONS</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#userreg">4. USER REGISTRATION</a>
+                <Link href="#userreg">4. USER REGISTRATION</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#purchases">5. PURCHASES AND PAYMENT</a>
+                <Link href="#purchases">5. PURCHASES AND PAYMENT</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#subscriptions">6. SUBSCRIPTIONS</a>
+                <Link href="#subscriptions">6. SUBSCRIPTIONS</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#software">7. SOFTWARE</a>
+                <Link href="#software">7. SOFTWARE</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#prohibited">8. PROHIBITED ACTIVITIES</a>
+                <Link href="#prohibited">8. PROHIBITED ACTIVITIES</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#ugc">9. USER GENERATED CONTRIBUTIONS</a>
+                <Link href="#ugc">9. USER GENERATED CONTRIBUTIONS</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#license">10. CONTRIBUTION LICENSE</a>
+                <Link href="#license">10. CONTRIBUTION LICENSE</Link>
               </div>
 
               <div className="hover:text-primary-muted text-primary">
-                <a href="#socialmedia">11. SOCIAL MEDIA</a>
+                <Link href="#socialmedia">11. SOCIAL MEDIA</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#advertisers">12. ADVERTISERS</a>
+                <Link href="#advertisers">12. ADVERTISERS</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#thirdparty">13. THIRD-PARTY WEBSITES AND CONTENT</a>
+                <Link href="#thirdparty">
+                  13. THIRD-PARTY WEBSITES AND CONTENT
+                </Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#sitemanage">14. SERVICES MANAGEMENT</a>
+                <Link href="#sitemanage">14. SERVICES MANAGEMENT</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#ppyes">15. PRIVACY POLICY</a>
+                <Link href="#ppyes">15. PRIVACY POLICY</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#terms">16. TERM AND TERMINATION</a>
+                <Link href="#terms">16. TERM AND TERMINATION</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#modifications">17. MODIFICATIONS AND INTERRUPTIONS</a>
+                <Link href="#modifications">
+                  17. MODIFICATIONS AND INTERRUPTIONS
+                </Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#law">18. GOVERNING LAW</a>
+                <Link href="#law">18. GOVERNING LAW</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#disputes">19. DISPUTE RESOLUTION</a>
+                <Link href="#disputes">19. DISPUTE RESOLUTION</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#corrections">20. CORRECTIONS</a>
+                <Link href="#corrections">20. CORRECTIONS</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#disclaimer">21. DISCLAIMER</a>
+                <Link href="#disclaimer">21. DISCLAIMER</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#liability">22. LIMITATIONS OF LIABILITY</a>
+                <Link href="#liability">22. LIMITATIONS OF LIABILITY</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#indemnification">23. INDEMNIFICATION</a>
+                <Link href="#indemnification">23. INDEMNIFICATION</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#userdata">24. USER DATA</a>
+                <Link href="#userdata">24. USER DATA</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#electronic">
+                <Link href="#electronic">
                   25. ELECTRONIC COMMUNICATIONS, TRANSACTIONS, AND SIGNATURES
-                </a>
+                </Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#misc">26. MISCELLANEOUS</a>
+                <Link href="#misc">26. MISCELLANEOUS</Link>
               </div>
               <div className="hover:text-primary-muted text-primary">
-                <a href="#contact">27. CONTACT US</a>
+                <Link href="#contact">27. CONTACT US</Link>
               </div>
             </ul>
 
@@ -217,12 +222,12 @@ const Terms: NextPage = () => {
             <h3 className=" font-bold">Your use of our Services</h3>
             <p>
               Subject to your compliance with these Legal Terms, including the{' '}
-              <a
+              <Link
                 className="hover:text-primary-muted text-primary"
                 href="#prohibited"
               >
                 "PROHIBITED ACTIVITIES"
-              </a>{' '}
+              </Link>{' '}
               section below, we grant you a non-exclusive, non-transferable,
               revocable license to:
             </p>
@@ -268,12 +273,12 @@ const Terms: NextPage = () => {
             <h3 className=" font-bold">Your submissions</h3>
             <p>
               Please review this section and the{' '}
-              <a
+              <Link
                 className="hover:text-primary-muted text-primary"
                 href="#prohibited"
               >
                 "PROHIBITED ACTIVITIES"
-              </a>{' '}
+              </Link>{' '}
               section carefully prior to using our Services to understand the
               (a) rights you give us and (b) obligations you have when you post
               or upload any content through the Services.
@@ -295,12 +300,12 @@ const Terms: NextPage = () => {
               <span className="list-disc">
                 <li>
                   confirm that you have read and agree with our{' '}
-                  <a
+                  <Link
                     className="hover:text-primary-muted text-primary"
                     href="#prohibited"
                   >
                     "PROHIBITED ACTIVITIES"
-                  </a>{' '}
+                  </Link>{' '}
                   and will not post, send, publish, upload, or transmit through
                   the Services any Submission that is illegal, harassing,
                   hateful, harmful, defamatory, obscene, bullying, abusive,
@@ -327,7 +332,7 @@ const Terms: NextPage = () => {
             <p>
               You are solely responsible for your Submissions and you expressly
               agree to reimburse us for any and all losses that we may suffer
-              because of your breach of (a) this section, (b) any third party’s
+              because of your breach of (a) this section, (b) any third party's
               intellectual property rights, or (c) applicable law.
             </p>
 
@@ -522,7 +527,7 @@ const Terms: NextPage = () => {
                   Upload or transmit (or attempt to upload or to transmit)
                   viruses, Trojan horses, or other material, including excessive
                   use of capital letters and spamming (continuous posting of
-                  repetitive text), that interferes with any party’s
+                  repetitive text), that interferes with any party's
                   uninterrupted use and enjoyment of the Services or modifies,
                   impairs, disrupts, alters, or interferes with the use,
                   features, functions, operation, or maintenance of the
@@ -872,13 +877,13 @@ const Terms: NextPage = () => {
             <p>
               We care about data privacy and security. Please review our Privacy
               Policy:{' '}
-              <a
+              <Link
                 className="hover:text-primary-muted text-primary"
                 href="/privacy"
                 target="_blank"
               >
                 https://www.snapcaster.ca/privacy
-              </a>{' '}
+              </Link>{' '}
               . By using the Services, you agree to be bound by our Privacy
               Policy, which is incorporated into these Legal Terms. Please be
               advised the Services are hosted in the United States. If you
@@ -1110,7 +1115,7 @@ const Terms: NextPage = () => {
               our subsidiaries, affiliates, and all of our respective officers,
               agents, partners, and employees, from and against any loss,
               damage, liability, claim, or demand, including reasonable
-              attorneys’ fees and expenses, made by any third party due to or
+              attorneys' fees and expenses, made by any third party due to or
               arising out of: (1) use of the Services; (2) breach of these Legal
               Terms; (3) any breach of your representations and warranties set
               forth in these Legal Terms; (4) your violation of the rights of a
@@ -1224,13 +1229,13 @@ const Terms: NextPage = () => {
 
             <p>
               These terms of use were created using Termly's{' '}
-              <a
+              <Link
                 className="hover:text-primary-muted text-primary"
                 href="https://termly.io/products/terms-and-conditions-generator/"
                 target="_blank"
               >
                 Terms and Conditions Generator
-              </a>
+              </Link>
               .
             </p>
           </div>

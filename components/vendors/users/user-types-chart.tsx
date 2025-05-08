@@ -12,8 +12,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import type {
-  ChartConfig} from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart';
 import {
   ChartContainer,
   ChartTooltip,
@@ -76,7 +75,10 @@ interface CustomTooltipProps {
 
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (!active || !payload?.length) return null;
+
   const entry = payload[0];
+  if (!entry) return null;
+
   const value = entry.value;
   const name = entry.name;
 
