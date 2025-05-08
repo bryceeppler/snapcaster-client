@@ -24,8 +24,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const inter = Inter({ subsets: ['latin'] });
 
-interface MyAppProps extends AppProps {}
-
 type AdContextType = {
   showAds: boolean;
   setShowAds: (value: boolean) => void;
@@ -61,7 +59,7 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
   );
 };
 
-function MyApp({ Component, pageProps, router }: MyAppProps) {
+function MyApp({ Component, pageProps, router }: AppProps) {
   const { width = 0 } = useWindowSize();
   const isVendorDashboardPage =
     router.pathname.startsWith('/vendors/dashboard');

@@ -38,7 +38,6 @@ type SearchState = {
 };
 
 export const useSingleSearchStore = create<SearchState>()(
-  // @ts-ignore
   devtools(
     persist(
       (set, get) => ({

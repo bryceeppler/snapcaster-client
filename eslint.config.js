@@ -38,7 +38,15 @@ export default [
           argsIgnorePattern: '^_'
         }
       ],
-      '@typescript-eslint/no-unused-vars': 'off'
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn'
+    }
+  },
+  // Configuration files override - allow require() imports
+  {
+    files: ['*.config.js', '*.config.cjs', 'postcss.config.cjs'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off'
     }
   }
 ];

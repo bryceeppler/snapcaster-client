@@ -39,14 +39,6 @@ type TwoFactorSetupData = {
 
 type TwoFactorMethod = 'app' | 'email' | 'recovery';
 
-// This helper safely checks if the property exists on an object
-const hasProp = <T extends object, K extends PropertyKey>(
-  obj: T,
-  prop: K
-): obj is T & Record<K, unknown> => {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
 export function TwoFactorSection() {
   const { toast } = useToast();
   const {
@@ -62,9 +54,6 @@ export function TwoFactorSection() {
     disableEmail2FA,
     isDisablingEmail2FA,
     generateDisable2FACode,
-    isGeneratingDisableCode,
-    disable2FA,
-    isDisabling2FA,
     resendVerificationEmail,
     isResendingVerification
   } = useAuth();
@@ -74,9 +63,6 @@ export function TwoFactorSection() {
     'initial'
   );
   const [copiedBackupCodes, setCopiedBackupCodes] = useState(false);
-  const [activeMethod, setActiveMethod] = useState<TwoFactorMethod | null>(
-    null
-  );
   const [disableDialogOpen, setDisableDialogOpen] = useState(false);
   const [disableVerificationCode, setDisableVerificationCode] = useState('');
   const [methodToDisable, setMethodToDisable] =
@@ -91,7 +77,6 @@ export function TwoFactorSection() {
 
   // Setup app-based 2FA - we need to use a custom mutation to handle the setup data
   const setupAppAuth = useCallback(async () => {
-    setActiveMethod('app');
     setupApp2FA(undefined, {
       onSuccess: (data) => {
         setSetupData(data);
@@ -103,7 +88,6 @@ export function TwoFactorSection() {
         });
       },
       onError: () => {
-        setActiveMethod(null);
         toast({
           title: 'Setup Failed',
           description: 'There was an error setting up 2FA. Please try again.',
@@ -157,7 +141,6 @@ export function TwoFactorSection() {
           setSetupStep('initial');
           setSetupData(null);
           setVerificationCode('');
-          setActiveMethod(null);
           toast({
             title: '2FA Enabled',
             description:
@@ -533,7 +516,6 @@ export function TwoFactorSection() {
                   onClick={() => {
                     setSetupStep('initial');
                     setSetupData(null);
-                    setActiveMethod(null);
                   }}
                 >
                   Cancel

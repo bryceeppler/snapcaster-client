@@ -35,7 +35,6 @@ type MultiSearchState = {
 const useMultiSearchStore = create<MultiSearchState>()(
   devtools(
     persist(
-      // @ts-ignore
       (set, get) => ({
         cart: [],
         resultsTcg: 'mtg',
@@ -47,6 +46,7 @@ const useMultiSearchStore = create<MultiSearchState>()(
         loading: false,
         results: [],
         resultsList: [],
+        notFound: [],
         minimumAcceptableCondition: 'mp',
         setMinimumAcceptableCondition: (condition: Condition) => {
           set({ minimumAcceptableCondition: condition });

@@ -220,9 +220,11 @@ const SearchView = ({
           <span
             className="text-primary underline hover:cursor-pointer hover:text-primary/80"
             onClick={() => {
-              isAuthenticated
-                ? createCheckoutSession()
-                : (window.location.href = '/signin');
+              if (isAuthenticated) {
+                createCheckoutSession();
+              } else {
+                window.location.href = '/signin';
+              }
             }}
           >
             Upgrade to Snapcaster Pro
