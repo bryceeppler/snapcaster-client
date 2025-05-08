@@ -1,9 +1,8 @@
-import { ExternalLink, AlertTriangle } from 'lucide-react';
+import { AlertTriangle, ExternalLink } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import React from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardTitle, CardHeader } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -25,12 +24,12 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { useVendors } from '@/hooks/queries/useVendors';
-import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
+import { VendorAssetTheme, VendorAssetType } from '@/services/vendorService';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import type { Product } from '@/types';
 import {
-  groupProductsByHost,
-  buildCartUpdateUrls
+  buildCartUpdateUrls,
+  groupProductsByHost
 } from '@/utils/cartUrlBuilder';
 
 export const RecommendedStores = () => {
@@ -40,7 +39,7 @@ export const RecommendedStores = () => {
 
   // Filter out null values and then get unique card names
   const allCardNames = new Set(
-    results.filter((group) => group && group[0]).map((group) => group[0].name)
+    results.filter((group) => group && group[0]).map((group) => group[0]?.name)
   );
 
   const reccomendedWebsites = [
@@ -65,7 +64,7 @@ export const RecommendedStores = () => {
     // Process results to find available products
     results.forEach((resultGroup) => {
       if (!resultGroup || resultGroup.length === 0) return;
-      const cardName = resultGroup[0].name; // Get the card name from the first result
+      const cardName = resultGroup[0]?.name; // Get the card name from the first result
 
       resultGroup.forEach((product) => {
         if (!reccomendedWebsites.includes(product.vendor)) return;
@@ -75,11 +74,11 @@ export const RecommendedStores = () => {
         }
 
         // If we already have this product, only update if the new one is cheaper
-        const existingProduct = websiteProducts[product.vendor].get(
+        const existingProduct = websiteProducts[product.vendor]?.get(
           product.name
         );
         if (!existingProduct || product.price < existingProduct.price) {
-          websiteProducts[product.vendor].set(product.name, product);
+          websiteProducts[product.vendor]?.set(product.name, product);
         }
       });
 
@@ -87,7 +86,7 @@ export const RecommendedStores = () => {
       reccomendedWebsites.forEach((vendor) => {
         const vendorProducts = resultGroup.filter((p) => p.vendor === vendor);
         if (vendorProducts.length === 0) {
-          websiteNotFound[vendor].add(cardName);
+          websiteNotFound[vendor]?.add(cardName || 'Not Found');
         }
       });
     });
@@ -98,7 +97,7 @@ export const RecommendedStores = () => {
         return {
           vendor,
           products,
-          notFound: Array.from(websiteNotFound[vendor]),
+          notFound: Array.from(websiteNotFound[vendor] || []),
           count: products.length,
           totalCost: products.reduce((acc, product) => acc + product.price, 0)
         };
@@ -115,8 +114,10 @@ export const RecommendedStores = () => {
       (site) => site.vendor === 'obsidian'
     );
     if (obsidianIndex !== -1) {
-      const [obsidian] = sortedWebsites.splice(obsidianIndex, 1);
-      sortedWebsites = [obsidian, ...sortedWebsites];
+      const obsidianSite = sortedWebsites.splice(obsidianIndex, 1)[0];
+      if (obsidianSite) {
+        sortedWebsites = [obsidianSite, ...sortedWebsites];
+      }
     }
 
     return sortedWebsites;

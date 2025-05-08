@@ -1,7 +1,6 @@
 'use client';
 
 import { format } from 'date-fns';
-import * as React from 'react';
 import { useState } from 'react';
 
 import {
@@ -56,7 +55,7 @@ export function PopularClickedCards({ dateRange }: PopularClickedCardsProps) {
 
   // Set initial selected TCG when data is loaded
   if (data && !selectedTcg && Object.keys(data).length > 0) {
-    setSelectedTcg(Object.keys(data)[0]);
+    setSelectedTcg(Object.keys(data)[0] || 'mtg');
   }
 
   if (isLoading) {

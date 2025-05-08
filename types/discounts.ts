@@ -47,6 +47,11 @@ export interface Discount {
   vendor_id: number;
 
   /**
+   * Slug of the vendor this discount belongs to
+   */
+  vendor_slug: string;
+
+  /**
    * Date when the discount becomes active
    */
   starts_at: string | Date;
@@ -148,6 +153,9 @@ export interface CreateDiscountPayload {
   is_active: boolean;
 }
 
+// Alias for compatibility with vendorService
+export type CreateDiscountRequest = CreateDiscountPayload;
+
 /**
  * Request payload for updating an existing discount
  */
@@ -159,6 +167,15 @@ export interface UpdateDiscountPayload {
 
   /**
    * The updated discount data
+   * This is a partial to allow updating individual fields
    */
-  data: Omit<CreateDiscountPayload, 'vendor_id'>;
+  data: Partial<Omit<CreateDiscountPayload, 'vendor_id'>>;
 }
+
+/**
+ * Type for discount update request
+ * This is used by the vendor service
+ */
+export type UpdateDiscountRequest = Partial<
+  Omit<CreateDiscountPayload, 'vendor_id'>
+>;

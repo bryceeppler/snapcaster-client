@@ -1,7 +1,6 @@
 'use client';
 
 import { Check } from 'lucide-react';
-import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -48,8 +47,8 @@ export default function ColorSelector() {
       updateCssVariables(savedColor);
     } else {
       // Default to the first color if none is saved
-      setPrimaryColor(colorOptions[0].value);
-      updateCssVariables(colorOptions[0].value);
+      setPrimaryColor(colorOptions[0]?.value || '221 76% 62%');
+      updateCssVariables(colorOptions[0]?.value || '221 76% 62%');
     }
   }, []);
 
@@ -63,7 +62,7 @@ export default function ColorSelector() {
     // Also update primary-light for light mode
     const [hue, saturation, lightness] = colorValue.split(' ');
     const lighterValue = `${hue} ${saturation} ${Math.min(
-      parseInt(lightness) + 8,
+      parseInt(lightness || '0') + 8,
       100
     )}%`;
     root.style.setProperty('--primary-light', lighterValue);

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
@@ -134,9 +134,12 @@ export default function SingleCatalog() {
     // Select a featured ad based on weights
     const featuredAdIndex = feedAdManager.selectRandom();
     if (featuredAdIndex >= 0) {
-      setFeaturedAd(feedAds[featuredAdIndex]);
-      // Set as previous selection to avoid showing the same ad in the results
-      feedAdManager.setPreviousSelection(featuredAdIndex);
+      const featuredAd = feedAds[featuredAdIndex];
+      if (featuredAd) {
+        setFeaturedAd(featuredAd);
+        // Set as previous selection to avoid showing the same ad in the results
+        feedAdManager.setPreviousSelection(featuredAdIndex);
+      }
     } else {
       setFeaturedAd(null);
     }
@@ -151,8 +154,11 @@ export default function SingleCatalog() {
 
       if (adIndex >= 0) {
         // Store the selected ad, then set it as previous to avoid repeats
-        newAdMap[i] = feedAds[adIndex];
-        feedAdManager.setPreviousSelection(adIndex);
+        const ad = feedAds[adIndex];
+        if (ad) {
+          newAdMap[i] = ad;
+          feedAdManager.setPreviousSelection(adIndex);
+        }
       }
     }
 

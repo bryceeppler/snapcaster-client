@@ -33,11 +33,11 @@ type Action =
     }
   | {
       type: 'DISMISS_TOAST';
-      toastId?: ToasterToast['id'];
+      toastId?: string | undefined;
     }
   | {
       type: 'REMOVE_TOAST';
-      toastId?: ToasterToast['id'];
+      toastId?: string | undefined;
     };
 
 interface State {
@@ -179,4 +179,4 @@ function useToast() {
   };
 }
 
-export { useToast, toast };
+export { toast, useToast };

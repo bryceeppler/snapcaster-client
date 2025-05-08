@@ -1,13 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Pencil,
-  MoreHorizontal,
   Image as ImageIcon,
   Link as LinkIcon,
+  MoreHorizontal,
+  Pencil,
   Store
 } from 'lucide-react';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect, memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -356,7 +356,7 @@ export default function AdvertisementsPage() {
           advertisements: []
         };
       }
-      acc[ad.vendor_id].advertisements.push(ad);
+      acc[ad.vendor_id]?.advertisements.push(ad);
       return acc;
     }, {} as Record<number, { vendorId: number; vendorName: string; advertisements: AdvertisementWithImages[] }>);
 

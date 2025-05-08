@@ -1,7 +1,7 @@
 'use client';
 
 import type { KeyboardEvent } from 'react';
-import { useState, useRef, useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 
 import BaseSearchBar from '@/components/ui/base-search-bar';
@@ -174,7 +174,10 @@ export default function BuylistsSearchBar({
         case 'ArrowRight':
           if (selectedIndex >= 0 && selectedIndex < totalResults) {
             event.preventDefault();
-            handleSuggestionClick(suggestions[selectedIndex]);
+            const suggestion = suggestions[selectedIndex];
+            if (suggestion) {
+              handleSuggestionClick(suggestion);
+            }
           }
           break;
 

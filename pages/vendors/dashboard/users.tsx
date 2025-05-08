@@ -1,10 +1,10 @@
-import { subDays, format } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import type { LucideIcon } from 'lucide-react';
 import {
   BarChart3,
+  Calendar as CalendarIcon,
   LineChart,
-  Users,
-  Calendar as CalendarIcon
+  Users
 } from 'lucide-react';
 import { useState } from 'react';
 import { type PropsRange } from 'react-day-picker';
@@ -34,8 +34,8 @@ import { UserDeviceAreaChart } from '@/components/vendors/users/user-device-area
 import { UserTypesChart } from '@/components/vendors/users/user-types-chart';
 import {
   type AnalyticsError,
-  useUniqueUsersByDate,
-  useEngagementTime
+  useEngagementTime,
+  useUniqueUsersByDate
 } from '@/lib/hooks/useAnalytics';
 
 interface AnalyticsErrorMessageProps {
@@ -90,8 +90,8 @@ function MetricCard({
           <Skeleton className="h-8 w-[120px]" />
         ) : error ? (
           <AnalyticsErrorMessage
-            message={error.message}
-            status={error.status}
+            message={error.message || 'Unknown error'}
+            status={error.status || 500}
           />
         ) : (
           <div className="space-y-2">

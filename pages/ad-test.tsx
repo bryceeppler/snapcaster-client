@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
+  BarChart,
+  CartesianGrid,
   Legend,
   ResponsiveContainer,
-  CartesianGrid
+  Tooltip,
+  XAxis,
+  YAxis
 } from 'recharts';
 
 import { Button } from '@/components/ui/button';
@@ -112,9 +112,11 @@ const AdTest = () => {
       const selectedIndex = selectionManager.selectRandom();
       if (selectedIndex >= 0) {
         const selectedAd = ads[selectedIndex];
-        const vendorId = selectedAd.vendor_id;
-        const vendorName = getVendorNameById(vendorId);
-        results[vendorName] = (results[vendorName] || 0) + 1;
+        if (selectedAd) {
+          const vendorId = selectedAd.vendor_id;
+          const vendorName = getVendorNameById(vendorId);
+          results[vendorName] = (results[vendorName] || 0) + 1;
+        }
       }
     }
 

@@ -15,14 +15,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { TrafficChart } from '@/components/vendors/dashboard/traffic-chart';
 import { VendorBuyClicksChart } from '@/components/vendors/dashboard/vendor-buy-clicks-chart';
 import {
-  useUniqueUsers,
-  useSearchQueries,
   useBuyClicks,
+  useSearchQueries,
+  useUniqueUsers,
   type AnalyticsError
 } from '@/lib/hooks/useAnalytics';
 interface AnalyticsErrorMessageProps {
   message: string;
-  status?: number;
+  status?: number | undefined;
 }
 
 function AnalyticsErrorMessage({
@@ -41,7 +41,7 @@ interface MetricCardProps {
   title: string;
   Icon: LucideIcon;
   value: number;
-  percentageChange?: number;
+  percentageChange?: number | undefined;
   isLoading: boolean;
   error: AnalyticsError | null | undefined;
   description?: string;

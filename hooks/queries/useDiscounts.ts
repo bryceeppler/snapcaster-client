@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { vendorService } from '@/services/vendorService';
-import type { Discount } from '@/types/discounts';
 import type {
-  CreateDiscountRequest,
+  CreateDiscountPayload,
+  Discount,
   UpdateDiscountRequest
 } from '@/types/discounts';
 
@@ -67,13 +67,15 @@ export const useDiscounts = () => {
 
     // Find the largest discount amount among all active discounts
     return discounts.reduce((max, current) => {
-      return current.discount_amount > max.discount_amount ? current : max;
+      return current.discount_amount > (max?.discount_amount || 0)
+        ? current
+        : max;
     }, discounts[0]);
   };
 
   // Mutation for creating a new discount
   const createDiscount = useMutation({
-    mutationFn: (data: CreateDiscountRequest) =>
+    mutationFn: (data: CreateDiscountPayload) =>
       vendorService.createDiscount(data),
     onSuccess: () => {
       toast.success('Discount created successfully');

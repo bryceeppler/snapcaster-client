@@ -14,7 +14,6 @@ export const DesktopNavLink = ({
   children,
   target,
   rel,
-  onClick,
   className
 }: NavLinkProps) => (
   <Link
@@ -26,7 +25,6 @@ export const DesktopNavLink = ({
     )}
     target={target}
     rel={rel}
-    onClick={onClick}
     aria-current={isActive ? 'page' : undefined}
   >
     {children}
@@ -47,7 +45,6 @@ export const MobileNavLink = ({
   href,
   isActive,
   children,
-  onClick,
   className
 }: NavLinkProps) => {
   const isExternal = href.startsWith('http');
@@ -62,7 +59,6 @@ export const MobileNavLink = ({
           : 'text-muted-foreground hover:bg-accent/40 hover:text-accent-foreground',
         className
       )}
-      onClick={onClick}
       target={isExternal ? '_blank' : undefined}
       rel={isExternal ? 'noopener noreferrer' : undefined}
       aria-current={isActive ? 'page' : undefined}

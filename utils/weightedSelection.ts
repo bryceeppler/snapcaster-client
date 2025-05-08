@@ -103,7 +103,7 @@ export function createWeightedSelectionManager<T extends Weighted>() {
       if (distributionCache.length === 0) return -1;
 
       const randomIndex = Math.floor(Math.random() * distributionCache.length);
-      previousSelection = distributionCache[randomIndex];
+      previousSelection = distributionCache[randomIndex] ?? -1;
       return previousSelection;
     },
 
@@ -134,14 +134,14 @@ export function createWeightedSelectionManager<T extends Weighted>() {
         if (availableIndices.length === 0) return previousSelection; // No alternatives
 
         const randomIndex = Math.floor(Math.random() * availableIndices.length);
-        previousSelection = availableIndices[randomIndex];
+        previousSelection = availableIndices[randomIndex] ?? previousSelection;
         return previousSelection;
       }
 
       const randomIndex = Math.floor(
         Math.random() * excludingDistribution.length
       );
-      previousSelection = excludingDistribution[randomIndex];
+      previousSelection = excludingDistribution[randomIndex] ?? -1;
       return previousSelection;
     },
 

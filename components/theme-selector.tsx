@@ -1,6 +1,6 @@
 'use client';
 
-import { Moon, Sun, Laptop } from 'lucide-react';
+import { Laptop, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import * as React from 'react';
 
@@ -21,7 +21,7 @@ export default function ThemeSelector() {
   return (
     <div className="space-y-3">
       <RadioGroup
-        value={theme}
+        value={theme || 'system'}
         onValueChange={setTheme}
         className="grid grid-cols-1 gap-3 sm:grid-cols-3"
       >

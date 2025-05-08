@@ -10,7 +10,7 @@ export type Condition = 'nm' | 'lp' | 'mp' | 'hp' | 'dmg';
 
 export interface Product {
   name: string;
-  normalized_name: string;
+  normalized_name?: string;
   set: string;
   price: number;
   condition: string;

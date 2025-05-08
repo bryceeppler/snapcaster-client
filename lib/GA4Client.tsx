@@ -1,5 +1,5 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
-import { subYears, format, subDays } from 'date-fns';
+import { format, subDays, subYears } from 'date-fns';
 
 const GA4_PROPERTY_ID = '414002558';
 
@@ -109,8 +109,8 @@ export class GA4Client {
 
     const data =
       response.rows?.map((row) => ({
-        date: row.dimensionValues?.[0].value || '',
-        count: parseInt(row.metricValues?.[0].value || '0', 10)
+        date: row.dimensionValues?.[0]?.value || '',
+        count: parseInt(row.metricValues?.[0]?.value || '0', 10)
       })) || [];
 
     return data;
@@ -127,8 +127,8 @@ export class GA4Client {
 
     const data =
       response.rows?.map((row) => ({
-        date: row.dimensionValues?.[0].value || '',
-        count: parseInt(row.metricValues?.[0].value || '0', 10)
+        date: row.dimensionValues?.[0]?.value || '',
+        count: parseInt(row.metricValues?.[0]?.value || '0', 10)
       })) || [];
 
     return data;
@@ -599,7 +599,7 @@ export class GA4Client {
 
     const previousTotalSearches =
       previousResponse.rows?.reduce(
-        (sum, row) => sum + parseInt(row.metricValues?.[0].value || '0', 10),
+        (sum, row) => sum + parseInt(row.metricValues?.[0]?.value || '0', 10),
         0
       ) || 0;
 
@@ -793,7 +793,7 @@ export class GA4Client {
 
     const previousTotalSearches =
       previousResponse.rows?.reduce(
-        (sum, row) => sum + parseInt(row.metricValues?.[0].value || '0', 10),
+        (sum, row) => sum + parseInt(row.metricValues?.[0]?.value || '0', 10),
         0
       ) || 0;
 
@@ -865,7 +865,7 @@ export class GA4Client {
 
     const previousTotalClicks =
       previousResponse.rows?.reduce(
-        (sum, row) => sum + parseInt(row.metricValues?.[0].value || '0', 10),
+        (sum, row) => sum + parseInt(row.metricValues?.[0]?.value || '0', 10),
         0
       ) || 0;
 
@@ -1004,7 +1004,7 @@ export class GA4Client {
 
     const previousTotalBuyClicks =
       previousResponse.rows?.reduce(
-        (sum, row) => sum + parseInt(row.metricValues?.[0].value || '0', 10),
+        (sum, row) => sum + parseInt(row.metricValues?.[0]?.value || '0', 10),
         0
       ) || 0;
 
@@ -1113,9 +1113,9 @@ export class GA4Client {
 
     const buyClickData =
       response.rows?.map((row) => ({
-        website: row.dimensionValues?.[1].value || '',
-        tcg: row.dimensionValues?.[2].value?.toLowerCase() || '',
-        count: parseInt(row.metricValues?.[0].value || '0', 10)
+        website: row.dimensionValues?.[1]?.value || '',
+        tcg: row.dimensionValues?.[2]?.value?.toLowerCase() || '',
+        count: parseInt(row.metricValues?.[0]?.value || '0', 10)
       })) || [];
 
     const groupedData: { [key: string]: Omit<VendorBuyClickData, 'rank'> } = {};
@@ -1269,15 +1269,15 @@ export class GA4Client {
     const totalUsers =
       response.rows?.reduce(
         (sum: number, row) =>
-          sum + parseInt(row.metricValues?.[0].value || '0', 10),
+          sum + parseInt(row.metricValues?.[0]?.value || '0', 10),
         0
       ) || 0;
 
     const data =
       response.rows?.map((row) => {
-        const users = parseInt(row.metricValues?.[0].value || '0', 10);
+        const users = parseInt(row.metricValues?.[0]?.value || '0', 10);
         return {
-          city: row.dimensionValues?.[0].value || 'Unknown',
+          city: row.dimensionValues?.[0]?.value || 'Unknown',
           users,
           percentage: Math.round((users / totalUsers) * 1000) / 10 // Round to 1 decimal
         };
@@ -1320,14 +1320,14 @@ export class GA4Client {
 
     const totalUsers =
       response.rows?.reduce(
-        (sum, row) => sum + parseInt(row.metricValues?.[0].value || '0', 10),
+        (sum, row) => sum + parseInt(row.metricValues?.[0]?.value || '0', 10),
         0
       ) || 0;
 
     const data =
       response.rows?.map((row) => {
-        const users = parseInt(row.metricValues?.[0].value || '0', 10);
-        const source = row.dimensionValues?.[0].value || '(direct)';
+        const users = parseInt(row.metricValues?.[0]?.value || '0', 10);
+        const source = row.dimensionValues?.[0]?.value || '(direct)';
 
         // Normalize source names
         let normalizedSource = source;
@@ -1407,8 +1407,8 @@ export class GA4Client {
 
     const data = response.rows?.reduce(
       (acc, row) => {
-        const type = row.dimensionValues?.[0].value || 'unknown';
-        const users = parseInt(row.metricValues?.[0].value || '0', 10);
+        const type = row.dimensionValues?.[0]?.value || 'unknown';
+        const users = parseInt(row.metricValues?.[0]?.value || '0', 10);
 
         if (type === 'new') {
           acc.newUsers = users;

@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import DashboardLayout from '../../layout';
 
@@ -151,12 +151,18 @@ export default function EditAdvertisementPage() {
         setIsSaving(true);
 
         // Convert the changedFields to the expected format for updateAdvertisement
-        const updateData = {
-          ...changedFields,
-          // These conversions ensure the backend receives the correct data types
-          start_date: changedFields.start_date,
-          end_date: changedFields.end_date
+        const updateData: Record<string, any> = {
+          ...changedFields
         };
+
+        // Only include dates if they're defined
+        if (changedFields.start_date !== undefined) {
+          updateData.start_date = changedFields.start_date;
+        }
+
+        if (changedFields.end_date !== undefined) {
+          updateData.end_date = changedFields.end_date;
+        }
 
         await updateAdvertisement.mutateAsync({
           id: advertisement.id,

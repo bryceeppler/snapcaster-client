@@ -23,8 +23,8 @@ export interface NavLinkProps {
   isActive: boolean;
   children: ReactNode;
   target?: string;
-  rel?: string;
   onClick?: () => void;
+  rel?: string;
   className?: string;
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Tier3SignupForm } from '@/components/forms/Tier3SignupForm';
@@ -77,11 +77,13 @@ const Tier3 = () => {
         />
         <Multisearch />
 
-        <Analytics
-          variant="dark"
-          popularBuyClicks={popularBuyClicks}
-          onSignup={() => openSignupDialog('quarterly')}
-        />
+        {popularBuyClicks && (
+          <Analytics
+            variant="dark"
+            popularBuyClicks={popularBuyClicks}
+            onSignup={() => openSignupDialog('quarterly')}
+          />
+        )}
         <Visibility />
         <OtherFeatures variant="dark" />
         <Pricing variant="light" onSignup={openSignupDialog} />

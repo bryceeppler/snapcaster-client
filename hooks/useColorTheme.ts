@@ -12,7 +12,7 @@ export function useColorTheme() {
       root.style.setProperty('--primary', savedColor);
 
       // Update primary-light
-      const [hue, saturation, lightness] = savedColor.split(' ');
+      const [hue, saturation, lightness = '50%'] = savedColor.split(' ');
       const lighterValue = `${hue} ${saturation} ${Math.min(
         parseInt(lightness) + 8,
         100

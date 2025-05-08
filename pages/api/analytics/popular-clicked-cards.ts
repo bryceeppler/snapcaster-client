@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import type { PopularClickedCardsByTCG } from '@/lib/GA4Client';
 import { GA4Client } from '@/lib/GA4Client';
 
 const VALID_TCGS = [
@@ -11,7 +10,11 @@ const VALID_TCGS = [
   'starwars',
   'fleshandblood',
   'pokemon'
-];
+] as const;
+
+type ValidTCG = (typeof VALID_TCGS)[number];
+type CardData = { cardName: string; count: number; averagePrice: number };
+type TCGData = Record<ValidTCG, CardData[]>;
 
 export default async function handler(
   req: NextApiRequest,
@@ -36,23 +39,21 @@ export default async function handler(
     const clickData =
       response.rows
         ?.map((row) => ({
-          cardName: row.dimensionValues?.[1].value || '',
-          tcg: row.dimensionValues?.[2].value?.toLowerCase() || '',
-          count: parseInt(row.metricValues?.[0].value || '0', 10),
+          cardName: row.dimensionValues?.[1]?.value || '',
+          tcg: row.dimensionValues?.[2]?.value?.toLowerCase() || '',
+          count: parseInt(row.metricValues?.[0]?.value || '0', 10),
           price:
             row.dimensionValues?.[3]?.value === '(not set)'
               ? null
               : parseFloat(row.dimensionValues?.[3]?.value || '0') / 100
         }))
-        .filter((item) => VALID_TCGS.includes(item.tcg)) || [];
+        .filter((item) => VALID_TCGS.includes(item.tcg as ValidTCG)) || [];
 
-    // Group by TCG and calculate averages
-    const tcgData: PopularClickedCardsByTCG = {};
-
-    // Initialize all valid TCGs with empty arrays
-    VALID_TCGS.forEach((tcg) => {
-      tcgData[tcg] = [];
-    });
+    // Initialize tcgData with all valid TCGs
+    const tcgData = VALID_TCGS.reduce((acc, tcg) => {
+      acc[tcg] = [];
+      return acc;
+    }, {} as TCGData);
 
     // Group data by card name and TCG to calculate averages
     const cardAverages = new Map<
@@ -61,32 +62,48 @@ export default async function handler(
         totalPrice: number;
         priceCount: number;
         totalCount: number;
-        tcg: string;
+        tcg: ValidTCG;
       }
     >();
+
     clickData.forEach((item) => {
-      const key = `${item.tcg}-${item.cardName}`;
-      const existing = cardAverages.get(key);
-      if (existing) {
-        // Only add to price calculations if we have a valid price
-        if (item.price !== null) {
-          existing.totalPrice += item.price * item.count;
-          existing.priceCount += item.count;
+      // Ensure we only process valid TCGs
+      if (VALID_TCGS.includes(item.tcg as ValidTCG)) {
+        const validTcg = item.tcg as ValidTCG;
+        const key = `${validTcg}-${item.cardName}`;
+        const existing = cardAverages.get(key);
+
+        if (existing) {
+          // Only add to price calculations if we have a valid price
+          if (item.price !== null) {
+            existing.totalPrice += item.price * item.count;
+            existing.priceCount += item.count;
+          }
+          existing.totalCount += item.count;
+        } else {
+          cardAverages.set(key, {
+            totalPrice: item.price !== null ? item.price * item.count : 0,
+            priceCount: item.price !== null ? item.count : 0,
+            totalCount: item.count,
+            tcg: validTcg
+          });
         }
-        existing.totalCount += item.count;
-      } else {
-        cardAverages.set(key, {
-          totalPrice: item.price !== null ? item.price * item.count : 0,
-          priceCount: item.price !== null ? item.count : 0,
-          totalCount: item.count,
-          tcg: item.tcg
-        });
       }
     });
 
     // Convert to final format with averages
     cardAverages.forEach((data, key) => {
-      const [tcg, cardName] = key.split('-');
+      const keyParts = key.split('-');
+      if (keyParts.length !== 2) return;
+
+      const [tcgKey, cardNameKey] = keyParts;
+      const cardName = cardNameKey || '';
+
+      // Validate that the tcg exists in our valid list
+      if (!VALID_TCGS.includes(tcgKey as ValidTCG)) return;
+
+      const tcg = tcgKey as ValidTCG;
+
       // Only calculate average if we have valid price data
       const avgPrice =
         data.priceCount > 0 ? data.totalPrice / data.priceCount : 0;
@@ -101,7 +118,7 @@ export default async function handler(
     });
 
     // Sort each TCG's cards by count
-    Object.keys(tcgData).forEach((tcg) => {
+    VALID_TCGS.forEach((tcg) => {
       tcgData[tcg].sort((a, b) => b.count - a.count);
     });
 

@@ -34,7 +34,7 @@ export function PopularBuyClicks({ searchData }: PopularSearchesProps) {
     onepiece: 'One Piece',
     fleshandblood: 'Flesh and Blood'
   };
-  const [selectedTcg, setSelectedTcg] = useState<string>(tcgs[0]);
+  const [selectedTcg, setSelectedTcg] = useState<string>(tcgs[0] || 'mtg');
 
   return (
     <Card className="h-[400px] border-0 bg-transparent shadow-none">

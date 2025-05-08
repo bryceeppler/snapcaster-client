@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import type { PopularBuyClicksByTCG } from '@/lib/GA4Client';
 import { GA4Client } from '@/lib/GA4Client';
+
+// Define a type for our TCG data structure
+type CardData = { cardName: string; count: number };
+type TCGData = Record<string, CardData[]>;
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,20 +22,28 @@ export default async function handler(
     // Process the raw GA4 data
     const buyClickData =
       response.rows?.map((row) => ({
-        cardName: row.dimensionValues?.[1].value || '',
-        tcg: row.dimensionValues?.[2].value || '',
-        count: parseInt(row.metricValues?.[0].value || '0', 10)
+        cardName: row.dimensionValues?.[1]?.value || '',
+        tcg: row.dimensionValues?.[2]?.value || '',
+        count: parseInt(row.metricValues?.[0]?.value || '0', 10)
       })) || [];
 
     // Group by TCG and limit to top 100 per TCG
-    const tcgData: PopularBuyClicksByTCG = {};
+    const tcgData: TCGData = {};
 
     buyClickData.forEach((item) => {
-      if (!tcgData[item.tcg]) {
-        tcgData[item.tcg] = [];
+      const tcg = item.tcg;
+
+      // Initialize array if needed
+      if (!tcgData[tcg]) {
+        tcgData[tcg] = [];
       }
-      if (tcgData[item.tcg].length < limit) {
-        tcgData[item.tcg].push({ cardName: item.cardName, count: item.count });
+
+      // Safe to access after initialization
+      if (tcgData[tcg].length < limit) {
+        tcgData[tcg].push({
+          cardName: item.cardName,
+          count: item.count
+        });
       }
     });
 

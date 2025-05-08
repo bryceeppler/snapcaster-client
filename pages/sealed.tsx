@@ -41,8 +41,8 @@ const SealedSearch: NextPage = () => {
           refetch={refetch}
           isLoading={isLoading}
           clearFilters={clearFilters}
-          searchResults={data?.searchResults}
-          promotedResults={data?.promotedResults}
+          searchResults={data?.searchResults || []}
+          promotedResults={data?.promotedResults || []}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}

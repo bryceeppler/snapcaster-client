@@ -189,7 +189,11 @@ export function SearchQueriesChart() {
         padding: 12,
         callbacks: {
           title: (tooltipItems) => {
-            return format(new Date(tooltipItems[0].parsed.x), 'MMM dd, yyyy');
+            if (!tooltipItems.length) return '';
+            return format(
+              new Date(tooltipItems[0]?.parsed?.x || Date.now()),
+              'MMM dd, yyyy'
+            );
           },
           label: (context) => {
             return `${context.dataset.label}: ${context.parsed.y} searches`;

@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import type { PopularClickedSetsByTCG } from '@/lib/GA4Client';
 import { GA4Client } from '@/lib/GA4Client';
 
 const VALID_TCGS = [
@@ -11,7 +10,13 @@ const VALID_TCGS = [
   'starwars',
   'fleshandblood',
   'pokemon'
-];
+] as const;
+
+type ValidTCG = (typeof VALID_TCGS)[number];
+
+type TCGData = {
+  [key in ValidTCG]: Array<{ setName: string; count: number }>;
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -36,23 +41,28 @@ export default async function handler(
     const clickData =
       response.rows
         ?.map((row) => ({
-          setName: row.dimensionValues?.[1].value || '',
-          tcg: row.dimensionValues?.[2].value?.toLowerCase() || '',
-          count: parseInt(row.metricValues?.[0].value || '0', 10)
+          setName: row.dimensionValues?.[1]?.value || '',
+          tcg: row.dimensionValues?.[2]?.value?.toLowerCase() || '',
+          count: parseInt(row.metricValues?.[0]?.value || '0', 10)
         }))
-        .filter((item) => VALID_TCGS.includes(item.tcg)) || [];
+        .filter((item) => VALID_TCGS.includes(item.tcg as ValidTCG)) || [];
 
     // Group by TCG and limit to top N per TCG
-    const tcgData: PopularClickedSetsByTCG = {};
-
-    // Initialize all valid TCGs with empty arrays
-    VALID_TCGS.forEach((tcg) => {
-      tcgData[tcg] = [];
-    });
+    const tcgData = VALID_TCGS.reduce((acc, tcg) => {
+      acc[tcg] = [];
+      return acc;
+    }, {} as TCGData);
 
     clickData.forEach((item) => {
-      if (tcgData[item.tcg].length < limit) {
-        tcgData[item.tcg].push({ setName: item.setName, count: item.count });
+      // Safely check if the tcg is a valid key
+      if (item.tcg && VALID_TCGS.includes(item.tcg as ValidTCG)) {
+        const validTcg = item.tcg as ValidTCG;
+        if (tcgData[validTcg].length < limit) {
+          tcgData[validTcg].push({
+            setName: item.setName,
+            count: item.count
+          });
+        }
       }
     });
 
