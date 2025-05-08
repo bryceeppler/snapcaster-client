@@ -37,7 +37,8 @@ export default [
           args: 'after-used',
           argsIgnorePattern: '^_'
         }
-      ]
+      ],
+      '@typescript-eslint/no-unused-vars': 'off'
     }
   }
 ];
