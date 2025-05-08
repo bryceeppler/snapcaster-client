@@ -1,21 +1,24 @@
-import { ArrowLeft } from 'lucide-react';
-import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+
 import DashboardLayout from '../../layout';
+
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/hooks/useAuth';
-import { useVendors } from '@/hooks/queries/useVendors';
-import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { AdvertisementWithImages } from '@/types/advertisements';
+import type {
+  AdvertisementFormValues} from '@/components/vendors/advertisements';
 import {
   AdvertisementDetailsForm,
-  AdvertisementFormValues,
   AdvertisementImageGallery,
   AdvertisementLoadingState,
   AdvertisementNotFound
 } from '@/components/vendors/advertisements';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import type { AdvertisementWithImages } from '@/types/advertisements';
 
 export default function EditAdvertisementPage() {
   const router = useRouter();

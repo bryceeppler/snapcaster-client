@@ -1,25 +1,29 @@
 // _app.tsx
+import type { AppProps } from 'next/app';
+import type {
+  ReactNode
+} from 'react';
 import {
   useEffect,
   useState,
   createContext,
-  useContext,
-  ReactNode
+  useContext
 } from 'react';
 import React from 'react';
+import { useWindowSize } from 'usehooks-ts';
 
-import { AppProps } from 'next/app';
-import MainLayout from '@/components/main-page-layout';
-import Layout from '@/components/ui/root-layout';
 import { initGA, logPageView } from '../utils/analytics';
-import { Toaster } from '@/components/ui/sonner';
+
+import MainLayout from '@/components/main-page-layout';
 import { ThemeProvider } from '@/components/theme-provider';
+import Layout from '@/components/ui/root-layout';
+import { Toaster } from '@/components/ui/sonner';
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
+
 import 'styles/main.css';
 import 'styles/chrome-bug.css';
-import { useWindowSize } from 'usehooks-ts';
 import { Inter } from 'next/font/google';
-import { useAuth } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const inter = Inter({ subsets: ['latin'] });

@@ -1,5 +1,9 @@
 'use client';
 
+import { Palette, Monitor } from 'lucide-react';
+
+import ColorSelector from '@/components/color-selector';
+import ThemeSelector from '@/components/theme-selector';
 import {
   Card,
   CardContent,
@@ -7,10 +11,8 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import ThemeSelector from '@/components/theme-selector';
-import ColorSelector from '@/components/color-selector';
 import { Separator } from '@/components/ui/separator';
-import { Palette, Monitor } from 'lucide-react';
+
 
 export function AppearanceSection() {
   return (

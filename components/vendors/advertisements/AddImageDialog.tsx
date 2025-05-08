@@ -1,33 +1,6 @@
-import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, useRef, useEffect } from 'react';
-import { QUERY_KEY } from '@/hooks/queries/useAdvertisements';
 import { useQueryClient } from '@tanstack/react-query';
-import {
-  AdvertisementWithImages,
-  AdvertisementPosition,
-  AdvertisementImageType
-} from '@/types/advertisements';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
+
 import { AD_RESOLUTIONS } from '@/lib/constants';
 import { advertisementService } from '@/services/advertisementService';
 import { toast } from 'sonner';
@@ -39,7 +12,36 @@ import {
   AlertCircleIcon,
   InfoIcon
 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { QUERY_KEY } from '@/hooks/queries/useAdvertisements';
 import { cn } from '@/lib/utils';
+import {
+  AdvertisementPosition,
+  AdvertisementImageType
+} from '@/types/advertisements';
+import type {
+  AdvertisementWithImages} from '@/types/advertisements';
 
 // Form schema for image upload
 const imageFormSchema = z.object({

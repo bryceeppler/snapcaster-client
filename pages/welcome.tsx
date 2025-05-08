@@ -1,19 +1,19 @@
-import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-
-import { Integrations } from '@/components/welcome/integrations';
-import Testimonials from '@/components/welcome/testimonials';
-import { SignupForm } from '@/components/forms/SignupForm';
-import { toast } from 'sonner';
 import {
   CheckCircle,
   DollarSignIcon,
   GlobeIcon,
   MoveRight
 } from 'lucide-react';
+import { motion } from 'motion/react';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+
+import { SignupForm } from '@/components/forms/SignupForm';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Integrations } from '@/components/welcome/integrations';
 import { SolutionsGrid } from '@/components/welcome/solutions-grid';
+import Testimonials from '@/components/welcome/testimonials';
 
 const Welcome = () => {
   const [accountCreated, setAccountCreated] = useState(false);

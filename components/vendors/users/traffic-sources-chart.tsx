@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip
 } from 'recharts';
+
 import {
   Card,
   CardContent,
@@ -16,13 +17,14 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
-import { useTrafficSources } from '@/lib/hooks/useAnalytics';
+import type {
+  ChartConfig} from '@/components/ui/chart';
 import {
   ChartContainer,
-  ChartConfig,
   ChartTooltipContent
 } from '@/components/ui/chart';
+import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
+import { useTrafficSources } from '@/lib/hooks/useAnalytics';
 
 interface TrafficSourcesChartProps {
   dateRange: {

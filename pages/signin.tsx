@@ -1,10 +1,11 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/router';
 import React from 'react';
+
 import SignInForm from '@/components/forms/SigninForm';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 const Signin: NextPage = () => {
   const { isAuthenticated, isInitializing } = useAuth();
   const router = useRouter();

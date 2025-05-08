@@ -1,8 +1,8 @@
-import type React from 'react';
 import { Lock } from 'lucide-react';
+import type React from 'react';
 
-import { useAuth } from '@/hooks/useAuth';
 import { VendorSidebar } from '@/components/vendors/sidebar';
+import { useAuth } from '@/hooks/useAuth';
 export default function DashboardLayout({
   children
 }: {

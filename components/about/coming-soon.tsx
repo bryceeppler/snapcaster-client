@@ -1,6 +1,7 @@
+import Image from 'next/image';
+
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import Image from 'next/image';
 
 export default function ComingSoon() {
   return (

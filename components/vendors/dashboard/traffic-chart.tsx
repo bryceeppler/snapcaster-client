@@ -1,8 +1,8 @@
 "use client"
 
+import { TrendingDown, TrendingUp } from "lucide-react"
 import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { TrendingDown, TrendingUp } from "lucide-react"
 
 import { 
   Card,
@@ -12,8 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import type {
+  ChartConfig} from "@/components/ui/chart";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent

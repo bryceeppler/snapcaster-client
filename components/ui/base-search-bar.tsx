@@ -1,4 +1,14 @@
-import React, { ReactNode, RefObject } from 'react';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { ChevronDown, Loader2, HelpCircle } from 'lucide-react';
+import type { ReactNode, RefObject } from 'react';
+import React from 'react';
+
+import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -7,15 +17,7 @@ import {
   SelectTriggerNoIcon as SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { ChevronDown, Loader2, HelpCircle } from 'lucide-react';
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Tcg } from '@/types';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
+import type { Tcg } from '@/types';
 
 export type DeviceType = 'mobile' | 'desktop';
 

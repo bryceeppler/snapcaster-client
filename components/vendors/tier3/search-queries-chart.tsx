@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react"
 import { format } from "date-fns"
 import { motion } from "framer-motion"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import type {
+  ChartData,
+  ChartOptions} from 'chart.js';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,8 +16,6 @@ import {
   Tooltip,
   Filler,
   Legend,
-  ChartData,
-  ChartOptions,
   TimeScale,
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
@@ -28,6 +28,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 // Register ChartJS components
 ChartJS.register(

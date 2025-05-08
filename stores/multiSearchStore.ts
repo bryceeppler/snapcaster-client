@@ -1,9 +1,10 @@
-import { WebsiteMapping } from '@/types/website';
 import { create } from 'zustand';
-import axiosInstance from '@/utils/axiosWrapper';
-import type { Tcg, Product, Condition } from '@/types';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+
+import type { Tcg, Product, Condition } from '@/types';
+import type { WebsiteMapping } from '@/types/website';
 import { trackSearch } from '@/utils/analytics';
+import axiosInstance from '@/utils/axiosWrapper';
 
 type MultiSearchState = {
   mode: 'search' | 'results';

@@ -1,20 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import {
-  AdvertisementPosition,
-  AdvertisementWithImages
-} from '@/types/advertisements';
-import { createWeightedSelectionManager } from '@/utils/weightedSelection';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   BarChart,
   Bar,
@@ -25,7 +9,26 @@ import {
   ResponsiveContainer,
   CartesianGrid
 } from 'recharts';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { useVendors } from '@/hooks/queries/useVendors';
+import type {
+  AdvertisementWithImages
+} from '@/types/advertisements';
+import {
+  AdvertisementPosition
+} from '@/types/advertisements';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 const AdTest = () => {
   // State for simulation controls

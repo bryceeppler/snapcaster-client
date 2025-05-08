@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Pencil,
   MoreHorizontal,
@@ -5,13 +6,16 @@ import {
   Link as LinkIcon,
   Store
 } from 'lucide-react';
-import React, { useState, useEffect, memo, useCallback, useMemo } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
+import React, { useState, useEffect, memo, useCallback, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
 import DashboardLayout from '../layout';
+
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -20,16 +24,15 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import { VisuallyHidden } from '@/components/ui/visually-hidden';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import type {
+  AdvertisementWithImages} from '@/types/advertisements';
 import {
-  AdvertisementWithImages,
   AdvertisementPosition
 } from '@/types/advertisements';
-import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/hooks/useAuth';
-import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { VisuallyHidden } from '@/components/ui/visually-hidden';
-import { Badge } from '@/components/ui/badge';
 
 export const AD_DIMENSIONS = {
   topBanner: {

@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
-import { FilterOption, SealedSortOptions } from '@/types/query';
-import { Tcg } from '@/types';
+
+import type { Tcg } from '@/types';
+import type { FilterOption, SealedSortOptions } from '@/types/query';
 
 const SEALED_LOCAL_STORAGE_VERSION = 1;
 

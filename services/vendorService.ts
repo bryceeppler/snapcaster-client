@@ -1,15 +1,16 @@
 import axios from 'axios';
-import axiosInstance from '@/utils/axiosWrapper';
-import {
-  Discount,
-  CreateDiscountRequest,
-  UpdateDiscountRequest
-} from '@/types/discounts';
-import {
+
+import type {
   ApiKey,
   CreateApiKeyRequest,
   CreateApiKeyResponse
 } from '@/hooks/queries/useApiKeys';
+import type {
+  Discount,
+  CreateDiscountRequest,
+  UpdateDiscountRequest
+} from '@/types/discounts';
+import axiosInstance from '@/utils/axiosWrapper';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 

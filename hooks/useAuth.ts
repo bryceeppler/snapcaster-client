@@ -1,7 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { authService, TwoFactorRequiredResponse } from '@/services/authService';
-import { tokenManager } from '@/utils/axiosWrapper';
 import { useCallback, useState } from 'react';
+
+import type { TwoFactorRequiredResponse } from '@/services/authService';
+import { authService } from '@/services/authService';
+import { tokenManager } from '@/utils/axiosWrapper';
+
 
 // Create a compatibility layer for router
 function useCompatRouter() {

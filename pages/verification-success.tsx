@@ -1,7 +1,8 @@
-import { Button } from '@/components/ui/button';
 import { CheckCircle } from 'lucide-react';
-import Link from 'next/link';
 import Head from 'next/head';
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
 
 export default function Component() {
   return (

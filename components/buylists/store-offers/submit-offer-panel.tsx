@@ -1,8 +1,8 @@
+import { AlertCircle, ExternalLink, ShieldCheck } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useConnectedVendors } from '@/hooks/useConnectedVendors';
-import { useVendors } from '@/hooks/queries/useVendors';
+
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
@@ -13,9 +13,10 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { AlertCircle, ExternalLink, ShieldCheck } from 'lucide-react';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import useBuyListStore from '@/stores/useBuylistStore';
 
 type PaymentMethod = 'Cash' | 'Store Credit';
 

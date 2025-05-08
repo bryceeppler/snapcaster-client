@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import {
   Calendar as CalendarIcon,
   Plus,
@@ -7,33 +8,12 @@ import {
   AlertCircle,
   Loader2
 } from 'lucide-react';
-import { useState, useCallback, memo, useMemo } from 'react';
-import { format } from 'date-fns';
-import DashboardLayout from '../layout';
-import { Button } from '@/components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
-import { useVendors } from '@/hooks/queries/useVendors';
-import { toast } from 'sonner';
-import { Discount } from '@/types/discounts';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/hooks/useAuth';
-import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { useRouter } from 'next/router';
+import { useState, useCallback, memo, useMemo } from 'react';
+import { toast } from 'sonner';
+
+import DashboardLayout from '../layout';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,8 +25,30 @@ import {
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Switch } from '@/components/ui/switch';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
+import { useDiscounts } from '@/hooks/queries/useDiscounts';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import type { Discount } from '@/types/discounts';
 
 // Reusable loading skeleton component
 const TableLoadingSkeleton = ({ isAdmin = false }: { isAdmin?: boolean }) => (

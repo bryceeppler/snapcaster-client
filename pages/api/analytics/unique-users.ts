@@ -1,6 +1,7 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { GA4Client } from '@/lib/GA4Client';
 import { subDays, differenceInDays } from 'date-fns';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+import { GA4Client } from '@/lib/GA4Client';
 
 export default async function handler(
   req: NextApiRequest,

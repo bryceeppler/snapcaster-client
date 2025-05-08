@@ -1,8 +1,8 @@
 'use client';
 
+import { CheckCircle, XCircle } from 'lucide-react';
 import type React from 'react';
 
-import { CheckCircle, XCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {

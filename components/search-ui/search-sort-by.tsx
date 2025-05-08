@@ -1,3 +1,6 @@
+import { ChevronDown } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -6,8 +9,6 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type SortOption = string;

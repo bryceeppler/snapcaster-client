@@ -1,14 +1,9 @@
-import DashboardLayout from './layout';
-import { useBuylistAnalytics } from '@/hooks/queries/useBuylistAnalytics';
-import { useAuth } from '@/hooks/useAuth';
-import BuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/buylist-analytics';
-import AdminBuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/admin-buylist-analytics';
-import {
-  BuylistAnalytics,
-  BuylistSubmissionResponse
-} from '@/services/catalogService';
-import BuylistSubmissionTable from '@/components/vendors/dashboard/buylists/buylist-submission-table';
 import { useState } from 'react';
+
+import DashboardLayout from './layout';
+
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -16,8 +11,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AdminBuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/admin-buylist-analytics';
+import BuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/buylist-analytics';
+import BuylistSubmissionTable from '@/components/vendors/dashboard/buylists/buylist-submission-table';
+import { useBuylistAnalytics } from '@/hooks/queries/useBuylistAnalytics';
+import { useAuth } from '@/hooks/useAuth';
+import type {
+  BuylistAnalytics,
+  BuylistSubmissionResponse
+} from '@/services/catalogService';
 
 export default function BuylistsPage() {
   const { profile, isAdmin, isLoadingProfile } = useAuth();

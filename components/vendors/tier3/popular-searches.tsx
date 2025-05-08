@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import {
   Card,
   CardContent,
@@ -5,8 +7,6 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { PopularBuyClicksByTCG } from '@/lib/GA4Client';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import {
   Select,
@@ -15,7 +15,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useState } from 'react';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import type { PopularBuyClicksByTCG } from '@/lib/GA4Client';
 
 interface PopularSearchesProps {
   searchData: PopularBuyClicksByTCG;

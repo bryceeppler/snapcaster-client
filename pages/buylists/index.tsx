@@ -1,6 +1,7 @@
-import React from 'react';
+import type { NextPage } from 'next';
 import Head from 'next/head';
-import { NextPage } from 'next';
+import React from 'react';
+
 import BuylistCatalog from '@/components/buylists/buylist-catalog-container';
 import BuylistLayout from '@/components/buylists/buylist-layout';
 

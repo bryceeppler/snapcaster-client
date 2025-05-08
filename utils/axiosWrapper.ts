@@ -1,4 +1,6 @@
-import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import axios from 'axios';
+
 import { authService } from '@/services/authService';
 
 // Token manager to be used by both axios interceptors and useAuth hook

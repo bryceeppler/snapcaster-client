@@ -1,9 +1,10 @@
+import { AlertCircle, Smartphone, Mail, Send, Key } from 'lucide-react';
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Input } from '@/components/ui/input';
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import Link from 'next/link';
 import {
   Card,
   CardHeader,
@@ -12,10 +13,10 @@ import {
   CardContent,
   CardFooter
 } from '@/components/ui/card';
-import { useAuth } from '@/hooks/useAuth';
-import { AlertCircle, Smartphone, Mail, Send, Key } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useAuth } from '@/hooks/useAuth';
 
 type SignInFormData = {
   email: string;

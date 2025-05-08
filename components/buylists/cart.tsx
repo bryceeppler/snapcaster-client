@@ -1,15 +1,17 @@
-import { useUserCarts } from '@/hooks/useUserCarts';
+import { AlertCircle } from 'lucide-react';
+
+import { CartItem } from './modify-list-items/list-item';
+
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle
 } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { AlertCircle } from 'lucide-react';
-import { CartItem } from './modify-list-items/list-item';
+import { useUserCarts } from '@/hooks/useUserCarts';
 import useBuyListStore from '@/stores/useBuylistStore';
 const Cart = () => {
   const { getCurrentCart } = useUserCarts();

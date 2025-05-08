@@ -1,3 +1,6 @@
+import { ChevronDown } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -5,8 +8,6 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
 
 // Type for sort options - consistent with search-filter-container.tsx
 export type SortByOption = string;

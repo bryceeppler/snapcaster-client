@@ -1,9 +1,10 @@
-import * as React from "react"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 import { Inter } from 'next/font/google';
+import * as React from "react"
+
 const inter = Inter({ subsets: ['latin'] });
-import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 const AlertDialog = AlertDialogPrimitive.Root
 

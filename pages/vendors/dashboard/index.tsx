@@ -1,11 +1,15 @@
+import type {
+  LucideIcon
+} from 'lucide-react';
 import {
   ArrowRight,
   BarChart3,
   LineChart,
-  Users,
-  LucideIcon
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
+
+import DashboardLayout from './layout';
 
 import {
   Card,
@@ -14,16 +18,15 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { TrafficChart } from '@/components/vendors/dashboard/traffic-chart';
-import DashboardLayout from './layout';
+import { VendorBuyClicksChart } from '@/components/vendors/dashboard/vendor-buy-clicks-chart';
 import {
   useUniqueUsers,
   useSearchQueries,
   useBuyClicks,
   type AnalyticsError
 } from '@/lib/hooks/useAnalytics';
-import { VendorBuyClicksChart } from '@/components/vendors/dashboard/vendor-buy-clicks-chart';
-import { Skeleton } from '@/components/ui/skeleton';
 interface AnalyticsErrorMessageProps {
   message: string;
   status?: number;

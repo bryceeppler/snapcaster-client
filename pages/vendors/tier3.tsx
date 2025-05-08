@@ -1,6 +1,8 @@
-import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
-import { PopularBuyClicksByTCG } from '@/lib/GA4Client';
+import { toast } from 'sonner';
+
+import { Tier3SignupForm } from '@/components/forms/Tier3SignupForm';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -8,16 +10,15 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { Tier3SignupForm } from '@/components/forms/Tier3SignupForm';
-import { toast } from 'sonner';
-import Hero from '@/components/vendors/tier3/hero';
-import Tier3Overview from '@/components/vendors/tier3/tier-3-overview';
-import Buylists from '@/components/vendors/tier3/buylists';
 import Analytics from '@/components/vendors/tier3/analytics';
-import OtherFeatures from '@/components/vendors/tier3/other-features';
+import Buylists from '@/components/vendors/tier3/buylists';
+import Hero from '@/components/vendors/tier3/hero';
 import Multisearch from '@/components/vendors/tier3/multisearch';
-import Visibility from '@/components/vendors/tier3/visibility';
+import OtherFeatures from '@/components/vendors/tier3/other-features';
 import Pricing from '@/components/vendors/tier3/pricing';
+import Tier3Overview from '@/components/vendors/tier3/tier-3-overview';
+import Visibility from '@/components/vendors/tier3/visibility';
+import type { PopularBuyClicksByTCG } from '@/lib/GA4Client';
 
 const Tier3 = () => {
   const [popularBuyClicks, setPopularBuyClicks] = useState<

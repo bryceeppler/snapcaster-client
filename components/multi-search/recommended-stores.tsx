@@ -1,3 +1,9 @@
+import { ExternalLink, AlertTriangle } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import React from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardTitle, CardHeader } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -18,19 +24,14 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import React from 'react';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
 import useMultiSearchStore from '@/stores/multiSearchStore';
-import { Product } from '@/types';
-import { Card, CardTitle, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import type { Product } from '@/types';
 import {
   groupProductsByHost,
   buildCartUpdateUrls
 } from '@/utils/cartUrlBuilder';
-import { ExternalLink, AlertTriangle } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
-import { useVendors } from '@/hooks/queries/useVendors';
 
 export const RecommendedStores = () => {
   const { results } = useMultiSearchStore();

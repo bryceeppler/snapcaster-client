@@ -1,8 +1,12 @@
-import React from 'react';
-import Head from 'next/head';
 import { Loader2 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { createCheckoutSession } from '@/lib/utils';
+import Head from 'next/head';
+import React from 'react';
+
+import { RecommendedStores } from '@/components/multi-search/recommended-stores';
+import { ResultsContainer } from '@/components/multi-search/results-container';
+import { Toolbar } from '@/components/multi-search/toolbar';
+import BackToTopButton from '@/components/ui/back-to-top-btn';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -12,18 +16,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { RecommendedStores } from '@/components/multi-search/recommended-stores';
-import useMultiSearchStore from '@/stores/multiSearchStore';
-import { Condition, Product, Tcg } from '@/types';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Toolbar } from '@/components/multi-search/toolbar';
-import BackToTopButton from '@/components/ui/back-to-top-btn';
-import { ResultsContainer } from '@/components/multi-search/results-container';
-import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
-import { trackSearch } from '@/utils/analytics';
-import { Vendor } from '@/services/vendorService';
 import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
+import { createCheckoutSession } from '@/lib/utils';
+import type { Vendor } from '@/services/vendorService';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import type { Condition, Product, Tcg } from '@/types';
+import { trackSearch } from '@/utils/analytics';
 
 export default function Multisearch() {
   const {

@@ -1,7 +1,8 @@
 import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import axiosInstance from '@/utils/axiosWrapper';
 import { format, parseISO } from 'date-fns';
+import { twMerge } from 'tailwind-merge';
+
+import axiosInstance from '@/utils/axiosWrapper';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

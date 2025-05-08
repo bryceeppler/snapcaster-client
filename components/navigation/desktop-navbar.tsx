@@ -2,13 +2,16 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/useAuth';
 import React from 'react';
-import ModeToggle from '@/components/theme-toggle';
-import { cn } from '@/lib/utils';
+
 import { DesktopNavLink } from './nav-link';
 import { SearchBar } from './search-provider';
+
+import ModeToggle from '@/components/theme-toggle';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
+
 
 /**
  * Desktop navigation bar component

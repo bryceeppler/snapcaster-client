@@ -1,14 +1,19 @@
+import { subDays, format } from 'date-fns';
 import {
   BarChart3,
   LineChart,
   Users,
-  LucideIcon,
   Calendar as CalendarIcon
 } from 'lucide-react';
+import type {
+  LucideIcon} from 'lucide-react';
 import { useState } from 'react';
 import { type PropsRange } from 'react-day-picker';
-import { subDays, format } from 'date-fns';
 
+import DashboardLayout from './layout';
+
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Card,
   CardContent,
@@ -16,24 +21,21 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { SearchChart } from '@/components/vendors/tcgs/search-chart';
-import { BuyClicksChart } from '@/components/vendors/tcgs/buy-clicks-chart';
-import DashboardLayout from './layout';
-import {
-  type AnalyticsError,
-  useSearchQueriesWithParams,
-  useBuyClicksWithParams
-} from '@/lib/hooks/useAnalytics';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Skeleton } from '@/components/ui/skeleton';
+import { BuyClicksChart } from '@/components/vendors/tcgs/buy-clicks-chart';
 import { PopularClickedCards } from '@/components/vendors/tcgs/popular-clicked-cards';
 import { PopularClickedSets } from '@/components/vendors/tcgs/popular-clicked-sets';
+import { SearchChart } from '@/components/vendors/tcgs/search-chart';
+import {
+  type AnalyticsError,
+  useSearchQueriesWithParams,
+  useBuyClicksWithParams
+} from '@/lib/hooks/useAnalytics';
 
 interface AnalyticsErrorMessageProps {
   message: string;

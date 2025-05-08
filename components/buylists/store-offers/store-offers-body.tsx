@@ -1,17 +1,19 @@
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useConnectedVendors } from '@/hooks/useConnectedVendors';
-import { Button } from '@/components/ui/button';
 import { ExternalLink, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { useVendors } from '@/hooks/queries/useVendors';
+
 import { ViewAllOffersHeader } from '../header/header';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import useBuyListStore from '@/stores/useBuylistStore';
 
 // Define proper TypeScript interface for store offer data
 interface StoreOfferData {

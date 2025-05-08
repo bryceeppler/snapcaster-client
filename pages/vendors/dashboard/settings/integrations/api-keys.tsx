@@ -1,7 +1,8 @@
 import DashboardLayout from '../../layout';
-import { PageHeader } from '@/components/vendors/page-header';
-import { CreateApiKeyButton } from '@/components/vendors/dashboard/settings/integrations/api-keys/create-api-key-button';
+
 import { ApiKeyList } from '@/components/vendors/dashboard/settings/integrations/api-keys/api-key-list';
+import { CreateApiKeyButton } from '@/components/vendors/dashboard/settings/integrations/api-keys/create-api-key-button';
+import { PageHeader } from '@/components/vendors/page-header';
 
 export default function ApiKeysPage() {
   return (

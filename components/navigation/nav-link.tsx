@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+
+import type { NavLinkProps } from './navbar-types';
+
 import { cn } from '@/lib/utils';
-import { NavLinkProps } from './navbar-types';
 
 /**
  * Shared NavLink component for consistent navigation styling

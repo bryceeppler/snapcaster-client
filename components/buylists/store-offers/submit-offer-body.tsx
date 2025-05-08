@@ -1,8 +1,18 @@
+import {
+  BadgeDollarSign,
+  ExternalLink,
+  CheckCircle2,
+  Info
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useConnectedVendors } from '@/hooks/useConnectedVendors';
-import { useVendors } from '@/hooks/queries/useVendors';
+
+import { FinalSubmissionHeader } from '../header/header';
+
 import { SubmitOfferPanel } from './submit-offer-panel';
+
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Tooltip,
@@ -10,17 +20,10 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import {
-  BadgeDollarSign,
-  ExternalLink,
-  CheckCircle2,
-  Info
-} from 'lucide-react';
-import { FinalSubmissionHeader } from '../header/header';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Vendor } from '@/services/vendorService';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import type { Vendor } from '@/services/vendorService';
+import useBuyListStore from '@/stores/useBuylistStore';
 
 // Interface for the card items in the buylist
 interface BuylistItem {

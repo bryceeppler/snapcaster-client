@@ -1,11 +1,12 @@
+import { CheckCircle } from 'lucide-react';
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { useForm } from 'react-hook-form';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { useAuth } from '@/hooks/useAuth';
 import {
   Card,
   CardHeader,
@@ -13,10 +14,12 @@ import {
   CardDescription,
   CardContent
 } from '@/components/ui/card';
-import { useState } from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+
+
 
 const ForgotPassword: NextPage = () => {
   const { forgotPassword } = useAuth();

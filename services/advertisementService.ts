@@ -1,11 +1,12 @@
 import axios from 'axios';
-import axiosInstance from '@/utils/axiosWrapper';
-import {
+
+import type {
   AdvertisementWithImages,
   AdvertisementPosition,
   AdvertisementImageType,
   AdvertisementImage
 } from '@/types/advertisements';
+import axiosInstance from '@/utils/axiosWrapper';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 

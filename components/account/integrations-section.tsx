@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { DiscordLogoIcon } from '@radix-ui/react-icons';
 import { useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {

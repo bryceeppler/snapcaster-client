@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import MobileNavbar from './mobile-navbar';
+
 import DesktopNavbar from './desktop-navbar';
+import MobileNavbar from './mobile-navbar';
 
 /**
  * Main navbar component that renders the appropriate navbar based on screen size

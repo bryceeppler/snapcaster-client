@@ -1,15 +1,9 @@
 'use client';
 
-import * as React from 'react';
 import { format } from 'date-fns';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import * as React from 'react';
+import { useState } from "react";
+
 import {
   Card,
   CardContent,
@@ -24,9 +18,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { usePopularClickedSets } from '@/lib/hooks/useAnalytics';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { TableSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
-import { useState } from "react";
+import { usePopularClickedSets } from '@/lib/hooks/useAnalytics';
+
 
 interface PopularClickedSetsProps {
   dateRange: {

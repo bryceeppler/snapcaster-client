@@ -1,14 +1,17 @@
+import type {
+  ChartData,
+  ChartOptions
+} from 'chart.js';
 import {
   Chart as ChartJS,
   ArcElement,
   Tooltip,
-  Legend,
-  ChartData,
-  ChartOptions
+  Legend
 } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UsersByDeviceData } from '@/lib/GA4Client';
+import type { UsersByDeviceData } from '@/lib/GA4Client';
 
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend);

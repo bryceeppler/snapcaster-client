@@ -1,13 +1,14 @@
-import BackToTopButton from '../ui/back-to-top-btn';
-import SealedCatalogItem from './sealed-catalog-item';
-import { useAuth } from '@/hooks/useAuth';
-import React, { useEffect, useRef } from 'react';
-import { sealedSortByLabel } from '@/types/query';
-import { SealedProduct } from '@/types';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { SealedSortOptions } from '@/types/query';
-import { Button } from '@/components/ui/button';
+import type { QueryObserverResult } from '@tanstack/react-query';
 import { SlidersHorizontal } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+
+import BackToTopButton from '../ui/back-to-top-btn';
+
+import FilterSheet from './filter-sheet';
+import SealedCatalogItem from './sealed-catalog-item';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -15,9 +16,15 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
-import FilterSheet from './filter-sheet';
-import { QueryObserverResult } from '@tanstack/react-query';
+import { useAuth } from '@/hooks/useAuth';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import type { SealedProduct } from '@/types';
+import { sealedSortByLabel } from '@/types/query';
+import type { SealedSortOptions } from '@/types/query';
+
+
+
+
 
 interface SealedCatalogContainerProps {
   clearFilters: () => void;

@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import Marquee from '@/components/ui/marquee';
+import { cn } from '@/lib/utils';
 
 function generateGradient(seed: string) {
   const hash = seed.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);

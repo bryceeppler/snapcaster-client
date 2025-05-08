@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, useRef, KeyboardEvent, useCallback } from 'react';
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
+import type { KeyboardEvent} from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
-import { DeviceType } from '../navbar-types';
+
+import type { DeviceType } from '../navbar-types';
+
 import BaseSearchBar from '@/components/ui/base-search-bar';
-import { Tcg } from '@/types';
+import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
+import useBuyListStore from '@/stores/useBuylistStore';
+import type { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
 
 interface AutocompleteResult {

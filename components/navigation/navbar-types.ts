@@ -2,7 +2,7 @@
  * Shared types and interfaces for the navbar system
  */
 
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 /**
  * Supported search modes for the application

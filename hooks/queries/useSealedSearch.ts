@@ -1,10 +1,14 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
-import { Product, Tcg } from '@/types';
-import { FilterOption, SealedSortOptions } from '@/types/query';
-import { toast } from 'sonner';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useEffect } from 'react';
+import { toast } from 'sonner';
+
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import type { Product, Tcg } from '@/types';
+import type { FilterOption, SealedSortOptions } from '@/types/query';
+import axiosInstance from '@/utils/axiosWrapper';
+
+
+
 
 interface SearchParams {
   productCategory: Tcg;

@@ -1,14 +1,19 @@
+import { subDays, format } from 'date-fns';
+import type {
+  LucideIcon} from 'lucide-react';
 import {
   BarChart3,
   LineChart,
   Users,
-  LucideIcon,
   Calendar as CalendarIcon
 } from 'lucide-react';
 import { useState } from 'react';
 import { type PropsRange } from 'react-day-picker';
-import { subDays, format } from 'date-fns';
 
+import DashboardLayout from './layout';
+
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Card,
   CardContent,
@@ -16,26 +21,23 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { TrafficChart } from '@/components/vendors/users/traffic-chart';
-import { UserDeviceChart } from '@/components/vendors/dashboard/user-device-chart';
-import { UserDeviceAreaChart } from '@/components/vendors/users/user-device-area-chart';
-import { CityAnalyticsTable } from '@/components/vendors/users/city-analytics-table';
-import { UserTypesChart } from '@/components/vendors/users/user-types-chart';
-import { TrafficSourcesChart } from '@/components/vendors/users/traffic-sources-chart';
-import DashboardLayout from './layout';
-import {
-  type AnalyticsError,
-  useUniqueUsersByDate,
-  useEngagementTime
-} from '@/lib/hooks/useAnalytics';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Skeleton } from '@/components/ui/skeleton';
+import { UserDeviceChart } from '@/components/vendors/dashboard/user-device-chart';
+import { CityAnalyticsTable } from '@/components/vendors/users/city-analytics-table';
+import { TrafficChart } from '@/components/vendors/users/traffic-chart';
+import { TrafficSourcesChart } from '@/components/vendors/users/traffic-sources-chart';
+import { UserDeviceAreaChart } from '@/components/vendors/users/user-device-area-chart';
+import { UserTypesChart } from '@/components/vendors/users/user-types-chart';
+import {
+  type AnalyticsError,
+  useUniqueUsersByDate,
+  useEngagementTime
+} from '@/lib/hooks/useAnalytics';
 
 interface AnalyticsErrorMessageProps {
   message: string;

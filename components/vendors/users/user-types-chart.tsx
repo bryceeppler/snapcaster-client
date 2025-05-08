@@ -1,8 +1,9 @@
 'use client';
 
-import * as React from 'react';
 import { format } from 'date-fns';
+import * as React from 'react';
 import { PieChart, Pie, Cell, Label } from 'recharts';
+
 import {
   Card,
   CardContent,
@@ -11,15 +12,16 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { useUserTypes } from '@/lib/hooks/useAnalytics';
+import type {
+  ChartConfig} from '@/components/ui/chart';
 import {
   ChartContainer,
-  ChartConfig,
   ChartTooltip,
   ChartLegend,
   ChartLegendContent
 } from '@/components/ui/chart';
 import { PieChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
+import { useUserTypes } from '@/lib/hooks/useAnalytics';
 
 interface UserTypesChartProps {
   dateRange: {

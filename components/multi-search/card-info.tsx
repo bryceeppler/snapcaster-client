@@ -1,7 +1,9 @@
 import React from 'react';
-import { Product } from '@/types';
-import { Separator } from '@/components/ui/separator';
+
 import { CardOptions } from './card-options';
+
+import { Separator } from '@/components/ui/separator';
+import type { Product } from '@/types';
 
 export const CardInfo = ({
   resultInfo,

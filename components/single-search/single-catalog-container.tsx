@@ -1,18 +1,23 @@
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import BackToTopButton from '../ui/back-to-top-btn';
-import SingleCatalogItem from './single-catalog-item';
-import FilterSection from '@/components/search-ui/search-filter-container';
-import { useAuth } from '@/hooks/useAuth';
-import {
-  AdvertisementPosition,
-  AdvertisementWithImages
-} from '@/types/advertisements';
 import React, { useMemo, useState, useEffect } from 'react';
+
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
+import BackToTopButton from '../ui/back-to-top-btn';
+
+import SingleCatalogItem from './single-catalog-item';
+
+import FilterSection from '@/components/search-ui/search-filter-container';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { createWeightedSelectionManager } from '@/utils/weightedSelection';
+import { useAuth } from '@/hooks/useAuth';
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
+import type {
+  AdvertisementWithImages
+} from '@/types/advertisements';
+import {
+  AdvertisementPosition
+} from '@/types/advertisements';
 import { appendUtmParameters } from '@/utils/adUrlBuilder';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 // Constant defining how often ads should appear in search results
 const AD_INTERVAL = 10;

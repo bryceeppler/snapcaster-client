@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 export default function Unsubscribe() {
   const router = useRouter();

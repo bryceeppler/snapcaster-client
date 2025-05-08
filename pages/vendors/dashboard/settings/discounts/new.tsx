@@ -1,7 +1,3 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import {
@@ -14,24 +10,24 @@ import {
   X,
   Store
 } from 'lucide-react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 import DashboardLayout from '../../layout';
+
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { useAuth } from '@/hooks/useAuth';
-import { useVendors } from '@/hooks/queries/useVendors';
-import { useDiscounts } from '@/hooks/queries/useDiscounts';
-import { DiscountType } from '@/types/discounts';
-import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -39,6 +35,11 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { useDiscounts } from '@/hooks/queries/useDiscounts';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import { DiscountType } from '@/types/discounts';
 
 // Form schema for discount validation
 const discountFormSchema = z.object({

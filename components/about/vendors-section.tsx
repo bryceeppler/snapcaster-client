@@ -1,8 +1,8 @@
 'use client';
 
-import { useVendors } from '@/hooks/queries/useVendors';
-import { Separator } from '@/components/ui/separator';
 import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { useVendors } from '@/hooks/queries/useVendors';
 
 export default function VendorsSection() {
   const { vendors } = useVendors();

@@ -1,14 +1,14 @@
-import React from 'react';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Trash2, PlusCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-
-import useMultiSearchStore from '@/stores/multiSearchStore';
-import { Product } from '@/types';
-import { useVendors } from '@/hooks/queries/useVendors';
-
-import { Button } from '@/components/ui/button';
+import React from 'react';
 import { toast } from 'sonner';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useVendors } from '@/hooks/queries/useVendors';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import type { Product } from '@/types';
+
 
 const CardOption = ({ product }: { product: Product }) => {
   const { getVendorNameBySlug } = useVendors();

@@ -1,4 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
+
 import { GA4Client } from '@/lib/GA4Client'
 
 export default async function handler(

@@ -1,14 +1,3 @@
-import React from 'react';
-import { BuylistAnalytics } from '@/services/catalogService';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardDescription
-} from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import {
   AlertCircle,
   TrendingUp,
@@ -17,7 +6,19 @@ import {
   Package,
   ShoppingCart
 } from 'lucide-react';
+import React from 'react';
+
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardDescription
+} from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import type { BuylistAnalytics } from '@/services/catalogService';
 
 type Props = {
   data: BuylistAnalytics;

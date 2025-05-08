@@ -1,11 +1,14 @@
 'use client';
 
-import { useRef, KeyboardEvent } from 'react';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
-import { DeviceType } from '../navbar-types';
+import type { KeyboardEvent } from 'react';
+import { useRef } from 'react';
+
+import type { DeviceType } from '../navbar-types';
+
 import BaseSearchBar from '@/components/ui/base-search-bar';
-import { Tcg } from '@/types';
+import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import type { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
 
 /**

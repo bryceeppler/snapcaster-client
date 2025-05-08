@@ -1,17 +1,18 @@
-import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Label } from '@/components/ui/label';
+import { useMemo } from 'react';
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { useMemo } from 'react';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import { useVendors } from '@/hooks/queries/useVendors';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 
 interface FilterSheetProps {
   sortBy: string | null;

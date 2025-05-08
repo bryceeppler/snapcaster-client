@@ -1,7 +1,5 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import {
   CreditCard,
   LogOut,
@@ -10,9 +8,12 @@ import {
   Settings,
   Palette
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
 
 interface MenuItem {
   title: string;

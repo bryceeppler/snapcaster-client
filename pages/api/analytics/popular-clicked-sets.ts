@@ -1,5 +1,7 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { GA4Client, PopularClickedSetsByTCG } from '@/lib/GA4Client'
+import type { NextApiRequest, NextApiResponse } from 'next'
+
+import type { PopularClickedSetsByTCG } from '@/lib/GA4Client';
+import { GA4Client } from '@/lib/GA4Client'
 
 const VALID_TCGS = ['mtg', 'onepiece', 'lorcana', 'yugioh', 'starwars', 'fleshandblood', 'pokemon'];
 

@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import SectionTitle from './section-title';
+import type {
+  LucideIcon} from 'lucide-react';
 import {
   Users,
   MapPin,
@@ -7,12 +7,15 @@ import {
   TrendingUp,
   LayoutGrid,
   Trophy,
-  LucideIcon,
   ArrowRight
 } from 'lucide-react';
-import { UsersByDeviceData, PopularBuyClicksByTCG } from '@/lib/GA4Client';
+
 import { PopularBuyClicks } from './popular-searches';
+import SectionTitle from './section-title';
+
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { UsersByDeviceData, PopularBuyClicksByTCG } from '@/lib/GA4Client';
 
 interface AnalyticsProps {
   variant: 'light' | 'dark';

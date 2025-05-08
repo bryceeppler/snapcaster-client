@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { parseISO } from 'date-fns';
 import {
   MoreHorizontal,
   Trash2,
@@ -9,15 +9,11 @@ import {
   AlertCircle,
   KeyRound
 } from 'lucide-react';
+import { useState } from 'react';
+
+import { DeleteApiKeyDialog } from './delete-api-key-dialog';
+
 import { Button } from '@/components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,10 +22,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { DeleteApiKeyDialog } from './delete-api-key-dialog';
-import { useApiKeys, ApiKey } from '@/hooks/queries/useApiKeys';
-import { parseISO } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
+import type { ApiKey } from '@/hooks/queries/useApiKeys';
+import { useApiKeys } from '@/hooks/queries/useApiKeys';
+
+
 
 
 

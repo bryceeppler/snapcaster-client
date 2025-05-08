@@ -1,7 +1,9 @@
 import { Key } from 'lucide-react';
-import DashboardLayout from '../../layout';
-import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/router';
+
+import DashboardLayout from '../../layout';
+
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardHeader,

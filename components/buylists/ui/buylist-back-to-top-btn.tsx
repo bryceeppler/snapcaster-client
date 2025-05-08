@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+
+import { Button } from '@/components/ui/button';
 
 const BuylistBackToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);

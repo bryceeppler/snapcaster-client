@@ -1,10 +1,11 @@
 'use client';
 
-import * as React from 'react';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const colorOptions = [
   // Default color first

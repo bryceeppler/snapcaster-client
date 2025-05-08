@@ -1,8 +1,8 @@
 'use client';
 
+import { format } from 'date-fns';
 import * as React from 'react';
 import { Pie, PieChart, Label, Cell } from 'recharts';
-import { format } from 'date-fns';
 
 import {
   Card,
@@ -12,16 +12,17 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import type {
+  ChartConfig} from '@/components/ui/chart';
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent
 } from '@/components/ui/chart';
-import { useUsersByDevice } from '@/lib/hooks/useAnalytics';
 import { PieChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
+import { useUsersByDevice } from '@/lib/hooks/useAnalytics';
 
 const chartConfig = {
   visitors: {

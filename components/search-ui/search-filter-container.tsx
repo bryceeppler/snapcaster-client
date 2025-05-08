@@ -1,19 +1,25 @@
+import { Separator } from '@radix-ui/react-dropdown-menu';
 import React, { memo } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { createCheckoutSession } from '@/lib/utils';
-import { FilterOption, FilterOptionValues } from '@/types/query';
-import { useVendors } from '@/hooks/queries/useVendors';
 
-import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
+
+import SearchSortBy from './search-sort-by';
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import { Separator } from '@radix-ui/react-dropdown-menu';
-import SearchSortBy from './search-sort-by';
+import { Button } from '@/components/ui/button';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import { createCheckoutSession } from '@/lib/utils';
+import type { FilterOption, FilterOptionValues } from '@/types/query';
+
+
+
+
 
 // Type for the sort options - matches what's in the provided data
 export type SortByOption = string;

@@ -1,8 +1,10 @@
-import React from 'react';
-import useMultiSearchStore from '@/stores/multiSearchStore';
-import { Product } from '@/types';
-import { CardInfo } from './card-info';
 import { AlertTriangleIcon } from 'lucide-react';
+import React from 'react';
+
+import { CardInfo } from './card-info';
+
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import type { Product } from '@/types';
 
 export const ResultsContainer = ({ results }: { results: Product[][] }) => {
   const { notFound, resultsList } = useMultiSearchStore();

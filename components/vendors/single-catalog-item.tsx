@@ -1,10 +1,14 @@
 import React from 'react';
-import { SingleCatalogCard } from '@/types';
-import { Button } from '@/components/ui/button';
+
+import { handleBuyClick } from '../../utils/analytics';
 import { Badge } from '../ui/badge';
 import CardImage from '../ui/card-image';
+
+import { Button } from '@/components/ui/button';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import { handleBuyClick } from '../../utils/analytics';
+import type { SingleCatalogCard } from '@/types';
+
+
 type Props = {
   product: SingleCatalogCard;
   storeLogo: boolean;

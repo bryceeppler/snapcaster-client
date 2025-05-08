@@ -1,13 +1,8 @@
+import { CheckCircle, Info, AlertTriangle } from 'lucide-react';
 import React, { useState } from 'react';
-import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { useAdImages } from '@/hooks/queries/useAdImages';
-import { useVendors } from '@/hooks/queries/useVendors';
-import {
-  AdvertisementImage,
-  AdvertisementImageType,
-  AdvertisementWithImages
-} from '@/types/advertisements';
-import { Vendor } from '@/services/vendorService';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -16,18 +11,26 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { CheckCircle, Info, AlertTriangle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAdImages } from '@/hooks/queries/useAdImages';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import { useVendors } from '@/hooks/queries/useVendors';
 import { AD_RESOLUTIONS } from '@/lib/constants';
+import { cn } from '@/lib/utils';
+import type { Vendor } from '@/services/vendorService';
+import {
+  AdvertisementImageType
+} from '@/types/advertisements';
+import type {
+  AdvertisementImage,
+  AdvertisementWithImages
+} from '@/types/advertisements';
 
 const formatFileSize = (kilobytes: number) => {
   // if less than 1mb, return the kilobytes

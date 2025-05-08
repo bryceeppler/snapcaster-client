@@ -1,16 +1,18 @@
-import { type NextPage } from 'next';
-import Head from 'next/head';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { DiscordLogoIcon } from '@radix-ui/react-icons';
 import { Mail, Copy, Check } from 'lucide-react';
+import { type NextPage } from 'next';
+import Head from 'next/head';
+import { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useState } from 'react';
+
 
 const ContactMethod = ({
   icon: Icon,

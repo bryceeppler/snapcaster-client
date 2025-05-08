@@ -1,8 +1,9 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
+
 import SealedCatalogContainer from '@/components/sealed/sealed-catalog-container';
+import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 
 const SealedSearch: NextPage = () => {
   const {

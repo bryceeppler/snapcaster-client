@@ -1,8 +1,9 @@
 'use client';
 
-import * as React from 'react';
 import { Moon, Sun, Laptop } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import * as React from 'react';
+
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 

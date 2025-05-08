@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import {
-  AdvertisementPosition,
+
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import type {
   AdvertisementWithImages
 } from '@/types/advertisements';
-import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { createWeightedSelectionManager } from '@/utils/weightedSelection';
+import {
+  AdvertisementPosition
+} from '@/types/advertisements';
 import { appendUtmParameters } from '@/utils/adUrlBuilder';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 interface SideBannerProps {
   position: AdvertisementPosition;

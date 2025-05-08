@@ -1,6 +1,14 @@
 "use client"
 
 import { format } from "date-fns"
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -9,15 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { useCityAnalytics } from "@/lib/hooks/useAnalytics"
 import { TableSkeleton } from "@/components/vendors/dashboard/chart-skeleton"
+import { useCityAnalytics } from "@/lib/hooks/useAnalytics"
 
 interface CityAnalyticsTableProps {
   dateRange: {

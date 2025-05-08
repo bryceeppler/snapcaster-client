@@ -1,15 +1,18 @@
-import React from 'react';
-import { SealedProduct } from '@/types';
-import ProductImage from './product-image';
-import { SEALED_DISCOUNT_MAP } from '@/lib/constants';
-import { handleBuyClick } from '@/utils/analytics';
-import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import { useTheme } from 'next-themes';
+import React from 'react';
+
 import { Button } from '../ui/button';
+
+import ProductImage from './product-image';
+
+import { useVendors } from '@/hooks/queries/useVendors';
+import { SEALED_DISCOUNT_MAP } from '@/lib/constants';
 import { VendorAssetTheme } from '@/services/vendorService';
 import { VendorAssetType } from '@/services/vendorService';
-import { useVendors } from '@/hooks/queries/useVendors';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import type { SealedProduct } from '@/types';
+import { handleBuyClick } from '@/utils/analytics';
 
 type Props = {
   product: SealedProduct;

@@ -1,4 +1,5 @@
 import SectionTitle from './section-title';
+
 import { LoomPlayer } from '@/components/ui/loom-player';
 
 const Multisearch = () => {

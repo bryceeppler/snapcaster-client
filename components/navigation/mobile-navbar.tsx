@@ -1,9 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/useAuth';
 import {
   AlignJustify,
   ShoppingCart,
@@ -27,8 +23,27 @@ import {
   MessageSquare,
   LogOut
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React, { useState, useRef } from 'react';
+
+import { MobileNavLink } from './nav-link';
+import {
+  SearchBar,
+  ResultsToolbar,
+  getSearchModeForPath
+} from './search-provider';
+
 import ModeToggle from '@/components/theme-toggle';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import {
   Sheet,
   SheetContent,
@@ -37,22 +52,10 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion';
-import useBuyListStore from '@/stores/useBuylistStore';
-import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/hooks/useAuth';
 import { useUserCarts } from '@/hooks/useUserCarts';
-import { Separator } from '@/components/ui/separator';
-import { MobileNavLink } from './nav-link';
-import {
-  SearchBar,
-  ResultsToolbar,
-  getSearchModeForPath
-} from './search-provider';
+import useBuyListStore from '@/stores/useBuylistStore';
+
 
 // Interface for navigation items with icons
 interface NavItem {

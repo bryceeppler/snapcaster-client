@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, useRef, KeyboardEvent, useCallback } from 'react';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import { DeviceType } from '../navbar-types';
-import BaseSearchBar from '@/components/ui/base-search-bar';
+import type { KeyboardEvent} from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
+
+import type { DeviceType } from '../navbar-types';
+
+import BaseSearchBar from '@/components/ui/base-search-bar';
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
+import type { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
-import { Tcg } from '@/types';
 
 /**
  * Singles search bar component that connects to the single search store

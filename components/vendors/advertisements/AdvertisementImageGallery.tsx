@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { format } from 'date-fns';
 import {
   Image as ImageIcon,
   Plus,
@@ -10,29 +10,12 @@ import {
   Check,
   ExternalLink
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import {
-  AdvertisementPosition,
-  AdvertisementImageType,
-  AdvertisementWithImages
-} from '@/types/advertisements';
-import { AddImageDialog } from './AddImageDialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { format } from 'date-fns';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
 import { toast } from 'sonner';
+
+import { AddImageDialog } from './AddImageDialog';
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,6 +26,29 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
+import type {
+  AdvertisementWithImages
+} from '@/types/advertisements';
+import {
+  AdvertisementPosition,
+  AdvertisementImageType
+} from '@/types/advertisements';
+
+
 
 interface AdvertisementImageGalleryProps {
   advertisement: AdvertisementWithImages;

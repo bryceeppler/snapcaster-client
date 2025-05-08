@@ -1,9 +1,11 @@
-import React from 'react';
-import DashboardLayout from '../layout';
-import { useAuth } from '@/hooks/useAuth';
-import { Badge } from '@/components/ui/badge';
 import { Lock } from 'lucide-react';
+import React from 'react';
+
+import DashboardLayout from '../layout';
+
+import { Badge } from '@/components/ui/badge';
 import ApprovalTable from '@/components/vendors/dashboard/settings/approvals/approval-table';
+import { useAuth } from '@/hooks/useAuth';
 export default function AdvertisementsPage() {
   const { profile } = useAuth();
 

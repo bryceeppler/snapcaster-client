@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState, createContext, useEffect, ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
+import { useWindowSize } from 'usehooks-ts';
+
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { useAuth } from '@/hooks/useAuth';
-import { useWindowSize } from 'usehooks-ts';
 
 // Ad Context
 type AdContextType = {

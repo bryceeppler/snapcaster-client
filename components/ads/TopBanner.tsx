@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import type {
+  AdvertisementWithImages} from '@/types/advertisements';
 import {
-  AdvertisementWithImages,
   AdvertisementImageType,
   AdvertisementPosition
 } from '@/types/advertisements';
-import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 import { appendUtmParameters } from '@/utils/adUrlBuilder';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 interface TopBannerProps {
   className?: string;

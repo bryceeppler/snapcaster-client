@@ -1,6 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { LucideIcon} from 'lucide-react';
+import { MessageCircle, Mail, Ticket } from 'lucide-react';
+
 import SectionTitle from './section-title';
-import { LucideIcon, MessageCircle, Mail, Ticket } from 'lucide-react';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const OtherFeatures = ({ variant }: { variant: 'dark' | 'light' }) => {
   const features = [

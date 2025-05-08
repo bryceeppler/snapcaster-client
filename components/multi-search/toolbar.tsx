@@ -1,10 +1,10 @@
-import React from 'react';
-import useMultiSearchStore from '@/stores/multiSearchStore';
-import { Product } from '@/types';
-import { Button } from '@/components/ui/button';
 import { ArrowLeft, ShoppingCart, Download, HelpCircle } from 'lucide-react';
-import { Cart } from './cart';
+import React from 'react';
 import { useState, useEffect } from 'react';
+
+import { Cart } from './cart';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +14,8 @@ import {
   DialogDescription
 } from '@/components/ui/dialog';
 import { useVendors } from '@/hooks/queries/useVendors';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import type { Product } from '@/types';
 export const Toolbar = () => {
   const { resetSearch, cart } = useMultiSearchStore();
   const { getVendorNameBySlug } = useVendors();

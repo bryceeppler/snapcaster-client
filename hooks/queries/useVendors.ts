@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
+import { useTheme } from 'next-themes';
+
 import type { Vendor } from '@/services/vendorService';
 import {
   VendorAssetTheme,
   VendorAssetType,
   vendorService
 } from '@/services/vendorService';
-import { useTheme } from 'next-themes';
 
 const fetchVendors = async (): Promise<Vendor[]> => {
   try {

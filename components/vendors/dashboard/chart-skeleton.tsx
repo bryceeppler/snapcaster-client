@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 import {
   Card,
   CardContent,
@@ -7,7 +9,6 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { format } from 'date-fns';
 
 interface ChartSkeletonProps {
   title: string;

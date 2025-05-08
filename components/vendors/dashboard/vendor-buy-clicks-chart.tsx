@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+
 import {
   Card,
   CardContent,
@@ -10,15 +11,16 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { useVendorBuyClicks } from '@/lib/hooks/useAnalytics';
+import type {
+  ChartConfig} from '@/components/ui/chart';
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip
 } from '@/components/ui/chart';
 import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
-import { formatChartDate } from '@/lib/utils';
 import { useVendors } from '@/hooks/queries/useVendors';
+import { useVendorBuyClicks } from '@/lib/hooks/useAnalytics';
+import { formatChartDate } from '@/lib/utils';
 const TCG_ORDER = [
   'mtg',
   'pokemon',

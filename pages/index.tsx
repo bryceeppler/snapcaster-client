@@ -1,9 +1,10 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
+
 import Homebanner from '@/components/homebanner';
+import SearchBar from '@/components/search-ui/search-bar';
 import SingleCatalog from '@/components/single-search/single-catalog-container';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import SearchBar from '@/components/search-ui/search-bar';
 
 const Home: NextPage = () => {
   const {

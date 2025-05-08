@@ -1,9 +1,9 @@
 'use client';
 
-import { DeviceType, SearchMode } from './navbar-types';
-import SinglesSearchBar from './search-bars/singles-search-bar';
+import type { DeviceType, SearchMode } from './navbar-types';
 import BuylistsSearchBar from './search-bars/buylists-search-bar';
 import SealedSearchBar from './search-bars/sealed-search-bar';
+import SinglesSearchBar from './search-bars/singles-search-bar';
 import SinglesResultsToolbar from './toolbars/singles-results-toolbar';
 
 /**

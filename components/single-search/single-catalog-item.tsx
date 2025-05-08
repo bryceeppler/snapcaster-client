@@ -1,16 +1,18 @@
-import React from 'react';
-import { SingleCatalogCard } from '@/types';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { useTheme } from 'next-themes';
+import React from 'react';
+
+import { handleBuyClick } from '../../utils/analytics';
 import { Badge } from '../ui/badge';
 import CardImage from '../ui/card-image';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import { handleBuyClick } from '../../utils/analytics';
-import { useTheme } from 'next-themes';
-import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
-import { useVendors } from '@/hooks/queries/useVendors';
+
+import { Button } from '@/components/ui/button';
 import { useDiscounts } from '@/hooks/queries/useDiscounts';
-import { Discount } from '@/types/discounts';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
+import type { SingleCatalogCard } from '@/types';
+import type { Discount } from '@/types/discounts';
 type DiscountBadgeProps = {
   product: SingleCatalogCard;
   discount: Discount | undefined;

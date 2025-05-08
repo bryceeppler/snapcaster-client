@@ -1,8 +1,10 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { SlidersHorizontal } from 'lucide-react';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
+
+import FilterSection from '@/components/search-ui/search-filter-container';
+import SearchPagination from '@/components/search-ui/search-pagination';
+import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -10,8 +12,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import FilterSection from '@/components/search-ui/search-filter-container';
-import SearchPagination from '@/components/search-ui/search-pagination';
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 
 /**
  * Toolbar component for singles search results

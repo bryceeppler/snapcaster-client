@@ -1,9 +1,11 @@
-import type { Product, Tcg } from '@/types';
-import { create } from 'zustand';
-import { toast } from 'sonner';
-import { devtools, persist, createJSONStorage } from 'zustand/middleware';
-import { FilterOption } from '@/types/query';
 import axios from 'axios';
+import { toast } from 'sonner';
+import { create } from 'zustand';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+
+import type { Product, Tcg } from '@/types';
+import type { FilterOption } from '@/types/query';
+
 
 type SearchState = {
   searchTerm: string;

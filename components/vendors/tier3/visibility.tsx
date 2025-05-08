@@ -1,12 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import SectionTitle from './section-title';
-import Link from 'next/link';
 import {
   ArrowRightIcon,
   ArrowDownIcon
 } from 'lucide-react';
-import SingleCatalogItem from '@/components/vendors/single-catalog-item';
+import Link from 'next/link';
+
+import SectionTitle from './section-title';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShineBorder } from '@/components/ui/shine-border';
+import SingleCatalogItem from '@/components/vendors/single-catalog-item';
 
 const Visibility = () => {
   return (

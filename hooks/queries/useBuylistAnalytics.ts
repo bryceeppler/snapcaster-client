@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { catalogService, BuylistAnalytics } from '@/services/catalogService';
+
+import type { BuylistAnalytics } from '@/services/catalogService';
+import { catalogService } from '@/services/catalogService';
 export const QUERY_KEY = 'buylistAnalytics';
 export const SUBMISSIONS_QUERY_KEY = 'buylistSubmissions';
 

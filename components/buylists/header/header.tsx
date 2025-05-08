@@ -1,8 +1,15 @@
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useAuth } from '@/hooks/useAuth';
-import { useState } from 'react';
-import { useUserCarts } from '@/hooks/useUserCarts';
 
+import {
+  ChevronLeft,
+  ListIcon,
+  PlusIcon,
+  SlidersHorizontal
+} from 'lucide-react';
+import { useState } from 'react';
+
+import FilterSelector from '@/components/buylists/filter-selector';
+import FilterSheet from '@/components/buylists/filter-sheet';
+import SearchSortBy from '@/components/buylists/sort-by';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -13,16 +20,9 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import {
-  ChevronLeft,
-  ListIcon,
-  PlusIcon,
-  SlidersHorizontal
-} from 'lucide-react';
-
-import SearchSortBy from '@/components/buylists/sort-by';
-import FilterSelector from '@/components/buylists/filter-selector';
-import FilterSheet from '@/components/buylists/filter-sheet';
+import { useAuth } from '@/hooks/useAuth';
+import { useUserCarts } from '@/hooks/useUserCarts';
+import useBuyListStore from '@/stores/useBuylistStore';
 /////////////////////////////////////////////////////////////////////////////////////
 // This File Contains All the Header Components for each step in the buylist stage //
 /////////////////////////////////////////////////////////////////////////////////////

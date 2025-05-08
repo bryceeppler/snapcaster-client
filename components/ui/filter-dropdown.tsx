@@ -1,14 +1,15 @@
+import { ChevronDown } from 'lucide-react';
 import React from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverTrigger,
   PopoverContent
 } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 
 type FilterDropdownProps = {
   triggerLabel: string;

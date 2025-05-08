@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
-import { IBuylistCartItem, IBuylistCart } from '@/stores/useBuylistStore';
 import { toast } from 'sonner';
+
+import type { IBuylistCartItem, IBuylistCart } from '@/stores/useBuylistStore';
+import axiosInstance from '@/utils/axiosWrapper';
 
 const CART_ITEMS_KEY = (cartId: number) => ['cartItems', cartId] as const;
 const USER_CARTS_KEY = ['userCarts'] as const;

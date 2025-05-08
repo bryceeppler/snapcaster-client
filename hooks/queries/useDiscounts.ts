@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Discount } from '@/types/discounts';
-import { vendorService } from '@/services/vendorService';
 import { toast } from 'sonner';
-import {
+
+import { vendorService } from '@/services/vendorService';
+import type { Discount } from '@/types/discounts';
+import type {
   CreateDiscountRequest,
   UpdateDiscountRequest
 } from '@/types/discounts';

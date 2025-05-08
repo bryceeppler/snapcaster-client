@@ -1,9 +1,11 @@
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { Tcg } from '@/types';
-import axiosInstance from '@/utils/axiosWrapper';
-import { toast } from 'sonner';
 import { useEffect } from 'react';
+import { toast } from 'sonner';
+
 import useBuylistStore from '@/stores/useBuylistStore';
+import type { Tcg } from '@/types';
+import axiosInstance from '@/utils/axiosWrapper';
+
 
 interface SearchParams {
   tcg: Tcg;

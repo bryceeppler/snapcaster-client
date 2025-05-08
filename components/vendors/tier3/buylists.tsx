@@ -1,6 +1,8 @@
-import SectionTitle from './section-title';
-import { Button } from '@/components/ui/button';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
+
+import SectionTitle from './section-title';
+
+import { Button } from '@/components/ui/button';
 import { LoomPlayer } from '@/components/ui/loom-player';
 
 const Buylists = ({ variant, onSignup }: { variant: 'dark' | 'light'; onSignup: () => void }) => {
