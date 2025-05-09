@@ -1,5 +1,5 @@
-import { useTheme } from 'next-themes';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
 
 import { handleBuyClick } from '../../utils/analytics';
 import { Badge } from '../ui/badge';
