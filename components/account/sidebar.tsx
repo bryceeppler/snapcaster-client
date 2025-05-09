@@ -67,7 +67,7 @@ export function AccountSidebar() {
             className={cn(
               'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
               item.isActive
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                ? 'bg-primary text-primary-foreground'
                 : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
             )}
           >
