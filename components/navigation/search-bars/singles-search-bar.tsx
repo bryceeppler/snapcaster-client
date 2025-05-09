@@ -22,7 +22,7 @@ export default function SinglesSearchBar({
   const {
     searchTerm,
     tcg,
-    isLoading,
+    loadingCardResults,
     fetchCards,
     setSearchTerm,
     setTcg,
@@ -175,7 +175,7 @@ export default function SinglesSearchBar({
       tcg={tcg}
       searchTerm={searchTerm}
       placeholder="Search for a card"
-      isLoading={isLoading}
+      isLoading={loadingCardResults}
       inputRef={inputRef}
       onTcgChange={handleTcgChange}
       onInputChange={handleInputChange}
