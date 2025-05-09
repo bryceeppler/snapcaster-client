@@ -1,26 +1,20 @@
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useConnectedVendors } from '@/hooks/useConnectedVendors';
-import { Button } from '@/components/ui/button';
-import { ExternalLink, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { useVendors } from '@/hooks/queries/useVendors';
+import { AlertCircle, CheckCircle2, ExternalLink } from 'lucide-react';
+
 import { ViewAllOffersHeader } from '../header/header';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-
-// Define proper TypeScript interface for store offer data
-interface StoreOfferData {
-  storeName: string;
-  creditSubtotal: number;
-  cashSubtotal: number;
-  items: unknown[];
-  unableToPurchaseItems: unknown[];
-}
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import useBuyListStore from '@/stores/useBuylistStore';
+import type { StoreOfferData } from '@/types/buylists';
 
 export const BuylistStoreOffers = () => {
   const { reviewData, setSelectedStoreForReview, setBuylistUIState } =
@@ -58,8 +52,8 @@ export const BuylistStoreOffers = () => {
 
                 const isEligibleForFreeShipping =
                   storeOfferData.storeName === 'exorgames' &&
-                  (storeOfferData.cashSubtotal > 250 ||
-                    storeOfferData.creditSubtotal > 250);
+                  (parseFloat(storeOfferData.cashSubtotal) > 250 ||
+                    parseFloat(storeOfferData.creditSubtotal) > 250);
 
                 return (
                   <Card
@@ -121,11 +115,9 @@ export const BuylistStoreOffers = () => {
                             <p className="text-sm">Credit</p>
                             <p className={'text-sm font-medium'}>
                               $
-                              {typeof storeOfferData.creditSubtotal === 'number'
-                                ? storeOfferData.creditSubtotal.toFixed(2)
-                                : parseFloat(
-                                    String(storeOfferData.creditSubtotal)
-                                  ).toFixed(2) || '0.00'}
+                              {parseFloat(
+                                storeOfferData.creditSubtotal
+                              ).toFixed(2)}
                             </p>
                           </div>
 
@@ -133,11 +125,9 @@ export const BuylistStoreOffers = () => {
                             <p className="text-sm">Cash</p>
                             <p className={'text-sm font-medium'}>
                               $
-                              {typeof storeOfferData.cashSubtotal === 'number'
-                                ? storeOfferData.cashSubtotal.toFixed(2)
-                                : parseFloat(
-                                    String(storeOfferData.cashSubtotal)
-                                  ).toFixed(2) || '0.00'}
+                              {parseFloat(storeOfferData.cashSubtotal).toFixed(
+                                2
+                              )}
                             </p>
                           </div>
 

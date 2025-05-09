@@ -1,4 +1,10 @@
-import { useState, useEffect, useRef, KeyboardEvent, useCallback } from 'react';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { ChevronDown, Loader2 } from 'lucide-react';
+import type { KeyboardEvent } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
+
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -7,13 +13,7 @@ import {
   SelectTriggerNoIcon as SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-
-import { Input } from '@/components/ui/input';
-import { ChevronDown, Loader2 } from 'lucide-react';
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { useDebounceCallback } from 'usehooks-ts';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import { Tcg } from '@/types';
+import type { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
 
 interface AutocompleteResult {
@@ -41,10 +41,9 @@ export default function SearchBar({
   fetchCards,
   clearFilters,
   isLoading,
-  setIsLoading,
-  setCurrentPage
+  setIsLoading
 }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, _setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);

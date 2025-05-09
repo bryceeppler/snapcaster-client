@@ -1,5 +1,3 @@
-import { cn } from '@/lib/utils';
-
 interface PageHeaderProps {
   title: string;
   description?: string;
@@ -10,7 +8,6 @@ interface PageHeaderProps {
 export function PageHeader({
   title,
   description,
-  className,
   actionButton
 }: PageHeaderProps) {
   return (

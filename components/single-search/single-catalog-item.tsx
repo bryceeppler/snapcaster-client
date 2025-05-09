@@ -1,16 +1,18 @@
-import React from 'react';
-import { SingleCatalogCard } from '@/types';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { useTheme } from 'next-themes';
+
+import { handleBuyClick } from '../../utils/analytics';
 import { Badge } from '../ui/badge';
 import CardImage from '../ui/card-image';
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import { handleBuyClick } from '../../utils/analytics';
-import { useTheme } from 'next-themes';
-import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
-import { useVendors } from '@/hooks/queries/useVendors';
+
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { useDiscounts } from '@/hooks/queries/useDiscounts';
-import { Discount } from '@/types/discounts';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { VendorAssetTheme, VendorAssetType } from '@/services/vendorService';
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
+import type { SingleCatalogCard } from '@/types';
+import type { Discount } from '@/types/discounts';
 type DiscountBadgeProps = {
   product: SingleCatalogCard;
   discount: Discount | undefined;
@@ -44,10 +46,8 @@ const SingleCatalogItem = ({ product }: Props) => {
   };
 
   return (
-    <div className="flex flex-col rounded-lg bg-popover font-montserrat">
-      <div
-        className={`group flex h-full flex-col rounded-lg border border-accent bg-popover p-4`}
-      >
+    <Card className="flex flex-col">
+      <div className={`group flex h-full flex-col rounded-lg p-4`}>
         <div className="relative mx-auto h-min max-w-[150px] md:max-w-[250px]">
           <CardImage imageUrl={product.image} alt={product.name} />
           {product.promoted && (
@@ -129,8 +129,8 @@ const SingleCatalogItem = ({ product }: Props) => {
               </div>
             </div>
             <Badge
-              className={` mt-2 w-min border-2 border-muted-foreground text-white ${
-                product.finish ? 'bg-foil bg-cover bg-center' : 'bg-slate-700'
+              className={` mt-2 w-min ${
+                product.finish ? 'bg-foil bg-cover bg-center' : ''
               }`}
             >
               {product.condition}
@@ -145,8 +145,8 @@ const SingleCatalogItem = ({ product }: Props) => {
         className="w-full px-4 pb-4"
       >
         <Button
-          className="w-full rounded-b-lg border-border bg-popover font-montserrat text-xs uppercase"
-          variant="outline"
+          className="w-full font-montserrat text-xs uppercase"
+          variant="secondary"
           onClick={() =>
             handleBuyClick(
               product.link,
@@ -161,7 +161,7 @@ const SingleCatalogItem = ({ product }: Props) => {
           Buy
         </Button>
       </Link>
-    </div>
+    </Card>
   );
 };
 

@@ -1,14 +1,9 @@
+import { useState } from 'react';
+
 import DashboardLayout from './layout';
-import { useBuylistAnalytics } from '@/hooks/queries/useBuylistAnalytics';
-import { useAuth } from '@/hooks/useAuth';
-import BuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/buylist-analytics';
-import AdminBuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/admin-buylist-analytics';
-import {
-  BuylistAnalytics,
-  BuylistSubmissionResponse
-} from '@/services/catalogService';
-import BuylistSubmissionTable from '@/components/vendors/dashboard/buylists/buylist-submission-table';
-import { useState, useEffect } from 'react';
+
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -16,8 +11,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AdminBuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/admin-buylist-analytics';
+import BuylistAnalyticsOverview from '@/components/vendors/dashboard/buylists/buylist-analytics';
+import BuylistSubmissionTable from '@/components/vendors/dashboard/buylists/buylist-submission-table';
+import { useBuylistAnalytics } from '@/hooks/queries/useBuylistAnalytics';
+import { useAuth } from '@/hooks/useAuth';
+import type {
+  BuylistAnalytics,
+  BuylistSubmissionResponse
+} from '@/services/catalogService';
 
 export default function BuylistsPage() {
   const { profile, isAdmin, isLoadingProfile } = useAuth();
@@ -72,7 +74,7 @@ export default function BuylistsPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+        <div className="flex-1 space-y-4">
           <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
             <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
               Buylist Analytics

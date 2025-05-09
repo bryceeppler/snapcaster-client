@@ -1,7 +1,9 @@
-import { Button } from '@/components/ui/button';
-import { SearchQueriesChart } from './search-queries-chart';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
+
+import { SearchQueriesChart } from './search-queries-chart';
+
+import { Button } from '@/components/ui/button';
 
 interface HeroProps {
   onSignup?: () => void;

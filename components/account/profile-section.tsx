@@ -1,8 +1,5 @@
 'use client';
 
-import type React from 'react';
-
-import { useState } from 'react';
 import { CheckCircle, XCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -28,7 +25,20 @@ export function ProfileSection() {
   const isVerified = profile?.data?.user?.emailVerified || false;
 
   const handleResendVerification = async () => {
-    resendVerificationEmail();
+    resendVerificationEmail(undefined, {
+      onSuccess: () => {
+        toast({
+          title: 'Verification Email Sent',
+          description: 'Please check your inbox for the verification link.'
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error sending verification email',
+          description: error.message
+        });
+      }
+    });
   };
 
   return (
@@ -65,9 +75,9 @@ export function ProfileSection() {
             <div className="flex items-center gap-4 rounded-lg border p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                 {isVerified ? (
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <CheckCircle className="h-5 w-5 text-primary" />
                 ) : (
-                  <XCircle className="h-5 w-5 text-red-500" />
+                  <XCircle className="h-5 w-5 text-destructive" />
                 )}
               </div>
               <div className="flex-1">

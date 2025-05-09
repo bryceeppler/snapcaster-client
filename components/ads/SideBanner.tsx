@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import {
-  AdvertisementPosition,
-  AdvertisementWithImages
-} from '@/types/advertisements';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { createWeightedSelectionManager } from '@/utils/weightedSelection';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 import { appendUtmParameters } from '@/utils/adUrlBuilder';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 interface SideBannerProps {
   position: AdvertisementPosition;
@@ -35,10 +34,14 @@ const SideBanner: React.FC<SideBannerProps> = ({
 
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
   const [selectedImage, setSelectedImage] = useState<{
-    imageUrl?: string;
-    alt?: string;
-    url?: string;
-  }>({});
+    imageUrl: string | undefined;
+    alt: string | undefined;
+    url: string | undefined;
+  }>({
+    imageUrl: undefined,
+    alt: undefined,
+    url: undefined
+  });
 
   // Create a weighted selection manager for the ads
   const selectionManager = useMemo(() => {
@@ -77,7 +80,8 @@ const SideBanner: React.FC<SideBannerProps> = ({
         // Store this as the previous selection to avoid showing it again next
         selectionManager.setPreviousSelection(initialIndex);
         // Select random image for this ad
-        selectRandomImage(bannerAds[initialIndex]);
+        const ad = bannerAds[initialIndex];
+        if (ad) selectRandomImage(ad);
       }
       isFirstRender.current = false;
     } else if (bannerAds.length > 1) {
@@ -87,7 +91,8 @@ const SideBanner: React.FC<SideBannerProps> = ({
       if (nextIndex >= 0) {
         setCurrentAdIndex(nextIndex);
         // Select random image for this ad
-        selectRandomImage(bannerAds[nextIndex]);
+        const ad = bannerAds[nextIndex];
+        if (ad) selectRandomImage(ad);
       }
     }
   }, [bannerAds, selectionManager]);
@@ -103,7 +108,8 @@ const SideBanner: React.FC<SideBannerProps> = ({
       if (nextIndex >= 0) {
         setCurrentAdIndex(nextIndex);
         // Select random image for this ad
-        selectRandomImage(bannerAds[nextIndex]);
+        const ad = bannerAds[nextIndex];
+        if (ad) selectRandomImage(ad);
       }
     }, intervalMs);
 

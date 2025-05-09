@@ -27,7 +27,9 @@ export class PaymentService {
     return response.data;
   }
 
-  async createCustomerPortalSession(returnUrl: string): Promise<CustomerPortalSession> {
+  async createCustomerPortalSession(
+    returnUrl: string
+  ): Promise<CustomerPortalSession> {
     const response = await axiosInstance.post(
       `${BASE_URL}/createportalsession`,
       {
@@ -38,4 +40,4 @@ export class PaymentService {
   }
 }
 
-export const paymentService = new PaymentService(); 
+export const paymentService = new PaymentService();

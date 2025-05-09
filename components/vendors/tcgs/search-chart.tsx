@@ -1,18 +1,14 @@
 'use client';
 
-import * as React from 'react';
 import { format, parseISO } from 'date-fns';
 import {
-  Line,
-  LineChart,
   Area,
   AreaChart,
   CartesianGrid,
-  XAxis,
-  YAxis,
   Legend,
   ResponsiveContainer,
-  Tooltip
+  XAxis,
+  YAxis
 } from 'recharts';
 
 import {
@@ -22,8 +18,8 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import type { ChartConfig } from '@/components/ui/chart';
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent
@@ -47,7 +43,7 @@ const tcgColors = {
   onepiece: 'hsl(var(--chart-4))',
   lorcana: 'hsl(var(--chart-5))',
   starwars: 'hsl(var(--chart-6))',
-  fleshandblood: 'hsl(var(--chart-7))'
+  fleshandblood: 'hsl(var(--chart-1))'
 };
 
 // Create chart config
@@ -92,11 +88,11 @@ interface SearchChartProps {
   chartHeight?: number | string;
 }
 
-export function SearchChart({ 
-  dateRange, 
-  tcgFilter, 
-  title = "TCG Search Trends",
-  chartHeight = 200 
+export function SearchChart({
+  dateRange,
+  tcgFilter,
+  title = 'TCG Search Trends',
+  chartHeight = 200
 }: SearchChartProps) {
   const { data, isLoading, error } = useSearchQueriesWithParams(
     dateRange.from,
@@ -104,10 +100,17 @@ export function SearchChart({
   );
 
   // Convert chartHeight to a string with 'px' if it's a number
-  const heightClass = typeof chartHeight === 'number' ? `h-[${chartHeight}px]` : chartHeight;
+  const heightClass =
+    typeof chartHeight === 'number' ? `h-[${chartHeight}px]` : chartHeight;
 
   if (isLoading) {
-    return <ChartSkeleton title={title} dateRange={dateRange} height={chartHeight as number} />;
+    return (
+      <ChartSkeleton
+        title={title}
+        dateRange={dateRange}
+        height={chartHeight as number}
+      />
+    );
   }
 
   if (error) {
@@ -116,38 +119,45 @@ export function SearchChart({
         <CardHeader className="items-center pb-0">
           <CardTitle>{title}</CardTitle>
           <CardDescription>
-            {format(dateRange.from, 'LLL dd, y')} - {format(dateRange.to, 'LLL dd, y')}
+            {format(dateRange.from, 'LLL dd, y')} -{' '}
+            {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex h-[400px] items-center justify-center">
-          <p className="text-sm text-red-500">Failed to load search data: {error.message}</p>
+          <p className="text-sm text-red-500">
+            Failed to load search data: {error.message}
+          </p>
         </CardContent>
       </Card>
     );
   }
 
   // Process data for the chart
-  const chartData = data?.data.map((item) => {
-    const formattedDate = formatDate(item.date);
-    
-    // Start with the date
-    const dataPoint: any = { date: formattedDate };
-    
-    // Add each TCG's search count
-    Object.entries(item.tcgs).forEach(([tcg, count]) => {
-      // Only include TCGs that are in our config AND in the tcgFilter (if provided)
-      if (tcg in chartConfig && (!tcgFilter || tcgFilter.includes(tcg))) {
-        dataPoint[tcg] = count;
-      }
-    });
-    
-    return dataPoint;
-  }) ?? [];
+  const chartData =
+    data?.data.map((item) => {
+      const formattedDate = formatDate(item.date);
+
+      // Start with the date
+      const dataPoint: Record<string, string | number> = {
+        date: formattedDate
+      };
+
+      // Add each TCG's search count
+      Object.entries(item.tcgs).forEach(([tcg, count]) => {
+        // Only include TCGs that are in our config AND in the tcgFilter (if provided)
+        if (tcg in chartConfig && (!tcgFilter || tcgFilter.includes(tcg))) {
+          dataPoint[tcg] = count;
+        }
+      });
+
+      return dataPoint;
+    }) ?? [];
 
   // Get the list of TCGs that have data and are in the filter
-  const activeTcgs = Object.keys(chartConfig).filter(tcg => 
-    (!tcgFilter || tcgFilter.includes(tcg)) && 
-    chartData.some(dataPoint => dataPoint[tcg] !== undefined)
+  const activeTcgs = Object.keys(chartConfig).filter(
+    (tcg) =>
+      (!tcgFilter || tcgFilter.includes(tcg)) &&
+      chartData.some((dataPoint) => dataPoint[tcg] !== undefined)
   );
 
   return (
@@ -156,20 +166,28 @@ export function SearchChart({
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>{title}</CardTitle>
           <CardDescription>
-            {format(dateRange.from, 'LLL dd, y')} - {format(dateRange.to, 'LLL dd, y')}
+            {format(dateRange.from, 'LLL dd, y')} -{' '}
+            {format(dateRange.to, 'LLL dd, y')}
           </CardDescription>
         </div>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer 
-          config={chartConfig} 
+        <ChartContainer
+          config={chartConfig}
           className={`aspect-auto ${heightClass} w-full`}
         >
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData}>
               <defs>
-                {activeTcgs.map(tcg => (
-                  <linearGradient key={tcg} id={`fill${tcg}`} x1="0" y1="0" x2="0" y2="1">
+                {activeTcgs.map((tcg) => (
+                  <linearGradient
+                    key={tcg}
+                    id={`fill${tcg}`}
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
                     <stop
                       offset="5%"
                       stopColor={`var(--color-${tcg})`}
@@ -184,8 +202,8 @@ export function SearchChart({
                 ))}
               </defs>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="date" 
+              <XAxis
+                dataKey="date"
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
@@ -193,7 +211,7 @@ export function SearchChart({
                 fontSize={12}
                 stroke="hsl(var(--muted-foreground))"
               />
-              <YAxis 
+              <YAxis
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
@@ -210,7 +228,7 @@ export function SearchChart({
                 }
               />
               <Legend />
-              {activeTcgs.map(tcg => (
+              {activeTcgs.map((tcg) => (
                 <Area
                   key={tcg}
                   type="monotone"

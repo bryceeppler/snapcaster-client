@@ -1,8 +1,10 @@
-import { useCartItems } from '@/hooks/useCartItems';
-import useBuyListStore, { IBuylistCartItem } from '@/stores/useBuylistStore';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
 import { MinusIcon, Plus } from 'lucide-react';
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
+import { useCartItems } from '@/hooks/useCartItems';
+import type { IBuylistCartItem } from '@/stores/useBuylistStore';
+import useBuyListStore from '@/stores/useBuylistStore';
 
 export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
   const { currentCartId, buylistUIState, setAllCartsData } = useBuyListStore();
@@ -61,7 +63,7 @@ export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
                   if (buylistUIState === 'viewAllOffersState') {
                     await setAllCartsData(currentCartId);
                   }
-                } catch (error) {
+                } catch {
                   toast.error('Failed to update item');
                 }
               }
@@ -79,13 +81,14 @@ export const CartItem = ({ item }: { item: IBuylistCartItem }) => {
             size="icon"
             className="h-6 w-6"
             onClick={() => {
-              currentCartId &&
+              if (currentCartId) {
                 updateCartItem({
                   cartId: currentCartId,
                   item,
                   quantity: Math.max(0, item.quantity - 1)
                 });
-              if (buylistUIState === 'viewAllOffersState') {
+              }
+              if (buylistUIState === 'viewAllOffersState' && currentCartId) {
                 setAllCartsData(currentCartId);
               }
             }}

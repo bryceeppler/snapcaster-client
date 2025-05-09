@@ -1,8 +1,18 @@
+import {
+  BadgeDollarSign,
+  ExternalLink,
+  CheckCircle2,
+  Info
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useConnectedVendors } from '@/hooks/useConnectedVendors';
-import { useVendors } from '@/hooks/queries/useVendors';
+
+import { FinalSubmissionHeader } from '../header/header';
+
 import { SubmitOfferPanel } from './submit-offer-panel';
+
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Tooltip,
@@ -10,16 +20,25 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import {
-  BadgeDollarSign,
-  ExternalLink,
-  CheckCircle2,
-  Info
-} from 'lucide-react';
-import { FinalSubmissionHeader } from '../header/header';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useConnectedVendors } from '@/hooks/useConnectedVendors';
+import type { Vendor } from '@/services/vendorService';
+import useBuyListStore from '@/stores/useBuylistStore';
+import type {
+  StoreOfferData,
+  BuylistItem,
+  PriceRowProps
+} from '@/types/buylists';
+
+// Interface for the VendorInfoCard props
+interface VendorInfoCardProps {
+  vendor: Vendor | undefined;
+  storeName: string;
+  isVendorConnected: boolean;
+  getVendorIcon: (vendor: Vendor | undefined) => string | null;
+  getVendorNameBySlug: (slug: string) => string;
+  className: string;
+}
 
 export const SubmitOffer = () => {
   const { reviewData, selectedStoreForReview } = useBuyListStore();
@@ -30,7 +49,7 @@ export const SubmitOffer = () => {
   const [isVendorConnected, setIsVendorConnected] = useState(false);
 
   const storeData = reviewData?.find(
-    (store: any) => store.storeName === selectedStoreForReview
+    (store: StoreOfferData) => store.storeName === selectedStoreForReview
   );
 
   const vendor = vendors.find((vendor) => vendor.slug === storeData?.storeName);
@@ -85,13 +104,15 @@ export const SubmitOffer = () => {
                   accentColor="bg-primary"
                 >
                   <div className="grid gap-4 sm:grid-cols-1">
-                    {storeData.items.map((cardData: any, index: number) => (
-                      <PurchaseCard
-                        key={index}
-                        cardData={cardData}
-                        index={index}
-                      />
-                    ))}
+                    {storeData.items.map(
+                      (cardData: BuylistItem, index: number) => (
+                        <PurchaseCard
+                          key={index}
+                          cardData={cardData}
+                          index={index}
+                        />
+                      )
+                    )}
                   </div>
                 </CardSection>
 
@@ -108,7 +129,7 @@ export const SubmitOffer = () => {
                   >
                     <div className="grid gap-4 sm:grid-cols-1">
                       {storeData.unableToPurchaseItems.map(
-                        (cardData: any, index: number) => (
+                        (cardData: BuylistItem, index: number) => (
                           <NotPurchasingCard
                             key={index}
                             cardData={cardData}
@@ -149,13 +170,13 @@ const VendorInfoCard = ({
   getVendorIcon,
   getVendorNameBySlug,
   className
-}: any) => (
+}: VendorInfoCardProps) => (
   <div className={`flex items-center gap-4 ${className}`}>
     {getVendorIcon(vendor) && (
       <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-md border bg-white p-1 shadow-sm">
         <img
           src={getVendorIcon(vendor) || undefined}
-          alt={`${getVendorNameBySlug(vendor?.slug)} logo`}
+          alt={`${getVendorNameBySlug(storeName)} logo`}
           className="h-full w-full object-contain"
         />
       </div>
@@ -223,7 +244,7 @@ const PurchaseCard = ({
   cardData,
   index
 }: {
-  cardData: any;
+  cardData: BuylistItem;
   index: number;
 }) => {
   return (
@@ -237,7 +258,7 @@ const PurchaseCard = ({
             <img
               className="h-24 w-20 rounded-md object-contain shadow-sm transition-transform duration-200 group-hover:scale-105"
               src={cardData.image}
-              alt={cardData.name}
+              alt={cardData.name || cardData.cardName}
               loading="lazy"
             />
             {cardData.bestCreditOffer || cardData.bestCashOffer ? (
@@ -282,7 +303,7 @@ const PurchaseCard = ({
                 label="Credit"
                 unitPrice={cardData.creditPrice}
                 quantity={cardData.purchaseQuantity}
-                isBestOffer={cardData.bestCreditOffer}
+                isBestOffer={cardData.bestCreditOffer ?? undefined}
                 tooltipText="Top Credit Unit Price"
               />
 
@@ -290,7 +311,7 @@ const PurchaseCard = ({
                 label="Cash"
                 unitPrice={cardData.cashPrice}
                 quantity={cardData.purchaseQuantity}
-                isBestOffer={cardData.bestCashOffer}
+                isBestOffer={cardData.bestCashOffer ?? undefined}
                 tooltipText="Top Cash Unit Price"
               />
             </div>
@@ -306,7 +327,7 @@ const NotPurchasingCard = ({
   cardData,
   index
 }: {
-  cardData: any;
+  cardData: BuylistItem;
   index: number;
 }) => {
   return (
@@ -320,7 +341,7 @@ const NotPurchasingCard = ({
             <img
               className="h-24 w-20 rounded-md object-contain grayscale filter transition-opacity duration-200 group-hover:opacity-80"
               src={cardData.image}
-              alt={cardData.name}
+              alt={cardData.name || cardData.cardName}
               loading="lazy"
             />
           </div>
@@ -371,15 +392,9 @@ const PriceRow = ({
   label,
   unitPrice,
   quantity,
-  isBestOffer = false,
+  isBestOffer,
   tooltipText
-}: {
-  label: string;
-  unitPrice: string | number;
-  quantity: number;
-  isBestOffer?: boolean;
-  tooltipText: string;
-}) => {
+}: PriceRowProps) => {
   const total = (Number(unitPrice) * quantity).toFixed(2);
 
   return (

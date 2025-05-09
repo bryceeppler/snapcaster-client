@@ -3,9 +3,10 @@ import {
   GitHubLogoIcon,
   InstagramLogoIcon
 } from '@radix-ui/react-icons';
-import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
 import { FacebookIcon } from 'lucide-react';
+import Link from 'next/link';
+
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Footer() {
   const { isAuthenticated } = useAuth();

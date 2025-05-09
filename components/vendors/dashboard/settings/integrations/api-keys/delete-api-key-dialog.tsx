@@ -10,7 +10,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
-import { useApiKeys, ApiKey } from '@/hooks/queries/useApiKeys';
+import type { ApiKey } from '@/hooks/queries/useApiKeys';
+import { useApiKeys } from '@/hooks/queries/useApiKeys';
 
 interface DeleteApiKeyDialogProps {
   open: boolean;

@@ -1,20 +1,23 @@
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 
 interface LoadingSpinnerProps {
   size?: number;
   className?: string;
 }
 
-export const LoadingSpinner = ({ size = 24, className }: LoadingSpinnerProps) => {
+export const LoadingSpinner = ({
+  size = 24,
+  className
+}: LoadingSpinnerProps) => {
   const spinTransition = {
     repeat: Infinity,
-    ease: "linear",
+    ease: 'linear',
     duration: 1
   };
 
   const circleVariants = {
     initial: {
-      rotate: 0,
+      rotate: 0
     },
     animate: {
       rotate: 360
@@ -35,8 +38,8 @@ export const LoadingSpinner = ({ size = 24, className }: LoadingSpinnerProps) =>
   const dotTransition = {
     duration: 0.5,
     repeat: Infinity,
-    repeatType: "reverse" as const,
-    ease: "easeInOut"
+    repeatType: 'reverse' as const,
+    ease: 'easeInOut'
   };
 
   return (
@@ -55,15 +58,17 @@ export const LoadingSpinner = ({ size = 24, className }: LoadingSpinnerProps) =>
         {[0, 1, 2].map((index) => (
           <motion.div
             key={index}
-            className="absolute bg-primary rounded-full"
+            className="absolute rounded-full bg-primary"
             style={{
               width: size / 4,
               height: size / 4,
               x: -size / 8,
               y: -size / 8,
-              left: "50%",
-              top: "50%",
-              transform: `rotate(${index * 120}deg) translateY(-${size / 2.5}px)`
+              left: '50%',
+              top: '50%',
+              transform: `rotate(${index * 120}deg) translateY(-${
+                size / 2.5
+              }px)`
             }}
             variants={dotVariants}
             initial="initial"
@@ -77,4 +82,4 @@ export const LoadingSpinner = ({ size = 24, className }: LoadingSpinnerProps) =>
       </motion.div>
     </div>
   );
-}; 
+};

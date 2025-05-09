@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
-import { BuylistCatalogItem } from './catalog-item';
+
 import { SearchResultsHeader } from '../header/header';
+
+import { BuylistCatalogItem } from './catalog-item';
+
 import BuylistBackToTopButton from '@/components/buylists/ui/buylist-back-to-top-btn';
+import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
+import useBuyListStore from '@/stores/useBuylistStore';
 
 export const BuylistSearchResults = () => {
   const {
@@ -61,7 +64,12 @@ export const BuylistSearchResults = () => {
       setShouldReinitObserver(false);
       const observer = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          if (
+            entries.length > 0 &&
+            entries[0]?.isIntersecting &&
+            hasNextPage &&
+            !isFetchingNextPage
+          ) {
             fetchNextPage();
           }
         },
@@ -74,6 +82,7 @@ export const BuylistSearchResults = () => {
         }
       };
     }
+    return undefined;
   }, [
     shouldReinitObserver,
     data?.searchResults,

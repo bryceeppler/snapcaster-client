@@ -1,11 +1,12 @@
 'use client';
 
-import type React from 'react';
-import { AccountSidebar } from '@/components/account/sidebar';
-import { useAuth } from '@/hooks/useAuth';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useEffect } from 'react';
+
+import { AccountSidebar } from '@/components/account/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function AccountLayout({
   children

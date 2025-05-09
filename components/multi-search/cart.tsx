@@ -1,8 +1,13 @@
-import React from 'react';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Trash2, ExternalLink } from 'lucide-react';
-import useMultiSearchStore from '@/stores/multiSearchStore';
-import { Product } from '@/types';
+import React from 'react';
+
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import {
   Table,
   TableBody,
@@ -11,19 +16,13 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { useVendors } from '@/hooks/queries/useVendors';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import type { Product } from '@/types';
 import {
   groupProductsByHost,
   buildCartUpdateUrls
 } from '@/utils/cartUrlBuilder';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
-import { useVendors } from '@/hooks/queries/useVendors';
 
 export const Cart = () => {
   const { cart, removeFromCart } = useMultiSearchStore();

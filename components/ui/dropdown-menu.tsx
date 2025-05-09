@@ -1,10 +1,12 @@
-import * as React from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { Check, ChevronRight, Circle } from 'lucide-react';
 import { Inter } from 'next/font/google';
-const inter = Inter({ subsets: ['latin'] });
+import * as React from 'react';
+
 import { cn } from '@/lib/utils';
-import { cva, type VariantProps } from 'class-variance-authority';
+
+const inter = Inter({ subsets: ['latin'] });
 
 const dropdownMenuVariants = cva('', {
   variants: {
@@ -48,7 +50,7 @@ const DropdownMenuTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger> &
     VariantProps<typeof dropdownMenuVariants>
->(({ className, variant, children, ...props }, ref) => {
+>(({ className, variant, children, ...props }, _ref) => {
   const setIsOpen = React.useContext(DropdownMenuContext);
   return (
     <DropdownMenuPrimitive.Trigger
@@ -160,7 +162,7 @@ DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 const DropdownMenuCheckboxItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
->(({ className, children, checked, ...props }, ref) => (
+>(({ className, children, checked = false, ...props }, ref) => (
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
@@ -248,18 +250,18 @@ DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
 export {
   DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuCheckboxItem,
-  DropdownMenuRadioItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuGroup,
-  DropdownMenuPortal,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuRadioGroup
+  DropdownMenuTrigger
 };

@@ -1,6 +1,6 @@
-import { FilterOption } from '@/types/query';
-import { FilterDropdown } from '@/components/ui/filter-dropdown';
 import { FilterScrollArea } from '@/components/search-ui/filter-scroll-area';
+import { FilterDropdown } from '@/components/ui/filter-dropdown';
+import type { FilterOption } from '@/types/query';
 
 type FilterSelectorProps = {
   filterOption: FilterOption;

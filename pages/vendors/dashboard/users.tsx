@@ -1,14 +1,18 @@
+import { format, subDays } from 'date-fns';
+import type { LucideIcon } from 'lucide-react';
 import {
   BarChart3,
+  Calendar as CalendarIcon,
   LineChart,
-  Users,
-  LucideIcon,
-  Calendar as CalendarIcon
+  Users
 } from 'lucide-react';
 import { useState } from 'react';
 import { type PropsRange } from 'react-day-picker';
-import { subDays, format } from 'date-fns';
 
+import DashboardLayout from './layout';
+
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Card,
   CardContent,
@@ -16,28 +20,23 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { TrafficChart } from '@/components/vendors/users/traffic-chart';
-import { UserDeviceChart } from '@/components/vendors/dashboard/user-device-chart';
-import { UserDeviceAreaChart } from '@/components/vendors/users/user-device-area-chart';
-import { CityAnalyticsTable } from '@/components/vendors/users/city-analytics-table';
-import { UserTypesChart } from '@/components/vendors/users/user-types-chart';
-import { TrafficSourcesChart } from '@/components/vendors/users/traffic-sources-chart';
-import DashboardLayout from './layout';
-import { useAuth } from '@/hooks/useAuth';
-import {
-  type AnalyticsError,
-  useUniqueUsersByDate,
-  useEngagementTime
-} from '@/lib/hooks/useAnalytics';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { UserRetentionChart } from '@/components/vendors/users/user-retention-chart';
 import { Skeleton } from '@/components/ui/skeleton';
+import { UserDeviceChart } from '@/components/vendors/dashboard/user-device-chart';
+import { CityAnalyticsTable } from '@/components/vendors/users/city-analytics-table';
+import { TrafficChart } from '@/components/vendors/users/traffic-chart';
+import { TrafficSourcesChart } from '@/components/vendors/users/traffic-sources-chart';
+import { UserDeviceAreaChart } from '@/components/vendors/users/user-device-area-chart';
+import { UserTypesChart } from '@/components/vendors/users/user-types-chart';
+import {
+  type AnalyticsError,
+  useEngagementTime,
+  useUniqueUsersByDate
+} from '@/lib/hooks/useAnalytics';
 
 interface AnalyticsErrorMessageProps {
   message: string;
@@ -91,8 +90,8 @@ function MetricCard({
           <Skeleton className="h-8 w-[120px]" />
         ) : error ? (
           <AnalyticsErrorMessage
-            message={error.message}
-            status={error.status}
+            message={error.message || 'Unknown error'}
+            status={error.status || 500}
           />
         ) : (
           <div className="space-y-2">
@@ -172,8 +171,6 @@ export default function UserAnalyticsPage() {
     to: new Date()
   });
 
-  const { isAdmin } = useAuth();
-
   const handleDateRangeChange: PropsRange['onSelect'] = (range) => {
     if (!range) {
       setDateRange({ from: subDays(new Date(), 30), to: new Date() });
@@ -187,7 +184,7 @@ export default function UserAnalyticsPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+        <div className="flex-1 space-y-4">
           <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
             <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
               User Analytics

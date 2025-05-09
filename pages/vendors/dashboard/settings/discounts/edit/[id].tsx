@@ -1,41 +1,44 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import {
-  Calendar as CalendarIcon,
-  Tag,
-  Percent,
-  Clock,
   ArrowLeft,
+  Calendar as CalendarIcon,
   Check,
-  X,
-  Store
+  Clock,
+  Percent,
+  Store,
+  Tag,
+  X
 } from 'lucide-react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 import DashboardLayout from '../../../layout';
+
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import { useAuth } from '@/hooks/useAuth';
-import { useVendors } from '@/hooks/queries/useVendors';
-import { useDiscounts } from '@/hooks/queries/useDiscounts';
-import { Discount, DiscountType } from '@/types/discounts';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
+import { useDiscounts } from '@/hooks/queries/useDiscounts';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import type {
+  Discount,
+  DiscountFormValues,
+  UpdateDiscountPayload
+} from '@/types/discounts';
+import { DiscountType } from '@/types/discounts';
 
 // Form schema for discount validation
 const discountFormSchema = z.object({
@@ -50,8 +53,6 @@ const discountFormSchema = z.object({
   end_date: z.date().nullable().optional(),
   is_active: z.boolean().default(true)
 });
-
-type DiscountFormValues = z.infer<typeof discountFormSchema>;
 
 export default function EditDiscountPage() {
   const router = useRouter();
@@ -149,7 +150,7 @@ export default function EditDiscountPage() {
     }
 
     try {
-      await updateDiscount.mutateAsync({
+      const payload: UpdateDiscountPayload = {
         id: currentDiscount.id,
         data: {
           code: values.code,
@@ -159,7 +160,9 @@ export default function EditDiscountPage() {
           expires_at: values.end_date || null,
           is_active: values.is_active
         }
-      });
+      };
+
+      await updateDiscount.mutateAsync(payload);
 
       toast.success('Discount updated successfully');
       router.push('/vendors/dashboard/settings/discounts');
@@ -193,7 +196,7 @@ export default function EditDiscountPage() {
               <h1 className="text-xl font-medium tracking-tight md:text-2xl">
                 Edit Discount Code
                 {isAdmin && (
-                  <span className="ml-2 text-sm text-blue-600">(Admin)</span>
+                  <span className="ml-2 text-sm text-primary">(Admin)</span>
                 )}
               </h1>
               <p className="mt-1 text-xs text-muted-foreground">

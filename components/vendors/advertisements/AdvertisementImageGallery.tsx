@@ -1,39 +1,21 @@
-import { useState } from 'react';
-import {
-  Image as ImageIcon,
-  Plus,
-  Trash2,
-  AlertCircle,
-  Link,
-  Hash,
-  Copy,
-  Check,
-  ExternalLink
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import {
-  AdvertisementPosition,
-  AdvertisementImageType,
-  AdvertisementWithImages
-} from '@/types/advertisements';
-import { AddImageDialog } from './AddImageDialog';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { format } from 'date-fns';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
+  AlertCircle,
+  Check,
+  Copy,
+  ExternalLink,
+  Hash,
+  Image as ImageIcon,
+  Link,
+  Plus,
+  Trash2
+} from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
+
+import { AddImageDialog } from './AddImageDialog';
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,6 +26,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import {
+  AdvertisementImageType,
+  AdvertisementPosition
+} from '@/types/advertisements';
 
 interface AdvertisementImageGalleryProps {
   advertisement: AdvertisementWithImages;
@@ -211,8 +207,8 @@ export function AdvertisementImageGallery({
 
                       <div className="grid grid-cols-1 gap-2">
                         <div className="flex items-center gap-1.5">
-                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-                            <Hash className="h-3 w-3 text-slate-500" />
+                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10">
+                            <Hash className="h-3 w-3 text-primary" />
                           </div>
                           <span className="text-xs font-medium">Image ID:</span>
                           <span className="text-xs text-muted-foreground">
@@ -221,8 +217,8 @@ export function AdvertisementImageGallery({
                         </div>
 
                         <div className="flex items-center gap-1.5 truncate">
-                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-                            <Link className="h-3 w-3 text-slate-500" />
+                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10">
+                            <Link className="h-3 w-3 text-primary" />
                           </div>
                           <span className="flex-shrink-0 text-xs font-medium">
                             URL:

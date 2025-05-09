@@ -1,6 +1,8 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { useAuth } from '@/hooks/useAuth';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 import { SignupForm } from '@/components/forms/SignupForm';
 import {
   Card,
@@ -10,9 +12,9 @@ import {
   CardContent,
   CardFooter
 } from '@/components/ui/card';
-import { useRouter } from 'next/navigation';
-type Props = {};
-const Signup: NextPage<Props> = () => {
+import { useAuth } from '@/hooks/useAuth';
+
+const Signup: NextPage = () => {
   const { isAuthenticated, isInitializing } = useAuth();
   const router = useRouter();
 
@@ -36,19 +38,19 @@ const Signup: NextPage<Props> = () => {
             <p className="py-1 text-xs ">
               By creating an account, you confirm that you have read,
               understood, and consent to the{' '}
-              <a
+              <Link
                 href="/privacy"
                 className="text-primary underline hover:opacity-70"
               >
                 Privacy Notice
-              </a>{' '}
+              </Link>{' '}
               and{' '}
-              <a
+              <Link
                 href="/terms"
                 className="text-primary underline hover:opacity-70"
               >
                 Terms & Conditions
-              </a>
+              </Link>
               .
             </p>
           </CardFooter>

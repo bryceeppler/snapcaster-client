@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useAdContext } from '@/pages/_app';
-import { useAuth } from '@/hooks/useAuth';
-import { AdvertisementPosition } from '@/types/advertisements';
+import React, { useMemo } from 'react';
+
 import { TopBanner, SideBanner } from './ads';
+
+import { useAuth } from '@/hooks/useAuth';
+import { useAdContext } from '@/pages/_app';
+import { AdvertisementPosition } from '@/types/advertisements';
 
 type Props = {
   width?: 'md' | 'xl';

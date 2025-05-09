@@ -1,33 +1,27 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { format, subDays } from "date-fns"
-import { motion } from "framer-motion"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import type { ChartData, ChartOptions } from 'chart.js';
 import {
-  Chart as ChartJS,
   CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
+  Chart as ChartJS,
   Filler,
   Legend,
-  ChartData,
-  ChartOptions,
+  LinearScale,
+  LineElement,
+  PointElement,
   TimeScale,
-} from 'chart.js'
-import { Line } from 'react-chartjs-2'
-import 'chartjs-adapter-date-fns'
-import annotationPlugin from 'chartjs-plugin-annotation'
+  Title,
+  Tooltip
+} from 'chart.js';
+import 'chartjs-adapter-date-fns';
+import annotationPlugin from 'chartjs-plugin-annotation';
+import { format } from 'date-fns';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 // Register ChartJS components
 ChartJS.register(
@@ -41,7 +35,7 @@ ChartJS.register(
   Legend,
   TimeScale,
   annotationPlugin
-)
+);
 
 interface DataPoint {
   date: string;
@@ -51,68 +45,77 @@ interface DataPoint {
 export function SearchQueriesChart() {
   const [chartData, setChartData] = useState<ChartData<'line'>>({
     datasets: []
-  })
-  const [isLoading, setIsLoading] = useState(true)
-  const [realtimeSearches, setRealtimeSearches] = useState<number | null>(null)
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [realtimeSearches, setRealtimeSearches] = useState<number | null>(null);
 
   // Fetch realtime search queries every minute
   useEffect(() => {
     const fetchRealtimeSearches = async () => {
       try {
-        const response = await fetch('/api/analytics/search-queries-realtime')
+        const response = await fetch('/api/analytics/search-queries-realtime');
         if (!response.ok) {
-          throw new Error('Failed to fetch realtime search queries')
+          throw new Error('Failed to fetch realtime search queries');
         }
-        const data = await response.json()
-        setRealtimeSearches(data.searchCount)
+        const data = await response.json();
+        setRealtimeSearches(data.searchCount);
       } catch (error) {
-        console.error('Error fetching realtime search queries:', error)
+        console.error('Error fetching realtime search queries:', error);
       }
-    }
+    };
 
     // Initial fetch
-    fetchRealtimeSearches()
+    fetchRealtimeSearches();
 
     // Set up interval for periodic updates
-    const interval = setInterval(fetchRealtimeSearches, 60000) // Update every minute
+    const interval = setInterval(fetchRealtimeSearches, 60000); // Update every minute
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
           `/api/analytics/search-queries?numberOfDays=90`
-        )
-        
+        );
+
         if (!response.ok) {
-          throw new Error('Failed to fetch data')
+          throw new Error('Failed to fetch data');
         }
-        
-        const data = await response.json()
-        
+
+        const data = await response.json();
+
         // Transform daily data
-        const dailyData = data.data.map((item: { date: string; count: number }) => {
-          const year = item.date.substring(0, 4)
-          const month = item.date.substring(4, 6)
-          const day = item.date.substring(6, 8)
-          return {
-            date: `${year}-${month}-${day}`,
-            users: item.count
-          }
-        }).sort((a: DataPoint, b: DataPoint) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        const dailyData = data.data
+          .map((item: { date: string; count: number }) => {
+            const year = item.date.substring(0, 4);
+            const month = item.date.substring(4, 6);
+            const day = item.date.substring(6, 8);
+            return {
+              date: `${year}-${month}-${day}`,
+              users: item.count
+            };
+          })
+          .sort(
+            (a: DataPoint, b: DataPoint) =>
+              new Date(a.date).getTime() - new Date(b.date).getTime()
+          );
 
         // Calculate 7-day moving average
-        const movingAverage = dailyData.map((point: DataPoint, index: number, array: DataPoint[]) => {
-          const start = Math.max(0, index - 6)
-          const count = Math.min(7, index - start + 1)
-          const sum = array.slice(start, index + 1).reduce((sum: number, p: DataPoint) => sum + p.users, 0)
-          return {
-            date: point.date,
-            users: Math.round(sum / count)
+        const movingAverage = dailyData.map(
+          (point: DataPoint, index: number, array: DataPoint[]) => {
+            const start = Math.max(0, index - 6);
+            const count = Math.min(7, index - start + 1);
+            const sum = array
+              .slice(start, index + 1)
+              .reduce((sum: number, p: DataPoint) => sum + p.users, 0);
+            return {
+              date: point.date,
+              users: Math.round(sum / count)
+            };
           }
-        })
+        );
 
         setChartData({
           datasets: [
@@ -143,16 +146,16 @@ export function SearchQueriesChart() {
               fill: true
             }
           ]
-        })
+        });
       } catch (error) {
-        console.error('Error fetching search queries data:', error)
+        console.error('Error fetching search queries data:', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const options: ChartOptions<'line'> = {
     responsive: true,
@@ -186,13 +189,17 @@ export function SearchQueriesChart() {
         padding: 12,
         callbacks: {
           title: (tooltipItems) => {
-            return format(new Date(tooltipItems[0].parsed.x), 'MMM dd, yyyy')
+            if (!tooltipItems.length) return '';
+            return format(
+              new Date(tooltipItems[0]?.parsed?.x || Date.now()),
+              'MMM dd, yyyy'
+            );
           },
           label: (context) => {
-            return `${context.dataset.label}: ${context.parsed.y} searches`
+            return `${context.dataset.label}: ${context.parsed.y} searches`;
           }
         }
-      },
+      }
     },
     scales: {
       x: {
@@ -224,28 +231,28 @@ export function SearchQueriesChart() {
         }
       }
     }
-  }
+  };
 
   return (
     <Card className="shadow-xl">
       <CardHeader>
         <CardTitle>Snapcaster Searches</CardTitle>
         {realtimeSearches === null ? (
-          <motion.div 
-            className="flex items-center gap-2 mt-1"
+          <motion.div
+            className="mt-1 flex items-center gap-2"
             initial={{ opacity: 0.5 }}
             animate={{ opacity: [0.5, 0.8, 0.5] }}
-            transition={{ 
-              duration: 1.5, 
+            transition={{
+              duration: 1.5,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: 'easeInOut'
             }}
           >
             <span className="h-2 w-2 rounded-full bg-zinc-200"></span>
             <div className="h-[20px] w-[180px] rounded-md bg-zinc-200"></div>
           </motion.div>
         ) : (
-          <p className="text-sm font-medium text-primary mt-1 flex items-center gap-2">
+          <p className="mt-1 flex items-center gap-2 text-sm font-medium text-primary">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
@@ -255,9 +262,9 @@ export function SearchQueriesChart() {
         )}
       </CardHeader>
       <CardContent>
-      {isLoading ? (
-          <motion.div 
-            className="flex flex-col items-center justify-center h-[300px] gap-4"
+        {isLoading ? (
+          <motion.div
+            className="flex h-[300px] flex-col items-center justify-center gap-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
@@ -273,7 +280,7 @@ export function SearchQueriesChart() {
             </motion.p>
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             className="h-[300px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -284,5 +291,5 @@ export function SearchQueriesChart() {
         )}
       </CardContent>
     </Card>
-  )
-} 
+  );
+}

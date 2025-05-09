@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import '../styles/main.css';
 import { Inter } from 'next/font/google';
-import Navbar from '@/components/ui/navbar';
+import '../styles/main.css';
+
+import Navbar from '@/components/navigation/navbar';
 import { Providers } from '@/components/providers';
 import { Toaster } from '@/components/ui/toaster';
 

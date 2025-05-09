@@ -1,10 +1,18 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  AdvertisementPosition,
-  AdvertisementWithImages
-} from '@/types/advertisements';
-import { createWeightedSelectionManager } from '@/utils/weightedSelection';
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -12,27 +20,11 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  CartesianGrid
-} from 'recharts';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { useVendors } from '@/hooks/queries/useVendors';
-interface DistributionItem {
-  vendor_slug: string;
-  expected: number;
-  actual: number;
-  weight: number;
-  id: number;
-}
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 const AdTest = () => {
   // State for simulation controls
@@ -120,9 +112,11 @@ const AdTest = () => {
       const selectedIndex = selectionManager.selectRandom();
       if (selectedIndex >= 0) {
         const selectedAd = ads[selectedIndex];
-        const vendorId = selectedAd.vendor_id;
-        const vendorName = getVendorNameById(vendorId);
-        results[vendorName] = (results[vendorName] || 0) + 1;
+        if (selectedAd) {
+          const vendorId = selectedAd.vendor_id;
+          const vendorName = getVendorNameById(vendorId);
+          results[vendorName] = (results[vendorName] || 0) + 1;
+        }
       }
     }
 
@@ -230,7 +224,7 @@ const AdTest = () => {
                     />
                     <YAxis />
                     <Tooltip
-                      formatter={(value, name, props) => [`${value}%`, name]}
+                      formatter={(value, name, _props) => [`${value}%`, name]}
                       labelFormatter={(value) => `Vendor: ${value}`}
                     />
                     <Legend />

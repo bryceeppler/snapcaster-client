@@ -1,17 +1,21 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Pencil,
-  MoreHorizontal,
   Image as ImageIcon,
   Link as LinkIcon,
+  MoreHorizontal,
+  Pencil,
   Store
 } from 'lucide-react';
-import React, { useState, useEffect, memo, useCallback, useMemo } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
 import DashboardLayout from '../layout';
+
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -20,17 +24,12 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { useVendors } from '@/hooks/queries/useVendors';
-import {
-  AdvertisementWithImages,
-  AdvertisementPosition,
-  AdvertisementImageType
-} from '@/types/advertisements';
-import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/hooks/useAuth';
-import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
-import { Badge } from '@/components/ui/badge';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 
 export const AD_DIMENSIONS = {
   topBanner: {
@@ -67,21 +66,10 @@ const advertisementFormSchema = z.object({
 
 type AdvertisementFormValues = z.infer<typeof advertisementFormSchema>;
 
-const imageFormSchema = z.object({
-  image_url: z.string().url({
-    message: 'Please enter a valid image URL.'
-  }),
-  image_type: z.nativeEnum(AdvertisementImageType)
-});
-
-type ImageFormValues = z.infer<typeof imageFormSchema>;
-
 // Create a memoized component for individual advertisement rows
 const AdvertisementRow = memo(
   ({
     ad,
-    onEdit,
-    onDelete,
     onToggleStatus,
     onNavigateToDetails,
     isLoading,
@@ -184,8 +172,6 @@ AdvertisementRow.displayName = 'AdvertisementRow';
 const MobileAdvertisementCard = memo(
   ({
     ad,
-    onEdit,
-    onDelete,
     onToggleStatus,
     onNavigateToDetails,
     isLoading,
@@ -318,9 +304,6 @@ MobileAdvertisementCard.displayName = 'MobileAdvertisementCard';
 export default function AdvertisementsPage() {
   const { getVendorById } = useVendors();
   const { profile } = useAuth();
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [currentAd, setCurrentAd] = useState<AdvertisementWithImages | null>(
     null
   );
@@ -336,7 +319,6 @@ export default function AdvertisementsPage() {
   // Use the useAdvertisements hook only once
   const {
     isLoading,
-    createAdvertisement,
     updateAdvertisement,
     deleteAdvertisement: deleteAd,
     getAdvertisementsByVendorId,
@@ -374,7 +356,7 @@ export default function AdvertisementsPage() {
           advertisements: []
         };
       }
-      acc[ad.vendor_id].advertisements.push(ad);
+      acc[ad.vendor_id]?.advertisements.push(ad);
       return acc;
     }, {} as Record<number, { vendorId: number; vendorName: string; advertisements: AdvertisementWithImages[] }>);
 
@@ -408,32 +390,8 @@ export default function AdvertisementsPage() {
     }
   }, [currentAd, editForm]);
 
-  const onEditSubmit = async (values: AdvertisementFormValues) => {
-    if ((!vendor && !isAdmin) || !currentAd) return;
-
-    try {
-      await updateAdvertisement.mutateAsync({
-        id: currentAd.id,
-        data: {
-          position: values.position,
-          target_url: values.target_url,
-          alt_text: values.alt_text,
-          start_date: values.start_date,
-          end_date: values.end_date || null
-        }
-      });
-
-      // Close the dialog and reset
-      setIsEditDialogOpen(false);
-      setCurrentAd(null);
-    } catch (error) {
-      console.error('Error updating advertisement:', error);
-    }
-  };
-
   const handleEditAdvertisement = (ad: AdvertisementWithImages) => {
     setCurrentAd(ad);
-    setIsEditDialogOpen(true);
   };
 
   const deleteAdvertisement = async (adId: number) => {
@@ -473,7 +431,7 @@ export default function AdvertisementsPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-6 p-6 pt-8 md:p-8">
+        <div className="flex-1 space-y-6">
           <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
             <div>
               <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
@@ -576,7 +534,7 @@ export default function AdvertisementsPage() {
                   advertisementsByVendor &&
                   advertisementsByVendor.length > 0 ? (
                   // Admin view with vendors grouped
-                  (advertisementsByVendor.map((vendorGroup) => (
+                  advertisementsByVendor.map((vendorGroup) => (
                     <React.Fragment key={vendorGroup.vendorId}>
                       {/* Vendor Header Row */}
                       <TableRow className="bg-primary/20 hover:bg-primary/30">
@@ -605,10 +563,10 @@ export default function AdvertisementsPage() {
                         />
                       ))}
                     </React.Fragment>
-                  )))
+                  ))
                 ) : (
                   // Normal vendor view (unchanged)
-                  (advertisements.map((ad) => (
+                  advertisements.map((ad) => (
                     <AdvertisementRow
                       key={ad.id}
                       ad={ad}
@@ -620,7 +578,7 @@ export default function AdvertisementsPage() {
                       isAdmin={isAdmin}
                       getVendorName={getVendorName}
                     />
-                  )))
+                  ))
                 )}
               </TableBody>
             </Table>

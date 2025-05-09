@@ -1,8 +1,10 @@
+import type { Product, PromotedProduct } from '@/types/product';
+import type { FilterOption } from '@/types/query';
 import axiosInstance from '@/utils/axiosWrapper';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export interface SearchParams {
+interface SearchParams {
   index: string;
   keyword: string;
   sortBy: string;
@@ -13,18 +15,7 @@ export interface SearchParams {
   tcg?: string;
 }
 
-export interface Product {
-  id: string;
-  name: string;
-  set: string;
-  tcg: string;
-  image: string;
-  price: number;
-  promoted?: boolean;
-  // Add other product fields as needed
-}
-
-export interface SearchResponse {
+interface SearchResponse {
   results: Product[];
   filters: FilterOption[];
   pagination: {
@@ -32,18 +23,7 @@ export interface SearchResponse {
     numPages: number;
     currentPage: number;
   };
-  promotedResults?: Product[];
-}
-
-export interface FilterOption {
-  field: string;
-  label: string;
-  values: {
-    value: string;
-    label: string;
-    count: number;
-    selected: boolean;
-  }[];
+  promotedResults?: PromotedProduct[];
 }
 
 export interface BuylistAnalytics {
@@ -68,7 +48,7 @@ export interface BuylistAnalytics {
   };
 }
 
-export interface BuylistSubmission {
+interface BuylistSubmission {
   userId: number;
   cartId: string;
   timestamp: string;
@@ -103,7 +83,7 @@ export interface BuylistSubmissionResponse {
   };
 }
 
-export class CatalogService {
+class CatalogService {
   async search(params: SearchParams): Promise<SearchResponse> {
     const queryParams = new URLSearchParams();
 

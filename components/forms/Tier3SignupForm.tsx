@@ -1,82 +1,87 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import { toast } from 'sonner';
+import * as z from 'zod';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
+  SelectValue
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 const formSchema = z.object({
-  subscriptionType: z.enum(["monthly", "quarterly"], {
-    required_error: "Please select a subscription type.",
+  subscriptionType: z.enum(['monthly', 'quarterly'], {
+    required_error: 'Please select a subscription type.'
   }),
   email: z.string().email({
-    message: "Please enter a valid email address.",
+    message: 'Please enter a valid email address.'
   }),
   name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: 'Name must be at least 2 characters.'
   }),
   storeName: z.string().min(2, {
-    message: "Store name must be at least 2 characters.",
+    message: 'Store name must be at least 2 characters.'
   }),
-  notes: z.string().optional(),
+  notes: z.string().optional()
 });
 
 type FormData = z.infer<typeof formSchema>;
 
 interface Tier3SignupFormProps {
   onSuccess?: () => void;
-  initialPlan?: "monthly" | "quarterly";
+  initialPlan?: 'monthly' | 'quarterly';
 }
 
-export function Tier3SignupForm({ onSuccess, initialPlan = "quarterly" }: Tier3SignupFormProps) {
+export function Tier3SignupForm({
+  onSuccess,
+  initialPlan = 'quarterly'
+}: Tier3SignupFormProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       subscriptionType: initialPlan,
-      email: "",
-      name: "",
-      storeName: "",
-      notes: "",
-    },
+      email: '',
+      name: '',
+      storeName: '',
+      notes: ''
+    }
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/tier3-signup", {
-        method: "POST",
+      const response = await fetch('/api/tier3-signup', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit form");
+        throw new Error('Failed to submit form');
       }
 
-      toast.success("Application submitted successfully!");
+      toast.success('Application submitted successfully!');
       onSuccess?.();
     } catch (error) {
-      console.error("Error submitting form:", error);
-      toast.error("Failed to submit application. Please try again.");
+      console.error('Error submitting form:', error);
+      toast.error('Failed to submit application. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +90,7 @@ export function Tier3SignupForm({ onSuccess, initialPlan = "quarterly" }: Tier3S
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-2 block text-sm font-medium">
           Subscription Type
         </label>
         <Controller
@@ -97,71 +102,71 @@ export function Tier3SignupForm({ onSuccess, initialPlan = "quarterly" }: Tier3S
                 <SelectValue placeholder="Select your subscription type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="quarterly">Quarterly ($300/month)</SelectItem>
+                <SelectItem value="quarterly">
+                  Quarterly ($300/month)
+                </SelectItem>
                 <SelectItem value="monthly">Monthly ($350/month)</SelectItem>
               </SelectContent>
             </Select>
           )}
         />
         {errors.subscriptionType && (
-          <p className="text-sm text-red-500 mt-1">{errors.subscriptionType.message}</p>
+          <p className="mt-1 text-sm text-red-500">
+            {errors.subscriptionType.message}
+          </p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">
-          Email
-        </label>
+        <label className="mb-2 block text-sm font-medium">Email</label>
         <Input
           type="email"
           placeholder="your@email.com"
-          {...register("email")}
-          className={errors.email ? "border-red-500" : ""}
+          {...register('email')}
+          className={errors.email ? 'border-red-500' : ''}
         />
         {errors.email && (
-          <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+          <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">
-          Your Name
-        </label>
+        <label className="mb-2 block text-sm font-medium">Your Name</label>
         <Input
           placeholder="John Smith"
-          {...register("name")}
-          className={errors.name ? "border-red-500" : ""}
+          {...register('name')}
+          className={errors.name ? 'border-red-500' : ''}
         />
         {errors.name && (
-          <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+          <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">
-          Store Name
-        </label>
+        <label className="mb-2 block text-sm font-medium">Store Name</label>
         <Input
           placeholder="Your Store Name"
-          {...register("storeName")}
-          className={errors.storeName ? "border-red-500" : ""}
+          {...register('storeName')}
+          className={errors.storeName ? 'border-red-500' : ''}
         />
         {errors.storeName && (
-          <p className="text-sm text-red-500 mt-1">{errors.storeName.message}</p>
+          <p className="mt-1 text-sm text-red-500">
+            {errors.storeName.message}
+          </p>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-2 block text-sm font-medium">
           Additional Notes
         </label>
         <Textarea
           placeholder="Any additional information you'd like to share..."
-          {...register("notes")}
-          className={errors.notes ? "border-red-500" : ""}
+          {...register('notes')}
+          className={errors.notes ? 'border-red-500' : ''}
         />
         {errors.notes && (
-          <p className="text-sm text-red-500 mt-1">{errors.notes.message}</p>
+          <p className="mt-1 text-sm text-red-500">{errors.notes.message}</p>
         )}
       </div>
 
@@ -172,9 +177,9 @@ export function Tier3SignupForm({ onSuccess, initialPlan = "quarterly" }: Tier3S
             Submitting...
           </>
         ) : (
-          "Submit Application"
+          'Submit Application'
         )}
       </Button>
     </form>
   );
-} 
+}

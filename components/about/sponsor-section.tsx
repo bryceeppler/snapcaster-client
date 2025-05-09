@@ -1,7 +1,8 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
+
+import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
 // Define sponsor tiers with types
@@ -71,7 +72,7 @@ export default function SponsorSection() {
         }
       ],
       cardClassName:
-        'overflow-hidden border border-muted transition-all duration-200 hover:border-muted/80 hover:shadow-sm',
+        'overflow-hidden border-2 border-primary/20 transition-all duration-200 hover:border-primary/50 hover:shadow-md',
       titleClassName: 'text-lg font-bold'
     },
     {
@@ -85,7 +86,7 @@ export default function SponsorSection() {
         }
       ],
       cardClassName:
-        'overflow-hidden border border-muted/50 transition-all duration-200 hover:border-muted/70 hover:shadow-sm',
+        'overflow-hidden border-2 border-primary/20 transition-all duration-200 hover:border-primary/50 hover:shadow-md',
       titleClassName: 'text-base font-bold'
     }
   ];
@@ -117,7 +118,7 @@ export default function SponsorSection() {
               {tier.sponsors.map((sponsor) => (
                 <Card key={sponsor.id} className={tier.cardClassName}>
                   <CardContent className="flex flex-col items-center p-6 text-center">
-                    <div className="mb-4 h-[200px] w-full rounded-md bg-zinc-600 p-4 dark:bg-muted">
+                    <div className="mb-4 h-[200px] w-full rounded-md bg-neutral-600 p-4 dark:bg-muted">
                       <a
                         href={sponsor.href}
                         target="_blank"

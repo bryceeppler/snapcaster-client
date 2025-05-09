@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { format, parseISO } from 'date-fns';
+
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import {
   Table,
   TableBody,
@@ -18,12 +19,11 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { useVendorLeaderboard } from '@/lib/hooks/useAnalytics';
 import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
-import { formatChartDate } from '@/lib/utils';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { useAuth } from '@/hooks/useAuth';
 import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import { useVendorLeaderboard } from '@/lib/hooks/useAnalytics';
+import { formatChartDate } from '@/lib/utils';
 const TCG_ORDER = [
   'mtg',
   'pokemon',

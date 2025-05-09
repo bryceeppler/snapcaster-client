@@ -1,8 +1,9 @@
-import { create } from 'zustand';
-import { Tcg } from '@/types/product';
-import axiosInstance from '@/utils/axiosWrapper';
 import { toast } from 'sonner';
-import { FilterOption } from '@/types/query';
+import { create } from 'zustand';
+
+import type { Tcg } from '@/types/product';
+import type { FilterOption } from '@/types/query';
+import axiosInstance from '@/utils/axiosWrapper';
 
 export type BuylistUIState =
   | 'listSelectionState'

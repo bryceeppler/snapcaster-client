@@ -1,17 +1,19 @@
-import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, useRef, useEffect } from 'react';
-import {
-  useAdvertisements,
-  QUERY_KEY
-} from '@/hooks/queries/useAdvertisements';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  AdvertisementWithImages,
-  AdvertisementPosition,
-  AdvertisementImageType
-} from '@/types/advertisements';
+  UploadIcon,
+  ImageIcon,
+  XCircleIcon,
+  CheckCircle2Icon,
+  AlertCircleIcon,
+  InfoIcon
+} from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -22,9 +24,7 @@ import {
   DialogTrigger,
   DialogClose
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -32,19 +32,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { QUERY_KEY } from '@/hooks/queries/useAdvertisements';
 import { AD_RESOLUTIONS } from '@/lib/constants';
-import { advertisementService } from '@/services/advertisementService';
-import { toast } from 'sonner';
-import { useAuth } from '@/hooks/useAuth';
-import {
-  UploadIcon,
-  ImageIcon,
-  XCircleIcon,
-  CheckCircle2Icon,
-  AlertCircleIcon,
-  InfoIcon
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { advertisementService } from '@/services/advertisementService';
+import {
+  AdvertisementPosition,
+  AdvertisementImageType
+} from '@/types/advertisements';
+import type { AdvertisementWithImages } from '@/types/advertisements';
 
 // Form schema for image upload
 const imageFormSchema = z.object({
@@ -101,17 +97,12 @@ export function AddImageDialog({
   onOpenChange,
   addButtonRenderer
 }: AddImageDialogProps) {
-  const { fetchAdvertisementById } = useAdvertisements();
   const queryClient = useQueryClient();
-  const { profile } = useAuth();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [fileName, setFileName] = useState<string>('');
   const [fileMetadata, setFileMetadata] = useState<ImageMetadata | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Get vendor information from profile
-  const vendorId = profile?.data?.user.vendorData?.vendorId || 0;
 
   // Check if this ad position allows multiple image types
   const allowsMultipleImageTypes =
@@ -431,7 +422,7 @@ export function AddImageDialog({
             <div className="space-y-2">
               {!fileName ? (
                 // Empty state with file drop zone
-                (<div
+                <div
                   role="button"
                   tabIndex={0}
                   onClick={triggerFileInput}
@@ -451,10 +442,10 @@ export function AddImageDialog({
                   <span className="mt-0.5 text-[10px] text-muted-foreground">
                     JPEG, PNG, GIF, WebP up to 5MB
                   </span>
-                </div>)
+                </div>
               ) : (
                 // File metadata display
-                (<div className="rounded-md border border-border bg-muted/10 p-3">
+                <div className="rounded-md border border-border bg-muted/10 p-3">
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0 pt-0.5">
                       <ImageIcon className="h-4 w-4 text-muted-foreground" />
@@ -532,7 +523,7 @@ export function AddImageDialog({
                         )}
                     </div>
                   </div>
-                </div>)
+                </div>
               )}
 
               <input

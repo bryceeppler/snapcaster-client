@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import SectionTitle from './section-title';
+import type { LucideIcon } from 'lucide-react';
 import {
   BarChart3,
   Image,
@@ -7,11 +6,14 @@ import {
   Mail,
   Percent,
   ShoppingCart,
-  LucideIcon,
   ArrowRightIcon
 } from 'lucide-react';
 import Link from 'next/link';
+
+import SectionTitle from './section-title';
+
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Tier3OverviewProps {
   onSignup?: () => void;

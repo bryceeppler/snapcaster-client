@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { devtools, persist, createJSONStorage } from 'zustand/middleware';
-import { FilterOption, SealedSortOptions } from '@/types/query';
-import { Tcg } from '@/types';
+
+import type { Tcg } from '@/types';
+import type { FilterOption, SealedSortOptions } from '@/types/query';
 
 const SEALED_LOCAL_STORAGE_VERSION = 1;
 
@@ -10,7 +11,7 @@ interface FilterSelection {
   value: string;
 }
 
-type SearchState = {
+type SealedSearchStore = {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 
@@ -33,7 +34,7 @@ type SearchState = {
   setRegion: (region: string) => void;
 };
 
-export const useSealedSearchStore = create<SearchState>()(
+export const useSealedSearchStore = create<SealedSearchStore>()(
   devtools(
     persist(
       (set, get) => ({
@@ -56,7 +57,6 @@ export const useSealedSearchStore = create<SearchState>()(
 
         toggleFilter: (field: string, value: string) => {
           const currentSelections = get().selectedFilters;
-          const selectionKey = `${field}:${value}`;
 
           const exists = currentSelections.some(
             (f) => f.field === field && f.value === value

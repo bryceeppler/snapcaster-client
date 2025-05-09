@@ -1,11 +1,8 @@
-import {
-  ArrowRight,
-  BarChart3,
-  LineChart,
-  Users,
-  LucideIcon
-} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { ArrowRight, BarChart3, LineChart, Users } from 'lucide-react';
 import Link from 'next/link';
+
+import DashboardLayout from './layout';
 
 import {
   Card,
@@ -14,19 +11,18 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { TrafficChart } from '@/components/vendors/dashboard/traffic-chart';
-import DashboardLayout from './layout';
+import { VendorBuyClicksChart } from '@/components/vendors/dashboard/vendor-buy-clicks-chart';
 import {
-  useUniqueUsers,
-  useSearchQueries,
   useBuyClicks,
+  useSearchQueries,
+  useUniqueUsers,
   type AnalyticsError
 } from '@/lib/hooks/useAnalytics';
-import { VendorBuyClicksChart } from '@/components/vendors/dashboard/vendor-buy-clicks-chart';
-import { Skeleton } from '@/components/ui/skeleton';
 interface AnalyticsErrorMessageProps {
   message: string;
-  status?: number;
+  status?: number | undefined;
 }
 
 function AnalyticsErrorMessage({
@@ -45,7 +41,7 @@ interface MetricCardProps {
   title: string;
   Icon: LucideIcon;
   value: number;
-  percentageChange?: number;
+  percentageChange?: number | undefined;
   isLoading: boolean;
   error: AnalyticsError | null | undefined;
   description?: string;
@@ -223,7 +219,7 @@ export default function DashboardPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 pt-6 md:p-8">
+        <div className="flex-1 space-y-4">
           <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
             {' '}
             <h2 className="text-2xl font-bold tracking-tight md:text-3xl">

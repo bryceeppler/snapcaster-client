@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import SectionTitle from './section-title';
+import type { LucideIcon } from 'lucide-react';
 import {
   Users,
   MapPin,
@@ -7,12 +6,15 @@ import {
   TrendingUp,
   LayoutGrid,
   Trophy,
-  LucideIcon,
   ArrowRight
 } from 'lucide-react';
-import { UsersByDeviceData, PopularBuyClicksByTCG } from '@/lib/GA4Client';
+
 import { PopularBuyClicks } from './popular-searches';
+import SectionTitle from './section-title';
+
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { UsersByDeviceData, PopularBuyClicksByTCG } from '@/lib/GA4Client';
 
 interface AnalyticsProps {
   variant: 'light' | 'dark';
@@ -90,13 +92,12 @@ const Analytics = ({ variant, popularBuyClicks, onSignup }: AnalyticsProps) => {
         {popularBuyClicks && (
           <div className="relative mt-20">
             <div className="mb-12 text-center">
-              <div className="flex flex-row gap-3 justify-center items-center mb-4">
+              <div className="mb-4 flex flex-row items-center justify-center gap-3">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
                 </span>
                 <h3 className="text-2xl font-bold">Live Analytics Demo</h3>
-
               </div>
               <p className="mx-auto max-w-2xl text-white/70">
                 Experience real-time insights into customer behavior. This live
@@ -134,7 +135,7 @@ const Analytics = ({ variant, popularBuyClicks, onSignup }: AnalyticsProps) => {
               <div className="mt-12 text-center">
                 <Button
                   size="lg"
-                  className="bg-[#f8c14a] text-white gap-3 hover:bg-[#f8c14a]/90"
+                  className="gap-3 bg-[#f8c14a] text-white hover:bg-[#f8c14a]/90"
                   onClick={onSignup}
                 >
                   Sign Up to View the Dashboard{' '}

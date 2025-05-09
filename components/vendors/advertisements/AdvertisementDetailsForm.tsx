@@ -1,15 +1,12 @@
-import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Save, Link as LinkIcon } from 'lucide-react';
+import { Link as LinkIcon, Save } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -19,12 +16,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import {
-  AdvertisementWithImages,
-  AdvertisementPosition
-} from '@/types/advertisements';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEffect, useState } from 'react';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 
 // Form schema for advertisement validation
 const advertisementFormSchema = z.object({
@@ -110,7 +103,7 @@ export function AdvertisementDetailsForm({
         <div className="flex items-center gap-1.5">
           <div
             className={`h-1.5 w-1.5 rounded-full ${
-              isActive ? 'bg-green-500' : 'bg-gray-300'
+              isActive ? 'bg-primary' : 'bg-muted'
             }`}
           />
           <CardTitle className="text-sm font-medium md:text-base">

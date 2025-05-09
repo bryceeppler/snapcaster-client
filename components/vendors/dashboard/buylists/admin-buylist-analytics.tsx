@@ -1,24 +1,24 @@
+import {
+  AlertCircle,
+  Coins,
+  CreditCard,
+  Package,
+  ShoppingCart,
+  TrendingUp
+} from 'lucide-react';
 import React from 'react';
-import { BuylistAnalytics } from '@/services/catalogService';
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardDescription
+  CardDescription,
+  CardHeader
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import {
-  AlertCircle,
-  TrendingUp,
-  CreditCard,
-  Coins,
-  Package,
-  ShoppingCart,
-  Star
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { BuylistAnalytics } from '@/services/catalogService';
 
 type Props = {
   data: BuylistAnalytics;
@@ -106,12 +106,7 @@ const AdminBuylistAnalyticsOverview = ({ data, isLoading, isError }: Props) => {
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <Badge
             variant={data.vendor?.buylist_enabled ? 'default' : 'secondary'}
-            className={cn(
-              'px-3 py-1 text-xs font-medium',
-              data.vendor?.buylist_enabled
-                ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400'
-                : ''
-            )}
+            className={cn('px-3 py-1 text-xs font-medium')}
           >
             {data.vendor?.buylist_enabled
               ? 'Buylist Enabled'

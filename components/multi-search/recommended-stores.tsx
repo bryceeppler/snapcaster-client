@@ -1,3 +1,8 @@
+import { AlertTriangle, ExternalLink } from 'lucide-react';
+import { useTheme } from 'next-themes';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -18,32 +23,25 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import React, { useState } from 'react';
-import useMultiSearchStore from '@/stores/multiSearchStore';
-import { Product } from '@/types';
-import { Card, CardTitle, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { DialogClose } from '@radix-ui/react-dialog';
-import {
-  groupProductsByHost,
-  buildCartUpdateUrls
-} from '@/utils/cartUrlBuilder';
-import { ExternalLink, AlertCircle, AlertTriangle } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { VendorAssetType, VendorAssetTheme } from '@/services/vendorService';
 import { useVendors } from '@/hooks/queries/useVendors';
+import { VendorAssetTheme, VendorAssetType } from '@/services/vendorService';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import type { Product } from '@/types';
+import {
+  buildCartUpdateUrls,
+  groupProductsByHost
+} from '@/utils/cartUrlBuilder';
 
 export const RecommendedStores = () => {
-  const { results, addToCart, isInCart, notFound } = useMultiSearchStore();
+  const { results } = useMultiSearchStore();
   const { getVendorNameBySlug, vendors } = useVendors();
   const { theme } = useTheme();
 
   // Filter out null values and then get unique card names
   const allCardNames = new Set(
-    results.filter((group) => group && group[0]).map((group) => group[0].name)
+    results.filter((group) => group && group[0]).map((group) => group[0]?.name)
   );
 
-  const totalRequested = allCardNames.size;
   const reccomendedWebsites = [
     'obsidian',
     'levelup',
@@ -53,7 +51,6 @@ export const RecommendedStores = () => {
     'houseofcards',
     'vortexgames'
   ];
-  const [selectedTopStore, setSelectedTopStore] = useState('');
 
   const getTopWebsites = (results: Product[][]) => {
     const websiteProducts: { [vendor: string]: Map<string, Product> } = {};
@@ -67,7 +64,7 @@ export const RecommendedStores = () => {
     // Process results to find available products
     results.forEach((resultGroup) => {
       if (!resultGroup || resultGroup.length === 0) return;
-      const cardName = resultGroup[0].name; // Get the card name from the first result
+      const cardName = resultGroup[0]?.name; // Get the card name from the first result
 
       resultGroup.forEach((product) => {
         if (!reccomendedWebsites.includes(product.vendor)) return;
@@ -77,11 +74,11 @@ export const RecommendedStores = () => {
         }
 
         // If we already have this product, only update if the new one is cheaper
-        const existingProduct = websiteProducts[product.vendor].get(
+        const existingProduct = websiteProducts[product.vendor]?.get(
           product.name
         );
         if (!existingProduct || product.price < existingProduct.price) {
-          websiteProducts[product.vendor].set(product.name, product);
+          websiteProducts[product.vendor]?.set(product.name, product);
         }
       });
 
@@ -89,7 +86,7 @@ export const RecommendedStores = () => {
       reccomendedWebsites.forEach((vendor) => {
         const vendorProducts = resultGroup.filter((p) => p.vendor === vendor);
         if (vendorProducts.length === 0) {
-          websiteNotFound[vendor].add(cardName);
+          websiteNotFound[vendor]?.add(cardName || 'Not Found');
         }
       });
     });
@@ -100,7 +97,7 @@ export const RecommendedStores = () => {
         return {
           vendor,
           products,
-          notFound: Array.from(websiteNotFound[vendor]),
+          notFound: Array.from(websiteNotFound[vendor] || []),
           count: products.length,
           totalCost: products.reduce((acc, product) => acc + product.price, 0)
         };
@@ -117,8 +114,10 @@ export const RecommendedStores = () => {
       (site) => site.vendor === 'obsidian'
     );
     if (obsidianIndex !== -1) {
-      const [obsidian] = sortedWebsites.splice(obsidianIndex, 1);
-      sortedWebsites = [obsidian, ...sortedWebsites];
+      const obsidianSite = sortedWebsites.splice(obsidianIndex, 1)[0];
+      if (obsidianSite) {
+        sortedWebsites = [obsidianSite, ...sortedWebsites];
+      }
     }
 
     return sortedWebsites;
@@ -138,11 +137,11 @@ export const RecommendedStores = () => {
 
   return (
     <Dialog>
-      <Card className="recommended-stores col-span-12 flex flex-col gap-2 bg-popover pb-4 text-xs">
+      <Card className="col-span-12 flex flex-col text-xs">
         <CardHeader className="text-left">
           <CardTitle className="text-lg">Recommended Stores</CardTitle>
         </CardHeader>
-        <div className="grid grid-cols-2 gap-2 overflow-clip rounded-lg px-4">
+        <CardContent className="grid grid-cols-2 gap-2 overflow-clip">
           {getTopWebsites(results).map((vendorInfo, i) => {
             const matchingVendor = vendors.find(
               (vendor) => vendorInfo.vendor === vendor.slug
@@ -316,7 +315,7 @@ export const RecommendedStores = () => {
               </div>
             );
           })}
-        </div>
+        </CardContent>
       </Card>
     </Dialog>
   );

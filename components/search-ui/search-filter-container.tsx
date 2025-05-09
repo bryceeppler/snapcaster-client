@@ -1,39 +1,44 @@
+import { Separator } from '@radix-ui/react-dropdown-menu';
 import React, { memo } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { createCheckoutSession } from '@/lib/utils';
-import { FilterOption, FilterOptionValues } from '@/types/query';
-import { useVendors } from '@/hooks/queries/useVendors';
 
-import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
+
+import SearchSortBy from './search-sort-by';
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import { Separator } from '@radix-ui/react-dropdown-menu';
-import SearchSortBy from './search-sort-by';
+import { Button } from '@/components/ui/button';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import { createCheckoutSession } from '@/lib/utils';
+import type { FilterOption, FilterOptionValues } from '@/types/query';
 
-type Prop = {
-  filterOptions: any;
-  defaultSortBy?: any;
-  sortBy: any;
+// Type for the sort options - matches what's in the provided data
+export type SortByOption = string;
+
+// Props for the FilterSection component
+type FilterSectionProps = {
+  filterOptions: FilterOption[];
+  defaultSortBy?: SortByOption;
+  sortBy: SortByOption;
   fetchCards: () => Promise<void>;
   clearFilters: () => void;
   setFilter: (filterField: string, value: string, selected: boolean) => void;
   setCurrentPage: (currentPage: number) => void;
   applyFilters: () => Promise<void>;
-  setSortBy: (sortBy: any) => void;
-  handleSortByChange: (value: any) => void;
+  setSortBy: (sortBy: SortByOption) => void;
+  handleSortByChange: (value: SortByOption) => void;
   sortByOptions: Record<string, string>;
   hidePromo?: boolean;
 };
 
-const FilterSection: React.FC<Prop> = memo(
+const FilterSection: React.FC<FilterSectionProps> = memo(
   ({
     filterOptions,
-    defaultSortBy,
     sortBy,
     fetchCards,
     clearFilters,
@@ -41,7 +46,6 @@ const FilterSection: React.FC<Prop> = memo(
     setCurrentPage,
     applyFilters,
     setSortBy,
-    handleSortByChange,
     sortByOptions,
     hidePromo = false
   }) => {
@@ -67,7 +71,7 @@ const FilterSection: React.FC<Prop> = memo(
           </div>
           <Accordion type="multiple" className="w-full  ">
             {filterOptions &&
-              filterOptions.map((filterOption: any, i: number) => (
+              filterOptions.map((filterOption: FilterOption, i: number) => (
                 <AccordionItem value={filterOption.field} key={i}>
                   <AccordionTrigger className="hover:no-underline">
                     {filterOption.name}
@@ -185,13 +189,13 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
   return (
     <div className="space-y-3 py-2">
       {filterOption &&
-        filterOption.values.map((option: any) => (
+        filterOption.values.map((option: FilterOptionValues) => (
           <div key={option.value} className="flex items-start">
             <input
               type="checkbox"
               id={option.value}
               checked={localSelections[option.value] ?? option.selected}
-              onChange={(e) => handleOptionChange(filterOption, option)}
+              onChange={() => handleOptionChange(filterOption, option)}
               className="mr-2 mt-1"
             />
             <label htmlFor={option.value} className="text-sm leading-5">

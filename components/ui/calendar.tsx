@@ -1,7 +1,5 @@
 'use client';
 
-import { Button, buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { differenceInCalendarDays } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import * as React from 'react';
@@ -12,6 +10,9 @@ import {
   useDayPicker,
   type DayPickerProps
 } from 'react-day-picker';
+
+import { Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export type CalendarProps = DayPickerProps & {
   /**
@@ -52,6 +53,40 @@ export type CalendarProps = DayPickerProps & {
 
 type NavView = 'days' | 'years';
 
+// Define interfaces for all components for better type safety
+interface NavProps {
+  className?: string | undefined;
+  navView: NavView;
+  startMonth?: Date | undefined;
+  endMonth?: Date | undefined;
+  displayYears: { from: number; to: number };
+  setDisplayYears: React.Dispatch<
+    React.SetStateAction<{ from: number; to: number }>
+  >;
+  onPrevClick?: ((date: Date) => void) | undefined;
+  onNextClick?: ((date: Date) => void) | undefined;
+}
+
+interface MonthGridProps extends React.TableHTMLAttributes<HTMLTableElement> {
+  className?: string | undefined;
+  children: React.ReactNode;
+  displayYears: { from: number; to: number };
+  startMonth?: Date | undefined;
+  endMonth?: Date | undefined;
+  navView: NavView;
+  setNavView: React.Dispatch<React.SetStateAction<NavView>>;
+}
+
+// Define the YearGrid interface to handle optional startMonth and endMonth
+interface YearGridProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string | undefined;
+  displayYears: { from: number; to: number };
+  startMonth?: Date | undefined;
+  endMonth?: Date | undefined;
+  setNavView: React.Dispatch<React.SetStateAction<NavView>>;
+  navView: NavView;
+}
+
 /**
  * A custom calendar component built on top of react-day-picker.
  * @param props The props for the calendar.
@@ -63,7 +98,7 @@ function Calendar({
   showOutsideDays = true,
   showYearSwitcher = true,
   yearRange = 12,
-  numberOfMonths,
+  numberOfMonths = 1,
   ...props
 }: CalendarProps) {
   const [navView, setNavView] = React.useState<NavView>('days');
@@ -80,7 +115,7 @@ function Calendar({
     }, [yearRange])
   );
 
-  const { onNextClick, onPrevClick, startMonth, endMonth } = props;
+  const { onPrevClick, startMonth, endMonth } = props;
 
   const columnsDisplayed = navView === 'years' ? 1 : numberOfMonths;
 
@@ -209,6 +244,7 @@ function Calendar({
             startMonth={startMonth}
             endMonth={endMonth}
             onPrevClick={onPrevClick}
+            onNextClick={props.onNextClick}
           />
         ),
         CaptionLabel: (props) => (
@@ -249,18 +285,7 @@ function Nav({
   setDisplayYears,
   onPrevClick,
   onNextClick
-}: {
-  className?: string;
-  navView: NavView;
-  startMonth?: Date;
-  endMonth?: Date;
-  displayYears: { from: number; to: number };
-  setDisplayYears: React.Dispatch<
-    React.SetStateAction<{ from: number; to: number }>
-  >;
-  onPrevClick?: (date: Date) => void;
-  onNextClick?: (date: Date) => void;
-}) {
+}: NavProps) {
   const { nextMonth, previousMonth, goToMonth } = useDayPicker();
 
   const isPreviousDisabled = (() => {
@@ -414,15 +439,7 @@ function MonthGrid({
   navView,
   setNavView,
   ...props
-}: {
-  className?: string;
-  children: React.ReactNode;
-  displayYears: { from: number; to: number };
-  startMonth?: Date;
-  endMonth?: Date;
-  navView: NavView;
-  setNavView: React.Dispatch<React.SetStateAction<NavView>>;
-} & React.TableHTMLAttributes<HTMLTableElement>) {
+}: MonthGridProps) {
   if (navView === 'years') {
     return (
       <YearGrid
@@ -451,14 +468,7 @@ function YearGrid({
   setNavView,
   navView,
   ...props
-}: {
-  className?: string;
-  displayYears: { from: number; to: number };
-  startMonth?: Date;
-  endMonth?: Date;
-  setNavView: React.Dispatch<React.SetStateAction<NavView>>;
-  navView: NavView;
-} & React.HTMLAttributes<HTMLDivElement>) {
+}: YearGridProps) {
   const { goToMonth, selected } = useDayPicker();
 
   return (
@@ -467,15 +477,17 @@ function YearGrid({
         { length: displayYears.to - displayYears.from + 1 },
         (_, i) => {
           const isBefore =
+            startMonth &&
             differenceInCalendarDays(
               new Date(displayYears.from + i, 11, 31),
-              startMonth!
+              startMonth
             ) < 0;
 
           const isAfter =
+            endMonth &&
             differenceInCalendarDays(
               new Date(displayYears.from + i, 0, 0),
-              endMonth!
+              endMonth
             ) > 0;
 
           const isDisabled = isBefore || isAfter;

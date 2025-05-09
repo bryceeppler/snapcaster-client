@@ -1,26 +1,16 @@
-import { FilterDropdown } from '@/components/ui/filter-dropdown';
-import { cn } from '@/lib/utils';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { ChevronDown } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-type SortOption = string;
-
-type SortByProps = {
-  sortBy: SortOption;
-  setSortBy: (sortBy: SortOption) => void;
-  fetchCards: () => Promise<void>;
-  setCurrentPage: (currentPage: number) => void;
-  sortByOptions: Record<string, string>;
-  triggerClassName?: string;
-};
+import { cn } from '@/lib/utils';
+import type { SortByProps, SortOption } from '@/types/sorting';
 
 export default function SearchSortBy({
   sortBy,

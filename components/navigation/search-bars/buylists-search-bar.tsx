@@ -1,49 +1,45 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  KeyboardEvent,
-  useCallback,
-  useMemo
-} from 'react';
-import useBuylistStore from '@/stores/useBuylistStore';
-import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
+'use client';
+
+import type { KeyboardEvent } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
-import { HelpCircle, X } from 'lucide-react';
-import { Tcg } from '@/types';
-import BaseSearchBar, { DeviceType } from '../ui/base-search-bar';
+
+import BaseSearchBar from '@/components/ui/base-search-bar';
+import { useBuylistSearch } from '@/hooks/queries/useBuylistSearch';
+import useBuyListStore from '@/stores/useBuylistStore';
+import type { Tcg } from '@/types';
+import type { DeviceType } from '@/types/navbar';
+import { trackSearch } from '@/utils/analytics';
 
 interface AutocompleteResult {
   name: string;
 }
 
-type Props = {
-  deviceType: string;
-  toggleMobileSearch?: () => void;
-  setSearchTerm: (term: string) => void;
-  searchTerm: string;
-  setTcg: (tcg: Tcg) => void;
-  tcg: Tcg;
-};
+/**
+ * Buylists search bar component that connects to the buylist store
+ */
+export default function BuylistsSearchBar({
+  deviceType
+}: {
+  deviceType: DeviceType;
+}) {
+  const {
+    searchTerm,
+    tcg,
+    filters,
+    sortBy,
+    clearFilters,
+    setSearchTerm,
+    setTcg,
+    buylistUIState,
+    setBuylistUIState
+  } = useBuyListStore();
 
-export default function BuylistNavSearchBar({
-  deviceType,
-  toggleMobileSearch,
-  setSearchTerm,
-  searchTerm,
-  setTcg,
-  tcg
-}: Props) {
-  const { filters, sortBy, clearFilters, buylistUIState, setBuylistUIState } =
-    useBuylistStore();
-
-  const [inputValue, setInputValue] = useState(searchTerm);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isTyping, setIsTyping] = useState(false);
 
-  const autoCompleteRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -61,7 +57,7 @@ export default function BuylistNavSearchBar({
     { enabled: false }
   );
 
-  // Memoize the fetch function to prevent recreating on every render
+  // Fetch autocomplete results
   const fetchAutocomplete = useCallback(
     async (value: string) => {
       if (value.trim().length < MIN_SEARCH_LENGTH) {
@@ -88,48 +84,57 @@ export default function BuylistNavSearchBar({
     [autoCompleteUrl, tcg]
   );
 
-  // Create a debounced version of the fetch function
+  // Debounced autocomplete
   const debouncedAutoCompleteResults = useDebounceCallback(
     fetchAutocomplete,
     DEBOUNCE_MS
   );
 
-  // Handle input changes with local state to prevent re-renders
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setInputValue(value);
-    setIsTyping(true);
+  // Handle suggestion click
+  const handleSuggestionClick = useCallback(
+    (suggestion: AutocompleteResult) => {
+      setSearchTerm(suggestion.name);
+      setIsAutoCompleteVisible(false);
+      clearFilters();
+      refetch();
 
-    // Clear previous timeout
+      if (
+        buylistUIState === 'viewAllOffersState' ||
+        buylistUIState === 'finalSubmissionState'
+      ) {
+        setBuylistUIState('searchResultsState');
+      }
+
+      // Track the search
+      trackSearch('buylists', suggestion.name, tcg);
+    },
+    [
+      setSearchTerm,
+      clearFilters,
+      refetch,
+      buylistUIState,
+      setBuylistUIState,
+      tcg
+    ]
+  );
+
+  // Handle input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedAutoCompleteResults(value);
+
+    // Set typing state with debounce to prevent UI jitter
+    setIsTyping(true);
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
-
-    // Set a timeout to update the actual search term
     typingTimeoutRef.current = setTimeout(() => {
       setIsTyping(false);
-      setSearchTerm(value);
     }, 500);
-
-    // Only fetch suggestions if the input is long enough
-    if (value.trim().length >= MIN_SEARCH_LENGTH) {
-      debouncedAutoCompleteResults(value);
-    } else {
-      setSuggestions([]);
-      setIsAutoCompleteVisible(false);
-    }
   };
 
-  // Handle suggestion selection
-  const handleSuggestionClick = useCallback(
-    (suggestion: AutocompleteResult) => {
-      setInputValue(suggestion.name);
-      setSearchTerm(suggestion.name);
-      setIsAutoCompleteVisible(false);
-    },
-    [setSearchTerm]
-  );
-
+  // Handle key navigation
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       // Skip navigation if no suggestions or typing
@@ -152,7 +157,7 @@ export default function BuylistNavSearchBar({
           break;
 
         case 'Enter':
-          event.stopPropagation();
+          event.preventDefault();
           clearFilters();
           refetch();
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -163,12 +168,16 @@ export default function BuylistNavSearchBar({
             setBuylistUIState('searchResultsState');
           }
           setIsAutoCompleteVisible(false);
+          trackSearch('buylists', searchTerm, tcg);
           break;
 
         case 'ArrowRight':
           if (selectedIndex >= 0 && selectedIndex < totalResults) {
             event.preventDefault();
-            handleSuggestionClick(suggestions[selectedIndex]);
+            const suggestion = suggestions[selectedIndex];
+            if (suggestion) {
+              handleSuggestionClick(suggestion);
+            }
           }
           break;
 
@@ -186,105 +195,77 @@ export default function BuylistNavSearchBar({
       clearFilters,
       refetch,
       buylistUIState,
-      setBuylistUIState
+      setBuylistUIState,
+      searchTerm,
+      tcg
     ]
   );
 
-  // Handle clicks outside the autocomplete
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        autoCompleteRef.current &&
-        !autoCompleteRef.current.contains(event.target as Node)
-      ) {
-        setIsAutoCompleteVisible(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Clean up timeouts on unmount
-  useEffect(() => {
-    return () => {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  // Update input value when searchTerm changes externally
-  useEffect(() => {
-    setInputValue(searchTerm);
-  }, [searchTerm]);
-
-  const handleTcgChange = (value: Tcg) => {
-    clearFilters();
-    setTcg(value);
-    setSearchTerm('');
-    setInputValue('');
-    setSuggestions([]);
-    setIsAutoCompleteVisible(false);
-    setSelectedIndex(-1);
-  };
-
-  const handleSearchClick = () => {
+  // Handle search button click
+  const handleSearch = () => {
     clearFilters();
     refetch();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsAutoCompleteVisible(false);
+
     if (
       buylistUIState === 'viewAllOffersState' ||
       buylistUIState === 'finalSubmissionState'
     ) {
       setBuylistUIState('searchResultsState');
     }
+
+    // Track the search
+    trackSearch('buylists', searchTerm, tcg);
+  };
+
+  // Handle TCG change
+  const handleTcgChange = (value: Tcg) => {
+    setTcg(value);
+    setSearchTerm('');
+    setSuggestions([]);
+    setIsAutoCompleteVisible(false);
   };
 
   // Render autocomplete suggestions
   const renderAutoComplete = () => {
-    if (!isAutoCompleteVisible || !suggestions || suggestions.length === 0) {
+    if (!isAutoCompleteVisible || suggestions.length === 0) {
       return null;
     }
 
     return (
-      <div
-        ref={autoCompleteRef}
-        className="absolute left-0 right-0 top-full z-50 mt-[6px] rounded-b-md border bg-popover p-1 text-foreground shadow-lg"
-      >
-        {suggestions.map((suggestion, index) => (
-          <div
-            key={index}
-            className={`cursor-pointer px-4 py-2 ${
-              selectedIndex === index
-                ? 'bg-primary text-primary-foreground'
-                : 'hover:bg-accent'
-            }`}
-            onClick={() => handleSuggestionClick(suggestion)}
-          >
-            {suggestion.name}
-          </div>
-        ))}
+      <div className="absolute left-0 top-full z-50 mt-1 max-h-64 w-full overflow-y-auto rounded-md border border-border bg-popover p-1 shadow-md">
+        <ul>
+          {suggestions.map((suggestion, index) => (
+            <li
+              key={`${suggestion.name}-${index}`}
+              className={`cursor-pointer rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground ${
+                index === selectedIndex
+                  ? 'bg-accent text-accent-foreground'
+                  : ''
+              }`}
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
+              {suggestion.name}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   };
 
   return (
     <BaseSearchBar
-      deviceType={deviceType as DeviceType}
+      deviceType={deviceType}
       tcg={tcg}
-      searchTerm={inputValue}
+      searchTerm={searchTerm}
       placeholder="Search for a card"
       isLoading={isLoading}
       inputRef={inputRef}
       onTcgChange={handleTcgChange}
       onInputChange={handleInputChange}
       onInputKeyDown={handleKeyDown}
-      onSearchClick={handleSearchClick}
+      onSearchClick={handleSearch}
       renderAutoComplete={renderAutoComplete}
-      showSearchHelp={false}
     />
   );
 }

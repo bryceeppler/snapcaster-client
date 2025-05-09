@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { FilterOption, FilterOptionValues } from '@/types/query';
-import { useVendors } from '@/hooks/queries/useVendors';
+
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useVendors } from '@/hooks/queries/useVendors';
+import type { FilterOption, FilterOptionValues } from '@/types/query';
 
 interface FilterScrollAreaProps {
   filterOption: FilterOption;

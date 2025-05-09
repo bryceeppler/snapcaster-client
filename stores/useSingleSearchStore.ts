@@ -1,11 +1,12 @@
-import type { Product, Tcg } from '@/types';
-import { create } from 'zustand';
-import { toast } from 'sonner';
-import { devtools, persist, createJSONStorage } from 'zustand/middleware';
-import { FilterOption } from '@/types/query';
 import axios from 'axios';
+import { toast } from 'sonner';
+import { create } from 'zustand';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 
-type SearchState = {
+import type { Product, Tcg } from '@/types';
+import type { FilterOption } from '@/types/query';
+
+type SingleSearchStore = {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   tcg: Tcg;
@@ -37,8 +38,7 @@ type SearchState = {
   clearSearchResults: () => void;
 };
 
-export const useSingleSearchStore = create<SearchState>()(
-  // @ts-ignore
+export const useSingleSearchStore = create<SingleSearchStore>()(
   devtools(
     persist(
       (set, get) => ({
@@ -110,7 +110,7 @@ export const useSingleSearchStore = create<SearchState>()(
             });
 
             if (filters) {
-              Object.entries(filters).forEach(([index, filter]) => {
+              Object.entries(filters).forEach(([_, filter]) => {
                 filter.values.forEach((value) => {
                   if (value.selected) {
                     queryParams.append(
@@ -194,7 +194,7 @@ export const useSingleSearchStore = create<SearchState>()(
             });
 
             if (filters) {
-              Object.entries(filters).forEach(([index, filter]) => {
+              Object.entries(filters).forEach(([_, filter]) => {
                 filter.values.forEach((value) => {
                   if (value.selected) {
                     queryParams.append(

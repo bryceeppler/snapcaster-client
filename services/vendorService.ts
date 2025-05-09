@@ -1,15 +1,16 @@
 import axios from 'axios';
-import axiosInstance from '@/utils/axiosWrapper';
-import {
-  Discount,
-  CreateDiscountRequest,
-  UpdateDiscountRequest
-} from '@/types/discounts';
-import {
+
+import type {
   ApiKey,
   CreateApiKeyRequest,
   CreateApiKeyResponse
 } from '@/hooks/queries/useApiKeys';
+import type {
+  Discount,
+  CreateDiscountRequest,
+  UpdateDiscountRequest
+} from '@/types/discounts';
+import axiosInstance from '@/utils/axiosWrapper';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -31,15 +32,11 @@ export enum VendorAssetTheme {
   UNIVERSAL = 'universal'
 }
 
-export interface VendorAsset {
+interface VendorAsset {
   id: number;
   asset_type: VendorAssetType;
   theme: VendorAssetTheme;
   url: string;
-}
-
-export interface DiscountMap {
-  [key: string]: number;
 }
 
 export interface Vendor {
@@ -55,7 +52,7 @@ export interface Vendor {
   updated_at: Date;
 }
 
-export class VendorService {
+class VendorService {
   async getAllVendors(): Promise<Vendor[]> {
     try {
       const response = await axios.get(

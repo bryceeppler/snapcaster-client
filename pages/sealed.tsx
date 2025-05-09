@@ -1,20 +1,17 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
+
 import SealedCatalogContainer from '@/components/sealed/sealed-catalog-container';
+import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 
-type Props = {};
-
-const SealedSearch: NextPage<Props> = () => {
+const SealedSearch: NextPage = () => {
   const {
     productCategory,
     searchTerm,
-    setSearchTerm,
     selectedFilters,
     sortBy,
     region,
-    setProductCategory,
     clearFilters
   } = useSealedSearchStore();
 
@@ -36,28 +33,16 @@ const SealedSearch: NextPage<Props> = () => {
     { enabled: true }
   );
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-
   return (
     <>
       <SealedSearchHead />
       <div className="flex w-full flex-col justify-center text-center">
         <SealedCatalogContainer
-          setProductCategory={setProductCategory}
-          setSearchTerm={setSearchTerm}
-          handleSearch={() => {}}
           refetch={refetch}
-          productCategory={productCategory}
-          searchTerm={searchTerm}
-          handleInputChange={handleInputChange}
           isLoading={isLoading}
           clearFilters={clearFilters}
-          searchResults={data?.searchResults}
-          promotedResults={data?.promotedResults}
-          numResults={data?.numResults}
-          filterOptions={data?.filterOptions}
+          searchResults={data?.searchResults || []}
+          promotedResults={data?.promotedResults || []}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}

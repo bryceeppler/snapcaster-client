@@ -1,8 +1,10 @@
-import { useForm } from 'react-hook-form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 
 type SignupFormData = {
@@ -23,14 +25,15 @@ type SignupFormProps = {
   callToAction?: string;
 };
 
-export function SignupForm({ 
-  showSignInLink = true, 
-  inputClassName = '', 
-  labels = 'explicit', 
-  confirmPassword = true, 
-  callToAction = 'Sign Up' 
+export function SignupForm({
+  showSignInLink = true,
+  inputClassName = '',
+  labels = 'explicit',
+  confirmPassword = true,
+  callToAction = 'Sign Up'
 }: SignupFormProps) {
   const { register, isRegistering } = useAuth();
+  const { toast } = useToast();
   const {
     register: registerField,
     handleSubmit,
@@ -42,9 +45,24 @@ export function SignupForm({
 
   const onSubmit = async (data: SignupFormData) => {
     const { email, password, fullName } = data;
-    register({ email, password, fullName });
+    register(
+      { email, password, fullName },
+      {
+        onSuccess: () => {
+          toast({
+            title: 'Account created',
+            description: 'Your account has been created successfully'
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: 'Error creating account',
+            description: error.message
+          });
+        }
+      }
+    );
   };
-
   return (
     <form className="grid gap-4 md:gap-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid gap-2">
@@ -54,7 +72,9 @@ export function SignupForm({
           {...registerField('fullName', {
             required: 'A name is required'
           })}
-          className={`${errors.fullName ? 'border-red-500' : ''} ${inputClassName}`}
+          className={`${
+            errors.fullName ? 'border-red-500' : ''
+          } ${inputClassName}`}
           placeholder={labels === 'implicit' ? 'Name' : 'Al Dente'}
         />
         {errors.fullName && (
@@ -72,12 +92,12 @@ export function SignupForm({
               message: 'Invalid email address'
             }
           })}
-          className={`${errors.email ? 'border-red-500' : ''} ${inputClassName}`}
+          className={`${
+            errors.email ? 'border-red-500' : ''
+          } ${inputClassName}`}
           placeholder={labels === 'implicit' ? 'Email' : 'aldente@pasta.com'}
         />
-        {errors.email && (
-          <p className="text-red-500">{errors.email.message}</p>
-        )}
+        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
       </div>
       <div className="grid gap-2">
         {labels === 'explicit' && <Label htmlFor="password">Password</Label>}
@@ -90,7 +110,9 @@ export function SignupForm({
               message: 'Password must be at least 8 characters'
             }
           })}
-          className={`${errors.password ? 'border-red-500' : ''} ${inputClassName}`}
+          className={`${
+            errors.password ? 'border-red-500' : ''
+          } ${inputClassName}`}
           placeholder={labels === 'implicit' ? 'Password' : ''}
         />
         {errors.password && (
@@ -99,15 +121,19 @@ export function SignupForm({
       </div>
       {confirmPassword && (
         <div className="grid gap-2">
-          {labels === 'explicit' && <Label htmlFor="confirmPassword">Confirm Password</Label>}
+          {labels === 'explicit' && (
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+          )}
           <Input
             type="password"
             {...registerField('confirmPassword', {
               required: 'Please confirm your password',
-              validate: value =>
+              validate: (value) =>
                 value === password || 'The passwords do not match'
             })}
-            className={`${errors.confirmPassword ? 'border-red-500' : ''} ${inputClassName}`}
+            className={`${
+              errors.confirmPassword ? 'border-red-500' : ''
+            } ${inputClassName}`}
             placeholder={labels === 'implicit' ? 'Confirm Password' : ''}
           />
           {errors.confirmPassword && (
@@ -140,4 +166,4 @@ export function SignupForm({
       )}
     </form>
   );
-} 
+}

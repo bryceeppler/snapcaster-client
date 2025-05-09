@@ -1,14 +1,18 @@
+import { format, subDays } from 'date-fns';
+import type { LucideIcon } from 'lucide-react';
 import {
   BarChart3,
+  Calendar as CalendarIcon,
   LineChart,
-  Users,
-  LucideIcon,
-  Calendar as CalendarIcon
+  Users
 } from 'lucide-react';
 import { useState } from 'react';
 import { type PropsRange } from 'react-day-picker';
-import { subDays, format } from 'date-fns';
 
+import DashboardLayout from './layout';
+
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Card,
   CardContent,
@@ -16,27 +20,21 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { SearchChart } from '@/components/vendors/tcgs/search-chart';
-import { BuyClicksChart } from '@/components/vendors/tcgs/buy-clicks-chart';
-import DashboardLayout from './layout';
-import { useAuth } from '@/hooks/useAuth';
-import {
-  type AnalyticsError,
-  useUniqueUsersByDate,
-  useEngagementTime,
-  useSearchQueriesWithParams,
-  useBuyClicksWithParams
-} from '@/lib/hooks/useAnalytics';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Skeleton } from '@/components/ui/skeleton';
+import { BuyClicksChart } from '@/components/vendors/tcgs/buy-clicks-chart';
 import { PopularClickedCards } from '@/components/vendors/tcgs/popular-clicked-cards';
 import { PopularClickedSets } from '@/components/vendors/tcgs/popular-clicked-sets';
+import { SearchChart } from '@/components/vendors/tcgs/search-chart';
+import {
+  type AnalyticsError,
+  useBuyClicksWithParams,
+  useSearchQueriesWithParams
+} from '@/lib/hooks/useAnalytics';
 
 interface AnalyticsErrorMessageProps {
   message: string;
@@ -90,8 +88,8 @@ function MetricCard({
           <Skeleton className="h-8 w-[120px]" />
         ) : error ? (
           <AnalyticsErrorMessage
-            message={error.message}
-            status={error.status}
+            message={error.message || 'Unknown error'}
+            status={error.status || 500}
           />
         ) : (
           <div className="space-y-2">
@@ -108,18 +106,11 @@ function AnalyticsMetrics({
 }: {
   dateRange: { from: Date; to: Date };
 }) {
-  const uniqueUsers = useUniqueUsersByDate(dateRange.from, dateRange.to);
   const searchQueries = useSearchQueriesWithParams(
     dateRange.from,
     dateRange.to
   );
-  const engagementTime = useEngagementTime(dateRange.from, dateRange.to);
   const buyClicks = useBuyClicksWithParams(dateRange.from, dateRange.to);
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    return `${minutes}m ${Math.round(seconds % 60)}s`;
-  };
 
   const metrics = [
     {
@@ -172,8 +163,6 @@ export default function TCGAnalyticsPage() {
     to: new Date()
   });
 
-  const { isAdmin } = useAuth();
-
   const handleDateRangeChange: PropsRange['onSelect'] = (range) => {
     if (!range) {
       setDateRange({ from: subDays(new Date(), 30), to: new Date() });
@@ -187,7 +176,7 @@ export default function TCGAnalyticsPage() {
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+        <div className="flex-1 space-y-4">
           <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
             <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
               TCG Analytics

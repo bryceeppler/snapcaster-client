@@ -1,4 +1,5 @@
 import { ArrowLeft } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 
 interface AdvertisementLoadingStateProps {
@@ -10,7 +11,7 @@ export function AdvertisementLoadingState({
 }: AdvertisementLoadingStateProps) {
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="flex-1 space-y-6 p-6 pt-8 md:p-8">
+      <div className="flex-1 space-y-6">
         <div className="flex items-center gap-2">
           <Button
             variant="outline"

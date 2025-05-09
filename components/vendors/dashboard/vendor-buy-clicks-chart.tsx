@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { format, parseISO } from 'date-fns';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+
 import {
   Card,
   CardContent,
@@ -11,17 +11,12 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { useVendorBuyClicks } from '@/lib/hooks/useAnalytics';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent
-} from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip } from '@/components/ui/chart';
 import { ChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
-import { formatChartDate } from '@/lib/utils';
 import { useVendors } from '@/hooks/queries/useVendors';
+import { useVendorBuyClicks } from '@/lib/hooks/useAnalytics';
+import { formatChartDate } from '@/lib/utils';
 const TCG_ORDER = [
   'mtg',
   'pokemon',
@@ -63,9 +58,36 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
+// Define types for chart payload
+interface VendorPayload {
+  website: string;
+  mtg: number;
+  pokemon: number;
+  yugioh: number;
+  onepiece: number;
+  lorcana: number;
+  fleshandblood: number;
+  starwars: number;
+  total: number;
+  rank: number;
+  vendor: string;
+  originalUrl: string;
+}
+
+interface ChartTooltipPayloadItem {
+  fill: string;
+  radius: number;
+  dataKey: string;
+  name: string;
+  color: string;
+  value: number;
+  payload: VendorPayload;
+  hide: boolean;
+}
+
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: ChartTooltipPayloadItem[];
   label?: string;
 }
 
@@ -75,8 +97,15 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   const data = payload[0].payload;
   const totalClicks = data.total;
 
+  // Create a type for the TCG data items
+  type TcgDataItem = {
+    tcg: (typeof TCG_ORDER)[number];
+    clicks: number;
+    percentage: number;
+  };
+
   // Sort TCGs by number of clicks
-  const tcgData = TCG_ORDER.map((tcg) => ({
+  const tcgData: TcgDataItem[] = TCG_ORDER.map((tcg) => ({
     tcg,
     clicks: data[tcg],
     percentage: (data[tcg] / totalClicks) * 100
@@ -213,17 +242,18 @@ export function VendorBuyClicksChart({
   const endDate = data?.endDate ? formatChartDate(data.endDate) : '';
 
   // Process the data to use proper website names
-  const processedData = data?.data.map((item) => {
-    const normalizedUrl = normalizeWebsiteUrl(item.website);
-    const vendor = vendors.find(
-      (v) => normalizeWebsiteUrl(v.url) === normalizedUrl
-    );
-    return {
-      ...item,
-      vendor: vendor?.name || normalizedUrl, // Fallback to normalized URL if website not found
-      originalUrl: item.website // Keep original URL for tooltip
-    };
-  });
+  const processedData: VendorPayload[] =
+    data?.data.map((item) => {
+      const normalizedUrl = normalizeWebsiteUrl(item.website);
+      const vendor = vendors.find(
+        (v) => normalizeWebsiteUrl(v.url) === normalizedUrl
+      );
+      return {
+        ...item,
+        vendor: vendor?.name || normalizedUrl, // Fallback to normalized URL if website not found
+        originalUrl: item.website // Keep original URL for tooltip
+      };
+    }) || [];
 
   return (
     <Card className={className}>

@@ -1,15 +1,6 @@
-import React from 'react';
-import { BuylistSubmissionResponse } from '@/services/catalogService';
-import {
-  TableScrollable,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
-import { useVendors } from '@/hooks/queries/useVendors';
 import { formatDistanceToNow } from 'date-fns';
+import React from 'react';
+
 import { Badge } from '@/components/ui/badge';
 import {
   Pagination,
@@ -27,6 +18,16 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import {
+  TableScrollable,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
+import { useVendors } from '@/hooks/queries/useVendors';
+import type { BuylistSubmissionResponse } from '@/services/catalogService';
 
 type Props = {
   data: BuylistSubmissionResponse;

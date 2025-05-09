@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { Check, CreditCard, Sparkles, X } from 'lucide-react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +25,7 @@ export function SubscriptionSection() {
     setIsLoading(true);
     try {
       await createCheckoutSession();
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to create checkout session'
@@ -39,7 +39,7 @@ export function SubscriptionSection() {
     setIsLoading(true);
     try {
       await createPortalSession();
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to access billing portal'

@@ -1,10 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import axiosInstance from '@/utils/axiosWrapper';
-import { Product, Tcg } from '@/types';
-import { FilterOption, SealedSortOptions } from '@/types/query';
-import { toast } from 'sonner';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { useEffect } from 'react';
+import { toast } from 'sonner';
+
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import type { Product, Tcg } from '@/types';
+import type { FilterOption, SealedSortOptions } from '@/types/query';
+import axiosInstance from '@/utils/axiosWrapper';
 
 interface SearchParams {
   productCategory: Tcg;
@@ -112,9 +113,9 @@ export const useSealedSearch = (
     select: (data): TransformedSearchResponse => {
       const lastPage = data.pages[data.pages.length - 1];
       const allResults = data.pages.flatMap((page) => page.results);
-      const allPromotedResults = data.pages[0].promotedResults || [];
+      const allPromotedResults = data.pages[0]?.promotedResults || [];
 
-      const sortOptionsMap = data.pages[0].sorting.Items.reduce(
+      const sortOptionsMap = data.pages[0]?.sorting.Items.reduce(
         (acc, item) => ({
           ...acc,
           [item.value]: item.label
@@ -128,14 +129,14 @@ export const useSealedSearch = (
           ...item,
           promoted: true
         })),
-        filterOptions: lastPage.filters || [],
-        numPages: lastPage.pagination.numPages,
-        numResults: lastPage.pagination.numResults,
+        filterOptions: lastPage?.filters || [],
+        numPages: lastPage?.pagination.numPages || 0,
+        numResults: lastPage?.pagination.numResults || 0,
         nextPage:
-          data.pages.length + 1 <= lastPage.pagination.numPages
+          data.pages.length + 1 <= (lastPage?.pagination.numPages || 0)
             ? data.pages.length + 1
             : undefined,
-        sortOptions: sortOptionsMap
+        sortOptions: sortOptionsMap || {}
       };
     }
   });

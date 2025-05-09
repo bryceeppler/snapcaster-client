@@ -1,60 +1,56 @@
-import { cn } from '@/lib/utils';
 import Marquee from '@/components/ui/marquee';
+import { cn } from '@/lib/utils';
 
 function generateGradient(seed: string) {
-  const hash = seed.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
-  
+  const hash = seed
+    .split('')
+    .reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
+
   const hue1 = hash % 360;
   const hue2 = (hash * 7) % 360;
-  
+
   return `linear-gradient(45deg, hsl(${hue1}, 70%, 60%), hsl(${hue2}, 70%, 60%))`;
 }
 
 const reviews = [
   {
     name: 'Quirky-Signature4883',
-    body: "For any Canadian who hasn't used this, I highly recommend it. Been using it for awhile and all of the improvements made to the platform have made it even better. I've got this site bookmarked and will continue using it for the foreseeable future.",
+    body: "For any Canadian who hasn't used this, I highly recommend it. Been using it for awhile and all of the improvements made to the platform have made it even better. I've got this site bookmarked and will continue using it for the foreseeable future."
   },
   {
     name: 'DyneInferno',
-    body: "I've been using this website for the past year. It has saved me SO much $$$.",
+    body: "I've been using this website for the past year. It has saved me SO much $$$."
   },
   {
     name: 'xDictate',
-    body: 'Been using this for a few months now - helped me discover a few cool stores and also helped me put together a buncha pauper decks - thanks OP, this is seriously a huge service for the Canadian mtg community and I tell whoever I can about it!',
+    body: 'Been using this for a few months now - helped me discover a few cool stores and also helped me put together a buncha pauper decks - thanks OP, this is seriously a huge service for the Canadian mtg community and I tell whoever I can about it!'
   },
   {
     name: 'SoloWing',
-    body: 'Yo, I love you guys so much for this.',
+    body: 'Yo, I love you guys so much for this.'
   },
   {
     name: 'iwumbo2',
-    body: `Helped me find occasional singles I couldn't find at my usual stores, and sometimes for cheaper too. Gonna continue using this whenever I can't find what I want at my usual stores, or if I feel the prices are too high.`,
+    body: `Helped me find occasional singles I couldn't find at my usual stores, and sometimes for cheaper too. Gonna continue using this whenever I can't find what I want at my usual stores, or if I feel the prices are too high.`
   },
   {
     name: 'chp129',
-    body: 'Just bought some cards using your site. It was awesome to use.',
+    body: 'Just bought some cards using your site. It was awesome to use.'
   },
   {
     name: 'Ghnuberath',
-    body: "This site is very well done. I've used it a bunch. Great work!",
+    body: "This site is very well done. I've used it a bunch. Great work!"
   },
   {
     name: 'DDohD',
-    body: "I don’t know who made this website but your doing gods work! It’s been a game changer. I use to manually go through ever Canadian store when purchasing high end foils. The amount of time I’ve saved is awesome. Really appreciate all you do! I recommend you to all player who shop at our LGS.",
+    body: 'I don’t know who made this website but your doing gods work! It’s been a game changer. I use to manually go through ever Canadian store when purchasing high end foils. The amount of time I’ve saved is awesome. Really appreciate all you do! I recommend you to all player who shop at our LGS.'
   }
 ];
 
 const firstRow = reviews.slice(0, reviews.length / 2);
 const secondRow = reviews.slice(reviews.length / 2);
 
-const ReviewCard = ({
-  name,
-  body
-}: {
-  name: string;
-  body: string;
-}) => {
+const ReviewCard = ({ name, body }: { name: string; body: string }) => {
   return (
     <figure
       className={cn(
@@ -66,8 +62,8 @@ const ReviewCard = ({
       )}
     >
       <div className="flex flex-row items-center gap-2">
-        <div 
-          className="w-8 h-8 rounded-full"
+        <div
+          className="h-8 w-8 rounded-full"
           style={{ background: generateGradient(name) }}
         />
         <div className="flex flex-col">
@@ -76,7 +72,9 @@ const ReviewCard = ({
           </figcaption>
         </div>
       </div>
-      <blockquote className="mt-2 text-sm line-clamp-6 text-left overflow-ellipsis">{body}</blockquote>
+      <blockquote className="mt-2 line-clamp-6 overflow-ellipsis text-left text-sm">
+        {body}
+      </blockquote>
     </figure>
   );
 };

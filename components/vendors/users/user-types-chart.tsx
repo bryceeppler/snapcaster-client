@@ -1,8 +1,9 @@
 'use client';
 
-import * as React from 'react';
 import { format } from 'date-fns';
-import { PieChart, Pie, Cell, Legend, Label } from 'recharts';
+import * as React from 'react';
+import { PieChart, Pie, Cell, Label } from 'recharts';
+
 import {
   Card,
   CardContent,
@@ -11,17 +12,15 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { useUserTypes } from '@/lib/hooks/useAnalytics';
+import type { ChartConfig } from '@/components/ui/chart';
 import {
   ChartContainer,
-  ChartConfig,
   ChartTooltip,
-  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent
 } from '@/components/ui/chart';
 import { PieChartSkeleton } from '@/components/vendors/dashboard/chart-skeleton';
+import { useUserTypes } from '@/lib/hooks/useAnalytics';
 
 interface UserTypesChartProps {
   dateRange: {
@@ -45,16 +44,41 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
+// Type definitions for the chart data
+interface UserTypeData {
+  type: string;
+  users: number;
+  percentage: number;
+}
+
+// Payload structure for recharts tooltip
+interface TooltipPayloadItem {
+  name: string;
+  value: number;
+  dataKey: string;
+  payload: {
+    payload: UserTypeData;
+    stroke: string;
+    fill: string;
+    cx: string;
+    cy: string;
+    strokeWidth: number;
+  } & UserTypeData;
+}
+
 // Custom tooltip component
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: TooltipPayloadItem[];
   label?: string;
 }
 
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (!active || !payload?.length) return null;
+
   const entry = payload[0];
+  if (!entry) return null;
+
   const value = entry.value;
   const name = entry.name;
 
@@ -144,25 +168,37 @@ export function UserTypesChart({ dateRange }: UserTypesChartProps) {
               strokeWidth={5}
             >
               <Label
-                content={({ viewBox }: { viewBox?: any }) => {
-                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
+                content={(props) => {
+                  // Type guard to check if viewBox has the required properties
+                  const viewBox = props.viewBox;
+                  if (
+                    viewBox &&
+                    typeof viewBox === 'object' &&
+                    'cx' in viewBox &&
+                    'cy' in viewBox &&
+                    typeof viewBox.cx === 'number' &&
+                    typeof viewBox.cy === 'number'
+                  ) {
+                    const cx = viewBox.cx;
+                    const cy = viewBox.cy;
+
                     return (
                       <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
+                        x={cx}
+                        y={cy}
                         textAnchor="middle"
                         dominantBaseline="middle"
                       >
                         <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
+                          x={cx}
+                          y={cy}
                           className="fill-foreground text-3xl font-bold"
                         >
                           {returningUsers.toLocaleString()}
                         </tspan>
                         <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
+                          x={cx}
+                          y={cy + 24}
                           className="fill-muted-foreground"
                         >
                           Returning Users

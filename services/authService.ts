@@ -1,11 +1,14 @@
-import axiosInstance from '@/utils/axiosWrapper';
 import axios from 'axios';
+
+import axiosInstance from '@/utils/axiosWrapper';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface LoginCredentials {
   email: string;
   password: string;
+  twoFactorToken?: string;
+  tempToken?: string;
 }
 
 interface RegisterCredentials extends LoginCredentials {
@@ -16,13 +19,6 @@ interface RegisterResponse {
   status: string;
   data: {
     user: UserProfile;
-    accessToken: string;
-  };
-}
-
-interface AuthResponse {
-  status: string;
-  data: {
     accessToken: string;
   };
 }
@@ -58,12 +54,21 @@ interface UserProfile {
     createdAt: string;
     updatedAt: string;
     role: UserRole;
+    twoFactorMethods: string[];
     vendorData?: VendorData;
   };
 }
 
-export class AuthService {
-  async login(credentials: LoginCredentials): Promise<string> {
+export interface TwoFactorRequiredResponse {
+  requiresTwoFactor: true;
+  tempToken: string;
+  methods: string[];
+}
+
+class AuthService {
+  async login(
+    credentials: LoginCredentials
+  ): Promise<string | TwoFactorRequiredResponse> {
     const response = await axios.post(
       `${BASE_URL}/api/v1/auth/login`,
       credentials,
@@ -71,6 +76,15 @@ export class AuthService {
         withCredentials: true
       }
     );
+
+    if (response.data.data.requiresTwoFactor) {
+      return {
+        requiresTwoFactor: true,
+        tempToken: response.data.data.tempToken,
+        methods: response.data.data.methods || ['app'] // Default to app if not provided
+      };
+    }
+
     return response.data.data.accessToken;
   }
 
@@ -152,6 +166,131 @@ export class AuthService {
         withCredentials: true
       }
     );
+  }
+
+  async setupApp2FA(): Promise<{
+    secret: string;
+    qrCode: string;
+    backupCodes: string[];
+  }> {
+    const response = await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/app/setup`,
+      {},
+      {
+        withCredentials: true
+      }
+    );
+    return response.data.data;
+  }
+
+  async setupEmail2FA(): Promise<{
+    emailEnabled: boolean;
+  }> {
+    const response = await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/email/setup`,
+      {},
+      { withCredentials: true }
+    );
+    return response.data.data;
+  }
+
+  async verifyApp2FA(
+    token: string,
+    secret: string,
+    method: string = 'app'
+  ): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/app/verify`,
+      { token, secret, method },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async generateDisable2FACode(method: string): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/generate-disable-code`,
+      { method },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async disableApp2FA(token: string): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/app/disable`,
+      { token },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async disableEmail2FA(token: string): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/email/disable`,
+      { token },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async disable2FA(token: string): Promise<void> {
+    await axiosInstance.post(
+      `${BASE_URL}/api/v1/auth/2fa/disable`,
+      { token },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async completeTwoFactorLogin(
+    tempToken: string,
+    twoFactorCode: string,
+    method: string = 'app'
+  ): Promise<string> {
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/auth/2fa/validate`,
+      {
+        tempToken,
+        token: twoFactorCode,
+        method
+      },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data.data.accessToken;
+  }
+
+  async sendEmailVerificationCode(tempToken: string): Promise<void> {
+    await axios.post(
+      `${BASE_URL}/api/v1/auth/2fa/email/send`,
+      { tempToken },
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  async recover2FA(tempToken: string, recoveryCode: string): Promise<string> {
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/auth/2fa/recover`,
+      {
+        tempToken,
+        recoveryCode
+      },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data.data.accessToken;
   }
 }
 

@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
-import useBuyListStore from '@/stores/useBuylistStore';
+
 import { BuylistSearchResults } from './search-results/search-results';
 import { BuylistStoreOffers } from './store-offers/store-offers-body';
 import { SubmitOffer } from './store-offers/submit-offer-body';
+
+import useBuyListStore from '@/stores/useBuylistStore';
 
 export default function BuylistCatalog() {
   const { buylistUIState, currentCartId, setAllCartsData } = useBuyListStore();

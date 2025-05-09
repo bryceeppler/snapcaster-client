@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface Tier3SignupData {
   subscriptionType: 'monthly' | 'quarterly';

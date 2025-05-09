@@ -8,8 +8,9 @@ export type Tcg =
   | 'fleshandblood';
 export type Condition = 'nm' | 'lp' | 'mp' | 'hp' | 'dmg';
 
-export type Product = {
+export interface Product {
   name: string;
+  normalized_name?: string;
   set: string;
   price: number;
   condition: string;
@@ -19,7 +20,11 @@ export type Product = {
   image: string;
   variant_id?: string;
   [key: string]: any;
-};
+}
+
+export interface PromotedProduct extends Product {
+  promoted?: boolean;
+}
 
 export type SealedProduct = {
   name: string;
@@ -33,43 +38,4 @@ export type SealedProduct = {
 
 export interface SingleCatalogCard extends Product {
   promoted?: boolean;
-}
-
-export interface BuyListQueryCard {
-  name: string;
-  filters: any;
-  image: string;
-  conditions?: {
-    [key in Condition]?: BuyListCardPricing;
-  };
-}
-
-export interface BuyListStorePricing {
-  cashPrice: number;
-  creditPrice: number;
-}
-
-export interface BuyListConditionPricing {
-  [storeName: string]: BuyListStorePricing;
-}
-
-export interface BuyListCardPricing {
-  conditions?: {
-    [key in Condition]?: BuyListConditionPricing;
-  };
-}
-
-export interface BuyListCartStoreData {
-  [storeName: string]: BuyListCartCardData[];
-}
-
-export interface BuyListCartCardData {
-  name: string;
-  condition: string;
-  quantity: number;
-  rarity: string;
-  set: string;
-  foil: string;
-  cashPrice: number;
-  creditPrice: number;
 }

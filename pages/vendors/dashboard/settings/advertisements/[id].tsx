@@ -1,21 +1,23 @@
-import { ArrowLeft } from 'lucide-react';
-import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
 import DashboardLayout from '../../layout';
+
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/hooks/useAuth';
-import { useVendors } from '@/hooks/queries/useVendors';
-import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { AdvertisementWithImages } from '@/types/advertisements';
+import type { AdvertisementFormValues } from '@/components/vendors/advertisements';
 import {
   AdvertisementDetailsForm,
-  AdvertisementFormValues,
   AdvertisementImageGallery,
   AdvertisementLoadingState,
   AdvertisementNotFound
 } from '@/components/vendors/advertisements';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import type { AdvertisementWithImages } from '@/types/advertisements';
 
 export default function EditAdvertisementPage() {
   const router = useRouter();
@@ -32,7 +34,6 @@ export default function EditAdvertisementPage() {
     getAdvertisementById,
     fetchAdvertisementById,
     updateAdvertisement,
-    deleteAdvertisement,
     deleteAdvertisementImage
   } = useAdvertisements();
 
@@ -41,15 +42,6 @@ export default function EditAdvertisementPage() {
   const [isSaving, setIsSaving] = useState(false);
 
   const vendor = getVendorById(profile?.data?.user.vendorData?.vendorId || 0);
-
-  // Track combined loading state for better UX
-  const isMutating =
-    updateAdvertisement.isPending ||
-    deleteAdvertisement.isPending ||
-    deleteAdvertisementImage.isPending;
-
-  // Show loading state when initial data is loading or any mutation is in progress
-  const isPageLoading = isLoading || isQueryLoading || isMutating;
 
   // Show appropriate loading state based on mutation status
   const statusLabelText = updateAdvertisement.isPending
@@ -84,11 +76,7 @@ export default function EditAdvertisementPage() {
         } else {
           // If not in cache, fetch it (which will also update the cache)
           // For admin users, we can pass any vendorId since they have access to all ads
-          const vendorIdToUse = isAdmin ? 0 : vendor?.id || 0;
-          const ad = await fetchAdvertisementById(
-            vendorIdToUse,
-            advertisementId
-          );
+          const ad = await fetchAdvertisementById(advertisementId);
 
           if (!ad) {
             router.push('/vendors/dashboard/settings/advertisements');
@@ -163,12 +151,18 @@ export default function EditAdvertisementPage() {
         setIsSaving(true);
 
         // Convert the changedFields to the expected format for updateAdvertisement
-        const updateData = {
-          ...changedFields,
-          // These conversions ensure the backend receives the correct data types
-          start_date: changedFields.start_date,
-          end_date: changedFields.end_date
+        const updateData: Record<string, any> = {
+          ...changedFields
         };
+
+        // Only include dates if they're defined
+        if (changedFields.start_date !== undefined) {
+          updateData.start_date = changedFields.start_date;
+        }
+
+        if (changedFields.end_date !== undefined) {
+          updateData.end_date = changedFields.end_date;
+        }
 
         await updateAdvertisement.mutateAsync({
           id: advertisement.id,
@@ -264,7 +258,7 @@ export default function EditAdvertisementPage() {
                 <div className="flex items-center gap-1.5">
                   <span
                     className={`flex h-2 w-2 rounded-full ${
-                      advertisement.is_active ? 'bg-green-500' : 'bg-gray-300'
+                      advertisement.is_active ? 'bg-primary' : 'bg-muted'
                     }`}
                   ></span>
                   <span className="text-xs text-muted-foreground">

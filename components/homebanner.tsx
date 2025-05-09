@@ -34,7 +34,7 @@ export default function Homebanner({ prefixText }: Props) {
           1400
         ]}
         wrapper="span"
-        className="text-left font-semibold font-montserrat tracking-tighter mt-0.5"
+        className="mt-0.5 text-left font-montserrat font-semibold tracking-tighter"
         speed={50}
         style={{ fontSize: '1rem', display: 'inline-block' }}
         repeat={Infinity}

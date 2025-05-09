@@ -1,37 +1,33 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import {
-  Calendar as CalendarIcon,
-  Tag,
-  Percent,
-  Clock,
   ArrowLeft,
+  Calendar as CalendarIcon,
+  Clock,
+  Percent,
   Plus,
-  X,
-  Store
+  Store,
+  Tag,
+  X
 } from 'lucide-react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 import DashboardLayout from '../../layout';
+
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { useAuth } from '@/hooks/useAuth';
-import { useVendors } from '@/hooks/queries/useVendors';
-import { useDiscounts } from '@/hooks/queries/useDiscounts';
-import { DiscountType } from '@/types/discounts';
-import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -39,6 +35,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { useDiscounts } from '@/hooks/queries/useDiscounts';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import type {
+  CreateDiscountPayload,
+  DiscountFormValues
+} from '@/types/discounts';
+import { DiscountType } from '@/types/discounts';
 
 // Form schema for discount validation
 const discountFormSchema = z.object({
@@ -57,8 +62,6 @@ const discountFormSchema = z.object({
     message: 'Please select a vendor'
   })
 });
-
-type DiscountFormValues = z.infer<typeof discountFormSchema>;
 
 export default function NewDiscountPage() {
   const router = useRouter();
@@ -108,14 +111,14 @@ export default function NewDiscountPage() {
     }
 
     try {
-      const vendorIdToUse = isAdmin ? values.vendor_id : vendor?.id || 0;
+      const vendorIdToUse = isAdmin ? values.vendor_id! : vendor?.id || 0;
 
       if (vendorIdToUse === 0) {
         toast.error('Invalid vendor ID');
         return;
       }
 
-      await createDiscount.mutateAsync({
+      const payload: CreateDiscountPayload = {
         code: values.code.toUpperCase(),
         discount_amount: values.percentage,
         vendor_id: vendorIdToUse,
@@ -123,7 +126,9 @@ export default function NewDiscountPage() {
         starts_at: values.start_date,
         expires_at: values.end_date || null,
         is_active: values.is_active
-      });
+      };
+
+      await createDiscount.mutateAsync(payload);
 
       toast.success('Discount code created successfully');
       router.push('/vendors/dashboard/settings/discounts');
@@ -157,7 +162,7 @@ export default function NewDiscountPage() {
               <h1 className="text-xl font-medium tracking-tight md:text-2xl">
                 Create Discount Code
                 {isAdmin && (
-                  <span className="ml-2 text-sm text-blue-600">(Admin)</span>
+                  <span className="ml-2 text-sm text-primary">(Admin)</span>
                 )}
               </h1>
               <p className="mt-1 text-xs text-muted-foreground">

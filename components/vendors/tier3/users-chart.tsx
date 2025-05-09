@@ -1,24 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { format, subDays } from 'date-fns';
-import { motion } from 'framer-motion';
+import type { ChartData, ChartOptions } from 'chart.js';
 import {
-  Chart as ChartJS,
   CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
+  Chart as ChartJS,
   Filler,
   Legend,
-  ChartData,
-  ChartOptions,
-  TimeScale
+  LinearScale,
+  LineElement,
+  PointElement,
+  TimeScale,
+  Title,
+  Tooltip
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
+import { format } from 'date-fns';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -189,7 +188,8 @@ export function UsersChart() {
         padding: 12,
         callbacks: {
           title: (tooltipItems) => {
-            return format(new Date(tooltipItems[0].parsed.x), 'MMM dd, yyyy');
+            const date = tooltipItems[0]?.parsed?.x;
+            return date ? format(new Date(date), 'MMM dd, yyyy') : '';
           },
           label: (context) => {
             return `${context.dataset.label}: ${context.parsed.y} users`;

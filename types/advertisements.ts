@@ -5,7 +5,7 @@ export enum AdvertisementPosition {
   FEED = 'FEED'
 }
 
-export type Advertisement = {
+type Advertisement = {
   id: number;
   vendor_id: number;
   position: AdvertisementPosition;
@@ -40,23 +40,6 @@ export type AdvertisementImage = {
   updated_at: Date;
 };
 
-export type AdvertisementWeight = {
-  vendor_slug: string;
-  position: AdvertisementPosition;
-  weight: number;
-};
-
 export type AdvertisementWithImages = Advertisement & {
   images: AdvertisementImage[];
-};
-
-// Type for combined ad image with its parent ad info
-export type AdImageWithParentInfo = {
-  image: AdvertisementImage;
-  parentAd: AdvertisementWithImages;
-};
-
-// Vendor weight configuration for distribution control
-export type VendorWeightConfig = {
-  [vendorSlug: string]: number;
 };

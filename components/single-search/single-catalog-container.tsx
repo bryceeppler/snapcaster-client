@@ -1,18 +1,20 @@
-import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import BackToTopButton from '../ui/back-to-top-btn';
-import SingleCatalogItem from './single-catalog-item';
-import FilterSection from '@/components/search-ui/search-filter-container';
-import { useAuth } from '@/hooks/useAuth';
-import {
-  AdvertisementPosition,
-  AdvertisementWithImages
-} from '@/types/advertisements';
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
+import BackToTopButton from '../ui/back-to-top-btn';
+
+import SingleCatalogItem from './single-catalog-item';
+
+import FilterSection from '@/components/search-ui/search-filter-container';
+import { Card, CardContent } from '@/components/ui/card';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { createWeightedSelectionManager } from '@/utils/weightedSelection';
+import { useAuth } from '@/hooks/useAuth';
+import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 import { appendUtmParameters } from '@/utils/adUrlBuilder';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 // Constant defining how often ads should appear in search results
 const AD_INTERVAL = 10;
@@ -133,9 +135,12 @@ export default function SingleCatalog() {
     // Select a featured ad based on weights
     const featuredAdIndex = feedAdManager.selectRandom();
     if (featuredAdIndex >= 0) {
-      setFeaturedAd(feedAds[featuredAdIndex]);
-      // Set as previous selection to avoid showing the same ad in the results
-      feedAdManager.setPreviousSelection(featuredAdIndex);
+      const featuredAd = feedAds[featuredAdIndex];
+      if (featuredAd) {
+        setFeaturedAd(featuredAd);
+        // Set as previous selection to avoid showing the same ad in the results
+        feedAdManager.setPreviousSelection(featuredAdIndex);
+      }
     } else {
       setFeaturedAd(null);
     }
@@ -150,8 +155,11 @@ export default function SingleCatalog() {
 
       if (adIndex >= 0) {
         // Store the selected ad, then set it as previous to avoid repeats
-        newAdMap[i] = feedAds[adIndex];
-        feedAdManager.setPreviousSelection(adIndex);
+        const ad = feedAds[adIndex];
+        if (ad) {
+          newAdMap[i] = ad;
+          feedAdManager.setPreviousSelection(adIndex);
+        }
       }
     }
 
@@ -171,7 +179,7 @@ export default function SingleCatalog() {
     return positions;
   }, [searchResults, hasActiveSubscription, feedAds]);
 
-  const handleSortByChange = (value: any) => {
+  const handleSortByChange = (value: string) => {
     setSortBy(value);
     setCurrentPage(1);
     fetchCards();
@@ -188,32 +196,34 @@ export default function SingleCatalog() {
           {!loadingFilterResults && filters && (
             <div className="relative  hidden w-full flex-col gap-1 md:flex">
               <div className="child-1 mt-1 w-full md:sticky md:top-[118px]">
-                <div className="rounded-lg bg-popover px-3 py-2 text-left shadow-md md:max-w-sm">
-                  <div className="mx-auto w-full bg-red-200">
-                    <div className="sm:hidden">
-                      <SearchSortBy
-                        sortBy={sortBy || ''}
-                        sortByOptions={sortByOptions}
-                        setSortBy={setSortBy}
-                        fetchCards={fetchCards}
-                        setCurrentPage={setCurrentPage}
-                      />
+                <Card className="bg-popover pt-4 md:max-w-sm">
+                  <CardContent className="text-left">
+                    <div className="mx-auto w-full">
+                      <div className="sm:hidden">
+                        <SearchSortBy
+                          sortBy={sortBy || ''}
+                          sortByOptions={sortByOptions}
+                          setSortBy={setSortBy}
+                          fetchCards={fetchCards}
+                          setCurrentPage={setCurrentPage}
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <FilterSection
-                    filterOptions={filterOptions}
-                    sortBy={sortBy}
-                    setSortBy={setSortBy}
-                    fetchCards={fetchCards}
-                    clearFilters={clearFilters}
-                    setFilter={setFilter}
-                    setCurrentPage={setCurrentPage}
-                    handleSortByChange={handleSortByChange}
-                    applyFilters={applyFilters}
-                    sortByOptions={sortByOptions}
-                  />
-                </div>
+                    <FilterSection
+                      filterOptions={filterOptions || []}
+                      sortBy={sortBy || ''}
+                      setSortBy={setSortBy}
+                      fetchCards={fetchCards}
+                      clearFilters={clearFilters}
+                      setFilter={setFilter}
+                      setCurrentPage={setCurrentPage}
+                      handleSortByChange={handleSortByChange}
+                      applyFilters={applyFilters}
+                      sortByOptions={sortByOptions}
+                    />
+                  </CardContent>
+                </Card>
               </div>
             </div>
           )}

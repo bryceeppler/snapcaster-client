@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import type { AdvertisementWithImages } from '@/types/advertisements';
 import {
-  AdvertisementWithImages,
   AdvertisementImageType,
   AdvertisementPosition
 } from '@/types/advertisements';
-import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 import { appendUtmParameters } from '@/utils/adUrlBuilder';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
 interface TopBannerProps {
   className?: string;
@@ -29,11 +30,16 @@ const TopBanner: React.FC<TopBannerProps> = ({
   const { topBannerAds } = useAdvertisements();
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
   const [selectedImages, setSelectedImages] = useState<{
-    mobile?: string;
-    desktop?: string;
-    alt?: string;
-    url?: string;
-  }>({});
+    mobile: string | undefined;
+    desktop: string | undefined;
+    alt: string | undefined;
+    url: string | undefined;
+  }>({
+    mobile: undefined,
+    desktop: undefined,
+    alt: undefined,
+    url: undefined
+  });
 
   // Create a weighted selection manager for the ads
   const selectionManager = useMemo(() => {
@@ -82,7 +88,8 @@ const TopBanner: React.FC<TopBannerProps> = ({
         // Store this as the previous selection to avoid showing it again next
         selectionManager.setPreviousSelection(initialIndex);
         // Select random images for this ad
-        selectRandomImages(topBannerAds[initialIndex]);
+        const ad = topBannerAds[initialIndex];
+        if (ad) selectRandomImages(ad);
       }
       isFirstRender.current = false;
     } else if (topBannerAds.length > 1) {
@@ -92,7 +99,8 @@ const TopBanner: React.FC<TopBannerProps> = ({
       if (nextIndex >= 0) {
         setCurrentAdIndex(nextIndex);
         // Select random images for this ad
-        selectRandomImages(topBannerAds[nextIndex]);
+        const ad = topBannerAds[nextIndex];
+        if (ad) selectRandomImages(ad);
       }
     }
   }, [topBannerAds, selectionManager]);
@@ -108,7 +116,8 @@ const TopBanner: React.FC<TopBannerProps> = ({
       if (nextIndex >= 0) {
         setCurrentAdIndex(nextIndex);
         // Select random images for this ad
-        selectRandomImages(topBannerAds[nextIndex]);
+        const ad = topBannerAds[nextIndex];
+        if (ad) selectRandomImages(ad);
       }
     }, intervalMs);
 

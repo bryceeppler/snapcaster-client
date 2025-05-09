@@ -1,13 +1,8 @@
+import { CheckCircle, Info, AlertTriangle } from 'lucide-react';
 import React, { useState } from 'react';
-import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
-import { useAdImages } from '@/hooks/queries/useAdImages';
-import { useVendors } from '@/hooks/queries/useVendors';
-import {
-  AdvertisementImage,
-  AdvertisementImageType,
-  AdvertisementWithImages
-} from '@/types/advertisements';
-import { Vendor } from '@/services/vendorService';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -16,28 +11,24 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Calendar,
-  CheckCircle,
-  ExternalLink,
-  FileType,
-  Info,
-  Eye,
-  AlertTriangle
-} from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAdImages } from '@/hooks/queries/useAdImages';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
+import { useVendors } from '@/hooks/queries/useVendors';
 import { AD_RESOLUTIONS } from '@/lib/constants';
-
-type Props = {};
+import { cn } from '@/lib/utils';
+import type { Vendor } from '@/services/vendorService';
+import { AdvertisementImageType } from '@/types/advertisements';
+import type {
+  AdvertisementImage,
+  AdvertisementWithImages
+} from '@/types/advertisements';
 
 const formatFileSize = (kilobytes: number) => {
   // if less than 1mb, return the kilobytes
@@ -161,14 +152,12 @@ const AdImageCard = ({
           </Badge>
         </div>
         <CardDescription className="mt-1 flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <span className="font-medium">{ad?.position}</span>
-            {adImage.image_type && (
-              <span className="rounded-sm bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
-                {adImage.image_type}
-              </span>
-            )}
-          </div>
+          <span className="font-medium">{ad?.position}</span>
+          {adImage.image_type && (
+            <span className="rounded-sm bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
+              {adImage.image_type}
+            </span>
+          )}
         </CardDescription>
       </CardHeader>
 
@@ -402,11 +391,11 @@ const AdImageCard = ({
   );
 };
 
-const ApprovalTable = (props: Props) => {
+const ApprovalTable = () => {
   const { adImages } = useAdImages();
   const { ads } = useAdvertisements();
   const { vendors } = useVendors();
-  const [activeTab, setActiveTab] = useState<string>('pending');
+  const [_activeTab, setActiveTab] = useState<string>('pending');
 
   // Filter ad images based on active status
   const pendingAdImages = adImages.filter((adImage) => !adImage.is_active);

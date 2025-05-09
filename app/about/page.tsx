@@ -1,9 +1,9 @@
-import { Metadata } from 'next';
-import PageTitle from '@/components/ui/page-title';
+import type { Metadata } from 'next';
+
+import AboutUs from '@/components/about/about-us';
+import ComingSoon from '@/components/about/coming-soon';
 import SponsorSection from '@/components/about/sponsor-section';
 import VendorsSection from '@/components/about/vendors-section';
-import ComingSoon from '@/components/about/coming-soon';
-import AboutUs from '@/components/about/about-us';
 
 export const metadata: Metadata = {
   title: 'About - Snapcaster',

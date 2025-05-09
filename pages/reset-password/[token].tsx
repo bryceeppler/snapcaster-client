@@ -1,13 +1,9 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import axios from 'axios';
-import { toast } from 'sonner';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useAuth } from '@/hooks/useAuth';
-import { Label } from '@/components/ui/label';
 import {
   Card,
   CardHeader,
@@ -15,10 +11,11 @@ import {
   CardDescription,
   CardContent
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useAuth } from '@/hooks/useAuth';
 
-type Props = {};
-
-const ResetPassword: NextPage<Props> = () => {
+const ResetPassword: NextPage = () => {
   const { resetPassword } = useAuth();
   const router = useRouter();
   const { token } = router.query;

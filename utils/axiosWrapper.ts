@@ -1,4 +1,10 @@
-import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import type {
+  AxiosError,
+  AxiosInstance,
+  InternalAxiosRequestConfig
+} from 'axios';
+import axios from 'axios';
+
 import { authService } from '@/services/authService';
 
 // Token manager to be used by both axios interceptors and useAuth hook
@@ -44,7 +50,9 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     if (error.response?.status === 401 && error.config) {
-      const originalRequest = error.config as CustomAxiosRequestConfig & { _retry?: boolean };
+      const originalRequest = error.config as CustomAxiosRequestConfig & {
+        _retry?: boolean;
+      };
 
       if (!originalRequest._retry) {
         originalRequest._retry = true; // Mark the request to avoid an infinite loop

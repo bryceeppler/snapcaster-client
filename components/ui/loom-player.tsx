@@ -8,11 +8,16 @@ interface LoomPlayerProps {
 
 export const LoomPlayer = ({ videoId, title, className }: LoomPlayerProps) => {
   return (
-    <div className={cn("relative w-full aspect-[1.594] rounded-xl overflow-hidden shadow-2xl", className)}>
+    <div
+      className={cn(
+        'relative aspect-[1.594] w-full overflow-hidden rounded-xl shadow-2xl',
+        className
+      )}
+    >
       <iframe
         src={`https://www.loom.com/embed/${videoId}`}
-        title={title || "Loom video player"}
-        className="absolute top-0 left-0 w-full h-full"
+        title={title || 'Loom video player'}
+        className="absolute left-0 top-0 h-full w-full"
         frameBorder="0"
         allowFullScreen
       />

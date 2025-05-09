@@ -1,41 +1,19 @@
+import { format } from 'date-fns';
 import {
-  Calendar as CalendarIcon,
-  Plus,
-  Trash2,
-  Pencil,
-  MoreHorizontal,
-  Store,
   AlertCircle,
-  Loader2
+  Calendar as CalendarIcon,
+  Loader2,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Trash2
 } from 'lucide-react';
-import { useState, useEffect, useCallback, memo, useMemo } from 'react';
-import { subDays, format } from 'date-fns';
-import { z } from 'zod';
-import DashboardLayout from '../layout';
-import { Button } from '@/components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
-import { useVendors } from '@/hooks/queries/useVendors';
-import { toast } from 'sonner';
-import { Discount } from '@/types/discounts';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Switch } from '@/components/ui/switch';
-import { useAuth } from '@/hooks/useAuth';
-import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { useRouter } from 'next/router';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { toast } from 'sonner';
+
+import DashboardLayout from '../layout';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,23 +25,30 @@ import {
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Switch } from '@/components/ui/switch';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
-
-// Form schema for discount validation
-const discountFormSchema = z.object({
-  code: z.string().min(3, {
-    message: 'Discount code must be at least 3 characters.'
-  }),
-  percentage: z.coerce
-    .number()
-    .min(1, { message: 'Percentage must be at least 1%.' })
-    .max(100, { message: 'Percentage cannot exceed 100%.' }),
-  start_date: z.date(),
-  end_date: z.date().nullable().optional()
-});
-
-type DiscountFormValues = z.infer<typeof discountFormSchema>;
+import { useDiscounts } from '@/hooks/queries/useDiscounts';
+import { useVendors } from '@/hooks/queries/useVendors';
+import { useAuth } from '@/hooks/useAuth';
+import type { Discount } from '@/types/discounts';
 
 // Reusable loading skeleton component
 const TableLoadingSkeleton = ({ isAdmin = false }: { isAdmin?: boolean }) => (
@@ -364,7 +349,6 @@ export default function DiscountsPage() {
 
   const {
     getDiscountsByVendorId,
-    createDiscount,
     updateDiscount,
     deleteDiscount,
     isLoading,
@@ -395,7 +379,7 @@ export default function DiscountsPage() {
     try {
       await deleteDiscount.mutateAsync(discountToDelete);
       toast.success('Discount deleted successfully');
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete discount');
     } finally {
       setDeleteDialogOpen(false);
@@ -430,7 +414,7 @@ export default function DiscountsPage() {
         toast.success(
           `Discount code ${newStatus ? 'activated' : 'deactivated'}`
         );
-      } catch (error) {
+      } catch {
         toast.error('Failed to update discount status');
       }
     },
@@ -460,7 +444,7 @@ export default function DiscountsPage() {
   return (
     <DashboardLayout>
       <main className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-6 p-6 pt-8 md:p-8">
+        <div className="flex-1 space-y-6">
           {/* Header section */}
           <header className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
             <div>

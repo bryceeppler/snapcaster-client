@@ -1,8 +1,6 @@
 import { redirect } from 'next/navigation';
 
-type Props = {};
-
-function ProfilePage({}: Props) {
+function ProfilePage() {
   return redirect('/account');
 }
 

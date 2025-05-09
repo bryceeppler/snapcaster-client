@@ -1,11 +1,10 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-type Props = {};
-
-const About: NextPage<Props> = () => {
+import Link from 'next/link';
+const Privacy: NextPage = () => {
   return (
     <>
-      <AboutHead />
+      <PrivacyHead />
       <div className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
         <section className="w-full py-6 md:py-12">
           <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
@@ -22,13 +21,13 @@ const About: NextPage<Props> = () => {
               using the Service, You agree to the collection and use of
               information in accordance with this Privacy Policy. This Privacy
               Policy has been created with the help of the{' '}
-              <a
-                className="text-primary hover:text-primary-muted"
+              <Link
+                className="hover:text-primary-muted text-primary"
                 href="https://www.freeprivacypolicy.com/free-privacy-policy-generator/"
                 target="_blank"
               >
                 Free Privacy Policy Generator
-              </a>
+              </Link>
               .
             </p>
             <h2 className="text-lg font-bold">
@@ -125,14 +124,14 @@ const About: NextPage<Props> = () => {
               <li>
                 <p>
                   <strong>Website</strong> refers to Snapcaster, accessible from{' '}
-                  <a
-                    className="text-primary hover:text-primary-muted"
-                    href="https://www.snapcaster.ca"
+                  <Link
+                    className="hover:text-primary-muted text-primary"
+                    href="/"
                     rel="external nofollow noopener"
                     target="_blank"
                   >
                     https://www.snapcaster.ca/
-                  </a>
+                  </Link>
                 </p>
               </li>
               <li>
@@ -253,13 +252,13 @@ const About: NextPage<Props> = () => {
               mobile device when You go offline, while Session Cookies are
               deleted as soon as You close Your web browser. Learn more about
               cookies on the{' '}
-              <a
-                className="text-primary hover:text-primary-muted"
+              <Link
+                className="hover:text-primary-muted text-primary"
                 href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking"
                 target="_blank"
               >
                 Free Privacy Policy website
-              </a>{' '}
+              </Link>{' '}
               article.
             </p>
             <p>
@@ -596,9 +595,9 @@ const About: NextPage<Props> = () => {
   );
 };
 
-export default About;
+export default Privacy;
 
-const AboutHead = () => {
+const PrivacyHead = () => {
   return (
     <Head>
       <title>Privacy</title>

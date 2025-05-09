@@ -7,11 +7,15 @@
     "build": "next build",
     "start": "next start",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md,html}\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md,html}\"",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:unused-exports": "eslint . --ext .ts,.tsx --rule '@typescript-eslint/no-unused-vars:warn'",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix"
   },
   "dependencies": {
     "@google-analytics/data": "^4.12.0",
     "@hookform/resolvers": "^3.10.0",
+    "@next/bundle-analyzer": "^15.3.2",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.1.5",
     "@radix-ui/react-avatar": "^1.1.1",
@@ -82,11 +86,15 @@
     "@types/node": "^18.14.4",
     "@types/react": "^18.0.28",
     "autoprefixer": "^10.4.18",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "postcss": "^8.4.35",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^4.9.5"
+    "ts-prune": "^0.10.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.0"
   },
   "prettier": {
     "arrowParens": "always",
@@ -96,5 +104,6 @@
     "plugins": [
       "prettier-plugin-tailwindcss"
     ]
-  }
+  },
+  "type": "module"
 }

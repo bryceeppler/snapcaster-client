@@ -1,13 +1,14 @@
-import BackToTopButton from '../ui/back-to-top-btn';
-import SealedCatalogItem from './sealed-catalog-item';
-import { useAuth } from '@/hooks/useAuth';
-import React, { useEffect, useRef } from 'react';
-import { sealedSortByLabel } from '@/types/query';
-import { Tcg, SealedProduct } from '@/types';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { SealedSortOptions, FilterOption } from '@/types/query';
-import { Button } from '@/components/ui/button';
+import type { QueryObserverResult } from '@tanstack/react-query';
 import { SlidersHorizontal } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+
+import BackToTopButton from '../ui/back-to-top-btn';
+
+import FilterSheet from './filter-sheet';
+import SealedCatalogItem from './sealed-catalog-item';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -15,45 +16,32 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
-import FilterSheet from './filter-sheet';
+import { useAuth } from '@/hooks/useAuth';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import type { SealedProduct } from '@/types';
+import { sealedSortByLabel } from '@/types/query';
+import type { SealedSortOptions } from '@/types/query';
 
 interface SealedCatalogContainerProps {
-  productCategory: Tcg;
-  searchTerm: string;
-  setProductCategory: (productCategory: Tcg) => void;
-  setSearchTerm: (searchTerm: string) => void;
-  handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSearch: () => void;
   clearFilters: () => void;
   searchResults?: SealedProduct[];
   promotedResults?: SealedProduct[];
-  numResults?: number;
-  filterOptions?: FilterOption[];
   isLoading: boolean;
   hasNextPage: boolean;
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
-  refetch: () => Promise<any>;
+  refetch: () => Promise<QueryObserverResult<unknown, Error>>;
 }
 
 export default function SealedCatalogContainer({
   searchResults,
   promotedResults,
-  numResults,
   isLoading,
-  productCategory,
-  searchTerm,
-  setProductCategory,
-  setSearchTerm,
-  handleInputChange,
-  handleSearch,
   clearFilters,
   hasNextPage,
   fetchNextPage,
   isFetchingNextPage,
-  refetch,
-  filterOptions
+  refetch
 }: SealedCatalogContainerProps) {
   const {
     sortBy,
@@ -67,8 +55,9 @@ export default function SealedCatalogContainer({
   // Intersection Observer for infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+      (entries: IntersectionObserverEntry[]) => {
+        const firstEntry = entries[0];
+        if (firstEntry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },
@@ -121,9 +110,10 @@ export default function SealedCatalogContainer({
               </SheetTrigger>
               <SheetContent side="right" className="w-full max-w-sm">
                 <FilterSheet
-                  sortBy={sortBy as string}
-                  setSortBy={(sortBy: string | null) => {
-                    if (sortBy) handleSortChange(sortBy as SealedSortOptions);
+                  sortBy={sortBy}
+                  setSortBy={(sortByValue: string | null) => {
+                    if (sortByValue)
+                      handleSortChange(sortByValue as SealedSortOptions);
                   }}
                   sortByLabel={sealedSortByLabel}
                   clearFilters={clearFilters}

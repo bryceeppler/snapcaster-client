@@ -1,12 +1,14 @@
-import React from 'react';
-import Navbar from '@/components/ui/navbar';
-import Footer from '@/components/ui/footer';
 import { usePathname } from 'next/navigation';
-type Props = {};
+import React from 'react';
 
-export default function Layout({ children }: React.PropsWithChildren<Props>) {
+import Navbar from '@/components/navigation/navbar';
+import Footer from '@/components/ui/footer';
+
+export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const usesFooter = pathname ? !pathname.includes('buylists') : true;
+  const usesFooter = pathname
+    ? !pathname.includes('buylists') && !pathname.includes('vendors/dashboard')
+    : true;
 
   return (
     <div className="flex flex-col bg-background">

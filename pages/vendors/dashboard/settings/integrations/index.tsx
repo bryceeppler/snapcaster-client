@@ -1,10 +1,9 @@
-import { Plus, Key } from 'lucide-react';
-import DashboardLayout from '../../layout';
-import { Button } from '@/components/ui/button';
-import { useVendors } from '@/hooks/queries/useVendors';
-import { useAuth } from '@/hooks/useAuth';
+import { Key } from 'lucide-react';
 import { useRouter } from 'next/router';
-import { Badge } from '@/components/ui/badge';
+
+import DashboardLayout from '../../layout';
+
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardHeader,
@@ -16,17 +15,11 @@ import {
 import { PageHeader } from '@/components/vendors/page-header';
 export default function IntegrationsPage() {
   const router = useRouter();
-  const { getVendorById, vendors } = useVendors();
-  const { profile } = useAuth();
-
-  const vendorId = profile?.data?.user.vendorData?.vendorId || 0;
-  const isAdmin = profile?.data?.user.role === 'ADMIN';
-  const vendor = getVendorById(vendorId);
 
   return (
     <DashboardLayout>
       <main className="flex min-h-screen flex-col">
-        <div className="flex-1 space-y-6 p-6 pt-8 md:p-8">
+        <div className="flex-1 space-y-6">
           {/* Header section */}
           <PageHeader title="Integrations" />
 

@@ -1,31 +1,26 @@
-import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Label } from '@/components/ui/label';
+import { useMemo } from 'react';
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { useMemo } from 'react';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import { useVendors } from '@/hooks/queries/useVendors';
-
-interface FilterSheetProps {
-  sortBy: string | null;
-  setSortBy: (sortBy: string | null) => void;
-  sortByLabel: Record<string, string>;
-  clearFilters: () => void;
-}
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import type { SealedFilterSheetProps } from '@/types/filters';
 
 export default function FilterSheet({
   sortBy,
   setSortBy,
   sortByLabel,
   clearFilters
-}: FilterSheetProps) {
+}: SealedFilterSheetProps) {
   const { selectedFilters, toggleFilter, filterOptions } =
     useSealedSearchStore();
   const { getVendorNameBySlug } = useVendors();

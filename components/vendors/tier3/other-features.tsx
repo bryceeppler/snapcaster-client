@@ -1,6 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { LucideIcon } from 'lucide-react';
+import { MessageCircle, Mail, Ticket } from 'lucide-react';
+
 import SectionTitle from './section-title';
-import { LucideIcon, MessageCircle, Mail, Ticket } from 'lucide-react';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const OtherFeatures = ({ variant }: { variant: 'dark' | 'light' }) => {
   const features = [
@@ -19,7 +22,7 @@ const OtherFeatures = ({ variant }: { variant: 'dark' | 'light' }) => {
     {
       title: 'Premium Customer Rewards ($89 Value)',
       description:
-        "Transform your customer relationships with 30 FREE Snapcaster Pro discount codes monthly ($2.99 value each). Perfect for driving loyalty, powering giveaways, or rewarding your best customers. Our partners use these to support their local events and social media contests to boost engagement.",
+        'Transform your customer relationships with 30 FREE Snapcaster Pro discount codes monthly ($2.99 value each). Perfect for driving loyalty, powering giveaways, or rewarding your best customers. Our partners use these to support their local events and social media contests to boost engagement.',
       icon: Ticket
     }
   ];
@@ -38,7 +41,7 @@ const OtherFeatures = ({ variant }: { variant: 'dark' | 'light' }) => {
           paragraph="Join an elite group of TCG vendors who are leveraging our premium tools and community to scale their business. Our partners see an average of 20% increase in referrals within their first 3 months."
           variant={variant}
         />
-        <div className="grid md:grid-cols-3 gap-4 mt-16">
+        <div className="mt-16 grid gap-4 md:grid-cols-3">
           {features.map((feature) => (
             <Feature
               key={feature.title}

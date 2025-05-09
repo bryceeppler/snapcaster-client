@@ -2,8 +2,8 @@
 
 import React, { forwardRef, useRef } from 'react';
 
-import { cn } from '@/lib/utils';
 import { AnimatedBeam } from '@/components/ui/animated-beam';
+import { cn } from '@/lib/utils';
 
 const Circle = forwardRef<
   HTMLDivElement,

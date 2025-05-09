@@ -1,17 +1,11 @@
+import { AlertCircle } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { useUserCarts } from '@/hooks/useUserCarts';
-import useBuyListStore from '@/stores/useBuylistStore';
+
 import { ListItem } from './saved-lists/saved-list-item';
-import { AlertCircle, ListIcon, PlusIcon } from 'lucide-react';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetTitle
-} from '@/components/ui/sheet';
+
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -21,6 +15,16 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle
+} from '@/components/ui/sheet';
+import { useAuth } from '@/hooks/useAuth';
+import { useUserCarts } from '@/hooks/useUserCarts';
+import useBuyListStore from '@/stores/useBuylistStore';
 
 const ListSelector = () => {
   const { carts } = useUserCarts();
@@ -43,19 +47,20 @@ const ListSelector = () => {
   };
 
   const listContent = (
-    <div className="flex h-full flex-col">
-      <div className="sticky top-0 border-b bg-card p-4">
+    <Card className="flex h-full flex-col rounded-none border">
+      {/* Header */}
+      <CardHeader className="sticky top-0 border-b">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">Saved Lists</h3>
         </div>
         <p className="text-sm text-muted-foreground">
           Select a list to view or create a new one
         </p>
-      </div>
+      </CardHeader>
 
-      <div className="flex-1 overflow-hidden">
+      <CardContent className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="flex flex-col space-y-2 p-4">
+          <div className="flex flex-col space-y-2 pt-4">
             {isAuthenticated ? (
               carts && carts.length > 0 ? (
                 carts.map((cart, index) => (
@@ -82,17 +87,17 @@ const ListSelector = () => {
                   <p className="text-sm text-muted-foreground">
                     Please login to view your saved lists
                   </p>
-                  <a href="/signin?redirect=%2Fbuylists">
+                  <Link href="/signin?redirect=%2Fbuylists">
                     <Button variant="outline" className="mt-2 w-full">
                       Continue to Log In
                     </Button>
-                  </a>
+                  </Link>
                 </div>
               </div>
             )}
           </div>
         </ScrollArea>
-      </div>
+      </CardContent>
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
         <div className="sticky bottom-0 border-t bg-card p-4 shadow-md">
           <DialogTrigger asChild onClick={() => setCreateDialogOpen(true)}>
@@ -124,7 +129,7 @@ const ListSelector = () => {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </Card>
   );
 
   return (
@@ -144,9 +149,7 @@ const ListSelector = () => {
 
       {/* Desktop version (always visible) */}
       <div className="hidden h-full lg:block">
-        <div className="h-full overflow-hidden bg-card shadow">
-          {listContent}
-        </div>
+        <div className="h-full overflow-hidden">{listContent}</div>
       </div>
     </>
   );

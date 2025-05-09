@@ -1,4 +1,12 @@
-import React, { ReactNode, RefObject } from 'react';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { ChevronDown, HelpCircle, Loader2 } from 'lucide-react';
+
+import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -7,40 +15,13 @@ import {
   SelectTriggerNoIcon as SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { ChevronDown, Loader2, HelpCircle } from 'lucide-react';
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Tcg } from '@/types';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
-
-export type DeviceType = 'mobile' | 'desktop';
-
-interface BaseSearchBarProps {
-  deviceType: DeviceType;
-  tcg: Tcg;
-  searchTerm: string;
-  placeholder?: string;
-  isLoading?: boolean;
-  inputRef?: RefObject<HTMLInputElement>;
-  onTcgChange: (tcg: Tcg) => void;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onInputKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
-  onSearchClick: () => void;
-  renderAutoComplete?: () => ReactNode;
-  showSearchHelp?: boolean;
-  searchHelpContent?: ReactNode;
-}
+import type { BaseSearchBarProps } from '@/types/navbar';
 
 /**
  * A reusable base search bar component that handles the common UI structure and styling
  * for all search bar implementations in the application.
  */
 export default function BaseSearchBar({
-  deviceType,
   tcg,
   searchTerm,
   placeholder = 'Search for a card',
@@ -51,7 +32,7 @@ export default function BaseSearchBar({
   onInputKeyDown,
   onSearchClick,
   renderAutoComplete,
-  showSearchHelp = true,
+  showSearchHelp = false,
   searchHelpContent
 }: BaseSearchBarProps) {
   // Default search help content if not provided
@@ -94,7 +75,7 @@ export default function BaseSearchBar({
 
   return (
     <div
-      className={`border-1 relative w-full rounded-full border bg-background px-1 focus-within:border-primary sm:px-2`}
+      className={`border-1 relative w-full rounded-full border bg-background px-1 shadow-sm focus-within:border-primary sm:px-2`}
     >
       <div className={`flex h-8 w-full items-center sm:h-10`}>
         <Select value={tcg} onValueChange={onTcgChange}>

@@ -1,22 +1,23 @@
-import { useState } from 'react';
-import { useUserCarts } from '@/hooks/useUserCarts';
+import { AlertCircle } from 'lucide-react';
+
+import { CartItem } from './modify-list-items/list-item';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle
 } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { AlertCircle } from 'lucide-react';
-import { CartItem } from './modify-list-items/list-item';
+import { useUserCarts } from '@/hooks/useUserCarts';
 import useBuyListStore from '@/stores/useBuylistStore';
 const Cart = () => {
   const { getCurrentCart } = useUserCarts();
   const currentCart = getCurrentCart();
   const {
-    buylistUIState,
     setBuylistUIState,
     openCart: sheetOpen,
     setOpenCart: setSheetOpen
@@ -32,9 +33,9 @@ const Cart = () => {
     currentCart?.cart?.items && currentCart.cart.items.length > 0;
 
   const cartContent = (
-    <div className="flex h-full flex-col">
+    <Card className="flex h-full flex-col rounded-none border">
       {/* Header - Fixed at top */}
-      <div className="sticky top-0 border-b bg-card p-4">
+      <CardHeader className="sticky top-0 border-b">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">Your Cart</h3>
         </div>
@@ -48,12 +49,12 @@ const Cart = () => {
             </span>
           )}
         </div>
-      </div>
+      </CardHeader>
 
       {/* Content - Scrollable middle section */}
-      <div className="flex-1 overflow-hidden">
+      <CardContent className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="flex flex-col p-4">
+          <div className="flex flex-col pt-4">
             {hasItems ? (
               <>
                 {currentCart.cart.items.map((item, index) => (
@@ -76,7 +77,7 @@ const Cart = () => {
             )}
           </div>
         </ScrollArea>
-      </div>
+      </CardContent>
 
       {/* Footer with View Offers button - Fixed at bottom */}
       {hasItems && (
@@ -91,7 +92,7 @@ const Cart = () => {
           </Button>
         </div>
       )}
-    </div>
+    </Card>
   );
 
   return (
@@ -112,9 +113,7 @@ const Cart = () => {
 
       {/* Desktop version (always visible) */}
       <div className="hidden h-full lg:block">
-        <div className="flex h-full flex-col overflow-hidden rounded-lg bg-card shadow">
-          {cartContent}
-        </div>
+        <div className="h-full overflow-hidden">{cartContent}</div>
       </div>
     </>
   );

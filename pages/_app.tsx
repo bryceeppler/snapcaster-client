@@ -1,30 +1,25 @@
 // _app.tsx
-import {
-  useEffect,
-  useState,
-  createContext,
-  useContext,
-  ReactNode
-} from 'react';
-import React from 'react';
-
-import { AppProps } from 'next/app';
-import MainLayout from '@/components/main-page-layout';
-import Layout from '@/components/ui/root-layout';
-import { initGA, logPageView } from '../utils/analytics';
-import { Toaster } from '@/components/ui/sonner';
-import { ThemeProvider } from '@/components/theme-provider';
-import { cn } from '@/lib/utils';
-import 'styles/main.css';
-import 'styles/chrome-bug.css';
-import { useWindowSize } from 'usehooks-ts';
-import { Inter } from 'next/font/google';
-import { useAuth } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { AppProps } from 'next/app';
+import { Inter } from 'next/font/google';
+import type { ReactNode } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
+import React from 'react';
+import 'styles/chrome-bug.css';
+import 'styles/main.css';
+import { useWindowSize } from 'usehooks-ts';
+
+import { initGA, logPageView } from '../utils/analytics';
+
+import MainLayout from '@/components/main-page-layout';
+import { ThemeProvider } from '@/components/theme-provider';
+import Layout from '@/components/ui/root-layout';
+import { Toaster } from '@/components/ui/sonner';
+import { useAuth } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
+
 
 const inter = Inter({ subsets: ['latin'] });
-
-interface MyAppProps extends AppProps {}
 
 type AdContextType = {
   showAds: boolean;
@@ -61,7 +56,7 @@ const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
   );
 };
 
-function MyApp({ Component, pageProps, router }: MyAppProps) {
+function MyApp({ Component, pageProps, router }: AppProps) {
   const { width = 0 } = useWindowSize();
   const isVendorDashboardPage =
     router.pathname.startsWith('/vendors/dashboard');
@@ -104,7 +99,7 @@ function MyApp({ Component, pageProps, router }: MyAppProps) {
           attribute="class"
           defaultTheme={!isLandingPage ? 'light' : 'system'}
           enableSystem={!isLandingPage}
-          forcedTheme={isLandingPage ? 'light' : undefined}
+          {...(isLandingPage ? { forcedTheme: 'light' } : {})}
           disableTransitionOnChange
         >
           <AdProvider>
