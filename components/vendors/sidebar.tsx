@@ -1,14 +1,14 @@
 'use client';
 
 import {
-  LineChart,
-  Users,
-  Tags,
-  Store,
-  ShoppingCart,
   BadgePercent,
   CheckSquare,
-  MessageSquare
+  LineChart,
+  MessageSquare,
+  ShoppingCart,
+  Store,
+  Tags,
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -83,7 +83,7 @@ export function VendorSidebar() {
 
   // For desktop view
   return (
-    <div className="fixed top-[calc(theme(spacing.16)+theme(spacing.9))] hidden h-[calc(100vh-theme(spacing.16)-theme(spacing.9))] w-[280px] flex-col overflow-hidden border-r bg-card lg:flex">
+    <div className="fixed top-[calc(theme(spacing.16)+theme(spacing.9))] hidden h-[calc(100vh-theme(spacing.16)-theme(spacing.9))] w-[280px] flex-col overflow-hidden border-r bg-sidebar lg:flex">
       <div className="flex items-center gap-2 border-b px-6 py-4 font-semibold">
         <span>Analytics Dashboard</span>
       </div>
@@ -95,8 +95,8 @@ export function VendorSidebar() {
             className={cn(
               'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
               item.isActive
-                ? 'bg-accent text-accent-foreground'
-                : 'hover:bg-accent hover:text-accent-foreground'
+                ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
             )}
           >
             <item.icon className="h-4 w-4" />
