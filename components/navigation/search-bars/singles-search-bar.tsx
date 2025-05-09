@@ -1,7 +1,7 @@
 'use client';
 
 import type { KeyboardEvent } from 'react';
-import { useState, useRef, useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 
 import type { DeviceType } from '../../../types/navbar';

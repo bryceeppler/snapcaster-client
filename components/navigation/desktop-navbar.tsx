@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react';
 
 import { DesktopNavLink } from './nav-link';
 import { SearchBar } from './search-provider';
@@ -23,9 +22,9 @@ export default function DesktopNavbar(): JSX.Element {
   const canViewAnalytics = isAdmin || isVendor;
 
   return (
-    <header className="sticky top-0 z-40 hidden lg:block">
+    <header className="sticky top-0 z-40 hidden bg-accent lg:block">
       {/* Top section with logo, search and account */}
-      <div className="relative border-b border-border/40 bg-card/85 backdrop-blur-sm">
+      <div className="relative border-b border-border/40">
         <div className="flex h-16 items-center justify-between px-6">
           {/* 1. Left Section: Snapcaster Logo */}
           <div className="flex items-center">
@@ -74,7 +73,7 @@ export default function DesktopNavbar(): JSX.Element {
       </div>
 
       {/* 4. Nav Links section */}
-      <div className="relative border-b border-border/40 bg-card/85 backdrop-blur-sm">
+      <div className="relative border-b border-border/40">
         <div className="px-6">
           <DesktopMenuLinks
             currentPath={currentPath}
