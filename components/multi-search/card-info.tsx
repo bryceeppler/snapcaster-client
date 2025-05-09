@@ -1,7 +1,6 @@
-import React from 'react';
-
 import { CardOptions } from './card-options';
 
+import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import type { Product } from '@/types';
 
@@ -13,16 +12,18 @@ export const CardInfo = ({
   results: Product[];
 }) => {
   return (
-    <div className="flex w-full flex-col rounded-lg border border-border bg-popover">
-      <div className="flex flex-col p-4 text-left">
-        <div className="text-lg font-bold">{resultInfo.name}</div>
-        <div className="text-sm text-muted-foreground">
-          {results?.length || 0} results
+    <Card className="w-full">
+      <CardContent className="pt-4 text-left">
+        <div className="mb-2 flex flex-col">
+          <div className="text-lg font-bold">{resultInfo.name}</div>
+          <div className="text-sm text-muted-foreground">
+            {results?.length || 0} results
+          </div>
         </div>
-      </div>
-      <Separator />
+        <Separator />
 
-      <CardOptions results={results} />
-    </div>
+        <CardOptions results={results} />
+      </CardContent>
+    </Card>
   );
 };

@@ -1,4 +1,4 @@
-import { ExternalLink, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2, ExternalLink } from 'lucide-react';
 
 import { ViewAllOffersHeader } from '../header/header';
 
@@ -52,8 +52,8 @@ export const BuylistStoreOffers = () => {
 
                 const isEligibleForFreeShipping =
                   storeOfferData.storeName === 'exorgames' &&
-                  (storeOfferData.cashSubtotal > 250 ||
-                    storeOfferData.creditSubtotal > 250);
+                  (parseFloat(storeOfferData.cashSubtotal) > 250 ||
+                    parseFloat(storeOfferData.creditSubtotal) > 250);
 
                 return (
                   <Card
@@ -114,14 +114,20 @@ export const BuylistStoreOffers = () => {
                           <div className="flex items-center justify-between">
                             <p className="text-sm">Credit</p>
                             <p className={'text-sm font-medium'}>
-                              ${storeOfferData.creditSubtotal.toFixed(2)}
+                              $
+                              {parseFloat(
+                                storeOfferData.creditSubtotal
+                              ).toFixed(2)}
                             </p>
                           </div>
 
                           <div className="flex items-center justify-between">
                             <p className="text-sm">Cash</p>
                             <p className={'text-sm font-medium'}>
-                              ${storeOfferData.cashSubtotal.toFixed(2)}
+                              $
+                              {parseFloat(storeOfferData.cashSubtotal).toFixed(
+                                2
+                              )}
                             </p>
                           </div>
 

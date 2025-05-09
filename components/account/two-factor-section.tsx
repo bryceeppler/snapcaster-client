@@ -1,14 +1,14 @@
 'use client';
 
 import {
-  Shield,
-  Copy,
+  AlertCircle,
   CheckCircle,
+  Copy,
   Mail,
-  Smartphone,
-  AlertCircle
+  Shield,
+  Smartphone
 } from 'lucide-react';
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -321,7 +321,7 @@ export function TwoFactorSection() {
         {isApp2FAEnabled ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-primary" />
               <span className="text-sm font-medium">Enabled</span>
             </div>
             <Button
@@ -378,7 +378,7 @@ export function TwoFactorSection() {
         {isEmail2FAEnabled ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-primary" />
               <span className="text-sm font-medium">Enabled</span>
             </div>
             <Button

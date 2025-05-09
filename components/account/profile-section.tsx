@@ -1,7 +1,6 @@
 'use client';
 
 import { CheckCircle, XCircle } from 'lucide-react';
-import type React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -76,9 +75,9 @@ export function ProfileSection() {
             <div className="flex items-center gap-4 rounded-lg border p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                 {isVerified ? (
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <CheckCircle className="h-5 w-5 text-primary" />
                 ) : (
-                  <XCircle className="h-5 w-5 text-red-500" />
+                  <XCircle className="h-5 w-5 text-destructive" />
                 )}
               </div>
               <div className="flex-1">

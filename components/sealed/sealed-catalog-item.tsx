@@ -1,15 +1,14 @@
-import Link from 'next/link';
 import { useTheme } from 'next-themes';
-import React from 'react';
+import Link from 'next/link';
 
 import { Button } from '../ui/button';
 
 import ProductImage from './product-image';
 
+import { Card, CardContent } from '@/components/ui/card';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { SEALED_DISCOUNT_MAP } from '@/lib/constants';
-import { VendorAssetTheme } from '@/services/vendorService';
-import { VendorAssetType } from '@/services/vendorService';
+import { VendorAssetTheme, VendorAssetType } from '@/services/vendorService';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import type { SealedProduct } from '@/types';
 import { handleBuyClick } from '@/utils/analytics';
@@ -55,12 +54,10 @@ const SealedCatalogItem = ({ product }: Props) => {
   };
 
   return (
-    <div className="flex flex-col rounded-lg bg-popover font-montserrat">
-      <div
-        className={`group flex h-full flex-col rounded-lg border border-accent bg-popover p-4`}
-      >
+    <Card className="flex flex-col font-montserrat">
+      <CardContent className={`group flex h-full flex-col pt-4`}>
         <div
-          className="relative cursor-pointer bg-white transition-opacity hover:opacity-90"
+          className="relative cursor-pointer transition-opacity hover:opacity-90"
           onClick={handleClick}
         >
           {product.promoted && (
@@ -172,8 +169,8 @@ const SealedCatalogItem = ({ product }: Props) => {
             Buy
           </Button>
         </Link>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

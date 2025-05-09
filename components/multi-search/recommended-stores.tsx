@@ -2,7 +2,7 @@ import { AlertTriangle, ExternalLink } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -137,11 +137,11 @@ export const RecommendedStores = () => {
 
   return (
     <Dialog>
-      <Card className="recommended-stores col-span-12 flex flex-col gap-2 bg-popover pb-4 text-xs">
+      <Card className="col-span-12 flex flex-col text-xs">
         <CardHeader className="text-left">
           <CardTitle className="text-lg">Recommended Stores</CardTitle>
         </CardHeader>
-        <div className="grid grid-cols-2 gap-2 overflow-clip rounded-lg px-4">
+        <CardContent className="grid grid-cols-2 gap-2 overflow-clip">
           {getTopWebsites(results).map((vendorInfo, i) => {
             const matchingVendor = vendors.find(
               (vendor) => vendorInfo.vendor === vendor.slug
@@ -315,7 +315,7 @@ export const RecommendedStores = () => {
               </div>
             );
           })}
-        </div>
+        </CardContent>
       </Card>
     </Dialog>
   );

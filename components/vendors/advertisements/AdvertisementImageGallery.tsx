@@ -1,14 +1,14 @@
 import { format } from 'date-fns';
 import {
-  Image as ImageIcon,
-  Plus,
-  Trash2,
   AlertCircle,
-  Link,
-  Hash,
-  Copy,
   Check,
-  ExternalLink
+  Copy,
+  ExternalLink,
+  Hash,
+  Image as ImageIcon,
+  Link,
+  Plus,
+  Trash2
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -37,8 +37,8 @@ import {
 } from '@/components/ui/tooltip';
 import type { AdvertisementWithImages } from '@/types/advertisements';
 import {
-  AdvertisementPosition,
-  AdvertisementImageType
+  AdvertisementImageType,
+  AdvertisementPosition
 } from '@/types/advertisements';
 
 interface AdvertisementImageGalleryProps {
@@ -207,8 +207,8 @@ export function AdvertisementImageGallery({
 
                       <div className="grid grid-cols-1 gap-2">
                         <div className="flex items-center gap-1.5">
-                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-                            <Hash className="h-3 w-3 text-slate-500" />
+                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10">
+                            <Hash className="h-3 w-3 text-primary" />
                           </div>
                           <span className="text-xs font-medium">Image ID:</span>
                           <span className="text-xs text-muted-foreground">
@@ -217,8 +217,8 @@ export function AdvertisementImageGallery({
                         </div>
 
                         <div className="flex items-center gap-1.5 truncate">
-                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-                            <Link className="h-3 w-3 text-slate-500" />
+                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10">
+                            <Link className="h-3 w-3 text-primary" />
                           </div>
                           <span className="flex-shrink-0 text-xs font-medium">
                             URL:

@@ -1,5 +1,4 @@
-import { Trash2, PlusCircle } from 'lucide-react';
-import React from 'react';
+import { PlusCircle, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
@@ -66,7 +65,7 @@ const CardOption = ({ product }: { product: Product }) => {
 
 export const CardOptions = ({ results }: { results: Product[] }) => {
   return (
-    <ScrollArea className="h-[400px] w-full px-4 pb-4">
+    <ScrollArea className="h-[400px] w-full border">
       <div className="mt-2 flex w-full flex-col gap-4 text-left">
         {results?.map((product, index) => {
           return <CardOption product={product} key={index} />;

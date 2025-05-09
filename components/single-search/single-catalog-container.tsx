@@ -7,6 +7,7 @@ import BackToTopButton from '../ui/back-to-top-btn';
 import SingleCatalogItem from './single-catalog-item';
 
 import FilterSection from '@/components/search-ui/search-filter-container';
+import { Card, CardContent } from '@/components/ui/card';
 import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { useAuth } from '@/hooks/useAuth';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
@@ -195,32 +196,34 @@ export default function SingleCatalog() {
           {!loadingFilterResults && filters && (
             <div className="relative  hidden w-full flex-col gap-1 md:flex">
               <div className="child-1 mt-1 w-full md:sticky md:top-[118px]">
-                <div className="rounded-lg bg-popover px-3 py-2 text-left shadow-md md:max-w-sm">
-                  <div className="mx-auto w-full bg-red-200">
-                    <div className="sm:hidden">
-                      <SearchSortBy
-                        sortBy={sortBy || ''}
-                        sortByOptions={sortByOptions}
-                        setSortBy={setSortBy}
-                        fetchCards={fetchCards}
-                        setCurrentPage={setCurrentPage}
-                      />
+                <Card className="bg-popover pt-4 md:max-w-sm">
+                  <CardContent className="text-left">
+                    <div className="mx-auto w-full">
+                      <div className="sm:hidden">
+                        <SearchSortBy
+                          sortBy={sortBy || ''}
+                          sortByOptions={sortByOptions}
+                          setSortBy={setSortBy}
+                          fetchCards={fetchCards}
+                          setCurrentPage={setCurrentPage}
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <FilterSection
-                    filterOptions={filterOptions || []}
-                    sortBy={sortBy || ''}
-                    setSortBy={setSortBy}
-                    fetchCards={fetchCards}
-                    clearFilters={clearFilters}
-                    setFilter={setFilter}
-                    setCurrentPage={setCurrentPage}
-                    handleSortByChange={handleSortByChange}
-                    applyFilters={applyFilters}
-                    sortByOptions={sortByOptions}
-                  />
-                </div>
+                    <FilterSection
+                      filterOptions={filterOptions || []}
+                      sortBy={sortBy || ''}
+                      setSortBy={setSortBy}
+                      fetchCards={fetchCards}
+                      clearFilters={clearFilters}
+                      setFilter={setFilter}
+                      setCurrentPage={setCurrentPage}
+                      handleSortByChange={handleSortByChange}
+                      applyFilters={applyFilters}
+                      sortByOptions={sortByOptions}
+                    />
+                  </CardContent>
+                </Card>
               </div>
             </div>
           )}

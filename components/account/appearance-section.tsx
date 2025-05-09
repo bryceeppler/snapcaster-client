@@ -1,8 +1,7 @@
 'use client';
 
-import { Palette, Monitor } from 'lucide-react';
+import { Monitor, Palette } from 'lucide-react';
 
-import ColorSelector from '@/components/color-selector';
 import ThemeSelector from '@/components/theme-selector';
 import {
   Card,
@@ -11,7 +10,6 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 
 export function AppearanceSection() {
   return (
@@ -33,18 +31,6 @@ export function AppearanceSection() {
           </div>
           <div className="">
             <ThemeSelector />
-          </div>
-        </div>
-
-        <Separator className="my-6" />
-
-        <div className="space-y-5">
-          <div className="flex items-center gap-2">
-            <Palette className="h-5 w-5 text-muted-foreground" />
-            <h3 className="text-base font-medium">Colors</h3>
-          </div>
-          <div className="">
-            <ColorSelector />
           </div>
         </div>
       </CardContent>

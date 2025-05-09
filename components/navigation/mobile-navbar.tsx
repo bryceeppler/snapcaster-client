@@ -2,35 +2,35 @@
 
 import {
   AlignJustify,
-  ShoppingCart,
-  User,
-  Settings,
+  BarChart4,
+  CreditCard,
+  Home,
+  Info,
+  LayoutDashboard,
+  LogOut,
+  MessageSquare,
+  Package,
   Palette,
   Plug2,
-  CreditCard,
-  LayoutDashboard,
-  Users,
-  Tag,
-  Store,
-  ShoppingBag,
-  BarChart4,
-  Tags,
-  Shield,
-  Home,
   Search,
-  Package,
-  Info,
-  MessageSquare,
-  LogOut
+  Settings,
+  Shield,
+  ShoppingBag,
+  ShoppingCart,
+  Store,
+  Tag,
+  Tags,
+  User,
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { MobileNavLink } from './nav-link';
 import {
-  SearchBar,
   ResultsToolbar,
+  SearchBar,
   getSearchModeForPath
 } from './search-provider';
 
@@ -180,9 +180,9 @@ export default function MobileNavbar(): JSX.Element {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b lg:hidden">
+    <header className="sticky top-0 z-50 border-b bg-background lg:hidden">
       <nav
-        className="flex justify-between bg-background/95 px-3 py-2.5 backdrop-blur-sm"
+        className="relative flex justify-between px-3 py-2.5"
         aria-label="Mobile navigation"
       >
         {/* Hamburger Menu Button */}
@@ -334,7 +334,7 @@ export default function MobileNavbar(): JSX.Element {
 
         {/* Cart Button */}
         {isCartVisible && (
-          <div>
+          <div className="relative right-0 top-0">
             <Button
               ref={cartTriggerRef}
               size="icon"
@@ -348,7 +348,7 @@ export default function MobileNavbar(): JSX.Element {
               {hasCartItems && (
                 <Badge
                   className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center p-0 text-[10px]"
-                  variant="destructive"
+                  variant="default"
                 >
                   {cartItemCount}
                 </Badge>
@@ -361,7 +361,7 @@ export default function MobileNavbar(): JSX.Element {
       {/* Search Bar */}
       {getSearchModeForPath(currentPath) && (
         <section
-          className="bg-background/80 px-2 pb-2"
+          className="px-2 pb-2"
           aria-label={`Search ${getSearchModeForPath(currentPath)}`}
         >
           <SearchBar currentPath={currentPath} deviceType="mobile" />

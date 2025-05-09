@@ -22,7 +22,7 @@ export default function DesktopNavbar(): JSX.Element {
   const canViewAnalytics = isAdmin || isVendor;
 
   return (
-    <header className="sticky top-0 z-40 hidden bg-accent lg:block">
+    <header className="sticky top-0 z-40 hidden bg-background lg:block">
       {/* Top section with logo, search and account */}
       <div className="relative border-b border-border/40">
         <div className="flex h-16 items-center justify-between px-6">

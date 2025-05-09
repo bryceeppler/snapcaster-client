@@ -1,18 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import {
-  Calendar as CalendarIcon,
-  Tag,
-  Percent,
-  Clock,
   ArrowLeft,
+  Calendar as CalendarIcon,
   Check,
-  X,
-  Store
+  Clock,
+  Percent,
+  Store,
+  Tag,
+  X
 } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -196,7 +196,7 @@ export default function EditDiscountPage() {
               <h1 className="text-xl font-medium tracking-tight md:text-2xl">
                 Edit Discount Code
                 {isAdmin && (
-                  <span className="ml-2 text-sm text-blue-600">(Admin)</span>
+                  <span className="ml-2 text-sm text-primary">(Admin)</span>
                 )}
               </h1>
               <p className="mt-1 text-xs text-muted-foreground">

@@ -7,6 +7,7 @@ import { ResultsContainer } from '@/components/multi-search/results-container';
 import { Toolbar } from '@/components/multi-search/toolbar';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -121,156 +122,158 @@ const SearchView = ({
     setSearchInput(value);
   };
   return (
-    <div className="flex w-full flex-col gap-4 rounded-lg  bg-popover p-4">
-      <div className="flex flex-col items-center gap-4 md:flex-row">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="tcg-select" className="text-left text-sm">
-            TCG
-          </label>
-          <Select value={tcg} onValueChange={(value: Tcg) => setTcg(value)}>
-            <SelectTrigger id="tcg-select" className="w-[200px]">
-              <SelectValue placeholder="MTG" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Select TCG</SelectLabel>
-                <SelectItem value="mtg">MTG</SelectItem>
-                <SelectItem value="onepiece">One Piece</SelectItem>
-                <SelectItem value="pokemon">Pokemon</SelectItem>
-                <SelectItem value="lorcana">Lorcana</SelectItem>
-                <SelectItem value="yugioh">Yu-gi-oh</SelectItem>
-                <SelectItem value="starwars">Star Wars</SelectItem>
-                <SelectItem value="fleshandblood">Flesh and Blood</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="condition-select" className="text-left text-sm">
-            Minimum Condition
-          </label>
-          <Select
-            value={minimumAcceptableCondition}
-            onValueChange={(value: Condition) =>
-              setMinimumAcceptableCondition(value)
-            }
-          >
-            <SelectTrigger id="condition-select" className="w-[200px]">
-              <SelectValue placeholder="MP" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="nm">NM</SelectItem>
-              <SelectItem value="lp">LP</SelectItem>
-              <SelectItem value="mp">MP</SelectItem>
-              <SelectItem value="hp">HP</SelectItem>
-              <SelectItem value="dmg">DMG</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className=" flex-grow "></div>
-        {/* {adsEnabled && <PoweredBy size="small" />} */}
-      </div>
-
-      {/* Textarea */}
-      <div className="mx-auto mt-4 w-20">
-        <svg
-          className="h-auto w-full"
-          viewBox="0 0 374 202"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect
-            x="3.19031"
-            y="42.1871"
-            width="117"
-            height="166"
-            rx="5.5"
-            transform="rotate(-19.4696 3.19031 42.1871)"
-            className="fill-accent stroke-border"
-            strokeWidth="5"
-          />
-          <rect
-            x="-2.5"
-            y="2.5"
-            width="117"
-            height="166"
-            rx="5.5"
-            transform="matrix(-1 8.74228e-08 8.74228e-08 1 243 2.18557e-07)"
-            className="fill-accent stroke-border"
-            strokeWidth="5"
-          />
-          <rect
-            x="-3.19031"
-            y="1.52378"
-            width="117"
-            height="166"
-            rx="5.5"
-            transform="matrix(-0.942819 -0.333306 -0.333306 0.942819 367.329 39.6871)"
-            className="fill-accent stroke-border"
-            strokeWidth="5"
-          />
-        </svg>
-      </div>
-
-      <div className="mx-auto max-w-xs text-center text-sm text-muted-foreground">
-        Search up to 100 cards at once. Paste your decklist in below!
-      </div>
-      {!hasActiveSubscription && (
-        <div>
-          ✨{' '}
-          <span
-            className="text-primary underline hover:cursor-pointer hover:text-primary/80"
-            onClick={() => {
-              if (isAuthenticated) {
-                createCheckoutSession();
-              } else {
-                window.location.href = '/signin';
+    <Card>
+      <CardContent className="flex w-full flex-col gap-4 pt-4">
+        <div className="flex flex-col items-center gap-4 md:flex-row">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="tcg-select" className="text-left text-sm">
+              TCG
+            </label>
+            <Select value={tcg} onValueChange={(value: Tcg) => setTcg(value)}>
+              <SelectTrigger id="tcg-select" className="w-[200px]">
+                <SelectValue placeholder="MTG" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select TCG</SelectLabel>
+                  <SelectItem value="mtg">MTG</SelectItem>
+                  <SelectItem value="onepiece">One Piece</SelectItem>
+                  <SelectItem value="pokemon">Pokemon</SelectItem>
+                  <SelectItem value="lorcana">Lorcana</SelectItem>
+                  <SelectItem value="yugioh">Yu-gi-oh</SelectItem>
+                  <SelectItem value="starwars">Star Wars</SelectItem>
+                  <SelectItem value="fleshandblood">Flesh and Blood</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="condition-select" className="text-left text-sm">
+              Minimum Condition
+            </label>
+            <Select
+              value={minimumAcceptableCondition}
+              onValueChange={(value: Condition) =>
+                setMinimumAcceptableCondition(value)
               }
-            }}
-          >
-            Upgrade to Snapcaster Pro
-          </span>{' '}
-          to search 100 cards at a time.
+            >
+              <SelectTrigger id="condition-select" className="w-[200px]">
+                <SelectValue placeholder="MP" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="nm">NM</SelectItem>
+                <SelectItem value="lp">LP</SelectItem>
+                <SelectItem value="mp">MP</SelectItem>
+                <SelectItem value="hp">HP</SelectItem>
+                <SelectItem value="dmg">DMG</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className=" flex-grow "></div>
+          {/* {adsEnabled && <PoweredBy size="small" />} */}
         </div>
-      )}
-      <Textarea
-        rows={10}
-        className="text-[16px]"
-        placeholder={`Enter card names (one per line). Max ${
-          hasActiveSubscription ? 100 : FREE_MULTISEARCH_CARD_LIMIT
-        } cards.${
-          !hasActiveSubscription
-            ? ' \nUpgrade to Pro to search up to 100 cards.'
-            : ''
-        }`}
-        value={searchInput}
-        onChange={handleInputChange}
-      ></Textarea>
-      <Button
-        onClick={() => {
-          trackSearch(searchInput, tcg, 'multi');
-          handleSubmit(tcg, minimumAcceptableCondition);
-        }}
-        disabled={
-          searchInput.length === 0 ||
-          loading ||
-          (!hasActiveSubscription &&
-            searchInput.split('\n').length > FREE_MULTISEARCH_CARD_LIMIT) ||
-          searchInput.split('\n').length > 100
-        }
-      >
-        {loading ? (
-          <>
-            <Loader2 className="animate-spin" size={16} />
-            <span className="ml-2">Loading</span>
-          </>
-        ) : searchInput.split('\n').length > 100 ? (
-          'Too many cards'
-        ) : (
-          'Search'
+
+        {/* Textarea */}
+        <div className="mx-auto mt-4 w-20">
+          <svg
+            className="h-auto w-full"
+            viewBox="0 0 374 202"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              x="3.19031"
+              y="42.1871"
+              width="117"
+              height="166"
+              rx="5.5"
+              transform="rotate(-19.4696 3.19031 42.1871)"
+              className="fill-accent stroke-border"
+              strokeWidth="5"
+            />
+            <rect
+              x="-2.5"
+              y="2.5"
+              width="117"
+              height="166"
+              rx="5.5"
+              transform="matrix(-1 8.74228e-08 8.74228e-08 1 243 2.18557e-07)"
+              className="fill-accent stroke-border"
+              strokeWidth="5"
+            />
+            <rect
+              x="-3.19031"
+              y="1.52378"
+              width="117"
+              height="166"
+              rx="5.5"
+              transform="matrix(-0.942819 -0.333306 -0.333306 0.942819 367.329 39.6871)"
+              className="fill-accent stroke-border"
+              strokeWidth="5"
+            />
+          </svg>
+        </div>
+
+        <div className="mx-auto max-w-xs text-center text-sm text-muted-foreground">
+          Search up to 100 cards at once. Paste your decklist in below!
+        </div>
+        {!hasActiveSubscription && (
+          <div>
+            ✨{' '}
+            <span
+              className="text-primary underline hover:cursor-pointer hover:text-primary/80"
+              onClick={() => {
+                if (isAuthenticated) {
+                  createCheckoutSession();
+                } else {
+                  window.location.href = '/signin';
+                }
+              }}
+            >
+              Upgrade to Snapcaster Pro
+            </span>{' '}
+            to search 100 cards at a time.
+          </div>
         )}
-      </Button>
-    </div>
+        <Textarea
+          rows={10}
+          className="text-[16px]"
+          placeholder={`Enter card names (one per line). Max ${
+            hasActiveSubscription ? 100 : FREE_MULTISEARCH_CARD_LIMIT
+          } cards.${
+            !hasActiveSubscription
+              ? ' \nUpgrade to Pro to search up to 100 cards.'
+              : ''
+          }`}
+          value={searchInput}
+          onChange={handleInputChange}
+        ></Textarea>
+        <Button
+          onClick={() => {
+            trackSearch(searchInput, tcg, 'multi');
+            handleSubmit(tcg, minimumAcceptableCondition);
+          }}
+          disabled={
+            searchInput.length === 0 ||
+            loading ||
+            (!hasActiveSubscription &&
+              searchInput.split('\n').length > FREE_MULTISEARCH_CARD_LIMIT) ||
+            searchInput.split('\n').length > 100
+          }
+        >
+          {loading ? (
+            <>
+              <Loader2 className="animate-spin" size={16} />
+              <span className="ml-2">Loading</span>
+            </>
+          ) : searchInput.split('\n').length > 100 ? (
+            'Too many cards'
+          ) : (
+            'Search'
+          )}
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 

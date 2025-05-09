@@ -1,6 +1,5 @@
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { ChevronDown, Loader2, HelpCircle } from 'lucide-react';
-import React from 'react';
+import { ChevronDown, HelpCircle, Loader2 } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
 import {
@@ -33,7 +32,7 @@ export default function BaseSearchBar({
   onInputKeyDown,
   onSearchClick,
   renderAutoComplete,
-  showSearchHelp = true,
+  showSearchHelp = false,
   searchHelpContent
 }: BaseSearchBarProps) {
   // Default search help content if not provided
@@ -76,7 +75,7 @@ export default function BaseSearchBar({
 
   return (
     <div
-      className={`border-1 relative w-full rounded-full border bg-background px-1 focus-within:border-primary sm:px-2`}
+      className={`border-1 relative w-full rounded-full border bg-background px-1 shadow-sm focus-within:border-primary sm:px-2`}
     >
       <div className={`flex h-8 w-full items-center sm:h-10`}>
         <Select value={tcg} onValueChange={onTcgChange}>

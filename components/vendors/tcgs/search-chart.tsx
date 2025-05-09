@@ -1,15 +1,14 @@
 'use client';
 
 import { format, parseISO } from 'date-fns';
-import * as React from 'react';
 import {
   Area,
   AreaChart,
   CartesianGrid,
-  XAxis,
-  YAxis,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  XAxis,
+  YAxis
 } from 'recharts';
 
 import {
@@ -44,7 +43,7 @@ const tcgColors = {
   onepiece: 'hsl(var(--chart-4))',
   lorcana: 'hsl(var(--chart-5))',
   starwars: 'hsl(var(--chart-6))',
-  fleshandblood: 'hsl(var(--chart-7))'
+  fleshandblood: 'hsl(var(--chart-1))'
 };
 
 // Create chart config

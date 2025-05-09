@@ -115,7 +115,7 @@ const CartDialogContent = ({ cardData }: { cardData: BuylistCardData }) => {
   };
 
   return (
-    <DialogContent className="w-[95vw] max-w-[400px] rounded-lg px-4 sm:px-6">
+    <DialogContent className="w-[95vw] max-w-[400px]">
       <div className="mx-auto w-[200px] sm:w-[250px]">
         <CardImage imageUrl={cardData.image} alt={cardData.name} />
       </div>

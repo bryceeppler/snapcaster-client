@@ -103,7 +103,7 @@ export function AdvertisementDetailsForm({
         <div className="flex items-center gap-1.5">
           <div
             className={`h-1.5 w-1.5 rounded-full ${
-              isActive ? 'bg-green-500' : 'bg-gray-300'
+              isActive ? 'bg-primary' : 'bg-muted'
             }`}
           />
           <CardTitle className="text-sm font-medium md:text-base">

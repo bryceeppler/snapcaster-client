@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { Card, CardFooter, CardHeader } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -18,9 +19,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { useUserCarts } from '@/hooks/useUserCarts';
 import { cn } from '@/lib/utils';
-import useBuyListStore from '@/stores/useBuylistStore';
 import type { IBuylistCart } from '@/stores/useBuylistStore';
-
+import useBuyListStore from '@/stores/useBuylistStore';
 export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   const { setBuylistUIState, currentCartId, setCurrentCartId, setCurrentCart } =
     useBuyListStore();
@@ -40,12 +40,10 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
   };
 
   return (
-    <div
+    <Card
       className={cn(
-        'mb-1 flex h-14 cursor-pointer flex-col justify-between rounded-lg border px-2 py-1.5 shadow-sm transition-colors',
-        isSelected
-          ? 'border-primary bg-primary/10 hover:bg-primary/15'
-          : 'bg-accent hover:bg-accent/50'
+        'cursor-pointer hover:bg-muted',
+        isSelected ? 'bg-muted hover:bg-accent' : ''
       )}
       onClick={() => {
         if (!dialogJustClosed) {
@@ -55,14 +53,14 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
         }
       }}
     >
-      <div className="flex justify-between">
+      <CardHeader>
         <p
           className={cn('text-sm', isSelected ? 'font-medium' : 'font-normal')}
         >
           {cart.name}
         </p>
-      </div>
-      <div className="flex justify-between">
+      </CardHeader>
+      <CardFooter className="flex justify-between">
         {/* Rename Cart Dialog */}
         <p className="text-xs font-semibold text-zinc-400">
           {cart.items.length} items
@@ -70,7 +68,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger
             asChild
-            className="h-min w-min flex-shrink-0 border-0 bg-transparent"
+            className="h-min w-min flex-shrink-0 border-0"
             variant={null}
           >
             <span
@@ -108,7 +106,7 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </CardFooter>
       {/* Rename List Dialog */}
       <Dialog
         open={activeDialogId === cart.id}
@@ -219,6 +217,6 @@ export const ListItem = ({ cart }: { cart: IBuylistCart }) => {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </Card>
   );
 };

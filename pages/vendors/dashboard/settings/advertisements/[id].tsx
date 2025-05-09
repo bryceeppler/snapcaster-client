@@ -258,7 +258,7 @@ export default function EditAdvertisementPage() {
                 <div className="flex items-center gap-1.5">
                   <span
                     className={`flex h-2 w-2 rounded-full ${
-                      advertisement.is_active ? 'bg-green-500' : 'bg-gray-300'
+                      advertisement.is_active ? 'bg-primary' : 'bg-muted'
                     }`}
                   ></span>
                   <span className="text-xs text-muted-foreground">

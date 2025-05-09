@@ -22,8 +22,8 @@ export type BuylistPaymentMethod = 'Cash' | 'Store Credit';
 
 export interface StoreOfferData {
   storeName: string;
-  cashSubtotal: number;
-  creditSubtotal: number;
+  cashSubtotal: string;
+  creditSubtotal: string;
   items: BuylistItem[];
   unableToPurchaseItems: BuylistItem[];
 }
