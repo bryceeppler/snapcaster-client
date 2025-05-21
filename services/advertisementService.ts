@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 import type {
-  AdvertisementWithImages,
-  AdvertisementPosition,
+  AdvertisementImage,
   AdvertisementImageType,
-  AdvertisementImage
+  AdvertisementPosition,
+  AdvertisementWithImages
 } from '@/types/advertisements';
 import axiosInstance from '@/utils/axiosWrapper';
 
@@ -61,10 +61,15 @@ type ConfirmUploadRequest = {
 
 class AdvertisementService {
   async getAllAdvertisements(): Promise<AdvertisementWithImages[]> {
-    const response = await axios.get(
-      `${BASE_URL}/api/v1/vendor/advertisements?with=images`
-    );
-    return response.data.data || ([] as AdvertisementWithImages[]);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/v1/vendor/advertisements?with=images`
+      );
+      return response.data.data || ([] as AdvertisementWithImages[]);
+    } catch (error) {
+      console.error('Error fetching advertisements:', error);
+      return [] as AdvertisementWithImages[];
+    }
   }
 
   async getAllAdImages(): Promise<AdvertisementImage[]> {

@@ -14,7 +14,7 @@ const fetchAdvertisements = async (): Promise<AdvertisementWithImages[]> => {
     return response;
   } catch (error) {
     console.error('Error fetching advertisements:', error);
-    throw error;
+    return [];
   }
 };
 
