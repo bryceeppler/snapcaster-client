@@ -1,8 +1,8 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-
 export default function ComingSoon() {
   return (
     <section>
@@ -34,9 +34,12 @@ export default function ComingSoon() {
             </h3>
             <p className="text-lg">
               We're excited to announce our upcoming marketplace platform where
-              our community can shop directly on Snapcaster. The Snapcaster
-              Marketplace will be launching soon, connecting vendors and TCG
-              players across Canada.
+              our community can shop directly on Snapcaster by partnering with{' '}
+              <Link href="https://www.sortswift.com/" className="text-primary">
+                SortSwift
+              </Link>
+              . The Snapcaster Marketplace will be launching soon, connecting
+              vendors and TCG players across Canada.
             </p>
             <p className="text-sm text-muted-foreground">
               We will be launching the marketplace in the next few months, stay
