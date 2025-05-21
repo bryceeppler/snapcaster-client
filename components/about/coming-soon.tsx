@@ -16,7 +16,7 @@ export default function ComingSoon() {
           <div className="flex w-full justify-center md:w-1/3">
             <div className="overflow-hidden rounded-lg bg-zinc-600 p-6 shadow-md transition-transform hover:scale-[1.02] dark:bg-muted">
               <Image
-                src="https://imagedelivery.net/kwpOMlVOHoYYK5BfnMRBqg/ff0cfeac-4e3a-494c-e6fb-4b671b2f3200/public"
+                src="https://imagedelivery.net/kwpOMlVOHoYYK5BfnMRBqg/06343c63-72e8-4265-c160-78c917bc0100/public"
                 alt="Snapcaster Marketplace logo"
                 width={320}
                 height={160}
