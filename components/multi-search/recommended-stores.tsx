@@ -43,7 +43,7 @@ export const RecommendedStores = () => {
   );
 
   const reccomendedWebsites = [
-    'obsidian',
+    'obsidiangamesvernon',
     'levelup',
     'chimera',
     'exorgames',
@@ -111,7 +111,7 @@ export const RecommendedStores = () => {
 
     // Ensure "obsidian" appears at the top
     const obsidianIndex = sortedWebsites.findIndex(
-      (site) => site.vendor === 'obsidian'
+      (site) => site.vendor === 'obsidiangamesvernon'
     );
     if (obsidianIndex !== -1) {
       const obsidianSite = sortedWebsites.splice(obsidianIndex, 1)[0];
