@@ -1,8 +1,8 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-
 export default function ComingSoon() {
   return (
     <section>
@@ -14,13 +14,17 @@ export default function ComingSoon() {
       <Card className="overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 shadow-md">
         <div className="flex flex-col gap-8 p-8 md:flex-row md:items-center">
           <div className="flex w-full justify-center md:w-1/3">
-            <div className="overflow-hidden rounded-lg bg-zinc-600 p-6 shadow-md transition-transform hover:scale-[1.02] dark:bg-muted">
+            <div className="relative overflow-hidden rounded-lg bg-zinc-600 p-6 shadow-md transition-transform hover:scale-[1.02] dark:bg-muted">
+              {/* Add "Powered By " in the top left of the container */}
+              <div className="absolute left-6 top-3 text-xs text-white">
+                Powered By
+              </div>
               <Image
-                src="https://imagedelivery.net/kwpOMlVOHoYYK5BfnMRBqg/ff0cfeac-4e3a-494c-e6fb-4b671b2f3200/public"
+                src="https://imagedelivery.net/kwpOMlVOHoYYK5BfnMRBqg/06343c63-72e8-4265-c160-78c917bc0100/public"
                 alt="Snapcaster Marketplace logo"
                 width={320}
                 height={160}
-                className="object-contain"
+                className="mt-4 object-contain"
               />
             </div>
           </div>
@@ -30,9 +34,12 @@ export default function ComingSoon() {
             </h3>
             <p className="text-lg">
               We're excited to announce our upcoming marketplace platform where
-              our community can shop directly on Snapcaster. The Snapcaster
-              Marketplace will be launching soon, connecting vendors and TCG
-              players across Canada.
+              our community can shop directly on Snapcaster by partnering with{' '}
+              <Link href="https://www.sortswift.com/" className="text-primary">
+                SortSwift
+              </Link>
+              . The Snapcaster Marketplace will be launching soon, connecting
+              vendors and TCG players across Canada.
             </p>
             <p className="text-sm text-muted-foreground">
               We will be launching the marketplace in the next few months, stay
