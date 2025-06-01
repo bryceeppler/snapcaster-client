@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { ChevronDown, Loader2 } from 'lucide-react';
 import type { KeyboardEvent } from 'react';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 
 import { Input } from '@/components/ui/input';
@@ -42,7 +42,7 @@ export default function SearchBar({
   clearFilters,
   isLoading,
   setIsLoading
-}: Props) {
+}: Props): JSX.Element {
   const [isOpen, _setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<AutocompleteResult[]>([]);
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
@@ -79,7 +79,7 @@ export default function SearchBar({
           setSelectedIndex(-1);
         })
         .catch((error) => {
-          console.error('Error fetching autocomplete results: ', error);
+          console.warn('Error fetching autocomplete results: ', error);
         });
     },
     [autoCompleteUrl, tcg]
