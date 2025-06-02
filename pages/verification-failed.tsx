@@ -1,6 +1,7 @@
-import { XCircle } from 'lucide-react';
 import Head from 'next/head';
 import Link from 'next/link';
+
+import { XCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 

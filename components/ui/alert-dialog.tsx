@@ -1,5 +1,6 @@
-import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import { Inter } from 'next/font/google';
+
+import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import * as React from 'react';
 
 const inter = Inter({ subsets: ['latin'] });

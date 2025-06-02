@@ -1,5 +1,6 @@
-import { AlertCircle, Smartphone, Mail, Send, Key } from 'lucide-react';
 import Link from 'next/link';
+
+import { AlertCircle, Smartphone, Mail, Send, Key } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 

@@ -1,5 +1,6 @@
-import { Key } from 'lucide-react';
 import { useRouter } from 'next/router';
+
+import { Key } from 'lucide-react';
 
 import DashboardLayout from '../../layout';
 
