@@ -156,6 +156,7 @@ export default function SinglesSearchBar({
               }`}
               onClick={() => {
                 setSearchTerm(suggestion.name);
+                trackSearch('singles', suggestion.name, tcg);
                 setIsAutoCompleteVisible(false);
                 clearFilters();
                 fetchCards();
