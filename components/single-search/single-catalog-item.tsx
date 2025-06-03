@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import { useTheme } from 'next-themes';
 
 import { handleBuyClick } from '../../utils/analytics';
@@ -92,18 +93,10 @@ const SingleCatalogItem = ({ product }: Props) => {
             } ${
               product.collector_number ? `(${product.collector_number})` : ''
             }`}</h3>
+            {product.quantity && (
+              <p className="text-xs">{product.quantity} in stock</p>
+            )}
 
-            <h4 className="text-[0.65rem]   uppercase tracking-tighter text-muted-foreground">{` ${
-              product.frame ? product.frame : ''
-            }  ${
-              product.finish !== 'foil' && product.finish != null
-                ? product.finish
-                : ''
-            } ${product.showcase ? product.showcase : ''} ${
-              product.alternate_art ? product.alternate_art : ''
-            } ${product.promo ? product.promo : ''} ${
-              product.art_series ? product.art_series : ''
-            }`}</h4>
             <div className=" mb-2 mt-3 flex flex-row gap-1">
               {(() => {
                 const matchingVendor = vendors.find(

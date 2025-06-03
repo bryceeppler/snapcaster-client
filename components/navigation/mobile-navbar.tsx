@@ -1,5 +1,8 @@
 'use client';
 
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import {
   AlignJustify,
   BarChart4,
@@ -23,8 +26,6 @@ import {
   User,
   Users
 } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 
 import { MobileNavLink } from './nav-link';

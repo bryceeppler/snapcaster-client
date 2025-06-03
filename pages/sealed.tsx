@@ -1,5 +1,6 @@
-import { type NextPage } from 'next';
 import Head from 'next/head';
+
+import { type NextPage } from 'next';
 
 import SealedCatalogContainer from '@/components/sealed/sealed-catalog-container';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';

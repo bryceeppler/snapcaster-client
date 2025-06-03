@@ -1,5 +1,8 @@
 'use client';
 
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import {
   BadgePercent,
   CheckSquare,
@@ -10,8 +13,6 @@ import {
   Tags,
   Users
 } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';

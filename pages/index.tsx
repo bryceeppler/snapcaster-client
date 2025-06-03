@@ -1,5 +1,6 @@
-import { type NextPage } from 'next';
 import Head from 'next/head';
+
+import { type NextPage } from 'next';
 
 import Homebanner from '@/components/homebanner';
 import SearchBar from '@/components/search-ui/search-bar';

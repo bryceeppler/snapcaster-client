@@ -1,7 +1,8 @@
 // _app.tsx
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { AppProps } from 'next/app';
 import { Inter } from 'next/font/google';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { useEffect, useState, createContext, useContext } from 'react';
 import React from 'react';

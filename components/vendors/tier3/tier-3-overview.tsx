@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import type { LucideIcon } from 'lucide-react';
 import {
   BarChart3,
@@ -8,7 +10,6 @@ import {
   ShoppingCart,
   ArrowRightIcon
 } from 'lucide-react';
-import Link from 'next/link';
 
 import SectionTitle from './section-title';
 

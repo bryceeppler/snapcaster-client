@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import DesktopNavbar from './desktop-navbar';
 import MobileNavbar from './mobile-navbar';
 
@@ -15,6 +13,11 @@ export default function Navbar(): JSX.Element {
     <>
       <MobileNavbar />
       <DesktopNavbar />
+      <div className="w-full bg-primary/50 p-1 text-center text-white">
+        <p className="text-xs text-primary-foreground">
+          Snapcaster is under maintenance, we apologize for any inconvenience.
+        </p>
+      </div>
     </>
   );
 }

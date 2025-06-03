@@ -1,5 +1,6 @@
-import { AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+
+import { AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 
 import { ListItem } from './saved-lists/saved-list-item';

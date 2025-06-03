@@ -1,5 +1,4 @@
-import { Trash2, ExternalLink } from 'lucide-react';
-import React from 'react';
+import { ExternalLink, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,8 +19,8 @@ import { useVendors } from '@/hooks/queries/useVendors';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import type { Product } from '@/types';
 import {
-  groupProductsByHost,
-  buildCartUpdateUrls
+  buildCartUpdateUrls,
+  groupProductsByHost
 } from '@/utils/cartUrlBuilder';
 
 export const Cart = () => {
@@ -29,7 +28,7 @@ export const Cart = () => {
   const { getVendorNameBySlug } = useVendors();
 
   const recommendedStores = [
-    'obsidian',
+    'obsidiangamesvernon',
     'levelup',
     'chimera',
     'exorgames',

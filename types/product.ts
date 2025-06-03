@@ -14,10 +14,11 @@ export interface Product {
   set: string;
   price: number;
   condition: string;
-  finish: string;
+  printing: string;
   vendor: string;
   link: string;
   image: string;
+  quantity?: number;
   variant_id?: string;
   [key: string]: any;
 }

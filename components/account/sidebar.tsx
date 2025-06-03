@@ -1,5 +1,8 @@
 'use client';
 
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import {
   CreditCard,
   LogOut,
@@ -8,8 +11,6 @@ import {
   User,
   Webhook
 } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
