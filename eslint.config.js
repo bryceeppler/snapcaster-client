@@ -1,7 +1,7 @@
-import unusedImports from 'eslint-plugin-unused-imports';
-import tseslint from 'typescript-eslint';
 import nextPlugin from '@next/eslint-plugin-next';
 import importPlugin from 'eslint-plugin-import';
+import unusedImports from 'eslint-plugin-unused-imports';
+import tseslint from 'typescript-eslint';
 
 export default [
   {
@@ -74,6 +74,14 @@ export default [
             'sibling',
             'index'
           ],
+          pathGroups: [
+            {
+              pattern: 'next/**',
+              group: 'external',
+              position: 'before'
+            }
+          ],
+          pathGroupsExcludedImportTypes: ['builtin'],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true }
         }

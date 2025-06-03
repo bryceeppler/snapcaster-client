@@ -94,6 +94,7 @@ export default function BuylistsSearchBar({
   const handleSuggestionClick = useCallback(
     (suggestion: AutocompleteResult) => {
       setSearchTerm(suggestion.name);
+      trackSearch('buylists', suggestion.name, tcg);
       setIsAutoCompleteVisible(false);
       clearFilters();
       refetch();

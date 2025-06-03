@@ -1,6 +1,7 @@
-import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+
+import { type NextPage } from 'next';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';

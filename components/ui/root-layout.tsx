@@ -1,4 +1,5 @@
 import { usePathname } from 'next/navigation';
+
 import React from 'react';
 
 import Navbar from '@/components/navigation/navbar';

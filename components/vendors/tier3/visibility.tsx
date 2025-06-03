@@ -1,5 +1,6 @@
-import { ArrowRightIcon, ArrowDownIcon } from 'lucide-react';
 import Link from 'next/link';
+
+import { ArrowDownIcon, ArrowRightIcon } from 'lucide-react';
 
 import SectionTitle from './section-title';
 
@@ -76,7 +77,7 @@ const Visibility = () => {
                   set: 'Modern Horizons 3',
                   price: 6.5,
                   condition: 'NM',
-                  finish: 'foil',
+                  printing: 'Foil',
                   vendor: 'Your Store Name',
                   link: '',
                   image:
@@ -101,7 +102,7 @@ const Visibility = () => {
                   discounted_price: 5.85,
                   discount_code: 'SNAPCASTER10',
                   condition: 'NM',
-                  finish: 'foil',
+                  printing: 'Foil',
                   vendor: 'Your Store Name',
                   link: '',
                   image:

@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import {
@@ -244,14 +243,15 @@ export function VendorBuyClicksChart({
   // Process the data to use proper website names
   const processedData: VendorPayload[] =
     data?.data.map((item) => {
-      const normalizedUrl = normalizeWebsiteUrl(item.website);
+      const website = item.website || 'unknown';
+      const normalizedUrl = normalizeWebsiteUrl(website);
       const vendor = vendors.find(
         (v) => normalizeWebsiteUrl(v.url) === normalizedUrl
       );
       return {
         ...item,
         vendor: vendor?.name || normalizedUrl, // Fallback to normalized URL if website not found
-        originalUrl: item.website // Keep original URL for tooltip
+        originalUrl: website // Keep original URL for tooltip
       };
     }) || [];
 

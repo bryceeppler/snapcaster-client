@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import {
   CheckCircle,
   DollarSignIcon,
@@ -5,7 +7,6 @@ import {
   MoveRight
 } from 'lucide-react';
 import { motion } from 'motion/react';
-import Link from 'next/link';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
