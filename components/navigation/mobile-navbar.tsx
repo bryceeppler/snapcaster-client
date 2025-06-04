@@ -130,6 +130,7 @@ export default function MobileNavbar(): JSX.Element {
 
   const accountNavItems: NavItem[] = [
     { label: 'General', href: '/account', icon: Settings },
+    { label: 'Marketplace', href: '/account/marketplace', icon: Store },
     { label: 'Appearance', href: '/account/appearance', icon: Palette },
     { label: 'Integrations', href: '/account/integrations', icon: Plug2 },
     { label: 'Subscription', href: '/account/subscription', icon: CreditCard }

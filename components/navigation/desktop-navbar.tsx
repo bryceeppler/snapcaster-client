@@ -41,7 +41,7 @@ export default function DesktopNavbar(): JSX.Element {
                 width="24"
                 height="24"
               />
-              <span className="font-genos text-2xl font-bold leading-none tracking-tighter">
+              <span className="font-genos text-2xl font-semibold leading-none tracking-tight">
                 Snapcaster
               </span>
             </Link>

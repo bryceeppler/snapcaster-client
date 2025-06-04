@@ -8,6 +8,7 @@ import {
   LogOut,
   Palette,
   Settings,
+  Store,
   User,
   Webhook
 } from 'lucide-react';
@@ -26,6 +27,12 @@ export function AccountSidebar() {
       icon: User,
       href: '/account',
       isActive: pathname === '/account'
+    },
+    {
+      title: 'Marketplace',
+      icon: Store,
+      href: '/account/marketplace',
+      isActive: pathname?.startsWith('/account/marketplace') || false
     },
     {
       title: 'Appearance',
