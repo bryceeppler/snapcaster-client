@@ -17,6 +17,11 @@ const nextConfig = {
         hostname: 'imagedelivery.net',
         // pathname: '/.*',
         protocol: 'https'
+      },
+      {
+        hostname: 'tcgplayer-cdn.tcgplayer.com',
+        // pathname: '/.*',
+        protocol: 'https'
       }
     ]
   }

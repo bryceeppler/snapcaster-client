@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { Badge } from '../ui/badge';
+
 import { DesktopNavLink } from './nav-link';
 import { SearchBar } from './search-provider';
 
@@ -41,7 +43,7 @@ export default function DesktopNavbar(): JSX.Element {
                 width="24"
                 height="24"
               />
-              <span className="font-genos text-2xl font-bold leading-none tracking-tighter">
+              <span className="font-genos text-2xl font-semibold leading-none tracking-tight">
                 Snapcaster
               </span>
             </Link>
@@ -99,6 +101,13 @@ function DesktopMenuLinks({
     <nav className="flex" aria-label="Main navigation">
       <DesktopNavLink href="/" isActive={currentPath === '/'}>
         Home
+      </DesktopNavLink>
+
+      <DesktopNavLink
+        href="/marketplace"
+        isActive={currentPath === '/marketplace'}
+      >
+        Marketplace <Badge className="ml-2">New</Badge>
       </DesktopNavLink>
 
       <DesktopNavLink
