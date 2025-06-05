@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { Badge } from '../ui/badge';
+
 import { DesktopNavLink } from './nav-link';
 import { SearchBar } from './search-provider';
 
@@ -99,6 +101,13 @@ function DesktopMenuLinks({
     <nav className="flex" aria-label="Main navigation">
       <DesktopNavLink href="/" isActive={currentPath === '/'}>
         Home
+      </DesktopNavLink>
+
+      <DesktopNavLink
+        href="/marketplace"
+        isActive={currentPath === '/marketplace'}
+      >
+        Marketplace <Badge className="ml-2">New</Badge>
       </DesktopNavLink>
 
       <DesktopNavLink
