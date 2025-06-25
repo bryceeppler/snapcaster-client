@@ -10,8 +10,12 @@ import { authService } from '@/services/authService';
 // Token manager to be used by both axios interceptors and useAuth hook
 export const tokenManager = {
   accessToken: null as string | null,
+  apiKey: null as string | null,
   setAccessToken(token: string | null) {
     this.accessToken = token;
+  },
+  setApiKey(key: string | null) {
+    this.apiKey = key;
   }
 };
 
@@ -21,20 +25,26 @@ const axiosInstance: AxiosInstance = axios.create({
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   useCache?: boolean;
+  useApiKey?: boolean;
 }
 
 // Request interceptor to add the auth token header to every request
 axiosInstance.interceptors.request.use(
   (config: CustomAxiosRequestConfig) => {
-    const token = tokenManager.accessToken;
-
-    if (token) {
-      config.headers = config.headers || {};
-      config.headers['Authorization'] = `Bearer ${token}`;
+    config.headers = config.headers || {};
+    
+    // Check if we should use API key authentication
+    if (config.useApiKey && tokenManager.apiKey) {
+      config.headers['X-API-Key'] = tokenManager.apiKey;
+    } else {
+      // Use JWT token authentication
+      const token = tokenManager.accessToken;
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
     }
 
     if (typeof config.useCache !== 'undefined') {
-      config.headers = config.headers || {};
       config.headers['X-Use-Cache'] = config.useCache ? 'true' : 'false';
     }
 
@@ -77,5 +87,24 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Create a specialized axios instance for API key authentication
+export const createApiKeyAxiosInstance = (apiKey: string) => {
+  const apiKeyInstance: AxiosInstance = axios.create({
+    headers: {
+      'X-API-Key': apiKey
+    }
+  });
+
+  // Add response interceptor for error handling
+  apiKeyInstance.interceptors.response.use(
+    (response) => response,
+    (error: AxiosError) => {
+      return Promise.reject(error);
+    }
+  );
+
+  return apiKeyInstance;
+};
 
 export default axiosInstance;

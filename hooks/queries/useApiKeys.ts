@@ -8,20 +8,28 @@ import { vendorService } from '@/services/vendorService';
 export interface ApiKey {
   id: string;
   name: string;
+  keyPrefix: string;
+  scopes: string[];
   created_at: string;
   last_used_at: string | null;
+  expires_at?: string | null;
   is_active: boolean;
 }
 
 export interface CreateApiKeyResponse {
   id: string;
   name: string;
-  created_at: string;
   key: string; // Full API key that's only shown once
+  keyPrefix: string;
+  scopes: string[];
+  created_at: string;
+  expires_at?: string | null;
 }
 
 export interface CreateApiKeyRequest {
   name: string;
+  scopes?: string[];
+  expiresIn?: number; // days
 }
 
 export function useApiKeys() {

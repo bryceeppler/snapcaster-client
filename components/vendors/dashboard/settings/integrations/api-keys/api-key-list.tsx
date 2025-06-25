@@ -1,18 +1,18 @@
 'use client';
 
-import { formatDistanceToNow } from 'date-fns';
-import { parseISO } from 'date-fns';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 import {
-  MoreHorizontal,
-  Trash2,
-  Loader2,
   AlertCircle,
-  KeyRound
+  KeyRound,
+  Loader2,
+  MoreHorizontal,
+  Trash2
 } from 'lucide-react';
 import { useState } from 'react';
 
 import { DeleteApiKeyDialog } from './delete-api-key-dialog';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -73,6 +73,11 @@ const MobileApiKeyCard = ({
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium">{apiKey.name}</p>
+            {apiKey.keyPrefix && (
+              <code className="text-xs text-muted-foreground">
+                {apiKey.keyPrefix}...
+              </code>
+            )}
           </div>
           <div className="mt-1 text-xs text-muted-foreground">
             Created {formatDistanceToNow(parseISO(apiKey.created_at))} ago
@@ -96,7 +101,7 @@ const MobileApiKeyCard = ({
       {expanded && (
         <div className="mt-3 rounded-md bg-muted/30 p-3">
           {/* Last used information */}
-          <div className="mb-3 text-xs text-muted-foreground">
+          <div className="mb-3 space-y-1 text-xs text-muted-foreground">
             {apiKey.last_used_at ? (
               <div>
                 Last used: {formatDistanceToNow(parseISO(apiKey.last_used_at))}{' '}
@@ -104,6 +109,20 @@ const MobileApiKeyCard = ({
               </div>
             ) : (
               <div>Never used</div>
+            )}
+            {apiKey.expires_at && (
+              <div className="text-orange-600 dark:text-orange-400">
+                Expires: {formatDistanceToNow(parseISO(apiKey.expires_at))} ago
+              </div>
+            )}
+            {apiKey.scopes && apiKey.scopes.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1">
+                {apiKey.scopes.map((scope) => (
+                  <Badge key={scope} variant="secondary" className="text-xs">
+                    {scope}
+                  </Badge>
+                ))}
+              </div>
             )}
           </div>
 
@@ -243,12 +262,42 @@ export function ApiKeyList() {
               apiKeys.map((apiKey) => (
                 <TableRow key={apiKey.id} className="group">
                   <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      <span>{apiKey.name}</span>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <span>{apiKey.name}</span>
+                        {apiKey.keyPrefix && (
+                          <code className="text-xs text-muted-foreground">
+                            {apiKey.keyPrefix}...
+                          </code>
+                        )}
+                      </div>
+                      {apiKey.scopes && apiKey.scopes.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {apiKey.scopes.map((scope) => (
+                            <Badge
+                              key={scope}
+                              variant="secondary"
+                              className="text-xs"
+                            >
+                              {scope}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatDistanceToNow(parseISO(apiKey.created_at))} ago
+                    <div className="flex flex-col gap-1">
+                      <span>
+                        {formatDistanceToNow(parseISO(apiKey.created_at))} ago
+                      </span>
+                      {apiKey.expires_at && (
+                        <span className="text-xs text-orange-600 dark:text-orange-400">
+                          Expires{' '}
+                          {formatDistanceToNow(parseISO(apiKey.expires_at))} ago
+                        </span>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {apiKey.last_used_at

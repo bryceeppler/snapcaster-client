@@ -11,7 +11,8 @@ import { useAuth } from '@/hooks/useAuth';
 type SignupFormData = {
   email: string;
   password: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   confirmPassword: string;
   newsletter: boolean;
 };
@@ -45,9 +46,9 @@ export function SignupForm({
   const password = watch('password');
 
   const onSubmit = async (data: SignupFormData) => {
-    const { email, password, fullName } = data;
+    const { email, password, firstName, lastName } = data;
     register(
-      { email, password, fullName },
+      { email, password, firstName, lastName },
       {
         onSuccess: () => {
           toast({
@@ -67,19 +68,35 @@ export function SignupForm({
   return (
     <form className="grid gap-4 md:gap-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid gap-2">
-        {labels === 'explicit' && <Label htmlFor="fullName">Name</Label>}
+        {labels === 'explicit' && <Label htmlFor="firstName">First Name</Label>}
         <Input
           type="text"
-          {...registerField('fullName', {
-            required: 'A name is required'
+          {...registerField('firstName', {
+            required: 'First name is required'
           })}
           className={`${
-            errors.fullName ? 'border-red-500' : ''
+            errors.firstName ? 'border-red-500' : ''
           } ${inputClassName}`}
-          placeholder={labels === 'implicit' ? 'Name' : 'Al Dente'}
+          placeholder={labels === 'implicit' ? 'First Name' : 'Al'}
         />
-        {errors.fullName && (
-          <p className="text-red-500">{errors.fullName.message}</p>
+        {errors.firstName && (
+          <p className="text-red-500">{errors.firstName.message}</p>
+        )}
+      </div>
+      <div className="grid gap-2">
+        {labels === 'explicit' && <Label htmlFor="lastName">Last Name</Label>}
+        <Input
+          type="text"
+          {...registerField('lastName', {
+            required: 'Last name is required'
+          })}
+          className={`${
+            errors.lastName ? 'border-red-500' : ''
+          } ${inputClassName}`}
+          placeholder={labels === 'implicit' ? 'Last Name' : 'Dente'}
+        />
+        {errors.lastName && (
+          <p className="text-red-500">{errors.lastName.message}</p>
         )}
       </div>
       <div className="grid gap-2">

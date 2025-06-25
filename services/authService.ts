@@ -12,7 +12,8 @@ interface LoginCredentials {
 }
 
 interface RegisterCredentials extends LoginCredentials {
-  fullName: string;
+  firstName: string;
+  lastName: string;
 }
 
 interface RegisterResponse {
@@ -45,7 +46,8 @@ interface UserProfile {
   user: {
     id: string;
     email: string;
-    fullName: string;
+    firstName: string;
+    lastName: string;
     emailVerified: boolean;
     discordId: string;
     discordUsername: string;

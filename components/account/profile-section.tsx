@@ -20,7 +20,9 @@ export function ProfileSection() {
   const { profile, resendVerificationEmail, isResendingVerification } =
     useAuth();
 
-  const fullName = profile?.data?.user?.fullName || '';
+  const firstName = profile?.data?.user?.firstName || '';
+  const lastName = profile?.data?.user?.lastName || '';
+  const fullName = `${firstName} ${lastName}`.trim();
   const email = profile?.data?.user?.email || '';
   const isVerified = profile?.data?.user?.emailVerified || false;
 
