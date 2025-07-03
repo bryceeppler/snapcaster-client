@@ -32,7 +32,6 @@ export const Cart = () => {
     'levelup',
     'chimera',
     'exorgames',
-    'mythicstore',
     'houseofcards',
     'vortexgames'
   ];
