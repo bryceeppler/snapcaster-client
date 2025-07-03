@@ -10,11 +10,11 @@ import type { DeviceType, SearchMode } from '@/types/navbar';
 /**
  * Maps routes to search modes for consistent handling
  */
-const routeToSearchModeMap: Record<string, SearchMode> = {
-  '/': 'singles',
-  '/buylists': 'buylists',
-  '/sealed': 'sealed'
-};
+// const routeToSearchModeMap: Record<string, SearchMode> = {
+//   '/': 'singles',
+//   '/buylists': 'buylists',
+//   '/sealed': 'sealed'
+// };
 
 /**
  * Determines the search mode for the current path

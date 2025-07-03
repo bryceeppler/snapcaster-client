@@ -10,9 +10,9 @@ import ModeToggle from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import useBuylistStore from '@/stores/useBuylistStore';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 /**

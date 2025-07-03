@@ -1,9 +1,6 @@
 import Link from 'next/link';
-import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
-import useBuylistStore from '@/stores/useBuylistStore';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import useMultiSearchStore from '@/stores/multiSearchStore';
+
 
 import {
   DiscordLogoIcon,
@@ -13,6 +10,10 @@ import {
 import { FacebookIcon } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import useBuylistStore from '@/stores/useBuylistStore';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 export default function Footer() {
   const { isAuthenticated } = useAuth();

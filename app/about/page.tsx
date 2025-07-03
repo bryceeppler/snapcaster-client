@@ -1,8 +1,9 @@
+import type { Metadata } from 'next';
+
 import AboutUs from '@/components/about/about-us';
 import ComingSoon from '@/components/about/coming-soon';
 import SponsorSection from '@/components/about/sponsor-section';
 import VendorsSection from '@/components/about/vendors-section';
-import type { Metadata } from 'next';
 
 export default function AboutPage() {
   return (

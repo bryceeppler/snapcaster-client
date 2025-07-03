@@ -1,12 +1,13 @@
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+
+import BuylistCatalog from '@/components/buylists/buylist-catalog-container';
+import BuylistLayout from '@/components/buylists/buylist-layout';
 import { PageHead } from '@/components/page-head';
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import {
   TCG_PATHS,
   PRETTY_NAMES,
   getPopularClickedSets
 } from '@/utils/tcgPathHelper';
-import BuylistCatalog from '@/components/buylists/buylist-catalog-container';
-import BuylistLayout from '@/components/buylists/buylist-layout';
 interface TCGPageProps {
   tcgPath: string;
   prettyName: string;

@@ -1,17 +1,18 @@
 'use client';
 
+import { useRouter } from 'next/router';
+
 import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
-import { useRouter } from 'next/router';
 
 import type { DeviceType } from '../../../types/navbar';
 
 import BaseSearchBar from '@/components/ui/base-search-bar';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 import type { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 /**
  * Sealed search bar component that connects to the sealed search store

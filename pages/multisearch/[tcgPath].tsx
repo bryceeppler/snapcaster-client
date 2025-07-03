@@ -1,16 +1,13 @@
-import { PageHead } from '@/components/page-head';
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import {
-  TCG_PATHS,
-  PRETTY_NAMES,
-  TCG_SELECT_TO_PATH,
-  getPopularClickedSets
-} from '@/utils/tcgPathHelper';
+import { useRouter } from 'next/router';
+
 import { Loader2 } from 'lucide-react';
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
+
 import { RecommendedStores } from '@/components/multi-search/recommended-stores';
 import { ResultsContainer } from '@/components/multi-search/results-container';
 import { Toolbar } from '@/components/multi-search/toolbar';
+import { PageHead } from '@/components/page-head';
 import BackToTopButton from '@/components/ui/back-to-top-btn';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -32,7 +29,13 @@ import type { Vendor } from '@/services/vendorService';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import type { Condition, Product, Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
-import { useRouter } from 'next/router';
+import {
+  TCG_PATHS,
+  PRETTY_NAMES,
+  TCG_SELECT_TO_PATH,
+  getPopularClickedSets
+} from '@/utils/tcgPathHelper';
+
 
 interface TCGPageProps {
   tcgPath: string;

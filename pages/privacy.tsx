@@ -1,5 +1,7 @@
 import Link from 'next/link';
+
 import { type NextPage } from 'next';
+
 import { PageHead } from '@/components/page-head';
 
 const Privacy: NextPage = () => {

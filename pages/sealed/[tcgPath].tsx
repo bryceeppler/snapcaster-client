@@ -1,13 +1,11 @@
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+
 import { PageHead } from '@/components/page-head';
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import SealedCatalogContainer from '@/components/sealed/sealed-catalog-container';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import {
-  TCG_PATHS,
-  PRETTY_NAMES,
-  getPopularClickedSets
-} from '@/utils/tcgPathHelper';
+import { TCG_PATHS, PRETTY_NAMES } from '@/utils/tcgPathHelper';
+import { getPopularClickedSets } from '@/utils/tcgPathHelper';
 
 interface TCGPageProps {
   tcgPath: string;

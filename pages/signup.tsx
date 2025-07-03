@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
 import { type NextPage } from 'next';
+
 import { SignupForm } from '@/components/forms/SignupForm';
+import { PageHead } from '@/components/page-head';
 import {
   Card,
   CardHeader,
@@ -11,7 +14,6 @@ import {
   CardFooter
 } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
-import { PageHead } from '@/components/page-head';
 
 const Signup: NextPage = () => {
   const { isAuthenticated, isInitializing } = useAuth();

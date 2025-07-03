@@ -1,5 +1,8 @@
 import Link from 'next/link';
+
 import { CheckCircle } from 'lucide-react';
+
+import { PageHead } from '@/components/page-head';
 import {
   Accordion,
   AccordionItem,
@@ -8,7 +11,6 @@ import {
 } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { PageHead } from '@/components/page-head';
 
 export default function Component() {
   return (

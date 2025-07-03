@@ -2,11 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
-import useBuylistStore from '@/stores/useBuylistStore';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import useMultiSearchStore from '@/stores/multiSearchStore';
+
 
 import {
   AlignJustify,
@@ -60,7 +57,11 @@ import {
 } from '@/components/ui/sheet';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserCarts } from '@/hooks/useUserCarts';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import useBuylistStore from '@/stores/useBuylistStore';
 import useBuyListStore from '@/stores/useBuylistStore';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 // Interface for navigation items with icons
 interface NavItem {

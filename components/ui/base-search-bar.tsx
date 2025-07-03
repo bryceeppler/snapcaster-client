@@ -1,6 +1,7 @@
+import { useRouter } from 'next/router';
+
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { ChevronDown, HelpCircle, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/router';
 
 import { Input } from '@/components/ui/input';
 import {
@@ -16,8 +17,8 @@ import {
   SelectTriggerNoIcon as SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 import type { BaseSearchBarProps } from '@/types/navbar';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 /**
  * A reusable base search bar component that handles the common UI structure and styling
