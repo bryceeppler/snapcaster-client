@@ -1,11 +1,8 @@
-import Head from 'next/head';
 import Link from 'next/link';
-
 import { CheckCircle } from 'lucide-react';
 import { type NextPage } from 'next';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { PageHead } from '@/components/page-head';
 
 const ForgotPassword: NextPage = () => {
   const { forgotPassword } = useAuth();
@@ -58,7 +56,13 @@ const ForgotPassword: NextPage = () => {
 
   return (
     <>
-      <ForgotPasswordHead />
+      <h1 className="sr-only">Reset Your Snapcaster Password</h1>
+      <PageHead
+        title="Snapcaster | Forgot Password"
+        description="Enter your email to receive a password reset link."
+        url="https://snapcaster.ca/forgot-password"
+      />
+
       <section className="flex w-full justify-center py-6 md:py-12">
         <Card className="w-full max-w-sm">
           <CardHeader>
@@ -116,26 +120,26 @@ const ForgotPassword: NextPage = () => {
 
 export default ForgotPassword;
 
-const ForgotPasswordHead = () => {
-  return (
-    <Head>
-      <title>Forgot Password</title>
-      <meta
-        name="description"
-        content="Search Magic the Gathering cards across Canada"
-      />
-      <meta
-        property="og:title"
-        content={`Snapcaster - Search Magic the Gathering cards across Canada`}
-      />
-      <meta
-        property="og:description"
-        content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
-      />
-      <meta property="og:url" content={`https://snapcaster.ca`} />
-      <meta property="og:type" content="website" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-  );
-};
+// const ForgotPasswordHead = () => {
+//   return (
+//     <Head>
+//       <title>Forgot Password</title>
+//       <meta
+//         name="description"
+//         content="Search Magic the Gathering cards across Canada"
+//       />
+//       <meta
+//         property="og:title"
+//         content={`Snapcaster - Search Magic the Gathering cards across Canada`}
+//       />
+//       <meta
+//         property="og:description"
+//         content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
+//       />
+//       <meta property="og:url" content={`https://snapcaster.ca`} />
+//       <meta property="og:type" content="website" />
+//       <meta name="viewport" content="width=device-width, initial-scale=1" />
+//       <link rel="icon" href="/favicon.ico" />
+//     </Head>
+//   );
+// };

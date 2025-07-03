@@ -1,5 +1,6 @@
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { ChevronDown, HelpCircle, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/router';
 
 import { Input } from '@/components/ui/input';
 import {
@@ -15,6 +16,7 @@ import {
   SelectTriggerNoIcon as SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 import type { BaseSearchBarProps } from '@/types/navbar';
 
 /**
@@ -35,6 +37,30 @@ export default function BaseSearchBar({
   showSearchHelp = false,
   searchHelpContent
 }: BaseSearchBarProps) {
+  const router = useRouter();
+
+  // Handle TCG change with URL redirection
+  const handleTcgChange = (value: string) => {
+    // Call the original onTcgChange handler
+    onTcgChange(value as any);
+
+    // Get the path value for the selected TCG
+    const pathValue = TCG_SELECT_TO_PATH[value];
+    if (pathValue) {
+      // Get current path segments
+      const pathSegments = router.asPath.split('/').filter(Boolean);
+
+      // Do not push url path for the homepage (single search). We dont want SEO to be fragmented here especially when people are sharing the Snapcaster URL online.
+      if (pathSegments.length > 0) {
+        // Replace the last segment with the new TCG path value
+        pathSegments[pathSegments.length - 1] = pathValue;
+        const newPath = `/${pathSegments.join('/')}`;
+        router.push(newPath);
+      }
+      // If we're at root, don't update the URL - just update the state
+    }
+  };
+
   // Default search help content if not provided
   const defaultSearchHelpContent = (
     <div className="rounded-md">
@@ -78,7 +104,7 @@ export default function BaseSearchBar({
       className={`border-1 relative w-full rounded-full border bg-background px-1 shadow-sm focus-within:border-primary sm:px-2`}
     >
       <div className={`flex h-8 w-full items-center sm:h-10`}>
-        <Select value={tcg} onValueChange={onTcgChange}>
+        <Select value={tcg} onValueChange={handleTcgChange}>
           <SelectTrigger className="h-8 w-[80px] shrink-0 rounded-l-full rounded-r-none border-b-0 border-l-0 border-r border-t-0 border-border bg-transparent p-1 pl-2 text-xs focus:ring-0 focus:ring-offset-0 sm:h-10 sm:w-[100px] sm:p-2 sm:pl-3 md:w-[120px] lg:w-[150px] [&>span]:!text-left">
             <SelectValue placeholder="TCG" />
             <ChevronDown className="ml-1 h-3 w-3 flex-shrink-0 sm:ml-2 sm:h-4 sm:w-4" />

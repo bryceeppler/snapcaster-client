@@ -2,12 +2,14 @@
 
 import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
+import { useRouter } from 'next/router';
 
 import type { DeviceType } from '../../../types/navbar';
 
 import BaseSearchBar from '@/components/ui/base-search-bar';
 import { useSealedSearch } from '@/hooks/queries/useSealedSearch';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 import type { Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
 
@@ -19,6 +21,8 @@ export default function SealedSearchBar({
 }: {
   deviceType: DeviceType;
 }) {
+  const router = useRouter();
+
   const {
     productCategory,
     searchTerm,
@@ -66,6 +70,12 @@ export default function SealedSearchBar({
   const handleTcgChange = (value: Tcg) => {
     setProductCategory(value);
     setSearchTerm('');
+
+    // Navigate to the corresponding sealed page
+    const pathValue = TCG_SELECT_TO_PATH[value];
+    if (pathValue) {
+      router.push(`/sealed/${pathValue}`);
+    }
   };
 
   return (

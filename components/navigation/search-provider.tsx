@@ -20,7 +20,22 @@ const routeToSearchModeMap: Record<string, SearchMode> = {
  * Determines the search mode for the current path
  */
 export const getSearchModeForPath = (path: string): SearchMode | null => {
-  return routeToSearchModeMap[path] || null;
+  // Handle exact root path
+  if (path === '/') {
+    return 'singles';
+  }
+
+  // Handle paths that start with /buylists
+  if (path.startsWith('/buylists')) {
+    return 'buylists';
+  }
+
+  // Handle paths that start with /sealed
+  if (path.startsWith('/sealed')) {
+    return 'sealed';
+  }
+
+  return null;
 };
 
 /**

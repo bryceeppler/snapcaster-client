@@ -1,8 +1,13 @@
-import Head from 'next/head';
-
+import { PageHead } from '@/components/page-head';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import {
+  TCG_PATHS,
+  PRETTY_NAMES,
+  TCG_SELECT_TO_PATH,
+  getPopularClickedSets
+} from '@/utils/tcgPathHelper';
 import { Loader2 } from 'lucide-react';
 import React from 'react';
-
 import { RecommendedStores } from '@/components/multi-search/recommended-stores';
 import { ResultsContainer } from '@/components/multi-search/results-container';
 import { Toolbar } from '@/components/multi-search/toolbar';
@@ -27,8 +32,15 @@ import type { Vendor } from '@/services/vendorService';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import type { Condition, Product, Tcg } from '@/types';
 import { trackSearch } from '@/utils/analytics';
+import { useRouter } from 'next/router';
 
-export default function Multisearch() {
+interface TCGPageProps {
+  tcgPath: string;
+  prettyName: string;
+  sets: string[];
+}
+
+const TCGPage: NextPage<TCGPageProps> = ({ tcgPath, prettyName, sets }) => {
   const {
     mode,
     selectedWebsites,
@@ -44,9 +56,20 @@ export default function Multisearch() {
   } = useMultiSearchStore();
   const { vendors } = useVendors();
 
+  const setsDescription =
+    sets.length > 0
+      ? `Search and compare multiple ${prettyName} trading card singles from 80+ Canadian stores. Buy ${sets
+          .map((set) => `${set}`)
+          .join(', ')}.`
+      : `Search and compare multiple ${prettyName} trading card singles from 80+ Canadian stores.`;
+
   return (
     <>
-      <MultisearchHead />
+      <PageHead
+        title={`Snapcaster | Buy ${prettyName} Singles from 80+ Stores`}
+        description={setsDescription}
+        url={`https://snapcaster.ca/sealed/${tcgPath}`}
+      />
       <div className="flex w-full flex-col justify-center gap-8 text-center">
         {mode === 'search' && (
           <>
@@ -75,7 +98,7 @@ export default function Multisearch() {
       <BackToTopButton />
     </>
   );
-}
+};
 
 const ResultsView = ({ results }: { results: Product[][] }) => {
   return (
@@ -111,6 +134,16 @@ const SearchView = ({
 }) => {
   const { loading } = useMultiSearchStore();
   const { hasActiveSubscription, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  // Handle TCG change with URL redirection
+  const handleTcgChange = (value: Tcg) => {
+    setTcg(value);
+    const pathValue = TCG_SELECT_TO_PATH[value];
+    if (pathValue) {
+      router.push(`/multisearch/${pathValue}`);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -130,7 +163,7 @@ const SearchView = ({
             <label htmlFor="tcg-select" className="text-left text-sm">
               TCG
             </label>
-            <Select value={tcg} onValueChange={(value: Tcg) => setTcg(value)}>
+            <Select value={tcg} onValueChange={handleTcgChange}>
               <SelectTrigger id="tcg-select" className="w-[200px]">
                 <SelectValue placeholder="MTG" />
               </SelectTrigger>
@@ -278,26 +311,33 @@ const SearchView = ({
   );
 };
 
-const MultisearchHead = () => {
-  return (
-    <Head>
-      <title>Multi Search</title>
-      <meta
-        name="description"
-        content="Search Magic the Gathering cards across Canada"
-      />
-      <meta
-        property="og:title"
-        content={`Snapcaster - Search Magic the Gathering cards across Canada`}
-      />
-      <meta
-        property="og:description"
-        content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
-      />
-      <meta property="og:url" content={`https://snapcaster.ca`} />
-      <meta property="og:type" content="website" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-  );
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = TCG_PATHS.map((tcgPath) => ({
+    params: { tcgPath }
+  }));
+
+  return {
+    paths,
+    fallback: false
+  };
 };
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const tcgPath = params?.tcgPath as string;
+
+  // Example API call to get top sets
+  //   const res = await fetch(`https://your-api.com/top-sets/${tcgPath}`);
+  //   const sets: string[] = await res.json();
+  const sets = await getPopularClickedSets(tcgPath);
+
+  return {
+    props: {
+      tcgPath,
+      prettyName: PRETTY_NAMES[tcgPath] || tcgPath,
+      sets: sets.slice(0, 3)
+    },
+    revalidate: 86400 // Rebuild once a day
+  };
+};
+
+export default TCGPage;

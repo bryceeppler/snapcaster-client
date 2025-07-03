@@ -1,11 +1,9 @@
-import Head from 'next/head';
-
 import { type NextPage } from 'next';
-
 import Homebanner from '@/components/homebanner';
 import SearchBar from '@/components/search-ui/search-bar';
 import SingleCatalog from '@/components/single-search/single-catalog-container';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
+import { PageHead } from '@/components/page-head';
 
 const Home: NextPage = () => {
   const {
@@ -24,7 +22,12 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <HomeHead />
+      <h1 className="sr-only">Buy Trading Cards Online In Canada</h1>
+      <PageHead
+        title="Snapcaster | Search TCG Singles From 80+ Stores In Canada"
+        description="The best place to shop trading card singles online across 80+ stores across Canada. Magic the Gathering, Pokemon, Yu-Gi-Oh, Lorcana, One Piece, Star Wars Unlimted, Flesh and Blood."
+        url="https://snapcaster.ca"
+      />
       <div className="flex w-full flex-col justify-center text-center">
         {!searchResults && (
           <div className="flex flex-col items-center justify-center md:mt-6">
@@ -53,27 +56,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-const HomeHead = () => {
-  return (
-    <Head>
-      <title>Snapcaster</title>
-      <meta
-        name="description"
-        content="Search Magic the Gathering cards across Canada"
-      />
-      <meta
-        property="og:title"
-        content={`Snapcaster - Search Magic the Gathering cards across Canada`}
-      />
-      <meta
-        property="og:description"
-        content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
-      />
-      <meta property="og:url" content={`https://snapcaster.ca`} />
-      <meta property="og:type" content="website" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-  );
-};

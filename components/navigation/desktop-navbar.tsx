@@ -10,6 +10,10 @@ import ModeToggle from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import useMultiSearchStore from '@/stores/multiSearchStore';
+import useBuylistStore from '@/stores/useBuylistStore';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 /**
  * Desktop navigation bar component
@@ -36,7 +40,7 @@ export default function DesktopNavbar(): JSX.Element {
               <img
                 className="h-6 w-auto"
                 src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
-                alt=""
+                alt="Snapcaster"
                 aria-hidden="true"
                 width="24"
                 height="24"
@@ -95,6 +99,12 @@ function DesktopMenuLinks({
   currentPath: string;
   canViewAnalytics: boolean;
 }): JSX.Element {
+  const multiSearchTcg = useMultiSearchStore((state) => state.tcg);
+  const sealedSearchTcg = useSealedSearchStore(
+    (state) => state.productCategory
+  );
+  const buylistTcg = useBuylistStore((state) => state.tcg);
+
   return (
     <nav className="flex" aria-label="Main navigation">
       <DesktopNavLink href="/" isActive={currentPath === '/'}>
@@ -102,17 +112,30 @@ function DesktopMenuLinks({
       </DesktopNavLink>
 
       <DesktopNavLink
-        href="/multisearch"
-        isActive={currentPath === '/multisearch'}
+        href={`/multisearch/${
+          TCG_SELECT_TO_PATH[multiSearchTcg] || 'magic-the-gathering'
+        }`}
+        isActive={currentPath.startsWith('/multisearch')}
       >
         Multi Search
       </DesktopNavLink>
 
-      <DesktopNavLink href="/sealed" isActive={currentPath === '/sealed'}>
+      <DesktopNavLink
+        href={`/sealed/${
+          TCG_SELECT_TO_PATH[sealedSearchTcg] || 'magic-the-gathering'
+        }`}
+        isActive={currentPath.startsWith('/sealed')}
+        rel="external nofollow noopener"
+      >
         Sealed Search
       </DesktopNavLink>
 
-      <DesktopNavLink href="/buylists" isActive={currentPath === '/buylists'}>
+      <DesktopNavLink
+        href={`/buylists/${
+          TCG_SELECT_TO_PATH[buylistTcg] || 'magic-the-gathering'
+        }`}
+        isActive={currentPath.startsWith('/buylists')}
+      >
         Buylists
       </DesktopNavLink>
 
@@ -124,7 +147,6 @@ function DesktopMenuLinks({
         href="https://discord.gg/EnKKHxSq75"
         isActive={false}
         target="_blank"
-        rel="noopener noreferrer"
       >
         Discord
       </DesktopNavLink>

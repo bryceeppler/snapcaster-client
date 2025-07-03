@@ -2,6 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
+
+import useBuylistStore from '@/stores/useBuylistStore';
+import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
+import useMultiSearchStore from '@/stores/multiSearchStore';
 
 import {
   AlignJustify,
@@ -99,7 +104,8 @@ export default function MobileNavbar(): JSX.Element {
   const cartItemCount = currentCart?.cart?.items?.length || 0;
   const hasCartItems = cartItemCount > 0;
   const isCartVisible =
-    currentPath === '/buylists' && buylistUIState !== 'finalSubmissionState';
+    currentPath.startsWith('/buylists') &&
+    buylistUIState !== 'finalSubmissionState';
   const isCartEnabled = Boolean(currentCart?.cart?.name);
 
   // Handle cart button click
@@ -117,9 +123,30 @@ export default function MobileNavbar(): JSX.Element {
   // Navigation data
   const mainNavItems: NavItem[] = [
     { label: 'Home', href: '/', icon: Home },
-    { label: 'Multi Search', href: '/multisearch', icon: Search },
-    { label: 'Sealed Search', href: '/sealed', icon: Package },
-    { label: 'Buylists', href: '/buylists', icon: ShoppingBag },
+    {
+      label: 'Multi Search',
+      href: `/multisearch/${
+        TCG_SELECT_TO_PATH[useMultiSearchStore.getState().tcg] ||
+        'magic-the-gathering'
+      }`,
+      icon: Search
+    },
+    {
+      label: 'Sealed Search',
+      href: `/sealed/${
+        TCG_SELECT_TO_PATH[useSealedSearchStore.getState().productCategory] ||
+        'magic-the-gathering'
+      }`,
+      icon: Package
+    },
+    {
+      label: 'Buylists',
+      href: `/buylists/${
+        TCG_SELECT_TO_PATH[useBuylistStore.getState().tcg] ||
+        'magic-the-gathering'
+      }`,
+      icon: ShoppingBag
+    },
     { label: 'About', href: '/about', icon: Info },
     {
       label: 'Discord',
@@ -322,7 +349,7 @@ export default function MobileNavbar(): JSX.Element {
             <img
               className="h-5 w-auto"
               src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
-              alt=""
+              alt="Snapcaster"
               aria-hidden="true"
               width="20"
               height="20"

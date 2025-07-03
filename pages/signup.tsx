@@ -1,9 +1,6 @@
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
 import { type NextPage } from 'next';
-
 import { SignupForm } from '@/components/forms/SignupForm';
 import {
   Card,
@@ -14,6 +11,7 @@ import {
   CardFooter
 } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
+import { PageHead } from '@/components/page-head';
 
 const Signup: NextPage = () => {
   const { isAuthenticated, isInitializing } = useAuth();
@@ -25,7 +23,13 @@ const Signup: NextPage = () => {
 
   return (
     <>
-      <SignupHead />
+      <h1 className="sr-only">Create Your Snapcaster Account</h1>
+      <PageHead
+        title="Snapcaster | Sign Up"
+        description="Create a Snapcaster account and manage your buylists, pro features, and discord integration.."
+        url="https://snapcaster.ca/signup"
+      />
+
       <section className="flex w-full justify-center py-6 md:py-12">
         <Card className="w-full max-w-sm">
           <CardHeader>
@@ -62,27 +66,3 @@ const Signup: NextPage = () => {
 };
 
 export default Signup;
-
-const SignupHead = () => {
-  return (
-    <Head>
-      <title>Sign Up</title>
-      <meta
-        name="description"
-        content="Search Magic the Gathering cards across Canada"
-      />
-      <meta
-        property="og:title"
-        content={`Snapcaster - Search Magic the Gathering cards across Canada`}
-      />
-      <meta
-        property="og:description"
-        content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
-      />
-      <meta property="og:url" content={`https://snapcaster.ca`} />
-      <meta property="og:type" content="website" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-  );
-};
