@@ -23,8 +23,8 @@ const BuylistsIndex: NextPage = (): JSX.Element => {
   return (
     <>
       <PageHead
-        title="Snapcaster | Buylista"
-        description="Buylist"
+        title="Snapcaster | Sell Your Cards Using LGS Buylist Offers Across Canada"
+        description="Get the best buylist prices for your trading cards across Canadian stores. Fast comparisons. Instant insights."
         url="https://snapcaster.ca/buylists"
       />
 

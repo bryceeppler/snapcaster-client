@@ -80,9 +80,9 @@ export async function getPopularClickedSets(
     const tcgSets = data[tcgKey] || [];
 
     // Return just the set names (top 3)
-    return tcgSets
-      .slice(0, 3)
-      .map((set: { setName: string; count: number }) => set.setName);
+    return tcgSets.map(
+      (set: { setName: string; count: number }) => set.setName
+    );
   } catch (error) {
     console.error('Error fetching popular clicked sets:', error);
     return [];

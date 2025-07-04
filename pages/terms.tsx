@@ -14,10 +14,11 @@ const Terms: NextPage = () => {
       />
 
       <main className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
-        <h1 className="sr-only">Snapcaster Terms And Conditions</h1>
         <section className="w-full py-6 md:py-12">
           <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
-            <h1 className="text-2xl font-bold">TERMS AND CONDITIONS</h1>
+            <h1 className="text-2xl font-bold">
+              Snapcaster Terms And CONDITIONS
+            </h1>
             <p>Last updated: August 25, 2024</p>
 
             <h2 className="text-lg font-bold">AGREEMENT TO OUR LEGAL TERMS</h2>

@@ -8,7 +8,7 @@ import SinglesResultsToolbar from './toolbars/singles-results-toolbar';
 import type { DeviceType, SearchMode } from '@/types/navbar';
 
 /**
- * Determines the search mode for the current path
+ * Determines the search mode for the current path (This is used to determine which search bar to render for singles, sealed, and buylists only)
  */
 export const getSearchModeForPath = (path: string): SearchMode | null => {
   // Handle exact root path

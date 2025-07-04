@@ -111,7 +111,6 @@ function DesktopMenuLinks({
       <DesktopNavLink
         href="/sealed/"
         isActive={currentPath.startsWith('/sealed')}
-        rel="external nofollow noopener"
       >
         Sealed Search
       </DesktopNavLink>
