@@ -61,7 +61,7 @@ const ForgotPassword: NextPage = () => {
       <PageHead
         title="Snapcaster | Forgot Password"
         description="Enter your email to receive a password reset link."
-        url="https://snapcaster.ca/forgot-password"
+        url="https://www.snapcaster.ca/forgot-password"
       />
 
       <main className="flex w-full justify-center py-6 md:py-12">

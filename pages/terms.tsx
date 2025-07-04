@@ -10,14 +10,14 @@ const Terms: NextPage = () => {
       <PageHead
         title="Snapcaster | Terms and Conditions"
         description="Read the terms and conditions for using Snapcaster to search and compare trading card prices in Canada."
-        url="https://snapcaster.ca/terms"
+        url="https://www.snapcaster.ca/terms"
       />
 
       <main className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
         <section className="w-full py-6 md:py-12">
           <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
             <h1 className="text-2xl font-bold">
-              Snapcaster Terms And CONDITIONS
+              Snapcaster Terms And Conditions
             </h1>
             <p>Last updated: August 25, 2024</p>
 

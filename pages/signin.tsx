@@ -32,7 +32,7 @@ const Signin: NextPage = () => {
       <PageHead
         title="Snapcaster | Sign In"
         description="Access your Snapcaster account to manage your account, buylists, and discord integration."
-        url="https://snapcaster.ca/signin"
+        url="https://www.snapcaster.ca/signin"
       />
 
       <main className="flex w-full justify-center py-6 md:py-12">

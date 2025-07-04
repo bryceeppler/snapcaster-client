@@ -23,9 +23,6 @@ export const PageHead = ({
       <meta property="og:url" content={url} />
       <meta property="og:type" content="website" />
 
-      {/* Canonical Tag */}
-      <link rel="canonical" href={url} />
-
       {/* Viewport & Icons */}
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="icon" href="/favicon.ico" />

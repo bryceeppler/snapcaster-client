@@ -70,7 +70,7 @@ const TCGPage: NextPage<TCGPageProps> = ({ tcgPath, prettyName, sets }) => {
       <PageHead
         title={`Snapcaster | Buy ${prettyName} Singles from 80+ Stores`}
         description={setsDescription}
-        url={`https://snapcaster.ca/multisearch/${tcgPath}`}
+        url={`https://www.snapcaster.ca/multisearch/${tcgPath}`}
       />
       <main className="flex w-full flex-col justify-center gap-8 text-center">
         <h1 className="sr-only">
