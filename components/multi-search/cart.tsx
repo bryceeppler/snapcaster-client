@@ -28,7 +28,7 @@ export const Cart = () => {
   const { getVendorNameBySlug } = useVendors();
 
   const recommendedStores = [
-    'obsidiangamesvernon',
+    'obsidian',
     'levelup',
     'chimera',
     'exorgames',

@@ -110,7 +110,7 @@ export const RecommendedStores = () => {
 
     // Ensure "obsidian" appears at the top
     const obsidianIndex = sortedWebsites.findIndex(
-      (site) => site.vendor === 'obsidiangamesvernon'
+      (site) => site.vendor === 'obsidian'
     );
     if (obsidianIndex !== -1) {
       const obsidianSite = sortedWebsites.splice(obsidianIndex, 1)[0];
