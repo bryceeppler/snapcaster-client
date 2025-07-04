@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+
 import { type NextPage } from 'next';
+import { useEffect } from 'react';
 
 import { PageHead } from '@/components/page-head';
-import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 import useMultiSearchStore from '@/stores/multiSearchStore';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 const MultiSearchIndex: NextPage = (): JSX.Element => {
   const router = useRouter();

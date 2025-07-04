@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+
 import { type NextPage } from 'next';
+import { useEffect } from 'react';
 
 import { PageHead } from '@/components/page-head';
-import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 import useBuylistStore from '@/stores/useBuylistStore';
+import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 const BuylistsIndex: NextPage = (): JSX.Element => {
   const router = useRouter();
