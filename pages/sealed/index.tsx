@@ -28,7 +28,7 @@ const SealedIndex: NextPage = (): JSX.Element => {
       <PageHead
         title="Snapcaster | Buy Sealed TCG Packs and Boxes from 80+ Canadian Stores"
         description="The best place to shop sealed trading card products across Canada. Boxes, packs, and more — Fast, Reliable, Local."
-        url="https://snapcaster.ca/sealed"
+        url="https://www.snapcaster.ca/sealed"
       />
 
       <main className="flex min-h-screen items-center justify-center">

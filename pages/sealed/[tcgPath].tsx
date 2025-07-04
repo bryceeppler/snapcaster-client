@@ -53,7 +53,7 @@ const TCGPage: NextPage<TCGPageProps> = ({ tcgPath, prettyName, sets }) => {
       <PageHead
         title={`Snapcaster | Buy ${prettyName} Singles from 80+ Stores`}
         description={setsDescription}
-        url={`https://snapcaster.ca/sealed/${tcgPath}`}
+        url={`https://www.snapcaster.ca/sealed/${tcgPath}`}
       />
       <main className="flex w-full flex-col justify-center text-center">
         <h1 className="sr-only">

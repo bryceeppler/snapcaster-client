@@ -18,7 +18,7 @@ export default function Component() {
       <PageHead
         title="Snapcaster | Frequently Asked Questions"
         description="Answers to common questions about using Snapcaster to search, compare, and buy trading cards across Canada."
-        url="https://snapcaster.ca/faq"
+        url="https://www.snapcaster.ca/faq"
       />
 
       <main className="w-full space-y-4 py-3 md:py-6 lg:py-12">

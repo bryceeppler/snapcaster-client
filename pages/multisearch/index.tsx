@@ -25,7 +25,7 @@ const MultiSearchIndex: NextPage = (): JSX.Element => {
       <PageHead
         title="Snapcaster | TCG Singles Multi Search Tool 80+ Stores"
         description="Search and compare multiple trading card singles from 80+ Canadian stores—bulk search made easy."
-        url="https://snapcaster.ca/multisearch"
+        url="https://www.snapcaster.ca/multisearch"
       />
 
       <main className="flex min-h-screen items-center justify-center">

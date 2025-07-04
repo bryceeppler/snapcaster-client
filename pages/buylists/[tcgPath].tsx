@@ -27,7 +27,7 @@ const TCGPage: NextPage<TCGPageProps> = ({ tcgPath, prettyName, sets }) => {
       <PageHead
         title={`Snapcaster | Sell and Compare ${prettyName} Prices Across Canada`}
         description={setsDescription}
-        url={`https://snapcaster.ca/buylists/${tcgPath}`}
+        url={`https://www.snapcaster.ca/buylists/${tcgPath}`}
       />
       <main>
         <h1 className="sr-only">

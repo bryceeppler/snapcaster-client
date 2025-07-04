@@ -10,7 +10,7 @@ const Privacy: NextPage = () => {
       <PageHead
         title="Snapcaster | Privacy Policy"
         description="Learn how Snapcaster collects and protects your data while helping you search trading card prices across Canada."
-        url="https://snapcaster.ca/privacy"
+        url="https://www.snapcaster.ca/privacy"
       />
 
       <main className="w-full max-w-4xl flex-1 flex-col justify-center text-left">

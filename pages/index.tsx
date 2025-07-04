@@ -26,7 +26,7 @@ const Home: NextPage = () => {
       <PageHead
         title="Snapcaster | Search TCG Singles From 80+ Stores In Canada"
         description="The best place to shop trading card singles online from 80+ stores throughout Canada. Magic the Gathering, Pokemon, Yu-Gi-Oh, Lorcana, One Piece, Star Wars Unlimited, Flesh and Blood."
-        url="https://snapcaster.ca"
+        url="https://www.snapcaster.ca/"
       />
       <main className="flex w-full flex-col justify-center text-center">
         <h1 className="sr-only">Buy Trading Cards Online In Canada</h1>

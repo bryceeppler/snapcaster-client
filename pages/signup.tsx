@@ -28,7 +28,7 @@ const Signup: NextPage = () => {
       <PageHead
         title="Snapcaster | Sign Up"
         description="Create a Snapcaster account and manage your buylists, pro features, and discord integration."
-        url="https://snapcaster.ca/signup"
+        url="https://www.snapcaster.ca/signup"
       />
 
       <main className="flex w-full justify-center py-6 md:py-12">
