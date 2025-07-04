@@ -36,8 +36,5 @@ export const metadata: Metadata = {
     index: true,
     follow: true
   },
-  authors: [{ name: 'Snapcaster' }],
-  alternates: {
-    canonical: 'https://snapcaster.ca/about'
-  }
+  authors: [{ name: 'Snapcaster' }]
 };
