@@ -1,4 +1,5 @@
-import { GetServerSideProps } from 'next';
+import type { GetServerSideProps } from 'next';
+
 import { TCG_PATHS } from '@/utils/tcgPathHelper';
 const Sitemap = () => null;
 
