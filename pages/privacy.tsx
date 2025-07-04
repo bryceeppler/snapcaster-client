@@ -1,12 +1,20 @@
-import Head from 'next/head';
 import Link from 'next/link';
 
 import { type NextPage } from 'next';
+
+import { PageHead } from '@/components/page-head';
+
 const Privacy: NextPage = () => {
   return (
     <>
-      <PrivacyHead />
-      <div className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
+      <PageHead
+        title="Snapcaster | Privacy Policy"
+        description="Learn how Snapcaster collects and protects your data while helping you search trading card prices across Canada."
+        url="https://snapcaster.ca/privacy"
+      />
+
+      <main className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
+        <h1 className="sr-only">Snapcaster Privacy Policy</h1>
         <section className="w-full py-6 md:py-12">
           <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
             <h1 className="text-2xl font-bold">Privacy Policy</h1>
@@ -26,6 +34,7 @@ const Privacy: NextPage = () => {
                 className="hover:text-primary-muted text-primary"
                 href="https://www.freeprivacypolicy.com/free-privacy-policy-generator/"
                 target="_blank"
+                rel="external nofollow noopener noreferrer"
               >
                 Free Privacy Policy Generator
               </Link>
@@ -257,6 +266,7 @@ const Privacy: NextPage = () => {
                 className="hover:text-primary-muted text-primary"
                 href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking"
                 target="_blank"
+                rel="external nofollow noopener"
               >
                 Free Privacy Policy website
               </Link>{' '}
@@ -591,33 +601,9 @@ const Privacy: NextPage = () => {
             </ul>
           </div>
         </section>
-      </div>
+      </main>
     </>
   );
 };
 
 export default Privacy;
-
-const PrivacyHead = () => {
-  return (
-    <Head>
-      <title>Privacy</title>
-      <meta
-        name="description"
-        content="Search Magic the Gathering cards across Canada"
-      />
-      <meta
-        property="og:title"
-        content={`Snapcaster - Search Magic the Gathering cards across Canada`}
-      />
-      <meta
-        property="og:description"
-        content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
-      />
-      <meta property="og:url" content={`https://snapcaster.ca`} />
-      <meta property="og:type" content="website" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-  );
-};

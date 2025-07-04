@@ -11,6 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 export default function Footer() {
   const { isAuthenticated } = useAuth();
+
   return (
     <footer className="z-30 bg-popover py-6">
       <div className="container grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">

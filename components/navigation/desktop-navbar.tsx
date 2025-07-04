@@ -36,7 +36,7 @@ export default function DesktopNavbar(): JSX.Element {
               <img
                 className="h-6 w-auto"
                 src="https://cdn.snapcaster.ca/snapcaster_logo.webp"
-                alt=""
+                alt="Snapcaster"
                 aria-hidden="true"
                 width="24"
                 height="24"
@@ -102,17 +102,23 @@ function DesktopMenuLinks({
       </DesktopNavLink>
 
       <DesktopNavLink
-        href="/multisearch"
-        isActive={currentPath === '/multisearch'}
+        href="/multisearch/"
+        isActive={currentPath.startsWith('/multisearch')}
       >
         Multi Search
       </DesktopNavLink>
 
-      <DesktopNavLink href="/sealed" isActive={currentPath === '/sealed'}>
+      <DesktopNavLink
+        href="/sealed/"
+        isActive={currentPath.startsWith('/sealed')}
+      >
         Sealed Search
       </DesktopNavLink>
 
-      <DesktopNavLink href="/buylists" isActive={currentPath === '/buylists'}>
+      <DesktopNavLink
+        href="/buylists/"
+        isActive={currentPath.startsWith('/buylists')}
+      >
         Buylists
       </DesktopNavLink>
 

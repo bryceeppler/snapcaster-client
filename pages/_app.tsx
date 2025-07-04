@@ -19,7 +19,6 @@ import { Toaster } from '@/components/ui/sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 
-
 const inter = Inter({ subsets: ['latin'] });
 
 type AdContextType = {
@@ -63,7 +62,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
     router.pathname.startsWith('/vendors/dashboard');
   const isLandingPage =
     router.pathname === '/welcome' || router.pathname === '/vendors/tier3';
-  const isBuylistsPage = router.pathname === '/buylists';
+  const isBuylistsPage = router.pathname.startsWith('/buylists');
   const usesMainNav =
     !isVendorDashboardPage && !isLandingPage && !isBuylistsPage;
 

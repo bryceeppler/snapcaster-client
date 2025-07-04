@@ -7,7 +7,7 @@ import type { ReactNode, RefObject } from 'react';
 import type { Tcg } from '@/types';
 
 /**
- * Supported search modes for the application
+ * Supported search modes for the application (This is used to determine which search bar to render for singles, sealed, and buylists only)
  */
 export type SearchMode = 'singles' | 'sealed' | 'buylists';
 

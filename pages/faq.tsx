@@ -1,8 +1,8 @@
-import Head from 'next/head';
 import Link from 'next/link';
 
 import { CheckCircle } from 'lucide-react';
 
+import { PageHead } from '@/components/page-head';
 import {
   Accordion,
   AccordionItem,
@@ -15,13 +15,19 @@ import { cn } from '@/lib/utils';
 export default function Component() {
   return (
     <>
-      <FaqHead />
-      <section className="w-full space-y-4 py-3 md:py-6 lg:py-12">
-        <div className="mx-auto space-y-2">
+      <PageHead
+        title="Snapcaster | Frequently Asked Questions"
+        description="Answers to common questions about using Snapcaster to search, compare, and buy trading cards across Canada."
+        url="https://snapcaster.ca/faq"
+      />
+
+      <main className="w-full space-y-4 py-3 md:py-6 lg:py-12">
+        <h1 className="sr-only">Frequently Asked Questions On Snapcaster</h1>
+        <section className="mx-auto space-y-2">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl">
               General FAQ
-            </h1>
+            </h2>
           </div>
           <Accordion type="single" collapsible className="grid gap-4">
             <AccordionItem value="what-is-this">
@@ -69,13 +75,13 @@ export default function Component() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
+        </section>
 
-        <div className="mx-auto space-y-2">
+        <section className="mx-auto space-y-2">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl">
               LGS FAQ
-            </h1>
+            </h2>
           </div>
           <Accordion type="single" collapsible className="grid gap-4">
             <AccordionItem value="add-store">
@@ -116,16 +122,16 @@ export default function Component() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
+        </section>
 
         <section className="">
           <div className=" space-y-4">
-            <h1
+            <h2
               id="buylists"
               className="scroll-mt-16 text-center text-3xl font-bold tracking-tighter sm:text-4xl md:scroll-mt-32 md:text-4xl"
             >
               Buylist FAQ
-            </h1>
+            </h2>
 
             <div className="mx-auto space-y-2">
               <Accordion type="single" collapsible className="grid gap-4">
@@ -219,7 +225,7 @@ export default function Component() {
             </div>
           </div>
         </section>
-      </section>
+      </main>
     </>
   );
 }
@@ -437,27 +443,3 @@ const steps: Step[] = [
     ]
   }
 ];
-
-const FaqHead = () => {
-  return (
-    <Head>
-      <title>Snapcaster</title>
-      <meta
-        name="description"
-        content="Search Magic the Gathering cards across Canada"
-      />
-      <meta
-        property="og:title"
-        content={`Snapcaster - Search Magic the Gathering cards across Canada`}
-      />
-      <meta
-        property="og:description"
-        content={`Find Magic the Gathering singles and sealed product using in Snapcaster. Search your favourite Canadian stores.`}
-      />
-      <meta property="og:url" content={`https://snapcaster.ca`} />
-      <meta property="og:type" content="website" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-  );
-};
