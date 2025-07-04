@@ -43,7 +43,7 @@ export const RecommendedStores = () => {
   );
 
   const reccomendedWebsites = [
-    'obsidiangamesvernon',
+    'obsidian',
     'levelup',
     'chimera',
     'exorgames',
