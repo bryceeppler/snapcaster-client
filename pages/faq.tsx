@@ -15,15 +15,15 @@ import { cn } from '@/lib/utils';
 export default function Component() {
   return (
     <>
-      <h1 className="sr-only">Frequently Asked Questions On Snapcaster</h1>
       <PageHead
         title="Snapcaster | Frequently Asked Questions"
         description="Answers to common questions about using Snapcaster to search, compare, and buy trading cards across Canada."
         url="https://snapcaster.ca/faq"
       />
 
-      <section className="w-full space-y-4 py-3 md:py-6 lg:py-12">
-        <div className="mx-auto space-y-2">
+      <main className="w-full space-y-4 py-3 md:py-6 lg:py-12">
+        <h1 className="sr-only">Frequently Asked Questions On Snapcaster</h1>
+        <section className="mx-auto space-y-2">
           <div className="space-y-2 text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl">
               General FAQ
@@ -75,9 +75,9 @@ export default function Component() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
+        </section>
 
-        <div className="mx-auto space-y-2">
+        <section className="mx-auto space-y-2">
           <div className="space-y-2 text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl">
               LGS FAQ
@@ -122,7 +122,7 @@ export default function Component() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
+        </section>
 
         <section className="">
           <div className=" space-y-4">
@@ -225,7 +225,7 @@ export default function Component() {
             </div>
           </div>
         </section>
-      </section>
+      </main>
     </>
   );
 }

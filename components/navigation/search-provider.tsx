@@ -8,15 +8,6 @@ import SinglesResultsToolbar from './toolbars/singles-results-toolbar';
 import type { DeviceType, SearchMode } from '@/types/navbar';
 
 /**
- * Maps routes to search modes for consistent handling
- */
-// const routeToSearchModeMap: Record<string, SearchMode> = {
-//   '/': 'singles',
-//   '/buylists': 'buylists',
-//   '/sealed': 'sealed'
-// };
-
-/**
  * Determines the search mode for the current path
  */
 export const getSearchModeForPath = (path: string): SearchMode | null => {

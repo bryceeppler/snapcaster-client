@@ -3,8 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-
-
 import {
   AlignJustify,
   BarChart4,
@@ -57,11 +55,8 @@ import {
 } from '@/components/ui/sheet';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserCarts } from '@/hooks/useUserCarts';
-import useMultiSearchStore from '@/stores/multiSearchStore';
+
 import useBuylistStore from '@/stores/useBuylistStore';
-import useBuyListStore from '@/stores/useBuylistStore';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 // Interface for navigation items with icons
 interface NavItem {
@@ -86,9 +81,9 @@ export default function MobileNavbar(): JSX.Element {
   const { isAuthenticated, isVendor, isAdmin, logout } = useAuth();
   const canViewAnalytics = isAdmin || isVendor;
   const [mobileNavSheetOpen, setMobileNavSheetOpen] = useState(false);
-  const { buylistUIState } = useBuyListStore();
+  const { buylistUIState } = useBuylistStore();
   const { openCart: cartSheetOpen, setOpenCart: setCartSheetOpen } =
-    useBuyListStore();
+    useBuylistStore();
   const cartTriggerRef = useRef<HTMLButtonElement>(null);
 
   // Initialize accordion states based on current path
@@ -126,26 +121,17 @@ export default function MobileNavbar(): JSX.Element {
     { label: 'Home', href: '/', icon: Home },
     {
       label: 'Multi Search',
-      href: `/multisearch/${
-        TCG_SELECT_TO_PATH[useMultiSearchStore.getState().tcg] ||
-        'magic-the-gathering'
-      }`,
+      href: `/multisearch/`,
       icon: Search
     },
     {
       label: 'Sealed Search',
-      href: `/sealed/${
-        TCG_SELECT_TO_PATH[useSealedSearchStore.getState().productCategory] ||
-        'magic-the-gathering'
-      }`,
+      href: `/sealed/`,
       icon: Package
     },
     {
       label: 'Buylists',
-      href: `/buylists/${
-        TCG_SELECT_TO_PATH[useBuylistStore.getState().tcg] ||
-        'magic-the-gathering'
-      }`,
+      href: `/buylists/`,
       icon: ShoppingBag
     },
     { label: 'About', href: '/about', icon: Info },

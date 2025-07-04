@@ -23,13 +23,13 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <h1 className="sr-only">Buy Trading Cards Online In Canada</h1>
       <PageHead
         title="Snapcaster | Search TCG Singles From 80+ Stores In Canada"
-        description="The best place to shop trading card singles online across 80+ stores across Canada. Magic the Gathering, Pokemon, Yu-Gi-Oh, Lorcana, One Piece, Star Wars Unlimted, Flesh and Blood."
+        description="The best place to shop trading card singles online from 80+ stores throughout Canada. Magic the Gathering, Pokemon, Yu-Gi-Oh, Lorcana, One Piece, Star Wars Unlimited, Flesh and Blood."
         url="https://snapcaster.ca"
       />
-      <div className="flex w-full flex-col justify-center text-center">
+      <main className="flex w-full flex-col justify-center text-center">
+        <h1 className="sr-only">Buy Trading Cards Online In Canada</h1>
         {!searchResults && (
           <div className="flex flex-col items-center justify-center md:mt-6">
             <Homebanner prefixText={'Search for'} />
@@ -51,7 +51,7 @@ const Home: NextPage = () => {
           </div>
         )}
         {searchResults && <SingleCatalog />}
-      </div>
+      </main>
     </>
   );
 };

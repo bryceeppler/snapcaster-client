@@ -55,7 +55,10 @@ const TCGPage: NextPage<TCGPageProps> = ({ tcgPath, prettyName, sets }) => {
         description={setsDescription}
         url={`https://snapcaster.ca/sealed/${tcgPath}`}
       />
-      <div className="flex w-full flex-col justify-center text-center">
+      <main className="flex w-full flex-col justify-center text-center">
+        <h1 className="sr-only">
+          Buy {prettyName} sealed packs and boxes from 80+ Canadian stores.
+        </h1>
         <SealedCatalogContainer
           refetch={refetch}
           isLoading={isLoading}
@@ -66,7 +69,7 @@ const TCGPage: NextPage<TCGPageProps> = ({ tcgPath, prettyName, sets }) => {
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}
         />
-      </div>
+      </main>
     </>
   );
 };

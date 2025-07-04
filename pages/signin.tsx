@@ -29,16 +29,16 @@ const Signin: NextPage = () => {
 
   return (
     <>
-      <h1 className="sr-only">Sign In To Your Snapcaster Account</h1>
       <PageHead
         title="Snapcaster | Sign In"
         description="Access your Snapcaster account to manage your account, buylists, and discord integration."
         url="https://snapcaster.ca/signin"
       />
 
-      <section className="flex w-full justify-center py-6 md:py-12">
+      <main className="flex w-full justify-center py-6 md:py-12">
+        <h1 className="sr-only">Sign In To Your Snapcaster Account</h1>
         <SignInForm />
-      </section>
+      </main>
     </>
   );
 };

@@ -24,18 +24,19 @@ const TCGPage: NextPage<TCGPageProps> = ({ tcgPath, prettyName, sets }) => {
 
   return (
     <>
-      <h1 className="sr-only">
-        Sell Trading Card Singles And Compare Buylist Prices Across Canada
-      </h1>
       <PageHead
         title={`Snapcaster | Sell and Compare ${prettyName} Prices Across Canada`}
         description={setsDescription}
         url={`https://snapcaster.ca/buylists/${tcgPath}`}
       />
-
-      <BuylistLayout>
-        <BuylistCatalog />
-      </BuylistLayout>
+      <main>
+        <h1 className="sr-only">
+          Sell Trading Card Singles And Compare Buylist Prices Across Canada
+        </h1>
+        <BuylistLayout>
+          <BuylistCatalog />
+        </BuylistLayout>
+      </main>
     </>
   );
 };

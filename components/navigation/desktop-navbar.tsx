@@ -10,10 +10,6 @@ import ModeToggle from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
-import useMultiSearchStore from '@/stores/multiSearchStore';
-import useBuylistStore from '@/stores/useBuylistStore';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 /**
  * Desktop navigation bar component
@@ -99,12 +95,6 @@ function DesktopMenuLinks({
   currentPath: string;
   canViewAnalytics: boolean;
 }): JSX.Element {
-  const multiSearchTcg = useMultiSearchStore((state) => state.tcg);
-  const sealedSearchTcg = useSealedSearchStore(
-    (state) => state.productCategory
-  );
-  const buylistTcg = useBuylistStore((state) => state.tcg);
-
   return (
     <nav className="flex" aria-label="Main navigation">
       <DesktopNavLink href="/" isActive={currentPath === '/'}>
@@ -112,18 +102,14 @@ function DesktopMenuLinks({
       </DesktopNavLink>
 
       <DesktopNavLink
-        href={`/multisearch/${
-          TCG_SELECT_TO_PATH[multiSearchTcg] || 'magic-the-gathering'
-        }`}
+        href="/multisearch/"
         isActive={currentPath.startsWith('/multisearch')}
       >
         Multi Search
       </DesktopNavLink>
 
       <DesktopNavLink
-        href={`/sealed/${
-          TCG_SELECT_TO_PATH[sealedSearchTcg] || 'magic-the-gathering'
-        }`}
+        href="/sealed/"
         isActive={currentPath.startsWith('/sealed')}
         rel="external nofollow noopener"
       >
@@ -131,9 +117,7 @@ function DesktopMenuLinks({
       </DesktopNavLink>
 
       <DesktopNavLink
-        href={`/buylists/${
-          TCG_SELECT_TO_PATH[buylistTcg] || 'magic-the-gathering'
-        }`}
+        href="/buylists/"
         isActive={currentPath.startsWith('/buylists')}
       >
         Buylists
@@ -147,6 +131,7 @@ function DesktopMenuLinks({
         href="https://discord.gg/EnKKHxSq75"
         isActive={false}
         target="_blank"
+        rel="noopener noreferrer"
       >
         Discord
       </DesktopNavLink>

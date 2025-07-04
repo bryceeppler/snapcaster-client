@@ -36,7 +36,6 @@ import {
   getPopularClickedSets
 } from '@/utils/tcgPathHelper';
 
-
 interface TCGPageProps {
   tcgPath: string;
   prettyName: string;
@@ -71,9 +70,12 @@ const TCGPage: NextPage<TCGPageProps> = ({ tcgPath, prettyName, sets }) => {
       <PageHead
         title={`Snapcaster | Buy ${prettyName} Singles from 80+ Stores`}
         description={setsDescription}
-        url={`https://snapcaster.ca/sealed/${tcgPath}`}
+        url={`https://snapcaster.ca/multisearch/${tcgPath}`}
       />
-      <div className="flex w-full flex-col justify-center gap-8 text-center">
+      <main className="flex w-full flex-col justify-center gap-8 text-center">
+        <h1 className="sr-only">
+          Multi Search {prettyName} Singles from 80+ Stores
+        </h1>
         {mode === 'search' && (
           <>
             <SearchView
@@ -97,7 +99,7 @@ const TCGPage: NextPage<TCGPageProps> = ({ tcgPath, prettyName, sets }) => {
             </div>
           </>
         )}
-      </div>
+      </main>
       <BackToTopButton />
     </>
   );

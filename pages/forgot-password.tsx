@@ -58,14 +58,14 @@ const ForgotPassword: NextPage = () => {
 
   return (
     <>
-      <h1 className="sr-only">Reset Your Snapcaster Password</h1>
       <PageHead
         title="Snapcaster | Forgot Password"
         description="Enter your email to receive a password reset link."
         url="https://snapcaster.ca/forgot-password"
       />
 
-      <section className="flex w-full justify-center py-6 md:py-12">
+      <main className="flex w-full justify-center py-6 md:py-12">
+        <h1 className="sr-only">Reset Your Snapcaster Password</h1>
         <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">Forgot Password</CardTitle>
@@ -115,7 +115,7 @@ const ForgotPassword: NextPage = () => {
             </div>
           </CardContent>
         </Card>
-      </section>
+      </main>
     </>
   );
 };

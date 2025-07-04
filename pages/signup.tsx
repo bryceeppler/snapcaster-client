@@ -25,14 +25,14 @@ const Signup: NextPage = () => {
 
   return (
     <>
-      <h1 className="sr-only">Create Your Snapcaster Account</h1>
       <PageHead
         title="Snapcaster | Sign Up"
-        description="Create a Snapcaster account and manage your buylists, pro features, and discord integration.."
+        description="Create a Snapcaster account and manage your buylists, pro features, and discord integration."
         url="https://snapcaster.ca/signup"
       />
 
-      <section className="flex w-full justify-center py-6 md:py-12">
+      <main className="flex w-full justify-center py-6 md:py-12">
+        <h1 className="sr-only">Create Your Snapcaster Account</h1>
         <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">Sign Up</CardTitle>
@@ -62,7 +62,7 @@ const Signup: NextPage = () => {
             </p>
           </CardFooter>
         </Card>
-      </section>
+      </main>
     </>
   );
 };

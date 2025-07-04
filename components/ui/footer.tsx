@@ -1,7 +1,5 @@
 import Link from 'next/link';
 
-
-
 import {
   DiscordLogoIcon,
   GitHubLogoIcon,
@@ -10,20 +8,9 @@ import {
 import { FacebookIcon } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
-import useMultiSearchStore from '@/stores/multiSearchStore';
-import useBuylistStore from '@/stores/useBuylistStore';
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import { TCG_SELECT_TO_PATH } from '@/utils/tcgPathHelper';
 
 export default function Footer() {
   const { isAuthenticated } = useAuth();
-
-  // Use hooks properly instead of getState()
-  const multiSearchTcg = useMultiSearchStore((state) => state.tcg);
-  const sealedSearchTcg = useSealedSearchStore(
-    (state) => state.productCategory
-  );
-  const buylistTcg = useBuylistStore((state) => state.tcg);
 
   return (
     <footer className="z-30 bg-popover py-6">
@@ -32,27 +19,9 @@ export default function Footer() {
           <h3 className="text-lg font-semibold">Pages</h3>
           <nav className="grid gap-2">
             <Link href="/">Home</Link>
-            <Link
-              href={`/multisearch/${
-                TCG_SELECT_TO_PATH[multiSearchTcg] || 'magic-the-gathering'
-              }`}
-            >
-              Multi Search
-            </Link>
-            <Link
-              href={`/sealed/${
-                TCG_SELECT_TO_PATH[sealedSearchTcg] || 'magic-the-gathering'
-              }`}
-            >
-              Sealed Search
-            </Link>
-            <Link
-              href={`/buylists/${
-                TCG_SELECT_TO_PATH[buylistTcg] || 'magic-the-gathering'
-              }`}
-            >
-              Buylists
-            </Link>
+            <Link href="/multisearch">Multi Search</Link>
+            <Link href="/sealed">Sealed Search</Link>
+            <Link href="/buylists">Buylists</Link>
             {!isAuthenticated ? (
               <Link href="/signin">Login</Link>
             ) : (

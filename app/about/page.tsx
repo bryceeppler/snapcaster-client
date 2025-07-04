@@ -8,9 +8,8 @@ import VendorsSection from '@/components/about/vendors-section';
 export default function AboutPage() {
   return (
     <>
-      <h1 className="sr-only">About Snapcaster</h1>
-
       <main className="container mx-auto px-4 py-12 md:px-6 lg:py-20">
+        <h1 className="sr-only">About Snapcaster</h1>
         <div className="mx-auto max-w-6xl space-y-24">
           <ComingSoon />
           <AboutUs />

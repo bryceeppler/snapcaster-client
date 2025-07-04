@@ -7,14 +7,14 @@ import { PageHead } from '@/components/page-head';
 const Terms: NextPage = () => {
   return (
     <>
-      <h1 className="sr-only">Snapcaster Terms And Conditions</h1>
       <PageHead
         title="Snapcaster | Terms and Conditions"
         description="Read the terms and conditions for using Snapcaster to search and compare trading card prices in Canada."
         url="https://snapcaster.ca/terms"
       />
 
-      <div className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
+      <main className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
+        <h1 className="sr-only">Snapcaster Terms And Conditions</h1>
         <section className="w-full py-6 md:py-12">
           <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
             <h1 className="text-2xl font-bold">TERMS AND CONDITIONS</h1>
@@ -1248,7 +1248,7 @@ const Terms: NextPage = () => {
             </p>
           </div>
         </section>
-      </div>
+      </main>
     </>
   );
 };

@@ -7,14 +7,14 @@ import { PageHead } from '@/components/page-head';
 const Privacy: NextPage = () => {
   return (
     <>
-      <h1 className="sr-only">Snapcaster Privacy Policy</h1>
       <PageHead
         title="Snapcaster | Privacy Policy"
         description="Learn how Snapcaster collects and protects your data while helping you search trading card prices across Canada."
         url="https://snapcaster.ca/privacy"
       />
 
-      <div className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
+      <main className="w-full max-w-4xl flex-1 flex-col justify-center text-left">
+        <h1 className="sr-only">Snapcaster Privacy Policy</h1>
         <section className="w-full py-6 md:py-12">
           <div className="max-[1fr_900px] container grid items-start gap-6 md:px-6">
             <h1 className="text-2xl font-bold">Privacy Policy</h1>
@@ -34,7 +34,7 @@ const Privacy: NextPage = () => {
                 className="hover:text-primary-muted text-primary"
                 href="https://www.freeprivacypolicy.com/free-privacy-policy-generator/"
                 target="_blank"
-                rel="external nofollow noopener"
+                rel="external nofollow noopener noreferrer"
               >
                 Free Privacy Policy Generator
               </Link>
@@ -601,7 +601,7 @@ const Privacy: NextPage = () => {
             </ul>
           </div>
         </section>
-      </div>
+      </main>
     </>
   );
 };
