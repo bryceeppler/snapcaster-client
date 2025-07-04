@@ -19,6 +19,32 @@ const nextConfig = {
         protocol: 'https'
       }
     ]
+  },
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes
+        source: '/(.*)',
+        headers: [
+          // prevents man in the middle attacks. This prevents url parameters from being sent in the referer header to other domains and only Snapcasters base url. (Not relvevent to UTM parameters)
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
+          },
+          // prevents clicjacking attacks by preventing pages from being embedded in an iframe/frame or object tag
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          // prevents MIME type sniffing attacks. Web browsers won't try to guess the mime type of the content and instead use the one specified in the Content-Type header.
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          }
+          // TODO: Add a Content Security Policy header for js, css, images, fonts, api connections, and other resources (This will be alot more involved and will require a lot of testing).
+        ]
+      }
+    ];
   }
 };
 
