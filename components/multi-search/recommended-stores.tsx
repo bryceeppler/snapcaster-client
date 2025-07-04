@@ -47,7 +47,6 @@ export const RecommendedStores = () => {
     'levelup',
     'chimera',
     'exorgames',
-    'mythicstore',
     'houseofcards',
     'vortexgames'
   ];
