@@ -93,13 +93,14 @@ export default function MobileNavbar(): JSX.Element {
     pathname?.startsWith('/vendors') ? 'analytics' : ''
   );
 
-  // Get cart data
-  const { getCurrentCart } = useUserCarts();
+  // Get cart data - only fetch when on buylists page
+  const isOnBuylistsPage = currentPath.startsWith('/buylists');
+  const { getCurrentCart } = isOnBuylistsPage ? useUserCarts() : { getCurrentCart: () => null };
   const currentCart = getCurrentCart();
   const cartItemCount = currentCart?.cart?.items?.length || 0;
   const hasCartItems = cartItemCount > 0;
   const isCartVisible =
-    currentPath.startsWith('/buylists') &&
+    isOnBuylistsPage &&
     buylistUIState !== 'finalSubmissionState';
   const isCartEnabled = Boolean(currentCart?.cart?.name);
 
