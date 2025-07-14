@@ -7,12 +7,17 @@ import { Button } from '../ui/button';
 import ProductImage from './product-image';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { SEALED_DISCOUNT_MAP } from '@/lib/constants';
 import { VendorAssetTheme, VendorAssetType } from '@/services/vendorService';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import type { SealedProduct } from '@/types';
 import { handleBuyClick } from '@/utils/analytics';
+import { createConductUrlBuilder } from '@/utils/urlBuilders/conductUrlBuilder';
+import { createCrystalUrlBuilder } from '@/utils/urlBuilders/crystalUrlBuilder';
+import { createShopifyUrlBuilder } from '@/utils/urlBuilders/shopifyUrlBuilder';
+import { UtmPresets } from '@/utils/urlBuilders/urlBuilderInterfaces';
 
 type Props = {
   product: SealedProduct;
@@ -41,17 +46,38 @@ const SealedCatalogItem = ({ product }: Props) => {
   const { getVendorNameBySlug, getVendorBySlug } = useVendors();
   const { theme } = useTheme();
   const { productCategory } = useSealedSearchStore();
-
+  const { getLargestActiveDiscountByVendorSlug } = useDiscounts();
   const handleClick = () => {
+    const url = (() => {
+      if (product.platform === 'shopify') {
+        const builder = createShopifyUrlBuilder(product.link)
+          .setProduct(product.handle, product.variant_id)
+          .setUtmParams(UtmPresets.singles);
+        const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
+        if (discount?.code) {
+          builder.setDiscount(discount.code);
+        }
+        return builder.build();
+      } else if (product.platform === 'crystal') {
+        return createCrystalUrlBuilder(product.link)
+          .setUtmParams(UtmPresets.singles)
+          .build();
+      } else {
+        return createConductUrlBuilder(product.link)
+          .setUtmParams(UtmPresets.singles)
+          .build();
+      }
+    })();
+
     handleBuyClick(
-      product.link,
+      url,
       product.price,
       product.name,
       product.set,
       product.promoted ?? false,
       productCategory
     );
-    window.open(product.link, '_blank');
+    window.open(url, '_blank');
   };
 
   return (

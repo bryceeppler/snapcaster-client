@@ -23,6 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
+import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { VendorAssetTheme, VendorAssetType } from '@/services/vendorService';
 import useMultiSearchStore from '@/stores/multiSearchStore';
@@ -36,12 +37,13 @@ export const RecommendedStores = () => {
   const { results } = useMultiSearchStore();
   const { getVendorNameBySlug, vendors } = useVendors();
   const { theme } = useTheme();
-
+  const { getLargestActiveDiscountByVendorSlug } = useDiscounts();
   // Filter out null values and then get unique card names
   const allCardNames = new Set(
     results.filter((group) => group && group[0]).map((group) => group[0]?.name)
   );
 
+  //Note: Reccomended Stores are just applicable to shopify stores for now. There is no logic in the buildCartUpdateUrls function that supports crystal or conduct stores for 1 click checkout.
   const reccomendedWebsites = [
     'obsidian',
     'levelup',
@@ -118,17 +120,17 @@ export const RecommendedStores = () => {
         sortedWebsites = [obsidianSite, ...sortedWebsites];
       }
     }
-
     return sortedWebsites;
   };
 
   const handleCheckout = (products: Product[]) => {
     if (products.length === 0) return;
-
     // Group products by host and build cart URLs
+    const discount = getLargestActiveDiscountByVendorSlug(
+      products[0]?.vendor || ''
+    );
     const groupedProducts = groupProductsByHost(products);
-    const cartUrls = buildCartUpdateUrls(groupedProducts);
-    // Open the first URL (there should only be one per vendor)
+    const cartUrls = buildCartUpdateUrls(groupedProducts, discount?.code);
     if (cartUrls.length > 0) {
       window.open(cartUrls[0], '_blank');
     }

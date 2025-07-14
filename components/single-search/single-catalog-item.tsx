@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import { useTheme } from 'next-themes';
 
 import { handleBuyClick } from '../../utils/analytics';
@@ -14,6 +12,11 @@ import { VendorAssetTheme, VendorAssetType } from '@/services/vendorService';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
 import type { SingleCatalogCard } from '@/types';
 import type { Discount } from '@/types/discounts';
+import { createConductUrlBuilder } from '@/utils/urlBuilders/conductUrlBuilder';
+import { createCrystalUrlBuilder } from '@/utils/urlBuilders/crystalUrlBuilder';
+import { createShopifyUrlBuilder } from '@/utils/urlBuilders/shopifyUrlBuilder';
+import { UtmPresets } from '@/utils/urlBuilders/urlBuilderInterfaces';
+
 type DiscountBadgeProps = {
   product: SingleCatalogCard;
   discount: Discount | undefined;
@@ -131,29 +134,48 @@ const SingleCatalogItem = ({ product }: Props) => {
           </div>
         </div>
       </div>
-      <Link
-        href={product.link}
-        target="_blank"
-        rel="noreferrer"
-        className="w-full px-4 pb-4"
-      >
+      <div className="w-full px-4 pb-4">
         <Button
           className="w-full font-montserrat text-xs uppercase"
           variant="secondary"
-          onClick={() =>
+          onClick={() => {
+            const url = (() => {
+              if (product.platform === 'shopify') {
+                const discount = getLargestActiveDiscountByVendorSlug(
+                  product.vendor
+                );
+                const builder = createShopifyUrlBuilder(product.link)
+                  .setProduct(product.handle, product.variant_id)
+                  .setUtmParams(UtmPresets.singles);
+                if (discount?.code) {
+                  builder.setDiscount(discount.code);
+                }
+                return builder.build();
+              } else if (product.platform === 'crystal') {
+                return createCrystalUrlBuilder(product.link)
+                  .setUtmParams(UtmPresets.singles)
+                  .build();
+              } else {
+                return createConductUrlBuilder(product.link)
+                  .setUtmParams(UtmPresets.singles)
+                  .build();
+              }
+            })();
+
             handleBuyClick(
-              product.link,
+              url,
               product.price,
               product.name,
               product.set,
               product.promoted ?? false,
               resultsTcg
-            )
-          }
+            );
+            window.open(url, '_blank', 'noreferrer');
+          }}
         >
           Buy
         </Button>
-      </Link>
+      </div>
     </Card>
   );
 };
