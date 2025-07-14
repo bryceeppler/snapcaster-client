@@ -50,7 +50,7 @@ export function buildCartUpdateUrls(
   if (products[0]?.platform === 'shopify') {
     const shopifyBuilder = createShopifyUrlBuilder(baseUrl)
       .setCart(cartItems)
-      .setUtmParams(UtmPresets.singles);
+      .setUtmParams(UtmPresets.multi);
 
     if (discountCode) {
       shopifyBuilder.setDiscount(discountCode);

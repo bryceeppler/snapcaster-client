@@ -1,8 +1,8 @@
 import type { ShopifyUrlConfig, UtmParams } from './urlBuilderInterfaces';
 
 /**
- * Single Conduct Commerce URL Builder
- * Use Case: Build Crystal Commerce shopify URLs with product or cart paths, discounts, and UTM parameters
++ * Conduct Platform URL Builder
++ * Use Case: Build Conduct URLs with UTM parameters
  */
 export class ConductUrlBuilder {
   private config: ShopifyUrlConfig;
@@ -38,8 +38,8 @@ export class ConductUrlBuilder {
   }
 
   /**
-   * Build the product page url
-   * Purpose: Build the product page url. We apply the product path, discount code, and UTM parameters to the url so that when the user clicks the link, they are redirected to the product page with the discount code applied and UTM parameters applied
++   * Build the product URL with UTM parameters
++   * Purpose: Build the product URL by appending UTM parameters to the base URL
    */
   private buildProductUrl(): string {
     let url = this.config.baseUrl;
@@ -55,8 +55,8 @@ export class ConductUrlBuilder {
   }
 
   /**
-   * Build the final URL
-   * Purpose: Build the final url. We apply the product path, discount code, and UTM parameters to the url so that when the user clicks the link, they are redirected to the product page with the discount code applied and UTM parameters applied
++   * Build the final URL with UTM parameters
++   * Purpose: Build the final URL by appending UTM parameters to the base URL
    */
   build(): string {
     return this.buildProductUrl();

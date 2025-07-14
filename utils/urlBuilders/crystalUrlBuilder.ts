@@ -1,11 +1,11 @@
-import type { ShopifyUrlConfig, UtmParams } from './urlBuilderInterfaces';
+import type { CrystalUrlConfig, UtmParams } from './urlBuilderInterfaces';
 
 /**
  * Single Crystal Commerce URL Builder
  * Use Case: Build Crystal Commerce shopify URLs with product or cart paths, discounts, and UTM parameters
  */
 export class CrystalUrlBuilder {
-  private config: ShopifyUrlConfig;
+  private config: CrystalUrlConfig;
 
   constructor(baseUrl: string) {
     this.config = { baseUrl, type: 'product' };
