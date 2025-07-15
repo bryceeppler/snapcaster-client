@@ -1,5 +1,5 @@
-import { CheckCircle, Info, AlertTriangle } from 'lucide-react';
-import React, { useState } from 'react';
+import { AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -24,11 +24,11 @@ import { useVendors } from '@/hooks/queries/useVendors';
 import { AD_RESOLUTIONS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import type { Vendor } from '@/services/vendorService';
-import { AdvertisementImageType } from '@/types/advertisements';
 import type {
   AdvertisementImage,
   AdvertisementWithImages
 } from '@/types/advertisements';
+import { AdvertisementImageType } from '@/types/advertisements';
 
 const formatFileSize = (kilobytes: number) => {
   // if less than 1mb, return the kilobytes
@@ -58,8 +58,8 @@ const AdImageCard = ({
       const resolutions = AD_RESOLUTIONS[ad.position];
 
       // Try to match with the specific image type if it exists
-      if (adImage.image_type && adImage.image_type in resolutions) {
-        return resolutions[adImage.image_type as keyof typeof resolutions];
+      if (adImage.imageType && adImage.imageType in resolutions) {
+        return resolutions[adImage.imageType as keyof typeof resolutions];
       }
 
       // Default to DEFAULT type if specific type not found
@@ -140,22 +140,22 @@ const AdImageCard = ({
             {vendor?.name}
           </CardTitle>
           <Badge
-            variant={adImage.is_active ? 'default' : 'secondary'}
+            variant={adImage.isActive ? 'default' : 'secondary'}
             className={cn(
               'px-2 py-1',
-              adImage.is_active
+              adImage.isActive
                 ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400'
             )}
           >
-            {adImage.is_active ? 'Active' : 'Inactive'}
+            {adImage.isActive ? 'Active' : 'Inactive'}
           </Badge>
         </div>
         <CardDescription className="mt-1 flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
           <span className="font-medium">{ad?.position}</span>
-          {adImage.image_type && (
+          {adImage.imageType && (
             <span className="rounded-sm bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
-              {adImage.image_type}
+              {adImage.imageType}
             </span>
           )}
         </CardDescription>
@@ -247,14 +247,14 @@ const AdImageCard = ({
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">File Size</span>
                     <span className="font-medium">
-                      {formatFileSize(adImage.file_size) || '—'}
+                      {formatFileSize(adImage.fileSize) || '—'}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Format</span>
                     <span className="font-medium capitalize">
-                      {adImage.file_type?.toLowerCase().replace('image/', '') ||
+                      {adImage.fileType?.toLowerCase().replace('image/', '') ||
                         '—'}
                     </span>
                   </div>
@@ -262,8 +262,8 @@ const AdImageCard = ({
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Created</span>
                     <span className="font-medium">
-                      {adImage.created_at
-                        ? new Date(adImage.created_at).toLocaleDateString()
+                      {adImage.createdAt
+                        ? new Date(adImage.createdAt).toLocaleDateString()
                         : '—'}
                     </span>
                   </div>
@@ -308,7 +308,7 @@ const AdImageCard = ({
           <div className="relative order-1 col-span-1 sm:order-2 sm:col-span-7">
             <div className="group relative flex h-[180px] items-center justify-center overflow-hidden rounded-md border border-gray-200 bg-gray-50 p-2 dark:border-gray-700 dark:bg-gray-900/50 sm:h-[200px]">
               <img
-                src={adImage.image_url}
+                src={adImage.imageUrl}
                 alt={`Advertisement by ${vendor?.name}`}
                 className="max-h-full max-w-full rounded object-contain transition-transform duration-200 group-hover:scale-[1.02]"
                 loading="lazy"
@@ -316,7 +316,7 @@ const AdImageCard = ({
 
               {/* Status indicators */}
               <div className="absolute left-0 top-0 flex flex-col gap-1 p-2">
-                {adImage.file_type?.toLowerCase().includes('gif') && (
+                {adImage.fileType?.toLowerCase().includes('gif') && (
                   <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
                     Animated
                   </Badge>
@@ -372,10 +372,10 @@ const AdImageCard = ({
         </div>
       </CardContent>
 
-      {!adImage.is_active && (
+      {!adImage.isActive && (
         <CardFooter className="flex flex-wrap items-center justify-end gap-2 border-t bg-gray-50 p-3 px-4 dark:border-gray-800 dark:bg-gray-900/30 sm:px-6">
           {/* Only show Approve button for inactive ads */}
-          {!adImage.is_active && (
+          {!adImage.isActive && (
             <Button
               size="sm"
               className="w-full bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 sm:w-auto"
@@ -404,16 +404,16 @@ const ApprovalTable = () => {
   // Count ads with dimension mismatches
   const getMismatchCount = (adImagesList: AdvertisementImage[]) => {
     return adImagesList.filter((adImage) => {
-      const ad = ads.find((ad) => ad.id === adImage.advertisement_id);
+      const ad = ads.find((ad) => ad.id === adImage.advertisementId);
       if (!ad?.position || !(ad.position in AD_RESOLUTIONS)) return false;
 
       const resolutions = AD_RESOLUTIONS[ad.position];
       let recommendedDimensions = null;
 
       // Find the applicable dimensions
-      if (adImage.image_type && adImage.image_type in resolutions) {
+      if (adImage.imageType && adImage.imageType in resolutions) {
         recommendedDimensions =
-          resolutions[adImage.image_type as keyof typeof resolutions];
+          resolutions[adImage.imageType as keyof typeof resolutions];
       } else if (AdvertisementImageType.DEFAULT in resolutions) {
         recommendedDimensions = resolutions[AdvertisementImageType.DEFAULT];
       } else {
@@ -501,9 +501,9 @@ const ApprovalTable = () => {
         ) : (
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             {pendingAdImages.map((adImage) => {
-              const ad = ads.find((ad) => ad.id === adImage.advertisement_id);
+              const ad = ads.find((ad) => ad.id === adImage.advertisementId);
               const vendor = vendors.find(
-                (vendor) => vendor.id === ad?.vendor_id
+                (vendor) => vendor.id === ad?.vendorId
               );
               return (
                 <AdImageCard
@@ -530,9 +530,9 @@ const ApprovalTable = () => {
         ) : (
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             {activeAdImages.map((adImage) => {
-              const ad = ads.find((ad) => ad.id === adImage.advertisement_id);
+              const ad = ads.find((ad) => ad.id === adImage.advertisementId);
               const vendor = vendors.find(
-                (vendor) => vendor.id === ad?.vendor_id
+                (vendor) => vendor.id === ad?.vendorId
               );
               return (
                 <AdImageCard

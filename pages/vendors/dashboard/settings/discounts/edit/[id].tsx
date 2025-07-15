@@ -268,9 +268,9 @@ export default function EditDiscountPage() {
                             </div>
                             <div className="flex h-8 w-full items-center rounded-md border bg-muted/10 pl-8 text-xs md:h-9 md:text-sm">
                               {vendors.find(
-                                (v) => v.id === currentDiscount.vendor_id
+                                (v) => v.id === currentDiscount.vendorId
                               )?.name ||
-                                `Vendor ID: ${currentDiscount.vendor_id}`}
+                                `Vendor ID: ${currentDiscount.vendorId}`}
                             </div>
                           </div>
                           <p className="text-[10px] text-muted-foreground md:text-xs">
@@ -514,7 +514,7 @@ export default function EditDiscountPage() {
                     <span>
                       Created{' '}
                       {format(
-                        new Date(currentDiscount.created_at || new Date()),
+                        new Date(currentDiscount.createdAt || new Date()),
                         'PP'
                       )}
                     </span>

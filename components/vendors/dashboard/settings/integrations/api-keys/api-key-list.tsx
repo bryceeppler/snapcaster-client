@@ -1,13 +1,12 @@
 'use client';
 
-import { formatDistanceToNow } from 'date-fns';
-import { parseISO } from 'date-fns';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 import {
-  MoreHorizontal,
-  Trash2,
-  Loader2,
   AlertCircle,
-  KeyRound
+  KeyRound,
+  Loader2,
+  MoreHorizontal,
+  Trash2
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -75,7 +74,7 @@ const MobileApiKeyCard = ({
             <p className="text-sm font-medium">{apiKey.name}</p>
           </div>
           <div className="mt-1 text-xs text-muted-foreground">
-            Created {formatDistanceToNow(parseISO(apiKey.createdAt))} ago
+            Created {formatDistanceToNow(parseISO(apiKey.created_at))} ago
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -248,7 +247,7 @@ export function ApiKeyList() {
                     </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatDistanceToNow(parseISO(apiKey.createdAt))} ago
+                    {formatDistanceToNow(parseISO(apiKey.created_at))} ago
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {apiKey.last_used_at

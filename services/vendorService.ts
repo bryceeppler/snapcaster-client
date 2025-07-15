@@ -72,31 +72,15 @@ class VendorService {
     // Transform API response to match frontend expectations and convert dates
     return discounts.map((discount: any) => ({
       ...discount,
-      startsAt:
-        discount.startsAt || discount.starts_at
-          ? new Date(discount.startsAt || discount.starts_at)
-          : null,
-      expiresAt:
-        discount.expiresAt || discount.expires_at
-          ? new Date(discount.expiresAt || discount.expires_at)
-          : null,
+      startsAt: discount.startsAt ? new Date(discount.startsAt) : null,
+      expiresAt: discount.expiresAt ? new Date(discount.expiresAt) : null,
       // Handle both camelCase and snake_case field names from API
-      vendorId: discount.vendorId || discount.vendor_id,
-      vendorSlug: discount.vendorSlug || discount.vendor_slug,
-      discountAmount: discount.discountAmount || discount.discount_amount,
-      discountType: discount.discountType || discount.discount_type,
-      isActive:
-        discount.isActive !== undefined
-          ? discount.isActive
-          : discount.is_active,
-      createdAt:
-        discount.createdAt || discount.created_at
-          ? new Date(discount.createdAt || discount.created_at)
-          : undefined,
-      updatedAt:
-        discount.updatedAt || discount.updated_at
-          ? new Date(discount.updatedAt || discount.updated_at)
-          : undefined
+      vendorId: discount.vendorId,
+      discountAmount: discount.discountAmount,
+      discountType: discount.discountType,
+      isActive: discount.isActive !== undefined ? discount.isActive : undefined,
+      createdAt: discount.createdAt ? new Date(discount.createdAt) : undefined,
+      updatedAt: discount.updatedAt ? new Date(discount.updatedAt) : undefined
     }));
   }
 
@@ -126,9 +110,7 @@ class VendorService {
         discountAmount: discount.discountAmount,
         discountType: discount.discountType,
         isActive:
-          discount.isActive !== undefined
-            ? discount.isActive
-            : discount.is_active,
+          discount.isActive !== undefined ? discount.isActive : undefined,
         createdAt: discount.createdAt
           ? new Date(discount.createdAt)
           : undefined,
