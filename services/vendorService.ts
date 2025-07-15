@@ -1,13 +1,11 @@
-import axios from 'axios';
-
 import type {
   ApiKey,
   CreateApiKeyRequest,
   CreateApiKeyResponse
 } from '@/hooks/queries/useApiKeys';
 import type {
-  Discount,
   CreateDiscountRequest,
+  Discount,
   UpdateDiscountRequest
 } from '@/types/discounts';
 import axiosInstance from '@/utils/axiosWrapper';
@@ -66,22 +64,39 @@ class VendorService {
   }
 
   async getDiscounts(): Promise<Discount[]> {
-    const response = await axiosInstance.get(`${BASE_URL}/api/v1/vendor/discounts`);
+    const response = await axiosInstance.get(
+      `${BASE_URL}/api/v1/vendor/discounts`
+    );
     const discounts = response.data.data || ([] as Discount[]);
 
     // Transform API response to match frontend expectations and convert dates
     return discounts.map((discount: any) => ({
       ...discount,
-      startsAt: discount.startsAt || discount.starts_at ? new Date(discount.startsAt || discount.starts_at) : null,
-      expiresAt: discount.expiresAt || discount.expires_at ? new Date(discount.expiresAt || discount.expires_at) : null,
+      startsAt:
+        discount.startsAt || discount.starts_at
+          ? new Date(discount.startsAt || discount.starts_at)
+          : null,
+      expiresAt:
+        discount.expiresAt || discount.expires_at
+          ? new Date(discount.expiresAt || discount.expires_at)
+          : null,
       // Handle both camelCase and snake_case field names from API
       vendorId: discount.vendorId || discount.vendor_id,
       vendorSlug: discount.vendorSlug || discount.vendor_slug,
       discountAmount: discount.discountAmount || discount.discount_amount,
       discountType: discount.discountType || discount.discount_type,
-      isActive: discount.isActive !== undefined ? discount.isActive : discount.is_active,
-      createdAt: discount.createdAt || discount.created_at ? new Date(discount.createdAt || discount.created_at) : undefined,
-      updatedAt: discount.updatedAt || discount.updated_at ? new Date(discount.updatedAt || discount.updated_at) : undefined
+      isActive:
+        discount.isActive !== undefined
+          ? discount.isActive
+          : discount.is_active,
+      createdAt:
+        discount.createdAt || discount.created_at
+          ? new Date(discount.createdAt || discount.created_at)
+          : undefined,
+      updatedAt:
+        discount.updatedAt || discount.updated_at
+          ? new Date(discount.updatedAt || discount.updated_at)
+          : undefined
     }));
   }
 
@@ -103,16 +118,31 @@ class VendorService {
       // Transform API response to match frontend expectations and convert dates
       return discounts.map((discount: any) => ({
         ...discount,
-        startsAt: discount.startsAt || discount.starts_at ? new Date(discount.startsAt || discount.starts_at) : null,
-        expiresAt: discount.expiresAt || discount.expires_at ? new Date(discount.expiresAt || discount.expires_at) : null,
+        startsAt:
+          discount.startsAt || discount.starts_at
+            ? new Date(discount.startsAt || discount.starts_at)
+            : null,
+        expiresAt:
+          discount.expiresAt || discount.expires_at
+            ? new Date(discount.expiresAt || discount.expires_at)
+            : null,
         // Handle both camelCase and snake_case field names from API
         vendorId: discount.vendorId || discount.vendor_id,
         vendorSlug: discount.vendorSlug || discount.vendor_slug,
         discountAmount: discount.discountAmount || discount.discount_amount,
         discountType: discount.discountType || discount.discount_type,
-        isActive: discount.isActive !== undefined ? discount.isActive : discount.is_active,
-        createdAt: discount.createdAt || discount.created_at ? new Date(discount.createdAt || discount.created_at) : undefined,
-        updatedAt: discount.updatedAt || discount.updated_at ? new Date(discount.updatedAt || discount.updated_at) : undefined
+        isActive:
+          discount.isActive !== undefined
+            ? discount.isActive
+            : discount.is_active,
+        createdAt:
+          discount.createdAt || discount.created_at
+            ? new Date(discount.createdAt || discount.created_at)
+            : undefined,
+        updatedAt:
+          discount.updatedAt || discount.updated_at
+            ? new Date(discount.updatedAt || discount.updated_at)
+            : undefined
       }));
     } catch (error) {
       console.error('Error fetching discounts:', error);
