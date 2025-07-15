@@ -54,15 +54,15 @@ export const AD_DIMENSIONS = {
 
 // Form schema for advertisement validation
 const advertisementFormSchema = z.object({
-  target_url: z.string().url({
+  targetUrl: z.string().url({
     message: 'Please enter a valid URL.'
   }),
   position: z.nativeEnum(AdvertisementPosition),
-  alt_text: z.string().min(3, {
+  altText: z.string().min(3, {
     message: 'Alt text must be at least 3 characters.'
   }),
-  start_date: z.date(),
-  end_date: z.date().nullable().optional()
+  startDate: z.date(),
+  endDate: z.date().nullable().optional()
 });
 
 type AdvertisementFormValues = z.infer<typeof advertisementFormSchema>;
@@ -96,19 +96,19 @@ const AdvertisementRow = memo(
         {isAdmin && (
           <TableCell className="hidden text-muted-foreground md:table-cell">
             <div className="flex items-center gap-2">
-              {getVendorName(ad.vendor_id)}
+              {getVendorName(ad.vendorId)}
             </div>
           </TableCell>
         )}
         <TableCell className="max-w-[200px]">
           <a
-            href={ad.target_url}
+            href={ad.targetUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center text-primary hover:underline"
           >
             <LinkIcon className="mr-1 h-3 w-3 min-w-[12px] flex-shrink-0" />
-            <span className="truncate">{ad.target_url}</span>
+            <span className="truncate">{ad.targetUrl}</span>
           </a>
         </TableCell>
         <TableCell className="hidden lg:table-cell">
@@ -127,17 +127,17 @@ const AdvertisementRow = memo(
         <TableCell>
           <div className="flex items-center space-x-2">
             <Switch
-              checked={ad.is_active}
+              checked={ad.isActive}
               onCheckedChange={(checked) => onToggleStatus(ad, checked)}
               aria-label={`${
-                ad.is_active ? 'Deactivate' : 'Activate'
+                ad.isActive ? 'Deactivate' : 'Activate'
               } advertisement`}
               disabled={isLoading}
               id={`ad-${ad.id}-status`}
             />
             <VisuallyHidden>
               <label htmlFor={`ad-${ad.id}-status`}>
-                {ad.is_active ? 'Active' : 'Inactive'}
+                {ad.isActive ? 'Active' : 'Inactive'}
               </label>
             </VisuallyHidden>
           </div>
@@ -160,8 +160,8 @@ const AdvertisementRow = memo(
   (prevProps, nextProps) => {
     return (
       prevProps.ad.id === nextProps.ad.id &&
-      prevProps.ad.is_active === nextProps.ad.is_active &&
-      prevProps.ad.target_url === nextProps.ad.target_url &&
+      prevProps.ad.isActive === nextProps.ad.isActive &&
+      prevProps.ad.targetUrl === nextProps.ad.targetUrl &&
       prevProps.ad.images.length === nextProps.ad.images.length
     );
   }
@@ -215,11 +215,11 @@ const MobileAdvertisementCard = memo(
             <div className="mt-0.5 flex items-center">
               <div
                 className={`mr-1 inline-block h-1.5 w-1.5 rounded-full ${
-                  ad.is_active ? 'bg-green-500' : 'bg-gray-400'
+                  ad.isActive ? 'bg-green-500' : 'bg-gray-400'
                 }`}
               />
               <span className="text-[10px] text-muted-foreground">
-                {ad.is_active ? 'Active' : 'Inactive'}
+                {ad.isActive ? 'Active' : 'Inactive'}
               </span>
             </div>
 
@@ -227,7 +227,7 @@ const MobileAdvertisementCard = memo(
             {isAdmin && (
               <div className="mt-0.5 flex items-center text-xs text-muted-foreground">
                 <Store className="mr-1 h-3 w-3" />
-                {getVendorName(ad.vendor_id)}
+                {getVendorName(ad.vendorId)}
               </div>
             )}
           </div>
@@ -236,7 +236,7 @@ const MobileAdvertisementCard = memo(
           <div className="flex items-center">
             <Switch
               className="scale-75"
-              checked={ad.is_active}
+              checked={ad.isActive}
               onCheckedChange={(checked) => onToggleStatus(ad, checked)}
               aria-label={`Toggle ${ad.id} status`}
               disabled={isLoading}
@@ -293,8 +293,8 @@ const MobileAdvertisementCard = memo(
   ) => {
     return (
       prevProps.ad.id === nextProps.ad.id &&
-      prevProps.ad.is_active === nextProps.ad.is_active &&
-      prevProps.ad.target_url === nextProps.ad.target_url &&
+      prevProps.ad.isActive === nextProps.ad.isActive &&
+      prevProps.ad.targetUrl === nextProps.ad.targetUrl &&
       prevProps.ad.images.length === nextProps.ad.images.length
     );
   }
@@ -348,16 +348,16 @@ export default function AdvertisementsPage() {
   const advertisementsByVendor = useMemo(() => {
     if (!isAdmin || !advertisements.length) return [];
 
-    // Group ads by vendor_id
+    // Group ads by vendorId
     const groupedAds = advertisements.reduce((acc, ad) => {
-      if (!acc[ad.vendor_id]) {
-        acc[ad.vendor_id] = {
-          vendorId: ad.vendor_id,
-          vendorName: getVendorName(ad.vendor_id),
+      if (!acc[ad.vendorId]) {
+        acc[ad.vendorId] = {
+          vendorId: ad.vendorId,
+          vendorName: getVendorName(ad.vendorId),
           advertisements: []
         };
       }
-      acc[ad.vendor_id]?.advertisements.push(ad);
+      acc[ad.vendorId]?.advertisements.push(ad);
       return acc;
     }, {} as Record<number, { vendorId: number; vendorName: string; advertisements: AdvertisementWithImages[] }>);
 
@@ -370,11 +370,11 @@ export default function AdvertisementsPage() {
   const editForm = useForm<AdvertisementFormValues>({
     resolver: zodResolver(advertisementFormSchema),
     defaultValues: {
-      target_url: '',
+      targetUrl: '',
       position: AdvertisementPosition.FEED,
-      alt_text: '',
-      start_date: new Date(),
-      end_date: null
+      altText: '',
+      startDate: new Date(),
+      endDate: null
     }
   });
 
@@ -382,11 +382,11 @@ export default function AdvertisementsPage() {
   useEffect(() => {
     if (currentAd) {
       editForm.reset({
-        target_url: currentAd.target_url,
+        targetUrl: currentAd.targetUrl,
         position: currentAd.position,
-        alt_text: currentAd.alt_text,
-        start_date: new Date(currentAd.start_date),
-        end_date: currentAd.end_date ? new Date(currentAd.end_date) : null
+        altText: currentAd.altText,
+        startDate: new Date(currentAd.startDate),
+        endDate: currentAd.endDate ? new Date(currentAd.endDate) : null
       });
     }
   }, [currentAd, editForm]);
@@ -418,7 +418,7 @@ export default function AdvertisementsPage() {
     try {
       await updateAdvertisement.mutateAsync({
         id: ad.id,
-        data: { is_active: newStatus }
+        data: { isActive: newStatus }
       });
     } catch (error) {
       console.error('Error updating advertisement status:', error);

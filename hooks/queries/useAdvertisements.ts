@@ -2,10 +2,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useRef } from 'react';
 import { toast } from 'sonner';
 
+import { useAuth } from '@/hooks/useAuth';
 import type { UpdateAdvertisementRequest } from '@/services/advertisementService';
 import { advertisementService } from '@/services/advertisementService';
 import type { AdvertisementWithImages } from '@/types/advertisements';
 import { AdvertisementPosition } from '@/types/advertisements';
+
 export const QUERY_KEY = 'advertisements';
 
 const fetchAdvertisements = async (): Promise<AdvertisementWithImages[]> => {
@@ -21,15 +23,21 @@ const fetchAdvertisements = async (): Promise<AdvertisementWithImages[]> => {
 export const useAdvertisements = () => {
   const queryClient = useQueryClient();
   const cachedAdsRef = useRef<{ [key: string]: any }>({});
+  const { profile } = useAuth();
+
+  // Get user role and vendor info
+  const isAdmin = profile?.data?.user.role === 'ADMIN';
+  const vendorId = profile?.data?.user.vendorData?.vendorId;
 
   // Query for fetching all advertisements
   const query = useQuery({
-    queryKey: [QUERY_KEY],
+    queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId],
     queryFn: fetchAdvertisements,
     staleTime: 1000 * 60 * 60, // 1 hour
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    refetchOnMount: false
+    refetchOnMount: false,
+    enabled: !!profile // Only fetch when profile is loaded
   });
 
   // Memoize and cache query results to prevent unnecessary filtering on window resize
@@ -50,8 +58,8 @@ export const useAdvertisements = () => {
 
       // Calculate and cache the result
       const result = vendorId
-        ? cachedData.filter((ad) => ad.vendor_id === vendorId)
-        : cachedData;
+        ? cachedData.filter((ad) => ad.vendorId === vendorId)
+        : [];
 
       cachedAdsRef.current[cacheKey] = result;
       cachedAdsRef.current.updatedAt = query.dataUpdatedAt;
@@ -98,10 +106,10 @@ export const useAdvertisements = () => {
 
       // Calculate and cache the result
       const result = cachedData
-        .filter((ad) => ad.is_active)
+        .filter((ad) => ad.isActive)
         .map((ad) => ({
           ...ad,
-          images: ad.images.filter((img) => img.is_active)
+          images: ad.images.filter((img) => img.isActive)
         }));
 
       cachedAdsRef.current[cacheKey] = result;
@@ -111,12 +119,12 @@ export const useAdvertisements = () => {
     };
   }, [cachedData, query.dataUpdatedAt]);
 
-  // return ads with the position TOP_BANNER, and allow for passing a param to filter by is_active = true
+  // return ads with the position TOP_BANNER, and allow for passing a param to filter by isActive = true
   const topBannerAds = useMemo(() => {
     return cachedData.filter(
       (ad) =>
         ad.position === AdvertisementPosition.TOP_BANNER &&
-        ad.is_active === true
+        ad.isActive === true
     );
   }, [cachedData]);
 
@@ -125,7 +133,7 @@ export const useAdvertisements = () => {
     return cachedData.filter(
       (ad) =>
         ad.position === AdvertisementPosition.LEFT_BANNER &&
-        ad.is_active === true
+        ad.isActive === true
     );
   }, [cachedData]);
 
@@ -134,7 +142,7 @@ export const useAdvertisements = () => {
     return cachedData.filter(
       (ad) =>
         ad.position === AdvertisementPosition.RIGHT_BANNER &&
-        ad.is_active === true
+        ad.isActive === true
     );
   }, [cachedData]);
 
@@ -153,7 +161,7 @@ export const useAdvertisements = () => {
 
       // Calculate and cache the result
       const result = cachedData.filter(
-        (ad) => ad.position === position && ad.is_active === true
+        (ad) => ad.position === position && ad.isActive === true
       );
 
       cachedAdsRef.current[cacheKey] = result;
@@ -174,8 +182,10 @@ export const useAdvertisements = () => {
     }) => advertisementService.updateAdvertisement(id, data),
     onSuccess: () => {
       toast.success('Advertisement updated successfully');
-      // Invalidate the appropriate query based on vendorId
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      // Invalidate the appropriate query based on user role and vendorId
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId]
+      });
       // Clear the cache
       cachedAdsRef.current = {};
     },
@@ -190,8 +200,10 @@ export const useAdvertisements = () => {
     mutationFn: (id: number) => advertisementService.deleteAdvertisement(id),
     onSuccess: () => {
       toast.success('Advertisement deleted successfully');
-      // Invalidate the appropriate query based on vendorId
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      // Invalidate the appropriate query based on user role and vendorId
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId]
+      });
       // Clear the cache
       cachedAdsRef.current = {};
     },
@@ -207,8 +219,10 @@ export const useAdvertisements = () => {
       advertisementService.deleteAdvertisementImage(id),
     onSuccess: () => {
       toast.success('Image deleted successfully');
-      // Invalidate the appropriate query based on vendorId
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      // Invalidate the appropriate query based on user role and vendorId
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId]
+      });
       // Clear the cache
       cachedAdsRef.current = {};
     },
@@ -232,7 +246,9 @@ export const useAdvertisements = () => {
     // If not in cache, try to fetch from the API
     try {
       // Fetching all advertisements first to ensure our cache is updated
-      await queryClient.fetchQuery({ queryKey: [QUERY_KEY] });
+      await queryClient.fetchQuery({
+        queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId]
+      });
 
       // Clear the cache after fetching new data
       cachedAdsRef.current = {};

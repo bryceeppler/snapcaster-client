@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { useAuth } from '@/hooks/useAuth';
 import { vendorService } from '@/services/vendorService';
 import type {
   CreateDiscountPayload,
@@ -22,28 +23,34 @@ const fetchDiscounts = async (): Promise<Discount[]> => {
 
 export const useDiscounts = () => {
   const queryClient = useQueryClient();
+  const { profile } = useAuth();
+
+  // Get user role and vendor info
+  const isAdmin = profile?.data?.user.role === 'ADMIN';
+  const vendorId = profile?.data?.user.vendorData?.vendorId;
 
   // Query for fetching all discounts
   const query = useQuery({
-    queryKey: [QUERY_KEY],
+    queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId],
     queryFn: fetchDiscounts,
     staleTime: 1000 * 60 * 60, // 1 hour
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: !!profile // Only fetch when profile is loaded
   });
 
   const getDiscountByVendorSlug = (
     vendorSlug: string
   ): Discount | undefined => {
     const discount = query.data?.find(
-      (discount) => discount.vendor_slug === vendorSlug
+      (discount) => discount.vendorSlug === vendorSlug
     );
     return discount;
   };
 
   const getDiscountsByVendorId = (vendorId: number | null): Discount[] => {
-    if (!vendorId) return query.data || [];
+    if (!vendorId) return [];
     const discounts = query.data?.filter(
-      (discount) => discount.vendor_id === vendorId
+      (discount) => discount.vendorId === vendorId
     );
     return discounts || [];
   };
@@ -54,10 +61,10 @@ export const useDiscounts = () => {
     const now = new Date();
     const discounts = query.data?.filter(
       (discount) =>
-        discount.vendor_slug === vendorSlug &&
-        discount.is_active &&
-        discount.starts_at <= now &&
-        (discount.expires_at === null || discount.expires_at >= now)
+        discount.vendorSlug === vendorSlug &&
+        discount.isActive &&
+        discount.startsAt <= now &&
+        (discount.expiresAt === null || discount.expiresAt >= now)
     );
 
     // If no active discounts are found, return undefined
@@ -67,7 +74,7 @@ export const useDiscounts = () => {
 
     // Find the largest discount amount among all active discounts
     return discounts.reduce((max, current) => {
-      return current.discount_amount > (max?.discount_amount || 0)
+      return current.discountAmount > (max?.discountAmount || 0)
         ? current
         : max;
     }, discounts[0]);
@@ -80,7 +87,9 @@ export const useDiscounts = () => {
     onSuccess: () => {
       toast.success('Discount created successfully');
       // Invalidate the discounts query to refresh the data
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId]
+      });
     },
     onError: (error) => {
       console.error('Error creating discount:', error);
@@ -95,7 +104,9 @@ export const useDiscounts = () => {
     onSuccess: () => {
       toast.success('Discount updated successfully');
       // Invalidate the discounts query to refresh the data
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId]
+      });
     },
     onError: (error) => {
       console.error('Error updating discount:', error);
@@ -109,7 +120,9 @@ export const useDiscounts = () => {
     onSuccess: () => {
       toast.success('Discount deleted successfully');
       // Invalidate the discounts query to refresh the data
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId]
+      });
     },
     onError: (error) => {
       console.error('Error deleting discount:', error);

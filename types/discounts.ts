@@ -34,47 +34,47 @@ export interface Discount {
   /**
    * The amount of the discount (percentage or fixed amount)
    */
-  discount_amount: number;
+  discountAmount: number;
 
   /**
    * The type of discount (percentage or fixed amount)
    */
-  discount_type: DiscountType;
+  discountType: DiscountType;
 
   /**
    * ID of the vendor this discount belongs to
    */
-  vendor_id: number;
+  vendorId: number;
 
   /**
    * Slug of the vendor this discount belongs to
    */
-  vendor_slug: string;
+  vendorSlug: string;
 
   /**
    * Date when the discount becomes active
    */
-  starts_at: string | Date;
+  startsAt: string | Date;
 
   /**
    * Date when the discount expires (null for never expires)
    */
-  expires_at: string | Date | null;
+  expiresAt: string | Date | null;
 
   /**
    * Whether the discount is currently active
    */
-  is_active: boolean;
+  isActive: boolean;
 
   /**
    * When the discount was created
    */
-  created_at?: string | Date;
+  createdAt?: string | Date;
 
   /**
    * When the discount was last updated
    */
-  updated_at?: string | Date;
+  updatedAt?: string | Date;
 }
 
 /**
@@ -94,23 +94,23 @@ export interface DiscountFormValues {
   /**
    * Date when the discount becomes active
    */
-  start_date: Date;
+  startDate: Date;
 
   /**
    * Date when the discount expires (null for never expires)
    */
-  end_date: Date | null;
+  endDate: Date | null;
 
   /**
    * Whether the discount is currently active
    */
-  is_active: boolean;
+  isActive: boolean;
 
   /**
    * ID of the vendor this discount belongs to
    * Only required for admin users creating discounts
    */
-  vendor_id?: number;
+  vendorId?: number;
 }
 
 /**
@@ -125,32 +125,32 @@ export interface CreateDiscountPayload {
   /**
    * The amount of the discount
    */
-  discount_amount: number;
+  discountAmount: number;
 
   /**
    * The type of discount
    */
-  discount_type: DiscountType;
+  discountType: DiscountType;
 
   /**
    * ID of the vendor this discount belongs to
    */
-  vendor_id: number;
+  vendorId: number;
 
   /**
    * Date when the discount becomes active
    */
-  starts_at: Date;
+  startsAt: Date;
 
   /**
    * Date when the discount expires (null for never expires)
    */
-  expires_at: Date | null;
+  expiresAt: Date | null;
 
   /**
    * Whether the discount is currently active
    */
-  is_active: boolean;
+  isActive: boolean;
 }
 
 // Alias for compatibility with vendorService
@@ -169,7 +169,7 @@ export interface UpdateDiscountPayload {
    * The updated discount data
    * This is a partial to allow updating individual fields
    */
-  data: Partial<Omit<CreateDiscountPayload, 'vendor_id'>>;
+  data: Partial<Omit<CreateDiscountPayload, 'vendorId'>>;
 }
 
 /**
@@ -177,5 +177,5 @@ export interface UpdateDiscountPayload {
  * This is used by the vendor service
  */
 export type UpdateDiscountRequest = Partial<
-  Omit<CreateDiscountPayload, 'vendor_id'>
+  Omit<CreateDiscountPayload, 'vendorId'>
 >;

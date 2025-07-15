@@ -7,16 +7,16 @@ export enum AdvertisementPosition {
 
 type Advertisement = {
   id: number;
-  vendor_id: number;
+  vendorId: number;
   position: AdvertisementPosition;
-  target_url: string;
-  is_active: boolean;
+  targetUrl: string;
+  isActive: boolean;
   weight: number;
-  alt_text: string;
-  start_date: Date;
-  end_date?: Date;
-  created_at: Date;
-  updated_at: Date;
+  altText: string;
+  startDate: Date;
+  endDate?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export enum AdvertisementImageType {
@@ -27,17 +27,17 @@ export enum AdvertisementImageType {
 
 export type AdvertisementImage = {
   id: number;
-  advertisement_id: number;
-  image_type: AdvertisementImageType;
-  image_url: string;
-  is_active: boolean;
+  advertisementId: number;
+  imageType: AdvertisementImageType;
+  imageUrl: string;
+  isActive: boolean;
   width: number;
   height: number;
-  file_size: number;
-  file_type: string;
+  fileSize: number;
+  fileType: string;
   metadata: Record<string, any>;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type AdvertisementWithImages = Advertisement & {

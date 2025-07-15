@@ -55,7 +55,7 @@ export interface Vendor {
 class VendorService {
   async getAllVendors(): Promise<Vendor[]> {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `${BASE_URL}/api/v1/vendor/vendors?with=assets,discounts&is_active=true`
       );
       return response.data.data || ([] as Vendor[]);
@@ -66,14 +66,22 @@ class VendorService {
   }
 
   async getDiscounts(): Promise<Discount[]> {
-    const response = await axios.get(`${BASE_URL}/api/v1/vendor/discounts`);
+    const response = await axiosInstance.get(`${BASE_URL}/api/v1/vendor/discounts`);
     const discounts = response.data.data || ([] as Discount[]);
 
-    // Convert string dates to Date objects
+    // Transform API response to match frontend expectations and convert dates
     return discounts.map((discount: any) => ({
       ...discount,
-      starts_at: discount.starts_at ? new Date(discount.starts_at) : null,
-      expires_at: discount.expires_at ? new Date(discount.expires_at) : null
+      startsAt: discount.startsAt || discount.starts_at ? new Date(discount.startsAt || discount.starts_at) : null,
+      expiresAt: discount.expiresAt || discount.expires_at ? new Date(discount.expiresAt || discount.expires_at) : null,
+      // Handle both camelCase and snake_case field names from API
+      vendorId: discount.vendorId || discount.vendor_id,
+      vendorSlug: discount.vendorSlug || discount.vendor_slug,
+      discountAmount: discount.discountAmount || discount.discount_amount,
+      discountType: discount.discountType || discount.discount_type,
+      isActive: discount.isActive !== undefined ? discount.isActive : discount.is_active,
+      createdAt: discount.createdAt || discount.created_at ? new Date(discount.createdAt || discount.created_at) : undefined,
+      updatedAt: discount.updatedAt || discount.updated_at ? new Date(discount.updatedAt || discount.updated_at) : undefined
     }));
   }
 
@@ -82,7 +90,7 @@ class VendorService {
     skipCache: boolean = false
   ): Promise<Discount[]> {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `${BASE_URL}/api/v1/vendor/discounts?vendor_id=${vendorId}`,
         {
           headers: {
@@ -92,11 +100,19 @@ class VendorService {
       );
       const discounts = response.data.data || ([] as Discount[]);
 
-      // Convert string dates to Date objects
+      // Transform API response to match frontend expectations and convert dates
       return discounts.map((discount: any) => ({
         ...discount,
-        starts_at: discount.starts_at ? new Date(discount.starts_at) : null,
-        expires_at: discount.expires_at ? new Date(discount.expires_at) : null
+        startsAt: discount.startsAt || discount.starts_at ? new Date(discount.startsAt || discount.starts_at) : null,
+        expiresAt: discount.expiresAt || discount.expires_at ? new Date(discount.expiresAt || discount.expires_at) : null,
+        // Handle both camelCase and snake_case field names from API
+        vendorId: discount.vendorId || discount.vendor_id,
+        vendorSlug: discount.vendorSlug || discount.vendor_slug,
+        discountAmount: discount.discountAmount || discount.discount_amount,
+        discountType: discount.discountType || discount.discount_type,
+        isActive: discount.isActive !== undefined ? discount.isActive : discount.is_active,
+        createdAt: discount.createdAt || discount.created_at ? new Date(discount.createdAt || discount.created_at) : undefined,
+        updatedAt: discount.updatedAt || discount.updated_at ? new Date(discount.updatedAt || discount.updated_at) : undefined
       }));
     } catch (error) {
       console.error('Error fetching discounts:', error);
