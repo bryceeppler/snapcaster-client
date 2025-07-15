@@ -254,7 +254,9 @@ const SearchView = ({
         </div>
 
         <div className="mx-auto max-w-xs text-center text-sm text-muted-foreground">
-          Search up to 100 cards at once. Paste your decklist in below!
+          {`Search up to ${
+            hasActiveSubscription ? '100' : '10'
+          } cards at once. Paste your decklist in below!`}
         </div>
         {!hasActiveSubscription && (
           <div>
