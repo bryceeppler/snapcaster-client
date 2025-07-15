@@ -147,7 +147,7 @@ export const RecommendedStores = () => {
             );
             const matchingVendorIcon = matchingVendor?.assets.find(
               (asset) =>
-                asset.asset_type === VendorAssetType.ICON &&
+                asset.assetType === VendorAssetType.ICON &&
                 (asset.theme === theme ||
                   asset.theme === VendorAssetTheme.UNIVERSAL)
             );

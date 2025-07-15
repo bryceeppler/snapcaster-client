@@ -104,7 +104,7 @@ const SingleCatalogItem = ({ product }: Props) => {
                 );
                 const matchingVendorIcon = matchingVendor?.assets.find(
                   (asset) =>
-                    asset.asset_type === VendorAssetType.ICON &&
+                    asset.assetType === VendorAssetType.ICON &&
                     (asset.theme === theme ||
                       asset.theme === VendorAssetTheme.UNIVERSAL)
                 );

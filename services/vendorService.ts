@@ -32,7 +32,7 @@ export enum VendorAssetTheme {
 
 interface VendorAsset {
   id: number;
-  asset_type: VendorAssetType;
+  assetType: VendorAssetType;
   theme: VendorAssetTheme;
   url: string;
 }
@@ -42,12 +42,12 @@ export interface Vendor {
   name: string;
   slug: string;
   url: string;
-  is_active: boolean;
-  buylist_enabled: boolean;
+  isActive: boolean;
+  buylistEnabled: boolean;
   tier: VendorTier;
   assets: VendorAsset[];
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 class VendorService {
