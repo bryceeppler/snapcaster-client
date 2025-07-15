@@ -182,7 +182,7 @@ export function AdvertisementImageGallery({
                     >
                       <img
                         src={image.imageUrl}
-                        alt={`${advertisement.alt_text || 'Advertisement'} - ${
+                        alt={`${advertisement.altText || 'Advertisement'} - ${
                           image.imageType
                         }`}
                         className="h-full w-full object-contain transition-all group-hover/image:scale-105"

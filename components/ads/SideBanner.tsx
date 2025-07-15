@@ -63,8 +63,8 @@ const SideBanner: React.FC<SideBannerProps> = ({
 
     setSelectedImage({
       imageUrl: randomImage?.imageUrl,
-      alt: ad.alt_text,
-      url: ad.target_url
+      alt: ad.altText,
+      url: ad.targetUrl
     });
   };
 
