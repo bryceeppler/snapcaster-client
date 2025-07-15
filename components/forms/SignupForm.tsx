@@ -45,9 +45,9 @@ export function SignupForm({
   const password = watch('password');
 
   const onSubmit = async (data: SignupFormData) => {
-    const { email, password, fullName } = data;
+    const { email, password, fullName, newsletter } = data;
     register(
-      { email, password, fullName },
+      { email, password, fullName, newsletter },
       {
         onSuccess: () => {
           toast({

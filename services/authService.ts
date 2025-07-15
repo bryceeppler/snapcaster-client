@@ -13,6 +13,7 @@ interface LoginCredentials {
 
 interface RegisterCredentials extends LoginCredentials {
   fullName: string;
+  newsletter?: boolean;
 }
 
 interface RegisterResponse {
