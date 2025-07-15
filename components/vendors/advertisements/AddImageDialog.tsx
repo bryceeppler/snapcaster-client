@@ -61,7 +61,7 @@ const imageFormSchema = z.object({
     .refine((file) => file.size <= 5 * 1024 * 1024, {
       message: 'File size must be less than 5MB.'
     }),
-  image_type: z.nativeEnum(AdvertisementImageType)
+  imageType: z.nativeEnum(AdvertisementImageType)
 });
 
 export type ImageFormValues = z.infer<typeof imageFormSchema>;
@@ -111,7 +111,7 @@ export function AddImageDialog({
   const imageForm = useForm<ImageFormValues>({
     resolver: zodResolver(imageFormSchema),
     defaultValues: {
-      image_type: AdvertisementImageType.DEFAULT
+      imageType: AdvertisementImageType.DEFAULT
     }
   });
 
@@ -130,7 +130,7 @@ export function AddImageDialog({
           : AdvertisementImageType.DEFAULT;
 
       imageForm.reset({
-        image_type: defaultImageType
+        imageType: defaultImageType
       });
     }
   }, [isOpen, imageForm, advertisement.position]);
@@ -138,20 +138,20 @@ export function AddImageDialog({
   // Set image type based on advertisement position
   useEffect(() => {
     if (!allowsMultipleImageTypes) {
-      imageForm.setValue('image_type', AdvertisementImageType.DEFAULT);
+      imageForm.setValue('imageType', AdvertisementImageType.DEFAULT);
     } else {
       // For TOP_BANNER, set DESKTOP as default if not already set to MOBILE
       if (
         advertisement.position === AdvertisementPosition.TOP_BANNER &&
-        imageForm.getValues('image_type') === AdvertisementImageType.DEFAULT
+        imageForm.getValues('imageType') === AdvertisementImageType.DEFAULT
       ) {
-        imageForm.setValue('image_type', AdvertisementImageType.DESKTOP);
+        imageForm.setValue('imageType', AdvertisementImageType.DESKTOP);
       }
     }
   }, [advertisement.position, allowsMultipleImageTypes, imageForm]);
 
   // Get the selected image type
-  const selectedImageType = imageForm.watch('image_type');
+  const selectedImageType = imageForm.watch('imageType');
 
   // Get recommended resolution for current position and image type
   const getRecommendedResolution = (): Resolution | null => {
@@ -291,7 +291,7 @@ export function AddImageDialog({
         await advertisementService.requestPresignedUrl(advertisement.id, {
           fileType: values.image.type,
           fileName: values.image.name,
-          imageType: values.image_type
+          imageType: values.imageType
         });
 
       // 2. Upload the image directly to S3 using the presigned URL
@@ -307,7 +307,7 @@ export function AddImageDialog({
       // 3. Confirm the upload to the backend
       await advertisementService.confirmImageUpload(advertisement.id, {
         publicUrl: presignedUrlResponse.publicUrl,
-        imageType: values.image_type,
+        imageType: values.imageType,
         isActive: true,
         width: uploadResponse.width,
         height: uploadResponse.height,
@@ -547,19 +547,19 @@ export function AddImageDialog({
           {/* Image Type Selection - Only for TOP_BANNER */}
           {allowsMultipleImageTypes && (
             <div className="space-y-1.5">
-              <Label htmlFor="image_type" className="text-xs font-medium">
+              <Label htmlFor="imageType" className="text-xs font-medium">
                 Image Type
               </Label>
               <Controller
                 control={imageForm.control}
-                name="image_type"
+                name="imageType"
                 render={({ field }) => (
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <SelectTrigger
-                      id="image_type"
+                      id="imageType"
                       className="h-9 text-sm"
                       aria-label="Select image type"
                     >
@@ -587,9 +587,9 @@ export function AddImageDialog({
                   </Select>
                 )}
               />
-              {imageForm.formState.errors.image_type && (
+              {imageForm.formState.errors.imageType && (
                 <p className="text-xs font-medium text-destructive">
-                  {imageForm.formState.errors.image_type.message}
+                  {imageForm.formState.errors.imageType.message}
                 </p>
               )}
               <p className="text-[10px] text-muted-foreground">

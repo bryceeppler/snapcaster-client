@@ -57,11 +57,11 @@ export function AdvertisementImageGallery({
   const [imageToDelete, setImageToDelete] = useState<number | null>(null);
 
   const hasMobileImage = advertisement.images.some(
-    (img) => img.image_type === AdvertisementImageType.MOBILE
+    (img) => img.imageType === AdvertisementImageType.MOBILE
   );
 
   const hasDesktopImage = advertisement.images.some(
-    (img) => img.image_type === AdvertisementImageType.DESKTOP
+    (img) => img.imageType === AdvertisementImageType.DESKTOP
   );
 
   const isTopBanner =
@@ -178,12 +178,12 @@ export function AdvertisementImageGallery({
                   <div className="flex flex-1 space-x-4">
                     <div
                       className="group/image relative h-20 w-20 flex-shrink-0 cursor-pointer overflow-hidden rounded-md border bg-muted/50 lg:h-24 lg:w-24"
-                      onClick={() => openImageInNewTab(image.image_url)}
+                      onClick={() => openImageInNewTab(image.imageUrl)}
                     >
                       <img
-                        src={image.image_url}
-                        alt={`${advertisement.alt_text || 'Advertisement'} - ${
-                          image.image_type
+                        src={image.imageUrl}
+                        alt={`${advertisement.altText || 'Advertisement'} - ${
+                          image.imageType
                         }`}
                         className="h-full w-full object-contain transition-all group-hover/image:scale-105"
                       />
@@ -197,11 +197,11 @@ export function AdvertisementImageGallery({
                           variant="outline"
                           className="border-primary/20 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
                         >
-                          {image.image_type}
+                          {image.imageType}
                         </Badge>
 
                         <span className="text-xs text-muted-foreground">
-                          Added {format(image.created_at, 'MMM d, yyyy')}
+                          Added {format(image.createdAt, 'MMM d, yyyy')}
                         </span>
                       </div>
 
@@ -225,13 +225,13 @@ export function AdvertisementImageGallery({
                           </span>
                           <button
                             onClick={() =>
-                              copyImageUrlToClipboard(image.image_url, image.id)
+                              copyImageUrlToClipboard(image.imageUrl, image.id)
                             }
                             className="group/copy flex max-w-[calc(100%-70px)] items-center gap-1.5 rounded-sm focus:outline-none focus-visible:ring-1 focus-visible:ring-primary"
-                            aria-label={`Copy image URL: ${image.image_url}`}
+                            aria-label={`Copy image URL: ${image.imageUrl}`}
                           >
                             <span className="cursor-pointer truncate text-xs text-slate-500 transition-colors group-hover/copy:text-primary">
-                              {image.image_url}
+                              {image.imageUrl}
                             </span>
                             {copiedImageId === image.id ? (
                               <Check className="h-3.5 w-3.5 flex-shrink-0 text-green-500" />
@@ -240,7 +240,7 @@ export function AdvertisementImageGallery({
                             )}
                           </button>
                         </div>
-                        {!image.is_active && (
+                        {!image.isActive && (
                           <Alert
                             variant="default"
                             className="w-fit border-yellow-500 bg-yellow-500/20"

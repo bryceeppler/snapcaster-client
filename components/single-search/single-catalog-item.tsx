@@ -28,7 +28,7 @@ const DiscountBadge = ({ product, discount }: DiscountBadgeProps) => {
     return (
       <div className="flex h-[18px] -skew-x-12 transform items-center rounded bg-primary/80 px-2 font-montserrat text-xs font-semibold leading-none text-white shadow-md">
         <span className="skew-x-12 transform">
-          - {Math.round(discount?.discount_amount || 0)}%
+          - {Math.round(discount?.discountAmount || 0)}%
         </span>
       </div>
     );
@@ -104,7 +104,7 @@ const SingleCatalogItem = ({ product }: Props) => {
                 );
                 const matchingVendorIcon = matchingVendor?.assets.find(
                   (asset) =>
-                    asset.asset_type === VendorAssetType.ICON &&
+                    asset.assetType === VendorAssetType.ICON &&
                     (asset.theme === theme ||
                       asset.theme === VendorAssetTheme.UNIVERSAL)
                 );

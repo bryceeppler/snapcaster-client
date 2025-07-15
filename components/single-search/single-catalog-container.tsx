@@ -45,18 +45,18 @@ const FeedAd = ({
     if (!ad || !ad.images || !ad.images.length) return;
 
     // Get all active images
-    const activeImages = ad.images.filter((img) => img.is_active);
+    const activeImages = ad.images.filter((img) => img.isActive);
     if (!activeImages.length) return;
 
     // Select a random image from the active images
     const randomImage = getRandomItem(activeImages);
-    setImageUrl(randomImage?.image_url);
+    setImageUrl(randomImage?.imageUrl);
   }, [ad]);
 
   if (!imageUrl) return null;
 
   // Append UTM parameters to the URL
-  const adUrl = appendUtmParameters(ad.target_url || '', {
+  const adUrl = appendUtmParameters(ad.targetUrl || '', {
     content: isFeatured ? 'feed_featured' : 'feed_inline'
   });
 
@@ -70,7 +70,7 @@ const FeedAd = ({
       <div className="relative">
         <img
           src={imageUrl}
-          alt={ad.alt_text || 'Advertisement'}
+          alt={ad.altText || 'Advertisement'}
           className="h-auto w-full rounded-lg object-cover"
         />
       </div>

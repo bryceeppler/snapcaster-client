@@ -55,13 +55,12 @@ const TopBanner: React.FC<TopBannerProps> = ({
   const selectRandomImages = (ad: AdvertisementWithImages) => {
     // Get all mobile images for this ad
     const mobileImages = ad.images.filter(
-      (img) => img.image_type === AdvertisementImageType.MOBILE && img.is_active
+      (img) => img.imageType === AdvertisementImageType.MOBILE && img.isActive
     );
 
     // Get all desktop images for this ad
     const desktopImages = ad.images.filter(
-      (img) =>
-        img.image_type === AdvertisementImageType.DESKTOP && img.is_active
+      (img) => img.imageType === AdvertisementImageType.DESKTOP && img.isActive
     );
 
     // Select a random mobile and desktop image
@@ -69,10 +68,10 @@ const TopBanner: React.FC<TopBannerProps> = ({
     const randomDesktopImage = getRandomItem(desktopImages);
 
     setSelectedImages({
-      mobile: randomMobileImage?.image_url,
-      desktop: randomDesktopImage?.image_url,
-      alt: ad.alt_text,
-      url: ad.target_url
+      mobile: randomMobileImage?.imageUrl,
+      desktop: randomDesktopImage?.imageUrl,
+      alt: ad.altText,
+      url: ad.targetUrl
     });
   };
 

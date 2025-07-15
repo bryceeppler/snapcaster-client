@@ -61,7 +61,7 @@ export const useVendors = () => {
     // Find the icon asset based on the current theme
     const iconAsset = vendor.assets.find(
       (asset: any) =>
-        asset.asset_type === VendorAssetType.ICON &&
+        asset.assetType === VendorAssetType.ICON &&
         (asset.theme ===
           (theme === 'dark' ? VendorAssetTheme.DARK : VendorAssetTheme.LIGHT) ||
           asset.theme === VendorAssetTheme.UNIVERSAL)

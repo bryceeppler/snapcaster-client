@@ -97,36 +97,36 @@ const DiscountRow = memo(
         {isAdmin && (
           <TableCell className="hidden text-muted-foreground md:table-cell">
             <div className="flex items-center gap-2">
-              {getVendorName(discount.vendor_id)}
+              {getVendorName(discount.vendorId)}
             </div>
           </TableCell>
         )}
         <TableCell className="hidden md:table-cell">
           <span className="rounded-md bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">
-            {discount.discount_amount}%
+            {discount.discountAmount}%
           </span>
         </TableCell>
         <TableCell className="hidden text-muted-foreground lg:table-cell">
-          {format(new Date(discount.starts_at), 'PP')}
+          {format(new Date(discount.startsAt), 'PP')}
         </TableCell>
         <TableCell className="hidden text-muted-foreground lg:table-cell">
-          {discount.expires_at
-            ? format(new Date(discount.expires_at), 'PP')
+          {discount.expiresAt
+            ? format(new Date(discount.expiresAt), 'PP')
             : 'Never'}
         </TableCell>
         <TableCell>
           <div className="flex items-center space-x-2">
             <Switch
-              checked={discount.is_active}
+              checked={discount.isActive}
               onCheckedChange={(checked) => onToggleStatus(discount, checked)}
               aria-label={`${
-                discount.is_active ? 'Deactivate' : 'Activate'
+                discount.isActive ? 'Deactivate' : 'Activate'
               } discount code ${discount.code}`}
               id={`toggle-${discount.id}`}
             />
             <VisuallyHidden>
               <label htmlFor={`toggle-${discount.id}`}>
-                {discount.is_active ? 'Active' : 'Inactive'}
+                {discount.isActive ? 'Active' : 'Inactive'}
               </label>
             </VisuallyHidden>
           </div>
@@ -224,14 +224,14 @@ const MobileDiscountCard = memo(
             {/* Discount amount */}
             <div className="mt-1">
               <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-xs font-semibold text-primary">
-                {discount.discount_amount}%
+                {discount.discountAmount}%
               </span>
             </div>
 
             {/* Vendor (admin only) */}
             {isAdmin && (
               <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                {getVendorName(discount.vendor_id)}
+                {getVendorName(discount.vendorId)}
               </div>
             )}
           </div>
@@ -239,10 +239,10 @@ const MobileDiscountCard = memo(
           {/* Toggle and actions */}
           <div className="flex items-center gap-2">
             <Switch
-              checked={discount.is_active}
+              checked={discount.isActive}
               onCheckedChange={(checked) => onToggleStatus(discount, checked)}
               aria-label={`${
-                discount.is_active ? 'Deactivate' : 'Activate'
+                discount.isActive ? 'Deactivate' : 'Activate'
               } discount code ${discount.code}`}
               id={`mobile-toggle-${discount.id}`}
             />
@@ -266,13 +266,13 @@ const MobileDiscountCard = memo(
             <div className="mb-3 flex text-xs text-muted-foreground">
               <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
               <div>
-                <div>From: {format(new Date(discount.starts_at), 'PP')}</div>
-                {discount.expires_at && (
+                <div>From: {format(new Date(discount.startsAt), 'PP')}</div>
+                {discount.expiresAt && (
                   <div>
-                    Until: {format(new Date(discount.expires_at), 'PP')}
+                    Until: {format(new Date(discount.expiresAt), 'PP')}
                   </div>
                 )}
-                {!discount.expires_at && <div>No expiration date</div>}
+                {!discount.expiresAt && <div>No expiration date</div>}
               </div>
             </div>
 
@@ -409,7 +409,7 @@ export default function DiscountsPage() {
       try {
         await updateDiscount.mutateAsync({
           id: discount.id,
-          data: { is_active: newStatus }
+          data: { isActive: newStatus }
         });
 
         toast.success(

@@ -50,9 +50,9 @@ const discountFormSchema = z.object({
     .number()
     .min(1, { message: 'Percentage must be at least 1%.' })
     .max(100, { message: 'Percentage cannot exceed 100%.' }),
-  start_date: z.date(),
-  end_date: z.date().nullable().optional(),
-  is_active: z.boolean().default(true)
+  startDate: z.date(),
+  endDate: z.date().nullable().optional(),
+  isActive: z.boolean().default(true)
 });
 
 export default function EditDiscountPage() {
@@ -81,9 +81,9 @@ export default function EditDiscountPage() {
     defaultValues: {
       code: '',
       percentage: 5,
-      start_date: new Date(),
-      end_date: null,
-      is_active: true
+      startDate: new Date(),
+      endDate: null,
+      isActive: true
     }
   });
 
@@ -108,7 +108,7 @@ export default function EditDiscountPage() {
         }
 
         // Check if the user has permission to edit this discount
-        if (!isAdmin && discount.vendor_id !== vendor?.id) {
+        if (!isAdmin && discount.vendorId !== vendor?.id) {
           toast.error('You do not have permission to edit this discount');
           router.push('/vendors/dashboard/settings/discounts');
           return;
@@ -119,10 +119,10 @@ export default function EditDiscountPage() {
         // Populate form with discount data
         form.reset({
           code: discount.code,
-          percentage: discount.discount_amount,
-          start_date: new Date(discount.starts_at),
-          end_date: discount.expires_at ? new Date(discount.expires_at) : null,
-          is_active: discount.is_active
+          percentage: discount.discountAmount,
+          startDate: new Date(discount.startsAt),
+          endDate: discount.expiresAt ? new Date(discount.expiresAt) : null,
+          isActive: discount.isActive
         });
       } catch (error) {
         console.error('Error loading discount:', error);
@@ -155,11 +155,11 @@ export default function EditDiscountPage() {
         id: currentDiscount.id,
         data: {
           code: values.code,
-          discount_amount: values.percentage,
-          discount_type: DiscountType.PERCENTAGE, // Currently only supporting percentage discounts
-          starts_at: values.start_date,
-          expires_at: values.end_date || null,
-          is_active: values.is_active
+          discountAmount: values.percentage,
+          discountType: DiscountType.PERCENTAGE, // Currently only supporting percentage discounts
+          startsAt: values.startDate,
+          expiresAt: values.endDate || null,
+          isActive: values.isActive
         }
       };
 
@@ -268,9 +268,9 @@ export default function EditDiscountPage() {
                             </div>
                             <div className="flex h-8 w-full items-center rounded-md border bg-muted/10 pl-8 text-xs md:h-9 md:text-sm">
                               {vendors.find(
-                                (v) => v.id === currentDiscount.vendor_id
+                                (v) => v.id === currentDiscount.vendorId
                               )?.name ||
-                                `Vendor ID: ${currentDiscount.vendor_id}`}
+                                `Vendor ID: ${currentDiscount.vendorId}`}
                             </div>
                           </div>
                           <p className="text-[10px] text-muted-foreground md:text-xs">
@@ -341,18 +341,18 @@ export default function EditDiscountPage() {
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
                           <Label
-                            htmlFor="is_active"
+                            htmlFor="isActive"
                             className="text-xs font-medium md:text-sm"
                           >
                             Status
                           </Label>
                           <Controller
                             control={form.control}
-                            name="is_active"
+                            name="isActive"
                             render={({ field }) => (
                               <div className="flex items-center space-x-2">
                                 <Switch
-                                  id="is_active"
+                                  id="isActive"
                                   checked={field.value}
                                   onCheckedChange={field.onChange}
                                 />
@@ -385,19 +385,19 @@ export default function EditDiscountPage() {
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div className="space-y-1.5">
                         <Label
-                          htmlFor="start_date"
+                          htmlFor="startDate"
                           className="text-xs font-medium md:text-sm"
                         >
                           Start Date
                         </Label>
                         <Controller
                           control={form.control}
-                          name="start_date"
+                          name="startDate"
                           render={({ field }) => (
                             <Popover>
                               <PopoverTrigger asChild>
                                 <Button
-                                  id="start_date"
+                                  id="startDate"
                                   variant="outline"
                                   className={`h-8 w-full justify-start text-left text-xs md:h-9 md:text-sm ${
                                     !field.value ? 'text-muted-foreground' : ''
@@ -425,16 +425,16 @@ export default function EditDiscountPage() {
                             </Popover>
                           )}
                         />
-                        {form.formState.errors.start_date && (
+                        {form.formState.errors.startDate && (
                           <p className="text-xs font-medium text-destructive">
-                            {form.formState.errors.start_date.message}
+                            {form.formState.errors.startDate.message}
                           </p>
                         )}
                       </div>
 
                       <div className="space-y-1.5">
                         <Label
-                          htmlFor="end_date"
+                          htmlFor="endDate"
                           className="text-xs font-medium md:text-sm"
                         >
                           End Date{' '}
@@ -444,12 +444,12 @@ export default function EditDiscountPage() {
                         </Label>
                         <Controller
                           control={form.control}
-                          name="end_date"
+                          name="endDate"
                           render={({ field }) => (
                             <Popover>
                               <PopoverTrigger asChild>
                                 <Button
-                                  id="end_date"
+                                  id="endDate"
                                   variant="outline"
                                   className={`h-8 w-full justify-start text-left text-xs md:h-9 md:text-sm ${
                                     !field.value ? 'text-muted-foreground' : ''
@@ -489,7 +489,7 @@ export default function EditDiscountPage() {
                                   onSelect={field.onChange}
                                   disabled={(date) =>
                                     date <
-                                    (form.getValues().start_date || new Date())
+                                    (form.getValues().startDate || new Date())
                                   }
                                   initialFocus
                                 />
@@ -497,9 +497,9 @@ export default function EditDiscountPage() {
                             </Popover>
                           )}
                         />
-                        {form.formState.errors.end_date && (
+                        {form.formState.errors.endDate && (
                           <p className="text-xs font-medium text-destructive">
-                            {form.formState.errors.end_date.message}
+                            {form.formState.errors.endDate.message}
                           </p>
                         )}
                       </div>
@@ -514,7 +514,7 @@ export default function EditDiscountPage() {
                     <span>
                       Created{' '}
                       {format(
-                        new Date(currentDiscount.created_at || new Date()),
+                        new Date(currentDiscount.createdAt || new Date()),
                         'PP'
                       )}
                     </span>

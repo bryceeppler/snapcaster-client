@@ -56,10 +56,10 @@ const discountFormSchema = z.object({
     .int({ message: 'Percentage must be an integer (no decimals allowed).' })
     .min(1, { message: 'Percentage must be at least 1%.' })
     .max(100, { message: 'Percentage cannot exceed 100%.' }),
-  start_date: z.date(),
-  end_date: z.date().nullable().optional(),
-  is_active: z.boolean().default(true),
-  vendor_id: z.coerce.number().positive({
+  startDate: z.date(),
+  endDate: z.date().nullable().optional(),
+  isActive: z.boolean().default(true),
+  vendorId: z.coerce.number().positive({
     message: 'Please select a vendor'
   })
 });
@@ -84,23 +84,23 @@ export default function NewDiscountPage() {
     defaultValues: {
       code: '',
       percentage: 5,
-      start_date: new Date(),
-      end_date: null,
-      is_active: true,
-      vendor_id: isAdmin ? 0 : vendor?.id || 0
+      startDate: new Date(),
+      endDate: null,
+      isActive: true,
+      vendorId: isAdmin ? 0 : vendor?.id || 0
     }
   });
 
   // Update form values when vendor is loaded or admin status changes
   useEffect(() => {
     if (!isAdmin && vendor) {
-      form.setValue('vendor_id', vendor.id);
+      form.setValue('vendorId', vendor.id);
     }
   }, [isAdmin, vendor, form]);
 
   const onSubmit = async (values: DiscountFormValues) => {
     // For admin users, ensure a vendor is selected
-    if (isAdmin && (!values.vendor_id || values.vendor_id === 0)) {
+    if (isAdmin && (!values.vendorId || values.vendorId === 0)) {
       toast.error('Please select a vendor for this discount code');
       return;
     }
@@ -112,7 +112,7 @@ export default function NewDiscountPage() {
     }
 
     try {
-      const vendorIdToUse = isAdmin ? values.vendor_id! : vendor?.id || 0;
+      const vendorIdToUse = isAdmin ? values.vendorId! : vendor?.id || 0;
 
       if (vendorIdToUse === 0) {
         toast.error('Invalid vendor ID');
@@ -121,12 +121,12 @@ export default function NewDiscountPage() {
 
       const payload: CreateDiscountPayload = {
         code: values.code.toUpperCase(),
-        discount_amount: values.percentage,
-        vendor_id: vendorIdToUse,
-        discount_type: DiscountType.PERCENTAGE,
-        starts_at: values.start_date,
-        expires_at: values.end_date || null,
-        is_active: values.is_active
+        discountAmount: values.percentage,
+        vendorId: vendorIdToUse,
+        discountType: DiscountType.PERCENTAGE,
+        startsAt: values.startDate,
+        expiresAt: values.endDate || null,
+        isActive: values.isActive
       };
 
       await createDiscount.mutateAsync(payload);
@@ -191,7 +191,7 @@ export default function NewDiscountPage() {
                     {isAdmin && (
                       <div className="space-y-1.5">
                         <Label
-                          htmlFor="vendor_id"
+                          htmlFor="vendorId"
                           className="text-xs font-medium md:text-sm"
                         >
                           Vendor
@@ -202,7 +202,7 @@ export default function NewDiscountPage() {
                           </div>
                           <Controller
                             control={form.control}
-                            name="vendor_id"
+                            name="vendorId"
                             render={({ field }) => (
                               <Select
                                 onValueChange={(value) =>
@@ -217,7 +217,7 @@ export default function NewDiscountPage() {
                                 </SelectTrigger>
                                 <SelectContent>
                                   {vendors
-                                    .filter((v) => v.is_active)
+                                    .filter((v) => v.isActive)
                                     .map((vendor) => (
                                       <SelectItem
                                         key={vendor.id}
@@ -232,9 +232,9 @@ export default function NewDiscountPage() {
                             )}
                           />
                         </div>
-                        {form.formState.errors.vendor_id && (
+                        {form.formState.errors.vendorId && (
                           <p className="text-xs font-medium text-destructive">
-                            {form.formState.errors.vendor_id.message}
+                            {form.formState.errors.vendorId.message}
                           </p>
                         )}
                         <p className="text-[10px] text-muted-foreground md:text-xs">
@@ -313,18 +313,18 @@ export default function NewDiscountPage() {
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
                         <Label
-                          htmlFor="is_active"
+                          htmlFor="isActive"
                           className="text-xs font-medium md:text-sm"
                         >
                           Status
                         </Label>
                         <Controller
                           control={form.control}
-                          name="is_active"
+                          name="isActive"
                           render={({ field }) => (
                             <div className="flex items-center space-x-2">
                               <Switch
-                                id="is_active"
+                                id="isActive"
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                               />
@@ -357,19 +357,19 @@ export default function NewDiscountPage() {
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
                       <Label
-                        htmlFor="start_date"
+                        htmlFor="startDate"
                         className="text-xs font-medium md:text-sm"
                       >
                         Start Date
                       </Label>
                       <Controller
                         control={form.control}
-                        name="start_date"
+                        name="startDate"
                         render={({ field }) => (
                           <Popover>
                             <PopoverTrigger asChild>
                               <Button
-                                id="start_date"
+                                id="startDate"
                                 variant="outline"
                                 className={`h-8 w-full justify-start text-left text-xs md:h-9 md:text-sm ${
                                   !field.value ? 'text-muted-foreground' : ''
@@ -397,16 +397,16 @@ export default function NewDiscountPage() {
                           </Popover>
                         )}
                       />
-                      {form.formState.errors.start_date && (
+                      {form.formState.errors.startDate && (
                         <p className="text-xs font-medium text-destructive">
-                          {form.formState.errors.start_date.message}
+                          {form.formState.errors.startDate.message}
                         </p>
                       )}
                     </div>
 
                     <div className="space-y-1.5">
                       <Label
-                        htmlFor="end_date"
+                        htmlFor="endDate"
                         className="text-xs font-medium md:text-sm"
                       >
                         End Date{' '}
@@ -416,12 +416,12 @@ export default function NewDiscountPage() {
                       </Label>
                       <Controller
                         control={form.control}
-                        name="end_date"
+                        name="endDate"
                         render={({ field }) => (
                           <Popover>
                             <PopoverTrigger asChild>
                               <Button
-                                id="end_date"
+                                id="endDate"
                                 variant="outline"
                                 className={`h-8 w-full justify-start text-left text-xs md:h-9 md:text-sm ${
                                   !field.value ? 'text-muted-foreground' : ''
@@ -461,7 +461,7 @@ export default function NewDiscountPage() {
                                 onSelect={field.onChange}
                                 disabled={(date) =>
                                   date <
-                                  (form.getValues().start_date || new Date())
+                                  (form.getValues().startDate || new Date())
                                 }
                                 initialFocus
                               />
@@ -469,9 +469,9 @@ export default function NewDiscountPage() {
                           </Popover>
                         )}
                       />
-                      {form.formState.errors.end_date && (
+                      {form.formState.errors.endDate && (
                         <p className="text-xs font-medium text-destructive">
-                          {form.formState.errors.end_date.message}
+                          {form.formState.errors.endDate.message}
                         </p>
                       )}
                       <p className="text-[10px] text-muted-foreground md:text-xs">

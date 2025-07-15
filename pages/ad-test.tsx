@@ -70,7 +70,7 @@ const AdTest = () => {
 
     return ads.map((ad) => {
       // Create a fallback vendor identifier in case vendor_slug is missing
-      const vendorId = ad.vendor_id;
+      const vendorId = ad.vendorId;
       // Use ad.vendor_slug if available, otherwise use a generated identifier
       const vendorName = getVendorNameById(vendorId);
 
@@ -102,7 +102,7 @@ const AdTest = () => {
     // Initialize results for all vendors
     ads.forEach((ad) => {
       // Use ad.vendor_slug if available, otherwise use a generated identifier
-      const vendorId = ad.vendor_id;
+      const vendorId = ad.vendorId;
       const vendorName = getVendorNameById(vendorId);
       results[vendorName] = 0;
     });
@@ -113,7 +113,7 @@ const AdTest = () => {
       if (selectedIndex >= 0) {
         const selectedAd = ads[selectedIndex];
         if (selectedAd) {
-          const vendorId = selectedAd.vendor_id;
+          const vendorId = selectedAd.vendorId;
           const vendorName = getVendorNameById(vendorId);
           results[vendorName] = (results[vendorName] || 0) + 1;
         }

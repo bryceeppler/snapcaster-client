@@ -11,26 +11,26 @@ import axiosInstance from '@/utils/axiosWrapper';
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 type CreateAdvertisementRequest = {
-  vendor_id: number;
+  vendorId: number;
   position: AdvertisementPosition;
-  target_url: string;
-  alt_text: string;
-  start_date: Date;
-  end_date?: Date | null;
-  is_active?: boolean;
+  targetUrl: string;
+  altText: string;
+  startDate: Date;
+  endDate?: Date | null;
+  isActive?: boolean;
 };
 
 export type UpdateAdvertisementRequest = Partial<CreateAdvertisementRequest>;
 
 export type CreateAdvertisementImageRequest = {
-  advertisement_id: number;
-  image_type: AdvertisementImageType;
-  image_url: string;
-  is_active?: boolean;
+  advertisementId: number;
+  imageType: AdvertisementImageType;
+  imageUrl: string;
+  isActive?: boolean;
 };
 
 export type UpdateAdvertisementImageRequest = {
-  is_active?: boolean;
+  isActive?: boolean;
 };
 
 type PresignedUrlRequest = {
@@ -62,10 +62,16 @@ type ConfirmUploadRequest = {
 class AdvertisementService {
   async getAllAdvertisements(): Promise<AdvertisementWithImages[]> {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `${BASE_URL}/api/v1/vendor/advertisements?with=images`
       );
-      return response.data.data || ([] as AdvertisementWithImages[]);
+      const data = response.data.data || [];
+      
+      // Transform API response to match frontend expectations and add missing images field
+      return data.map((ad: any) => ({
+        ...ad,
+        images: ad.images || [] // Add empty images array if missing
+      }));
     } catch (error) {
       console.warn('Error fetching advertisements:', error);
       return [] as AdvertisementWithImages[];
@@ -73,7 +79,7 @@ class AdvertisementService {
   }
 
   async getAllAdImages(): Promise<AdvertisementImage[]> {
-    const response = await axios.get(
+    const response = await axiosInstance.get(
       `${BASE_URL}/api/v1/vendor/advertisements/images`
     );
     return response.data.data || ([] as AdvertisementImage[]);
@@ -87,12 +93,18 @@ class AdvertisementService {
       const url = vendorId
         ? `${BASE_URL}/api/v1/vendor/advertisements?with=images&vendor_id=${vendorId}`
         : `${BASE_URL}/api/v1/vendor/advertisements?with=images`;
-      const response = await axios.get(url, {
+      const response = await axiosInstance.get(url, {
         headers: {
           'x-skip-cache': skipCache ? 'true' : 'false'
         }
       });
-      return response.data.data || ([] as AdvertisementWithImages[]);
+      const data = response.data.data || [];
+      
+      // Transform API response to match frontend expectations and add missing images field
+      return data.map((ad: any) => ({
+        ...ad,
+        images: ad.images || [] // Add empty images array if missing
+      }));
     } catch (error) {
       console.error('Error fetching advertisements:', error);
       return [] as AdvertisementWithImages[];
@@ -117,7 +129,7 @@ class AdvertisementService {
       'Updating advertisement with only changed fields:',
       advertisement
     );
-    const response = await axiosInstance.patch(
+    const response = await axiosInstance.put(
       `${BASE_URL}/api/v1/vendor/advertisements/${advertisementId}`,
       advertisement
     );
@@ -128,6 +140,9 @@ class AdvertisementService {
     imageId: number,
     image: UpdateAdvertisementImageRequest
   ): Promise<any> {
+    // Note: The backend route structure suggests this should be:
+    // PUT /api/v1/vendor/advertisements/:id/images/:imageId
+    // But we don't have the advertisement ID here, so we'll need to handle this differently
     const response = await axiosInstance.patch(
       `${BASE_URL}/api/v1/vendor/advertisements/images/${imageId}`,
       image
