@@ -59,6 +59,12 @@ export default function SponsorSection() {
           logo: 'https://cdn.snapcaster.ca/supporters/levelup_supporter.png'
         },
         {
+          id: 2,
+          name: 'Magic Stronghold Games',
+          href: 'https://www.magicstronghold.com?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/supporters/magicstronghold_supporter.png'
+        },
+        {
           id: 3,
           name: 'House of Cards',
           href: 'https://houseofcards.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',

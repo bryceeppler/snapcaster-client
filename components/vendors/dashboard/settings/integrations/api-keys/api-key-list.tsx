@@ -75,7 +75,7 @@ const MobileApiKeyCard = ({
             <p className="text-sm font-medium">{apiKey.name}</p>
           </div>
           <div className="mt-1 text-xs text-muted-foreground">
-            Created {formatDistanceToNow(parseISO(apiKey.created_at))} ago
+            Created {formatDistanceToNow(parseISO(apiKey.createdAt))} ago
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -248,7 +248,7 @@ export function ApiKeyList() {
                     </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatDistanceToNow(parseISO(apiKey.created_at))} ago
+                    {formatDistanceToNow(parseISO(apiKey.createdAt))} ago
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {apiKey.last_used_at

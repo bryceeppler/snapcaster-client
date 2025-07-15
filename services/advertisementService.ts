@@ -129,7 +129,7 @@ class AdvertisementService {
       'Updating advertisement with only changed fields:',
       advertisement
     );
-    const response = await axiosInstance.patch(
+    const response = await axiosInstance.put(
       `${BASE_URL}/api/v1/vendor/advertisements/${advertisementId}`,
       advertisement
     );
@@ -140,6 +140,9 @@ class AdvertisementService {
     imageId: number,
     image: UpdateAdvertisementImageRequest
   ): Promise<any> {
+    // Note: The backend route structure suggests this should be:
+    // PUT /api/v1/vendor/advertisements/:id/images/:imageId
+    // But we don't have the advertisement ID here, so we'll need to handle this differently
     const response = await axiosInstance.patch(
       `${BASE_URL}/api/v1/vendor/advertisements/images/${imageId}`,
       image

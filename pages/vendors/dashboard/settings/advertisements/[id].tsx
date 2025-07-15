@@ -47,7 +47,7 @@ export default function EditAdvertisementPage() {
   // Show appropriate loading state based on mutation status
   const statusLabelText = updateAdvertisement.isPending
     ? 'Updating status...'
-    : advertisement?.is_active
+    : advertisement?.isActive
     ? 'Active'
     : 'Inactive';
 
@@ -63,6 +63,11 @@ export default function EditAdvertisementPage() {
 
       // Admin users should be able to load ads even without a vendor
       if (!isAdmin && !vendor) {
+        return;
+      }
+
+      // Don't try to load if the initial query is still loading
+      if (isQueryLoading) {
         return;
       }
 
@@ -100,7 +105,8 @@ export default function EditAdvertisementPage() {
     isAdmin,
     router,
     fetchAdvertisementById,
-    getAdvertisementById
+    getAdvertisementById,
+    isQueryLoading
   ]);
 
   const onFormSubmit = async (values: AdvertisementFormValues) => {
@@ -112,39 +118,39 @@ export default function EditAdvertisementPage() {
       const changedFields: Partial<AdvertisementFormValues> = {};
 
       // Check each field to see if it has changed
-      if (values.target_url !== advertisement.target_url) {
-        changedFields.target_url = values.target_url;
+      if (values.targetUrl !== advertisement.targetUrl) {
+        changedFields.targetUrl = values.targetUrl;
       }
 
       if (values.position !== advertisement.position) {
         changedFields.position = values.position;
       }
 
-      if (values.alt_text !== advertisement.alt_text) {
-        changedFields.alt_text = values.alt_text;
+      if (values.altText !== advertisement.altText) {
+        changedFields.altText = values.altText;
       }
 
       // For date fields, we need to compare the date strings since the Date objects will be different
-      const formStartDate = values.start_date
-        ? format(values.start_date, 'yyyy-MM-dd')
+      const formStartDate = values.startDate
+        ? format(values.startDate, 'yyyy-MM-dd')
         : null;
-      const adStartDate = advertisement.start_date
-        ? format(new Date(advertisement.start_date), 'yyyy-MM-dd')
+      const adStartDate = advertisement.startDate
+        ? format(new Date(advertisement.startDate), 'yyyy-MM-dd')
         : null;
 
       if (formStartDate !== adStartDate) {
-        changedFields.start_date = values.start_date;
+        changedFields.startDate = values.startDate;
       }
 
-      const formEndDate = values.end_date
-        ? format(values.end_date, 'yyyy-MM-dd')
+      const formEndDate = values.endDate
+        ? format(values.endDate, 'yyyy-MM-dd')
         : null;
-      const adEndDate = advertisement.end_date
-        ? format(new Date(advertisement.end_date), 'yyyy-MM-dd')
+      const adEndDate = advertisement.endDate
+        ? format(new Date(advertisement.endDate), 'yyyy-MM-dd')
         : null;
 
       if (formEndDate !== adEndDate) {
-        changedFields.end_date = values.end_date || null;
+        changedFields.endDate = values.endDate || null;
       }
 
       // Only send the update request if there are changes
@@ -157,12 +163,12 @@ export default function EditAdvertisementPage() {
         };
 
         // Only include dates if they're defined
-        if (changedFields.start_date !== undefined) {
-          updateData.start_date = changedFields.start_date;
+        if (changedFields.startDate !== undefined) {
+          updateData.startDate = changedFields.startDate;
         }
 
-        if (changedFields.end_date !== undefined) {
-          updateData.end_date = changedFields.end_date;
+        if (changedFields.endDate !== undefined) {
+          updateData.endDate = changedFields.endDate;
         }
 
         await updateAdvertisement.mutateAsync({
@@ -189,13 +195,13 @@ export default function EditAdvertisementPage() {
     try {
       await updateAdvertisement.mutateAsync({
         id: advertisement.id,
-        data: { is_active: newStatus }
+        data: { isActive: newStatus }
       });
 
       // Update the advertisement in state
       setAdvertisement({
         ...advertisement,
-        is_active: newStatus
+        isActive: newStatus
       });
     } catch (error) {
       console.error('Error updating advertisement status:', error);
@@ -222,7 +228,7 @@ export default function EditAdvertisementPage() {
     router.push('/vendors/dashboard/settings/advertisements');
 
   // Show loading indicator when fetching data
-  if ((isLoading || isQueryLoading) && !advertisement) {
+  if (isQueryLoading || (isLoading && !advertisement)) {
     return (
       <DashboardLayout>
         <AdvertisementLoadingState onBack={handleBackClick} />
@@ -230,10 +236,20 @@ export default function EditAdvertisementPage() {
     );
   }
 
-  if (!advertisement) {
+  // Only show "not found" if we've finished loading and still don't have the advertisement
+  if (!isQueryLoading && !isLoading && !advertisement) {
     return (
       <DashboardLayout>
         <AdvertisementNotFound onBack={handleBackClick} />
+      </DashboardLayout>
+    );
+  }
+
+  // If we're here but don't have an advertisement yet, show loading
+  if (!advertisement) {
+    return (
+      <DashboardLayout>
+        <AdvertisementLoadingState onBack={handleBackClick} />
       </DashboardLayout>
     );
   }
@@ -259,7 +275,7 @@ export default function EditAdvertisementPage() {
                 <div className="flex items-center gap-1.5">
                   <span
                     className={`flex h-2 w-2 rounded-full ${
-                      advertisement.is_active ? 'bg-primary' : 'bg-muted'
+                      advertisement.isActive ? 'bg-primary' : 'bg-muted'
                     }`}
                   ></span>
                   <span className="text-xs text-muted-foreground">
@@ -267,7 +283,7 @@ export default function EditAdvertisementPage() {
                   </span>
                 </div>
                 <Switch
-                  checked={advertisement.is_active}
+                  checked={advertisement.isActive}
                   onCheckedChange={handleStatusToggle}
                   aria-label="Toggle advertisement status"
                   disabled={updateAdvertisement.isPending}
@@ -290,7 +306,7 @@ export default function EditAdvertisementPage() {
             <div className="xl:col-span-2">
               <AdvertisementDetailsForm
                 advertisement={advertisement}
-                isActive={advertisement.is_active}
+                isActive={advertisement.isActive}
                 onSubmit={onFormSubmit}
                 isPending={updateAdvertisement.isPending || isSaving}
               />

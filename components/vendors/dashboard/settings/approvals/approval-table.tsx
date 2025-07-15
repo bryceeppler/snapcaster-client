@@ -127,7 +127,7 @@ const AdImageCard = ({
     updateAdvertisementImage.mutate({
       id: adImage.id,
       data: {
-        is_active: true
+        isActive: true
       }
     });
   };
@@ -398,8 +398,8 @@ const ApprovalTable = () => {
   const [_activeTab, setActiveTab] = useState<string>('pending');
 
   // Filter ad images based on active status
-  const pendingAdImages = adImages.filter((adImage) => !adImage.is_active);
-  const activeAdImages = adImages.filter((adImage) => adImage.is_active);
+  const pendingAdImages = adImages.filter((adImage) => !adImage.isActive);
+  const activeAdImages = adImages.filter((adImage) => adImage.isActive);
 
   // Count ads with dimension mismatches
   const getMismatchCount = (adImagesList: AdvertisementImage[]) => {

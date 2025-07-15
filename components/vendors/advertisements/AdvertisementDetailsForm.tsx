@@ -21,15 +21,15 @@ import { AdvertisementPosition } from '@/types/advertisements';
 
 // Form schema for advertisement validation
 const advertisementFormSchema = z.object({
-  target_url: z.string().url({
+  targetUrl: z.string().url({
     message: 'Please enter a valid URL. (e.g. https://snapcaster.ca)'
   }),
   position: z.nativeEnum(AdvertisementPosition),
-  alt_text: z.string().min(3, {
+  altText: z.string().min(3, {
     message: 'Alt text must be at least 3 characters.'
   }),
-  start_date: z.date(),
-  end_date: z.date().nullable().optional()
+  startDate: z.date(),
+  endDate: z.date().nullable().optional()
 });
 
 export type AdvertisementFormValues = z.infer<typeof advertisementFormSchema>;
@@ -52,11 +52,11 @@ export function AdvertisementDetailsForm({
   const form = useForm<AdvertisementFormValues>({
     resolver: zodResolver(advertisementFormSchema),
     defaultValues: {
-      target_url: advertisement.target_url,
+      targetUrl: advertisement.targetUrl,
       position: advertisement.position,
-      alt_text: advertisement.alt_text,
-      start_date: new Date(advertisement.start_date),
-      end_date: advertisement.end_date ? new Date(advertisement.end_date) : null
+      altText: advertisement.altText || '',
+      startDate: advertisement.startDate ? new Date(advertisement.startDate) : new Date(),
+      endDate: advertisement.endDate ? new Date(advertisement.endDate) : null
     }
   });
 
@@ -66,25 +66,46 @@ export function AdvertisementDetailsForm({
   // This effect runs when form values change to detect if the form has been modified
   useEffect(() => {
     // Check if basic text/select fields have changed
-    const urlChanged = formValues.target_url !== advertisement.target_url;
+    const urlChanged = formValues.targetUrl !== advertisement.targetUrl;
     const positionChanged = formValues.position !== advertisement.position;
-    const altTextChanged = formValues.alt_text !== advertisement.alt_text;
+    const altTextChanged = formValues.altText !== advertisement.altText;
 
     // For date fields, we need to compare the date strings
-    const formStartDate = formValues.start_date
-      ? format(formValues.start_date, 'yyyy-MM-dd')
-      : null;
-    const adStartDate = advertisement.start_date
-      ? format(new Date(advertisement.start_date), 'yyyy-MM-dd')
-      : null;
-    const startDateChanged = formStartDate !== adStartDate;
+    // Handle potential invalid dates gracefully
+    let formStartDate: string | null = null;
+    let adStartDate: string | null = null;
+    let formEndDate: string | null = null;
+    let adEndDate: string | null = null;
 
-    const formEndDate = formValues.end_date
-      ? format(formValues.end_date, 'yyyy-MM-dd')
-      : null;
-    const adEndDate = advertisement.end_date
-      ? format(new Date(advertisement.end_date), 'yyyy-MM-dd')
-      : null;
+    try {
+      if (formValues.startDate && formValues.startDate instanceof Date && !isNaN(formValues.startDate.getTime())) {
+        formStartDate = format(formValues.startDate, 'yyyy-MM-dd');
+      }
+      if (advertisement.startDate) {
+        const date = new Date(advertisement.startDate);
+        if (!isNaN(date.getTime())) {
+          adStartDate = format(date, 'yyyy-MM-dd');
+        }
+      }
+    } catch (error) {
+      console.warn('Error formatting start date:', error);
+    }
+
+    try {
+      if (formValues.endDate && formValues.endDate instanceof Date && !isNaN(formValues.endDate.getTime())) {
+        formEndDate = format(formValues.endDate, 'yyyy-MM-dd');
+      }
+      if (advertisement.endDate) {
+        const date = new Date(advertisement.endDate);
+        if (!isNaN(date.getTime())) {
+          adEndDate = format(date, 'yyyy-MM-dd');
+        }
+      }
+    } catch (error) {
+      console.warn('Error formatting end date:', error);
+    }
+
+    const startDateChanged = formStartDate !== adStartDate;
     const endDateChanged = formEndDate !== adEndDate;
 
     // Update the state based on whether any fields have changed
@@ -136,12 +157,12 @@ export function AdvertisementDetailsForm({
                 id="target_url"
                 placeholder="https://example.com"
                 className="h-8 pl-8 text-xs md:h-9 md:text-sm"
-                {...form.register('target_url')}
+                {...form.register('targetUrl')}
               />
             </div>
-            {form.formState.errors.target_url && (
+            {form.formState.errors.targetUrl && (
               <p className="text-xs font-medium text-destructive">
-                {form.formState.errors.target_url.message}
+                {form.formState.errors.targetUrl.message}
               </p>
             )}
           </div>
@@ -213,11 +234,11 @@ export function AdvertisementDetailsForm({
               id="alt_text"
               placeholder="Brief description of the advertisement"
               className="h-8 text-xs md:h-9 md:text-sm"
-              {...form.register('alt_text')}
+              {...form.register('altText')}
             />
-            {form.formState.errors.alt_text && (
+            {form.formState.errors.altText && (
               <p className="text-xs font-medium text-destructive">
-                {form.formState.errors.alt_text.message}
+                {form.formState.errors.altText.message}
               </p>
             )}
           </div>
