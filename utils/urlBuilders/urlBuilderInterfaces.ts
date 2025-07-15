@@ -27,10 +27,16 @@ export interface ShopifyUrlConfig extends BaseUrlConfig {
  */
 export interface CrystalUrlConfig extends BaseUrlConfig {
   type: 'product' | 'cart';
-  productHandle?: string;
-  variantId?: string | undefined; // Allow undefined
-  cartItems?: Array<{ variantId: string; quantity: number }>;
 }
+
+/**
+ * Conduct-specific configuration
+ * Purpose: Build Conduct URLs with UTM parameters
+ */
+export interface ConductUrlConfig extends BaseUrlConfig {
+  type: 'product' | 'cart';
+}
+
 export interface UtmParams {
   utm_source?: string;
   utm_medium?: string;

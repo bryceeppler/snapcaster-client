@@ -1,11 +1,11 @@
-import type { ShopifyUrlConfig, UtmParams } from './urlBuilderInterfaces';
+import type { ConductUrlConfig, UtmParams } from './urlBuilderInterfaces';
 
 /**
 + * Conduct Platform URL Builder
 + * Use Case: Build Conduct URLs with UTM parameters
  */
 export class ConductUrlBuilder {
-  private config: ShopifyUrlConfig;
+  private config: ConductUrlConfig;
 
   constructor(baseUrl: string) {
     this.config = { baseUrl, type: 'product' };
