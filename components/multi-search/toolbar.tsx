@@ -16,6 +16,10 @@ import {
 import { useVendors } from '@/hooks/queries/useVendors';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import type { Product } from '@/types';
+import { createConductUrlBuilder } from '@/utils/urlBuilders/conductUrlBuilder';
+import { createCrystalUrlBuilder } from '@/utils/urlBuilders/crystalUrlBuilder';
+import { createShopifyUrlBuilder } from '@/utils/urlBuilders/shopifyUrlBuilder';
+import { UtmPresets } from '@/utils/urlBuilders/urlBuilderInterfaces';
 export const Toolbar = () => {
   const { resetSearch, cart } = useMultiSearchStore();
   const { getVendorNameBySlug } = useVendors();
@@ -54,7 +58,20 @@ export const Toolbar = () => {
                 2
               )}\n  Set: ${product.set}\n  Condition: ${
                 product.condition
-              }\n  Link: ${product.link}\n`
+              }\n  Link: ${
+                product.platform === 'shopify'
+                  ? createShopifyUrlBuilder(product.link)
+                      .setProduct(product.handle, product.variant_id)
+                      .setUtmParams(UtmPresets.singles)
+                      .build()
+                  : product.platform === 'crystal'
+                  ? createCrystalUrlBuilder(product.link)
+                      .setUtmParams(UtmPresets.singles)
+                      .build()
+                  : createConductUrlBuilder(product.link)
+                      .setUtmParams(UtmPresets.singles)
+                      .build()
+              }\n`
           )
           .join('\n');
         return `Website: ${vendor}\n\n${productsText}`;

@@ -1,3 +1,6 @@
+import { createShopifyUrlBuilder } from './urlBuilders/shopifyUrlBuilder';
+import { UtmPresets } from './urlBuilders/urlBuilderInterfaces';
+
 import type { Product } from '@/types';
 
 export function groupProductsByHost(
@@ -21,19 +24,42 @@ export function groupProductsByHost(
   }, {});
 }
 
-function buildUpdateParameters(products: Product[]): string {
-  return products
-    .map((product) => `updates[${product.variant_id}]=1`)
-    .join('&');
-}
-
+/**
+ * Multi Search Specific Url Builder
+ * Purpose: Build the cart update urls for the grouped products. We apply the cart items, discount code, and UTM parameters to the url so that when the user clicks the link, they are redirected to the cart checkout page with the discount code applied and UTM parameters applied
+ */
 export function buildCartUpdateUrls(
-  groupedProducts: Record<string, Product[]>
+  groupedProducts: Record<string, Product[]>,
+  discountCode?: string
 ): string[] {
-  const utmParams =
-    'utm_source=sc&utm_medium=referral&utm_campaign=referral_multisearch';
-  return Object.entries(groupedProducts).map(([host, products]) => {
-    const queryParams = buildUpdateParameters(products);
-    return `https://${host}/cart/update?${queryParams}&${utmParams}`;
-  });
+  const entries = Object.entries(groupedProducts);
+  if (entries.length === 0) return [];
+
+  const firstEntry = entries[0];
+  if (!firstEntry) return [];
+
+  const [host, products] = firstEntry;
+  const baseUrl = `https://${host}/`;
+
+  const cartItems = products
+    .filter((product) => product.variant_id)
+    .map((product) => ({
+      variantId: product.variant_id!.toString(),
+      quantity: 1
+    }));
+  if (products[0]?.platform === 'shopify') {
+    const shopifyBuilder = createShopifyUrlBuilder(baseUrl)
+      .setCart(cartItems)
+      .setUtmParams(UtmPresets.multi);
+
+    if (discountCode) {
+      shopifyBuilder.setDiscount(discountCode);
+    }
+
+    const shopifyUrl = shopifyBuilder.build();
+
+    return [shopifyUrl];
+  } else {
+    return [baseUrl];
+  }
 }
