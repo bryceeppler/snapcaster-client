@@ -37,7 +37,7 @@ export const useAdvertisements = () => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     refetchOnMount: false,
-    enabled: !!profile // Only fetch when profile is loaded
+    enabled: true // Only fetch when profile is loaded
   });
 
   // Memoize and cache query results to prevent unnecessary filtering on window resize
@@ -123,8 +123,7 @@ export const useAdvertisements = () => {
   const topBannerAds = useMemo(() => {
     return cachedData.filter(
       (ad) =>
-        ad.position === AdvertisementPosition.TOP_BANNER &&
-        ad.isActive === true
+        ad.position === AdvertisementPosition.TOP_BANNER && ad.isActive === true
     );
   }, [cachedData]);
 
