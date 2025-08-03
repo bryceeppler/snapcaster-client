@@ -95,7 +95,7 @@ const SingleCatalogItem = ({ product }: Props) => {
               product.name
             } ${
               product.collector_number ? `(${product.collector_number})` : ''
-            }`}</h3>
+            } ${product.printing ? `[${product.printing}]` : ''}`}</h3>
             {product.quantity && (
               <p className="text-xs">{product.quantity} in stock</p>
             )}
@@ -124,13 +124,7 @@ const SingleCatalogItem = ({ product }: Props) => {
                 {findVendorNameByCode(product.vendor)}
               </div>
             </div>
-            <Badge
-              className={` mt-2 w-min ${
-                product.finish ? 'bg-foil bg-cover bg-center' : ''
-              }`}
-            >
-              {product.condition}
-            </Badge>
+            <Badge className={`mt-2 w-min`}>{product.condition}</Badge>
           </div>
         </div>
       </div>

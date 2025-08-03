@@ -106,11 +106,26 @@ export default function SinglesSearchBar({
 
       case 'Enter':
         event.preventDefault();
-        clearFilters();
-        setIsLoading(true);
-        fetchCards();
-        setIsAutoCompleteVisible(false);
-        trackSearch('singles', searchTerm, tcg);
+        // If there's a selected suggestion, use that value
+        if (selectedIndex >= 0 && selectedIndex < totalResults) {
+          const selectedSuggestion = suggestions[selectedIndex];
+          setSearchTerm(selectedSuggestion?.name || '');
+          // Use setTimeout to ensure the state update happens before search
+          setTimeout(() => {
+            clearFilters();
+            setIsLoading(true);
+            fetchCards();
+            setIsAutoCompleteVisible(false);
+            trackSearch('singles', selectedSuggestion?.name || '', tcg);
+          }, 0);
+        } else {
+          // No suggestion selected, use current search term
+          clearFilters();
+          setIsLoading(true);
+          fetchCards();
+          setIsAutoCompleteVisible(false);
+          trackSearch('singles', searchTerm, tcg);
+        }
         break;
 
       case 'Escape':
