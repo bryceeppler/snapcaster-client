@@ -95,10 +95,8 @@ export default function MobileNavbar(): JSX.Element {
 
   // Get cart data - only fetch when on buylists page
   const isOnBuylistsPage = currentPath.startsWith('/buylists');
-  const { getCurrentCart } = isOnBuylistsPage
-    ? useUserCarts()
-    : { getCurrentCart: () => null };
-  const currentCart = getCurrentCart();
+  const { getCurrentCart } = useUserCarts();
+  const currentCart = isOnBuylistsPage ? getCurrentCart() : null;
   const cartItemCount = currentCart?.cart?.items?.length || 0;
   const hasCartItems = cartItemCount > 0;
   const isCartVisible =
