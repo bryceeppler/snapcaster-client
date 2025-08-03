@@ -5,6 +5,7 @@ import { SlidersHorizontal } from 'lucide-react';
 import FilterSection from '@/components/search-ui/search-filter-container';
 import SearchPagination from '@/components/search-ui/search-pagination';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Sheet,
   SheetContent,
@@ -13,7 +14,6 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet';
 import { useSingleSearchStore } from '@/stores/useSingleSearchStore';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 /**
  * Toolbar component for singles search results
