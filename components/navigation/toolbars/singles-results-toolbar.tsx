@@ -5,6 +5,7 @@ import { SlidersHorizontal } from 'lucide-react';
 import FilterSection from '@/components/search-ui/search-filter-container';
 import SearchPagination from '@/components/search-ui/search-pagination';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Sheet,
   SheetContent,
@@ -36,6 +37,14 @@ export default function SinglesResultsToolbar(): JSX.Element | null {
     sortByOptions
   } = useSingleSearchStore();
 
+  // Format results count
+  const formatResultsCount = (count: number): string => {
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}k`;
+    }
+    return count.toString();
+  };
+
   // Only render if we have search results
   if (!searchResults) return null;
 
@@ -45,7 +54,7 @@ export default function SinglesResultsToolbar(): JSX.Element | null {
         className="text-center text-sm font-normal text-muted-foreground"
         aria-live="polite"
       >
-        {numResults} results
+        {formatResultsCount(numResults || 0)} results
       </span>
 
       <SearchPagination
@@ -69,26 +78,30 @@ export default function SinglesResultsToolbar(): JSX.Element | null {
           </Button>
         </SheetTrigger>
 
-        <SheetContent className="min-w-full">
-          <SheetTitle>Filters</SheetTitle>
-          <SheetDescription>Filter your search results</SheetDescription>
+        <SheetContent className="min-w-full p-2">
+          <ScrollArea className="flex max-h-[100svh] flex-col overflow-y-auto rounded">
+            <div className="flex flex-col p-6">
+              <SheetTitle>Filters</SheetTitle>
+              <SheetDescription>Filter your search results</SheetDescription>
 
-          <FilterSection
-            filterOptions={filterOptions || []}
-            sortBy={sortBy || ''}
-            fetchCards={fetchCards}
-            clearFilters={clearFilters}
-            setFilter={setFilter}
-            setCurrentPage={setCurrentPage}
-            handleSortByChange={(value: string) => {
-              setSortBy(value);
-              setCurrentPage(1);
-              fetchCards();
-            }}
-            applyFilters={applyFilters}
-            setSortBy={setSortBy}
-            sortByOptions={sortByOptions}
-          />
+              <FilterSection
+                filterOptions={filterOptions || []}
+                sortBy={sortBy || ''}
+                fetchCards={fetchCards}
+                clearFilters={clearFilters}
+                setFilter={setFilter}
+                setCurrentPage={setCurrentPage}
+                handleSortByChange={(value: string) => {
+                  setSortBy(value);
+                  setCurrentPage(1);
+                  fetchCards();
+                }}
+                applyFilters={applyFilters}
+                setSortBy={setSortBy}
+                sortByOptions={sortByOptions}
+              />
+            </div>
+          </ScrollArea>
         </SheetContent>
       </Sheet>
     </div>

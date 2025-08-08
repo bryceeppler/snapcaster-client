@@ -55,64 +55,61 @@ const FilterSection: React.FC<FilterSectionProps> = memo(
       fetchCards();
     };
     return (
-      <ScrollArea className="flex max-h-[95svh] flex-col overflow-y-auto rounded">
-        <div className="sticky top-5 mx-auto h-1/4 w-full rounded-lg  px-3 py-2 text-left shadow-md md:max-w-sm">
-          <div className=" border-b ">
-            {/* {sortByOptions && <p>its here</p>} */}
-            <div className="flex w-full justify-center">
-              <SearchSortBy
-                sortBy={sortBy}
-                setSortBy={setSortBy}
-                fetchCards={fetchCards}
-                setCurrentPage={setCurrentPage}
-                sortByOptions={sortByOptions}
-              />
-            </div>
+      <div className="sticky top-5 mx-auto h-1/4 w-full rounded-lg py-2 text-left md:max-w-sm">
+        <div className=" border-b ">
+          <div className="flex w-full justify-center">
+            <SearchSortBy
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              fetchCards={fetchCards}
+              setCurrentPage={setCurrentPage}
+              sortByOptions={sortByOptions}
+            />
           </div>
-          <Accordion type="multiple" className="w-full  ">
-            {filterOptions &&
-              filterOptions.map((filterOption: FilterOption, i: number) => (
-                <AccordionItem value={filterOption.field} key={i}>
-                  <AccordionTrigger className="hover:no-underline">
-                    {filterOption.name}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <FilterScrollArea
-                      key={filterOption.field}
-                      filterOption={filterOption}
-                      setFilter={setFilter}
-                      setCurrentPage={setCurrentPage}
-                      applyFilters={applyFilters}
-                    />
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-          </Accordion>
-          {!hasActiveSubscription && !hidePromo && (
-            <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
-              <p>
-                Support us with{' '}
-                <span className="font-bold text-primary">Snapcaster Pro</span>{' '}
-                and remove promoted results with reduced ads for $2.99/mo.
-              </p>
-              <Button
-                onClick={
-                  isAuthenticated
-                    ? createCheckoutSession
-                    : () => (window.location.href = '/signin')
-                }
-              >
-                Subscribe
-              </Button>
-            </div>
-          )}
-
-          <Button onClick={handleClearFilters} className="w-full">
-            Clear Filters
-          </Button>
-          <Separator className="mx-2" />
         </div>
-      </ScrollArea>
+        <Accordion type="multiple" className="w-full">
+          {filterOptions &&
+            filterOptions.map((filterOption: FilterOption, i: number) => (
+              <AccordionItem value={filterOption.field} key={i}>
+                <AccordionTrigger className="hover:no-underline">
+                  {filterOption.name}
+                </AccordionTrigger>
+                <AccordionContent className="overflow-hidden">
+                  <FilterScrollArea
+                    key={filterOption.field}
+                    filterOption={filterOption}
+                    setFilter={setFilter}
+                    setCurrentPage={setCurrentPage}
+                    applyFilters={applyFilters}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+        </Accordion>
+        {!hasActiveSubscription && !hidePromo && (
+          <div className="border-1 mb-4 flex flex-col gap-2 border p-4 text-left text-sm">
+            <p>
+              Support us with{' '}
+              <span className="font-bold text-primary">Snapcaster Pro</span> and
+              remove promoted results with reduced ads for $2.99/mo.
+            </p>
+            <Button
+              onClick={
+                isAuthenticated
+                  ? createCheckoutSession
+                  : () => (window.location.href = '/signin')
+              }
+            >
+              Subscribe
+            </Button>
+          </div>
+        )}
+
+        <Button onClick={handleClearFilters} className="w-full">
+          Clear Filters
+        </Button>
+        <Separator className="mx-2" />
+      </div>
     );
   }
 );
@@ -131,9 +128,9 @@ const FilterScrollArea: React.FC<FilterScrollAreaProps> = ({
   applyFilters
 }) => {
   return (
-    <div>
-      <div className="flex">
-        <ScrollArea className="90 max-h-48 w-full rounded-lg  px-3">
+    <div className="w-full max-w-full">
+      <div className="flex w-full max-w-full">
+        <ScrollArea className="max-h-48 w-full max-w-full px-3">
           <FilterFactory
             filterOption={filterOption}
             setFilter={setFilter}
@@ -187,18 +184,25 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
   };
 
   return (
-    <div className="space-y-3 py-2">
+    <div className="w-full max-w-full space-y-3 py-2">
       {filterOption &&
         filterOption.values.map((option: FilterOptionValues) => (
-          <div key={option.value} className="flex items-start">
+          <div
+            key={option.value}
+            className="flex w-full max-w-full items-start"
+          >
             <input
               type="checkbox"
               id={option.value}
               checked={localSelections[option.value] ?? option.selected}
               onChange={() => handleOptionChange(filterOption, option)}
-              className="mr-2 mt-1"
+              className="mr-2 mt-1 flex-shrink-0"
             />
-            <label htmlFor={option.value} className="text-sm leading-5">
+            <label
+              htmlFor={option.value}
+              className="min-w-0 flex-1 break-words text-sm leading-5"
+              style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
+            >
               {filterOption.field === 'vendor'
                 ? getVendorNameBySlug(option.value)
                 : option.label}{' '}

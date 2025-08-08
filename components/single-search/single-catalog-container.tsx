@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import SearchPagination from '../search-ui/search-pagination';
 import SearchSortBy from '../search-ui/search-sort-by';
 import BackToTopButton from '../ui/back-to-top-btn';
+import { ScrollArea } from '../ui/scroll-area';
 
 import SingleCatalogItem from './single-catalog-item';
 
@@ -184,6 +185,15 @@ export default function SingleCatalog() {
     setCurrentPage(1);
     fetchCards();
   };
+
+  // Format results count
+  const formatResultsCount = (count: number): string => {
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}k`;
+    }
+    return count.toString();
+  };
+
   return (
     <div className="mb-8 grid min-h-svh gap-1 md:grid-cols-[240px_1fr]">
       {/* #1 Single Search Filter Section */}
@@ -196,33 +206,36 @@ export default function SingleCatalog() {
           {!loadingFilterResults && filters && (
             <div className="relative  hidden w-full flex-col gap-1 md:flex">
               <div className="child-1 mt-1 w-full md:sticky md:top-[118px]">
-                <Card className="bg-popover pt-4 md:max-w-sm">
-                  <CardContent className="text-left">
-                    <div className="mx-auto w-full">
-                      <div className="sm:hidden">
-                        <SearchSortBy
+                <Card className="bg-popover pt-2 md:max-w-sm ">
+                  <div className="p-1">
+                    <ScrollArea className="flex max-h-[80svh] flex-col overflow-y-auto rounded pr-2 ">
+                      <CardContent className="px-3 text-left">
+                        <div className="mx-auto w-full">
+                          <div className="sm:hidden">
+                            <SearchSortBy
+                              sortBy={sortBy || ''}
+                              sortByOptions={sortByOptions}
+                              setSortBy={setSortBy}
+                              fetchCards={fetchCards}
+                              setCurrentPage={setCurrentPage}
+                            />
+                          </div>
+                        </div>
+                        <FilterSection
+                          filterOptions={filterOptions || []}
                           sortBy={sortBy || ''}
-                          sortByOptions={sortByOptions}
                           setSortBy={setSortBy}
                           fetchCards={fetchCards}
+                          clearFilters={clearFilters}
+                          setFilter={setFilter}
                           setCurrentPage={setCurrentPage}
+                          handleSortByChange={handleSortByChange}
+                          applyFilters={applyFilters}
+                          sortByOptions={sortByOptions}
                         />
-                      </div>
-                    </div>
-
-                    <FilterSection
-                      filterOptions={filterOptions || []}
-                      sortBy={sortBy || ''}
-                      setSortBy={setSortBy}
-                      fetchCards={fetchCards}
-                      clearFilters={clearFilters}
-                      setFilter={setFilter}
-                      setCurrentPage={setCurrentPage}
-                      handleSortByChange={handleSortByChange}
-                      applyFilters={applyFilters}
-                      sortByOptions={sortByOptions}
-                    />
-                  </CardContent>
+                      </CardContent>
+                    </ScrollArea>
+                  </div>
                 </Card>
               </div>
             </div>
@@ -252,7 +265,7 @@ export default function SingleCatalog() {
         <div className="grid h-min gap-1">
           {/* #2.1 Single Search Top Bar Section (# Results, Pagination, Sort By) */}
           <div className="z-30 hidden bg-background pt-1 md:sticky md:top-[114px] md:block">
-            <div className="flex items-center justify-between rounded-lg bg-popover px-4 py-2">
+            <div className="flex items-center justify-between rounded-lg border bg-popover px-4 py-2">
               {/* Empty div to balance the flex space */}
               <div className="w-24" />
 
@@ -270,7 +283,7 @@ export default function SingleCatalog() {
               {/* Results count with minimum width */}
               <div className="w-24 text-right">
                 <span className="whitespace-nowrap text-sm font-normal text-secondary-foreground">
-                  {numResults} results
+                  {formatResultsCount(numResults || 0)} results
                 </span>
               </div>
             </div>

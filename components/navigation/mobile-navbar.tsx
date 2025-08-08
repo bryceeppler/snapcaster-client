@@ -95,13 +95,12 @@ export default function MobileNavbar(): JSX.Element {
 
   // Get cart data - only fetch when on buylists page
   const isOnBuylistsPage = currentPath.startsWith('/buylists');
-  const { getCurrentCart } = isOnBuylistsPage ? useUserCarts() : { getCurrentCart: () => null };
-  const currentCart = getCurrentCart();
+  const { getCurrentCart } = useUserCarts();
+  const currentCart = isOnBuylistsPage ? getCurrentCart() : null;
   const cartItemCount = currentCart?.cart?.items?.length || 0;
   const hasCartItems = cartItemCount > 0;
   const isCartVisible =
-    isOnBuylistsPage &&
-    buylistUIState !== 'finalSubmissionState';
+    isOnBuylistsPage && buylistUIState !== 'finalSubmissionState';
   const isCartEnabled = Boolean(currentCart?.cart?.name);
 
   // Handle cart button click
@@ -195,7 +194,7 @@ export default function MobileNavbar(): JSX.Element {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background lg:hidden">
+    <header className="sticky top-0 z-50 border-b bg-background md:hidden">
       <nav
         className="relative flex justify-between px-3 py-2.5"
         aria-label="Mobile navigation"

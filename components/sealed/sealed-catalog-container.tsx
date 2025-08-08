@@ -82,7 +82,7 @@ export default function SealedCatalogContainer({
       <div className="grid h-min gap-1">
         {/* #2.1 Single Search Top Bar Section (# Results, Pagination, Sort By) */}
         <div className="z-30 bg-background pt-1">
-          <div className="flex flex-row items-center justify-between rounded-lg bg-popover px-4 py-2">
+          <div className="flex flex-row items-center justify-between rounded-lg border bg-popover px-4 py-2">
             <div className="flex flex-col">
               <span className="text-center text-sm font-normal text-secondary-foreground">
                 {searchResults?.length} results
