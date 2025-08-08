@@ -56,7 +56,7 @@ const SideBanner: React.FC<SideBannerProps> = ({
   // Function to select a random image for the current ad
   const selectRandomImage = (ad: AdvertisementWithImages) => {
     // Get all active images for this ad
-    const activeImages = ad.images.filter((img) => img.isActive);
+    const activeImages = ad.images.filter((img) => img.isApproved && img.isEnabled);
 
     // Select a random image from the active images
     const randomImage = getRandomItem(activeImages);

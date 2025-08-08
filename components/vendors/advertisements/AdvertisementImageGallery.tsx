@@ -240,7 +240,7 @@ export function AdvertisementImageGallery({
                             )}
                           </button>
                         </div>
-                        {!image.isActive && (
+                        {!image.isApproved && (
                           <Alert
                             variant="default"
                             className="w-fit border-yellow-500 bg-yellow-500/20"
@@ -252,6 +252,20 @@ export function AdvertisementImageGallery({
                             <AlertDescription className="hidden text-xs md:block">
                               Please allow up to 24 hours for your image to be
                               approved.
+                            </AlertDescription>
+                          </Alert>
+                        )}
+                        {image.isApproved && !image.isEnabled && (
+                          <Alert
+                            variant="default"
+                            className="w-fit border-gray-500 bg-gray-500/20"
+                          >
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle className="text-xs">
+                              Image Disabled
+                            </AlertTitle>
+                            <AlertDescription className="hidden text-xs md:block">
+                              This image is currently disabled and will not be shown.
                             </AlertDescription>
                           </Alert>
                         )}

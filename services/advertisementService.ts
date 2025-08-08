@@ -26,11 +26,13 @@ export type CreateAdvertisementImageRequest = {
   advertisementId: number;
   imageType: AdvertisementImageType;
   imageUrl: string;
-  isActive?: boolean;
+  isApproved?: boolean;
+  isEnabled?: boolean;
 };
 
 export type UpdateAdvertisementImageRequest = {
-  isActive?: boolean;
+  isApproved?: boolean;
+  isEnabled?: boolean;
 };
 
 type PresignedUrlRequest = {
@@ -51,7 +53,7 @@ type PresignedUrlResponse = {
 type ConfirmUploadRequest = {
   publicUrl: string;
   imageType: AdvertisementImageType;
-  isActive: boolean;
+  isEnabled?: boolean;
   width: number;
   height: number;
   fileSize: number;
@@ -178,6 +180,17 @@ class AdvertisementService {
       );
     } catch (error) {
       console.error('Error deleting advertisement image:', error);
+      throw error;
+    }
+  }
+
+  async softDeleteAdvertisementImage(imageId: number): Promise<void> {
+    try {
+      await axiosInstance.post(
+        `${BASE_URL}/api/v1/vendor/advertisements/images/${imageId}/soft-delete`
+      );
+    } catch (error) {
+      console.error('Error soft deleting advertisement image:', error);
       throw error;
     }
   }

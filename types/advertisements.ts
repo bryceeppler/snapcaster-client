@@ -30,7 +30,8 @@ export type AdvertisementImage = {
   advertisementId: number;
   imageType: AdvertisementImageType;
   imageUrl: string;
-  isActive: boolean;
+  isApproved: boolean;
+  isEnabled: boolean;
   width: number;
   height: number;
   fileSize: number;

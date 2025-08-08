@@ -308,7 +308,7 @@ export function AddImageDialog({
       await advertisementService.confirmImageUpload(advertisement.id, {
         publicUrl: presignedUrlResponse.publicUrl,
         imageType: values.imageType,
-        isActive: true,
+        isEnabled: true,
         width: uploadResponse.width,
         height: uploadResponse.height,
         fileSize: uploadResponse.fileSize,
