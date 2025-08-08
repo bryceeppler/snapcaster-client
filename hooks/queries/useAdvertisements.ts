@@ -109,7 +109,7 @@ export const useAdvertisements = () => {
         .filter((ad) => ad.isActive)
         .map((ad) => ({
           ...ad,
-          images: ad.images.filter((img) => img.isActive)
+          images: ad.images.filter((img) => img.isApproved && img.isEnabled)
         }));
 
       cachedAdsRef.current[cacheKey] = result;
@@ -212,10 +212,10 @@ export const useAdvertisements = () => {
     }
   });
 
-  // Mutation for deleting an advertisement image
+  // Mutation for deleting an advertisement image (uses soft delete)
   const deleteAdvertisementImage = useMutation({
     mutationFn: (id: number) =>
-      advertisementService.deleteAdvertisementImage(id),
+      advertisementService.softDeleteAdvertisementImage(id),
     onSuccess: () => {
       toast.success('Image deleted successfully');
       // Invalidate the appropriate query based on user role and vendorId

@@ -127,7 +127,7 @@ const AdImageCard = ({
     updateAdvertisementImage.mutate({
       id: adImage.id,
       data: {
-        isActive: true
+        isApproved: true
       }
     });
   };
@@ -140,15 +140,15 @@ const AdImageCard = ({
             {vendor?.name}
           </CardTitle>
           <Badge
-            variant={adImage.isActive ? 'default' : 'secondary'}
+            variant={adImage.isApproved ? 'default' : 'secondary'}
             className={cn(
               'px-2 py-1',
-              adImage.isActive
+              adImage.isApproved
                 ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400'
             )}
           >
-            {adImage.isActive ? 'Active' : 'Inactive'}
+            {adImage.isApproved ? 'Approved' : 'Pending'}
           </Badge>
         </div>
         <CardDescription className="mt-1 flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
@@ -372,10 +372,10 @@ const AdImageCard = ({
         </div>
       </CardContent>
 
-      {!adImage.isActive && (
+      {!adImage.isApproved && (
         <CardFooter className="flex flex-wrap items-center justify-end gap-2 border-t bg-gray-50 p-3 px-4 dark:border-gray-800 dark:bg-gray-900/30 sm:px-6">
-          {/* Only show Approve button for inactive ads */}
-          {!adImage.isActive && (
+          {/* Only show Approve button for unapproved ads */}
+          {!adImage.isApproved && (
             <Button
               size="sm"
               className="w-full bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 sm:w-auto"
@@ -397,9 +397,9 @@ const ApprovalTable = () => {
   const { vendors } = useVendors();
   const [_activeTab, setActiveTab] = useState<string>('pending');
 
-  // Filter ad images based on active status
-  const pendingAdImages = adImages.filter((adImage) => !adImage.isActive);
-  const activeAdImages = adImages.filter((adImage) => adImage.isActive);
+  // Filter ad images based on approval status
+  const pendingAdImages = adImages.filter((adImage) => !adImage.isApproved);
+  const activeAdImages = adImages.filter((adImage) => adImage.isApproved);
 
   // Count ads with dimension mismatches
   const getMismatchCount = (adImagesList: AdvertisementImage[]) => {

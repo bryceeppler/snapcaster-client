@@ -10,7 +10,8 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md,html}\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:unused-exports": "eslint . --ext .ts,.tsx --rule '@typescript-eslint/no-unused-vars:warn'",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@google-analytics/data": "^4.12.0",

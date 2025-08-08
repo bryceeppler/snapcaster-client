@@ -46,7 +46,7 @@ const FeedAd = ({
     if (!ad || !ad.images || !ad.images.length) return;
 
     // Get all active images
-    const activeImages = ad.images.filter((img) => img.isActive);
+    const activeImages = ad.images.filter((img) => img.isApproved && img.isEnabled);
     if (!activeImages.length) return;
 
     // Select a random image from the active images
