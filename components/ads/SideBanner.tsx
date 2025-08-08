@@ -46,36 +46,36 @@ const SideBanner: React.FC<SideBannerProps> = ({
     }
 
     const triedIndices = new Set<number>();
-    
+
     while (triedIndices.size < bannerAds.length) {
       const candidateIndex = selectionManager.selectRandom();
-      
+
       if (candidateIndex < 0 || triedIndices.has(candidateIndex)) {
         break;
       }
-      
+
       triedIndices.add(candidateIndex);
       const ad = bannerAds[candidateIndex];
-      
+
       if (ad) {
         const activeImages = ad.images.filter(
           (img) => img.isApproved && img.isEnabled
         );
-        
+
         if (activeImages.length > 0) {
           const randomImage = getRandomItem(activeImages);
           if (randomImage) {
             selectionManager.setPreviousSelection(candidateIndex);
-            return { 
-              index: candidateIndex, 
+            return {
+              index: candidateIndex,
               image: randomImage,
-              ad 
+              ad
             };
           }
         }
       }
     }
-    
+
     return { index: -1, image: null, ad: null };
   };
 

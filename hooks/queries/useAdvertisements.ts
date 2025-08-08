@@ -4,8 +4,8 @@ import { toast } from 'sonner';
 
 import { useAuth } from '@/hooks/useAuth';
 import type {
-  UpdateAdvertisementRequest,
-  UpdateAdvertisementImageRequest
+  UpdateAdvertisementImageRequest,
+  UpdateAdvertisementRequest
 } from '@/services/advertisementService';
 import { advertisementService } from '@/services/advertisementService';
 import type { AdvertisementWithImages } from '@/types/advertisements';
