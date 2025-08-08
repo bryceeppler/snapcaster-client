@@ -54,12 +54,12 @@ export interface Discount {
   /**
    * Date when the discount becomes active
    */
-  startsAt: string | Date;
+  startsAt: Date;
 
   /**
    * Date when the discount expires (null for never expires)
    */
-  expiresAt: string | Date | null;
+  expiresAt: Date | null;
 
   /**
    * Whether the discount is currently active
@@ -69,12 +69,12 @@ export interface Discount {
   /**
    * When the discount was created
    */
-  createdAt?: string | Date;
+  createdAt?: Date;
 
   /**
    * When the discount was last updated
    */
-  updatedAt?: string | Date;
+  updatedAt?: Date;
 }
 
 /**

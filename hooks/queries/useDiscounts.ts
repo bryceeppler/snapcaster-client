@@ -35,7 +35,7 @@ export const useDiscounts = () => {
     queryFn: fetchDiscounts,
     staleTime: 1000 * 60 * 60, // 1 hour
     refetchOnWindowFocus: false,
-    enabled: !!profile // Only fetch when profile is loaded
+    enabled: true // Only fetch when profile is loaded
   });
 
   const getDiscountByVendorSlug = (

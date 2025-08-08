@@ -3,6 +3,7 @@ import type {
   CreateApiKeyRequest,
   CreateApiKeyResponse
 } from '@/hooks/queries/useApiKeys';
+import { parseDiscountResponse } from '@/schemas/discount.schema';
 import type {
   CreateDiscountRequest,
   Discount,
@@ -64,24 +65,18 @@ class VendorService {
   }
 
   async getDiscounts(): Promise<Discount[]> {
-    const response = await axiosInstance.get(
-      `${BASE_URL}/api/v1/vendor/discounts`
-    );
-    const discounts = response.data.data || ([] as Discount[]);
+    try {
+      const response = await axiosInstance.get(
+        `${BASE_URL}/api/v1/vendor/discounts`
+      );
 
-    // Transform API response to match frontend expectations and convert dates
-    return discounts.map((discount: any) => ({
-      ...discount,
-      startsAt: discount.startsAt ? new Date(discount.startsAt) : null,
-      expiresAt: discount.expiresAt ? new Date(discount.expiresAt) : null,
-      // Handle both camelCase and snake_case field names from API
-      vendorId: discount.vendorId,
-      discountAmount: discount.discountAmount,
-      discountType: discount.discountType,
-      isActive: discount.isActive !== undefined ? discount.isActive : undefined,
-      createdAt: discount.createdAt ? new Date(discount.createdAt) : undefined,
-      updatedAt: discount.updatedAt ? new Date(discount.updatedAt) : undefined
-    }));
+      // Validate and transform the response using Zod schema
+      const discounts = parseDiscountResponse(response.data);
+      return discounts;
+    } catch (error) {
+      console.error('Error fetching discounts:', error);
+      return [] as Discount[];
+    }
   }
 
   async fetchDiscountsByVendorId(
@@ -97,25 +92,10 @@ class VendorService {
           }
         }
       );
-      const discounts = response.data.data || ([] as Discount[]);
 
-      // Transform API response to match frontend expectations and convert dates
-      return discounts.map((discount: any) => ({
-        ...discount,
-        startsAt: discount.startsAt ? new Date(discount.startsAt) : null,
-        expiresAt: discount.expiresAt ? new Date(discount.expiresAt) : null,
-        // Handle both camelCase and snake_case field names from API
-        vendorId: discount.vendorId,
-        // vendorSlug: discount.vendorSlug,
-        discountAmount: discount.discountAmount,
-        discountType: discount.discountType,
-        isActive:
-          discount.isActive !== undefined ? discount.isActive : undefined,
-        createdAt: discount.createdAt
-          ? new Date(discount.createdAt)
-          : undefined,
-        updatedAt: discount.updatedAt ? new Date(discount.updatedAt) : undefined
-      }));
+      // Validate and transform the response using Zod schema
+      const discounts = parseDiscountResponse(response.data);
+      return discounts;
     } catch (error) {
       console.error('Error fetching discounts:', error);
       return [] as Discount[];
