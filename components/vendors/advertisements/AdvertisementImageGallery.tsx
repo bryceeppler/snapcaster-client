@@ -8,6 +8,7 @@ import {
   Image as ImageIcon,
   Link,
   Plus,
+  Power,
   Trash2
 } from 'lucide-react';
 import { useState } from 'react';
@@ -29,6 +30,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
 import {
   Tooltip,
   TooltipContent,
@@ -44,12 +46,14 @@ import {
 interface AdvertisementImageGalleryProps {
   advertisement: AdvertisementWithImages;
   onDeleteImage: (imageId: number) => Promise<void>;
+  onToggleImageEnabled: (imageId: number, isEnabled: boolean) => Promise<void>;
   isLoading: boolean;
 }
 
 export function AdvertisementImageGallery({
   advertisement,
   onDeleteImage,
+  onToggleImageEnabled,
   isLoading
 }: AdvertisementImageGalleryProps) {
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
@@ -272,25 +276,48 @@ export function AdvertisementImageGallery({
                       </div>
                     </div>
                   </div>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setImageToDelete(image.id)}
-                          disabled={isLoading}
-                          className="h-8 w-8 p-0 text-muted-foreground transition-all hover:bg-red-50 hover:text-red-600 focus:opacity-100 dark:hover:bg-red-950/50 md:opacity-0 md:group-hover:opacity-100"
-                          aria-label={`Delete image ${image.id}`}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="left">
-                        <p className="text-xs">Delete image</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <div className="flex items-center gap-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-2">
+                            <Switch
+                              checked={image.isEnabled}
+                              onCheckedChange={(checked) => onToggleImageEnabled(image.id, checked)}
+                              disabled={isLoading}
+                              aria-label={`Toggle image ${image.id} enabled state`}
+                              className="data-[state=checked]:bg-green-600"
+                            />
+                            <Power className="h-3.5 w-3.5 text-muted-foreground" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="left">
+                          <p className="text-xs">
+                            {image.isEnabled ? 'Disable image' : 'Enable image'}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setImageToDelete(image.id)}
+                            disabled={isLoading}
+                            className="h-8 w-8 p-0 text-muted-foreground transition-all hover:bg-red-50 hover:text-red-600 focus:opacity-100 dark:hover:bg-red-950/50 md:opacity-0 md:group-hover:opacity-100"
+                            aria-label={`Delete image ${image.id}`}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="left">
+                          <p className="text-xs">Delete image</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                 </div>
               ))}
             </div>

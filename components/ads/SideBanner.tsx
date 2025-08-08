@@ -32,17 +32,6 @@ const SideBanner: React.FC<SideBannerProps> = ({
     [getAdsByPosition, position]
   );
 
-  const [currentAdIndex, setCurrentAdIndex] = useState(0);
-  const [selectedImage, setSelectedImage] = useState<{
-    imageUrl: string | undefined;
-    alt: string | undefined;
-    url: string | undefined;
-  }>({
-    imageUrl: undefined,
-    alt: undefined,
-    url: undefined
-  });
-
   // Create a weighted selection manager for the ads
   const selectionManager = useMemo(() => {
     const manager = createWeightedSelectionManager<AdvertisementWithImages>();
@@ -50,49 +39,153 @@ const SideBanner: React.FC<SideBannerProps> = ({
     return manager;
   }, [bannerAds]);
 
+  // Helper function for synchronous initialization
+  const getInitialAdWithImage = () => {
+    if (!bannerAds || !bannerAds.length) {
+      return { index: -1, image: null, ad: null };
+    }
+
+    const triedIndices = new Set<number>();
+    
+    while (triedIndices.size < bannerAds.length) {
+      const candidateIndex = selectionManager.selectRandom();
+      
+      if (candidateIndex < 0 || triedIndices.has(candidateIndex)) {
+        break;
+      }
+      
+      triedIndices.add(candidateIndex);
+      const ad = bannerAds[candidateIndex];
+      
+      if (ad) {
+        const activeImages = ad.images.filter(
+          (img) => img.isApproved && img.isEnabled
+        );
+        
+        if (activeImages.length > 0) {
+          const randomImage = getRandomItem(activeImages);
+          if (randomImage) {
+            selectionManager.setPreviousSelection(candidateIndex);
+            return { 
+              index: candidateIndex, 
+              image: randomImage,
+              ad 
+            };
+          }
+        }
+      }
+    }
+    
+    return { index: -1, image: null, ad: null };
+  };
+
+  // Initialize state with lazy initializers to prevent flash
+  const [currentAdIndex, setCurrentAdIndex] = useState(() => {
+    const initial = getInitialAdWithImage();
+    return initial.index >= 0 ? initial.index : 0;
+  });
+
+  const [selectedImage, setSelectedImage] = useState<{
+    imageUrl: string | undefined;
+    alt: string | undefined;
+    url: string | undefined;
+  }>(() => {
+    const initial = getInitialAdWithImage();
+    if (initial.image && initial.ad) {
+      return {
+        imageUrl: initial.image.imageUrl,
+        alt: initial.ad.altText,
+        url: initial.ad.targetUrl
+      };
+    }
+    return {
+      imageUrl: undefined,
+      alt: undefined,
+      url: undefined
+    };
+  });
+
   // Keep track of whether it's the first render
   const isFirstRender = useRef(true);
 
   // Function to select a random image for the current ad
-  const selectRandomImage = (ad: AdvertisementWithImages) => {
+  // Returns true if successful, false if no active images available
+  const selectRandomImage = (ad: AdvertisementWithImages): boolean => {
     // Get all active images for this ad
-    const activeImages = ad.images.filter((img) => img.isApproved && img.isEnabled);
+    const activeImages = ad.images.filter(
+      (img) => img.isApproved && img.isEnabled
+    );
+
+    // If no active images, return false
+    if (!activeImages.length) {
+      return false;
+    }
 
     // Select a random image from the active images
     const randomImage = getRandomItem(activeImages);
 
-    setSelectedImage({
-      imageUrl: randomImage?.imageUrl,
-      alt: ad.altText,
-      url: ad.targetUrl
-    });
+    if (randomImage) {
+      setSelectedImage({
+        imageUrl: randomImage.imageUrl,
+        alt: ad.altText,
+        url: ad.targetUrl
+      });
+      return true;
+    }
+
+    return false;
   };
 
-  // Select an initial ad based on weights on component mount
+  // Helper function to find an ad with active images
+  const selectAdWithActiveImage = (
+    excludeIndices: number[] = [],
+    maxAttempts: number = 10
+  ): number => {
+    let attempts = 0;
+    const triedIndices = new Set<number>(excludeIndices);
+
+    while (attempts < maxAttempts && triedIndices.size < bannerAds.length) {
+      // Select a random ad index that hasn't been tried yet
+      const candidateIndex =
+        triedIndices.size === 0
+          ? selectionManager.selectRandom()
+          : selectionManager.selectDifferentRandom();
+
+      if (candidateIndex < 0 || triedIndices.has(candidateIndex)) {
+        attempts++;
+        continue;
+      }
+
+      triedIndices.add(candidateIndex);
+      const ad = bannerAds[candidateIndex];
+
+      if (ad && selectRandomImage(ad)) {
+        // Successfully found an ad with active images
+        selectionManager.setPreviousSelection(candidateIndex);
+        return candidateIndex;
+      }
+
+      attempts++;
+    }
+
+    return -1; // No ad with active images found
+  };
+
+  // Handle data changes after initial mount
   useEffect(() => {
     if (!bannerAds || !bannerAds.length) return;
 
+    // Skip first render since we initialized synchronously
     if (isFirstRender.current) {
-      // First render - select any ad using weights
-      const initialIndex = selectionManager.selectRandom();
-      if (initialIndex >= 0) {
-        setCurrentAdIndex(initialIndex);
-        // Store this as the previous selection to avoid showing it again next
-        selectionManager.setPreviousSelection(initialIndex);
-        // Select random image for this ad
-        const ad = bannerAds[initialIndex];
-        if (ad) selectRandomImage(ad);
-      }
       isFirstRender.current = false;
-    } else if (bannerAds.length > 1) {
-      // Data changed - make sure we don't show the same ad again
-      selectionManager.setPreviousSelection(currentAdIndex);
-      const nextIndex = selectionManager.selectDifferentRandom();
+      return;
+    }
+
+    // Data changed - select a new ad with active images
+    if (bannerAds.length > 0) {
+      const nextIndex = selectAdWithActiveImage([currentAdIndex]);
       if (nextIndex >= 0) {
         setCurrentAdIndex(nextIndex);
-        // Select random image for this ad
-        const ad = bannerAds[nextIndex];
-        if (ad) selectRandomImage(ad);
       }
     }
   }, [bannerAds, selectionManager]);
@@ -102,14 +195,10 @@ const SideBanner: React.FC<SideBannerProps> = ({
     if (bannerAds.length <= 1) return; // No need for rotation with 0 or 1 ads
 
     const rotationTimer = setInterval(() => {
-      // Always select a different ad than the current one
-      selectionManager.setPreviousSelection(currentAdIndex);
-      const nextIndex = selectionManager.selectDifferentRandom();
+      // Find the next ad with active images, excluding the current one
+      const nextIndex = selectAdWithActiveImage([currentAdIndex]);
       if (nextIndex >= 0) {
         setCurrentAdIndex(nextIndex);
-        // Select random image for this ad
-        const ad = bannerAds[nextIndex];
-        if (ad) selectRandomImage(ad);
       }
     }, intervalMs);
 
@@ -122,6 +211,7 @@ const SideBanner: React.FC<SideBannerProps> = ({
     return null;
   }
 
+  console.log(bannerAds);
   // Different position and styling based on the banner position
   const positionStyles =
     position === AdvertisementPosition.LEFT_BANNER
