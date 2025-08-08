@@ -3,7 +3,10 @@ import { useMemo, useRef } from 'react';
 import { toast } from 'sonner';
 
 import { useAuth } from '@/hooks/useAuth';
-import type { UpdateAdvertisementRequest } from '@/services/advertisementService';
+import type {
+  UpdateAdvertisementImageRequest,
+  UpdateAdvertisementRequest
+} from '@/services/advertisementService';
 import { advertisementService } from '@/services/advertisementService';
 import type { AdvertisementWithImages } from '@/types/advertisements';
 import { AdvertisementPosition } from '@/types/advertisements';
@@ -212,6 +215,30 @@ export const useAdvertisements = () => {
     }
   });
 
+  // Mutation for updating an advertisement image
+  const updateAdvertisementImage = useMutation({
+    mutationFn: ({
+      id,
+      data
+    }: {
+      id: number;
+      data: UpdateAdvertisementImageRequest;
+    }) => advertisementService.updateAdvertisementImage(id, data),
+    onSuccess: () => {
+      toast.success('Image updated successfully');
+      // Invalidate the appropriate query based on user role and vendorId
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY, isAdmin ? 'admin' : 'vendor', vendorId]
+      });
+      // Clear the cache
+      cachedAdsRef.current = {};
+    },
+    onError: (error) => {
+      console.error('Error updating advertisement image:', error);
+      toast.error('Failed to update image. Please try again.');
+    }
+  });
+
   // Mutation for deleting an advertisement image (uses soft delete)
   const deleteAdvertisementImage = useMutation({
     mutationFn: (id: number) =>
@@ -286,6 +313,7 @@ export const useAdvertisements = () => {
     // Mutations
     updateAdvertisement,
     deleteAdvertisement,
+    updateAdvertisementImage,
     deleteAdvertisementImage
   };
 };

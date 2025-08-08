@@ -35,6 +35,7 @@ export default function EditAdvertisementPage() {
     getAdvertisementById,
     fetchAdvertisementById,
     updateAdvertisement,
+    updateAdvertisementImage,
     deleteAdvertisementImage
   } = useAdvertisements();
 
@@ -224,6 +225,27 @@ export default function EditAdvertisementPage() {
     }
   };
 
+  const handleToggleImageEnabled = async (imageId: number, isEnabled: boolean) => {
+    if ((!isAdmin && !vendor) || !advertisement) return;
+
+    try {
+      await updateAdvertisementImage.mutateAsync({
+        id: imageId,
+        data: { isEnabled }
+      });
+
+      // Update the advertisement in state by updating the image's isEnabled status
+      setAdvertisement({
+        ...advertisement,
+        images: advertisement.images.map((img) =>
+          img.id === imageId ? { ...img, isEnabled } : img
+        )
+      });
+    } catch (error) {
+      console.error('Error toggling advertisement image:', error);
+    }
+  };
+
   const handleBackClick = () =>
     router.push('/vendors/dashboard/settings/advertisements');
 
@@ -316,7 +338,8 @@ export default function EditAdvertisementPage() {
               <AdvertisementImageGallery
                 advertisement={advertisement}
                 onDeleteImage={handleDeleteImage}
-                isLoading={deleteAdvertisementImage.isPending}
+                onToggleImageEnabled={handleToggleImageEnabled}
+                isLoading={deleteAdvertisementImage.isPending || updateAdvertisementImage.isPending}
               />
             </div>
           </div>
