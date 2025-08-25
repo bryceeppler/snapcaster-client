@@ -62,6 +62,7 @@ export default function SealedSearchBar({
 
   // Handle search button click
   const handleSearch = () => {
+    setSearchTerm(searchTerm);
     clearFilters();
     refetch();
     trackSearch('sealed', searchTerm, productCategory);
