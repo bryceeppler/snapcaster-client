@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
@@ -93,12 +93,33 @@ export const useSealedSearch = (
   options?: { enabled?: boolean }
 ) => {
   const { setFilterOptions } = useSealedSearchStore();
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(
+    searchParams.searchTerm
+  );
+
+  // Debounce the search term to prevent excessive API calls
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchParams.searchTerm);
+    }, 500); // 300ms delay - shorter for better responsiveness
+
+    return () => clearTimeout(timer);
+  }, [searchParams.searchTerm]);
+
+  // Create debounced search params
+  const debouncedSearchParams = {
+    ...searchParams,
+    searchTerm: debouncedSearchTerm
+  };
+
+  // Always enable query - it will use the debounced search term
+  const shouldEnableQuery = options?.enabled ?? true;
 
   const query = useInfiniteQuery({
-    queryKey: ['sealedSearch', searchParams],
+    queryKey: ['sealedSearch', debouncedSearchParams],
     queryFn: ({ pageParam = 1 }) =>
       fetchSealedProducts({
-        ...searchParams,
+        ...debouncedSearchParams,
         pageParam
       }),
     initialPageParam: 1,
@@ -106,7 +127,7 @@ export const useSealedSearch = (
       const nextPage = allPages.length + 1;
       return nextPage <= lastPage.pagination.numPages ? nextPage : undefined;
     },
-    enabled: options?.enabled ?? true,
+    enabled: shouldEnableQuery,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
