@@ -6,13 +6,8 @@ import { useProductSearch } from '@/hooks/queries/useProductSearch';
 import { useProductSearchStore } from '@/stores/useProductSearchStore';
 
 const SearchPage: NextPage = () => {
-  const {
-    searchTerm,
-    selectedFilters,
-    sortBy,
-    region,
-    clearFilters
-  } = useProductSearchStore();
+  const { searchTerm, selectedFilters, sortBy, region, clearFilters } =
+    useProductSearchStore();
 
   const {
     data,
@@ -47,7 +42,6 @@ const SearchPage: NextPage = () => {
           isLoading={isLoading}
           clearFilters={clearFilters}
           searchResults={data?.searchResults || []}
-          promotedResults={data?.promotedResults || []}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}
