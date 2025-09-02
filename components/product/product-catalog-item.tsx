@@ -68,11 +68,6 @@ const ProductCatalogItem = ({ product }: Props) => {
   };
 
   const vendor = getVendorBySlug(product.vendor);
-  const vendorIcon = vendor?.assets.find(
-    (asset) =>
-      asset.assetType === VendorAssetType.ICON &&
-      (asset.theme === theme || asset.theme === VendorAssetTheme.UNIVERSAL)
-  );
 
   return (
     <Card className="flex flex-col font-montserrat">
