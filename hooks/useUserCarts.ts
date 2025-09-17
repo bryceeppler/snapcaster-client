@@ -24,7 +24,7 @@ export function useUserCarts() {
     queryFn: async () => {
       try {
         const response = await axiosInstance.get(
-          `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts`
         );
         if (response.status === 200) {
           return response.data.carts;
@@ -42,7 +42,7 @@ export function useUserCarts() {
   const createCartMutation = useMutation({
     mutationFn: async (cartName: string) => {
       const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts`,
         { cartName }
       );
       if (response.status !== 201) {
@@ -56,7 +56,7 @@ export function useUserCarts() {
         await queryClient.invalidateQueries({ queryKey: CARTS_QUERY_KEY });
 
         const response = await axiosInstance.get(
-          `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts`
         );
 
         const newCart = response.data.carts.find(
@@ -79,7 +79,7 @@ export function useUserCarts() {
   const deleteCartMutation = useMutation({
     mutationFn: async (cartId: number) => {
       await axiosInstance.delete(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts/${cartId}`
       );
     },
     onSuccess: () => {
@@ -94,7 +94,7 @@ export function useUserCarts() {
   const renameCartMutation = useMutation({
     mutationFn: async ({ id, name }: IBuylistCart) => {
       const response = await axiosInstance.patch(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts/${id}`,
         { cartName: name.trim() }
       );
       return { success: true, message: response.data.message, id };
@@ -124,7 +124,7 @@ export function useUserCarts() {
       queryFn: async () => {
         if (!currentCartId) return null;
         const response = await axiosInstance.get(
-          `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts/${currentCartId}`
         );
         return response.data;
       },
