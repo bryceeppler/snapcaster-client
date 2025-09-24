@@ -49,7 +49,7 @@ export default function SearchBar({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const autoCompleteRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
+  const autoCompleteUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const useMediaQuery = (width: number): boolean => {
     const [isMobile, setIsMobile] = useState(false);
@@ -68,7 +68,7 @@ export default function SearchBar({
 
   const fetchAutocomplete = useCallback(
     (value: string) => {
-      const url = `${autoCompleteUrl}/cards?tcg=${tcg}&query=${encodeURIComponent(
+      const url = `${autoCompleteUrl}/api/v1/autocomplete/cards?tcg=${tcg}&query=${encodeURIComponent(
         value
       )}`;
       fetch(url)
