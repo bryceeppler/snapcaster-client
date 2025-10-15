@@ -39,7 +39,7 @@ export default function SinglesSearchBar({
   const [isAutoCompleteVisible, setIsAutoCompleteVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
-  const autoCompleteUrl = process.env.NEXT_PUBLIC_AUTOCOMPLETE_URL;
+  const autoCompleteUrl = process.env.NEXT_PUBLIC_API_URL;
   const MIN_SEARCH_LENGTH = 3;
   const DEBOUNCE_MS = 300;
 
@@ -53,7 +53,7 @@ export default function SinglesSearchBar({
       }
 
       try {
-        const url = `${autoCompleteUrl}/cards?tcg=${tcg}&query=${encodeURIComponent(
+        const url = `${autoCompleteUrl}/api/v1/autocomplete/cards?tcg=${tcg}&query=${encodeURIComponent(
           value
         )}`;
         const response = await fetch(url);
