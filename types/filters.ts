@@ -43,3 +43,29 @@ export interface SealedFilterSheetProps {
    */
   clearFilters: () => void;
 }
+
+/**
+ * Properties for filter components used with general products
+ */
+export interface ProductFilterSheetProps {
+  /**
+   * Currently selected sort option
+   */
+  sortBy: string | null;
+
+  /**
+   * Function to update the selected sort option
+   * @param sortBy The new sort option to apply
+   */
+  setSortBy: (sortBy: string | null) => void;
+
+  /**
+   * Mapping of sort option keys to their display labels
+   */
+  sortByLabel: Record<string, string>;
+
+  /**
+   * Function to reset all filters to their default state
+   */
+  clearFilters: () => void;
+}

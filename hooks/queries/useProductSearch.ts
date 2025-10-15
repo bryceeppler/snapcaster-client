@@ -2,16 +2,15 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
-import type { Product, Tcg } from '@/types';
-import type { FilterOption, SealedSortOptions } from '@/types/query';
+import { useProductSearchStore } from '@/stores/useProductSearchStore';
+import type { Product } from '@/types';
+import type { FilterOption, ProductSortOptions } from '@/types/query';
 import axiosInstance from '@/utils/axiosWrapper';
 
 interface SearchParams {
-  productCategory: Tcg;
   searchTerm: string;
   selectedFilters: { field: string; value: string }[];
-  sortBy: SealedSortOptions;
+  sortBy: ProductSortOptions;
   region: string;
 }
 
@@ -26,15 +25,14 @@ interface SearchResponse {
   sorting: {
     Items: Array<{
       label: string;
-      value: SealedSortOptions;
+      value: ProductSortOptions;
       selected: boolean;
     }>;
   };
 }
 
 export interface TransformedSearchResponse {
-  searchResults: (Product & { promoted: boolean })[];
-  promotedResults: (Product & { promoted: boolean })[];
+  searchResults: Product[];
   filterOptions: FilterOption[];
   numPages: number;
   numResults: number;
@@ -42,8 +40,7 @@ export interface TransformedSearchResponse {
   sortOptions: Record<string, string>;
 }
 
-const fetchSealedProducts = async ({
-  productCategory,
+const fetchProducts = async ({
   searchTerm,
   selectedFilters,
   sortBy,
@@ -52,13 +49,12 @@ const fetchSealedProducts = async ({
 }: SearchParams & { pageParam?: number }): Promise<SearchResponse> => {
   const queryParams = new URLSearchParams({
     region: region,
-    tcg: productCategory,
-    mode: 'sealed',
+    tcg: '', // Empty for general product search
+    mode: 'generic', // Changed from 'sealed' to 'product'
     keyword: searchTerm.trim(),
     sortBy: sortBy,
     maxResultsPerPage: '24',
     pageNumber: pageParam.toString()
-    // fuzzy: 'max'
   });
 
   selectedFilters.forEach(({ field, value }) => {
@@ -78,21 +74,21 @@ const fetchSealedProducts = async ({
 
     return response.data.data;
   } catch (error) {
-    console.error('Error fetching cards:', error);
+    console.error('Error fetching products:', error);
     if (error instanceof Error) {
-      toast.error('Unable to fetch cards: ' + error.message);
+      toast.error('Unable to fetch products: ' + error.message);
     } else {
-      toast.error('An unexpected error occurred while fetching cards');
+      toast.error('An unexpected error occurred while fetching products');
     }
     throw error;
   }
 };
 
-export const useSealedSearch = (
+export const useProductSearch = (
   searchParams: SearchParams,
   options?: { enabled?: boolean }
 ) => {
-  const { setFilterOptions } = useSealedSearchStore();
+  const { setFilterOptions } = useProductSearchStore();
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(
     searchParams.searchTerm
   );
@@ -101,7 +97,7 @@ export const useSealedSearch = (
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchParams.searchTerm);
-    }, 500); // 300ms delay - shorter for better responsiveness
+    }, 500); // 500ms delay for debouncing
 
     return () => clearTimeout(timer);
   }, [searchParams.searchTerm]);
@@ -116,9 +112,9 @@ export const useSealedSearch = (
   const shouldEnableQuery = options?.enabled ?? true;
 
   const query = useInfiniteQuery({
-    queryKey: ['sealedSearch', debouncedSearchParams],
+    queryKey: ['productSearch', debouncedSearchParams],
     queryFn: ({ pageParam = 1 }) =>
-      fetchSealedProducts({
+      fetchProducts({
         ...debouncedSearchParams,
         pageParam
       }),
@@ -134,7 +130,6 @@ export const useSealedSearch = (
     select: (data): TransformedSearchResponse => {
       const lastPage = data.pages[data.pages.length - 1];
       const allResults = data.pages.flatMap((page) => page.results);
-      const allPromotedResults = data.pages[0]?.promotedResults || [];
 
       const sortOptionsMap = data.pages[0]?.sorting.Items.reduce(
         (acc, item) => ({
@@ -145,11 +140,7 @@ export const useSealedSearch = (
       );
 
       return {
-        searchResults: allResults.map((item) => ({ ...item, promoted: false })),
-        promotedResults: allPromotedResults.map((item) => ({
-          ...item,
-          promoted: true
-        })),
+        searchResults: allResults,
         filterOptions: lastPage?.filters || [],
         numPages: lastPage?.pagination.numPages || 0,
         numResults: lastPage?.pagination.numResults || 0,
