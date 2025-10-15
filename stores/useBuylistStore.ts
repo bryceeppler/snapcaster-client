@@ -201,7 +201,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const response = await axiosInstance.get(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/checkouts`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts/${cartId}/checkouts`
       );
       if (response.status === 200) {
         const storeBreakdowns = response.data.data.storeBreakdowns;
@@ -242,7 +242,7 @@ const useBuyListStore = create<BuyListState>((set, get) => ({
 
     try {
       const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${currentCartId}/submit`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts/${currentCartId}/submit`,
         {
           paymentType,
           store: selectedStoreForReview

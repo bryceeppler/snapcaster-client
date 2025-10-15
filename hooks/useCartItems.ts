@@ -21,7 +21,7 @@ export function useCartItems(cartId: number | undefined) {
       if (!cartId) return [];
       try {
         const response = await axiosInstance.get(
-          `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/cards`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts/${cartId}/cards`
         );
         if (response.status === 200) {
           return response.data.items;
@@ -46,7 +46,7 @@ export function useCartItems(cartId: number | undefined) {
       quantity: number;
     }) => {
       const response = await axiosInstance.put(
-        `${process.env.NEXT_PUBLIC_BUYLISTS_URL}/v2/carts/${cartId}/cards`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/buylists/carts/${cartId}/cards`,
         { ...item, quantity }
       );
       return response.data;
