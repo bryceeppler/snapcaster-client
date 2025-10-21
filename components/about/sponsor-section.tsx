@@ -80,9 +80,9 @@ export default function SponsorSection() {
       sponsors: [
         {
           id: 1,
-          name: 'Vortex Games',
-          href: 'https://vortexgames.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
-          logo: 'https://cdn.snapcaster.ca/supporters/vortex_supporter.png'
+          name: 'The Comic Hunter',
+          href: 'https://comichunter.net?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/supporters/comichunter-supporter.png'
         }
       ],
       cardClassName:

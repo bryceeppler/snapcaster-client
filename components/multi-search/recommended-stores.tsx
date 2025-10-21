@@ -49,8 +49,8 @@ export const RecommendedStores = () => {
     'levelup',
     'chimera',
     'exorgames',
-    'houseofcards',
-    'vortexgames'
+    'houseofcards'
+    // 'vortexgames'
   ];
 
   const getTopWebsites = (results: Product[][]) => {

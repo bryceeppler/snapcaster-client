@@ -32,8 +32,8 @@ export const Cart = () => {
     'levelup',
     'chimera',
     'exorgames',
-    'houseofcards',
-    'vortexgames'
+    'houseofcards'
+    // 'vortexgames'
   ];
 
   const handleCheckout = (products: Product[]) => {
