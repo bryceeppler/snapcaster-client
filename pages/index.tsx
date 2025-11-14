@@ -32,7 +32,8 @@ const Home: NextPage = () => {
         <h1 className="sr-only">Buy Trading Cards Online In Canada</h1>
         <div className="flex w-full justify-center bg-red-300 p-2 text-center">
           Nov 14th 8:00 AM PST: We're undergoing maintenance for a few hours
-          while me make some changes, sorry for the inconvenience!
+          while me make some changes, sorry for the inconvenience! You may
+          notice some missing results or cards.
         </div>
         {!searchResults && (
           <div className="flex flex-col items-center justify-center md:mt-6">
