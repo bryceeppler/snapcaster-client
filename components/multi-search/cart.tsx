@@ -28,12 +28,11 @@ export const Cart = () => {
   const { getVendorNameBySlug } = useVendors();
 
   const recommendedStores = [
-    'obsidian',
-    'levelup',
-    'chimera',
-    'exorgames',
-    'houseofcards'
-    // 'vortexgames'
+    'obsidiangamesvernon',
+    'house-of-cards-mtg',
+    'most-wanted-ca',
+    'level-up-games-ca',
+    'chimera-gaming'
   ];
 
   const handleCheckout = (products: Product[]) => {
