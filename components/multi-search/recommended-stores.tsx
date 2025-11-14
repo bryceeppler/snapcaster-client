@@ -45,12 +45,11 @@ export const RecommendedStores = () => {
 
   //Note: Reccomended Stores are just applicable to shopify stores for now. There is no logic in the buildCartUpdateUrls function that supports crystal or conduct stores for 1 click checkout.
   const reccomendedWebsites = [
-    'obsidian',
-    'levelup',
-    'chimera',
-    'exorgames',
-    'houseofcards'
-    // 'vortexgames'
+    'obsidiangamesvernon',
+    'house-of-cards-mtg',
+    'most-wanted-ca',
+    'level-up-games-ca',
+    'chimera-gaming'
   ];
 
   const getTopWebsites = (results: Product[][]) => {
