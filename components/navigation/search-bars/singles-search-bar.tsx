@@ -86,7 +86,7 @@ export default function SinglesSearchBar({
   // Handle key navigation
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     // Skip navigation if no suggestions
-    if (suggestions.length === 0) return;
+    if (!suggestions || suggestions.length === 0) return;
 
     const key = event.key;
     const totalResults = suggestions.length;
@@ -154,7 +154,7 @@ export default function SinglesSearchBar({
 
   // Render autocomplete suggestions
   const renderAutoComplete = () => {
-    if (!isAutoCompleteVisible || suggestions.length === 0) {
+    if (!isAutoCompleteVisible || !suggestions || suggestions.length === 0) {
       return null;
     }
 
