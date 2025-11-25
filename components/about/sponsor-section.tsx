@@ -83,6 +83,12 @@ export default function SponsorSection() {
           name: 'The Comic Hunter',
           href: 'https://comichunter.net?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
           logo: 'https://cdn.snapcaster.ca/supporters/comichunter-supporter.png'
+        },
+        {
+          id: 2,
+          name: '3 Mana',
+          href: 'https://3mana.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/3mana-logo.png'
         }
       ],
       cardClassName:
