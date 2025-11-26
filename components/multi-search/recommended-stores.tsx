@@ -49,7 +49,8 @@ export const RecommendedStores = () => {
     'house-of-cards-mtg',
     'most-wanted-ca',
     'level-up-games-ca',
-    'chimera-gaming'
+    'chimera-gaming',
+    '3-mana-ca'
   ];
 
   const getTopWebsites = (results: Product[][]) => {
