@@ -113,7 +113,7 @@ export const Toolbar = () => {
             className="help-button gap-2"
           >
             <HelpCircle className="h-4 w-4" />
-            Help
+            <span className="hidden md:block">Help</span>
           </Button>
           {/* <Button
             variant="ghost"
@@ -128,12 +128,12 @@ export const Toolbar = () => {
         <div className="flex items-center gap-2">
           <Button
             onClick={exportCart}
-            variant="ghost"
+            variant="outline"
             size="sm"
-            className="export-cart-button hidden gap-2 lg:flex"
+            className="export-cart-button  gap-2 "
           >
             <Download className="h-4 w-4" />
-            Export Cart
+            <span className="hidden md:block">Export Cart</span>
           </Button>
           <Dialog open={showCart} onOpenChange={setShowCart}>
             <DialogTrigger asChild>
@@ -143,7 +143,7 @@ export const Toolbar = () => {
                 className="cart-button text-foreground"
               >
                 <ShoppingCart className="mr-2 h-4 w-4" />
-                Cart ({cart.length})
+                <span className="hidden md:block">Cart </span>({cart.length})
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px]">
@@ -153,7 +153,7 @@ export const Toolbar = () => {
                   Add more cards to your cart or remove items.
                 </DialogDescription>
               </DialogHeader>
-              <Cart />
+              <Cart exportCart={exportCart} />
             </DialogContent>
           </Dialog>
         </div>

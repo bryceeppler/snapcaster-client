@@ -1,4 +1,4 @@
-import { ExternalLink, Trash2 } from 'lucide-react';
+import { Download, ExternalLink, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -23,7 +23,7 @@ import {
   groupProductsByHost
 } from '@/utils/cartUrlBuilder';
 
-export const Cart = () => {
+export const Cart = ({ exportCart }: { exportCart: () => void }) => {
   const { cart, removeFromCart } = useMultiSearchStore();
   const { getVendorNameBySlug } = useVendors();
 
@@ -32,7 +32,8 @@ export const Cart = () => {
     'house-of-cards-mtg',
     'most-wanted-ca',
     'level-up-games-ca',
-    'chimera-gaming'
+    'chimera-gaming',
+    '3-mana-ca'
   ];
 
   const handleCheckout = (products: Product[]) => {
@@ -178,6 +179,15 @@ export const Cart = () => {
           ${cart.reduce((acc, product) => acc + product.price, 0).toFixed(2)}
         </span>
       </div>
+      <Button
+        onClick={exportCart}
+        variant="outline"
+        size="sm"
+        className="export-cart-button  gap-2 "
+      >
+        <Download className="h-4 w-4" />
+        <span>Export Cart</span>
+      </Button>
     </div>
   );
 };
