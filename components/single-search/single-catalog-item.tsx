@@ -1,7 +1,6 @@
 import { useTheme } from 'next-themes';
 
 import { handleBuyClick } from '../../utils/analytics';
-import { Badge } from '../ui/badge';
 import CardImage from '../ui/card-image';
 
 import { Button } from '@/components/ui/button';
