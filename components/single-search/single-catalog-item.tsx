@@ -50,10 +50,16 @@ const SingleCatalogItem = ({ product }: Props) => {
   };
 
   return (
-    <Card className="flex flex-col p-4">
+    <Card className="group flex flex-col overflow-visible p-4">
       <div className={`group flex h-full flex-col rounded-lg`}>
-        <div className="relative mx-auto h-min max-w-[150px] md:max-w-[250px]">
-          <CardImage imageUrl={product.image} alt={product.name} />
+        <div className="relative mx-auto h-min max-w-[150px] overflow-visible md:max-w-[250px]">
+          <div className="overflow-hidden rounded-lg">
+            <CardImage
+              imageUrl={product.image}
+              alt={product.name}
+              className="transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
           {product.promoted && (
             <div className="absolute -left-1 -top-1 flex h-[18px] -skew-x-12 transform items-center rounded bg-primary/90 px-2 font-montserrat text-xs font-semibold leading-none text-white shadow-md">
               <span className="skew-x-12 transform">Promoted</span>

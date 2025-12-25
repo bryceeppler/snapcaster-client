@@ -181,7 +181,7 @@ export const BuylistStoreOffers = () => {
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
                       >
-                        Submit Offer
+                        Offer Details
                       </Button>
                     </CardFooter>
                   </Card>
