@@ -50,8 +50,8 @@ const SingleCatalogItem = ({ product }: Props) => {
   };
 
   return (
-    <Card className="flex flex-col">
-      <div className={`group flex h-full flex-col rounded-lg p-4`}>
+    <Card className="flex flex-col p-4">
+      <div className={`group flex h-full flex-col rounded-lg`}>
         <div className="relative mx-auto h-min max-w-[150px] md:max-w-[250px]">
           <CardImage imageUrl={product.image} alt={product.name} />
           {product.promoted && (
@@ -61,10 +61,10 @@ const SingleCatalogItem = ({ product }: Props) => {
           )}
         </div>
 
-        <div>
-          <div className="mt-3">
+        <div className="flex flex-grow flex-col py-2">
+          <div className="">
             <div className="flex flex-row items-center gap-2">
-              <h4 className="font-montserrat text-2xl font-semibold">
+              <h4 className="font-montserrat text-xl font-semibold">
                 ${Number(product.discounted_price || product.price).toFixed(2)}
               </h4>
               <DiscountBadge
@@ -86,21 +86,33 @@ const SingleCatalogItem = ({ product }: Props) => {
               </div>
             )}
           </div>
-          <div className="mt-3 flex flex-grow flex-col text-left">
-            <div className="text-primary-light font-montserrat text-[0.65rem]  font-semibold uppercase">
+          <div className="flex flex-grow flex-col gap-1 text-left">
+            <div className="text-primary-light font-montserrat text-[0.65rem] font-semibold uppercase leading-tight">
               {product.set}
             </div>
 
-            <h3 className="overflow-hidden text-ellipsis text-[0.9rem] font-semibold capitalize tracking-tight">{`${
-              product.name
-            } ${
-              product.collector_number ? `(${product.collector_number})` : ''
-            } ${product.printing ? `[${product.printing}]` : ''}`}</h3>
-            {product.quantity && (
-              <p className="text-xs">{product.quantity} in stock</p>
-            )}
+            <div className="overflow-hidden text-ellipsis text-[0.75rem] font-semibold capitalize leading-tight">
+              {product.name}
+            </div>
 
-            <div className=" mb-2 mt-3 flex flex-row gap-1">
+            <div className="flex flex-wrap items-center gap-1 text-[0.65rem] font-medium capitalize text-primary">
+              {product.condition && (
+                <div className="rounded bg-primary/10 px-1.5 py-0.5">
+                  {product.condition}
+                </div>
+              )}
+              {product.printing && (
+                <div className="rounded bg-primary/10 px-1.5 py-0.5">
+                  {product.printing}
+                </div>
+              )}
+              {product.collector_number && (
+                <div className="rounded bg-primary/10 px-1.5 py-0.5">
+                  {product.collector_number}
+                </div>
+              )}
+            </div>
+            <div className="mt-auto flex flex-row gap-1">
               {(() => {
                 const matchingVendor = vendors.find(
                   (vendor) => product.vendor === vendor.slug
@@ -124,14 +136,12 @@ const SingleCatalogItem = ({ product }: Props) => {
                 {findVendorNameByCode(product.vendor)}
               </div>
             </div>
-            <Badge className={`mt-2 w-min`}>{product.condition}</Badge>
           </div>
         </div>
       </div>
-      <div className="w-full px-4 pb-4">
+      <div className="w-full">
         <Button
-          className="w-full font-montserrat text-xs uppercase"
-          variant="secondary"
+          className="w-full  font-montserrat text-xs uppercase"
           onClick={() => {
             const url = (() => {
               if (product.platform === 'shopify') {
@@ -167,7 +177,12 @@ const SingleCatalogItem = ({ product }: Props) => {
             window.open(url, '_blank', 'noreferrer');
           }}
         >
-          Buy
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-xs font-semibold">Buy</span>
+            <span className="text-[0.65rem]">
+              {product.quantity ? `Stock: ${product.quantity}` : ''}
+            </span>
+          </div>
         </Button>
       </div>
     </Card>
