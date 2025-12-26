@@ -96,7 +96,7 @@ const SingleCatalogItem = ({ product }: Props) => {
               {product.set}
             </div>
 
-            <div className="overflow-hidden text-ellipsis text-[0.75rem] font-semibold capitalize leading-tight">
+            <div className="overflow-hidden text-ellipsis text-[0.8rem] font-semibold capitalize leading-tight">
               {product.name}
             </div>
 
@@ -146,7 +146,7 @@ const SingleCatalogItem = ({ product }: Props) => {
       </div>
       <div className="w-full">
         <Button
-          className="w-full  font-montserrat text-xs uppercase"
+          className="w-full  border font-montserrat text-xs uppercase text-primary-foreground  "
           onClick={() => {
             const url = (() => {
               if (product.platform === 'shopify') {
