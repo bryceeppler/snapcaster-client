@@ -29,7 +29,7 @@ const SealedCatalogItem = ({ product }: Props) => {
       if (product.platform === 'shopify') {
         const builder = createShopifyUrlBuilder(product.link)
           .setProduct(product.handle, product.variant_id)
-          .setUtmParams(UtmPresets.singles);
+          .setUtmParams(UtmPresets.sealed);
         const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
         if (discount?.code) {
           builder.setDiscount(discount.code);
@@ -37,11 +37,11 @@ const SealedCatalogItem = ({ product }: Props) => {
         return builder.build();
       } else if (product.platform === 'crystal') {
         return createCrystalUrlBuilder(product.link)
-          .setUtmParams(UtmPresets.singles)
+          .setUtmParams(UtmPresets.sealed)
           .build();
       } else {
         return createConductUrlBuilder(product.link)
-          .setUtmParams(UtmPresets.singles)
+          .setUtmParams(UtmPresets.sealed)
           .build();
       }
     })();
