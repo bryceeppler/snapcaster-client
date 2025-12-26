@@ -4,7 +4,7 @@ import { handleBuyClick } from '../../utils/analytics';
 import CardImage from '../ui/card-image';
 
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useDiscounts } from '@/hooks/queries/useDiscounts';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { VendorAssetTheme, VendorAssetType } from '@/services/vendorService';
@@ -50,9 +50,9 @@ const SingleCatalogItem = ({ product }: Props) => {
 
   return (
     <Card className="group flex flex-col overflow-visible p-4">
-      <div className={`group flex h-full flex-col rounded-lg`}>
-        <div className="relative mx-auto h-min max-w-[150px] overflow-visible md:max-w-[250px]">
-          <div className="overflow-hidden rounded-lg">
+      <CardContent className="group flex h-full flex-col rounded-lg p-0">
+        <div className="relative mx-auto w-full max-w-[150px] md:max-w-[250px]">
+          <div className="aspect-[3/4] overflow-hidden rounded-lg">
             <CardImage
               imageUrl={product.image}
               alt={product.name}
@@ -143,7 +143,7 @@ const SingleCatalogItem = ({ product }: Props) => {
             </div>
           </div>
         </div>
-      </div>
+      </CardContent>
       <div className="w-full">
         <Button
           className="w-full  border font-montserrat text-xs uppercase text-primary-foreground  "
