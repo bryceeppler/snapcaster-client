@@ -1,5 +1,5 @@
 import { Separator } from '@radix-ui/react-dropdown-menu';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 
@@ -184,35 +184,37 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
     applyFilters();
   };
   // Sort options alphanumerically by display label
-  const sortedValues = [...filterOption.values].sort((a, b) => {
-    // Get the display label (vendor name for vendor field, otherwise option.label)
-    const labelA =
-      filterOption.field === 'vendor'
-        ? getVendorNameBySlug(a.value) || a.label || ''
-        : a.label || '';
-    const labelB =
-      filterOption.field === 'vendor'
-        ? getVendorNameBySlug(b.value) || b.label || ''
-        : b.label || '';
+  const sortedValues = useMemo(() => {
+    return [...filterOption.values].sort((a, b) => {
+      // Get the display label (vendor name for vendor field, otherwise option.label)
+      const labelA =
+        filterOption.field === 'vendor'
+          ? getVendorNameBySlug(a.value) || a.label || ''
+          : a.label || '';
+      const labelB =
+        filterOption.field === 'vendor'
+          ? getVendorNameBySlug(b.value) || b.label || ''
+          : b.label || '';
 
-    const trimmedA = labelA.trim();
-    const trimmedB = labelB.trim();
+      const trimmedA = labelA.trim();
+      const trimmedB = labelB.trim();
 
-    // Try to parse as numbers first
-    const numA = Number(trimmedA);
-    const numB = Number(trimmedB);
+      // Try to parse as numbers first
+      const numA = Number(trimmedA);
+      const numB = Number(trimmedB);
 
-    // If both are valid numbers, sort numerically
-    if (!isNaN(numA) && !isNaN(numB) && trimmedA !== '' && trimmedB !== '') {
-      return numA - numB;
-    }
+      // If both are valid numbers, sort numerically
+      if (!isNaN(numA) && !isNaN(numB) && trimmedA !== '' && trimmedB !== '') {
+        return numA - numB;
+      }
 
-    // Otherwise, use localeCompare for proper alphanumeric sorting
-    return trimmedA.localeCompare(trimmedB, undefined, {
-      numeric: true,
-      sensitivity: 'base'
+      // Otherwise, use localeCompare for proper alphanumeric sorting
+      return trimmedA.localeCompare(trimmedB, undefined, {
+        numeric: true,
+        sensitivity: 'base'
+      });
     });
-  });
+  }, [filterOption.values, filterOption.field]);
 
   return (
     <div className="space-y-3 py-2">
