@@ -1,5 +1,5 @@
 import { Separator } from '@radix-ui/react-dropdown-menu';
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 import { ScrollArea, ScrollBar } from '../ui/scroll-area';
 
@@ -158,10 +158,11 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
   applyFilters
 }) => {
   const { getVendorNameBySlug } = useVendors();
-  const [localSelections, setLocalSelections] = React.useState<{
+  const [localSelections, setLocalSelections] = useState<{
     [key: string]: boolean;
   }>({});
-  React.useEffect(() => {
+
+  useEffect(() => {
     const selections = filterOption.values.reduce((acc, option) => {
       acc[option.value] = option.selected;
       return acc;
@@ -182,26 +183,52 @@ const FilterFactory: React.FC<FilterFactoryProps> = ({
     setCurrentPage(1);
     applyFilters();
   };
+  // Sort options alphanumerically by display label
+  const sortedValues = [...filterOption.values].sort((a, b) => {
+    // Get the display label (vendor name for vendor field, otherwise option.label)
+    const labelA =
+      filterOption.field === 'vendor'
+        ? getVendorNameBySlug(a.value) || a.label || ''
+        : a.label || '';
+    const labelB =
+      filterOption.field === 'vendor'
+        ? getVendorNameBySlug(b.value) || b.label || ''
+        : b.label || '';
+
+    const trimmedA = labelA.trim();
+    const trimmedB = labelB.trim();
+
+    // Try to parse as numbers first
+    const numA = Number(trimmedA);
+    const numB = Number(trimmedB);
+
+    // If both are valid numbers, sort numerically
+    if (!isNaN(numA) && !isNaN(numB) && trimmedA !== '' && trimmedB !== '') {
+      return numA - numB;
+    }
+
+    // Otherwise, use localeCompare for proper alphanumeric sorting
+    return trimmedA.localeCompare(trimmedB, undefined, {
+      numeric: true,
+      sensitivity: 'base'
+    });
+  });
 
   return (
-    <div className="w-full max-w-full space-y-3 py-2">
+    <div className="space-y-3 py-2">
       {filterOption &&
-        filterOption.values.map((option: FilterOptionValues) => (
-          <div
-            key={option.value}
-            className="flex w-full max-w-full items-start"
-          >
+        sortedValues.map((option) => (
+          <div key={option.value} className="flex items-start">
             <input
               type="checkbox"
-              id={option.value}
+              id={`${filterOption.field}-${option.value}`}
               checked={localSelections[option.value] ?? option.selected}
               onChange={() => handleOptionChange(filterOption, option)}
-              className="mr-2 mt-1 flex-shrink-0"
+              className="mr-2 mt-1"
             />
             <label
-              htmlFor={option.value}
-              className="min-w-0 flex-1 break-words text-sm leading-5"
-              style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
+              htmlFor={`${filterOption.field}-${option.value}`}
+              className="text-sm leading-5"
             >
               {filterOption.field === 'vendor'
                 ? getVendorNameBySlug(option.value)
