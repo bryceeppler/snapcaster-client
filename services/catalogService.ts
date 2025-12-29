@@ -127,14 +127,14 @@ class CatalogService {
 
   async getBuylistAnalytics(vendorId: string): Promise<BuylistAnalytics> {
     const response = await axiosInstance.get(
-      `${BASE_URL}/api/v1/catalog/analytics/buylists/${vendorId}`
+      `${BASE_URL}/api/v1/analytics/buylists/${vendorId}`
     );
     return response.data.data;
   }
 
   async getAdminBuylistAnalytics(): Promise<BuylistAnalytics[]> {
     const response = await axiosInstance.get(
-      `${BASE_URL}/api/v1/catalog/analytics/buylists`
+      `${BASE_URL}/api/v1/analytics/buylists`
     );
     return response.data.data;
   }
@@ -148,7 +148,7 @@ class CatalogService {
     endDate?: Date
   ): Promise<BuylistSubmissionResponse> {
     const response = await axiosInstance.get(
-      `${BASE_URL}/api/v1/catalog/analytics/buylists/submissions`,
+      `${BASE_URL}/api/v1/analytics/buylists/submissions`,
       { params: { page, limit, vendorSlug, status, startDate, endDate } }
     );
     return response.data.data;
