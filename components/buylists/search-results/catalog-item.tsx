@@ -196,7 +196,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
 
   return (
     <>
-      <Card className="h-full border-none">
+      <Card className="h-full ">
         <div className="flex h-full flex-col gap-2 rounded-md  p-4 ">
           <div className="mx-auto max-w-[150px]  md:max-w-[160px]">
             <CardImage imageUrl={cardData.image} alt={cardData.name} />
@@ -204,7 +204,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
 
           <div className=" flex flex-1 flex-col justify-between">
             <div className="flex w-full flex-col gap-1 space-y-0.5 px-0.5">
-              <p className="overflow-hidden text-ellipsis text-[0.7rem] text-xs  font-semibold  leading-none text-muted-foreground ">
+              <p className="overflow-hidden text-ellipsis text-xs  font-semibold  leading-none text-muted-foreground ">
                 {cardData.set}
               </p>
               <p className="overflow-hidden text-ellipsis text-[0.80rem] font-semibold leading-none ">
@@ -230,8 +230,7 @@ export const BuylistCatalogItem = ({ cardData }: BuylistCatalogItemProps) => {
             {Object.keys(cardData.conditions) && (
               <DialogTrigger asChild>
                 <Button
-                  className="border-input-none w-full rounded-b-lg bg-card font-montserrat text-xs font-semibold"
-                  variant="outline"
+                  className="border-input-none w-full rounded-b-lg border font-montserrat text-xs font-semibold"
                   onClick={(e) => {
                     if (!isAuthenticated) {
                       e.preventDefault();
