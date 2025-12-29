@@ -79,7 +79,12 @@ export class ShopifyUrlBuilder {
     let url = this.config.baseUrl;
 
     // Build product path
-    let productPath = `products/${this.config.productHandle}`;
+    let productPath = '';
+    // Temporary fix until the shopify app is updated to fix the url structure
+    if (!this.config.baseUrl.includes('/products/')) {
+      productPath = `products/${this.config.productHandle}`;
+    }
+
     if (this.config.variantId) {
       productPath += `?variant=${this.config.variantId}`;
     }

@@ -1,10 +1,6 @@
 import Link from 'next/link';
 
-import {
-  DiscordLogoIcon,
-  GitHubLogoIcon,
-  InstagramLogoIcon
-} from '@radix-ui/react-icons';
+import { DiscordLogoIcon, InstagramLogoIcon } from '@radix-ui/react-icons';
 import { FacebookIcon } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
@@ -43,9 +39,6 @@ export default function Footer() {
           <div className="flex gap-4">
             <Link aria-label="Discord" href="https://discord.gg/EnKKHxSq75">
               <DiscordLogoIcon className="h-6 w-6" />
-            </Link>
-            <Link aria-label="GitHub" href="https://github.com/bryceeppler">
-              <GitHubLogoIcon className="h-6 w-6" />
             </Link>
             <Link
               aria-label="Instagram"
