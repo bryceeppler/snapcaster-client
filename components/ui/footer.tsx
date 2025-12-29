@@ -1,10 +1,6 @@
 import Link from 'next/link';
 
-import {
-  DiscordLogoIcon,
-  GitHubLogoIcon,
-  InstagramLogoIcon
-} from '@radix-ui/react-icons';
+import { DiscordLogoIcon, InstagramLogoIcon } from '@radix-ui/react-icons';
 import { FacebookIcon } from 'lucide-react';
 
 import { useAuth } from '@/hooks/useAuth';
