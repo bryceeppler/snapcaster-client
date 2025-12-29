@@ -44,9 +44,6 @@ export default function Footer() {
             <Link aria-label="Discord" href="https://discord.gg/EnKKHxSq75">
               <DiscordLogoIcon className="h-6 w-6" />
             </Link>
-            <Link aria-label="GitHub" href="https://github.com/bryceeppler">
-              <GitHubLogoIcon className="h-6 w-6" />
-            </Link>
             <Link
               aria-label="Instagram"
               href="https://www.instagram.com/snapcasterca/"
