@@ -80,6 +80,7 @@ export class ShopifyUrlBuilder {
 
     // Build product path
     let productPath = '';
+    // Temporary fix until the shopify app is updated to fix the url structure
     if (!this.config.baseUrl.includes('/products/')) {
       productPath = `products/${this.config.productHandle}`;
     }
