@@ -15,7 +15,8 @@ export const handleBuyClick = (
   cardName: string,
   setName: string,
   promoted: boolean,
-  tcg: string
+  tcg: string,
+  product_type: 'singles' | 'sealed'
 ) => {
   const domain = link.split('/')[2];
   const priceInCents = price * 100;
@@ -27,7 +28,8 @@ export const handleBuyClick = (
     card_name: cardName,
     set_name: setName,
     card_price: priceInCents,
-    tcg: tcg
+    tcg: tcg,
+    product_type: product_type
   });
 
   if (promoted) {
