@@ -1,42 +1,53 @@
 import axiosInstance from '@/utils/axiosWrapper';
 
-const BASE_URL = process.env.NEXT_PUBLIC_PAYMENT_URL;
+const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/payment`;
 
 export interface CheckoutSession {
-  checkoutUrl: string;
+  url: string;
 }
 
 export interface CustomerPortalSession {
-  portalUrl: string;
+  url: string;
 }
 
-export class PaymentService {
-  async createCheckoutSession(
-    priceId: string,
-    successUrl: string,
-    cancelUrl: string
-  ): Promise<CheckoutSession> {
-    const response = await axiosInstance.post(
-      `${BASE_URL}/createcheckoutsession`,
-      {
-        priceId,
-        successUrl,
-        cancelUrl
-      }
-    );
-    return response.data;
+class PaymentService {
+  async createCheckoutSession(): Promise<void> {
+    try {
+      const response = await axiosInstance.post(
+        `${BASE_URL}/createcheckoutsession`
+      );
+      if (response.status !== 200) throw new Error('Failed to create session');
+      const data = await response.data;
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      throw error;
+    }
   }
 
-  async createCustomerPortalSession(
-    returnUrl: string
-  ): Promise<CustomerPortalSession> {
-    const response = await axiosInstance.post(
-      `${BASE_URL}/createportalsession`,
-      {
-        returnUrl
-      }
-    );
-    return response.data;
+  async createPortalSession(): Promise<void> {
+    try {
+      const response = await axiosInstance.post(
+        `${BASE_URL}/createportalsession`
+      );
+      if (response.status !== 200) throw new Error('Failed to create session');
+      const data = await response.data;
+      window.location.href = data.url;
+    } catch (error) {
+      console.error('Error creating portal session:', error);
+      throw error;
+    }
+  }
+
+  async syncSubscription(): Promise<void> {
+    try {
+      const response = await axiosInstance.post(`${BASE_URL}/sync`);
+      if (response.status !== 200)
+        throw new Error('Failed to sync subscription');
+    } catch (error) {
+      console.error('Error syncing subscription:', error);
+      throw error;
+    }
   }
 }
 
