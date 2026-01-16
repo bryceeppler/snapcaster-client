@@ -52,7 +52,8 @@ const SealedCatalogItem = ({ product }: Props) => {
       product.name,
       product.set,
       product.promoted ?? false,
-      productCategory
+      productCategory,
+      'sealed'
     );
     window.open(url, '_blank');
   };

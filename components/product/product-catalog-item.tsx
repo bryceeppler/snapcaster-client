@@ -62,7 +62,8 @@ const ProductCatalogItem = ({ product }: Props) => {
       product.name,
       product.set,
       product.promoted ?? false,
-      'product' // Use 'product' as the category for general search
+      'product', // Use 'product' as the category for general search
+      'singles'
     );
     window.open(url, '_blank');
   };
