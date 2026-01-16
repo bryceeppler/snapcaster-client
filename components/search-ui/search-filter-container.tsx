@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useAuth } from '@/hooks/useAuth';
-import { createCheckoutSession } from '@/lib/utils';
+import { paymentService } from '@/services/paymentService';
 import type { FilterOption, FilterOptionValues } from '@/types/query';
 
 // Type for the sort options - matches what's in the provided data
@@ -96,7 +96,7 @@ const FilterSection: React.FC<FilterSectionProps> = memo(
             <Button
               onClick={
                 isAuthenticated
-                  ? createCheckoutSession
+                  ? () => paymentService.createCheckoutSession()
                   : () => (window.location.href = '/signin')
               }
             >
