@@ -38,9 +38,7 @@ const CardImage: React.FC<Props> = ({
   }, [imageUrl]);
 
   return (
-    <div
-      className={`relative aspect-card w-full overflow-hidden rounded-lg ${className}`}
-    >
+    <div className={`relative h-full w-full ${className}`}>
       {/* Loading State */}
       {isLoading && (
         <div className="absolute inset-0 z-0">
@@ -64,7 +62,7 @@ const CardImage: React.FC<Props> = ({
         <img
           src={imageUrl}
           alt={alt || 'Card Image'}
-          className={`w-full object-cover transition-all duration-300 ${
+          className={`h-full w-full object-contain transition-all duration-300 ${
             isLoading ? 'opacity-0' : 'opacity-100'
           } ${href ? 'cursor-pointer hover:scale-105 hover:opacity-80' : ''}`}
         />
