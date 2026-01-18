@@ -218,7 +218,6 @@ const SideBanner: React.FC<SideBannerProps> = ({
     return null;
   }
 
-  console.log(bannerAds);
   // Different position and styling based on the banner position
   const positionStyles =
     position === AdvertisementPosition.LEFT_BANNER

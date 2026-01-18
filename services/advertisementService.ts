@@ -68,7 +68,7 @@ class AdvertisementService {
         `${BASE_URL}/api/v1/vendor/advertisements?with=images`
       );
       const data = response.data.data || [];
-      
+
       // Transform API response to match frontend expectations and add missing images field
       return data.map((ad: any) => ({
         ...ad,
@@ -101,7 +101,7 @@ class AdvertisementService {
         }
       });
       const data = response.data.data || [];
-      
+
       // Transform API response to match frontend expectations and add missing images field
       return data.map((ad: any) => ({
         ...ad,
@@ -127,10 +127,6 @@ class AdvertisementService {
     advertisementId: number,
     advertisement: UpdateAdvertisementRequest
   ): Promise<AdvertisementWithImages> {
-    console.log(
-      'Updating advertisement with only changed fields:',
-      advertisement
-    );
     const response = await axiosInstance.put(
       `${BASE_URL}/api/v1/vendor/advertisements/${advertisementId}`,
       advertisement
@@ -253,13 +249,13 @@ class AdvertisementService {
     try {
       // get the dimensions for the image
       const dimensions = await this.getImageDimensions(file);
-      console.log('Uploading file to S3:', {
-        fileType: file.type,
-        fileSize: file.size,
-        width: dimensions.width,
-        height: dimensions.height,
-        url: presignedUrl.split('?')[0] // Log the base URL without query params for security
-      });
+      // console.log('Uploading file to S3:', {
+      //   fileType: file.type,
+      //   fileSize: file.size,
+      //   width: dimensions.width,
+      //   height: dimensions.height,
+      //   url: presignedUrl.split('?')[0] // Log the base URL without query params for security
+      // });
 
       await axios.put(presignedUrl, file, {
         headers: {
@@ -267,7 +263,7 @@ class AdvertisementService {
         }
       });
 
-      console.log('File successfully uploaded to S3');
+      // console.log('File successfully uploaded to S3');
       return {
         fileType: file.type,
         fileSize: file.size,
