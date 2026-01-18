@@ -16,12 +16,16 @@ function MainLayout({
   usesSideBanners = true
 }: React.PropsWithChildren<Props>) {
   const { showAds } = useAdContext();
-  const { hasActiveSubscription } = useAuth();
+  const { hasActiveSubscription, isLoadingProfile } = useAuth();
 
-  const shouldShowAds = useMemo(
-    () => showAds && !hasActiveSubscription,
-    [showAds, hasActiveSubscription]
-  );
+  const shouldShowAds = useMemo(() => {
+    // Don't show ads while profile is loading to prevent flash
+    if (isLoadingProfile) {
+      return false;
+    }
+    // Only show ads if showAds is true AND user doesn't have active subscription
+    return showAds && !hasActiveSubscription;
+  }, [showAds, hasActiveSubscription, isLoadingProfile]);
 
   return (
     <div className="relative flex justify-center">

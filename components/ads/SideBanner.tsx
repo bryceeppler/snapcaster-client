@@ -175,9 +175,16 @@ const SideBanner: React.FC<SideBannerProps> = ({
   useEffect(() => {
     if (!bannerAds || !bannerAds.length) return;
 
-    // Skip first render since we initialized synchronously
+    // Skip first render only if we already have a valid image
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      // If we don't have a valid image yet, try to select one now
+      if (!selectedImage.imageUrl) {
+        const nextIndex = selectAdWithActiveImage();
+        if (nextIndex >= 0) {
+          setCurrentAdIndex(nextIndex);
+        }
+      }
       return;
     }
 
