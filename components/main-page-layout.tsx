@@ -16,16 +16,31 @@ function MainLayout({
   usesSideBanners = true
 }: React.PropsWithChildren<Props>) {
   const { showAds } = useAdContext();
-  const { hasActiveSubscription, isLoadingProfile } = useAuth();
+  const {
+    hasActiveSubscription,
+    isLoadingProfile,
+    isAuthenticated,
+    isInitializing
+  } = useAuth();
+
+  // Wait for profile to load if user is authenticated to prevent layout shifts
+  const isProfileLoading =
+    isInitializing || (isAuthenticated && isLoadingProfile);
 
   const shouldShowAds = useMemo(() => {
     // Don't show ads while profile is loading to prevent flash
-    if (isLoadingProfile) {
+    if (isProfileLoading) {
       return false;
     }
     // Only show ads if showAds is true AND user doesn't have active subscription
     return showAds && !hasActiveSubscription;
-  }, [showAds, hasActiveSubscription, isLoadingProfile]);
+  }, [showAds, hasActiveSubscription, isProfileLoading]);
+
+  // Don't render layout until profile is loaded (if user is authenticated)
+  // This prevents layout shifts when components render differently based on auth state
+  if (isProfileLoading) {
+    return null;
+  }
 
   return (
     <div className="relative flex justify-center">
