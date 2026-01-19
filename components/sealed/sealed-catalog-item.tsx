@@ -83,8 +83,11 @@ const SealedCatalogItem = ({ product }: Props) => {
             </div>
             <div className="flex flex-wrap items-center gap-1 text-[0.65rem] font-medium capitalize text-primary">
               {product.tags &&
-                product.tags.map((tag: string) => (
-                  <div className="rounded bg-primary/10 px-1.5 py-0.5">
+                product.tags.map((tag: string, index: number) => (
+                  <div
+                    key={`${product.name}-${tag}-${index}`}
+                    className="rounded bg-primary/10 px-1.5 py-0.5"
+                  >
                     {tag}
                   </div>
                 ))}
