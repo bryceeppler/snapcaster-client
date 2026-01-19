@@ -62,7 +62,7 @@ const CardImage: React.FC<Props> = ({
         <img
           src={imageUrl}
           alt={alt || 'Card Image'}
-          className={`h-full w-full object-contain transition-all duration-300 ${
+          className={`h-full w-full rounded-xl object-contain transition-all duration-300 ${
             isLoading ? 'opacity-0' : 'opacity-100'
           } ${href ? 'cursor-pointer hover:scale-105 hover:opacity-80' : ''}`}
         />
