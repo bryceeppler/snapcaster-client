@@ -49,8 +49,6 @@ const AdTest = () => {
   // Log ads to debug
   useEffect(() => {
     if (ads.length > 0) {
-      console.log('Ads loaded:', ads);
-      console.log('Sample ad data structure:', ads[0]);
     }
   }, [ads]);
 
@@ -120,7 +118,6 @@ const AdTest = () => {
       }
     }
 
-    console.log('Simulation results:', results);
     setSimulationResults(results);
     setHasRun(true);
   };

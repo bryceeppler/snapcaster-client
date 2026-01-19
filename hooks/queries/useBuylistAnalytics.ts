@@ -11,8 +11,6 @@ const fetchBuylistAnalytics = async (
   role: string
 ): Promise<BuylistAnalytics[]> => {
   try {
-    console.log('fetching buylist analytics', vendorId, 'role:', role);
-
     // Use different endpoint for ADMIN users
     if (role === 'ADMIN') {
       const response = await catalogService.getAdminBuylistAnalytics();
@@ -37,7 +35,6 @@ const fetchBuylistSubmissions = async (
   endDate?: Date
 ) => {
   try {
-    console.log(`Fetching submissions page ${page} with limit ${limit}`);
     const response = await catalogService.getBuylistSubmissions(
       page,
       limit,
@@ -134,14 +131,12 @@ export const useBuylistAnalytics = (vendorId: string, role: string | null) => {
       (!cachedSubmissionsData ||
         newPage <= cachedSubmissionsData.pagination.totalPages)
     ) {
-      console.log(`Changing page from ${page} to ${newPage}`);
       setPage(newPage);
     }
   };
 
   // Function to handle page size change
   const handlePageSizeChange = (newPageSize: number) => {
-    console.log(`Changing page size from ${pageSize} to ${newPageSize}`);
     setPageSize(newPageSize);
     setPage(1); // Reset to first page when changing page size
   };

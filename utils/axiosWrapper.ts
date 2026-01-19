@@ -54,6 +54,12 @@ axiosInstance.interceptors.response.use(
         _retry?: boolean;
       };
 
+      // Don't retry if this is already a refresh token request that failed
+      if (originalRequest.url?.includes('/auth/refresh')) {
+        tokenManager.setAccessToken(null);
+        return Promise.reject(error);
+      }
+
       if (!originalRequest._retry) {
         originalRequest._retry = true; // Mark the request to avoid an infinite loop
 
@@ -68,7 +74,7 @@ axiosInstance.interceptors.response.use(
           // Retry the original request
           return axiosInstance(originalRequest);
         } catch (refreshError) {
-          // Handle refresh token failure
+          // Handle refresh token failure - don't retry again
           tokenManager.setAccessToken(null);
           return Promise.reject(refreshError);
         }
