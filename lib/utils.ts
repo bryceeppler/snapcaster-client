@@ -2,8 +2,6 @@ import { type ClassValue, clsx } from 'clsx';
 import { format, parseISO } from 'date-fns';
 import { twMerge } from 'tailwind-merge';
 
-import axiosInstance from '@/utils/axiosWrapper';
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -27,30 +25,4 @@ export function formatChartDate(
   }
 
   return format(parseISO(dateString), includeYear ? 'MMM d, yyyy' : 'MMM d');
-}
-
-export async function createCheckoutSession() {
-  try {
-    const response = await axiosInstance.post(
-      `${process.env.NEXT_PUBLIC_PAYMENT_URL}/createcheckoutsession`
-    );
-    if (response.status !== 200) throw new Error('Failed to create session');
-    const data = await response.data;
-    window.location.href = data.url;
-  } catch (error) {
-    console.error('Error creating checkout session:', error);
-  }
-}
-
-export async function createPortalSession() {
-  try {
-    const response = await axiosInstance.post(
-      `${process.env.NEXT_PUBLIC_PAYMENT_URL}/createportalsession`
-    );
-    if (response.status !== 200) throw new Error('Failed to create session');
-    const data = await response.data;
-    window.location.href = data.url;
-  } catch (error) {
-    console.error('Error creating portal session:', error);
-  }
 }

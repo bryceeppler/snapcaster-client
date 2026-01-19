@@ -1,6 +1,6 @@
 import type { QueryObserverResult } from '@tanstack/react-query';
 import { SlidersHorizontal } from 'lucide-react';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import BackToTopButton from '../ui/back-to-top-btn';
 
@@ -16,11 +16,75 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
+import { useAdvertisements } from '@/hooks/queries/useAdvertisements';
 import { useAuth } from '@/hooks/useAuth';
 import { useSealedSearchStore } from '@/stores/useSealedSearchStore';
 import type { SealedProduct } from '@/types';
+import type { AdvertisementWithImages } from '@/types/advertisements';
+import { AdvertisementPosition } from '@/types/advertisements';
 import { sealedSortByLabel } from '@/types/query';
 import type { SealedSortOptions } from '@/types/query';
+import { appendUtmParameters } from '@/utils/adUrlBuilder';
+import { createWeightedSelectionManager } from '@/utils/weightedSelection';
+
+const AD_INTERVAL = 35;
+
+// Helper function to get a random image from the advertisement pool
+const getRandomAd = <T,>(items: T[]): T | undefined => {
+  if (!items || !items.length) return undefined;
+  const randomIndex = Math.floor(Math.random() * items.length);
+  return items[randomIndex];
+};
+
+// Feed Ad Component to be inserted in search results
+const FeedAd = ({
+  ad,
+  isFeatured = false
+}: {
+  ad: AdvertisementWithImages;
+  isFeatured?: boolean;
+}) => {
+  const [imageUrl, setImageUrl] = useState<string | undefined>();
+
+  // Select a random image for the ad when it first renders
+  useEffect(() => {
+    if (!ad || !ad.images || !ad.images.length) return;
+
+    // Get all active images
+    const activeImages = ad.images.filter(
+      (img) => img.isApproved && img.isEnabled
+    );
+    if (!activeImages.length) return;
+
+    // Select a random image from the active images
+    const randomImage = getRandomAd(activeImages);
+    setImageUrl(randomImage?.imageUrl);
+  }, [ad]);
+
+  if (!imageUrl) return null;
+
+  // Append UTM parameters to the URL
+  const adUrl = appendUtmParameters(ad.targetUrl || '', {
+    content: isFeatured ? 'feed_featured' : 'feed_inline'
+  });
+
+  return (
+    <a
+      href={adUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex h-fit flex-col overflow-hidden rounded-lg border border-border transition-shadow duration-200 hover:shadow-md"
+    >
+      <div className="relative">
+        <img
+          src={imageUrl}
+          alt={ad.altText || 'Advertisement'}
+          className="h-auto w-full rounded-lg object-cover"
+        />
+      </div>
+    </a>
+  );
+};
 
 interface SealedCatalogContainerProps {
   clearFilters: () => void;
@@ -50,6 +114,83 @@ export default function SealedCatalogContainer({
   } = useSealedSearchStore();
 
   const { hasActiveSubscription } = useAuth();
+  const { getAdsByPosition } = useAdvertisements();
+
+  // Get feed ads and manage selection
+  const feedAds = useMemo(
+    () => getAdsByPosition(AdvertisementPosition.FEED),
+    [getAdsByPosition]
+  );
+
+  // Set up weighted selection for feed ads
+  const feedAdManager = useMemo(() => {
+    const manager = createWeightedSelectionManager<AdvertisementWithImages>();
+    manager.setItems(feedAds);
+    return manager;
+  }, [feedAds]);
+
+  // Keep track of which ad is displayed at each position and the featured ad
+  const [adMap, setAdMap] = useState<Record<number, AdvertisementWithImages>>(
+    {}
+  );
+  const [featuredAd, setFeaturedAd] = useState<AdvertisementWithImages | null>(
+    null
+  );
+
+  // Generate the featured ad and interleaved ads whenever search results change
+  useEffect(() => {
+    if (!searchResults || hasActiveSubscription || !feedAds.length) {
+      setFeaturedAd(null);
+      setAdMap({});
+      return;
+    }
+
+    // Select a featured ad based on weights
+    const featuredAdIndex = feedAdManager.selectRandom();
+    if (featuredAdIndex >= 0) {
+      const featuredAd = feedAds[featuredAdIndex];
+      if (featuredAd) {
+        setFeaturedAd(featuredAd);
+        // Set as previous selection to avoid showing the same ad in the results
+        feedAdManager.setPreviousSelection(featuredAdIndex);
+      }
+    } else {
+      setFeaturedAd(null);
+    }
+
+    // Now select ads for interleaving in the results
+    const newAdMap: Record<number, AdvertisementWithImages> = {};
+
+    // Calculate positions for the interleaved ads
+    for (let i = AD_INTERVAL - 1; i < searchResults.length; i += AD_INTERVAL) {
+      // Select a random ad based on weights that's different from previous selections
+      const adIndex = feedAdManager.selectDifferentRandom();
+
+      if (adIndex >= 0) {
+        // Store the selected ad, then set it as previous to avoid repeats
+        const ad = feedAds[adIndex];
+        if (ad) {
+          newAdMap[i] = ad;
+          feedAdManager.setPreviousSelection(adIndex);
+        }
+      }
+    }
+
+    setAdMap(newAdMap);
+  }, [searchResults, hasActiveSubscription, feedAds, feedAdManager]);
+
+  // Calculate positions where ads should be shown
+  const adPositions = useMemo(() => {
+    if (!searchResults || hasActiveSubscription || !feedAds.length) return [];
+
+    // Create an array of positions where ads should appear
+    const positions: number[] = [];
+    for (let i = AD_INTERVAL - 1; i < searchResults.length; i += AD_INTERVAL) {
+      positions.push(i);
+    }
+
+    return positions;
+  }, [searchResults, hasActiveSubscription, feedAds]);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   // Intersection Observer for infinite scroll
@@ -139,14 +280,27 @@ export default function SealedCatalogContainer({
         {/* Results Grid */}
         {Array.isArray(searchResults) && searchResults.length > 0 && (
           <div className="grid grid-cols-2 gap-1 md:grid-cols-4 lg:grid-cols-5">
+            {/* Featured Ad - displayed as first item in the grid */}
+            {!hasActiveSubscription && featuredAd && (
+              <FeedAd ad={featuredAd} isFeatured />
+            )}
+
             {promotedResults &&
               !hasActiveSubscription &&
               promotedResults.map((item, index) => (
-                <SealedCatalogItem product={item} key={index} />
+                <SealedCatalogItem product={item} key={`promoted-${index}`} />
               ))}
 
+            {/* Regular results with interleaved ads */}
             {searchResults.map((item, index) => (
-              <SealedCatalogItem product={item} key={index} />
+              <React.Fragment key={`result-${index}`}>
+                <SealedCatalogItem product={item} />
+
+                {/* Insert ad at specified intervals if user doesn't have a subscription */}
+                {!hasActiveSubscription &&
+                  adPositions.includes(index) &&
+                  adMap[index] && <FeedAd ad={adMap[index]} />}
+              </React.Fragment>
             ))}
           </div>
         )}

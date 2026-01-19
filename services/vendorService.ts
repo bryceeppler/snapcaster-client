@@ -115,17 +115,11 @@ class VendorService {
     discount: UpdateDiscountRequest
   ): Promise<Discount> {
     const url = `${BASE_URL}/api/v1/vendor/discounts/${discountId}`;
-    console.log(`Making updateDiscount API request to: ${url}`, {
-      discountId,
-      discountData: discount
-    });
 
     try {
       const response = await axiosInstance.put(url, discount);
-      console.log('API response for updateDiscount:', response.data);
       return response.data.data;
     } catch (error) {
-      console.error('API error in updateDiscount:', error);
       throw error;
     }
   }
@@ -147,7 +141,6 @@ class VendorService {
       const response = await axiosInstance.get(
         `${BASE_URL}/api/v1/vendor/vendors/${vendorId}/api-keys`
       );
-      console.log('API keys response:', response.data);
       return response.data.data || ([] as ApiKey[]);
     } catch (error) {
       console.error('Error fetching API keys:', error);
