@@ -154,7 +154,7 @@ const SingleCatalogItem = ({ product }: Props) => {
                   product.vendor
                 );
                 const builder = createShopifyUrlBuilder(product.link)
-                  .setProduct(product.handle, product.variant_id)
+                  .setProduct(product.handle, product.variant_id ? String(product.variant_id) : undefined)
                   .setUtmParams(UtmPresets.singles);
                 if (discount?.code) {
                   builder.setDiscount(discount.code);
