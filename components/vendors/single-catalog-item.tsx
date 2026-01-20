@@ -106,7 +106,8 @@ const SingleCatalogItem = ({ product, storeLogo = true }: Props) => {
             product.name,
             product.set,
             product.promoted ?? false,
-            resultsTcg
+            resultsTcg,
+            'singles'
           )
         }
       >

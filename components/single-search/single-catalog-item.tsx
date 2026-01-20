@@ -177,7 +177,8 @@ const SingleCatalogItem = ({ product }: Props) => {
               product.name,
               product.set,
               product.promoted ?? false,
-              resultsTcg
+              resultsTcg,
+              'singles'
             );
             window.open(url, '_blank', 'noreferrer');
           }}
