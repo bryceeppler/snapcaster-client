@@ -27,7 +27,7 @@ import type { SealedSortOptions } from '@/types/query';
 import { appendUtmParameters } from '@/utils/adUrlBuilder';
 import { createWeightedSelectionManager } from '@/utils/weightedSelection';
 
-const AD_INTERVAL = 35;
+const AD_INTERVAL = 20;
 
 // Helper function to get a random image from the advertisement pool
 const getRandomAd = <T,>(items: T[]): T | undefined => {
