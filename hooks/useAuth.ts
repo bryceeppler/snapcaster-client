@@ -45,9 +45,16 @@ export function useAuth() {
     queryKey: ['auth-init'],
     queryFn: async () => {
       if (!accessToken) {
-        const token = await authService.refreshToken();
-        setAccessToken(token);
-        queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+        try {
+          const token = await authService.refreshToken();
+          setAccessToken(token);
+          queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+        } catch (error) {
+          // If refresh fails (e.g., no valid refresh token), silently fail
+          // This is expected when user is not logged in
+          // Don't throw - just return null to prevent React Query from retrying
+          return null;
+        }
       }
       return null;
     },
@@ -56,7 +63,9 @@ export function useAuth() {
     retry: false,
     // Don't refetch on window focus or reconnect
     refetchOnWindowFocus: false,
-    refetchOnReconnect: false
+    refetchOnReconnect: false,
+    // Don't refetch when dependencies change
+    refetchOnMount: false
   });
 
   // Query for user profile

@@ -67,13 +67,13 @@ function findTypeDefinitions(directory: string) {
 
 findTypeDefinitions(projectRoot);
 
-// Print duplicate types
-console.log('Potential duplicate type definitions:');
-for (const [typeName, files] of typeDefinitions.entries()) {
-  if (files.length > 1) {
-    console.log(`Type "${typeName}" defined in ${files.length} files:`);
-    files.forEach((file) =>
-      console.log(`  - ${path.relative(projectRoot, file)}`)
-    );
-  }
-}
+// // Print duplicate types
+// console.log('Potential duplicate type definitions:');
+// for (const [typeName, files] of typeDefinitions.entries()) {
+//   if (files.length > 1) {
+//     console.log(`Type "${typeName}" defined in ${files.length} files:`);
+//     files.forEach((file) =>
+//       console.log(`  - ${path.relative(projectRoot, file)}`)
+//     );
+//   }
+// }

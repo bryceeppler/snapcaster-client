@@ -19,7 +19,7 @@ export class ShopifyUrlBuilder {
     this.config.type = 'product';
     this.config.productHandle = handle;
     if (variantId !== undefined) {
-      this.config.variantId = variantId;
+      this.config.variantId = String(variantId);
     }
     return this;
   }
@@ -77,28 +77,40 @@ export class ShopifyUrlBuilder {
    */
   private buildProductUrl(): string {
     let url = this.config.baseUrl;
-
-    // Build product path
-    let productPath = `products/${this.config.productHandle}`;
-    if (this.config.variantId) {
-      productPath += `?variant=${this.config.variantId}`;
+    // (Temp Fix for Sealed link field affecting sealed from the shopify app only) Strip products/{productHandle} from the end of baseUrl if present
+    if (this.config.productHandle) {
+      const suffix = `/products/${this.config.productHandle}`;
+      if (url.endsWith(`${suffix}/`)) {
+        url = url.slice(0, -(suffix.length + 1));
+      } else if (url.endsWith(suffix)) {
+        url = url.slice(0, -suffix.length);
+      }
     }
 
+    // Build base product path (without variant - variant goes outside redirect)
+    const baseProductPath = `/products/${this.config.productHandle}`;
+    
     // Add discount wrapper if needed
     if (this.config.discountCode) {
-      url += `discount/${this.config.discountCode}`;
-      url += `?redirect=/${productPath}`;
+      url += `/discount/${this.config.discountCode}`;
+      url += `?redirect=${encodeURIComponent(baseProductPath)}`;
+      if (this.config.variantId) {
+        url += `&variant=${this.config.variantId}`;
+      }
     } else {
-      url += productPath;
+      if (this.config.variantId) {
+        url += `${baseProductPath}?variant=${this.config.variantId}`;
+      } else {
+        url += baseProductPath;
+      }
     }
-
+  
     // Add UTM parameters
     const utmParams = this.buildUtmParams();
     if (utmParams) {
       const separator = url.includes('?') ? '&' : '?';
       url += separator + utmParams;
     }
-
     return url;
   }
 
@@ -117,7 +129,7 @@ export class ShopifyUrlBuilder {
 
     // Add discount wrapper if needed
     if (this.config.discountCode) {
-      url += `discount/${encodeURIComponent(this.config.discountCode)}`;
+      url += `/discount/${this.config.discountCode}`;
       url += `?redirect=/${encodeURIComponent(cartPath)}`;
     } else {
       url += cartPath;
@@ -129,7 +141,7 @@ export class ShopifyUrlBuilder {
       const separator = url.includes('?') ? '&' : '?';
       url += separator + utmParams;
     }
-
+    console.log('cart url', url);
     return url;
   }
 

@@ -89,6 +89,12 @@ export default function SponsorSection() {
           name: '3 Mana',
           href: 'https://3mana.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
           logo: 'https://cdn.snapcaster.ca/3mana-logo.png'
+        },
+        {
+          id: 3,
+          name: 'Derpy Cards',
+          href: 'https://derpycards.ca?utm_source=sc&utm_medium=referral&utm_campaign=referral_advertisement',
+          logo: 'https://cdn.snapcaster.ca/derpycards.png'
         }
       ],
       cardClassName:

@@ -52,11 +52,11 @@ const SingleCatalogItem = ({ product }: Props) => {
     <Card className="group flex flex-col overflow-visible p-4">
       <CardContent className="group flex h-full flex-col rounded-lg p-0">
         <div className="relative mx-auto w-full max-w-[150px] md:max-w-[250px]">
-          <div className="aspect-[3/4] overflow-hidden rounded-lg">
+          <div className="aspect-[3/4] rounded-lg">
             <CardImage
               imageUrl={product.image}
               alt={product.name}
-              className="transition-transform duration-300 group-hover:scale-105"
+              className="transition-transform duration-300 group-hover:scale-[1.03]"
             />
           </div>
           {product.promoted && (
@@ -154,7 +154,7 @@ const SingleCatalogItem = ({ product }: Props) => {
                   product.vendor
                 );
                 const builder = createShopifyUrlBuilder(product.link)
-                  .setProduct(product.handle, product.variant_id)
+                  .setProduct(product.handle, product.variant_id ? String(product.variant_id) : undefined)
                   .setUtmParams(UtmPresets.singles);
                 if (discount?.code) {
                   builder.setDiscount(discount.code);
@@ -177,7 +177,8 @@ const SingleCatalogItem = ({ product }: Props) => {
               product.name,
               product.set,
               product.promoted ?? false,
-              resultsTcg
+              resultsTcg,
+              'singles'
             );
             window.open(url, '_blank', 'noreferrer');
           }}

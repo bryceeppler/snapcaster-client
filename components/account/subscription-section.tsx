@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { createCheckoutSession, createPortalSession } from '@/lib/utils';
+import { paymentService } from '@/services/paymentService';
 
 export function SubscriptionSection() {
   const { toast } = useToast();
@@ -24,7 +24,7 @@ export function SubscriptionSection() {
   const handleSubscribe = async () => {
     setIsLoading(true);
     try {
-      await createCheckoutSession();
+      await paymentService.createCheckoutSession();
     } catch {
       toast({
         title: 'Error',
@@ -38,7 +38,7 @@ export function SubscriptionSection() {
   const handleManage = async () => {
     setIsLoading(true);
     try {
-      await createPortalSession();
+      await paymentService.createPortalSession();
     } catch {
       toast({
         title: 'Error',

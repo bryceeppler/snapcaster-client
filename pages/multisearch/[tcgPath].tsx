@@ -24,7 +24,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useVendors } from '@/hooks/queries/useVendors';
 import { useAuth } from '@/hooks/useAuth';
 import { FREE_MULTISEARCH_CARD_LIMIT } from '@/lib/constants';
-import { createCheckoutSession } from '@/lib/utils';
+import { paymentService } from '@/services/paymentService';
 import type { Vendor } from '@/services/vendorService';
 import useMultiSearchStore from '@/stores/multiSearchStore';
 import type { Condition, Product, Tcg } from '@/types';
@@ -265,7 +265,7 @@ const SearchView = ({
               className="text-primary underline hover:cursor-pointer hover:text-primary/80"
               onClick={() => {
                 if (isAuthenticated) {
-                  createCheckoutSession();
+                  paymentService.createCheckoutSession();
                 } else {
                   window.location.href = '/signin';
                 }
