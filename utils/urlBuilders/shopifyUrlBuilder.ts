@@ -57,6 +57,15 @@ export class ShopifyUrlBuilder {
   }
 
   /**
+   * ShopifyUrlBuilder updates storefront field before building the url
+   * Purpose: When true, cart links will redirect to the storefront cart page instead of checkout
+   */
+  setStorefront(value: boolean): ShopifyUrlBuilder {
+    this.config.storefront = value;
+    return this;
+  }
+
+  /**
    * Build UTM parameters
    * Purpose: Build the UTM parameters for the url. We apply the UTM parameters to the url so that when the user clicks the link, they are redirected to the product page with the UTM parameters applied
    */
@@ -115,32 +124,50 @@ export class ShopifyUrlBuilder {
   }
 
   /**
-   * Build the cart checkout page url
-   * Purpose: Build the cart checkout page url. We apply the cart path, discount code, and UTM parameters to the url so that when the user clicks the link, they are redirected to the cart checkout page with the discount code applied and UTM parameters applied
+   * Build the cart add url
+   * Purpose: Build the cart add url using /cart/add format. This adds items to the existing cart without replacing it. We apply the cart items, discount code, storefront parameter, and UTM parameters via return_to
    */
   private buildCartUrl(): string {
     let url = this.config.baseUrl;
 
-    // Build cart path
-    const cartItemsString = this.config
-      .cartItems!.map((item) => `${item.variantId}:${item.quantity}`)
-      .join(',');
-    const cartPath = `cart/${cartItemsString}`;
+    // Build cart/add path with items as query parameters
+    url += 'cart/add';
 
-    // Add discount wrapper if needed
+    // Add items as query parameters
+    const itemsParams = this.config
+      .cartItems!.map((item) => `items[][id]=${item.variantId}&items[][quantity]=${item.quantity}`)
+      .join('&');
+
+    url += `?${itemsParams}`;
+
+    // Build return_to path with discount, storefront, and UTM params
+    let returnToPath = '/cart';
+    const returnParams: string[] = [];
+
+    // Add discount code to return_to if needed
     if (this.config.discountCode) {
-      url += `/discount/${this.config.discountCode}`;
-      url += `?redirect=/${encodeURIComponent(cartPath)}`;
-    } else {
-      url += cartPath;
+      returnParams.push(`discount=${encodeURIComponent(this.config.discountCode)}`);
     }
 
-    // Add UTM parameters
+    // Add storefront parameter to return_to if needed (goes to cart page instead of checkout)
+    if (this.config.storefront) {
+      returnParams.push('storefront=true');
+    }
+
+    // Add UTM parameters to return_to
     const utmParams = this.buildUtmParams();
     if (utmParams) {
-      const separator = url.includes('?') ? '&' : '?';
-      url += separator + utmParams;
+      returnParams.push(utmParams);
     }
+
+    // Construct return_to with all parameters
+    if (returnParams.length > 0) {
+      returnToPath += '?' + returnParams.join('&');
+    }
+
+    // Add return_to parameter
+    url += `&return_to=${encodeURIComponent(returnToPath)}`;
+
     console.log('cart url', url);
     return url;
   }

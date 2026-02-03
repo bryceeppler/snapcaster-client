@@ -19,6 +19,7 @@ export interface ShopifyUrlConfig extends BaseUrlConfig {
   productHandle?: string;
   variantId?: string | undefined; // Allow undefined
   cartItems?: Array<{ variantId: string; quantity: number }>;
+  storefront?: boolean; // If true, cart links go to cart page instead of checkout
 }
 
 /**

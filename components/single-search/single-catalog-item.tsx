@@ -1,3 +1,4 @@
+import { ExternalLink } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { handleBuyClick } from '../../utils/analytics';
@@ -46,6 +47,89 @@ const SingleCatalogItem = ({ product }: Props) => {
   const findVendorNameByCode = (slug: string) => {
     const vendor = vendors.find((vendor) => vendor.slug === slug);
     return vendor ? vendor.name : 'Vendor not found';
+  };
+
+  // Build cart permalink URL (for Add to Cart button)
+  const buildCartUrl = () => {
+    if (product.platform === 'shopify') {
+      const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
+      const builder = createShopifyUrlBuilder(product.link)
+        .setCart([
+          {
+            variantId: product.variant_id ? String(product.variant_id) : '',
+            quantity: 1
+          }
+        ])
+        .setStorefront(true)
+        .setUtmParams(UtmPresets.singles);
+      if (discount?.code) {
+        builder.setDiscount(discount.code);
+      }
+      return builder.build();
+    } else if (product.platform === 'crystal') {
+      return createCrystalUrlBuilder(product.link)
+        .setUtmParams(UtmPresets.singles)
+        .build();
+    } else {
+      return createConductUrlBuilder(product.link)
+        .setUtmParams(UtmPresets.singles)
+        .build();
+    }
+  };
+
+  // Build product page URL (for external link icon)
+  const buildProductPageUrl = () => {
+    if (product.platform === 'shopify') {
+      const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
+      const builder = createShopifyUrlBuilder(product.link)
+        .setProduct(
+          product.handle,
+          product.variant_id ? String(product.variant_id) : undefined
+        )
+        .setUtmParams(UtmPresets.singles);
+      if (discount?.code) {
+        builder.setDiscount(discount.code);
+      }
+      return builder.build();
+    } else if (product.platform === 'crystal') {
+      return createCrystalUrlBuilder(product.link)
+        .setUtmParams(UtmPresets.singles)
+        .build();
+    } else {
+      return createConductUrlBuilder(product.link)
+        .setUtmParams(UtmPresets.singles)
+        .build();
+    }
+  };
+
+  // Handle Add to Cart button click (cart permalink)
+  const handleAddToCartClick = () => {
+    const url = buildCartUrl();
+    handleBuyClick(
+      url,
+      product.price,
+      product.name,
+      product.set,
+      product.promoted ?? false,
+      resultsTcg,
+      'singles'
+    );
+    window.open(url, '_blank', 'noreferrer');
+  };
+
+  // Handle external link icon click (product page)
+  const handleProductPageClick = () => {
+    const url = buildProductPageUrl();
+    handleBuyClick(
+      url,
+      product.price,
+      product.name,
+      product.set,
+      product.promoted ?? false,
+      resultsTcg,
+      'singles'
+    );
+    window.open(url, '_blank', 'noreferrer');
   };
 
   return (
@@ -144,51 +228,26 @@ const SingleCatalogItem = ({ product }: Props) => {
           </div>
         </div>
       </CardContent>
-      <div className="w-full">
+      <div className="flex w-full gap-2">
         <Button
-          className="w-full  border font-montserrat text-xs uppercase text-primary-foreground  "
-          onClick={() => {
-            const url = (() => {
-              if (product.platform === 'shopify') {
-                const discount = getLargestActiveDiscountByVendorSlug(
-                  product.vendor
-                );
-                const builder = createShopifyUrlBuilder(product.link)
-                  .setProduct(product.handle, product.variant_id ? String(product.variant_id) : undefined)
-                  .setUtmParams(UtmPresets.singles);
-                if (discount?.code) {
-                  builder.setDiscount(discount.code);
-                }
-                return builder.build();
-              } else if (product.platform === 'crystal') {
-                return createCrystalUrlBuilder(product.link)
-                  .setUtmParams(UtmPresets.singles)
-                  .build();
-              } else {
-                return createConductUrlBuilder(product.link)
-                  .setUtmParams(UtmPresets.singles)
-                  .build();
-              }
-            })();
-
-            handleBuyClick(
-              url,
-              product.price,
-              product.name,
-              product.set,
-              product.promoted ?? false,
-              resultsTcg,
-              'singles'
-            );
-            window.open(url, '_blank', 'noreferrer');
-          }}
+          className="flex-1 border font-montserrat text-xs uppercase text-primary-foreground"
+          onClick={handleAddToCartClick}
         >
           <div className="flex flex-col items-center justify-center">
-            <span className="text-xs font-semibold">Buy</span>
+            <span className="text-xs font-semibold">Add to Cart</span>
             <span className="text-[0.65rem]">
               {product.quantity ? `Stock: ${product.quantity}` : ''}
             </span>
           </div>
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-auto border"
+          onClick={handleProductPageClick}
+          title="View product page"
+        >
+          <ExternalLink className="h-4 w-4" />
         </Button>
       </div>
     </Card>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { ExternalLink } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import ProductImage from '../sealed/product-image';
@@ -29,33 +30,83 @@ const ProductCatalogItem = ({ product }: Props) => {
     return `${urlObj.protocol}//${urlObj.host}/`;
   };
 
-  const handleClick = () => {
-    const url = (() => {
-      // Check if product has platform property like sealed products
-      if ('platform' in product) {
-        if (product.platform === 'shopify') {
-          const builder = createShopifyUrlBuilder(getBaseUrl(product.link))
-            .setProduct(product.handle || '', product.variant_id || '')
-            .setUtmParams(UtmPresets.singles);
-          const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
-          if (discount?.code) {
-            builder.setDiscount(discount.code);
-          }
-          return builder.build();
-        } else if (product.platform === 'crystal') {
-          return createCrystalUrlBuilder(product.link)
-            .setUtmParams(UtmPresets.singles)
-            .build();
-        } else {
-          return createConductUrlBuilder(product.link)
-            .setUtmParams(UtmPresets.singles)
-            .build();
+  // Build cart permalink URL (for Add to Cart button)
+  const buildCartUrl = () => {
+    // Check if product has platform property like sealed products
+    if ('platform' in product) {
+      if (product.platform === 'shopify') {
+        const builder = createShopifyUrlBuilder(getBaseUrl(product.link))
+          .setCart([
+            { variantId: product.variant_id || '', quantity: 1 }
+          ])
+          .setStorefront(true)
+          .setUtmParams(UtmPresets.singles);
+        const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
+        if (discount?.code) {
+          builder.setDiscount(discount.code);
         }
+        return builder.build();
+      } else if (product.platform === 'crystal') {
+        return createCrystalUrlBuilder(product.link)
+          .setUtmParams(UtmPresets.singles)
+          .build();
+      } else {
+        return createConductUrlBuilder(product.link)
+          .setUtmParams(UtmPresets.singles)
+          .build();
       }
-      // Fallback for products without platform
-      return product.link;
-    })();
+    }
+    // Fallback for products without platform
+    return product.link;
+  };
 
+  // Build product page URL (for clicks on image/name/price and external link icon)
+  const buildProductPageUrl = () => {
+    // Check if product has platform property like sealed products
+    if ('platform' in product) {
+      if (product.platform === 'shopify') {
+        const builder = createShopifyUrlBuilder(getBaseUrl(product.link))
+          .setProduct(product.handle || '', product.variant_id || '')
+          .setUtmParams(UtmPresets.singles);
+        const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
+        if (discount?.code) {
+          builder.setDiscount(discount.code);
+        }
+        return builder.build();
+      } else if (product.platform === 'crystal') {
+        return createCrystalUrlBuilder(product.link)
+          .setUtmParams(UtmPresets.singles)
+          .build();
+      } else {
+        return createConductUrlBuilder(product.link)
+          .setUtmParams(UtmPresets.singles)
+          .build();
+      }
+    }
+    // Fallback for products without platform
+    return product.link;
+  };
+
+  // Handle product page clicks (image, name, price, external link)
+  const handleProductPageClick = () => {
+    const url = buildProductPageUrl();
+    handleBuyClick(
+      url,
+      product.price,
+      product.name,
+      product.set,
+      product.promoted ?? false,
+      'product', // Use 'product' as the category for general search
+      'singles'
+    );
+    window.open(url, '_blank');
+  };
+
+  // Handle Add to Cart button click (cart permalink)
+  const handleAddToCartClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent Link navigation
+    e.stopPropagation(); // Stop event bubbling
+    const url = buildCartUrl();
     handleBuyClick(
       url,
       product.price,
@@ -74,7 +125,7 @@ const ProductCatalogItem = ({ product }: Props) => {
     <Card className="group flex h-full flex-col overflow-hidden border-border/40 font-montserrat transition-all hover:border-border hover:shadow-md">
       <div
         className="relative w-full cursor-pointer bg-background p-2"
-        onClick={handleClick}
+        onClick={handleProductPageClick}
       >
         <div className="relative aspect-square w-full overflow-hidden">
           <ProductImage imageUrl={product.image} alt={product.name} />
@@ -108,7 +159,7 @@ const ProductCatalogItem = ({ product }: Props) => {
         </Link>
 
         <h3
-          onClick={handleClick}
+          onClick={handleProductPageClick}
           className="line-clamp-2 cursor-pointer text-sm leading-tight text-foreground transition-colors hover:text-primary"
           title={product.name}
         >
@@ -124,7 +175,7 @@ const ProductCatalogItem = ({ product }: Props) => {
         <div className="mt-auto pt-2">
           <div
             className="mb-3 cursor-pointer"
-            onClick={handleClick}
+            onClick={handleProductPageClick}
           >
             <span className="text-2xl font-bold tracking-tight">
               ${product.price.toFixed(2)}
@@ -132,20 +183,23 @@ const ProductCatalogItem = ({ product }: Props) => {
             <span className="ml-1 text-xs text-muted-foreground">CAD</span>
           </div>
 
-          <Link
-            href={product.link}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full"
-          >
+          <div className="flex w-full gap-2">
             <Button
-              className="w-full"
+              className="flex-1"
               variant="default"
-              onClick={handleClick}
+              onClick={handleAddToCartClick}
             >
-              View Product
+              Add to Cart
             </Button>
-          </Link>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleProductPageClick}
+              title="View product page"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

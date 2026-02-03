@@ -1,3 +1,4 @@
+import { ExternalLink } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { Button } from '../ui/button';
@@ -24,28 +25,69 @@ const SealedCatalogItem = ({ product }: Props) => {
   const { theme } = useTheme();
   const { productCategory } = useSealedSearchStore();
   const { getLargestActiveDiscountByVendorSlug } = useDiscounts();
-  const handleClick = () => {
-    const url = (() => {
-      if (product.platform === 'shopify') {
-        const builder = createShopifyUrlBuilder(product.link)
-          .setProduct(product.handle, product.variant_id)
-          .setUtmParams(UtmPresets.sealed);
-        const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
-        if (discount?.code) {
-          builder.setDiscount(discount.code);
-        }
-        return builder.build();
-      } else if (product.platform === 'crystal') {
-        return createCrystalUrlBuilder(product.link)
-          .setUtmParams(UtmPresets.sealed)
-          .build();
-      } else {
-        return createConductUrlBuilder(product.link)
-          .setUtmParams(UtmPresets.sealed)
-          .build();
+  // Build cart permalink URL (for Add to Cart button)
+  const buildCartUrl = () => {
+    if (product.platform === 'shopify') {
+      const builder = createShopifyUrlBuilder(product.link)
+        .setCart([{ variantId: product.variant_id || '', quantity: 1 }])
+        .setStorefront(true)
+        .setUtmParams(UtmPresets.sealed);
+      const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
+      if (discount?.code) {
+        builder.setDiscount(discount.code);
       }
-    })();
+      return builder.build();
+    } else if (product.platform === 'crystal') {
+      return createCrystalUrlBuilder(product.link)
+        .setUtmParams(UtmPresets.sealed)
+        .build();
+    } else {
+      return createConductUrlBuilder(product.link)
+        .setUtmParams(UtmPresets.sealed)
+        .build();
+    }
+  };
 
+  // Build product page URL (for external link icon)
+  const buildProductPageUrl = () => {
+    if (product.platform === 'shopify') {
+      const builder = createShopifyUrlBuilder(product.link)
+        .setProduct(product.handle, product.variant_id)
+        .setUtmParams(UtmPresets.sealed);
+      const discount = getLargestActiveDiscountByVendorSlug(product.vendor);
+      if (discount?.code) {
+        builder.setDiscount(discount.code);
+      }
+      return builder.build();
+    } else if (product.platform === 'crystal') {
+      return createCrystalUrlBuilder(product.link)
+        .setUtmParams(UtmPresets.sealed)
+        .build();
+    } else {
+      return createConductUrlBuilder(product.link)
+        .setUtmParams(UtmPresets.sealed)
+        .build();
+    }
+  };
+
+  // Handle Add to Cart button click (cart permalink)
+  const handleAddToCartClick = () => {
+    const url = buildCartUrl();
+    handleBuyClick(
+      url,
+      product.price,
+      product.name,
+      product.set,
+      product.promoted ?? false,
+      productCategory,
+      'sealed'
+    );
+    window.open(url, '_blank');
+  };
+
+  // Handle external link icon click (product page)
+  const handleProductPageClick = () => {
+    const url = buildProductPageUrl();
     handleBuyClick(
       url,
       product.price,
@@ -117,17 +159,26 @@ const SealedCatalogItem = ({ product }: Props) => {
           </div>
         </div>
       </CardContent>
-      <div className="w-full">
+      <div className="flex w-full gap-2">
         <Button
-          className="w-full  border font-montserrat text-xs uppercase text-primary-foreground  "
-          onClick={handleClick}
+          className="flex-1 border font-montserrat text-xs uppercase text-primary-foreground"
+          onClick={handleAddToCartClick}
         >
           <div className="flex flex-col items-center justify-center">
-            <span className="text-xs font-semibold">Buy</span>
+            <span className="text-xs font-semibold">Add to Cart</span>
             <span className="text-[0.65rem]">
               {product.quantity ? `Stock: ${product.quantity}` : ''}
             </span>
           </div>
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-auto border"
+          onClick={handleProductPageClick}
+          title="View product page"
+        >
+          <ExternalLink className="h-4 w-4" />
         </Button>
       </div>
     </Card>
