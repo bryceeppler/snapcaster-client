@@ -70,87 +70,82 @@ const ProductCatalogItem = ({ product }: Props) => {
   const vendor = getVendorBySlug(product.vendor);
 
   return (
-    <Card className="flex flex-col font-montserrat">
-      <CardContent className={`group flex h-full flex-col pt-4`}>
-        <div
-          className="relative cursor-pointer transition-opacity hover:opacity-90"
-          onClick={handleClick}
-        >
-          <div className="mx-auto h-min max-w-[150px] md:max-w-[250px]">
-            <ProductImage imageUrl={product.image} alt={product.name} />
-          </div>
+    <Card className="group flex h-full flex-col overflow-hidden border-border/40 font-montserrat transition-all hover:border-border hover:shadow-md">
+      <div
+        className="relative w-full cursor-pointer bg-background p-2"
+        onClick={handleClick}
+      >
+        <div className="relative aspect-square w-full overflow-hidden">
+          <ProductImage imageUrl={product.image} alt={product.name} />
         </div>
-        <div className="flex flex-grow flex-col">
-          <div className="mt-3 flex flex-grow flex-col text-center md:text-left">
-            <h3
-              onClick={handleClick}
-              className="cursor-pointer overflow-hidden text-ellipsis text-[0.9rem] font-semibold capitalize tracking-tight"
-            >
-              {product.title}
-            </h3>
-            <Link
-              className="mb-2 mt-1 flex w-full cursor-pointer flex-col items-center justify-center gap-1 transition-opacity hover:opacity-80 md:flex-row md:justify-start"
-              href={vendor?.url || ''}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div className="text-xs md:hidden">
-                {getVendorNameBySlug(product.vendor)}
-              </div>
-              {(() => {
-                const matchingVendor = getVendorBySlug(product.vendor);
-                const matchingVendorIcon = matchingVendor?.assets.find(
-                  (asset) =>
-                    asset.assetType === VendorAssetType.ICON &&
-                    (asset.theme === theme ||
-                      asset.theme === VendorAssetTheme.UNIVERSAL)
-                );
-                return matchingVendorIcon ? (
-                  <img
-                    src={matchingVendorIcon.url}
-                    alt={getVendorNameBySlug(product.vendor)}
-                    className="h-4 w-4"
-                  />
-                ) : null;
-              })()}
-              <div className="ml-1 hidden text-xs md:block">
-                {getVendorNameBySlug(product.vendor)}
-              </div>
-            </Link>
+      </div>
 
-            {product.quantity && (
-              <div className="text-xs">
-                {product.quantity}{' '}
-                {product.quantity > 1 ? 'items available' : 'item available'}
-              </div>
-            )}
-            <div className="mt-3">
-              <div
-                className="flex cursor-pointer flex-row items-center justify-center gap-2 transition-opacity hover:opacity-80 md:justify-start"
-                onClick={handleClick}
-              >
-                <h4 className="flex items-start font-montserrat text-2xl font-semibold">
-                  <span className="mt-1 text-sm">$</span>
-                  {product.price.toFixed(2)}
-                </h4>
-              </div>
-            </div>
-          </div>
-        </div>
+      <CardContent className="flex flex-grow flex-col gap-2 p-3 text-left">
         <Link
-          href={product.link}
+          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          href={vendor?.url || ''}
           target="_blank"
           rel="noreferrer"
-          className="mt-4 w-full"
         >
-          <Button
-            className="w-full font-montserrat text-xs uppercase"
-            variant="default"
+          {(() => {
+            const matchingVendor = getVendorBySlug(product.vendor);
+            const matchingVendorIcon = matchingVendor?.assets.find(
+              (asset) =>
+                asset.assetType === VendorAssetType.ICON &&
+                (asset.theme === theme ||
+                  asset.theme === VendorAssetTheme.UNIVERSAL)
+            );
+            return matchingVendorIcon ? (
+              <img
+                src={matchingVendorIcon.url}
+                alt={getVendorNameBySlug(product.vendor)}
+                className="h-3 w-3 flex-shrink-0"
+              />
+            ) : null;
+          })()}
+          <span>{getVendorNameBySlug(product.vendor)}</span>
+        </Link>
+
+        <h3
+          onClick={handleClick}
+          className="line-clamp-2 cursor-pointer text-sm leading-tight text-foreground transition-colors hover:text-primary"
+          title={product.name}
+        >
+          {product.name}
+        </h3>
+
+        {product.quantity && (
+          <p className="text-xs text-emerald-600 dark:text-emerald-400">
+            In Stock ({product.quantity})
+          </p>
+        )}
+
+        <div className="mt-auto pt-2">
+          <div
+            className="mb-3 cursor-pointer"
             onClick={handleClick}
           >
-            Buy
-          </Button>
-        </Link>
+            <span className="text-2xl font-bold tracking-tight">
+              ${product.price.toFixed(2)}
+            </span>
+            <span className="ml-1 text-xs text-muted-foreground">CAD</span>
+          </div>
+
+          <Link
+            href={product.link}
+            target="_blank"
+            rel="noreferrer"
+            className="w-full"
+          >
+            <Button
+              className="w-full"
+              variant="default"
+              onClick={handleClick}
+            >
+              Add to Cart
+            </Button>
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );
