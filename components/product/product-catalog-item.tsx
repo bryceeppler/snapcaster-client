@@ -143,7 +143,7 @@ const ProductCatalogItem = ({ product }: Props) => {
               variant="default"
               onClick={handleClick}
             >
-              Add to Cart
+              View Product
             </Button>
           </Link>
         </div>
