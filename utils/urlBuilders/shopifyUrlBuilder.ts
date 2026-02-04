@@ -142,16 +142,6 @@ export class ShopifyUrlBuilder {
    * Purpose: Build the cart add url using /cart/add format. This adds items to the existing cart without replacing it. We apply the cart items, discount code, storefront parameter, and UTM parameters via return_to
    */
   private buildCartUrl(): string {
-    console.log('[ShopifyUrlBuilder] Building cart URL with config:', {
-      baseUrl: this.config.baseUrl,
-      cartItems: this.config.cartItems,
-      discountCode: this.config.discountCode,
-      storefront: this.config.storefront,
-      utmSource: this.config.utmSource,
-      utmMedium: this.config.utmMedium,
-      utmCampaign: this.config.utmCampaign
-    });
-
     // Validate cart items exist
     if (!this.config.cartItems || this.config.cartItems.length === 0) {
       console.error('[ShopifyUrlBuilder] Error: No cart items provided');
@@ -177,21 +167,15 @@ export class ShopifyUrlBuilder {
       return this.config.baseUrl + 'cart';
     }
 
-    console.log(`[ShopifyUrlBuilder] Processing ${validItems.length} valid item(s)`);
-
     // Add items as query parameters
-    // Note: For single items, use id/quantity format. For multiple items, use comma-separated variant:quantity pairs
+    // Note: For single items, use id/quantity format. For multiple items, use items array format
     if (validItems.length === 1) {
       const item = validItems[0]!;
-      console.log(`[ShopifyUrlBuilder] Adding single item: variantId=${item.variantId}, quantity=${item.quantity}`);
       url += `?id=${item.variantId}&quantity=${item.quantity}`;
     } else {
       // Multiple items: use items array format
       const itemsParams = validItems
-        .map((item) => {
-          console.log(`[ShopifyUrlBuilder] Adding item: variantId=${item.variantId}, quantity=${item.quantity}`);
-          return `items[][id]=${item.variantId}&items[][quantity]=${item.quantity}`;
-        })
+        .map((item) => `items[][id]=${item.variantId}&items[][quantity]=${item.quantity}`)
         .join('&');
       url += `?${itemsParams}`;
     }
@@ -202,20 +186,17 @@ export class ShopifyUrlBuilder {
 
     // Add discount code to return_to if needed
     if (this.config.discountCode) {
-      console.log(`[ShopifyUrlBuilder] Adding discount code: ${this.config.discountCode}`);
       returnParams.push(`discount=${encodeURIComponent(this.config.discountCode)}`);
     }
 
     // Add storefront parameter to return_to if needed (goes to cart page instead of checkout)
     if (this.config.storefront) {
-      console.log('[ShopifyUrlBuilder] Adding storefront=true parameter');
       returnParams.push('storefront=true');
     }
 
     // Add UTM parameters to return_to
     const utmParams = this.buildUtmParams();
     if (utmParams) {
-      console.log(`[ShopifyUrlBuilder] Adding UTM parameters: ${utmParams}`);
       returnParams.push(utmParams);
     }
 
@@ -224,12 +205,9 @@ export class ShopifyUrlBuilder {
       returnToPath += '?' + returnParams.join('&');
     }
 
-    console.log(`[ShopifyUrlBuilder] Return path: ${returnToPath}`);
-
     // Add return_to parameter
     url += `&return_to=${encodeURIComponent(returnToPath)}`;
 
-    console.log('[ShopifyUrlBuilder] Final cart URL:', url);
     return url;
   }
 
