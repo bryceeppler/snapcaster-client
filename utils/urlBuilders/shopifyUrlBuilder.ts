@@ -97,21 +97,26 @@ export class ShopifyUrlBuilder {
     let url = this.config.baseUrl;
     // (Temp Fix for Sealed link field affecting sealed from the shopify app only) Strip products/{productHandle} from the end of baseUrl if present
     if (this.config.productHandle) {
-      const suffix = `/products/${this.config.productHandle}`;
+      const suffix = `products/${this.config.productHandle}`;
       if (url.endsWith(`${suffix}/`)) {
-        url = url.slice(0, -(suffix.length + 1));
+        url = url.slice(0, -(suffix.length + 1)) + '/';
       } else if (url.endsWith(suffix)) {
         url = url.slice(0, -suffix.length);
+        // Ensure trailing slash after stripping
+        if (!url.endsWith('/')) {
+          url += '/';
+        }
       }
     }
 
     // Build base product path (without variant - variant goes outside redirect)
-    const baseProductPath = `/products/${this.config.productHandle}`;
-    
+    // Note: No leading slash since baseUrl already has trailing slash
+    const baseProductPath = `products/${this.config.productHandle}`;
+
     // Add discount wrapper if needed
     if (this.config.discountCode) {
-      url += `/discount/${this.config.discountCode}`;
-      url += `?redirect=${encodeURIComponent(baseProductPath)}`;
+      url += `discount/${this.config.discountCode}`;
+      url += `?redirect=${encodeURIComponent('/' + baseProductPath)}`;
       if (this.config.variantId) {
         url += `&variant=${this.config.variantId}`;
       }
