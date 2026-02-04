@@ -166,14 +166,21 @@ export class ShopifyUrlBuilder {
     console.log(`[ShopifyUrlBuilder] Processing ${validItems.length} valid item(s)`);
 
     // Add items as query parameters
-    const itemsParams = validItems
-      .map((item) => {
-        console.log(`[ShopifyUrlBuilder] Adding item: variantId=${item.variantId}, quantity=${item.quantity}`);
-        return `items[][id]=${item.variantId}&items[][quantity]=${item.quantity}`;
-      })
-      .join('&');
-
-    url += `?${itemsParams}`;
+    // Note: For single items, use id/quantity format. For multiple items, use comma-separated variant:quantity pairs
+    if (validItems.length === 1) {
+      const item = validItems[0]!;
+      console.log(`[ShopifyUrlBuilder] Adding single item: variantId=${item.variantId}, quantity=${item.quantity}`);
+      url += `?id=${item.variantId}&quantity=${item.quantity}`;
+    } else {
+      // Multiple items: use items array format
+      const itemsParams = validItems
+        .map((item) => {
+          console.log(`[ShopifyUrlBuilder] Adding item: variantId=${item.variantId}, quantity=${item.quantity}`);
+          return `items[][id]=${item.variantId}&items[][quantity]=${item.quantity}`;
+        })
+        .join('&');
+      url += `?${itemsParams}`;
+    }
 
     // Build return_to path with discount, storefront, and UTM params
     let returnToPath = '/cart';
