@@ -8,7 +8,16 @@ export class ShopifyUrlBuilder {
   private config: ShopifyUrlConfig;
 
   constructor(baseUrl: string) {
-    this.config = { baseUrl, type: 'product' };
+    this.config = { baseUrl: this.normalizeBaseUrl(baseUrl), type: 'product' };
+  }
+
+  /**
+   * Normalize base URL to ensure consistent trailing slash
+   * Purpose: Prevents double slashes when concatenating paths by ensuring baseUrl always ends with exactly one trailing slash
+   */
+  private normalizeBaseUrl(url: string): string {
+    // Remove any trailing slashes, then add exactly one
+    return url.replace(/\/+$/, '') + '/';
   }
 
   /**
